@@ -1,0 +1,28 @@
+// app global css in SCSS form
+.page-padding {
+  margin: auto;
+  max-width: 1200px;
+}
+
+.padding-normal{
+  padding: 0px 20px;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0 0;
+}
+
+
+.pagination-input {
+  display: inline-block;
+  width: 55px;
+  margin: 0 3px;
+  padding-bottom: 0px;
+
+  div {
+    height: 32px;
+  }
+}
