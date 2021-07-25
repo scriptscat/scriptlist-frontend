@@ -1,5 +1,5 @@
 <template>
-  <div class="page-padding  padding-normal flex page-main">
+  <div class="page-padding padding-normal flex page-main">
     <div class="shadow-5 main-scrip-page">
       <div>
         <div
@@ -7,8 +7,29 @@
           v-for="(item, index) in ScriptList"
           :key="index"
         >
-          <div class="Head" @click="JumpToSciptWeb(item)">
-            {{ item.name }}
+          <div class="Head">
+            <div>
+              <a :href="'/script-show-page?id=' + item.id" target="_black">{{
+                item.name
+              }}</a>
+            </div>
+            <a
+              style="float: right; text-decoration: none"
+              :href="
+                '/scripts/' +
+                encodeURIComponent(item.name) +
+                '/source/' +
+                +item.id +
+                '.user.js'
+              "
+            >
+              <q-btn
+                color="primary"
+                size="sm"
+                icon="file_download"
+                label="立刻安装"
+              />
+            </a>
           </div>
           <div class="Context">
             <div class="text">
@@ -18,17 +39,13 @@
             <div class="Deatil">
               <div class="item">
                 <div class="Item-left-box">
-                  <div>
-                    作者
-                  </div>
+                  <div>作者</div>
                   <div class="Author">
                     {{ item.username }}
                   </div>
                 </div>
                 <div class="Item-right-box">
-                  <div>
-                    得分
-                  </div>
+                  <div>得分</div>
                   <div class="flex items-center justify-center">
                     <q-rating
                       v-model="item.score"
@@ -42,17 +59,13 @@
               </div>
               <div class="item">
                 <div class="Item-left-box">
-                  <div>
-                    今日安装
-                  </div>
+                  <div>今日安装</div>
                   <div>
                     {{ item.today_install }}
                   </div>
                 </div>
                 <div class="Item-right-box">
-                  <div>
-                    创建日期
-                  </div>
+                  <div>创建日期</div>
                   <div>
                     {{ item.createtime | formatDate }}
                   </div>
@@ -61,23 +74,17 @@
 
               <div class="item">
                 <div class="Item-left-box">
-                  <div>
-                    总安装量
-                  </div>
+                  <div>总安装量</div>
                   <div>
                     {{ item.total_install }}
                   </div>
                 </div>
                 <div class="Item-right-box">
-                  <div>
-                    最近更新
-                  </div>
+                  <div>最近更新</div>
                   <div v-if="item.updatetime !== 0">
                     {{ item.updatetime | formatDate }}
                   </div>
-                  <div v-else>
-                    暂无更新
-                  </div>
+                  <div v-else>暂无更新</div>
                 </div>
               </div>
             </div>
@@ -90,13 +97,13 @@
           :currentpage.sync="page"
           :maxpage="maxpage"
           :maxlens="6"
-          @UpdatePage="UpdatePageFunc"
+          :tolink="tolink"
         />
       </div>
     </div>
     <div class="show-mess-page">
       <q-card>
-        <div class="bg-primary text-white" style="padding:5px">
+        <div class="bg-primary text-white" style="padding: 5px">
           <div class="text-subtitle2">今日推荐</div>
         </div>
 
@@ -105,7 +112,7 @@
         <q-card-actions> </q-card-actions>
       </q-card>
       <q-card>
-        <div class="bg-primary text-white" style="padding:5px">
+        <div class="bg-primary text-white" style="padding: 5px">
           <div class="text-subtitle2">最高安装</div>
         </div>
 
@@ -114,7 +121,7 @@
         <q-card-actions> </q-card-actions>
       </q-card>
       <q-card>
-        <div class="bg-primary text-white" style="padding:5px">
+        <div class="bg-primary text-white" style="padding: 5px">
           <div class="text-subtitle2">最新脚本</div>
         </div>
 
@@ -127,75 +134,90 @@
 </template>
 <script>
 import TablePagination from "components/TablePagination.vue";
+
 export default {
-  name: "Search",
+  meta: {
+    title: "ScriptCat - 用户脚本列表",
+  },
   components: {
-    TablePagination
+    TablePagination,
   },
   computed: {
-    maxpage: function() {
+    maxpage: function () {
       let max = Math.ceil(this.totalnums / this.count);
       if (max < 1) {
         max = 1;
       }
       return max;
-    }
-  },
-  methods: {
-    JumpToSciptWeb(item){
-      this.$router.push({
-        path: "SciptShowPage",
-        query: { id: item.id }
-      });
     },
-    GetScripData(page, count) {
-      if (this.$route.query.page != page.toString()) {
-        this.$router.push({
-          query: { ...this.$route.query, page: page }
-        });
-      }
-
-      this.get("/scripts?page=" + page + "&count=" + count)
-        .then(response => {
+    ScriptList() {
+      return this.$store.state.scripts.scripts;
+    },
+    totalnums() {
+      return this.$store.state.scripts.total;
+    },
+  },
+  preFetch({
+    store,
+    currentRoute,
+    previousRoute,
+    redirect,
+    ssrContext,
+    urlPath,
+    publicPath,
+  }) {
+    return store.dispatch(
+      "scripts/fetchScriptList",
+      "/scripts?page=" +
+        (currentRoute.query.page || 1) +
+        "&count=20&keyword=" +
+        encodeURIComponent(currentRoute.query.keyword || "")
+    );
+  },
+  watch: {
+    $route(currentRoute, from) {
+      this.page = parseInt(this.$route.query.page);
+      this.get(
+        "/scripts?page=" +
+          (currentRoute.query.page || 1) +
+          "&count=20&keyword=" +
+          encodeURIComponent(currentRoute.query.keyword || "")
+      )
+        .then((response) => {
           if (response.data.code == 0) {
-            this.ScriptList = response.data.list;
-            this.totalnums = response.data.total;
-            scrollTo(0, 0);
+            this.$store.commit("scripts/updateScripts", response.data);
+          } else {
+            this.$store.commit("scripts/updateScripts", { list: [], total: 0 });
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch((error) => {
+          this.$store.commit("scripts/updateScripts", { list: [], total: 0 });
         });
     },
-    UpdatePageFunc(page) {
-      this.GetScripData(page, this.count);
-    }
+  },
+  methods: {
+    tolink(page) {
+      let ret = "/search?page=" + (page || 1);
+      if (this.$route.query.keyword) {
+        ret += "&keyword=" + encodeURIComponent(this.$route.query.keyword);
+      }
+      return ret;
+    },
   },
   data() {
     return {
-      count: 10, //每次获取条数
-      SearchText: "",
-      ScriptList: [],
-      totalnums: 0, //总条数
-      page: 1
+      count: 20, //每次获取条数
+      keyword: "",
+      page: 1,
     };
   },
   created() {
-    this.SearchText = decodeURIComponent(this.$route.query.SearchText);
+    this.keyword = this.$route.query.keyword;
     this.page = parseInt(this.$route.query.page);
-    this.count = parseInt(this.$route.query.count);
     if (isNaN(this.page)) {
       this.page = 1;
     }
-    if (isNaN(this.count)) {
-      this.count = 10;
-    }
-    if (this.SearchText === "" || this.SearchText === undefined) {
-      this.$router.push({ path: "/" });
-      return;
-    }
-    this.GetScripData(this.page, this.count);
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -238,7 +260,7 @@ $seprewidth: 250px;
       justify-content: space-between;
     }
     .Item-left-box {
-        @extend .item-child-common;
+      @extend .item-child-common;
       padding-left: 17%;
     }
     .Item-right-box {
@@ -251,35 +273,33 @@ $seprewidth: 250px;
   .Deatil {
     .Item-left-box {
       padding-left: 15% !important;
-
     }
   }
-  .main-scrip-page{
+  .main-scrip-page {
     width: 100% !important;
   }
-  .show-mess-page{
+  .show-mess-page {
     width: 100% !important;
     padding-left: 0px !important;
     margin-top: 20px;
   }
 }
 @media screen and (max-width: 630px) {
-    .Deatil {
+  .Deatil {
     .item {
       width: 100%;
       display: flex;
       flex-wrap: wrap;
     }
-    .Item-left-box  {
+    .Item-left-box {
       width: 100% !important;
-      padding-left:33% !important;
+      padding-left: 33% !important;
     }
     .Item-right-box {
       width: 100% !important;
       padding-left: 33% !important;
     }
   }
-
 }
 .pagination-input {
   max-width: 50px;

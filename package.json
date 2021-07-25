@@ -1,8 +1,8 @@
 {
-  "name": "greasyfork",
-  "version": "0.0.1",
-  "description": "A Quasar Framework app",
-  "productName": "Quasar App",
+  "name": "scriptsite",
+  "version": "0.1.0",
+  "description": "脚本猫脚本站 - 可以在这里发布你的用户脚本",
+  "productName": "ScriptCat",
   "author": "4548212@qq.com",
   "private": true,
   "scripts": {

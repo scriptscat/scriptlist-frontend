@@ -5,9 +5,9 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue') },
-      { path: 'Search', component: () => import('pages/Search.vue') },
-      { path: 'SciptShowPage', component: () => import('pages/SciptShowPage.vue') }
-    ]
+      { path: 'search', component: () => import('pages/Search.vue') },
+      { path: 'script-show-page', component: () => import('pages/SciptShowPage.vue') }
+    ],
   },
 
   // Always leave this as last one,
