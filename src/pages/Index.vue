@@ -9,6 +9,7 @@
           style="max-width: 800px; width: 100%; padding: 0 15px"
           outlined
           dense
+          v-on:keyup.enter="ClickSearch"
           v-model="SearchText"
           placeholder="请输入查询的关键词"
         >

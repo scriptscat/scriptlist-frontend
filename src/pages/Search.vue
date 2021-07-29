@@ -17,10 +17,10 @@
               style="float: right; text-decoration: none"
               :href="
                 '/scripts/' +
-                encodeURIComponent(item.name) +
-                '/source/' +
-                +item.id +
-                '.user.js'
+                  encodeURIComponent(item.name) +
+                  '/source' +
+                  +item.id +
+                  '.user.js'
               "
             >
               <q-btn
@@ -137,13 +137,13 @@ import TablePagination from "components/TablePagination.vue";
 
 export default {
   meta: {
-    title: "ScriptCat - 用户脚本列表",
+    title: "ScriptCat - 用户脚本列表"
   },
   components: {
-    TablePagination,
+    TablePagination
   },
   computed: {
-    maxpage: function () {
+    maxpage: function() {
       let max = Math.ceil(this.totalnums / this.count);
       if (max < 1) {
         max = 1;
@@ -155,7 +155,7 @@ export default {
     },
     totalnums() {
       return this.$store.state.scripts.total;
-    },
+    }
   },
   preFetch({
     store,
@@ -164,7 +164,7 @@ export default {
     redirect,
     ssrContext,
     urlPath,
-    publicPath,
+    publicPath
   }) {
     return store.dispatch(
       "scripts/fetchScriptList",
@@ -183,17 +183,17 @@ export default {
           "&count=20&keyword=" +
           encodeURIComponent(currentRoute.query.keyword || "")
       )
-        .then((response) => {
+        .then(response => {
           if (response.data.code == 0) {
             this.$store.commit("scripts/updateScripts", response.data);
           } else {
             this.$store.commit("scripts/updateScripts", { list: [], total: 0 });
           }
         })
-        .catch((error) => {
+        .catch(error => {
           this.$store.commit("scripts/updateScripts", { list: [], total: 0 });
         });
-    },
+    }
   },
   methods: {
     tolink(page) {
@@ -202,13 +202,13 @@ export default {
         ret += "&keyword=" + encodeURIComponent(this.$route.query.keyword);
       }
       return ret;
-    },
+    }
   },
   data() {
     return {
       count: 20, //每次获取条数
       keyword: "",
-      page: 1,
+      page: 1
     };
   },
   created() {
@@ -217,30 +217,14 @@ export default {
     if (isNaN(this.page)) {
       this.page = 1;
     }
-  },
+  }
 };
 </script>
 <style lang="scss" scoped>
 $seprewidth: 250px;
-.item-child-common {
-  > div:first-child {
-    margin-right: 5px;
-    width: 60px;
-    text-align: right;
-  }
-  width: 50%;
-  display: flex;
-}
 
 .Script-Block {
   padding: 16px;
-  .Author {
-    color: #1976d2;
-    text-decoration: underline;
-  }
-  .Author:hover {
-    cursor: pointer;
-  }
   .Head {
     font-size: 18px;
     text-decoration: underline;
@@ -253,28 +237,9 @@ $seprewidth: 250px;
       margin: 7.5px 0;
     }
   }
-  .Deatil {
-    .item {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-    }
-    .Item-left-box {
-      @extend .item-child-common;
-      padding-left: 17%;
-    }
-    .Item-right-box {
-      @extend .item-child-common;
-    }
-  }
 }
 
 @media screen and (max-width: 800px) {
-  .Deatil {
-    .Item-left-box {
-      padding-left: 15% !important;
-    }
-  }
   .main-scrip-page {
     width: 100% !important;
   }
@@ -282,23 +247,6 @@ $seprewidth: 250px;
     width: 100% !important;
     padding-left: 0px !important;
     margin-top: 20px;
-  }
-}
-@media screen and (max-width: 630px) {
-  .Deatil {
-    .item {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-    }
-    .Item-left-box {
-      width: 100% !important;
-      padding-left: 33% !important;
-    }
-    .Item-right-box {
-      width: 100% !important;
-      padding-left: 33% !important;
-    }
   }
 }
 .pagination-input {

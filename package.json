@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@toast-ui/editor": "^2.5.3",
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
     "dotenv": "^10.0.0",

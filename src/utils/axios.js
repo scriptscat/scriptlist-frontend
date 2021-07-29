@@ -6,6 +6,7 @@ const baseURL =
     ? process.env.VUE_APP_HTTP_HOST
     : "/dev";
 const service = axios.create({
+  withCredentials:true,
   baseURL: baseURL,
   timeout: 30000
 });
