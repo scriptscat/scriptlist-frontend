@@ -32,3 +32,17 @@ export async function post(url, data, config) {
     return service.post(url, qs.stringify(data));
   }
 }
+
+/**
+ * POST 方法
+ * url 提交地址
+ * query 提交參數
+ */
+ export async function put(url, data, config) {
+  if (config) {
+    return service.put(url, data, config);
+  } else {
+    return service.put(url, qs.stringify(data));
+  }
+}
+

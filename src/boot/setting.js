@@ -1,7 +1,8 @@
 import Vue from "vue";
-import { get, post } from "../utils/axios"; // 二次封裝axios.js
+import { get, post,put } from "../utils/axios"; // 二次封裝axios.js
 Vue.prototype.get = get; // 設置全局GET方法
 Vue.prototype.post = post; // 設置全局POST提交方法
+Vue.prototype.post = put; // 設置全局POST提交方法
 Vue.filter("formatDate", function(value) {
   if(value===undefined)
   {
