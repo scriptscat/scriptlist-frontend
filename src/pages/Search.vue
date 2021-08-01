@@ -12,15 +12,25 @@
               <a :href="'/script-show-page?id=' + item.id" target="_black">{{
                 item.name
               }}</a>
+              <q-avatar
+                v-if="
+                  item.latest.meta_json.background ||
+                  item.latest.meta_json.crontab
+                "
+                size="16px"
+                style="margin-left:4px"
+              >
+                <img src="/icons/favicon-32x32.png" />
+              </q-avatar>
             </div>
             <a
               style="float: right; text-decoration: none"
               :href="
                 '/scripts/' +
-                  encodeURIComponent(item.name) +
-                  '/source' +
-                  +item.id +
-                  '.user.js'
+                encodeURIComponent(item.name) +
+                '/source' +
+                +item.id +
+                '.user.js'
               "
             >
               <q-btn
@@ -48,7 +58,7 @@
                   <div>得分</div>
                   <div class="flex items-center justify-center">
                     <q-rating
-                      v-model="item.score"
+                      :value="item.score / 10"
                       disable
                       size="1em"
                       :max="5"
@@ -137,13 +147,13 @@ import TablePagination from "components/TablePagination.vue";
 
 export default {
   meta: {
-    title: "ScriptCat - 用户脚本列表"
+    title: "ScriptCat - 用户脚本列表",
   },
   components: {
-    TablePagination
+    TablePagination,
   },
   computed: {
-    maxpage: function() {
+    maxpage: function () {
       let max = Math.ceil(this.totalnums / this.count);
       if (max < 1) {
         max = 1;
@@ -155,7 +165,7 @@ export default {
     },
     totalnums() {
       return this.$store.state.scripts.total;
-    }
+    },
   },
   preFetch({
     store,
@@ -164,7 +174,7 @@ export default {
     redirect,
     ssrContext,
     urlPath,
-    publicPath
+    publicPath,
   }) {
     return store.dispatch(
       "scripts/fetchScriptList",
@@ -183,17 +193,17 @@ export default {
           "&count=20&keyword=" +
           encodeURIComponent(currentRoute.query.keyword || "")
       )
-        .then(response => {
+        .then((response) => {
           if (response.data.code == 0) {
             this.$store.commit("scripts/updateScripts", response.data);
           } else {
             this.$store.commit("scripts/updateScripts", { list: [], total: 0 });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("scripts/updateScripts", { list: [], total: 0 });
         });
-    }
+    },
   },
   methods: {
     tolink(page) {
@@ -202,13 +212,13 @@ export default {
         ret += "&keyword=" + encodeURIComponent(this.$route.query.keyword);
       }
       return ret;
-    }
+    },
   },
   data() {
     return {
       count: 20, //每次获取条数
       keyword: "",
-      page: 1
+      page: 1,
     };
   },
   created() {
@@ -217,7 +227,7 @@ export default {
     if (isNaN(this.page)) {
       this.page = 1;
     }
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

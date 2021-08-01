@@ -25,7 +25,7 @@
         <q-btn
           type="a"
           style="margin:5px 10px 5px 0px;"
-          href="https://bbs.tampermonkey.net.cn/"
+          href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
           target="_blank"
           outline
           color="primary"

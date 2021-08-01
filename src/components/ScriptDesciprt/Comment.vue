@@ -108,7 +108,7 @@ export default {
   data() {
     return {
       mypostform: {
-        ratingpost: 3,
+        ratingpost: 0,
         text: ""
       },
       userscorelist: []
@@ -180,8 +180,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.my-comment {
-  > div {
-  }
-}
+
 </style>
