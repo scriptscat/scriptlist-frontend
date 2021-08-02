@@ -184,7 +184,7 @@ export default {
         "&count=20&keyword=" +
         encodeURIComponent(currentRoute.query.keyword || "") +
         "&sort=" +
-        (currentRoute.query.sort || "") +
+        (currentRoute.query.sort || "today_download") +
         "&category=" +
         (currentRoute.query.category || "") +
         "&domain=" +
@@ -200,7 +200,7 @@ export default {
           "&count=20&keyword=" +
           encodeURIComponent(currentRoute.query.keyword || "") +
           "&sort=" +
-          (currentRoute.query.sort || "") +
+          (currentRoute.query.sort || "today_download") +
           "&category=" +
           (currentRoute.query.category || "") +
           "&domain=" +
