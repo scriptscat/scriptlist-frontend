@@ -138,7 +138,8 @@
 <script>
 export default {
   meta: {
-    title: "ScriptCat - 分享你的油猴用户脚本",
+    title: "ScriptCat - 分享你的用户脚本",
+    titleTemplate: (title) => `${title}`,
   },
   data() {
     return {

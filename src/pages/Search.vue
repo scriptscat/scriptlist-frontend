@@ -9,7 +9,7 @@
         >
           <div class="Head">
             <div>
-              <a :href="'/script-show-page?id=' + item.id" target="_black">{{
+              <a :href="'/script-show-page/' + item.id" target="_black">{{
                 item.name
               }}</a>
               <q-avatar
@@ -18,28 +18,28 @@
                   item.latest.meta_json.crontab
                 "
                 size="16px"
-                style="margin-left:4px"
+                style="margin-left: 4px"
               >
                 <img src="/icons/favicon-32x32.png" />
               </q-avatar>
+              <a
+                style="float: right; text-decoration: none"
+                :href="
+                  '/scripts/' +
+                  encodeURIComponent(item.name) +
+                  '/source/' +
+                  +item.id +
+                  '.user.js'
+                "
+              >
+                <q-btn
+                  color="primary"
+                  size="sm"
+                  icon="file_download"
+                  label="立刻安装"
+                />
+              </a>
             </div>
-            <a
-              style="float: right; text-decoration: none"
-              :href="
-                '/scripts/' +
-                encodeURIComponent(item.name) +
-                '/source' +
-                +item.id +
-                '.user.js'
-              "
-            >
-              <q-btn
-                color="primary"
-                size="sm"
-                icon="file_download"
-                label="立刻安装"
-              />
-            </a>
           </div>
           <div class="Context">
             <div class="text">
@@ -64,6 +64,7 @@
                       :max="5"
                       color="primary"
                     />
+                    <span>({{ item.score_num }})</span>
                   </div>
                 </div>
               </div>
@@ -147,7 +148,7 @@ import TablePagination from "components/TablePagination.vue";
 
 export default {
   meta: {
-    title: "ScriptCat - 用户脚本列表",
+    title: "用户脚本列表",
   },
   components: {
     TablePagination,
@@ -181,7 +182,13 @@ export default {
       "/scripts?page=" +
         (currentRoute.query.page || 1) +
         "&count=20&keyword=" +
-        encodeURIComponent(currentRoute.query.keyword || "")
+        encodeURIComponent(currentRoute.query.keyword || "") +
+        "&sort=" +
+        (currentRoute.query.sort || "") +
+        "&category=" +
+        (currentRoute.query.category || "") +
+        "&domain=" +
+        (currentRoute.query.domain || "")
     );
   },
   watch: {
@@ -191,7 +198,13 @@ export default {
         "/scripts?page=" +
           (currentRoute.query.page || 1) +
           "&count=20&keyword=" +
-          encodeURIComponent(currentRoute.query.keyword || "")
+          encodeURIComponent(currentRoute.query.keyword || "") +
+          "&sort=" +
+          (currentRoute.query.sort || "") +
+          "&category=" +
+          (currentRoute.query.category || "") +
+          "&domain=" +
+          (currentRoute.query.domain || "")
       )
         .then((response) => {
           if (response.data.code == 0) {
@@ -210,6 +223,15 @@ export default {
       let ret = "/search?page=" + (page || 1);
       if (this.$route.query.keyword) {
         ret += "&keyword=" + encodeURIComponent(this.$route.query.keyword);
+      }
+      if (this.$route.query.sort) {
+        ret += "&sort=" + encodeURIComponent(this.$route.query.sort);
+      }
+      if (this.$route.query.category) {
+        ret += "&category=" + encodeURIComponent(this.$route.query.category);
+      }
+      if (this.$route.query.domain) {
+        ret += "&domain=" + encodeURIComponent(this.$route.query.domain);
       }
       return ret;
     },

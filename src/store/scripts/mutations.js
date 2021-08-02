@@ -5,3 +5,7 @@ export function updateScripts(state, { list, total }) {
     state.total = total;
 }
 
+
+export function updateScriptInfo(state, script) {
+    state.script = script;
+}

@@ -9,3 +9,15 @@ export function fetchScriptList({ commit }, url) {
       commit("updateScripts", { list: [], total: 0 });
     });
 }
+
+export function fetchScriptInfo({ commit }, id) {
+  return get("/scripts/" + id).then(response => {
+    if (response.data.code === 0) {
+      commit("updateScriptInfo", response.data.data);
+    } else {
+      commit("updateScriptInfo", {});
+    }
+  }).catch(error => {
+    commit("updateScriptInfo", {});
+  });
+}
