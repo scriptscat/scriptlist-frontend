@@ -39,7 +39,7 @@
           border-radius: 10px;
         "
       >
-        <div class="intro-page-wrap">
+        <div class="intro-page-wrap description">
           <h6>油猴脚本有什么用？</h6>
           <p>
             他可以拓展网页功能，去除广告，增加易用性等等，提高你网上冲浪的体验。
@@ -132,6 +132,9 @@
 <style>
 .list a {
   margin-left: 4px;
+}
+.description p,.description li {
+  margin-left: 20px !important;
 }
 </style>
 

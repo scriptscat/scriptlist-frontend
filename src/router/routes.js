@@ -10,6 +10,7 @@ const routes = [
         path: 'script-show-page', component: () => import('pages/SciptShowPage.vue'),
         children: [
           { path: "/script-show-page/:id", name: "showPage", component: () => import('components/ScriptDescription/MainMess.vue') },
+          { path: "/script-show-page/:id/code", name: "showCode", component: () => import('components/ScriptDescription/CodeShow.vue') },
           { path: "/script-show-page/:id/history", name: "showHistory", component: () => import('components/ScriptDescription/History.vue') },
           { path: "/script-show-page/:id/comment", name: "showComment", component: () => import('components/ScriptDescription/Comment.vue') },
         ]

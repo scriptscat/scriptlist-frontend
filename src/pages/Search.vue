@@ -14,8 +14,8 @@
               }}</a>
               <q-avatar
                 v-if="
-                  item.latest.meta_json.background ||
-                  item.latest.meta_json.crontab
+                  item.script.meta_json.background ||
+                  item.script.meta_json.crontab
                 "
                 size="16px"
                 style="margin-left: 4px"

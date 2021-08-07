@@ -45,7 +45,7 @@
             <div class="Item-right-box">
               <div>版本</div>
               <div class="flex items-center justify-center">
-                {{ this.author.latest.version }}
+                {{ this.author.script.version }}
               </div>
             </div>
           </div>

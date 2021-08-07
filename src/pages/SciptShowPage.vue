@@ -15,7 +15,11 @@
           :name="0"
           label="脚本"
         />
-        <q-tab :name="1" label="代码" />
+        <q-route-tab
+          :to="{ name: 'showCode', params: $route.params }"
+          :name="1"
+          label="代码"
+        />
         <q-route-tab
           :to="{ name: 'showHistory', params: $route.params }"
           :name="2"
