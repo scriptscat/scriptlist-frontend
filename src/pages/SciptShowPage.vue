@@ -53,6 +53,7 @@ export default {
   methods: {},
   created() {
     this.id = parseInt(this.$route.params.id);
+
     if (!this.id) {
       this.$q.notify({
         position: "top-right",

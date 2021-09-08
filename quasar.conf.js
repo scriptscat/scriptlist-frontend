@@ -6,7 +6,6 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 const envparser = require('./src/config/envparser.js')
-
 module.exports = function (ctx) {
   return {
     // https://quasar.dev/quasar-cli/supporting-ts

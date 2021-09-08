@@ -6,7 +6,7 @@
           ><a href="/">ScriptCat</a></q-toolbar-title
         >
         <q-tabs
-          class="links"
+          class="links mobile-hide"
           align="left"
           indicator-color="transparent"
           active-color="white"
@@ -20,6 +20,10 @@
           <q-tab
             label="脚本列表"
             onclick="window.open('/search?page=1','_self')"
+          ></q-tab>
+                    <q-tab
+            label="脚本管理"
+            onclick="window.open('/managescript','_self')"
           >
           </q-tab>
           <q-tab
@@ -30,16 +34,36 @@
           </q-tab>
           <q-tab v-else label="登录" @click="gotoLogin"></q-tab>
         </q-tabs>
+        <q-btn
+          class="btn-control"
+          dense
+          flat
+          round
+          icon="menu"
+          @click="right = !right"
+        />
       </q-toolbar>
     </q-header>
-
+    <q-drawer  v-model="right" side="right" bordered>
+      <div v-for="(item, index) in itemlist" :key="index">
+        <q-item @click="JumpToPage(item)" clickable v-ripple>
+          <q-item-section avatar>
+            <q-icon :name="item.icon" />
+          </q-item-section>
+          <q-item-section>
+            {{ item.name==="登陆"?islogin===true?user.username:item.name:item.name }}
+          </q-item-section>
+        </q-item>
+        <q-separator v-if="item.sep" />
+      </div>
+    </q-drawer>
     <q-page-container>
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
-<style >
+<style>
 .links a {
   color: #fff;
   text-decoration: none;
@@ -54,14 +78,14 @@ import { Cookies } from "quasar";
 
 export default {
   meta: {
-    titleTemplate: (title) => `${title} - ScriptCat`,
+    titleTemplate: title => `${title} - ScriptCat`,
     meta: {
       description: {
         name: "description",
-        content: "脚本猫脚本站,在这里你可以与全世界分享你的用户脚本",
+        content: "脚本猫脚本站,在这里你可以与全世界分享你的用户脚本"
       },
-      keywords: { name: "keywords", content: "ScriptCat UserScript 用户脚本" },
-    },
+      keywords: { name: "keywords", content: "ScriptCat UserScript 用户脚本" }
+    }
   },
   preFetch({
     store,
@@ -70,7 +94,7 @@ export default {
     redirect,
     ssrContext,
     urlPath,
-    publicPath,
+    publicPath
   }) {
     const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     return store.dispatch("user/loginUserInfo", cookies, ssrContext.res);
@@ -81,14 +105,67 @@ export default {
     },
     user() {
       return this.$store.state.user.user;
-    },
+    }
   },
   data() {
     return {
-      tab: "",
+      itemlist: [
+        {
+          name: "登陆",
+          icon: "account_circle",
+          sep: true
+        },
+        {
+          name: "首页",
+          icon: "home",
+
+          sep: false
+        },
+        {
+          name: "油猴论坛",
+          icon: "language",
+                
+          sep: false
+        },
+        {
+          name: "脚本列表",
+          icon: "description",
+                
+          sep: false
+        }
+      ],
+      right: false,
+      tab: ""
     };
   },
   methods: {
+    JumpToPage(item){
+      if(item.name==='登陆'){
+        this.tryloginmess()
+        return;
+      }
+            if(item.name==='首页'){
+        window.open('/','_self')
+        return;
+      }
+            if(item.name==='油猴论坛'){
+        window.open('https://bbs.tampermonkey.net.cn/','_blank')
+        return;
+      }
+            if(item.name==='脚本列表'){
+        window.open('/search?page=1','_self')
+        return;
+      }
+
+    },
+    tryloginmess(){
+      debugger;
+      if(this.islogin){
+        window.open('/','_self')
+      }else{
+        this.gotoLogin()
+      }
+    },
     BackRootPage() {
       this.$router.push({ path: "/" });
     },
@@ -98,7 +175,19 @@ export default {
           encodeURIComponent(this.$route.path),
         "_self"
       );
-    },
-  },
+    }
+  }
 };
 </script>
+<style lang="scss" scoped>
+@media screen and (min-width: 554px) {
+  .btn-control {
+    display: none;
+  }
+}
+@media screen and (max-width: 554px) {
+  .mobile-hide {
+    display: none;
+  }
+}
+</style>

@@ -49,36 +49,39 @@
         <div>
           <span style="font-size: 20px; margin: 15px 0">用户评价：</span>
         </div>
-        <q-separator style="margin: 5px 0 20px 0" />
-        <div v-for="(item, index) in userscorelist" :key="index">
-          <div style="margin-bottom: 15px" class="flex">
-            <q-avatar size="48px">
-              <img :src="item.avatar" />
-            </q-avatar>
-            <div style="flex: 1 1 0; padding-left: 15px">
-              <div style="margin-bottom: 3px" class="flex items-center">
-                <span style="color: #1a73e8; min-width: 60px">{{
-                  item.username
-                }}</span>
-                <span style="padding-left: 15px">{{ item.createtime }}</span>
+        <q-separator style="margin:5px 0 20px 0" />
+        <div>
+          <div v-for="(item, index) in userscorelist" :key="index">
+            <div style="margin-bottom:15px;" class="flex">
+              <q-avatar size="48px">
+                <img :src="item.avatar" />
+              </q-avatar>
+              <div style="flex:1 1 0;padding-left:15px;">
+                <div style="margin-bottom:3px;" class="flex items-center">
+                  <span style="color:#1a73e8;min-width:60px;">{{
+                    item.username
+                  }}</span>
+                  <span style="padding-left:15px">{{ item.createtime }}</span>
 
-                <q-rating
-                  style="padding-left: 5px"
-                  readonly
-                  :value="item.score"
-                  size="16px"
-                  :max="5"
-                  color="primary"
-                />
-              </div>
-              <div>
+                  <q-rating
+                    style="padding-left:5px;"
+                    readonly
+                    :value="item.score"
+                    size="16px"
+                    :max="5"
+                    color="primary"
+                  />
+                </div>
                 <div>
-                  {{ item.message }}
+                  <div>
+                    {{ item.message }}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <div></div>
       </div>
     </div>
   </div>
@@ -120,7 +123,7 @@ export default {
       })
         .then((response) => {
           console.log(response, "response");
-          if (response.data.msg === "ok") {
+          if (response.data.code === 0) {
             this.$q.notify({
               position: "top-right",
               message: "提交成功！",
@@ -140,7 +143,7 @@ export default {
       this.get("/scripts/" + this.id + "/score")
         .then((response) => {
           console.log(response, "response");
-          if (response.data.msg === "ok") {
+          if (response.data.code === 0) {
             for (let index = 0; index < response.data.list.length; index++) {
               if (response.data.list[index].avatar === "") {
                 response.data.list[index].avatar =
@@ -159,8 +162,8 @@ export default {
     },
     GetMyScore() {
       this.get("/scripts/" + this.id + "/score/self")
-        .then((response) => {
-          if (response.data.msg === "ok") {
+        .then(response => {
+          if (response.data.code === 0) {
             this.mypostform.ratingpost = response.data.data.score / 10;
             this.mypostform.text = response.data.data.message;
           }

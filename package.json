@@ -11,9 +11,14 @@
   "dependencies": {
     "@quasar/extras": "^1.0.0",
     "@toast-ui/editor": "^2.5.3",
+    "ace-builds": "^1.4.12",
+    "ace-diff": "^3.0.3",
     "axios": "^0.18.1",
+    "codemirror": "^5.62.3",
     "core-js": "^3.6.5",
+    "diff": "^5.0.0",
     "dotenv": "^10.0.0",
+    "git-diff": "^2.0.6",
     "quasar": "^1.0.0",
     "save-dev": "0.0.1-security",
     "vue-i18n": "^8.0.0"

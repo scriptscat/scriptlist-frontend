@@ -12,10 +12,10 @@
           type="a"
           :href="
             'http://scriptcat.org/scripts/' +
-            this.author.name +
-            '/source/' +
-            this.id +
-            '.user.js'
+              this.author.name +
+              '/source/' +
+              this.id +
+              '.user.js'
           "
           style="margin: 5px 10px 5px 0px"
           outline
@@ -93,8 +93,8 @@ export default {
   meta() {
     return {
       title: this.author.name,
-      meta:{
-           description: { name: 'description', content: this.author.description },
+      meta: {
+        description: { name: "description", content: this.author.description }
       }
     };
   },
@@ -105,7 +105,7 @@ export default {
     redirect,
     ssrContext,
     urlPath,
-    publicPath,
+    publicPath
   }) {
     return store.dispatch("scripts/fetchScriptInfo", currentRoute.params.id);
   },
@@ -115,16 +115,33 @@ export default {
     },
     author() {
       return this.$store.state.scripts.script;
-    },
+    }
   },
   data() {
     return {
-      viewr: null,
+      viewr: null
     };
   },
   methods: {
     JumpToInstall() {},
     JumpToLearn() {},
+    GetScriptMess() {
+      this.get("/scripts/" + this.id)
+        .then(response => {
+          console.log(response, "response");
+          if (response.data.code === 0) {
+            this.author = response.data.data;
+            if (process.env.CLIENT) {
+              this.viewr.setMarkdown(this.author.content);
+            }
+          }
+        })
+        .catch(error => {});
+    }
+  },
+  destroyed: function() {
+    //this.editor.destroy();
+    this.viewr.destroy();
   },
   created() {
     if (process.env.CLIENT) {
@@ -132,12 +149,12 @@ export default {
         require("@toast-ui/editor/dist/toastui-editor-viewer.css");
         const Viewer = require("@toast-ui/editor/dist/toastui-editor-viewer");
         this.viewr = new Viewer({
-          el: document.querySelector("#editor"),
+          el: document.querySelector("#editor")
         });
         this.viewr.setMarkdown(this.author.content);
       });
     }
-  },
+  }
 };
 </script>
 
