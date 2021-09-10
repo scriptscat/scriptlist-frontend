@@ -171,7 +171,7 @@
       </q-card>
       <q-card>
         <div class="bg-primary text-white" style="padding: 5px">
-          <div class="text-subtitle2">最新脚本</div>
+          <div class="text-subtitle2">最近更新</div>
         </div>
 
         <div style="padding:10px 10px;">
