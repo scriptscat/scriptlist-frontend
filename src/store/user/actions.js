@@ -1,12 +1,12 @@
 import { get } from "src/utils/axios";
 
 export function loginUserInfo({ commit }, cookie, resp) {
-    if (!cookie.get('auth')) {
+    if (!cookie.get('token')) {
         return;
     }
     return get("/user/info", {
         headers: {
-            cookie: "auth=" + cookie.get('auth')
+            cookie: "token=" + cookie.get('token')
         }
     }).then(response => {
         if (response.headers['set-cookie']) {
