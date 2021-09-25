@@ -199,8 +199,7 @@ export default {
   methods: {
     JumpBtnToTarget(item){
             this.$router.push({
-        path: item.href,
-        query: { keyword: this.SearchText, page: 1 },
+        path: item.href
       });
     },
     tolink(page) {

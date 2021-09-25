@@ -7,7 +7,7 @@ const routes = [
       { path: '', component: () => import('pages/Index.vue') },
       { path: 'search', component: () => import('pages/Search.vue') },
       { path: 'managescript', component: () => import('pages/ManageScript.vue') },
-      { path: 'submitscript', component: () => import('pages/SubmitScript.vue') },
+      { path: 'submitscript', name: 'submitscript', component: () => import('pages/SubmitScript.vue') },
       {
         path: 'script-show-page', component: () => import('pages/SciptShowPage.vue'),
         children: [
