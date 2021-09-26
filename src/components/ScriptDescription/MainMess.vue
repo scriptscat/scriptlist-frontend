@@ -163,7 +163,12 @@ export default {
   },
   destroyed: function() {
     //this.editor.destroy();
+    if(this.viewr!==null){
+      console.log('this.viewr',this.viewr)
     this.viewr.destroy();
+    this.viewr=null;
+    }
+
   },
   created() {
     if (process.env.CLIENT) {

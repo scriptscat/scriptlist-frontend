@@ -34,7 +34,22 @@
               <div id="editor"></div>
             </div>
           </div>
-          <div>
+          <div v-if="this.id!==undefined">
+                        <div style="margin:10px 0">
+              <span class="title-wrap">更新记录</span>
+            </div>
+            <q-input
+              outlined
+              v-model="changelog"
+              label="更新记录"
+              style="margin-bottom:10px"
+              counter
+              maxlength="128"
+              dense
+            >
+            </q-input>
+          </div>
+          <div v-show="this.id===undefined">
             <div style="margin:10px 0">
               <span class="title-wrap">脚本类型</span>
             </div>
@@ -172,6 +187,12 @@
 
 <script>
 export default {
+    computed: {
+    islogin() {
+      return this.$store.state.user.islogin;
+    },
+
+  },
   data() {
     return {
       control: {
@@ -180,7 +201,8 @@ export default {
       loading: {
         publicloading: false
       },
-      id:undefined,
+      changelog:'',
+      id: undefined,
       editor: null,
       mkedit: null,
       scripttype: "1",
@@ -207,11 +229,21 @@ export default {
       this.dtseditor.toTextArea();
       this.dtseditor = null;
     }
-    this.mkedit.destroy();
+    this.mkedit.remove();
   },
   created() {
     if (process.env.CLIENT) {
-      this.id=this.$route.query.id
+      if(!this.islogin){
+
+                      this.$q.notify({
+                position: "top-right",
+                message: "当前尚未登陆！",
+                position: "top"
+              });
+              this.$router.push({ path: "/" });
+        return
+      }
+      this.id = this.$route.query.id;
       this.$nextTick(() => {
         this.codeMirror = require("codemirror");
         require("codemirror/lib/codemirror.css");
@@ -230,9 +262,9 @@ export default {
         //console.log(this.editor.getScrollInfo());
         let scollinfo = this.editor.getScrollInfo();
         this.editor.setSize(scollinfo.width, 400);
-              if(this.id!==undefined){
-        this.GetScriptData()
-      }
+        if (this.id !== undefined) {
+          this.GetScriptData();
+        }
       });
     }
     if (process.env.CLIENT) {
@@ -256,61 +288,64 @@ export default {
     }
   },
   methods: {
-    GetScriptData(){
-            this.get("/scripts/" + this.id+'/code')
+    GetScriptData() {
+      this.get("/scripts/" + this.id + "/code")
         .then(response => {
           console.log(response, "response");
           if (response.data.code === 0) {
-            
-            this.editor.setValue(response.data.data.script.code)
-            this.mkedit.setMarkdown(response.data.data.content)
-            this.dtseditor.setValue();
-            this.scripttype=response.data.data.type
-            this.publiccontrol=response.data.data.public
-            this.righttext=response.data.data.unwell
-            this.dtsname=response.data.data.name
-            this.dtsdescription=response.data.data.description
+            this.editor.setValue(response.data.data.script.code);
+            this.mkedit.setMarkdown(response.data.data.content);
+            //this.dtseditor.setValue();
+            this.scripttype = response.data.data.type + ""; //脚本类型
+            this.publiccontrol = response.data.data.public + ""; //公开/非公开
+            this.righttext = response.data.data.unwell;
+            this.dtsname = response.data.data.name;
+            let define = response.data.data.description;
+            if (define !== undefined) {
+              this.dtsvalue = define;
+              this.startdefined = true;
+              this.ChangeDtsEditor(true);
+            }
+            this.dtsdescription = response.data.data.description;
           }
         })
         .catch(error => {});
-
     },
-   uploadImage(blob) {
-      return new Promise((resolve,reject)=>{
-              console.log("blob", blob);
-      var formData = new FormData();
-      formData.append("image", blob);
-      formData.append("comment", "script");
+    uploadImage(blob) {
+      return new Promise((resolve, reject) => {
+        console.log("blob", blob);
+        var formData = new FormData();
+        formData.append("image", blob);
+        formData.append("comment", "script");
 
-      this.post("/resource/image", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      })
-        .then(response => {
-          if (response.data.code === 0) {
-            resolve( 'https://scriptcat.org/api/v1/resource/image/'+response.data.data.id)
-          }
-
+        this.post("/resource/image", formData, {
+          headers: { "Content-Type": "multipart/form-data" }
         })
-        .catch(error => {
-                    if (error.response.data.msg !== undefined) {
-            this.$q.notify({
-              position: "top-right",
-              message: error.response.data.msg,
-              position: "top"
-            });
-          } else {
-            this.$q.notify({
-              position: "top-right",
-              message: "系统错误！",
-              position: "top"
-            });
-          }
-          resolve('error')
-
-        });
-
-      })
-
+          .then(response => {
+            if (response.data.code === 0) {
+              resolve(
+                "https://scriptcat.org/api/v1/resource/image/" +
+                  response.data.data.id
+              );
+            }
+          })
+          .catch(error => {
+            if (error.response.data.msg !== undefined) {
+              this.$q.notify({
+                position: "top-right",
+                message: error.response.data.msg,
+                position: "top"
+              });
+            } else {
+              this.$q.notify({
+                position: "top-right",
+                message: "系统错误！",
+                position: "top"
+              });
+            }
+            resolve("error");
+          });
+      });
     },
     CloseThisPage() {
       window.location.pathname = "/script-show-page/" + this.publicid;
@@ -348,44 +383,85 @@ export default {
       if (this.scripttype === "3") {
         typetext = this.dtseditor.getValue();
       }
-      this.loading.publicloading = true;
+      if (this.id !== undefined) {
+        this.loading.publicloading = true;
 
-      this.post("/scripts", {
-        content: marktext,
-        code: codetext,
-        type: this.scripttype,
-        public: this.publiccontrol,
-        unwell: this.righttext,
-
-        definition: typetext,
-        name: this.dtsname,
-        description: this.dtsdescription
-      })
-        .then(response => {
-          this.loading.publicloading = false;
-          console.log(response, "response");
-          if (response.data.code === 0) {
-            this.publicid = response.data.data.id;
-            this.control.success = true;
-          }
+        this.put("/scripts/"+this.id+"/code", {
+          content: marktext,
+          code: codetext,
+          definition: typetext,
+          changelog:this.changelog,
+          public: this.publiccontrol,
+          unwell: this.righttext,
+          
+          name: this.dtsname,
+          description: this.dtsdescription
         })
-        .catch(error => {
-          this.loading.publicloading = false;
-          console.log("error", error);
-          if (error.response.data.msg !== undefined) {
-            this.$q.notify({
-              position: "top-right",
-              message: error.response.data.msg,
-              position: "top"
-            });
-          } else {
-            this.$q.notify({
-              position: "top-right",
-              message: "系统错误！",
-              position: "top"
-            });
-          }
-        });
+          .then(response => {
+            this.loading.publicloading = false;
+            console.log(response, "response");
+            if (response.data.code === 0) {
+              this.publicid = this.id
+              this.control.success = true;
+            }
+          })
+          .catch(error => {
+            this.loading.publicloading = false;
+            console.log("error", error);
+            if (error.response.data.msg !== undefined) {
+              this.$q.notify({
+                position: "top-right",
+                message: error.response.data.msg,
+                position: "top"
+              });
+            } else {
+              this.$q.notify({
+                position: "top-right",
+                message: "系统错误！",
+                position: "top"
+              });
+            }
+          });
+      } else {
+        this.loading.publicloading = true;
+
+        this.post("/scripts", {
+          content: marktext,
+          code: codetext,
+          type: this.scripttype,
+          public: this.publiccontrol,
+          unwell: this.righttext,
+
+          definition: typetext,
+          name: this.dtsname,
+          description: this.dtsdescription
+        })
+          .then(response => {
+            this.loading.publicloading = false;
+            console.log(response, "response");
+            if (response.data.code === 0) {
+              this.publicid = response.data.data.id;
+              this.control.success = true;
+            }
+          })
+          .catch(error => {
+            this.loading.publicloading = false;
+            console.log("error", error);
+            if (error.response.data.msg !== undefined) {
+              this.$q.notify({
+                position: "top-right",
+                message: error.response.data.msg,
+                position: "top"
+              });
+            } else {
+              this.$q.notify({
+                position: "top-right",
+                message: "系统错误！",
+                position: "top"
+              });
+            }
+          });
+      }
     },
     uploadadded(e) {
       let files = e.target.files;
