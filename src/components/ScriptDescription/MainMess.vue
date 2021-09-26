@@ -165,7 +165,7 @@ export default {
     //this.editor.destroy();
     if(this.viewr!==null){
       console.log('this.viewr',this.viewr)
-    this.viewr.destroy();
+    this.viewr.remove();
     this.viewr=null;
     }
 
