@@ -29,7 +29,7 @@
                 :href="
                   '/scripts/' +
                     encodeURIComponent(item.name) +
-                    '/source' +
+                    '/source/' +
                     +item.id +
                     '.user.js'
                 "
