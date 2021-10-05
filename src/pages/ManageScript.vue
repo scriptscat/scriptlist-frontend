@@ -16,7 +16,7 @@
               @click="JumpBtnToTarget(item)"
               style="margin-top:8px;margin-left:23px;"
             >
-              <q-btn outline color="primary" :label="item.name" />
+              <q-btn v-if="item.show===1" outline color="primary" :label="item.name" />
             </div>
           </div>
           <div
@@ -158,7 +158,8 @@ export default {
         {
           id: 0,
           name: "发布你编写的脚本",
-          href: "submitscript"
+          href: "submitscript",
+          show:1,
         },
         {
           id: 1,
@@ -178,7 +179,8 @@ export default {
         {
           id: 4,
           name: "设置 webhook",
-          href: ""
+          href: "webhookpage",
+                    show:1,
         },
         {
           id: 5,

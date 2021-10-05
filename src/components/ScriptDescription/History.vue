@@ -51,7 +51,11 @@ export default {
   },
   //离开当前页面后执行
   destroyed: function() {
-    this.differ.destroy();
+
+        this.editor.setValue("");
+    this.editor.clearHistory();
+    this.editor.toTextArea();
+    this.editor=null;
   },
   methods: {
     ToGetScriptDiff() {

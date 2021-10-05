@@ -31,6 +31,24 @@
           label="评论"
         />
         <q-tab :name="4" label="统计" />
+                <q-route-tab
+          :to="{ name: 'updateScript', query: {id} }"
+          :name="5"
+          v-if="isuserisauthor"
+          label="更新脚本"
+        />
+                <q-route-tab
+          :to="{ name: 'deleteScript',query: {id} }"
+          :name="6"
+          v-if="isuserisauthor"
+          label="删除脚本"
+        />
+                        <q-route-tab
+          :to="{ name: 'manageScript', query: {id} }"
+          :name="7"
+          v-if="isuserisauthor"
+          label="管理"
+        />
       </q-tabs>
 
       <div style="padding: 8px">
@@ -44,6 +62,12 @@
 
 <script>
 export default {
+  computed:{
+        isuserisauthor(){
+          debugger;
+      return this.$store.state.scripts.script.uid===this.$store.state.user.user.uid
+    }
+  },
   data() {
     return {
       id: null,
