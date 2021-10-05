@@ -30,6 +30,7 @@ export default {
         .then(response => {
           console.log(response, "response");
           if (response.data.msg === "ok") {
+            
             if (process.env.CLIENT) {
               this.$nextTick(() => {
                 /*let ace = require("ace-builds/src-noconflict/ace");

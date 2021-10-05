@@ -1,7 +1,6 @@
 <template>
   <div class="page-padding padding-normal">
     <q-card style="margin: 30px 0px">
-      {{$store.state.scripts.script.is_manager}}
       <q-tabs
         v-model="tab"
         inline-label
@@ -32,20 +31,20 @@
           label="评论"
         />
         <q-tab :name="4" label="统计" />
-                <q-route-tab
-          :to="{ name: 'updateScript', query: {id} }"
+        <q-route-tab
+          :to="{ name: 'updateScript', query: { id } }"
           :name="5"
           v-if="isuserisauthor"
           label="更新脚本"
         />
-                <q-route-tab
-          :to="{ name: 'deleteScript',query: {id} }"
+        <!--<q-route-tab
+          :to="{ name: 'deleteScript', query: { id } }"
           :name="6"
           v-if="isuserisauthor"
           label="删除脚本"
-        />
-                        <q-route-tab
-          :to="{ name: 'manageScript', query: {id} }"
+        />-->
+        <q-route-tab
+          :to="{ name: 'manageScript', query: { id } }"
           :name="7"
           v-if="isuserisauthor"
           label="管理"
@@ -63,24 +62,39 @@
 
 <script>
 export default {
-  computed:{
-        isuserisauthor(){
-          try {
-                  return this.$store.state.scripts.script.is_manager
-            
-          } catch (error) {
-            return false;
-          }
-          
+  computed: {
+    isuserisauthor() {
+      try {
+        return this.$store.state.scripts.is_manager;
+      } catch (error) {
+        return false;
+      }
     }
   },
   data() {
     return {
       id: null,
-      tab: 0,
+      tab: 0
     };
   },
-  methods: {},
+  methods: {
+    GetRoles() {
+      this.get("/scripts/" + this.id)
+        .then(response => {
+          if (response.data.code === 0) {
+            this.$store.commit(
+              "scripts/SetIsManagerScript",
+              response.data.data.is_manager
+            );
+          } else {
+            this.$store.commit("scripts/SetIsManagerScript", false);
+          }
+        })
+        .catch(error => {
+          this.$store.commit("scripts/SetIsManagerScript", false);
+        });
+    }
+  },
   created() {
     this.id = parseInt(this.$route.params.id);
 
@@ -88,12 +102,13 @@ export default {
       this.$q.notify({
         position: "top-right",
         message: "访问路径存在问题",
-        position: "top",
+        position: "top"
       });
       this.$router.push({ path: "/" });
       return;
     }
-  },
+    this.GetRoles();
+  }
 };
 </script>
 

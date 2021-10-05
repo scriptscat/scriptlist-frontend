@@ -20,4 +20,5 @@ export function fetchScriptInfo({ commit }, id) {
   }).catch(error => {
     commit("updateScriptInfo", {});
   });
+
 }

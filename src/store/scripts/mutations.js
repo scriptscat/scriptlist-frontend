@@ -9,3 +9,6 @@ export function updateScripts(state, { list, total }) {
 export function updateScriptInfo(state, script) {
     state.script = script;
 }
+export function SetIsManagerScript(state,status){
+    state.is_manager=status;
+}

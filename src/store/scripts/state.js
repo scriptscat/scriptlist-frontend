@@ -4,5 +4,6 @@ export default function () {
     scripts: [],
     total: 0,
     script: {},
+    is_manager:false,
   }
 }
