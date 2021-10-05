@@ -1,6 +1,7 @@
 <template>
   <div class="page-padding padding-normal">
     <q-card style="margin: 30px 0px">
+      {{$store.state.scripts.script.is_manager}}
       <q-tabs
         v-model="tab"
         inline-label
@@ -64,8 +65,13 @@
 export default {
   computed:{
         isuserisauthor(){
-          debugger;
-      return this.$store.state.scripts.script.uid===this.$store.state.user.user.uid
+          try {
+                  return this.$store.state.scripts.script.is_manager
+            
+          } catch (error) {
+            return false;
+          }
+          
     }
   },
   data() {

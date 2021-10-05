@@ -31,16 +31,6 @@
           color="primary"
           label="如何安装脚本？"
         />
-                <q-btn
-          type="a"
-          v-if="isuserisauthor"
-          @click="JumpToManage"
-          style="margin: 5px 10px 5px 0px"
-
-          outline
-          color="primary"
-          label="管理脚本"
-        />
         
       </div>
       <div style="max-width: 600px">
@@ -128,9 +118,6 @@ export default {
     author() {
       return this.$store.state.scripts.script;
     },
-    isuserisauthor(){
-      return this.$store.state.scripts.script.uid===this.$store.state.user.user.uid
-    }
   },
   data() {
     return {
