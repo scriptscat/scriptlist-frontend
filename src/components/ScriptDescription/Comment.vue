@@ -129,6 +129,8 @@ export default {
               message: "提交成功！",
               position: "top",
             });
+            this.getallscroe(1);
+            
           } else {
             this.$q.notify({
               position: "top-right",
@@ -140,6 +142,7 @@ export default {
         .catch((error) => {});
     },
     getallscroe(page = 1) {
+      this.userscorelist =[]
       this.get("/scripts/" + this.id + "/score")
         .then((response) => {
           console.log(response, "response");

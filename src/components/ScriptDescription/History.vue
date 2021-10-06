@@ -25,8 +25,8 @@
       />
       <q-btn @click="ToGetScriptDiff" color="primary" label="比对" />
     </div>
-    <div v-show="showeditor" style="position:relative">
-      <textarea ref="textarea"></textarea>
+    <div v-if="showtext!==''" class="border" v-html="showtext">
+
     </div>
   </div>
 </template>
@@ -41,6 +41,7 @@ export default {
   data() {
     return {
       diff: null,
+      showtext:'',
       editor: null,
       differ: null,
       ScriptList: [],
@@ -51,11 +52,6 @@ export default {
   },
   //离开当前页面后执行
   destroyed: function() {
-
-        this.editor.setValue("");
-    this.editor.clearHistory();
-    this.editor.toTextArea();
-    this.editor=null;
   },
   methods: {
     ToGetScriptDiff() {
@@ -67,31 +63,24 @@ export default {
         });
         return;
       }
+      console.log('this.leftversion',this.leftversion,this.rightversion);
       this.showeditor = true;
-      let one = this.get(
-        "/scripts/" + this.id + "/versions/" + this.leftversion + "/code"
-      );
-      let two = this.get(
-        "/scripts/" + this.id + "/versions/" + this.rightversion + "/code"
-      );
-
-      Promise.all([one, two])
-        .then(result => {
-          /*this.editor.left.setValue(result[0].data.data.script.code, -1);
-          this.editor.right.setValue(result[1].data.data.script.code, -1);*/
-          let diff= require("git-diff")
-          let difftext = diff(
-            "namestruct",
-            result[0].data.data.script.code,
-            result[1].data.data.script.code,
-            { context: 1 }
-          );
-          this.editor.setValue(difftext);
-          this.showeditor = true;
+            this.get("/scripts/"+this.id+"/diff/"+this.leftversion+"/"+this.rightversion)
+        .then(response => {
+          if (response.data.msg === "ok") {
+            if (process.env.CLIENT) {
+              
+              let text=response.data.data.diff
+              text=text.replace(/style="background:#ffe6e6;"/g,'class="Red-Diff"')
+              text=text.replace(/style="background:#e6ffe6;"/g,'class="Green-Diff"')
+              text=text.replace(/<strong>/g,'<span>')
+              text=text.replace(/<\/strong>/g,'</span>')
+              this.showtext=text
+            }
+          }
         })
-        .catch(error => {
-          console.log(error);
-        });
+        .catch(error => {});
+
     },
     GetScriptHistory() {
       this.get("/scripts/" + this.id + "/versions")
@@ -131,19 +120,7 @@ export default {
                 this.editor.right.getSession().setUseWorker(false);*/
                 //this.Diff  = require('git-diff')
                 //this.Diff = require('diff');
-                var codeMirror = require("codemirror");
 
-                require("codemirror/lib/codemirror.css");
-                require("codemirror/mode/javascript/javascript");
-                require("codemirror/theme/darcula.css");
-                this.editor = codeMirror.fromTextArea(this.$refs.textarea, {
-                  readOnly: true,
-                  lineWrapping: true,
-                  mode: "javascript",
-                  theme: "darcula", // 主日样式
-                  styleActiveLine: true, // 当前行高亮
-                  lineNumbers: true // 显示行号
-                });
                 /*this.editor.setValue(response.data.data.script.code);
                 console.log(this.editor.getScrollInfo());
                 let scollinfo = this.editor.getScrollInfo();
@@ -165,4 +142,23 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+::v-deep .Red-Diff{
+  color: #BB0000;
+  background-color: #FFEEEE;
+}
+::v-deep .Green-Diff{
+    color: #008800;
+    background-color: #DDFFDD;
+    text-decoration: none;
+
+}
+.border{
+  background-color: #F6F6F6;
+border-width: 1px;
+border-style: solid;
+padding: 4.7px;
+border-color: #cbcbcb;
+border-radius: 5px;
+}
+</style>

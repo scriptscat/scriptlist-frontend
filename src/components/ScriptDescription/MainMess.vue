@@ -31,6 +31,19 @@
           color="primary"
           label="如何安装脚本？"
         />
+                <q-btn
+                    type="a"
+          :href="
+            'http://scriptcat.org' +
+              '/script-show-page/' +
+              this.id +
+              '/comment'
+          "
+          style="margin: 5px 10px 5px 0px"
+          outline
+          color="primary"
+          label="快去评分"
+        />
         
       </div>
       <div style="max-width: 600px">

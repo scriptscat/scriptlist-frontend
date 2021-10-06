@@ -62,12 +62,17 @@
                     <div class="flex items-center justify-center">
                       <q-rating
                         v-model="item.score"
-                        disable
+                        readonly
                         size="1em"
                         :max="5"
                         color="primary"
                       />
                     </div>
+                    <a
+                    class="Author"
+                    style="text-decoration: none;"
+                    :href="'/script-show-page/' + item.id+'/comment'" target="_black"
+                    >(去评分)</a>
                   </div>
                 </div>
                 <div class="item">

@@ -30,7 +30,7 @@
           :name="3"
           label="评论"
         />
-        <q-tab :name="4" label="统计" />
+       <!-- <q-tab :name="4" label="统计" />-->
         <q-route-tab
           :to="{ name: 'updateScript', query: { id } }"
           :name="5"
