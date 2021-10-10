@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header reveal bordered class="bg-primary text-white">
+    <q-header reveal bordered class="bg-blue-5 text-white">
       <q-toolbar>
         <q-toolbar-title class="links"
           ><a href="/">ScriptCat</a></q-toolbar-title

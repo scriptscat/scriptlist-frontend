@@ -30,7 +30,7 @@
           有效url
         </div>
         <div class="padding-left">
-          66666
+          敬请期待
         </div>
                 <div>
           内容类型

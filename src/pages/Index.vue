@@ -35,26 +35,17 @@
         </q-input>
       </div>
     </div>
-    <div style="padding: 0px 20px 0px 15px; margin-bottom: 20px" class="flex justify-center">
-      <div
-        class="shadow-5"
-        style="
-          max-width: 1000px;
-          width:100%;
-          text-align: center;
-          padding: 0px 8px;
-          border-radius: 14px;
-        "
-      >
+    <div style="padding: 0px 20px 0px 15px; margin-bottom: 20px;" class="flex justify-center">
+      <div class="shadow-2" style="max-width: 1100px; width:100%; text-align:center; padding: 0px 8px; border-radius: 14px;">
         <div class="intro-page-wrap description">
-          <q-list bordered class="rounded-borders" v-for="result in questionAnswer" :key="name">
+          <q-list bordered class="rounded-borders" v-for="(result, idx) in questionAnswer" :key="idx">
               <q-expansion-item
                 switch-toggle-side
                 expand-separator
                 v-bind:label="result.question"
               >
                 <q-card>
-                  <q-card-section :props="props" v-html="result.answer">result.answer</q-card-section>
+                  <q-card-section style="margin-left:56px" v-html="result.answer"></q-card-section>
                 </q-card>
               </q-expansion-item>
             </q-list>
@@ -68,24 +59,29 @@
               :rows-per-page-options="[6]"
               row-key="name"
             >
-              <template v-slot:body="props">
-                <q-tr :props="props">
-                  <q-td key="desc" :props="props">
-                    {{ props.row.agent }}
-                  </q-td>
-                  <q-td key="calories" :props="props">
-                    <a v-bind:href="props.row.ScriptCat">点击安装</a>
-                  </q-td>
-                  <q-td key="fat" :props="props">
-                    <a v-bind:href="props.row.TamperMonkey">点击安装</a>
-                  </q-td>
-                </q-tr>
-              </template>
-            </q-table>
-          </div>
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td key="desc" :props="props">
+                  {{ props.row.agent }}
+                </q-td>
+                <q-td key="calories" :props="props">
+                  <a
+                  v-if="props.row.ScriptCat!=''"
+                  v-bind:href="props.row.ScriptCat">点击安装</a>
+                </q-td>
+                <q-td key="fat" :props="props">
+                  <a v-bind:href="props.row.TamperMonkey">点击安装</a>
+                </q-td>
+              </q-tr>
+            </template>
+
+            <template v-slot:bottom>
+              Safari,Opera,UC等浏览器将会尽快通过审核
+            </template>
+
+          </q-table>
+        </div>
       </div>
-    </div>
-    <div>
     </div>
   </div>
 </template>
@@ -163,7 +159,7 @@ export default {
         },
         {
           question:"安装出现问题? 想学习脚本开发? 对脚本存在疑问?",
-          answer:'<p>可以访问我们的论坛：<a href="https://bbs.tampermonkey.net.cn/"target="_black">油猴中文网</a></p>'
+          answer:'可以访问我们的论坛：<a style="text-decoration:none; color:rgb(40, 86, 172);" href="https://bbs.tampermonkey.net.cn/"target="_black">油猴中文网</a>'
         },
       ]
     };
@@ -184,6 +180,7 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .intro-page-wrap {
   text-align: left;
@@ -193,12 +190,8 @@ export default {
 .q-pa-md{
   a{
     text-decoration:none;
-  }
-  a:hover
-  { 
-  background-color:yellow;
+    color:rgb(40, 86, 172);
   }
 }
-
 
 </style>
