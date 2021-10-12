@@ -1,10 +1,10 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header reveal bordered class="bg-blue-5 text-white">
+    <q-header reveal bordered class="bg-primary text-white shadow-4">
       <q-toolbar>
-        <q-toolbar-title class="links"
-          ><a href="/">ScriptCat</a></q-toolbar-title
-        >
+        <q-toolbar-title class="links">
+          <a href="/">ScriptCat</a>
+          </q-toolbar-title>
         <q-tabs
           class="links mobile-hide"
           align="left"
@@ -12,7 +12,7 @@
           active-color="white"
         >
           <q-tab label="首页" onclick="window.open('/','_self')"> </q-tab>
-          <q-tab
+          <q-tab 
             label="油猴论坛"
             onclick="window.open('https://bbs.tampermonkey.net.cn/','_blank')"
           >
