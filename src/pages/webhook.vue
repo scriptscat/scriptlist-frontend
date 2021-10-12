@@ -13,7 +13,8 @@
 
           <div class="q-px-lg q-pb-md">
             <q-timeline color="primary">
-              <div class="text-h6" style="margin-left:40px; padding-bottom:20px;">　　与“脚本猫”绑定的Webhook（网页通知事件）可以基于代码仓库的更新而自动更新网站上对应的脚本。
+              <div class="text-h6" style="margin-left:40px; padding-bottom:20px;">
+                　　与“脚本猫”绑定的Webhook（网页通知事件）可以基于代码仓库的更新而自动更新网站上对应的脚本。
                 <br>脚本猫支持 GitHub的push（推送）事件和 GitHub的release（发布）事件。
                 <br>要使用该功能，你必须在脚本猫设定通过地址同步脚本的功能。
                 <br>你可以通过导入脚本到脚本猫来添加，或从已提交脚本的“管理”页面来设定同步。
@@ -29,16 +30,12 @@
                 icon="done_all"
               >
                 <q-tree
-                  v-model="Secret"
+                  class="text"
                   :nodes="simple"
                   node-key="label"
                   no-connectors
                   :expanded.sync="expanded"
                 />
-                <div class="text-h6" v-model="Secret">
-                  生成你的Secret:<br>
-                  　　{{Secret}}
-                </div>
                 <q-btn
                   label="Refresh your secret"
                   color="primary"
@@ -56,30 +53,23 @@
 <script>
 export default {
   meta: {
-    title: "ScriptCat - 分享你的用户脚本",
-    titleTemplate: title => `${title}`
+    title: "webhook",
   },
 
-  created(){
-    this.get("/user/webhook/1")
-      .then(response => {
-        if (response.data.msg === "ok") {
-          if (process.env.CLIENT) {
-            if (response.data.code === 0) {
-              this.Secret = response.data.data.token;
-            }
-          }
-        }
-      })
-      .catch(error => {});
+  computed: {
+    islogin() {
+      return this.$store.state.user.islogin;
+    },
+    user() {
+      return this.$store.state.user.user;
+    }
   },
 
   data() {
     return {
         cat : require('../assets/cat.png'),
-        Secret : "Secret生成中",
+        expanded: [ '配置方法', 'Url','Content-Type','Secret','选择事件'],
 
-        expanded: [ '配置方法', 'Url','Content-Type','选择事件'],
         simple: [
           {
             label: '配置方法',
@@ -88,7 +78,7 @@ export default {
                 label: 'Url',
                 icon: 'share',
                 children: [
-                  { label: 'https://scriptcat.org/api/v1/webhook/4' },
+                  { label: '' },
                 ]
               },
               {
@@ -98,36 +88,50 @@ export default {
                 ]
               },
               {
+                label: 'Secret',
+                children: [
+                  { label: ''},
+                ]
+              },
+              {
                 label: '选择事件',
                 children: [
                   { label: '如果你想让Script的脚本只在"push"行为后更新,请选择"Just the push event"'},
                   { label: '如果你想让Script的脚本只在"releases"行为后更新,请选择"Let me select individual events"' },
                 ]
-              }
+              },
             ]
           }
         ]
     }
   },
 
-  mounted:{
-  },
-
   methods:{
     RefreshSecret(){
-      this.put("user/webhook/1")
+      this.put("user/webhook")
         .then(response => {
           if (response.data.msg === "ok") {
-            if (process.env.CLIENT) {
-              if (response.data.code === 0) {
-                this.Secret = response.data.data.token;
-              }
+            if (response.data.code === 0) {
+              this.simple[0].children[2].children[0].label = response.data.data.token;
             }
           }
         })
         .catch(error => {});
       }
-  }
+  },
+
+  created(){
+    this.get("/user/webhook")
+      .then(response => {
+        if (response.data.msg === "ok") {
+          if (response.data.code === 0) {
+            this.simple[0].children[2].children[0].label = response.data.data.token;
+            this.simple[0].children[0].children[0].label = "https://scriptcat.org/api/v1/webhook/" + this.user.uid
+          }
+        }
+      })
+      .catch(error => {});
+  },
 };
 </script>
 
