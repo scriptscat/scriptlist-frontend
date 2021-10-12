@@ -96,8 +96,8 @@ export default {
     return {
       SearchTitle: "ScriptCat（脚本猫）比全更全的用户脚本托管平台",
       SearchText: "请输入要查询的脚本关键词",
-      Text:"",
       cat : require('../assets/cat.png'),
+      Text:"",
 
       columns : [
         { name: 'desc', align: 'left', label: '浏览器', field: 'name' },

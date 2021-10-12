@@ -3,66 +3,136 @@
     <q-card style="margin: 30px 0px">
       <q-card-actions>
         <div>
-          <div class="title-wrap">
-            Webhook
-          </div>
-          <div style="white-space: pre-line;">
-            <span
-              >与 脚本猫 绑定的
-              Webhook（网页通知事件）可以基于代码仓库的更新而自动更新 网站
-              上对应的脚本。脚本猫 支持 GitHub
-              的“push（推送）”事件和 GitHub的“release（发布）”事件。
-              要使用该功能，你必须在 脚本猫
-              设定通过地址同步脚本的功能。你可以通过 导入脚本到 脚本猫
-              来添加，或从已提交脚本的“管理”页面来设定同步。
-              你的脚本在收到第一次自动推送的事件之前，脚本的同步类型还是会显示为“自动”或“手动”。</span
-            >
+        <div class="text-h5">
+          <span 
+          style="vertical-align:middle;">
+          <img :src="cat" style="width:72px;">
+          </span>
+          Sciptcat(脚本猫)的WebHook设置
           </div>
 
+          <div class="q-px-lg q-pb-md">
+            <q-timeline color="primary">
+              <div class="text-h6" style="margin-left:40px; padding-bottom:20px;">
+                　　与“脚本猫”绑定的Webhook（网页通知事件）可以基于代码仓库的更新而自动更新网站上对应的脚本。
+                <br>脚本猫支持 GitHub的push（推送）事件和 GitHub的release（发布）事件。
+                <br>要使用该功能，你必须在脚本猫设定通过地址同步脚本的功能。
+                <br>你可以通过导入脚本到脚本猫来添加，或从已提交脚本的“管理”页面来设定同步。
+                <br>你的脚本在收到第一次自动推送的事件之前，脚本的同步类型还是会显示为“自动”或“手动”。</div>
 
-        <div class="title-wrap">
-          GitHub
-        </div>
-        <div style="margin-bottom:10px;">
-          在Github上设置webhook，访问github仓库并去设置，webhooks，添加webhook，输入下方数据
-        </div>
-        <div>
-          有效url
-        </div>
-        <div class="padding-left">
-          敬请期待
-        </div>
-                <div>
-          内容类型
-        </div>
-        <div class="padding-left">
-          application/json
-        </div>        <div>
-          Secret
-        </div>
-        <div class="padding-left" style="margin:5px 0">
+              <q-timeline-entry
+                subtitle="STEP ONE"
+                title="访问Github仓库进入Settings"
+              />
+              <q-timeline-entry
+                subtitle="STEP TWO"
+                title='点击"Add webhook"，输入下方数据'
+                icon="done_all"
+              >
+                <q-tree
+                  class="text"
+                  :nodes="simple"
+                  node-key="label"
+                  no-connectors
+                  :expanded.sync="expanded"
+                />
                 <q-btn
-        label="生成"
-        color="primary"
-      />
-        </div>        <div>
-          您喜欢哪个事件触发Webhook？
+                  label="Refresh your secret"
+                  color="primary"
+                  @click="RefreshSecret"
+                />
+              </q-timeline-entry>
+            </q-timeline>
+          </div>
         </div>
-        <div class="padding-left" style="white-space: pre-line;">To update ScriptCat on all pushes, choose "Just the push event".
-To update ScriptCat only on releases, choose "Let me select individual events", uncheck "Pushes", and check "Releases".</div>        <div>
-          行为
-        </div>
-        <div class="padding-left">
-          (Checked)
-        </div>
-                </div>
       </q-card-actions>
     </q-card>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  meta: {
+    title: "webhook",
+  },
+
+  computed: {
+    islogin() {
+      return this.$store.state.user.islogin;
+    },
+    user() {
+      return this.$store.state.user.user;
+    }
+  },
+
+  data() {
+    return {
+        cat : require('../assets/cat.png'),
+        expanded: [ '配置方法', 'Url','Content-Type','Secret','选择事件'],
+
+        simple: [
+          {
+            label: '配置方法',
+            children: [
+              {
+                label: 'Url',
+                icon: 'share',
+                children: [
+                  { label: '' },
+                ]
+              },
+              {
+                label: 'Content-Type',
+                children: [
+                  { label: 'application/json' },
+                ]
+              },
+              {
+                label: 'Secret',
+                children: [
+                  { label: ''},
+                ]
+              },
+              {
+                label: '选择事件',
+                children: [
+                  { label: '如果你想让Script的脚本只在"push"行为后更新,请选择"Just the push event"'},
+                  { label: '如果你想让Script的脚本只在"releases"行为后更新,请选择"Let me select individual events"' },
+                ]
+              },
+            ]
+          }
+        ]
+    }
+  },
+
+  methods:{
+    RefreshSecret(){
+      this.put("user/webhook")
+        .then(response => {
+          if (response.data.msg === "ok") {
+            if (response.data.code === 0) {
+              this.simple[0].children[2].children[0].label = response.data.data.token;
+            }
+          }
+        })
+        .catch(error => {});
+      }
+  },
+
+  created(){
+    this.get("/user/webhook")
+      .then(response => {
+        if (response.data.msg === "ok") {
+          if (response.data.code === 0) {
+            this.simple[0].children[2].children[0].label = response.data.data.token;
+            this.simple[0].children[0].children[0].label = "https://scriptcat.org/api/v1/webhook/" + this.user.uid
+          }
+        }
+      })
+      .catch(error => {});
+  },
+};
 </script>
 
 <style lang="scss" scoped>
