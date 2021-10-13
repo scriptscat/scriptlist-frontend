@@ -1,12 +1,12 @@
 import axios from "axios";
 import qs from "qs";
 
-const baseURL =
+export const baseURL =
   process.env.NODE_ENV === "production" || process.env.SERVER
     ? process.env.VUE_APP_HTTP_HOST
     : "/dev";
 const service = axios.create({
-  withCredentials:true,
+  withCredentials: true,
   baseURL: baseURL,
   timeout: 30000
 });
@@ -38,7 +38,7 @@ export async function post(url, data, config) {
  * url 提交地址
  * query 提交參數
  */
- export async function put(url, data, config) {
+export async function put(url, data, config) {
   if (config) {
     return service.put(url, data, config);
   } else {

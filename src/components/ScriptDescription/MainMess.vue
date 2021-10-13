@@ -12,7 +12,7 @@
         <q-btn
           type="a"
           :href="
-            'http://scriptcat.org/scripts/' +
+            '/scripts/' +
               this.author.name +
               '/source/' +
               this.id +
@@ -34,7 +34,6 @@
                 <q-btn
                     type="a"
           :href="
-            'http://scriptcat.org' +
               '/script-show-page/' +
               this.id +
               '/comment'

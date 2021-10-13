@@ -211,7 +211,9 @@ export default {
     },
     gotoLogin() {
       window.open(
-        "https://bbs.tampermonkey.net.cn/plugin.php?id=codfrm_oauth2:oauth&client_id=80mfto0y3b8v&scope=user&response_type=code&redirect_uri=https%3A%2F%2Fscriptcat.org%2Fapi%2Fv1%2Flogin%2Foauth%3Fredirect_uri%3D" +
+        "https://bbs.tampermonkey.net.cn/plugin.php?id=codfrm_oauth2:oauth&client_id=80mfto0y3b8v&scope=user&response_type=code&redirect_uri=" +
+          encodeURIComponent(process.env.VUE_APP_HTTP_HOST) +
+          "%2Flogin%2Foauth%3Fredirect_uri%3D" +
           encodeURIComponent(this.$route.path),
         "_self"
       );
@@ -230,7 +232,7 @@ export default {
     display: none;
   }
 }
-.links .q-tab{
+.links .q-tab {
   min-width: 100px;
 }
 </style>

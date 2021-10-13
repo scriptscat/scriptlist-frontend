@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { baseURL } from 'src/utils/axios';
 export default {
   meta: {
     title: "webhook",
@@ -139,7 +140,7 @@ export default {
         if (response.data.msg === "ok") {
           if (response.data.code === 0) {
             this.simple[0].children[2].children[0].label = response.data.data.token;
-            this.simple[0].children[0].children[0].label = "https://scriptcat.org/api/v1/webhook/" + this.user.uid
+            this.simple[0].children[0].children[0].label = baseURL+"/webhook/" + this.user.uid
           }
         }
       })

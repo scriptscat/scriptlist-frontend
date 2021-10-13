@@ -180,6 +180,7 @@
 </template>
 
 <script>
+import { baseURL } from 'src/utils/axios';
 export default {
   props: {
     id: {
@@ -307,7 +308,7 @@ export default {
           .then(response => {
             if (response.data.code === 0) {
               resolve(
-                "https://scriptcat.org/api/v1/resource/image/" +
+                baseURL + "/resource/image/" +
                   response.data.data.id
               );
             }
