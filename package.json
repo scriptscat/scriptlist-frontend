@@ -6,7 +6,8 @@
   "author": "4548212@qq.com",
   "private": true,
   "scripts": {
-    "quasar dev -m ssr": "quasar dev -m ssr"
+    "build": "quasar build -m ssr",
+    "dev": "quasar dev -m ssr"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
