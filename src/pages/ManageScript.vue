@@ -239,6 +239,18 @@ export default {
     }
   },
   created() {
+    if (process.env.CLIENT) {
+      if (!this.islogin) {
+        this.$q.notify({
+          position: "top-right",
+          message: "当前尚未登陆！",
+          position: "top"
+        });
+        this.$router.push({ path: "/" });
+        return;
+      }
+      //this.id = this.$route.query.id;
+    }
     this.getmyscripts();
   }
 };

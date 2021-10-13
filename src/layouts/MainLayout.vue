@@ -1,9 +1,9 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-header reveal bordered class="bg-primary text-white shadow-4">
+  <q-layout view="lHh Lpr fff">
+    <q-header elevated class="bg-primary text-white" height-hint="64">
       <q-toolbar>
         <q-toolbar-title class="links">
-          <a href="/">ScriptCat</a>
+          <span href="/" class="q-ml-sm">ScriptCat</span>
           </q-toolbar-title>
         <q-tabs
           class="links mobile-hide"
@@ -11,29 +11,60 @@
           indicator-color="transparent"
           active-color="white"
         >
-          <q-tab label="首页" onclick="window.open('/','_self')"> </q-tab>
-          <q-tab 
-            label="油猴论坛"
+          <q-btn
+            flat
+            dense
+            onclick="window.open('/','_self')"
+            label="首页"
+            icon="home"
+            class="q-mx-md"
+          />
+          <q-btn
+            flat
+            dense
             onclick="window.open('https://bbs.tampermonkey.net.cn/','_blank')"
-          >
-          </q-tab>
-          <q-tab
-            label="脚本列表"
+            label="油猴论坛"
+            icon="chat"
+            class="q-mx-md"
+          />
+          <q-btn
+            flat
+            dense
             onclick="window.open('/search?page=1','_self')"
-          ></q-tab>
-          <q-tab
+            label="脚本列表"
+            icon="menu"
+            class="q-mx-md"
+          />
+          <q-btn
+            flat
+            dense
             v-if="islogin"
-            label="脚本管理"
             onclick="window.open('/managescript','_self')"
-          >
-          </q-tab>
-          <q-tab
+            label="管理脚本"
+            icon="add"
+            class="q-mx-md"
+          />
+          <q-btn round flat
             v-if="islogin"
-            :label="user.username"
             onclick="window.open('/','_self')"
           >
-          </q-tab>
-          <q-tab v-else label="登录" @click="gotoLogin"></q-tab>
+            <q-avatar size="26px">
+              <img v-bind:src="avatar + user.uid">
+            </q-avatar>
+            <q-tooltip>{{user.username}}</q-tooltip>
+          </q-btn>
+
+          <q-btn round flat
+            v-else
+            @click="gotoLogin"
+          >
+            <q-avatar size="26px">
+              <img :src="DefaultAvatar">
+            </q-avatar>
+            <div class="q-mx-md">用户未登陆</div>
+            <q-tooltip>请点击登陆</q-tooltip>
+          </q-btn>
+
         </q-tabs>
         <q-btn
           class="btn-control"
@@ -141,6 +172,9 @@ export default {
           sep: false,
         },
       ],
+      DefaultAvatar: require('../assets/defaultavatar.png'),
+      avatar: "https://scriptcat.org/api/v1/user/avatar/",
+      Account:"请点击登陆",
       right: false,
       tab: "",
     };
