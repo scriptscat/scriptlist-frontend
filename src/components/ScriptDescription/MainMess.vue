@@ -1,105 +1,101 @@
 <template>
-  <div>
+  <div v-if="this.author !== null">
+    <q-card flat class="my-card">
+      <q-card-section  class="q-pb-none">
+        <q-item >
+          <q-item-section avatar>
+            <q-avatar>
+              <img :src="'https://scriptcat.org/api/v1/user/avatar/' + this.author.uid">
+            </q-avatar>
+          </q-item-section>
 
-    <div v-if="this.author !== null">
-      <div>
-        <span class="title">{{ author.name }}</span>
-      </div>
-      <div>
-        <span>{{ author.description }}</span>
-      </div>
-      <div style="margin: 20px 0">
-        <q-btn
-          type="a"
-          :href="
-            '/scripts/' +
-              this.author.name +
-              '/source/' +
-              this.id +
-              '.user.js'
-          "
-          style="margin: 5px 10px 5px 0px"
-          outline
-          color="primary"
-          label="安装此脚本"
-        />
-        <q-btn
-          type="a"
-          style="margin: 5px 10px 5px 0px"
-          href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
-          outline
-          color="primary"
-          label="如何安装脚本？"
-        />
-                <q-btn
-                    type="a"
-          :href="
-              '/script-show-page/' +
-              this.id +
-              '/comment'
-          "
-          style="margin: 5px 10px 5px 0px"
-          outline
-          color="primary"
-          label="快去评分"
-        />
-        
-      </div>
-      <div style="max-width: 600px">
-        <div class="Deatil Small-Detail-Item-Padding">
-          <div class="item">
-            <div class="Item-left-box">
-              <div>作者</div>
-              <div class="Author">
-                <div class="Author">
-                  {{ this.author.username }}
-                </div>
-              </div>
+          <q-item-section>
+            <q-item-label >
+              <a
+                style="color:rgb(40, 86, 172);"
+                href="/"
+                target="_blank"
+                >
+                {{ author.name }}
+              </a>
+              </q-item-label>
+            <div class="text-body1">
+              <a class="text-black" 
+                target="_blank"
+                :href="'/script-show-page/' + this.author.id">
+                <b>{{this.author.name}}</b>
+              </a>
             </div>
-            <div class="Item-right-box">
-              <div>版本</div>
-              <div class="flex items-center justify-center">
-                {{ this.author.script.version }}
-              </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="Item-left-box">
-              <div>今日安装</div>
-              <div>
-                {{ this.author.today_install }}
-              </div>
-            </div>
-            <div class="Item-right-box">
-              <div>创建日期</div>
-              <div>
-                {{ this.author.createtime | formatDate }}
-              </div>
-            </div>
-          </div>
+          </q-item-section>
+            <q-btn
+              flat
+              type="a"
+              class="text-caption"
+              style="font-size:15px"
+              text-color=primary
+              :href="'/script-show-page/' + this.id + '/comment'"
+              outline
+            >
+              <q-rating 
+                size="15px"
+                :value="this.author.score/10" 
+                :max="5"
+                color="primary"/>
+              　{{(this.author.score*2/10).toFixed(1)}}分 
+            </q-btn>
+        </q-item>
+      </q-card-section>
 
-          <div class="item">
-            <div class="Item-left-box">
-              <div>总安装量</div>
-              <div>
-                {{ this.author.total_install }}
-              </div>
-            </div>
-            <div class="Item-right-box">
-              <div>最近更新</div>
-              <div v-if="this.author.updatetime !== 0">
-                {{ this.author.updatetime | formatDate }}
-              </div>
-              <div v-else>暂无更新</div>
-            </div>
+      <q-separator />
+
+      <q-card-section>
+        <q-card-section class="q-pt-none">
+          <div 
+            v-if="this.author.updatetime !== 0" 
+            class="text-grey-7"
+          >
+            今日安装：{{ this.author.today_install }}　　创建日期：{{ this.author.createtime | formatDate }}
+            <br>总安装量：{{ this.author.total_install }}　　最近更新：{{ this.author.updatetime | formatDate }}
           </div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div id="editor">{{ author.content }}</div>
-    </div>
-  </div>
+          <div v-else class="text-grey-7">
+            今日安装：{{ this.author.today_install }}　　创建日期：{{ this.author.createtime | formatDate }}　
+            <br>总安装量：{{ this.author.total_install }}　　最近更新：{{ this.author.createtime | formatDate }}
+          </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section class="q-pt-none" style="margin-top:10px">
+          {{ author.description }}
+        </q-card-section>
+          <q-separator />
+        <q-card-section>
+          <div class="install">
+            <q-btn
+              class="text-caption"
+              type="a"
+              :href="'/scripts/' + this.author.name + '/source/' + this.id + '.user.js'"
+              outline
+              color="primary"
+              label="安装此脚本"
+            />
+            <q-btn
+              class="text-caption"
+              type="a"
+              href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
+              outline
+              color="primary"
+              label="如何安装脚本？"
+            />
+          </div>
+          <div>
+            <div id="editor">{{ author.content }}</div>
+          </div>
+        </q-card-section>
+      </q-card-section>
+    </q-card>
+</div>
+
 </template>
 
 <script>
@@ -137,6 +133,9 @@ export default {
     };
   },
   methods: {
+    to_score(id){
+      window.open('/script-show-page/' + id+'/comment')
+    },
     JumpToInstall() {},
     JumpToLearn() {},
     JumpToManage(){
@@ -185,6 +184,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.my-card {
+  a{
+      text-decoration: none;
+    }
+}
+
+.install{
+  .text-caption{
+    color:"primary";
+    font-size:13px;
+    margin-right: 5px
+  }
+}
+
 .title {
   font-size: 26px;
   font-weight: 400;

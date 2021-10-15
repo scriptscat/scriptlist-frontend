@@ -12,24 +12,36 @@
                   </q-avatar>
                 </q-item-section>
 
-                <q-item-section style="margin-top:12px ">
+                <q-item-section>
                   <q-item-label >
-                    <a href="">{{item.username}}</a>
+                    <a 
+                      style="color:rgb(40, 86, 172);"
+                      href="/"
+                      target="_blank"
+                      >
+                      {{item.username}}
+                    </a>
                     </q-item-label>
-                  <div class="text-body1"><b>{{item.name}}</b>
-                    <q-btn
-                      v-on:click="go_install(item.id)"
-                      flat color="primary"
-                      icon="directions"/>
+                  <div class="text-body1">
+                    <a class="text-black" 
+                      target="_blank"
+                      :href="'/script-show-page/' + item.id">
+                      <b>{{item.name}}</b>
+                    </a>
                   </div>
                 </q-item-section>
                 <q-item-section side bottom>
-                    <div class="text-caption text-center text-grey">脚本评分:{{item.score}}分</div>
+                    <div 
+                      class="text-caption text-center text-primary"
+                      style="font-size:14px"
+                      >
+                      {{(item.score*2/10).toFixed(1)}}
+                    </div>
                     <q-rating 
                       size="20px" 
                       v-on:click="to_score(item.id)" 
-                      :value="item.score" 
-                      :max="5" 
+                      :value="item.score/10" 
+                      :max="5"
                       color="primary"/>
                 </q-item-section>
               </q-item>
@@ -39,12 +51,12 @@
               <q-card-section>
                 <q-card-section class="q-pt-none">
                   <div v-if="item.updatetime !== 0" class="text-grey-7">
-                    今日安装:{{ item.today_install }}　总安装量:{{ item.total_install }}
-                  　创建日期:{{ item.createtime | formatDate }}　最近更新:{{ item.updatetime | formatDate }}
+                    今日安装：{{ item.today_install }}　总安装量：{{ item.total_install }}
+                  　创建日期：{{ item.createtime | formatDate }}　最近更新：{{ item.updatetime | formatDate }}
                   </div>
                   <div v-else class="text-grey-7">
-                    今日安装:{{ item.today_install }}　总安装量:{{ item.total_install }}
-                  　创建日期:{{ item.createtime | formatDate }}　最近更新:{{ item.createtime | formatDate }}
+                    今日安装：{{ item.today_install }}　总安装量：{{ item.total_install }}
+                  　创建日期：{{ item.createtime | formatDate }}　最近更新：{{ item.createtime | formatDate }}
                   </div>
                 </q-card-section>
                 <q-separator />
@@ -52,7 +64,6 @@
                 </q-card-section>
               </q-card-section>
             </q-card>
-            <q-separator />
           </div>
           <q-separator />
         </div>
@@ -231,9 +242,6 @@ export default {
     to_score(id){
       window.open('/script-show-page/' + id+'/comment')
     },
-    go_install(id){
-      window.open('/script-show-page/' + id)
-    },
     tolink(page) {
       let ret = "/search?page=" + (page || 1);
       if (this.$route.query.keyword) {
@@ -334,7 +342,6 @@ $seprewidth: 250px;
   padding: 16px;
   .my-card {
     a{
-      color:rgb(40, 86, 172);
       text-decoration: none;
     }
   }
