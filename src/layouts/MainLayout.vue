@@ -3,7 +3,7 @@
     <q-header elevated class="bg-primary text-white" height-hint="64">
       <q-toolbar>
         <q-toolbar-title class="links">
-          <span href="/" class="q-ml-sm">ScriptCat</span>
+          <a href="/" class="q-ml-sm">ScriptCat</a>
           </q-toolbar-title>
         <q-tabs
           class="links mobile-hide"
@@ -44,7 +44,7 @@
             icon="add"
             class="q-mx-md"
           />
-          <q-btn round flat
+          <q-btn flat
             v-if="islogin"
             onclick="window.open('/','_self')"
           >
@@ -54,7 +54,7 @@
             <q-tooltip>{{user.username}}</q-tooltip>
           </q-btn>
 
-          <q-btn round flat
+          <q-btn flat
             v-else
             @click="gotoLogin"
           >

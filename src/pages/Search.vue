@@ -3,110 +3,56 @@
     <div class="shadow-5 main-scrip-page">
       <div v-if="ScriptList.length !== 0">
         <div>
-          <div
-            class="Script-Block"
-            v-for="(item, index) in ScriptList"
-            :key="index"
-          >
-            <div class="Head">
-              <div>
-                <a :href="'/script-show-page/' + item.id" target="_black">{{
-                  item.name
-                }}</a>
-                <q-avatar
-                  v-if="
-                    item.script.meta_json.background ||
-                      item.script.meta_json.crontab
-                  "
-                  size="16px"
-                  style="margin-left: 4px"
-                >
-                  <img src="/icons/favicon-32x32.png" />
-                </q-avatar>
-              </div>
-              <a
-                style="float: right; text-decoration: none"
-                :href="
-                  '/scripts/' +
-                    encodeURIComponent(item.name) +
-                    '/source/' +
-                    +item.id +
-                    '.user.js'
-                "
-              >
-                <q-btn
-                  color="primary"
-                  size="sm"
-                  icon="file_download"
-                  label="立刻安装"
-                />
-              </a>
-            </div>
-            <div class="Context">
-              <div class="text">
-                <span v-if="item.description !== ''">{{
-                  item.description
-                }}</span>
-                <span v-else>暂无简介</span>
-              </div>
-              <div class="Deatil">
-                <div class="item">
-                  <div class="Item-left-box">
-                    <div>作者</div>
-                    <div class="Author">
-                      {{ item.username }}
-                    </div>
-                  </div>
-                  <div class="Item-right-box">
-                    <div>得分</div>
-                    <div class="flex items-center justify-center">
-                      <q-rating
-                        v-model="item.score"
-                        readonly
-                        size="1em"
-                        :max="5"
-                        color="primary"
-                      />
-                    </div>
-                    <a
-                    class="Author"
-                    style="text-decoration: none;"
-                    :href="'/script-show-page/' + item.id+'/comment'" target="_black"
-                    >(去评分)</a>
-                  </div>
-                </div>
-                <div class="item">
-                  <div class="Item-left-box">
-                    <div>今日安装</div>
-                    <div>
-                      {{ item.today_install }}
-                    </div>
-                  </div>
-                  <div class="Item-right-box">
-                    <div>创建日期</div>
-                    <div>
-                      {{ item.createtime | formatDate }}
-                    </div>
-                  </div>
-                </div>
+          <div class="Script-Block" v-for="(item, index) in ScriptList" :key="index">
+            <q-card class="my-card shadow-2" bordered>
+              <q-item >
+                <q-item-section avatar>
+                  <q-avatar>
+                    <img :src="'https://scriptcat.org/api/v1/user/avatar/' + item.uid">
+                  </q-avatar>
+                </q-item-section>
 
-                <div class="item">
-                  <div class="Item-left-box">
-                    <div>总安装量</div>
-                    <div>
-                      {{ item.total_install }}
-                    </div>
+                <q-item-section style="margin-top:12px ">
+                  <q-item-label >
+                    <a href="">{{item.username}}</a>
+                    </q-item-label>
+                  <div class="text-body1"><b>{{item.name}}</b>
+                    <q-btn
+                      v-on:click="go_install(item.id)"
+                      flat color="primary"
+                      icon="directions"/>
                   </div>
-                  <div class="Item-right-box">
-                    <div>最近更新</div>
-                    <div v-if="item.updatetime !== 0">
-                      {{ item.updatetime | formatDate }}
-                    </div>
-                    <div v-else>暂无更新</div>
+                </q-item-section>
+                <q-item-section side bottom>
+                    <div class="text-caption text-center text-grey">脚本评分:{{item.score}}分</div>
+                    <q-rating 
+                      size="20px" 
+                      v-on:click="to_score(item.id)" 
+                      :value="item.score" 
+                      :max="5" 
+                      color="primary"/>
+                </q-item-section>
+              </q-item>
+              
+              <q-separator />
+
+              <q-card-section>
+                <q-card-section class="q-pt-none">
+                  <div v-if="item.updatetime !== 0" class="text-grey-7">
+                    今日安装:{{ item.today_install }}　总安装量:{{ item.total_install }}
+                  　创建日期:{{ item.createtime | formatDate }}　最近更新:{{ item.updatetime | formatDate }}
                   </div>
-                </div>
-              </div>
-            </div>
+                  <div v-else class="text-grey-7">
+                    今日安装:{{ item.today_install }}　总安装量:{{ item.total_install }}
+                  　创建日期:{{ item.createtime | formatDate }}　最近更新:{{ item.createtime | formatDate }}
+                  </div>
+                </q-card-section>
+                <q-separator />
+                <q-card-section class="q-pt-none" style="margin-top:10px">{{item.description}}
+                </q-card-section>
+              </q-card-section>
+            </q-card>
+            <q-separator />
           </div>
           <q-separator />
         </div>
@@ -120,13 +66,8 @@
         </div>
       </div>
       <div v-else>
-        <div
-          class="flex items-center justify-center column"
-          style="margin-top:80px;"
-        >
-          <span style="font-size:20px;"
-            >非常抱歉，你要搜索的内容和爱情一样没有结果！</span
-          >
+        <div class="flex items-center justify-center column"style="margin-top:80px;">
+          <span style="font-size:20px;">暂无相关脚本搜索结果</span>
           <div>
             <q-btn
               style="margin:40px 0;"
@@ -141,56 +82,73 @@
       </div>
     </div>
     <div class="show-mess-page">
-      <q-card>
-        <div class="bg-primary text-white" style="padding: 5px">
-          <div class="text-subtitle2">今日下载</div>
-        </div>
-        <div style="padding:10px 10px;">
-          <div v-for="(item, index) in recommondlist.download" :key="index">
-            <span class="show-recommod-text"
-              ><span
-                :style="{ backgroundColor: iconcolorlist[index] }"
-                class="recommond-icon"
-                >{{ index + 1 }}</span
-              ><a :href="'/script-show-page/'+item.id"> {{ item.name }}</a></span
-            >
-          </div>
-        </div>
-      </q-card>
-      <q-card>
-        <div class="bg-primary text-white" style="padding: 5px">
-          <div class="text-subtitle2">评分推荐</div>
-        </div>
+      <q-list bordered class="rounded-borders" style="padding-top:5px; width:300px;">
+        <q-expansion-item
+          default-opened
+          dense
+          dense-toggle
+          expand-separator
+          caption="安装量推荐"
+        >
+          <q-card>
+            <q-card-section>
+              <div v-for="(item, index) in recommondlist.download" :key="index">
+                <span class="show-recommod-text">
+                  <span
+                    :style="{ backgroundColor: iconcolorlist[index] }"
+                    class="recommond-icon"
+                    >{{ index + 1 }}
+                    </span>
+                    <a class="text-caption" :href="'/script-show-page/'+item.id"> {{ item.name }}</a>
+                </span>
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
 
-        <div style="padding:10px 10px;">
-          <div v-for="(item, index) in recommondlist.score" :key="index">
-            <span class="show-recommod-text"
-              ><span
-                :style="{ backgroundColor: iconcolorlist[index] }"
-                class="recommond-icon"
-                >{{ index + 1 }}</span
-              ><a :href="'/script-show-page/'+item.id"> {{ item.name }}</a></span
-            >
-          </div>
-        </div>
-      </q-card>
-      <q-card>
-        <div class="bg-primary text-white" style="padding: 5px">
-          <div class="text-subtitle2">最近更新</div>
-        </div>
-
-        <div style="padding:10px 10px;">
-          <div v-for="(item, index) in recommondlist.new" :key="index">
-            <span class="show-recommod-text"
-              ><span
-                :style="{ backgroundColor: iconcolorlist[index] }"
-                class="recommond-icon"
-                >{{ index + 1 }}</span
-              ><a :href="'/script-show-page/'+item.id"> {{ item.name }}</a></span
-            >
-          </div>
-        </div>
-      </q-card>
+        <q-expansion-item
+          default-opened
+          dense
+          dense-toggle
+          expand-separator
+          caption="评分推荐"
+        >
+          <q-card>
+            <q-card-section>
+              <div v-for="(item, index) in recommondlist.score" :key="index">
+                <span class="show-recommod-text"
+                  ><span
+                    :style="{ backgroundColor: iconcolorlist[index] }"
+                    class="recommond-icon"
+                    >{{ index + 1 }}</span
+                  ><a class="text-caption" :href="'/script-show-page/'+item.id"> {{ item.name }}</a></span
+                >
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+        <q-expansion-item
+          default-opened
+          dense
+          dense-toggle
+          expand-separator
+          caption="最新脚本"
+        >
+          <q-card>
+            <q-card-section>
+                <div v-for="(item, index) in recommondlist.new" :key="index">
+                  <span class="show-recommod-text"
+                    ><span
+                      :style="{backgroundColor: iconcolorlist[index] }"
+                      class="recommond-icon"
+                      >{{ index + 1 }}</span
+                    ><a class="text-caption" :href="'/script-show-page/'+item.id"> {{ item.name }}</a></span
+                  >
+                </div>
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+      </q-list>
     </div>
   </div>
 </template>
@@ -270,6 +228,12 @@ export default {
     }
   },
   methods: {
+    to_score(id){
+      window.open('/script-show-page/' + id+'/comment')
+    },
+    go_install(id){
+      window.open('/script-show-page/' + id)
+    },
     tolink(page) {
       let ret = "/search?page=" + (page || 1);
       if (this.$route.query.keyword) {
@@ -368,10 +332,13 @@ $seprewidth: 250px;
 
 .Script-Block {
   padding: 16px;
-  .Head {
-    font-size: 18px;
-    text-decoration: underline;
+  .my-card {
+    a{
+      color:rgb(40, 86, 172);
+      text-decoration: none;
+    }
   }
+
   .Head:hover {
     cursor: pointer;
   }
@@ -382,16 +349,17 @@ $seprewidth: 250px;
   }
 }
 .show-recommod-text {
-  max-width: 240px;
+  max-width: 300px;
+  padding-left:4px;
   overflow: hidden;
   display: flex;
     a{
-flex: 1 1 0;
-text-overflow: ellipsis;
-white-space: nowrap;
-overflow: hidden;
-text-decoration: none;
-color: black;
+      flex: 1 1 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      text-decoration: none;
+      color: black;
   }
 
 }
@@ -401,7 +369,6 @@ color: black;
   width: 16.7px;
   height: 17px;
   text-align: center;
-  // background-color: #ff981b;
   color: white;
   border-radius: 3px;
   line-height: 18.4px;
@@ -429,10 +396,7 @@ color: black;
     margin-top: 20px;
   }
 }
-.pagination-input {
-  max-width: 50px;
-  margin: 0px 5px;
-}
+
 .page-main {
   margin-bottom: 20px;
   margin-top: 30px;
@@ -441,7 +405,7 @@ color: black;
   }
   .show-mess-page {
     min-width: $seprewidth;
-    padding-left: 10px;
+    padding-left: 30px;
     .q-card {
       margin-bottom: 10px;
     }

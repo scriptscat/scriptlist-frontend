@@ -40,12 +40,11 @@
         <div class="intro-page-wrap description">
           <q-list bordered class="rounded-borders" v-for="(result, idx) in questionAnswer" :key="idx">
               <q-expansion-item
-                switch-toggle-side
-                expand-separator
+                dense-toggle
                 v-bind:label="result.question"
               >
                 <q-card>
-                  <q-card-section style="margin-left:56px" v-html="result.answer"></q-card-section>
+                  <q-card-section v-html="result.answer"></q-card-section>
                 </q-card>
               </q-expansion-item>
             </q-list>
