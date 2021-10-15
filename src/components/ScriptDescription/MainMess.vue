@@ -102,7 +102,7 @@
             />
           </div>
           <div>
-            <div id="editor"></div>
+            <div id="editor">{{ author.content }}</div>
           </div>
         </q-card-section>
       </q-card-section>
@@ -177,8 +177,11 @@ export default {
         require("@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css");
         const Viewer = require("@toast-ui/editor/dist/toastui-editor-viewer");
         const codeSyntaxHighlight = require("@toast-ui/editor-plugin-code-syntax-highlight");
+        let el = document.querySelector("#editor");
+        el.innerHTML = "";
         this.viewr = new Viewer({
-          el: document.querySelector("#editor"),
+          el: el,
+          initialValue: "",
           plugins: [[codeSyntaxHighlight, { highlighter: Prism }]],
         });
         this.viewr.setMarkdown(this.author.content);
