@@ -67,7 +67,7 @@ export default {
                   readOnly: true,
                   lineWrapping: true,
                   mode: "javascript",
-                  theme: "darcula", // 主日样式
+                  theme: "base16-light", // 主日样式
                   styleActiveLine: true, // 当前行高亮
                   lineNumbers: true // 显示行号
                 });

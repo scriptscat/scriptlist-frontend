@@ -39,15 +39,15 @@
       <div class="shadow-2" style="max-width: 1100px; width:100%; text-align:center; padding: 0px 8px; border-radius: 14px;">
         <div class="intro-page-wrap description">
           <q-list bordered class="rounded-borders" v-for="(result, idx) in questionAnswer" :key="idx">
-              <q-expansion-item
-                dense-toggle
-                v-bind:label="result.question"
-              >
-                <q-card>
-                  <q-card-section v-html="result.answer"></q-card-section>
-                </q-card>
-              </q-expansion-item>
-            </q-list>
+            <q-expansion-item
+              dense-toggle
+              v-bind:label="result.question"
+            >
+              <q-card>
+                <q-card-section v-html="result.answer"></q-card-section>
+              </q-card>
+            </q-expansion-item>
+          </q-list>
         </div>
 
         <div class="q-pa-md">

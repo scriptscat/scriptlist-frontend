@@ -1,7 +1,7 @@
 <template>
   <div v-if="this.author !== null">
     <q-card flat class="my-card">
-      <q-card-section class="q-pb-none">
+      <q-card-section>
         <q-item>
           <q-item-section avatar>
             <q-avatar>
@@ -33,13 +33,13 @@
             flat
             type="a"
             class="text-caption"
-            style="font-size: 15px"
+            style="font-size: 10px;height:30px;"
             text-color="primary"
             :href="'/script-show-page/' + this.id + '/comment'"
             outline
           >
             <q-rating
-              size="15px"
+              size="10px"
               :value="this.author.score / 10"
               :max="5"
               color="primary"
@@ -47,35 +47,9 @@
             　{{ ((this.author.score * 2) / 10).toFixed(1) }}分
           </q-btn>
         </q-item>
-      </q-card-section>
-
-      <q-separator />
-
-      <q-card-section>
-        <q-card-section class="q-pt-none">
-          <div v-if="this.author.updatetime !== 0" class="text-grey-7">
-            今日安装：{{ this.author.today_install }}　　创建日期：{{
-              this.author.createtime | formatDate
-            }}
-            <br />总安装量：{{ this.author.total_install }}　　最近更新：{{
-              this.author.updatetime | formatDate
-            }}
-          </div>
-          <div v-else class="text-grey-7">
-            今日安装：{{ this.author.today_install }}　　创建日期：{{
-              this.author.createtime | formatDate
-            }}　 <br />总安装量：{{ this.author.total_install }}　　最近更新：{{
-              this.author.createtime | formatDate
-            }}
-          </div>
-        </q-card-section>
 
         <q-separator />
 
-        <q-card-section class="q-pt-none" style="margin-top: 10px">
-          {{ author.description }}
-        </q-card-section>
-        <q-separator />
         <q-card-section>
           <div class="install">
             <q-btn
@@ -101,6 +75,29 @@
               label="如何安装脚本？"
             />
           </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section class="text-caption">
+          <div v-if="this.author.updatetime !== 0" class="text-grey-7">
+            创建日期：{{this.author.createtime | formatDate}}　　今日安装：{{ this.author.today_install }}
+            <br />最近更新：{{this.author.updatetime | formatDate}}　　总安装量：{{ this.author.total_install }}　　
+            </div>
+          <div v-else class="text-grey-7">
+            创建日期：{{this.author.createtime | formatDate}}　　今日安装：{{ this.author.today_install }}
+            <br />最近更新：{{this.author.createtime | formatDate}}　　总安装量：{{ this.author.total_install }}　　
+          </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section class="q-pt-none text-caption" style="margin-top: 10px">
+          {{ author.description }}
+        </q-card-section>
+
+        <q-separator />
+        <q-card-section>
           <div>
             <div id="editor">{{ author.content }}</div>
           </div>

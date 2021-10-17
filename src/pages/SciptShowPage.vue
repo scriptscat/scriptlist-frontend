@@ -1,6 +1,7 @@
 <template>
   <div class="page-padding padding-normal">
-    <q-card style="margin: 30px 0px">
+    <q-card style="margin: 30px auto;
+      max-width:1000px;">
       <q-tabs
         v-model="tab"
         inline-label
@@ -8,7 +9,8 @@
         mobile-arrows
         dense
         align="left"
-        class="text-primary"
+        active-color="primary"
+        indicator-color="primary"
       >
         <q-route-tab
           :to="{ name: 'showPage', params: $route.params }"
@@ -29,6 +31,11 @@
           :to="{ name: 'showComment', params: $route.params }"
           :name="3"
           label="评论"
+        />
+        <q-route-tab
+          to=""
+          :name="3"
+          label="反馈"
         />
        <!-- <q-tab :name="4" label="统计" />-->
         <q-route-tab

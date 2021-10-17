@@ -16,7 +16,6 @@
                   <q-item-label >
                     <a 
                       style="color:rgb(40, 86, 172);"
-                      href="/"
                       target="_blank"
                       >
                       {{item.username}}
@@ -33,7 +32,7 @@
                 <q-item-section side bottom>
                     <div 
                       class="text-caption text-center text-primary"
-                      style="font-size:14px"
+                      style="font-size:18px"
                       >
                       {{(item.score*2/10).toFixed(1)}}
                     </div>
