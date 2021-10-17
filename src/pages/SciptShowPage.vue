@@ -32,12 +32,15 @@
           :name="3"
           label="评论"
         />
-        <q-route-tab
+        <!-- <q-route-tab
           to=""
           :name="3"
           label="反馈"
-        />
-       <!-- <q-tab :name="4" label="统计" />-->
+        /> -->
+       <!-- <q-tab 
+        :name="4" 
+        label="统计" 
+        /> -->
         <q-route-tab
           :to="{ name: 'updateScript', query: { id } }"
           :name="5"

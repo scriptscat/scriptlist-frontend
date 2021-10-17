@@ -100,9 +100,7 @@
                     />
                   </div>
                   <div>
-                    <div>
-                      {{ item.message }}
-                    </div>
+                    <pre>{{ item.message }}</pre>
                   </div>
                 </div>
               </div>
