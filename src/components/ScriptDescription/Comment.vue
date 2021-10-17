@@ -1,90 +1,122 @@
 <template>
   <div>
     <div class="q-pa-md">
-      <div>
-        <div>
-          <span style="font-size: 20px">发表我的评论(账户:{{ username }})</span>
-        </div>
-        <q-separator style="margin: 5px 0" />
-        <div class="my-comment">
-          <div>
-            <div style="margin: 4px 0px">
-              <span>评价星级:</span>
-            </div>
-            <div>
-              <q-rating
-                icon-selected="star"
-                icon-half="star_half"
-                v-model="mypostform.ratingpost"
-                size="2em"
-                :max="5"
-                color="primary"
-              />
-            </div>
-            <div style="margin: 4px 0px 8px">
-              <span>评价内容:</span>
-            </div>
-            <div>
+      <div v-if="username!='暂未登陆'">
+        <q-card flat bordered class="q-mt-md">
+          <q-card-section>
+            <div class="my-comment">
               <q-input
-                class="text-area-control"
+                v-if="mypostform.text==''"
+                label="填写您的评论并在下方进行评分（友善的反馈是交流的起点）"
+                class="text-area-control text-h6"
                 v-model="mypostform.text"
-                filled
                 type="textarea"
+                borderless
+              />
+              <q-input
+                v-else
+                class="text-area-control"
+                style="font-size:15px"
+                v-model="mypostform.text"
+                type="textarea"
+                borderless
               />
             </div>
-          </div>
-        </div>
-        <div>
-          <q-btn
-            @click="SubmitMyViwer"
-            :disable="!islogin"
-            style="margin: 10px 0px"
-            color="primary"
-            label="提交评价"
-          />
-        </div>
-        <q-separator style="margin: 5px 0" />
+          <q-separator />
+          </q-card-section>
+          <q-card-section class="q-pt-none">
+            <q-rating
+              icon-selected="star"
+              icon-half="star_half"
+              v-model="mypostform.ratingpost"
+              size="25px"
+              :max="5"
+              color="primary"
+            />
+          </q-card-section>
+          <q-separator />
+          
+          <q-card-section>
+            <q-btn
+              @click="SubmitMyViwer"
+              :disable="!islogin"
+              color="primary"
+              label="提交评价"
+            />
+          </q-card-section>
+        </q-card>
+        <q-separator/>
       </div>
-      <div>
-        <div>
-          <span style="font-size: 20px; margin: 15px 0">用户评价：</span>
-        </div>
-        <q-separator style="margin:5px 0 20px 0" />
-        <div>
-          <div v-for="(item, index) in userscorelist" :key="index">
-            <div style="margin-bottom:15px;" class="flex">
-              <q-avatar size="48px">
-                <img :src="item.avatar" />
-              </q-avatar>
-              <div style="flex:1 1 0;padding-left:15px;">
-                <div style="margin-bottom:3px;" class="flex items-center">
-                  <span style="color:#1a73e8;min-width:60px;">{{
-                    item.username
-                  }}</span>
-                  <span style="padding-left:15px">{{ item.createtime }}</span>
 
-                  <q-rating
-                    style="padding-left:5px;"
-                    readonly
-                    :value="item.score"
-                    size="16px"
-                    :max="5"
-                    color="primary"
-                  />
-                </div>
-                <div>
+      <q-card v-else flat bordered class="q-mt-md">
+        <q-card-section>
+          <div class="my-comment">
+            <q-input
+              v-if="mypostform.text==''"
+              label="请先登陆再进行评价"
+              type="textarea"
+              borderless
+              disable
+            />
+          </div>
+        <q-separator />
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-rating
+            size="20px"
+            :max="5"
+            color="primary"
+            disable
+          />
+        </q-card-section>
+      </q-card>
+
+      <q-card flat bordered>
+        <q-expansion-item
+          switch-toggle
+          default-opened
+          icon="chat"
+          label="用户评价">
+          <q-card v-if="userscorelist.length!=0">
+            <div v-for="(item, index) in userscorelist" :key="index">
+              <div style="margin-left:10px; margin-bottom:5px;" class="flex">
+                <q-avatar size="40px">
+                  <img :src="item.avatar" />
+                </q-avatar>
+                <div style="flex:1 1 0;padding-left:15px;">
+                  <div class="flex items-center">
+                    <span style="color:#1a73e8;min-width:60px;">{{
+                      item.username
+                    }}</span>
+                    <span style="padding-left:15px">{{ item.createtime }}</span>
+
+                    <q-rating
+                      style="padding-left:5px;"
+                      readonly
+                      :value="item.score"
+                      size="16px"
+                      :max="5"
+                      color="primary"
+                    />
+                  </div>
                   <div>
-                    {{ item.message }}
+                    <pre>{{ item.message }}</pre>
                   </div>
                 </div>
               </div>
+              <q-separator style="margin-bottom:5px"/>
             </div>
+          </q-card>
+
+          <div v-else style="margin:15px">
+            暂无用户评论，您可以来当第一位
           </div>
-        </div>
-        <div></div>
-      </div>
+        </q-expansion-item>
+      </q-card>
     </div>
   </div>
+</div>
+
 </template>
 
 <script>
@@ -130,7 +162,7 @@ export default {
               position: "top",
             });
             this.getallscroe(1);
-            
+
           } else {
             this.$q.notify({
               position: "top-right",
@@ -138,6 +170,7 @@ export default {
               position: "top",
             });
           }
+          
         })
         .catch((error) => {});
     },
@@ -150,7 +183,7 @@ export default {
             for (let index = 0; index < response.data.list.length; index++) {
               if (response.data.list[index].avatar === "") {
                 response.data.list[index].avatar =
-                  "https://bbs.tampermonkey.net.cn/uc_server/images/noavatar_middle.gif";
+                  "https://scriptcat.org/api/v1/user/avatar/5";
               }
               response.data.list[index].score =
                 response.data.list[index].score / 10;
