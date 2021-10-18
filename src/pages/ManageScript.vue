@@ -3,128 +3,90 @@
     <div class="show-mess-page">
       <q-card>
         <q-card-section>
-          <div style="font-size: 19px;">
-            {{ user.username }}
-          </div>
-          <div style="font-size:18px;margin-top:15px;">
-            控制台
-          </div>
-          <div>
-            <div
-              v-for="(item, index) in btnlist"
-              :key="index"
-              @click="JumpBtnToTarget(item)"
-              style="margin-top:8px;margin-left:23px;"
-            >
-              <q-btn v-if="item.show===1" outline color="primary" :label="item.name" />
-            </div>
-          </div>
           <div
             v-if="ScriptList.length !== 0"
-            style="font-size:18px;margin-top:15px;"
+            class="text-h4"
+            style="margin-top:20px;text-align:center;"
           >
-            发布的脚本
+            {{user.username}}
+          </div>
+          <div
+            v-for="(item, index) in btnlist"
+            :key="index"
+            style="margin-top:8px;margin-left:20px;"
+          >
+            <q-btn
+              outline
+              @click="JumpBtnToTarget(item)"
+              v-if="item.show===1" 
+              color="primary" 
+              :label="item.name" />
           </div>
           <div v-if="ScriptList.length !== 0">
-            <div>
-              <div style="padding-left:25px;">
-                <div
-                  class="Script-Block"
-                  v-for="(item, index) in ScriptList"
-                  :key="index"
-                >
-                  <div class="Head">
-                    <div>
-                      <a
-                        :href="'/script-show-page/' + item.id"
-                        target="_black"
-                        >{{ item.name }}</a
-                      >
-                      <q-avatar
-                        v-if="
-                          item.script.meta_json.background ||
-                            item.script.meta_json.crontab
-                        "
-                        size="16px"
-                        style="margin-left: 4px"
-                      >
-                        <img src="/icons/favicon-32x32.png" />
-                      </q-avatar>
-                    </div>
-                    <a
-                      style="float: right; text-decoration: none"
-                      :href="
-                        '/scripts/' +
-                          encodeURIComponent(item.name) +
-                          '/source' +
-                          +item.id +
-                          '.user.js'
-                      "
-                    >
-                    </a>
-                  </div>
-                  <div class="Context">
-                    <div class="text">
-                      <span v-if="item.description !== ''">{{
-                        item.description
-                      }}</span>
-                      <span v-else>暂无简介</span>
-                    </div>
-                    <div class="Deatil">
-                      <div class="item">
-                        <div class="Item-left-box">
-                          <div>作者</div>
-                          <div class="Author">
-                            {{ item.username }}
-                          </div>
-                        </div>
-                        <div class="Item-right-box">
-                          <div>得分</div>
-                          <div class="flex items-center justify-center">
-                            <q-rating
-                              v-model="item.score"
-                              disable
-                              size="1em"
-                              :max="5"
-                              color="primary"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div class="item">
-                        <div class="Item-left-box">
-                          <div>今日安装</div>
-                          <div>
-                            {{ item.today_install }}
-                          </div>
-                        </div>
-                        <div class="Item-right-box">
-                          <div>创建日期</div>
-                          <div>
-                            {{ item.createtime | formatDate }}
-                          </div>
-                        </div>
-                      </div>
+            <div
+              class="Script-Block"
+              v-for="(item, index) in ScriptList"
+              :key="index"
+            >
+              <q-card class="my-card" flat bordered>
+                <q-item >
+                  <q-item-section avatar>
+                    <q-avatar>
+                      <img :src="'https://scriptcat.org/api/v1/user/avatar/' + item.uid">
+                    </q-avatar>
+                  </q-item-section>
 
-                      <div class="item">
-                        <div class="Item-left-box">
-                          <div>总安装量</div>
-                          <div>
-                            {{ item.total_install }}
-                          </div>
-                        </div>
-                        <div class="Item-right-box">
-                          <div>最近更新</div>
-                          <div v-if="item.updatetime !== 0">
-                            {{ item.updatetime | formatDate }}
-                          </div>
-                          <div v-else>暂无更新</div>
-                        </div>
-                      </div>
+                  <q-item-section>
+                    <q-item-label >
+                      <a
+                        style="color:rgb(40, 86, 172);"
+                        target="_blank"
+                        >
+                        {{item.username}}
+                      </a>
+                      </q-item-label>
+                    <div class="text-body1">
+                      <a class="text-black"
+                        target="_blank"
+                        :href="'/script-show-page/' + item.id">
+                        <b>{{item.name}}</b>
+                      </a>
                     </div>
-                  </div>
-                </div>
-              </div>
+                  </q-item-section>
+                  <q-item-section side bottom>
+                      <div 
+                        class="text-caption text-center text-primary"
+                        style="font-size:18px"
+                        >
+                        {{(item.score*2/10).toFixed(1)}}
+                      </div>
+                      <q-rating 
+                        size="20px" 
+                        v-on:click="to_score(item.id)" 
+                        :value="item.score/10" 
+                        :max="5"
+                        color="primary"/>
+                  </q-item-section>
+                </q-item>
+                
+                <q-separator />
+
+                <q-card-section>
+                  <q-card-section class="q-pt-none">
+                    <div v-if="item.updatetime !== 0" class="text-grey-7">
+                      今日安装：{{ item.today_install }}　总安装量：{{ item.total_install }}
+                    　创建日期：{{ item.createtime | formatDate }}　最近更新：{{ item.updatetime | formatDate }}
+                    </div>
+                    <div v-else class="text-grey-7">
+                      今日安装：{{ item.today_install }}　总安装量：{{ item.total_install }}
+                    　创建日期：{{ item.createtime | formatDate }}　最近更新：{{ item.createtime | formatDate }}
+                    </div>
+                  </q-card-section>
+                  <q-separator />
+                  <q-card-section class="q-pt-none" style="margin-top:10px">{{item.description}}
+                  </q-card-section>
+                </q-card-section>
+              </q-card>
             </div>
           </div>
         </q-card-section>
@@ -157,7 +119,7 @@ export default {
       btnlist: [
         {
           id: 0,
-          name: "发布你编写的脚本",
+          name: "发布编写的脚本",
           href: "submitscript",
           show:1,
         },
@@ -257,26 +219,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-wrap {
+  max-width: 1100px;
   margin-bottom: 20px;
   margin-top: 20px;
 }
+.my-card{
+  a{
+    text-decoration:none;
+  }
+}
 .Script-Block {
   padding: 16px;
-  .Head {
-    a {
-      color: #1987E2;
-      //text-decoration: none;
-    }
-    font-size: 18px;
-    text-decoration: underline;
-  }
-  .Head:hover {
-    cursor: pointer;
-  }
-  .Context {
-    .text {
-      margin: 7.5px 0;
-    }
-  }
 }
 </style>
