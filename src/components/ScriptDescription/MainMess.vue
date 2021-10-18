@@ -62,7 +62,6 @@
                 this.id +
                 '.user.js'
               "
-              outline
               color="primary"
               label="安装此脚本"
             />
@@ -70,7 +69,6 @@
               class="text-caption"
               type="a"
               href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
-              outline
               color="primary"
               label="如何安装脚本？"
             />
