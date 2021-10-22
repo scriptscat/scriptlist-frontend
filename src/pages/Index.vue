@@ -1,6 +1,6 @@
 <template>
   <div class="page-padding">
-    <div style="margin: 8vh 0;">
+    <div style="margin-top: 8vh;">
       <div style="margin: 4vh 0" class="flex justify-center">
         <div class="text-h5">
           <span 
@@ -34,11 +34,17 @@
           </template>
         </q-input>
       </div>
+      <div class="q-pa-md flex justify-center">
+        <div class="q-gutter-sm">
+          <q-radio val="0" v-model="shape" label="全部脚本"/>
+          <q-radio v-for="item in categorylist" :key="item.id" :val="item.id" v-model="shape" :label="item.name"/>
+        </div>
+      </div>
     </div>
     <div style="padding: 0px 20px 0px 15px; margin-bottom: 20px;" class="flex justify-center">
-      <div class="shadow-2" style="max-width: 1100px; width:100%; text-align:center; padding: 0px 8px; border-radius: 14px;">
+      <div class="shadow-2" style="max-width: 1000px; width:100%; text-align:center; padding: 0px 8px; border-radius: 14px;">
         <div class="intro-page-wrap description">
-          <q-list bordered class="rounded-borders" v-for="(result, idx) in questionAnswer" :key="idx">
+          <q-list title="常见问题" bordered class="rounded-borders" v-for="(result, idx) in questionAnswer" :key="idx">
             <q-expansion-item
               dense-toggle
               v-bind:label="result.question"
@@ -96,6 +102,7 @@ export default {
       SearchTitle: "ScriptCat（脚本猫）比全更全的用户脚本托管平台",
       SearchText: "请输入要查询的脚本关键词",
       cat : require('../assets/cat.png'),
+      shape: "0",
       Text:"",
 
       columns : [
@@ -160,8 +167,12 @@ export default {
           question:"安装出现问题? 想学习脚本开发? 对脚本存在疑问?",
           answer:'可以访问我们的论坛：<a style="text-decoration:none; color:rgb(40, 86, 172);" href="https://bbs.tampermonkey.net.cn/"target="_black">油猴中文网</a>'
         },
-      ]
+      ],
+      categorylist:[],
     };
+  },
+  created(){
+    this.GetCategroy();
   },
   methods: {
     ClickSearch() {
@@ -173,9 +184,26 @@ export default {
       }
       this.$router.push({
         path: "search",
-        query: { keyword: this.Text, page: 1 }
+        query: { 
+          keyword: this.Text, 
+          page: 1,
+          category: this.shape,
+        }
       });
-    }
+    },
+    GetCategroy() {
+      if (process.env.CLIENT) {
+        this.get(
+          "/category"
+        )
+          .then(response => {
+            if (response.data.code === 0) {
+              this.categorylist = response.data.data;
+            }
+          })
+          .catch(error => {});
+      }
+    },
   }
 };
 </script>

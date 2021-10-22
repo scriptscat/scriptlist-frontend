@@ -1,10 +1,23 @@
 <template>
   <div class="page-padding padding-normal setting-wrap-status flex page-main">
-    <div class="shadow-5 main-scrip-page">
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      side="left"
+      :width="150"
+    >
+      <div class="q-pa-md" style="margin-top:20px">
+        <div class="q-gutter-sm" v-for="(item,index) in categorylist" :key="index" >
+          <q-radio :val="item.id" v-model="shape" :label="item.name"/>
+          <q-separator />
+        </div>
+      </div>
+    </q-drawer>
+    <q-card bordered flat class="main-scrip-page">
       <div v-if="ScriptList.length !== 0">
         <div>
           <div class="Script-Block" v-for="(item, index) in ScriptList" :key="index">
-            <q-card class="my-card shadow-2" bordered>
+            <q-card class="my-card shadow-1" bordered>
               <q-item >
                 <q-item-section avatar>
                   <q-avatar>
@@ -90,7 +103,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </q-card>
     <div class="show-mess-page">
       <q-list bordered class="rounded-borders" style="padding-top:5px; width:300px;">
         <q-expansion-item
@@ -211,6 +224,19 @@ export default {
     );
   },
   watch: {
+    shape:{
+      handler(newName, oldName) {
+        this.$router.replace({
+            page:"/search",
+            query:{
+              keyword: this.$route.query.keyword,
+              category: newName,
+              page:1,
+              }
+            })
+            console.log(newName);
+        }
+    },
     $route(currentRoute, from) {
       this.page = parseInt(this.$route.query.page);
       this.get(
@@ -257,48 +283,49 @@ export default {
       }
       return ret;
     },
-    GerRecommond() {
-      this.get(
-        "/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain="
-      )
-        .then(response => {
-          if (response.data.msg === "ok") {
-            if (process.env.CLIENT) {
-              if (response.data.code === 0) {
-                this.recommondlist.download = response.data.list;
-              }
+    GetRecommend() {
+      if (process.env.CLIENT) {
+        this.get(
+          "/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain="
+        )
+          .then(response => {
+            if (response.data.code === 0) {
+              this.recommondlist.download = response.data.list;
             }
-          }
-        })
-        .catch(error => {});
-      this.get("/scripts?page=1&count=10&keyword=&sort=score&category=&domain=")
-        .then(response => {
-          if (response.data.msg === "ok") {
-            if (process.env.CLIENT) {
-              if (response.data.code === 0) {
-                this.recommondlist.score = response.data.list;
-              }
+          })
+          .catch(error => {});
+        this.get("/scripts?page=1&count=10&keyword=&sort=score&category=&domain=")
+          .then(response => {
+            if (response.data.code === 0) {
+              this.recommondlist.score = response.data.list;
             }
-          }
-        })
-        .catch(error => {});
-      this.get(
-        "/scripts?page=1&count=10&keyword=&sort=updatetime&category=&domain="
-      )
-        .then(response => {
-          if (response.data.msg === "ok") {
-            if (process.env.CLIENT) {
-              if (response.data.code === 0) {
-                this.recommondlist.new = response.data.list;
-              }
+          })
+          .catch(error => {});
+        this.get(
+          "/scripts?page=1&count=10&keyword=&sort=updatetime&category=&domain="
+        )
+          .then(response => {
+            if (response.data.code === 0) {
+              this.recommondlist.new = response.data.list;
             }
-          }
-        })
-        .catch(error => {});
+          })
+          .catch(error => {});
+      }
     },
-    GetSciprtList() {
-      this.GerRecommond();
-    }
+    GetCategroy() {
+      if (process.env.CLIENT) {
+        this.get(
+          "/category"
+        )
+          .then(response => {
+            if (response.data.code === 0) {
+              this.categorylist = response.data.data;
+              this.categorylist.unshift({name:"全部脚本",id:0});
+            }
+          })
+          .catch(error => {});
+      }
+    },
   },
   data() {
     return {
@@ -319,26 +346,34 @@ export default {
         score: [],
         new: []
       },
+      shape: 2,
+      categorylist:[],
       count: 20, //每次获取条数
       keyword: "",
-      page: 1
+      page: 1,
+      leftDrawerOpen: false
     };
   },
   created() {
+    this.shape = Number(this.$route.query.category);
     this.keyword = this.$route.query.keyword;
     this.page = parseInt(this.$route.query.page);
     if (isNaN(this.page)) {
       this.page = 1;
     }
-    this.GetSciprtList();
+    // this.GetCategroy();
+    this.GetRecommend();
+    this.GetCategroy();
   }
 };
+
 </script>
 <style lang="scss" scoped>
-$seprewidth: 250px;
 
 .Script-Block {
-  padding: 16px;
+  padding: 16px 16px 0px 16px;
+  max-width: 1000px;
+  
   .my-card {
     a{
       text-decoration: none;
@@ -354,6 +389,7 @@ $seprewidth: 250px;
     }
   }
 }
+
 .show-recommod-text {
   max-width: 300px;
   padding-left:4px;
@@ -407,10 +443,10 @@ $seprewidth: 250px;
   margin-bottom: 20px;
   margin-top: 30px;
   .main-scrip-page {
-    width: calc(100% - #{$seprewidth});
+    width: 100%;
   }
   .show-mess-page {
-    min-width: $seprewidth;
+    min-width:200px;
     padding-left: 30px;
     .q-card {
       margin-bottom: 10px;
