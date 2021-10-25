@@ -49,6 +49,11 @@
         </q-item>
 
         <q-separator />
+        
+        <q-card-section class="q-pt-none text-caption" style="margin-top: 10px">
+          {{ author.description }}
+        </q-card-section>
+        <q-separator />
 
         <q-card-section>
           <div class="install">
@@ -63,7 +68,7 @@
                 '.user.js'
               "
               color="primary"
-              label="安装此脚本"
+              :label="this.install"
             />
             <q-btn
               class="text-caption"
@@ -76,10 +81,10 @@
         </q-card-section>
 
         <q-separator />
-
-        <q-card-section class="text-caption">
-          <div v-if="this.author.updatetime !== 0" class="text-grey-7">
-            创建日期：{{this.author.createtime | formatDate}}　　今日安装：{{ this.author.today_install }}
+        <q-card-section class="text-caption text-grey-7">
+          <div v-if="this.author.updatetime !== 0">
+            当前版本：{{this.author.script.version}}
+            <br />创建日期：{{this.author.createtime | formatDate}}　　今日安装：{{ this.author.today_install }}
             <br />最近更新：{{this.author.updatetime | formatDate}}　　总安装量：{{ this.author.total_install }}　　
             </div>
           <div v-else class="text-grey-7">
@@ -88,17 +93,10 @@
           </div>
         </q-card-section>
 
-        <q-separator />
-
-        <q-card-section class="q-pt-none text-caption" style="margin-top: 10px">
-          {{ author.description }}
-        </q-card-section>
 
         <q-separator />
         <q-card-section>
-          <div>
             <div id="editor">{{ author.content }}</div>
-          </div>
         </q-card-section>
       </q-card-section>
     </q-card>
@@ -136,6 +134,7 @@ export default {
   },
   data() {
     return {
+      install: "安装此脚本",
       viewr: null,
     };
   },
@@ -183,6 +182,24 @@ export default {
       });
     }
   },
+  mounted(){
+    var api = window.external.Scriptcat || window.external.Tampermonkey;
+    api.isInstalled(
+      this.author.name,
+      this.author.namespace,
+      (response,reject)=>{
+        if (response.installed===true){
+          if (response.version==this.author.script.version){
+            this.install="重新安装此脚本（版本"+response.version+"）";
+          }
+          else{
+            this.install="更新到"+response.version+"版本";
+          }
+        }
+        else
+          this.install="安装此脚本";
+    });
+  }
 };
 </script>
 
