@@ -184,21 +184,23 @@ export default {
   },
   mounted(){
     var api = window.external.Scriptcat || window.external.Tampermonkey;
-    api.isInstalled(
-      this.author.name,
-      this.author.namespace,
-      (response,reject)=>{
-        if (response.installed===true){
-          if (response.version==this.author.script.version){
-            this.install="重新安装此脚本（版本"+response.version+"）";
+    if (api != undefined){
+      api.isInstalled(
+        this.author.name,
+        this.author.namespace,
+        (response,reject)=>{
+          if (response.installed===true){
+            if (response.version==this.author.script.version){
+              this.install="重新安装此脚本（版本"+response.version+"）";
+            }
+            else{
+              this.install="更新到"+response.version+"版本";
+            }
           }
-          else{
-            this.install="更新到"+response.version+"版本";
-          }
-        }
-        else
-          this.install="安装此脚本";
-    });
+          else
+            this.install="安装此脚本";
+      });
+    }
   }
 };
 </script>
