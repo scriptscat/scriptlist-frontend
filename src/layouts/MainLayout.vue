@@ -30,7 +30,7 @@
           <q-btn
             flat
             dense
-            onclick="window.open('/search?category=0&page=1','_self')"
+            onclick="window.open('/search','_self')"
             label="脚本列表"
             icon="menu"
             class="q-mx-md"
@@ -194,7 +194,7 @@ export default {
         return;
       }
       if (item.name === "脚本列表") {
-        window.open("/search?category=0&page=1", "_self");
+        window.open("/search", "_self");
         return;
       }
     },

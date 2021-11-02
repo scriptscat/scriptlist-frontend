@@ -185,8 +185,7 @@ export default {
       this.$router.push({
         path: "search",
         query: { 
-          keyword: this.Text, 
-          page: 1,
+          keyword: this.Text,
           category: this.shape,
         }
       });

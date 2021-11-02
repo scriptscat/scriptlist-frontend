@@ -230,8 +230,8 @@ export default {
             page:"/search",
             query:{
               keyword: this.$route.query.keyword,
-              category: newName,
-              page:1,
+              category: isNaN(newName)?this.$route.query.category:newName,
+              page: this.$route.query.page,
               }
             })
             console.log(newName);
@@ -358,10 +358,6 @@ export default {
     this.shape = Number(this.$route.query.category);
     this.keyword = this.$route.query.keyword;
     this.page = parseInt(this.$route.query.page);
-    if (isNaN(this.page)) {
-      this.page = 1;
-    }
-    // this.GetCategroy();
     this.GetRecommend();
     this.GetCategroy();
   }

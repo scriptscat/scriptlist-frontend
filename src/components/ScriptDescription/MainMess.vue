@@ -16,7 +16,7 @@
           <q-item-section>
             <q-item-label>
               <a style="color: rgb(40, 86, 172)" href="/" target="_blank">
-                {{ author.name }}
+                {{ author.username }}
               </a>
             </q-item-label>
             <div class="text-body1">
@@ -96,7 +96,7 @@
 
         <q-separator />
         <q-card-section>
-            <div id="editor">{{ author.content }}</div>
+            <div class="editor" id="editor">{{ author.content }}</div>
         </q-card-section>
       </q-card-section>
     </q-card>
