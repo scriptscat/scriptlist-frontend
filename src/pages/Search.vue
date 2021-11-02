@@ -1,14 +1,13 @@
 <template>
   <div class="page-padding padding-normal setting-wrap-status flex page-main">
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      side="left"
-      :width="150"
-    >
-      <div class="q-pa-md" style="margin-top:20px">
-        <div class="q-gutter-sm" v-for="(item,index) in categorylist" :key="index" >
-          <q-radio :val="item.id" v-model="shape" :label="item.name"/>
+    <q-drawer v-model="leftDrawerOpen" show-if-above side="left" :width="150">
+      <div class="q-pa-md" style="margin-top: 20px">
+        <div
+          class="q-gutter-sm"
+          v-for="(item, index) in categorylist"
+          :key="index"
+        >
+          <q-radio :val="item.id" v-model="shape" :label="item.name" />
           <q-separator />
         </div>
       </div>
@@ -16,63 +15,80 @@
     <q-card bordered flat class="main-scrip-page">
       <div v-if="ScriptList.length !== 0">
         <div>
-          <div class="Script-Block" v-for="(item, index) in ScriptList" :key="index">
+          <div
+            class="Script-Block"
+            v-for="(item, index) in ScriptList"
+            :key="index"
+          >
             <q-card class="my-card shadow-1" bordered>
-              <q-item >
+              <q-item>
                 <q-item-section avatar>
                   <q-avatar>
-                    <img :src="'https://scriptcat.org/api/v1/user/avatar/' + item.uid">
+                    <img
+                      :src="
+                        'https://scriptcat.org/api/v1/user/avatar/' + item.uid
+                      "
+                    />
                   </q-avatar>
                 </q-item-section>
 
                 <q-item-section>
-                  <q-item-label >
-                    <a 
-                      style="color:rgb(40, 86, 172);"
-                      target="_blank"
-                      >
-                      {{item.username}}
+                  <q-item-label>
+                    <a style="color: rgb(40, 86, 172)" target="_blank">
+                      {{ item.username }}
                     </a>
-                    </q-item-label>
+                  </q-item-label>
                   <div class="text-body1">
-                    <a class="text-black" 
+                    <a
+                      class="text-black"
                       target="_blank"
-                      :href="'/script-show-page/' + item.id">
-                      <b>{{item.name}}</b>
+                      :href="'/script-show-page/' + item.id"
+                    >
+                      <b>{{ item.name }}</b>
                     </a>
                   </div>
                 </q-item-section>
                 <q-item-section side bottom>
-                    <div 
-                      class="text-caption text-center text-primary"
-                      style="font-size:18px"
-                      >
-                      {{(item.score*2/10).toFixed(1)}}
-                    </div>
-                    <q-rating 
-                      size="20px" 
-                      v-on:click="to_score(item.id)" 
-                      :value="item.score/10" 
-                      :max="5"
-                      color="primary"/>
+                  <div
+                    class="text-caption text-center text-primary"
+                    style="font-size: 18px"
+                  >
+                    {{ ((item.score * 2) / 10).toFixed(1) }}
+                  </div>
+                  <q-rating
+                    size="20px"
+                    v-on:click="to_score(item.id)"
+                    :value="item.score / 10"
+                    :max="5"
+                    color="primary"
+                  />
                 </q-item-section>
               </q-item>
-              
+
               <q-separator />
 
               <q-card-section>
                 <q-card-section class="q-pt-none">
                   <div v-if="item.updatetime !== 0" class="text-grey-7">
-                    今日安装：{{ item.today_install }}　总安装量：{{ item.total_install }}
-                  　创建日期：{{ item.createtime | formatDate }}　最近更新：{{ item.updatetime | formatDate }}
+                    今日安装：{{ item.today_install }}　总安装量：{{
+                      item.total_install
+                    }}
+                    　创建日期：{{ item.createtime | formatDate }}　最近更新：{{
+                      item.updatetime | formatDate
+                    }}
                   </div>
                   <div v-else class="text-grey-7">
-                    今日安装：{{ item.today_install }}　总安装量：{{ item.total_install }}
-                  　创建日期：{{ item.createtime | formatDate }}　最近更新：{{ item.createtime | formatDate }}
+                    今日安装：{{ item.today_install }}　总安装量：{{
+                      item.total_install
+                    }}
+                    　创建日期：{{ item.createtime | formatDate }}　最近更新：{{
+                      item.createtime | formatDate
+                    }}
                   </div>
                 </q-card-section>
                 <q-separator />
-                <q-card-section class="q-pt-none" style="margin-top:10px">{{item.description}}
+                <q-card-section class="q-pt-none" style="margin-top: 10px"
+                  >{{ item.description }}
                 </q-card-section>
               </q-card-section>
             </q-card>
@@ -89,11 +105,14 @@
         </div>
       </div>
       <div v-else>
-        <div class="flex items-center justify-center column"style="margin-top:80px;">
-          <span style="font-size:20px;">暂无相关脚本搜索结果</span>
+        <div
+          class="flex items-center justify-center column"
+          style="margin-top: 80px"
+        >
+          <span style="font-size: 20px">暂无相关脚本搜索结果</span>
           <div>
             <q-btn
-              style="margin:40px 0;"
+              style="margin: 40px 0"
               type="a"
               href="/"
               outline
@@ -105,7 +124,11 @@
       </div>
     </q-card>
     <div class="show-mess-page">
-      <q-list bordered class="rounded-borders" style="padding-top:5px; width:300px;">
+      <q-list
+        bordered
+        class="rounded-borders"
+        style="padding-top: 5px; width: 300px"
+      >
         <q-expansion-item
           default-opened
           dense
@@ -121,8 +144,13 @@
                     :style="{ backgroundColor: iconcolorlist[index] }"
                     class="recommond-icon"
                     >{{ index + 1 }}
-                    </span>
-                    <a class="text-caption" :href="'/script-show-page/'+item.id"> {{ item.name }}</a>
+                  </span>
+                  <a
+                    class="text-caption"
+                    :href="'/script-show-page/' + item.id"
+                  >
+                    {{ item.name }}</a
+                  >
                 </span>
               </div>
             </q-card-section>
@@ -144,7 +172,12 @@
                     :style="{ backgroundColor: iconcolorlist[index] }"
                     class="recommond-icon"
                     >{{ index + 1 }}</span
-                  ><a class="text-caption" :href="'/script-show-page/'+item.id"> {{ item.name }}</a></span
+                  ><a
+                    class="text-caption"
+                    :href="'/script-show-page/' + item.id"
+                  >
+                    {{ item.name }}</a
+                  ></span
                 >
               </div>
             </q-card-section>
@@ -159,15 +192,20 @@
         >
           <q-card>
             <q-card-section>
-                <div v-for="(item, index) in recommondlist.new" :key="index">
-                  <span class="show-recommod-text"
-                    ><span
-                      :style="{backgroundColor: iconcolorlist[index] }"
-                      class="recommond-icon"
-                      >{{ index + 1 }}</span
-                    ><a class="text-caption" :href="'/script-show-page/'+item.id"> {{ item.name }}</a></span
+              <div v-for="(item, index) in recommondlist.new" :key="index">
+                <span class="show-recommod-text"
+                  ><span
+                    :style="{ backgroundColor: iconcolorlist[index] }"
+                    class="recommond-icon"
+                    >{{ index + 1 }}</span
+                  ><a
+                    class="text-caption"
+                    :href="'/script-show-page/' + item.id"
                   >
-                </div>
+                    {{ item.name }}</a
+                  ></span
+                >
+              </div>
             </q-card-section>
           </q-card>
         </q-expansion-item>
@@ -180,13 +218,13 @@ import TablePagination from "components/TablePagination.vue";
 
 export default {
   meta: {
-    title: "用户脚本列表"
+    title: "用户脚本列表",
   },
   components: {
-    TablePagination
+    TablePagination,
   },
   computed: {
-    maxpage: function() {
+    maxpage: function () {
       let max = Math.ceil(this.totalnums / this.count);
       if (max < 1) {
         max = 1;
@@ -198,7 +236,7 @@ export default {
     },
     totalnums() {
       return this.$store.state.scripts.total;
-    }
+    },
   },
   preFetch({
     store,
@@ -207,7 +245,7 @@ export default {
     redirect,
     ssrContext,
     urlPath,
-    publicPath
+    publicPath,
   }) {
     return store.dispatch(
       "scripts/fetchScriptList",
@@ -224,21 +262,20 @@ export default {
     );
   },
   watch: {
-    shape:{
+    shape: {
       handler(newName, oldName) {
-        if(isNaN(newName)){
+        if (isNaN(newName)) {
           return;
         }
         this.$router.replace({
-            page:"/search",
-            query:{
-              keyword: this.$route.query.keyword,
-              category: newName,
-              page: this.$route.query.page,
-              }
-            })
-            console.log(newName);
-        }
+          page: "/search",
+          query: {
+            keyword: this.$route.query.keyword,
+            category: newName,
+            page: this.$route.query.page,
+          },
+        });
+      },
     },
     $route(currentRoute, from) {
       this.page = parseInt(this.$route.query.page);
@@ -254,21 +291,21 @@ export default {
           "&domain=" +
           (currentRoute.query.domain || "")
       )
-        .then(response => {
+        .then((response) => {
           if (response.data.code == 0) {
             this.$store.commit("scripts/updateScripts", response.data);
           } else {
             this.$store.commit("scripts/updateScripts", { list: [], total: 0 });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$store.commit("scripts/updateScripts", { list: [], total: 0 });
         });
-    }
+    },
   },
   methods: {
-    to_score(id){
-      window.open('/script-show-page/' + id+'/comment')
+    to_score(id) {
+      window.open("/script-show-page/" + id + "/comment");
     },
     tolink(page) {
       let ret = "/search?page=" + (page || 1);
@@ -291,42 +328,42 @@ export default {
         this.get(
           "/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain="
         )
-          .then(response => {
+          .then((response) => {
             if (response.data.code === 0) {
               this.recommondlist.download = response.data.list;
             }
           })
-          .catch(error => {});
-        this.get("/scripts?page=1&count=10&keyword=&sort=score&category=&domain=")
-          .then(response => {
+          .catch((error) => {});
+        this.get(
+          "/scripts?page=1&count=10&keyword=&sort=score&category=&domain="
+        )
+          .then((response) => {
             if (response.data.code === 0) {
               this.recommondlist.score = response.data.list;
             }
           })
-          .catch(error => {});
+          .catch((error) => {});
         this.get(
           "/scripts?page=1&count=10&keyword=&sort=updatetime&category=&domain="
         )
-          .then(response => {
+          .then((response) => {
             if (response.data.code === 0) {
               this.recommondlist.new = response.data.list;
             }
           })
-          .catch(error => {});
+          .catch((error) => {});
       }
     },
     GetCategroy() {
       if (process.env.CLIENT) {
-        this.get(
-          "/category"
-        )
-          .then(response => {
+        this.get("/category")
+          .then((response) => {
             if (response.data.code === 0) {
               this.categorylist = response.data.data;
-              this.categorylist.unshift({name:"全部脚本",id:0});
+              this.categorylist.unshift({ name: "全部脚本", id: 0 });
             }
           })
-          .catch(error => {});
+          .catch((error) => {});
       }
     },
   },
@@ -347,34 +384,32 @@ export default {
       recommondlist: {
         download: [],
         score: [],
-        new: []
+        new: [],
       },
-      shape: 2,
-      categorylist:[],
+      shape: 0,
+      categorylist: [],
       count: 20, //每次获取条数
       keyword: "",
       page: 1,
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
     };
   },
   created() {
-    this.shape = Number(this.$route.query.category);
+    this.shape = Number(this.$route.query.category || 0);
     this.keyword = this.$route.query.keyword;
     this.page = parseInt(this.$route.query.page);
     this.GetRecommend();
     this.GetCategroy();
-  }
+  },
 };
-
 </script>
 <style lang="scss" scoped>
-
 .Script-Block {
   padding: 16px 16px 0px 16px;
   max-width: 1000px;
-  
+
   .my-card {
-    a{
+    a {
       text-decoration: none;
     }
   }
@@ -391,18 +426,17 @@ export default {
 
 .show-recommod-text {
   max-width: 300px;
-  padding-left:4px;
+  padding-left: 4px;
   overflow: hidden;
   display: flex;
-    a{
-      flex: 1 1 0;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      text-decoration: none;
-      color: black;
+  a {
+    flex: 1 1 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-decoration: none;
+    color: black;
   }
-
 }
 .recommond-icon {
   flex-shrink: 0;
@@ -416,16 +450,16 @@ export default {
   font-size: 12.1px;
   margin-right: 5px;
 }
-.setting-wrap-status{
+.setting-wrap-status {
   flex-wrap: nowrap;
 }
 @media screen and (max-width: 800px) {
-  .setting-wrap-status{
-  flex-wrap: wrap;
-}
-.show-recommod-text[data-v-4da00568] {
+  .setting-wrap-status {
+    flex-wrap: wrap;
+  }
+  .show-recommod-text[data-v-4da00568] {
     max-width: 100%;
-}
+  }
 }
 @media screen and (max-width: 800px) {
   .main-scrip-page {
@@ -445,7 +479,7 @@ export default {
     width: 100%;
   }
   .show-mess-page {
-    min-width:200px;
+    min-width: 200px;
     padding-left: 30px;
     .q-card {
       margin-bottom: 10px;
