@@ -226,12 +226,15 @@ export default {
   watch: {
     shape:{
       handler(newName, oldName) {
+        if(isNaN(newName)){
+          return;
+        }
         this.$router.replace({
             page:"/search",
             query:{
               keyword: this.$route.query.keyword,
               category: newName,
-              page:1,
+              page: this.$route.query.page,
               }
             })
             console.log(newName);
@@ -358,10 +361,6 @@ export default {
     this.shape = Number(this.$route.query.category);
     this.keyword = this.$route.query.keyword;
     this.page = parseInt(this.$route.query.page);
-    if (isNaN(this.page)) {
-      this.page = 1;
-    }
-    // this.GetCategroy();
     this.GetRecommend();
     this.GetCategroy();
   }

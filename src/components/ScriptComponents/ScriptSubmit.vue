@@ -249,10 +249,7 @@ export default {
         if (this.id !== undefined) {
           this.GetScriptData();
         }
-      });
-    }
-    if (process.env.CLIENT) {
-      this.$nextTick(() => {
+
         require("@toast-ui/editor/dist/toastui-editor.css");
         const Editor = require("@toast-ui/editor").default;
         this.mkedit = new Editor({
