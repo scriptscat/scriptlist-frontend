@@ -175,10 +175,12 @@ export default {
         el.innerHTML = "";
         this.viewr = new Viewer({
           el: el,
-          initialValue: "",
+          initialValue: this.author.content,
           plugins: [[codeSyntaxHighlight, { highlighter: Prism }]],
+          linkAttributes:{
+            target:"_blank"
+          }
         });
-        this.viewr.setMarkdown(this.author.content);
       });
     }
   },

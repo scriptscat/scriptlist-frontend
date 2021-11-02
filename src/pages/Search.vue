@@ -226,11 +226,14 @@ export default {
   watch: {
     shape:{
       handler(newName, oldName) {
+        if(isNaN(newName)){
+          return;
+        }
         this.$router.replace({
             page:"/search",
             query:{
               keyword: this.$route.query.keyword,
-              category: isNaN(newName)?this.$route.query.category:newName,
+              category: newName,
               page: this.$route.query.page,
               }
             })
