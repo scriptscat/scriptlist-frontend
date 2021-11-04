@@ -1,16 +1,16 @@
 import { get } from "src/utils/axios";
 
-export function loginUserInfo({ commit }, cookie, resp) {
-    if (!cookie.get('token')) {
+export function loginUserInfo({ commit }, { cookies, res }) {
+    if (!cookies.get('token')) {
         return;
     }
     return get("/user/info", {
         headers: {
-            cookie: "token=" + cookie.get('token')
+            cookie: "token=" + cookies.get('token')
         }
     }).then(response => {
         if (response.headers['set-cookie']) {
-            resp.setHeader("set-cookie", response.headers['set-cookie']);
+            res.append("set-cookie", response.headers['set-cookie']);
         }
         if (response.data.code === 0) {
             commit("updateUser", { islogin: true, user: response.data.data.user });
@@ -19,6 +19,7 @@ export function loginUserInfo({ commit }, cookie, resp) {
         }
     })
         .catch(error => {
+            console.log(error, "err");
             commit("updateUser", { islogin: false });
         });
 }

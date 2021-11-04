@@ -135,7 +135,7 @@ export default {
     publicPath,
   }) {
     const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
-    return store.dispatch("user/loginUserInfo", cookies, ssrContext.res);
+    return store.dispatch("user/loginUserInfo", {cookies, res: ssrContext.res});
   },
   computed: {
     islogin() {
