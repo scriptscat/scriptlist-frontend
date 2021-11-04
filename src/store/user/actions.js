@@ -23,3 +23,16 @@ export function loginUserInfo({ commit }, { cookies, res }) {
             commit("updateUser", { islogin: false });
         });
 }
+
+export function fetchUserInfo({ commit }, uid) {
+    return get("/user/info/" + uid).then(response => {
+      if (response.data.code === 0) {
+        commit("updateUser", { islogin: true, user: response.data.data.user });
+      } else {
+        commit("updateUser", {});
+      }
+    }).catch(error => {
+      commit("updateUser", {});
+    });
+  
+  }
