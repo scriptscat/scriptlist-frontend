@@ -100,6 +100,7 @@
             :currentpage.sync="page"
             :maxpage="maxpage"
             :maxlens="6"
+            :max="10"
             :tolink="tolink"
           />
         </div>

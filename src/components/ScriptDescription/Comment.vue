@@ -157,22 +157,23 @@ export default {
           console.log(response, "response");
           if (response.data.code === 0) {
             this.$q.notify({
-              position: "top-right",
               message: "提交成功！",
-              position: "top",
+              position: "center",
+              icon: "tag_faces",
+              color:"primary"
             });
             this.getallscroe(1);
 
-          } else {
-            this.$q.notify({
-              position: "top-right",
-              message: response.data.msg,
-              position: "top",
-            });
           }
-          
         })
-        .catch((error) => {});
+        .catch((error) => {
+          this.$q.notify({
+            position: "center",
+            message: "评分和评论都是必填项！",
+            icon: "error",
+            color: "red"
+          });
+        });
     },
     getallscroe(page = 1) {
       this.userscorelist =[]
