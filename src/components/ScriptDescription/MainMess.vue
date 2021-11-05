@@ -15,7 +15,7 @@
 
           <q-item-section>
             <q-item-label>
-              <a style="color: rgb(40, 86, 172)" href="/" target="_blank">
+              <a style="color: rgb(40, 86, 172)" href="/" target="_blank" :href="'/users/' + this.author.uid">
                 {{ author.username }}
               </a>
             </q-item-label>

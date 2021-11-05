@@ -34,7 +34,7 @@
 
                 <q-item-section>
                   <q-item-label>
-                    <a style="color: rgb(40, 86, 172)" target="_blank">
+                    <a style="color: rgb(40, 86, 172)" target="_blank" :href="'/users/'+item.uid">
                       {{ item.username }}
                     </a>
                   </q-item-label>

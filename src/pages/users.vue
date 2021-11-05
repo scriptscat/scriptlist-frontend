@@ -26,7 +26,7 @@
 
                   <q-item-section>
                     <q-item-label>
-                      <a style="color:rgb(40, 86, 172);" target="_blank">
+                      <a style="color:rgb(40, 86, 172);" target="_blank" :href="'/users/'+item.uid">
                         {{ item.username }}
                       </a>
                     </q-item-label>
@@ -124,7 +124,7 @@ export default {
       return max;
     },
     username() {
-      return this.$store.state.user.user.username;
+      return this.$store.state.user.userInfo.username;
     },
     scriptList() {
       return this.$store.state.scripts.scripts;

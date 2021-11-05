@@ -27,12 +27,11 @@ export function loginUserInfo({ commit }, { cookies, res }) {
 export function fetchUserInfo({ commit }, uid) {
     return get("/user/info/" + uid).then(response => {
       if (response.data.code === 0) {
-        commit("updateUser", { islogin: true, user: response.data.data.user });
+        commit("fetchUserInfo", { userInfo: response.data.data.user });
       } else {
-        commit("updateUser", {});
+        commit("fetchUserInfo", {});
       }
     }).catch(error => {
-      commit("updateUser", {});
+      commit("fetchUserInfo", {});
     });
-  
   }
