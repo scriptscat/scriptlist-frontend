@@ -15,15 +15,13 @@
 
           <q-item-section>
             <q-item-label>
-              <a style="color: rgb(40, 86, 172)" href="/" target="_blank">
+              <a style="color: rgb(40, 86, 172)" href="/" target="_blank" :href="'/users/' + this.author.uid">
                 {{ author.username }}
               </a>
             </q-item-label>
             <div class="text-body1">
               <a
                 class="text-black"
-                target="_blank"
-                :href="'/script-show-page/' + this.author.id"
               >
                 <b>{{ this.author.name }}</b>
               </a>
@@ -73,6 +71,7 @@
             <q-btn
               class="text-caption"
               type="a"
+              target="_blank"
               href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
               color="primary"
               label="如何安装脚本？"

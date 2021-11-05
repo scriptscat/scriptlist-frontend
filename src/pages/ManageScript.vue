@@ -41,6 +41,7 @@
                       <a
                         style="color:rgb(40, 86, 172);"
                         target="_blank"
+                        :href="'/users/'+item.uid"
                         >
                         {{item.username}}
                       </a>
