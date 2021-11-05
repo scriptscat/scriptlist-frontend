@@ -4,11 +4,7 @@ export function loginUserInfo({ commit }, { cookies, res }) {
     if (!cookies.get('token')) {
         return;
     }
-    return get("/user/info", {
-        headers: {
-            cookie: "token=" + cookies.get('token')
-        }
-    }).then(response => {
+    return get("/user/info", {}, cookies).then(response => {
         if (response.headers['set-cookie']) {
             res.append("set-cookie", response.headers['set-cookie']);
         }
@@ -26,12 +22,12 @@ export function loginUserInfo({ commit }, { cookies, res }) {
 
 export function fetchUserInfo({ commit }, uid) {
     return get("/user/info/" + uid).then(response => {
-      if (response.data.code === 0) {
-        commit("fetchUserInfo", { userInfo: response.data.data.user });
-      } else {
-        commit("fetchUserInfo", {});
-      }
+        if (response.data.code === 0) {
+            commit("fetchUserInfo", { userInfo: response.data.data.user });
+        } else {
+            commit("fetchUserInfo", {});
+        }
     }).catch(error => {
-      commit("fetchUserInfo", {});
+        commit("fetchUserInfo", {});
     });
-  }
+}

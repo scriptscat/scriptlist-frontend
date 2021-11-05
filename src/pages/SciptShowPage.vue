@@ -1,7 +1,6 @@
 <template>
   <div class="page-padding padding-normal">
-    <q-card style="margin: 30px auto;
-      max-width:1000px;">
+    <q-card style="margin: 30px auto; max-width: 1000px">
       <q-tabs
         v-model="tab"
         inline-label
@@ -37,7 +36,9 @@
           :name="3"
           label="反馈"
         /> -->
+        <!-- <q-tab 
        <!-- <q-tab 
+        <!-- <q-tab 
         :name="4" 
         label="统计" 
         /> -->
@@ -71,7 +72,24 @@
 </template>
 
 <script>
+import { Cookies } from "quasar";
+
 export default {
+  preFetch({
+    store,
+    currentRoute,
+    previousRoute,
+    redirect,
+    ssrContext,
+    urlPath,
+    publicPath,
+  }) {
+    const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
+    return store.dispatch("scripts/fetchScriptInfo", {
+      id: currentRoute.params.id,
+      cookies: cookies,
+    });
+  },
   computed: {
     isuserisauthor() {
       try {
@@ -79,31 +97,16 @@ export default {
       } catch (error) {
         return false;
       }
-    }
+    },
+    script() {
+      return this.$store.state.scripts.script;
+    },
   },
   data() {
     return {
       id: null,
-      tab: 0
+      tab: 0,
     };
-  },
-  methods: {
-    GetRoles() {
-      this.get("/scripts/" + this.id)
-        .then(response => {
-          if (response.data.code === 0) {
-            this.$store.commit(
-              "scripts/SetIsManagerScript",
-              response.data.data.is_manager
-            );
-          } else {
-            this.$store.commit("scripts/SetIsManagerScript", false);
-          }
-        })
-        .catch(error => {
-          this.$store.commit("scripts/SetIsManagerScript", false);
-        });
-    }
   },
   created() {
     this.id = parseInt(this.$route.params.id);
@@ -112,13 +115,17 @@ export default {
       this.$q.notify({
         position: "top-right",
         message: "访问路径存在问题",
-        position: "top"
+        position: "top",
       });
       this.$router.push({ path: "/" });
       return;
     }
-    this.GetRoles();
-  }
+    if (this.script) {
+      this.$store.commit("scripts/SetIsManagerScript", this.script.is_manager);
+    } else {
+      this.$store.commit("scripts/SetIsManagerScript", false);
+    }
+  },
 };
 </script>
 

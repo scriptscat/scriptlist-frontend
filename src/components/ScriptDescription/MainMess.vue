@@ -112,17 +112,6 @@ export default {
       },
     };
   },
-  preFetch({
-    store,
-    currentRoute,
-    previousRoute,
-    redirect,
-    ssrContext,
-    urlPath,
-    publicPath,
-  }) {
-    return store.dispatch("scripts/fetchScriptInfo", currentRoute.params.id);
-  },
   computed: {
     id() {
       return this.$route.params.id;

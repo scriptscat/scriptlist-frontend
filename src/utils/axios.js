@@ -16,7 +16,13 @@ const service = axios.create({
  * url 提交地址
  * query 提交參數
  */
-export async function get(url, config) {
+export async function get(url, config, cookies) {
+  config = config || {};
+  if (cookies) {
+    config.headers = {
+      cookie: "token=" + cookies.get('token')
+    }
+  }
   return service.get(url, config);
 }
 
@@ -25,24 +31,28 @@ export async function get(url, config) {
  * url 提交地址
  * query 提交參數
  */
-export async function post(url, data, config) {
-  if (config) {
-    return service.post(url, data, config);
-  } else {
-    return service.post(url, qs.stringify(data));
+export async function post(url, data, config, cookies) {
+  config = config || {};
+  if (cookies) {
+    config.headers = {
+      cookie: "token=" + cookies.get('token')
+    }
   }
+  return service.post(url, data, config);
 }
 
 /**
- * POST 方法
+ * PUT 方法
  * url 提交地址
  * query 提交參數
  */
-export async function put(url, data, config) {
-  if (config) {
-    return service.put(url, data, config);
-  } else {
-    return service.put(url, qs.stringify(data));
+export async function put(url, data, config, cookies) {
+  config = config || {};
+  if (cookies) {
+    config.headers = {
+      cookie: "token=" + cookies.get('token')
+    }
   }
+  return service.put(url, data, config);
 }
 

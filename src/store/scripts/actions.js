@@ -10,8 +10,8 @@ export function fetchScriptList({ commit }, url) {
     });
 }
 
-export function fetchScriptInfo({ commit }, id) {
-  return get("/scripts/" + id).then(response => {
+export function fetchScriptInfo({ commit }, { id, cookies }) {
+  return get("/scripts/" + id, {}, cookies).then(response => {
     if (response.data.code === 0) {
       commit("updateScriptInfo", response.data.data);
     } else {
@@ -20,5 +20,4 @@ export function fetchScriptInfo({ commit }, id) {
   }).catch(error => {
     commit("updateScriptInfo", {});
   });
-
 }
