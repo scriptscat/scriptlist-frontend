@@ -398,7 +398,7 @@ export default {
   created() {
     this.shape = Number(this.$route.query.category || 0);
     this.keyword = this.$route.query.keyword;
-    this.page = parseInt(this.$route.query.page);
+    this.page = parseInt(this.$route.query.page)|| 1;
     this.GetRecommend();
     this.GetCategroy();
   },
