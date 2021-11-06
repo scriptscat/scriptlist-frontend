@@ -33,6 +33,11 @@
 
 <script>
 export default {
+    meta() {
+    return {
+      title: '历史',
+    };
+  },
   computed: {
     id() {
       return this.$route.params.id;

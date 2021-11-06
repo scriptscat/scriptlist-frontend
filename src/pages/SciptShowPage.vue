@@ -76,6 +76,15 @@
 import { Cookies } from "quasar";
 
 export default {
+  meta() {
+    return {
+      title: 'ScriptCat',
+      titleTemplate: title => `${this.script.name} - ${title}`,
+      meta: {
+        description: { name: "description", content: this.script.description },
+      },
+    };
+  },
   preFetch({
     store,
     currentRoute,

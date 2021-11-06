@@ -104,14 +104,6 @@
 
 <script>
 export default {
-  meta() {
-    return {
-      title: this.author.name,
-      meta: {
-        description: { name: "description", content: this.author.description },
-      },
-    };
-  },
   computed: {
     id() {
       return this.$route.params.id;

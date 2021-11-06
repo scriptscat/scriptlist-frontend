@@ -1,5 +1,8 @@
 <template>
 <div>
+  <div>
+    7天用户数量{{weeklyNum}}
+  </div>
   <div class="flex justify-center">
     <div style="width:500px;height:300px;" id="realInstall"></div>
     <div style="width:500px;height:300px;" id="realUpdate"></div>
@@ -21,6 +24,11 @@
 import * as echarts from "echarts";
 
 export default {
+  meta(){
+    return {
+      title: '统计'
+    }
+  },
   data() {
     return {
       myChart:[],
@@ -30,6 +38,7 @@ export default {
       lastWeeklyUpdate: [],
       thirtyDayInstall: [],
       thirtyDayUpdate: [],
+      weeklyNum:0,
     };
   },
   created() {
@@ -46,6 +55,7 @@ export default {
           this.seven_day("update","更新",this.theWeekUpdate,this.lastWeeklyUpdate);
           this.thirty_day("thirtyinstall","过去30日安装",this.thirtyDayInstall);
           this.thirty_day("thirtyupdate","过去30日更新",this.thirtyDayUpdate);
+          this.weeklyNum=response.data.data.member.num;
         }
       })
       .catch(error => {});
