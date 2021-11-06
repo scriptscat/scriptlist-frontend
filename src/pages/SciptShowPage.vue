@@ -38,7 +38,7 @@
           label="反馈"
         /> -->
         <q-route-tab
-          :to="{ name: 'updateScript', query: { id } }"
+          :to="{ name: 'updateScript', params: $route.params }"
           :name="4"
           v-if="isuserisauthor"
           label="更新脚本"
@@ -50,13 +50,13 @@
           label="删除脚本"
         />-->
         <q-route-tab 
-          :to="{ name: 'statistic', query: { id } }"
+          :to="{ name: 'statistic', params: $route.params  }"
           v-if="isuserisauthor"
           :name="6" 
           label="统计" 
         />
         <q-route-tab
-          :to="{ name: 'manageScript', query: { id } }"
+          :to="{ name: 'manageScript', params: $route.params }"
           :name="7"
           v-if="isuserisauthor"
           label="管理"

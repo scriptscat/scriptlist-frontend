@@ -33,7 +33,7 @@ export default {
     };
   },
   created() {
-    this.get("/statistics/script/9")
+    this.get("/statistics/script/"+this.$route.params.id)
       .then(response => {
         if (response.data.code == 0) {
           this.theWeekInstall.push(response.data.data.download.uv.x, response.data.data.download.uv.y);
@@ -49,28 +49,27 @@ export default {
         }
       })
       .catch(error => {});
+    this.fn();
   },
   mounted() {
     this.real_time("realInstall","实时下载数据",0);
     this.real_time("realUpdate","实时更新数据",1);
-    this.fn();
   },
   methods: {
     fn(){
-      setTimeout(() => {
-        this.get("/statistics/script/9")
+      this.get("/statistics/script/"+this.$route.params.id+"/realtime")
           .then(response => {
             if (response.data.code == 0) {
               this.myChart[0].setOption({
-                series: [{data: response.data.data.download.realtime.y}]
+                series: [{data: response.data.data.download.y}]
               });
               this.myChart[1].setOption({
-                series: [{data: response.data.data.update.realtime.x}
-                ]
-              });
+                series: [{data: response.data.data.update.x}
+              ]});
             }
           })
           .catch(error => {});
+      setTimeout(() => {
         this.fn();
       }, 5000);
     },

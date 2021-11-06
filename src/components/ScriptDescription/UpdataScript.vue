@@ -16,7 +16,7 @@ export default {
     };
   },
   created() {
-    this.id = this.$route.query.id;
+    this.id = this.$route.params.id;
     if (this.id === undefined) {
       this.$q.notify({
         position: "top-right",
