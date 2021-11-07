@@ -6,13 +6,11 @@
       >
     </div>
     <div>
-      <div class="title-wrap">
-        代码
-      </div>
+      <div class="title-wrap">代码</div>
       <div>
         <textarea ref="textarea"></textarea>
       </div>
-      <div style="margin: 10px 0;">
+      <div style="margin: 10px 0">
         <span>或本地上传代码： </span>
         <input
           type="file"
@@ -23,7 +21,7 @@
       </div>
     </div>
     <div>
-      <div style="margin:10px 0">
+      <div style="margin: 10px 0">
         <span class="title-wrap">附加信息</span
         ><span> 更详细的描述，或者操作说明等</span>
       </div>
@@ -32,14 +30,14 @@
       </div>
     </div>
     <div v-if="id !== undefined">
-      <div style="margin:10px 0">
+      <div style="margin: 10px 0">
         <span class="title-wrap">更新记录</span>
       </div>
       <q-input
         outlined
         v-model="changelog"
         label="更新记录"
-        style="margin-bottom:10px"
+        style="margin-bottom: 10px"
         counter
         maxlength="128"
         dense
@@ -47,21 +45,21 @@
       </q-input>
     </div>
     <div v-show="id === undefined">
-      <div style="margin:10px 0">
+      <div style="margin: 10px 0">
         <span class="title-wrap">脚本类型</span>
       </div>
       <div>
         <div>
           <q-radio
             v-model="scripttype"
-            val="1"
+            :val="1"
             label="脚本，允许被用户所安装并使用"
           />
         </div>
         <div>
           <q-radio
             v-model="scripttype"
-            val="2"
+            :val="2"
             label="订阅脚本，仅会在安装时弹出安装界面由用户确认订阅，后续的更新采用静默更新的方式"
           />
         </div>
@@ -69,21 +67,21 @@
         <div>
           <q-radio
             v-model="scripttype"
-            val="3"
+            :val="3"
             label="库脚本，只允许被其他脚本进行引用，不允许被用户安装"
           />
         </div>
       </div>
     </div>
-    <div v-show="scripttype === '3'">
-      <div style="margin:10px 0">
+    <div v-show="scripttype === 3">
+      <div style="margin: 10px 0">
         <span class="title-wrap">库声明文件</span>
       </div>
       <q-input
         outlined
         v-model="dtsname"
         label="库名字"
-        style="margin-bottom:10px"
+        style="margin-bottom: 10px"
         counter
         maxlength="128"
         dense
@@ -98,7 +96,7 @@
         dense
       >
       </q-input>
-      <div style="margin:10px 0">
+      <div style="margin: 10px 0">
         <span class="title-wrap">启用库编辑框</span>
       </div>
       <div>
@@ -116,21 +114,21 @@
       </div>
     </div>
     <div>
-      <div style="margin:10px 0">
+      <div style="margin: 10px 0">
         <span class="title-wrap">脚本访问权限</span>
       </div>
       <div>
         <span>公开</span>
         <q-toggle
           v-model="publiccontrol"
-          false-value="1"
-          true-value="2"
+          :false-value="1"
+          :true-value="2"
           label="非公开"
         />
       </div>
     </div>
     <div>
-      <div style="margin:10px 0">
+      <div style="margin: 10px 0">
         <span class="title-wrap">不适内容</span>
       </div>
       <div>
@@ -161,8 +159,8 @@
         </q-btn>
       </div>
     </div>
-        <q-dialog v-model="control.success" @hide="CloseThisPage">
-      <q-card style="width:90%;">
+    <q-dialog v-model="control.success" @hide="CloseThisPage">
+      <q-card style="width: 90%">
         <q-card-section>
           <div class="text-h6">提示</div>
         </q-card-section>
@@ -180,38 +178,38 @@
 </template>
 
 <script>
-import { baseURL } from 'src/utils/axios';
+import { baseURL } from "src/utils/axios";
 export default {
   props: {
     id: {
       type: String | Number,
-      default: undefined
-    }
+      default: undefined,
+    },
   },
   data() {
     return {
       control: {
-        success: false
+        success: false,
       },
       loading: {
-        publicloading: false
+        publicloading: false,
       },
       changelog: "",
       editor: null,
       mkedit: null,
-      scripttype: "1",
+      scripttype: 1,
       righttext: 2,
-      publiccontrol: "1",
+      publiccontrol: 1,
       startdefined: false,
       dtseditor: null,
       dtsvalue: "",
       codeMirror: null,
       dtsname: "",
       dtsdescription: "",
-      publicid: ""
+      publicid: "",
     };
   },
-  destroyed: function() {
+  destroyed: function () {
     //this.editor.destroy();
     this.editor.setValue("");
     this.editor.clearHistory();
@@ -239,7 +237,7 @@ export default {
           mode: "javascript",
           theme: "base16-light", // 主日样式
           styleActiveLine: true, // 当前行高亮
-          lineNumbers: true // 显示行号
+          lineNumbers: true, // 显示行号
         });
         //this.editor.setValue(response.data.data.script.code);
         //console.log(this.editor.getScrollInfo());
@@ -260,9 +258,9 @@ export default {
               const uploadedImageURL = await this.uploadImage(blob);
               callback(uploadedImageURL, "alt text");
               return false;
-            }
+            },
           },
-          autofocus:false,
+          autofocus: false,
         });
         //this.viewr.setMarkdown(this.author.content);
       });
@@ -271,14 +269,14 @@ export default {
   methods: {
     GetScriptData() {
       this.get("/scripts/" + this.id + "/code")
-        .then(response => {
+        .then((response) => {
           console.log(response, "response");
           if (response.data.code === 0) {
             this.editor.setValue(response.data.data.script.code);
             this.mkedit.setMarkdown(response.data.data.content);
             //this.dtseditor.setValue();
-            this.scripttype = response.data.data.type + ""; //脚本类型
-            this.publiccontrol = response.data.data.public + ""; //公开/非公开
+            this.scripttype = response.data.data.type; //脚本类型
+            this.publiccontrol = response.data.data.public; //公开/非公开
             this.righttext = response.data.data.unwell;
             this.dtsname = response.data.data.name;
             let define = response.data.data.description;
@@ -290,7 +288,7 @@ export default {
             this.dtsdescription = response.data.data.description;
           }
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     uploadImage(blob) {
       return new Promise((resolve, reject) => {
@@ -300,28 +298,25 @@ export default {
         formData.append("comment", "script");
 
         this.post("/resource/image", formData, {
-          headers: { "Content-Type": "multipart/form-data" }
+          headers: { "Content-Type": "multipart/form-data" },
         })
-          .then(response => {
+          .then((response) => {
             if (response.data.code === 0) {
-              resolve(
-                baseURL + "/resource/image/" +
-                  response.data.data.id
-              );
+              resolve(baseURL + "/resource/image/" + response.data.data.id);
             }
           })
-          .catch(error => {
+          .catch((error) => {
             if (error.response.data.msg !== undefined) {
               this.$q.notify({
                 position: "top-right",
                 message: error.response.data.msg,
-                position: "top"
+                position: "top",
               });
             } else {
               this.$q.notify({
                 position: "top-right",
                 message: "系统错误！",
-                position: "top"
+                position: "top",
               });
             }
             resolve("error");
@@ -341,7 +336,7 @@ export default {
             mode: "javascript",
             theme: "base16-light", // 主日样式
             styleActiveLine: true, // 当前行高亮
-            lineNumbers: true // 显示行号
+            lineNumbers: true, // 显示行号
           });
           this.dtseditor.setValue(this.dtsvalue);
           let dtscollinfo = this.dtseditor.getScrollInfo();
@@ -361,7 +356,7 @@ export default {
       let codetext = this.editor.getValue();
       let marktext = this.mkedit.getMarkdown();
       let typetext = "";
-      if (this.scripttype === "3") {
+      if (this.scripttype === 3 && this.dtseditor) {
         typetext = this.dtseditor.getValue();
       }
       if (this.id !== undefined) {
@@ -376,9 +371,9 @@ export default {
           unwell: this.righttext,
 
           name: this.dtsname,
-          description: this.dtsdescription
+          description: this.dtsdescription,
         })
-          .then(response => {
+          .then((response) => {
             this.loading.publicloading = false;
             console.log(response, "response");
             if (response.data.code === 0) {
@@ -386,20 +381,20 @@ export default {
               this.control.success = true;
             }
           })
-          .catch(error => {
+          .catch((error) => {
             this.loading.publicloading = false;
             console.log("error", error);
             if (error.response.data.msg !== undefined) {
               this.$q.notify({
                 position: "top-right",
                 message: error.response.data.msg,
-                position: "top"
+                position: "top",
               });
             } else {
               this.$q.notify({
                 position: "top-right",
                 message: "系统错误！",
-                position: "top"
+                position: "top",
               });
             }
           });
@@ -415,9 +410,9 @@ export default {
 
           definition: typetext,
           name: this.dtsname,
-          description: this.dtsdescription
+          description: this.dtsdescription,
         })
-          .then(response => {
+          .then((response) => {
             this.loading.publicloading = false;
             console.log(response, "response");
             if (response.data.code === 0) {
@@ -425,20 +420,20 @@ export default {
               this.control.success = true;
             }
           })
-          .catch(error => {
+          .catch((error) => {
             this.loading.publicloading = false;
             console.log("error", error);
             if (error.response.data.msg !== undefined) {
               this.$q.notify({
                 position: "top-right",
                 message: error.response.data.msg,
-                position: "top"
+                position: "top",
               });
             } else {
               this.$q.notify({
                 position: "top-right",
                 message: "系统错误！",
-                position: "top"
+                position: "top",
               });
             }
           });
@@ -460,8 +455,8 @@ export default {
           // this.$refs.clearFile.removeQueuedFiles();
         };
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
