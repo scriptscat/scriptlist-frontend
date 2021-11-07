@@ -1,21 +1,31 @@
 <template>
-<div>
   <div>
-    7天用户数量{{weeklyNum}}
+    <div class="flex justify-center">
+      <q-card>
+        <q-card-section>
+          <div class="text-subtitle2" style="text-align: center">
+            过去7天用户数 {{ weeklyNum }}
+          </div>
+        </q-card-section>
+        <q-separator inset />
+        <q-card-section>
+          本页暂未完善,在以后也可能会提供更多数据维度,如果你有什么意见可以前往论坛 <b>建议/投诉/举报</b> 板块提出.
+        </q-card-section>
+      </q-card>
+    </div>
+    <div class="flex justify-center">
+      <div style="width: 500px; height: 300px" id="realInstall"></div>
+      <div style="width: 500px; height: 300px" id="realUpdate"></div>
+    </div>
+    <div class="flex justify-center">
+      <div style="width: 500px; height: 300px" id="install"></div>
+      <div style="width: 500px; height: 300px" id="update"></div>
+    </div>
+    <div class="flex justify-center">
+      <div style="width: 500px; height: 300px" id="thirtyinstall"></div>
+      <div style="width: 500px; height: 300px" id="thirtyupdate"></div>
+    </div>
   </div>
-  <div class="flex justify-center">
-    <div style="width:500px;height:300px;" id="realInstall"></div>
-    <div style="width:500px;height:300px;" id="realUpdate"></div>
-  </div>
-  <div class="flex justify-center">
-    <div style="width:500px;height:300px;" id="install"></div>
-    <div style="width:500px;height:300px;" id="update"></div>
-  </div>
-  <div class="flex justify-center">
-    <div style="width:500px;height:300px;" id="thirtyinstall"></div>
-    <div style="width:500px;height:300px;" id="thirtyupdate"></div>
-  </div>
-</div>
 </template>
 
 <style scoped></style>
@@ -24,78 +34,110 @@
 import * as echarts from "echarts";
 
 export default {
-  meta(){
+  meta() {
     return {
-      title: '统计'
-    }
+      title: "统计",
+    };
   },
   data() {
     return {
-      myChart:[],
+      myChart: [],
       theWeekInstall: [],
       lastWeeklyInstall: [],
       theWeekUpdate: [],
       lastWeeklyUpdate: [],
       thirtyDayInstall: [],
       thirtyDayUpdate: [],
-      weeklyNum:0,
+      weeklyNum: 0,
     };
   },
   created() {
-    this.get("/statistics/script/"+this.$route.params.id)
-      .then(response => {
+    this.get("/statistics/script/" + this.$route.params.id)
+      .then((response) => {
         if (response.data.code == 0) {
-          this.theWeekInstall.push(response.data.data.download.uv.x, response.data.data.download.uv.y);
-          this.lastWeeklyInstall.push(response.data.data.download['uv-lastweekly'].x,response.data.data.download['uv-lastweekly'].y);
-          this.theWeekUpdate.push(response.data.data.update.uv.x,response.data.data.update.uv.y);
-          this.lastWeeklyUpdate.push(response.data.data.update['uv-lastweekly'].x,response.data.data.update['uv-lastweekly'].y);
-          this.thirtyDayInstall.push(response.data.data.download.pv.x,response.data.data.download.pv.y);
-          this.thirtyDayUpdate.push(response.data.data.update.pv.x,response.data.data.update.pv.y);
-          this.seven_day("install","安装",this.theWeekInstall,this.lastWeeklyInstall);
-          this.seven_day("update","更新",this.theWeekUpdate,this.lastWeeklyUpdate);
-          this.thirty_day("thirtyinstall","过去30日安装",this.thirtyDayInstall);
-          this.thirty_day("thirtyupdate","过去30日更新",this.thirtyDayUpdate);
-          this.weeklyNum=response.data.data.member.num;
+          this.theWeekInstall.push(
+            response.data.data.download.uv.x,
+            response.data.data.download.uv.y
+          );
+          this.lastWeeklyInstall.push(
+            response.data.data.download["uv-lastweekly"].x,
+            response.data.data.download["uv-lastweekly"].y
+          );
+          this.theWeekUpdate.push(
+            response.data.data.update.uv.x,
+            response.data.data.update.uv.y
+          );
+          this.lastWeeklyUpdate.push(
+            response.data.data.update["uv-lastweekly"].x,
+            response.data.data.update["uv-lastweekly"].y
+          );
+          this.thirtyDayInstall.push(
+            response.data.data.download.pv.x,
+            response.data.data.download.pv.y
+          );
+          this.thirtyDayUpdate.push(
+            response.data.data.update.pv.x,
+            response.data.data.update.pv.y
+          );
+          this.seven_day(
+            "install",
+            "安装",
+            this.theWeekInstall,
+            this.lastWeeklyInstall
+          );
+          this.seven_day(
+            "update",
+            "更新",
+            this.theWeekUpdate,
+            this.lastWeeklyUpdate
+          );
+          this.thirty_day(
+            "thirtyinstall",
+            "过去30日安装",
+            this.thirtyDayInstall
+          );
+          this.thirty_day("thirtyupdate", "过去30日更新", this.thirtyDayUpdate);
+          this.weeklyNum = response.data.data.member.num;
         }
       })
-      .catch(error => {});
+      .catch((error) => {});
     this.fn();
   },
   mounted() {
-    this.real_time("realInstall","实时下载数据",0);
-    this.real_time("realUpdate","实时更新数据",1);
+    this.real_time("realInstall", "实时下载数据", 0);
+    this.real_time("realUpdate", "实时更新数据", 1);
   },
   methods: {
-    fn(){
-      this.get("/statistics/script/"+this.$route.params.id+"/realtime")
-          .then(response => {
-            if (response.data.code == 0) {
-              this.myChart[0].setOption({
-                series: [{data: response.data.data.download.y}]
-              });
-              this.myChart[1].setOption({
-                series: [{data: response.data.data.update.x}
-              ]});
-            }
-          })
-          .catch(error => {});
+    fn() {
+      this.get("/statistics/script/" + this.$route.params.id + "/realtime")
+        .then((response) => {
+          if (response.data.code == 0) {
+            this.myChart[0].setOption({
+              series: [{ data: response.data.data.download.y }],
+            });
+            this.myChart[1].setOption({
+              series: [{ data: response.data.data.update.x }],
+            });
+          }
+        })
+        .catch((error) => {});
       setTimeout(() => {
         this.fn();
       }, 5000);
     },
-    real_time(name,title,id){
+    real_time(name, title, id) {
       var chartDom = document.getElementById(name);
       this.myChart[id] = echarts.init(chartDom);
       var option;
       option = {
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
           axisPointer: {
-            type: 'cross',
+            type: "cross",
             label: {
-              backgroundColor: '#283b56'
-            }
-          }
+              backgroundColor: "#283b56",
+            },
+          },
         },
         legend: {},
         toolbox: {
@@ -104,36 +146,52 @@ export default {
         dataZoom: {
           show: false,
           start: 0,
-          end: 100
+          end: 100,
         },
         xAxis: [
           {
-            type: 'category',
+            type: "category",
             boundaryGap: true,
-            data: ["15分钟前","14分钟前","13分钟前","12分钟前","11分钟前","10分钟前","9分钟前","8分钟前","7分钟前","6分钟前","5分钟前","4分钟前","3分钟前","2分钟前","1分钟前",]
-          }
+            data: [
+              "15分钟前",
+              "14分钟前",
+              "13分钟前",
+              "12分钟前",
+              "11分钟前",
+              "10分钟前",
+              "9分钟前",
+              "8分钟前",
+              "7分钟前",
+              "6分钟前",
+              "5分钟前",
+              "4分钟前",
+              "3分钟前",
+              "2分钟前",
+              "1分钟前",
+            ],
+          },
         ],
         yAxis: [
           {
-            type: 'value',
+            type: "value",
             scale: true,
             max: 10,
             min: 0,
-            boundaryGap: [1, 1]
+            boundaryGap: [1, 1],
           },
         ],
         series: [
           {
             name: title,
-            type: 'bar',
-            data: []
-          }
-        ]
+            type: "bar",
+            data: [],
+          },
+        ],
       };
       option && this.myChart[id].setOption(option);
     },
 
-    seven_day(name,title,week,lastweek) {
+    seven_day(name, title, week, lastweek) {
       var chartDom = document.getElementById(name);
       var myChart = echarts.init(chartDom);
       var option;
@@ -144,73 +202,71 @@ export default {
         tooltip: {
           trigger: "none",
           axisPointer: {
-            type: "cross"
-          }
+            type: "cross",
+          },
         },
         legend: {},
         grid: {
           top: 70,
-          bottom: 50
+          bottom: 50,
         },
         xAxis: [
           {
             type: "category",
             axisTick: {
-              alignWithLabel: true
+              alignWithLabel: true,
             },
             axisLine: {
               onZero: false,
               lineStyle: {
-                color: colors[1]
-              }
+                color: colors[1],
+              },
             },
             axisPointer: {
               label: {
-                formatter: function(params) {
+                formatter: function (params) {
                   return (
-                    "Precipitation  " +
                     params.value +
                     (params.seriesData.length
                       ? "：" + params.seriesData[0].data
                       : "")
                   );
-                }
-              }
+                },
+              },
             },
             // prettier-ignore
-            data: week[0]
+            data:lastweek[0],
           },
           {
             type: "category",
             axisTick: {
-              alignWithLabel: true
+              alignWithLabel: true,
             },
             axisLine: {
               onZero: false,
               lineStyle: {
-                color: colors[0]
-              }
+                color: colors[0],
+              },
             },
             axisPointer: {
               label: {
-                formatter: function(params) {
+                formatter: function (params) {
                   return (
-                    "Precipitation  " +
                     params.value +
                     (params.seriesData.length
                       ? "：" + params.seriesData[0].data
                       : "")
                   );
-                }
-              }
+                },
+              },
             },
-            data: lastweek[0]
-          }
+            data: week[0],
+          },
         ],
         yAxis: [
           {
-            type: "value"
-          }
+            type: "value",
+          },
         ],
         series: [
           {
@@ -219,37 +275,37 @@ export default {
             xAxisIndex: 1,
             smooth: true,
             emphasis: {
-              focus: "series"
+              focus: "series",
             },
-            data: week[1]
+            data: week[1],
           },
           {
             name: "上周" + title,
             type: "line",
             smooth: true,
             emphasis: {
-              focus: "series"
+              focus: "series",
             },
-            data: lastweek[1]
-          }
-        ]
+            data: lastweek[1],
+          },
+        ],
       };
       option && myChart.setOption(option);
     },
 
-    thirty_day(name,title,week) {
+    thirty_day(name, title, week) {
       var chartDom = document.getElementById(name);
       var myChart = echarts.init(chartDom);
       var option;
       option = {
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
           axisPointer: {
-            type: 'cross',
+            type: "cross",
             label: {
-              backgroundColor: '#283b56'
-            }
-          }
+              backgroundColor: "#283b56",
+            },
+          },
         },
         legend: {},
         toolbox: {
@@ -258,33 +314,33 @@ export default {
         dataZoom: {
           show: false,
           start: 0,
-          end: 100
+          end: 100,
         },
         xAxis: [
           {
-            type: 'category',
+            type: "category",
             boundaryGap: true,
-            data: week[0]
-          }
+            data: week[0],
+          },
         ],
         yAxis: [
           {
-            type: 'value',
+            type: "value",
             scale: true,
             min: 0,
-            boundaryGap: [1, 1]
+            boundaryGap: [1, 1],
           },
         ],
         series: [
           {
             name: title,
-            type: 'line',
-            data: week[1]
-          }
-        ]
+            type: "line",
+            data: week[1],
+          },
+        ],
       };
       option && myChart.setOption(option);
-    }
-  }
+    },
+  },
 };
 </script>
