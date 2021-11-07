@@ -116,7 +116,7 @@ export default {
               series: [{ data: response.data.data.download.y }],
             });
             this.myChart[1].setOption({
-              series: [{ data: response.data.data.update.x }],
+              series: [{ data: response.data.data.update.y }],
             });
           }
         })
