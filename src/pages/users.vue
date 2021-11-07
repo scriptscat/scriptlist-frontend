@@ -3,7 +3,7 @@
     <div class="show-mess-page">
       <q-card>
         <q-card-section>
-          <div class="text-h4" style="margin-top:20px;text-align:center;">
+          <div class="text-h4" style="margin-top: 20px; text-align: center">
             {{ this.username }}
           </div>
           <div v-if="scriptList.length !== 0">
@@ -26,7 +26,11 @@
 
                   <q-item-section>
                     <q-item-label>
-                      <a style="color:rgb(40, 86, 172);" target="_blank" :href="'/users/'+item.uid">
+                      <a
+                        style="color: rgb(40, 86, 172)"
+                        target="_blank"
+                        :href="'/users/' + item.uid"
+                      >
                         {{ item.username }}
                       </a>
                     </q-item-label>
@@ -43,7 +47,7 @@
                   <q-item-section side bottom>
                     <div
                       class="text-caption text-center text-primary"
-                      style="font-size:18px"
+                      style="font-size: 18px"
                     >
                       {{ ((item.score * 2) / 10).toFixed(1) }}
                     </div>
@@ -79,7 +83,7 @@
                     </div>
                   </q-card-section>
                   <q-separator />
-                  <q-card-section class="q-pt-none" style="margin-top:10px"
+                  <q-card-section class="q-pt-none" style="margin-top: 10px"
                     >{{ item.description }}
                   </q-card-section>
                 </q-card-section>
@@ -94,6 +98,12 @@
 
 <script>
 export default {
+  meta() {
+    return {
+      title: this.username,
+    };
+  },
+
   components: {},
 
   preFetch({
@@ -103,9 +113,9 @@ export default {
     redirect,
     ssrContext,
     urlPath,
-    publicPath
+    publicPath,
   }) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       await store.dispatch("user/fetchUserInfo", currentRoute.params.id);
       await store.dispatch(
         "scripts/fetchScriptList",
@@ -116,7 +126,7 @@ export default {
   },
 
   computed: {
-    maxpage: function() {
+    maxpage: function () {
       let max = Math.ceil(this.totalnums / this.count);
       if (max < 1) {
         max = 1;
@@ -128,7 +138,7 @@ export default {
     },
     scriptList() {
       return this.$store.state.scripts.scripts;
-    }
+    },
   },
   data() {
     return {};
@@ -137,7 +147,7 @@ export default {
   methods: {
     JumpBtnToTarget(item) {
       this.$router.push({
-        path: item.href
+        path: item.href,
       });
     },
     tolink(page) {
@@ -155,8 +165,8 @@ export default {
         ret += "&domain=" + encodeURIComponent(this.$route.query.domain);
       }
       return ret;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
