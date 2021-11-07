@@ -6,6 +6,11 @@
 
 <script>
 export default {
+  meta(){
+    return {
+      title: '代码'
+    }
+  },
   computed: {
     id() {
       return this.$route.params.id;

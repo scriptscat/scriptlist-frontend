@@ -227,7 +227,6 @@ export default {
   },
   created() {
     if (process.env.CLIENT) {
-      this.id = this.$route.query.id;
       this.$nextTick(() => {
         this.codeMirror = require("codemirror");
         require("codemirror/lib/codemirror.css");
@@ -262,7 +261,8 @@ export default {
               callback(uploadedImageURL, "alt text");
               return false;
             }
-          }
+          },
+          autofocus:false,
         });
         //this.viewr.setMarkdown(this.author.content);
       });

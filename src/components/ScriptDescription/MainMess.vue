@@ -15,7 +15,7 @@
 
           <q-item-section>
             <q-item-label>
-              <a style="color: rgb(40, 86, 172)" href="/" target="_blank" :href="'/users/' + this.author.uid">
+              <a style="color: rgb(40, 86, 172)" target="_blank" :href="'/users/' + this.author.uid">
                 {{ author.username }}
               </a>
             </q-item-label>
@@ -104,14 +104,6 @@
 
 <script>
 export default {
-  meta() {
-    return {
-      title: this.author.name,
-      meta: {
-        description: { name: "description", content: this.author.description },
-      },
-    };
-  },
   computed: {
     id() {
       return this.$route.params.id;

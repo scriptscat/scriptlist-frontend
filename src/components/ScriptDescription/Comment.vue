@@ -115,12 +115,15 @@
       </q-card>
     </div>
   </div>
-</div>
-
 </template>
 
 <script>
 export default {
+  meta(){
+    return {
+      title: '评论'
+    }
+  },
   computed: {
     id() {
       return this.$route.params.id;

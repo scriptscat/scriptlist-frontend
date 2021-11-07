@@ -20,6 +20,7 @@
     "core-js": "^3.6.5",
     "diff": "^5.0.0",
     "dotenv": "^10.0.0",
+    "echarts": "^5.2.2",
     "element-ui": "^2.15.5",
     "git-diff": "^2.0.6",
     "prismjs": "^1.25.0",

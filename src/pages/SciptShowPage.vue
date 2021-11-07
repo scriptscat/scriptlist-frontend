@@ -1,6 +1,7 @@
 <template>
   <div class="page-padding padding-normal">
-    <q-card style="margin: 30px auto; max-width: 1000px">
+    <q-card style="margin: 30px auto;
+      max-width:1100px;">
       <q-tabs
         v-model="tab"
         inline-label
@@ -36,26 +37,26 @@
           :name="3"
           label="反馈"
         /> -->
-        <!-- <q-tab 
-       <!-- <q-tab 
-        <!-- <q-tab 
-        :name="4" 
-        label="统计" 
-        /> -->
         <q-route-tab
-          :to="{ name: 'updateScript', query: { id } }"
-          :name="5"
+          :to="{ name: 'updateScript', params: $route.params }"
+          :name="4"
           v-if="isuserisauthor"
           label="更新脚本"
         />
         <!--<q-route-tab
           :to="{ name: 'deleteScript', query: { id } }"
-          :name="6"
+          :name="5"
           v-if="isuserisauthor"
           label="删除脚本"
         />-->
+        <q-route-tab 
+          :to="{ name: 'statistic', params: $route.params  }"
+          v-if="isuserisauthor"
+          :name="6" 
+          label="统计" 
+        />
         <q-route-tab
-          :to="{ name: 'manageScript', query: { id } }"
+          :to="{ name: 'manageScript', params: $route.params }"
           :name="7"
           v-if="isuserisauthor"
           label="管理"
@@ -75,6 +76,15 @@
 import { Cookies } from "quasar";
 
 export default {
+  meta() {
+    return {
+      title: 'ScriptCat',
+      titleTemplate: title => `${this.script.name} - ${title}`,
+      meta: {
+        description: { name: "description", content: this.script.description },
+      },
+    };
+  },
   preFetch({
     store,
     currentRoute,
