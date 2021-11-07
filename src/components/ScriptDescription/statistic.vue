@@ -175,7 +175,6 @@ export default {
           {
             type: "value",
             scale: true,
-            max: 10,
             min: 0,
             boundaryGap: [1, 1],
           },
