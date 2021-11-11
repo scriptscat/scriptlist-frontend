@@ -1,30 +1,38 @@
 <template>
   <div>
-    <div class="flex justify-center">
-      <q-card>
-        <q-card-section>
-          <div class="text-subtitle2" style="text-align: center">
-            过去7天用户数 {{ weeklyNum }}
-          </div>
-        </q-card-section>
-        <q-separator inset />
-        <q-card-section>
-          本页暂未完善,在以后也可能会提供更多数据维度,如果你有什么意见可以前往论坛 <b>建议/投诉/举报</b> 板块提出.
-        </q-card-section>
+    <div class="flex flex-center">
+      <q-card flat>
+        <div class="text-h6"> 
+          <span 
+          style="vertical-align:middle;">
+          <img :src="cat" style="width:48px;">
+          </span>
+          安装及更新统计
+        </div>
+        <div class="text-caption flex flex-center">过去 7 天用户数 {{ weeklyNum }}</div>
       </q-card>
     </div>
-    <div class="flex justify-center">
-      <div style="width: 500px; height: 300px" id="realInstall"></div>
-      <div style="width: 500px; height: 300px" id="realUpdate"></div>
-    </div>
-    <div class="flex justify-center">
-      <div style="width: 500px; height: 300px" id="install"></div>
-      <div style="width: 500px; height: 300px" id="update"></div>
-    </div>
-    <div class="flex justify-center">
-      <div style="width: 500px; height: 300px" id="thirtyinstall"></div>
-      <div style="width: 500px; height: 300px" id="thirtyupdate"></div>
-    </div>
+  <div>
+      <q-card-section align="left">
+      </q-card-section>
+      <q-card flat bordered  class="flex justify-center">
+        <div style="width: 500px; height: 300px" id="realInstall"></div>
+        <div style="width: 500px; height: 300px" id="realUpdate"></div>
+      </q-card>
+      <q-card flat bordered class="flex justify-center">
+        <div style="width: 500px; height: 300px" id="install"></div>
+        <div style="width: 500px; height: 300px" id="update"></div>
+      </q-card>
+      <q-card flat bordered class="flex justify-center">
+        <div style="width: 500px; height: 300px" id="thirtyinstall"></div>
+        <div style="width: 500px; height: 300px" id="thirtyupdate"></div>
+      </q-card>
+      <q-card flat bordered class="flex justify-center">
+        <q-card-section class="q-pt-none">
+            本页暂未完善,在以后也可能会提供更多数据维度<br>如果你有什么意见可以前往论坛 <b>建议/投诉/举报</b> 板块提出.
+        </q-card-section>
+      </q-card>
+  </div>
   </div>
 </template>
 
@@ -49,6 +57,7 @@ export default {
       thirtyDayInstall: [],
       thirtyDayUpdate: [],
       weeklyNum: 0,
+      cat: require('assets/cat.png'),
     };
   },
   created() {

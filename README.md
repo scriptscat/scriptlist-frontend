@@ -1,10 +1,10 @@
-# Quasar App (greasyfork)
+# Quasar App
 
-A Quasar Framework app
+脚本猫站点前端
 
 ## Install the dependencies
 ```bash
-yarn
+npm
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
@@ -17,6 +17,3 @@ quasar dev
 ```bash
 quasar build
 ```
-
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).

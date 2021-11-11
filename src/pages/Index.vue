@@ -56,7 +56,7 @@
           </q-list>
         </div>
 
-        <div class="q-pa-md">
+        <div class="q-pa-md" style="width:100%; max-width:1000px;">
           <q-table
               :data="tableData"
               :columns="columns"
@@ -107,8 +107,8 @@ export default {
 
       columns : [
         { name: 'desc', align: 'left', label: '浏览器', field: 'name' },
-        { name: 'calories', align: 'left', label: 'Scirpt下载（推荐）', field: 'Scirpt' },
-        { name: 'fat', align: 'left',label: 'tampermonkey下载', field: 'tampermonkey' },
+        { name: 'calories', align: 'left', label: 'Scirptcat', field: 'Scirpt' },
+        { name: 'fat', align: 'center',label: 'tampermonkey', field: 'tampermonkey' },
       ],
 
       tableData: [
