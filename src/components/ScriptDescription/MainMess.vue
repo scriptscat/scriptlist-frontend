@@ -170,13 +170,13 @@ export default {
       api.isInstalled(
         this.author.name,
         this.author.namespace,
-        (response,reject)=>{
-          if (response.installed===true){
-            if (response.version==this.author.script.version){
-              this.install="重新安装此脚本（版本"+response.version+"）";
+        (res,rej)=>{
+          if (res.installed===true){
+            if (res.version==this.author.script.version){
+              this.install="重新安装此脚本（版本" + res.version + "）";
             }
             else{
-              this.install="更新到"+response.version+"版本";
+              this.install="更新到" + this.author.script.version + "版本";
             }
           }
           else

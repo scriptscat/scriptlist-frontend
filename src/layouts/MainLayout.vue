@@ -98,6 +98,15 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <div class="flex flex-center">
+      <a style="margin-right:20px; text-decoration: none;" href="https://docs.scriptcat.org/">Docs</a>
+      <img :src="cat" width="36px;">
+      <a style="margin-left:20px; text-decoration: none;" href="https://github.com/scriptscat/">Github</a>
+    </div>
+    <div class="flex flex-center" style="padding:5px 0px 15px 0px;">
+      <a >@2020-2021 最终解释权归ScriptCat所有</a>
+    </div>
   </q-layout>
 </template>
 
@@ -176,6 +185,7 @@ export default {
       avatar: "https://scriptcat.org/api/v1/user/avatar/",
       Account:"请点击登陆",
       right: false,
+      cat: require('../assets/cat.png'),
       tab: "",
     };
   },

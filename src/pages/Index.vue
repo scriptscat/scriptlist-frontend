@@ -101,7 +101,7 @@ export default {
     return {
       SearchTitle: "ScriptCat（脚本猫）比全更全的用户脚本托管平台",
       SearchText: "请输入要查询的脚本关键词",
-      cat : require('../assets/cat.png'),
+      cat: require('../assets/cat.png'),
       shape: "0",
       Text:"",
 
