@@ -1,10 +1,14 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/IndexLayout/IndexLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index/Index.vue') },
-      { path: 'search', component: () => import('pages/Search/Search.vue') },
+      {
+        path: 'search',
+        name: 'search',
+        component: () => import('pages/Search/Search.vue'),
+      },
       // { path: 'managescript', component: () => import('pages/ManageScript.vue') },
       // { path: 'submitscript', name: 'submitscript', component: () => import('pages/SubmitScript.vue') },
       // { path: 'webhookpage', name: 'webhookpage', component: () => import('pages/webhook.vue') },
@@ -20,7 +24,7 @@ const routes = [
       //     { path: "/script-show-page/:id/update", name: "updateScript", component: () => import('components/ScriptDescription/UpdataScript.vue') },
       //     { path: "/script-show-page/:id/statistic", name: "statistic", component: () => import('components/ScriptDescription/statistic.vue') },
       //     { path: "/script-show-page/:id/manage", name: "manageScript", component: () => import('components/ScriptDescription/ManageScript.vue') },
-          
+
       //   ]
       // }
     ],

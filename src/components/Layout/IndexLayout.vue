@@ -1,47 +1,41 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="bg-grey-1">
-    <q-header bordered class="bg-grey-1 text-black" height-hint="64">
-      <q-toolbar class="GNL__toolbar">
-        <q-toolbar-title shrink class="row items-center no-wrap">
-          <img
-            :src="require('src/assets/cat.png')"
-            style="width: 36px; vertical-align: middle; margin-left: 12px"
-          />
-        </q-toolbar-title>
+  <q-header bordered class="bg-grey-1 text-black" height-hint="64">
+    <q-toolbar class="GNL__toolbar">
+      <q-toolbar-title shrink class="row items-center no-wrap">
+        <img
+          :src="require('src/assets/cat.png')"
+          style="width: 36px; vertical-align: middle; margin-left: 12px"
+        />
+      </q-toolbar-title>
 
-        <q-space />
+      <q-space />
 
-        <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn v-if="$q.screen.gt.sm" dense flat icon="apps">
-            <q-tooltip>Google Apps</q-tooltip>
-          </q-btn>
-          <q-btn round dense flat color="grey-8" icon="notifications">
-            <!-- <q-badge color="red" text-color="white" floating>
+      <div class="q-gutter-sm row items-center no-wrap">
+        <q-btn v-if="$q.screen.gt.sm" dense flat icon="apps">
+          <q-tooltip>Google Apps</q-tooltip>
+        </q-btn>
+        <q-btn round dense flat color="grey-8" icon="notifications">
+          <!-- <q-badge color="red" text-color="white" floating>
               2
             </q-badge> -->
-            <q-tooltip>to be design</q-tooltip>
-          </q-btn>
-          <q-btn round flat>
-            <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-            </q-avatar>
-            <q-tooltip>Account</q-tooltip>
-          </q-btn>
-        </div>
-      </q-toolbar>
-    </q-header>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+          <q-tooltip>to be design</q-tooltip>
+        </q-btn>
+        <q-btn round flat>
+          <q-avatar size="26px">
+            <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+          </q-avatar>
+          <q-tooltip>Account</q-tooltip>
+        </q-btn>
+      </div>
+    </q-toolbar>
+  </q-header>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { ref, defineComponent } from 'vue';
 import { fasGlobeAmericas, fasFlask } from '@quasar/extras/fontawesome-v5';
-export default {
-  name: 'GoogleNewsLayout',
+export default defineComponent({
+  name: 'SearchLayout',
   setup() {
     const leftDrawerOpen = ref(false);
     const search = ref('');
@@ -102,7 +96,7 @@ export default {
       changeDate,
     };
   },
-};
+});
 </script>
 
 <style lang="sass">

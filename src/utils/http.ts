@@ -5,7 +5,10 @@ import { Cookies } from 'quasar';
 class Http {
   private service = axios.create({
     withCredentials: true,
-    baseURL: '/dev',
+    baseURL:
+      process.env.NODE_ENV === 'production' || process.env.SERVER
+        ? process.env.VUE_APP_HTTP_HOST_PRODUCTION
+        : '/dev',
     timeout: 30000,
   });
 
@@ -29,9 +32,9 @@ class Http {
       (response) => {
         if (response.status === 200) {
           if (response.data) {
-            return Promise.resolve(response.data);
+            return Promise.resolve(response);
           }
-          return Promise.reject(response.data);
+          return Promise.reject(response);
         }
       },
       (error) => {
@@ -39,15 +42,15 @@ class Http {
       }
     );
   }
-  public get(url: string, params = {}) {
+  public async get(url: string, params = {}) {
     return this.service.get(url, { params });
   }
-  public post(url: string, data = {}, config = {}) {
+  public async post(url: string, data = {}, config = {}) {
     data = qs.stringify(data); // form-data传参
     return this.service.post(url, data, config);
   }
-  public put(url: string, data = {}, config = {}) {
-    return this.service.post(url, data, config);
+  public async put(url: string, data = {}, config = {}) {
+    return this.service.put(url, data, config);
   }
 }
 

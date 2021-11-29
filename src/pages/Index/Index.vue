@@ -1,9 +1,8 @@
 <template>
   <div>
+    <IndexLayout />
     <div align="center">
-      <div class="title text-h4">
-        ScriptCat，比全更全的用户脚本托管平台
-      </div>
+      <div class="title text-h4">ScriptCat，比全更全的用户脚本托管平台</div>
       <q-input
         class="GNL__toolbar-input"
         outlined
@@ -22,7 +21,14 @@
           />
         </template>
         <template v-slot:append>
-          <q-btn icon="search" flat dense outline color="primary" @click="Search" />
+          <q-btn
+            icon="search"
+            flat
+            dense
+            outline
+            color="primary"
+            @click="Search"
+          />
           <q-btn flat dense aria-label="Menu" icon="menu">
             筛选
             <q-menu anchor="bottom end" self="top end">
@@ -93,10 +99,9 @@
 
 <script lang="ts">
 import { ref, defineComponent, onMounted } from 'vue';
+import IndexLayout from 'components/Layout/IndexLayout.vue';
 import { useRouter } from 'vue-router';
-import http from 'src/utils/http'
 
-const SearchText = '';
 const shape = '0';
 const data = [
   {
@@ -108,7 +113,7 @@ const data = [
       '<br>　持续兼容油猴脚本中，已兼容90%+的油猴脚本，更多油猴特性完善中。' +
       '<br>　并且另外支持更强大的后台脚本和定时脚本!' +
       '<br>　<b>如果您已经安装了其他脚本管理器（Tanmpermonkey（油猴）），可以选择不安装脚本猫。</b>' +
-      '<br>　<b>如果您想使用脚本猫，请先<a style="text-decoration:none; color:rgb(40, 86, 172);" href="https://docs.scriptcat.org/use/#%E5%AE%89%E8%A3%85%E6%89%A9%E5%B1%95">点击安装</a>脚本猫。</b>'+
+      '<br>　<b>如果您想使用脚本猫，请先<a style="text-decoration:none; color:rgb(40, 86, 172);" href="https://docs.scriptcat.org/use/#%E5%AE%89%E8%A3%85%E6%89%A9%E5%B1%95">点击安装</a>脚本猫。</b>' +
       '<br>　如果您在安装中出现了问题? 想学习脚本开发? 对脚本存在疑问?' +
       '<br><b>　可以访问我们的论坛：<a style="text-decoration:none; color:rgb(40, 86, 172);" href="https://bbs.tampermonkey.net.cn/"target="_black">油猴中文网</a></b>',
   },
@@ -122,7 +127,7 @@ const data = [
       '<br><b>2.ScriptCat脚本猫又是什么？</b>' +
       '<br>　参考了油猴的设计思路并且支持油猴脚本，实现了一个<b>后台脚本</b>运行的框架，并且也支持大部分的油猴脚本。推荐直接安装脚本猫，支持的脚本范围更广。' +
       '<br><b>3.如何使用油猴脚本？</b>' +
-      '<br>　使用油猴脚本首先需要安装油猴管理器，油猴管理器根据不同浏览器安装的方式有所不同。'
+      '<br>　使用油猴脚本首先需要安装油猴管理器，油猴管理器根据不同浏览器安装的方式有所不同。',
   },
   {
     icon: 'cloud',
@@ -153,30 +158,29 @@ const columns = [
 
 export default defineComponent({
   name: 'Error404',
-
+  components: {
+    IndexLayout,
+  },
   setup() {
+    const SearchText = ref('');
     const router = useRouter();
-
     const Search = () => {
-      const aa = http.get('/category');
-      console.log(aa)
-      aa.then((res)=>{
-        console.log(res)
-      }).catch(e=>{
-        console.log(e)
-      })
-      return router.push({
-        path: '/search',
+      const { href } = router.resolve({
+        name: 'search',
+        query: {
+          keyword: SearchText.value,
+        },
       });
+      window.open(href, '_blank');
     };
 
     onMounted;
 
     return {
-      SearchText: ref(SearchText),
       shape: ref(shape),
       data: ref(data),
       columns,
+      SearchText,
       Search,
     };
   },
