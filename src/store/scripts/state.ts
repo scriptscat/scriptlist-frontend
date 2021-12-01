@@ -1,10 +1,16 @@
-export interface ExampleStateInterface {
-  prop: boolean;
+export interface ScriptsStateInterface {
+  scripts: Array<any>
+  total: number,
+  script: any,
+  is_manager: boolean
 }
 
-function state(): ExampleStateInterface {
+function state(): ScriptsStateInterface {
   return {
-    prop: false
+    scripts: [],
+    total: 0,
+    script: {},
+    is_manager: false,
   }
 };
 

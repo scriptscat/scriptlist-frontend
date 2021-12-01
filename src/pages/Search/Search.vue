@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 <template>
   <SearchLayout />
   <div class="flex justify-center">
@@ -62,10 +63,14 @@
                   ><strong>{{ item.total_install }}</strong></span
                 >
                 <span class="col"
-                  ><strong>{{ dateformat(item.createtime*1000) }}</strong></span
+                  ><strong>{{
+                    dateformat(item.createtime * 1000)
+                  }}</strong></span
                 >
                 <span class="col"
-                  ><strong>{{ dateformat(item.createtime*1000) }}</strong></span
+                  ><strong>{{
+                    dateformat(item.createtime * 1000)
+                  }}</strong></span
                 >
               </q-item-label>
             </q-item>
@@ -84,10 +89,14 @@
                   ><strong>{{ item.total_install }}</strong></span
                 >
                 <span class="col"
-                  ><strong>{{ dateformat(item.createtime*1000) }}</strong></span
+                  ><strong>{{
+                    dateformat(item.createtime * 1000)
+                  }}</strong></span
                 >
                 <span class="col"
-                  ><strong>{{ dateformat(item.updatetime*1000) }}</strong></span
+                  ><strong>{{
+                    dateformat(item.updatetime * 1000)
+                  }}</strong></span
                 >
               </q-item-label>
             </q-item>
@@ -323,11 +332,8 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import geScriptList from './geScriptList';
-import { RootObject } from 'src/model/rootObject';
 import SearchLayout from 'components/Layout/SearchLayout.vue';
 import format from 'date-fns/format';
-// import { preFetch } from 'quasar/wrappers'
-// import { Store } from 'vuex'
 
 const iconcolorlist = [
   '#ff981b',
@@ -353,6 +359,27 @@ export default defineComponent({
         return format(value, 'yyyy-MM-dd');
       };
     },
+    ScriptList() {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return this.$store.state.scripts.scripts;
+    },
+  },
+  serverPrefetch() {
+    // return the Promise from the action
+    // so that the component waits before rendering
+    return this.$store.dispatch(
+      'scripts/fetchScriptList',
+      '/scripts?page=' +
+        (this.$route.query.page || 1).toString() +
+        '&count=20&keyword=' +
+        encodeURIComponent(<string>this.$route.query.keyword || '') +
+        '&sort=' +
+        (this.$route.query.sort || 'today_download').toString() +
+        '&category=' +
+        (this.$route.query.category || '').toString() +
+        '&domain=' +
+        (this.$route.query.domain || '').toString()
+    );
   },
   setup() {
     const recommondlist = ref({
@@ -361,27 +388,25 @@ export default defineComponent({
       new: [],
     });
 
-    const ScriptList = ref([]);
     // 获取推荐列表
-    geScriptList
-      .getRecommendList(
-        '/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain='
-      )
-      .then((r) => {
-        const reee: RootObject = r.data;
-        ScriptList.value = reee.list;
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    // geScriptList
+    //   .getRecommendList(
+    //     '/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain='
+    //   )
+    //   .then((r) => {
+    //     const reee: RootObject = r.data;
+    //     ScriptList.value = reee.list;
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
 
     geScriptList
       .getRecommendList(
         '/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain='
       )
       .then((r) => {
-        const reee: RootObject = r.data;
-        recommondlist.value.download = reee.list;
+        recommondlist.value.download = r.data.list;
       })
       .catch((e) => {
         console.log(e);
@@ -391,8 +416,7 @@ export default defineComponent({
         '/scripts?page=1&count=10&keyword=&sort=score&category=&domain='
       )
       .then((r) => {
-        const res: RootObject = r.data;
-        recommondlist.value.score = res.list;
+        recommondlist.value.score = r.data.list;
       })
       .catch((e) => {
         console.log(e);
@@ -402,8 +426,7 @@ export default defineComponent({
         '/scripts?page=1&count=10&keyword=&sort=updatetime&category=&domain='
       )
       .then((r) => {
-        const res: RootObject = r.data;
-        recommondlist.value.new = res.list;
+        recommondlist.value.new = r.data.list;
       })
       .catch((e) => {
         console.log(e);
@@ -412,7 +435,6 @@ export default defineComponent({
     return {
       iconcolorlist: ref(iconcolorlist),
       recommondlist,
-      ScriptList,
     };
   },
 });

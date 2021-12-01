@@ -7,7 +7,7 @@ class Http {
     withCredentials: true,
     baseURL:
       process.env.NODE_ENV === 'production' || process.env.SERVER
-        ? process.env.VUE_APP_HTTP_HOST_PRODUCTION
+        ? process.env.VUE_APP_HTTP_HOST
         : '/dev',
     timeout: 30000,
   });
@@ -42,8 +42,8 @@ class Http {
       }
     );
   }
-  public async get(url: string, params = {}) {
-    return this.service.get(url, { params });
+  public async get<T>(url: string, params = {}) {
+    return this.service.get<T>(url, { params });
   }
   public async post(url: string, data = {}, config = {}) {
     data = qs.stringify(data); // form-data传参
