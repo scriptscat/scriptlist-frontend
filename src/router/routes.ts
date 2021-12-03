@@ -11,8 +11,8 @@ const routes = [
       },
       // { path: 'managescript', component: () => import('pages/ManageScript.vue') },
       // { path: 'submitscript', name: 'submitscript', component: () => import('pages/SubmitScript.vue') },
-      // { path: 'webhookpage', name: 'webhookpage', component: () => import('pages/webhook.vue') },
-      // { path: 'users/:id', name: 'users', component: () => import('pages/users.vue') },
+      { path: 'webhookpage', name: 'webhookpage', component: () => import('pages/webhook/webhook.vue') },
+      { path: 'users/:id', name: 'users', component: () => import('pages/users/users.vue') },
       // {
       //   path: 'script-show-page', component: () => import('pages/SciptShowPage.vue'),
       //   children: [

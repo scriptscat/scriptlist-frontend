@@ -118,12 +118,13 @@ export default defineComponent({
       showDateOptions.value = false;
     }
     function Search() {
-      return router.push({
+      const { href } = router.resolve({
         name: 'search',
         query: {
-          keyword: '222',
+          keyword: SearchText.value,
         },
       });
+      window.open(href, '_self');
     }
     return {
       leftDrawerOpen,
