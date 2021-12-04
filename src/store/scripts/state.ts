@@ -1,5 +1,5 @@
 export interface ScriptsStateInterface {
-  scripts: Array<any>
+  scripts: DTO.Script[]
   total: number,
   script: any,
   is_manager: boolean

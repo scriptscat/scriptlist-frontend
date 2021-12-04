@@ -7,12 +7,12 @@ const routes = [
       {
         path: 'search',
         name: 'search',
-        component: () => import('pages/Search/Search.vue'),
+        component: () => import('pages/Script/Search/Search.vue'),
       },
-      // { path: 'managescript', component: () => import('pages/ManageScript.vue') },
-      // { path: 'submitscript', name: 'submitscript', component: () => import('pages/SubmitScript.vue') },
-      { path: 'webhookpage', name: 'webhookpage', component: () => import('pages/webhook/webhook.vue') },
-      { path: 'users/:id', name: 'users', component: () => import('pages/users/users.vue') },
+      // { path: '/users/home', component: () => import('pages/ManageScript.vue') },
+      // { path: '/scripts/submit-code', name: 'submit-code', component: () => import('pages/Script/SubmitCode/SubmitCode.vue') },
+      { path: 'users/webhook', name: 'webhook', component: () => import('pages/Users/Webhook/Webhook.vue') },
+      { path: 'users/:id', name: 'users', component: () => import('pages/Users/Users.vue') },
       // {
       //   path: 'script-show-page', component: () => import('pages/SciptShowPage.vue'),
       //   children: [

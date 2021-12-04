@@ -1,113 +1,106 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 <template>
   <SearchLayout />
   <div class="flex justify-center">
     <q-card flat bordered class="scriptshow" v-if="ScriptList.length !== 0">
-      <q-intersection once transition="scale">
-        <q-card
-          class="single"
-          flat
-          bordered
-          v-for="(item, index) in ScriptList"
-          v-bind:key="index"
-        >
-          <q-card square bordered flat>
-            <q-item>
-              <q-item-section avatar>
-                <q-avatar>
-                  <img
-                    :src="
-                      'https://scriptcat.org/api/v1/user/avatar/' + item.uid
-                    "
-                  />
-                </q-avatar>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>
-                  <a
-                    style="color: rgb(40, 86, 172)"
-                    target="_blank"
-                    :href="'/users/' + item.uid"
-                  >
-                    {{ item.username }}
-                  </a>
-                </q-item-label>
-                <div class="text-body1">
-                  <a
-                    class="text-black"
-                    target="_blank"
-                    :href="'/script-show-page/' + item.id"
-                  >
-                    <b>{{ item.name }}</b>
-                  </a>
-                </div>
-              </q-item-section>
-            </q-item>
-            <q-separator />
-            <q-card-section class="q-pt-none" style="margin: 10px 0px 0px 0px"
-              >{{ item.description }}
-            </q-card-section>
-            <q-separator />
-            <q-item class="block text-left">
-              <q-item-label class="row" caption>
-                <span class="col">今日安装</span>
-                <span class="col">总安装量</span>
-                <span class="col">创建日期</span>
-                <span class="col">最近更新</span>
-                <span class="col">评分</span>
-              </q-item-label>
-              <q-item-label
-                class="row text-caption text-blue-10"
-                style="font-weight: bold"
-              >
-                <span class="col">{{ item.today_install }}</span>
-                <span class="col">{{ item.total_install }}</span>
-                <span class="col">{{
-                  dateformat(item.createtime * 1000)
-                }}</span>
-                <span v-if="item.updatetime !== 0" class="col">{{
-                  dateformat(item.updatetime * 1000)
-                }}</span>
-                <span v-else class="col">{{
-                  dateformat(item.createtime * 1000)
-                }}</span>
-                <span v-if="item.score != 0" class="col"
-                  >{{ ((item.score * 2) / 10).toFixed(1) }} 分</span
+      <q-card
+        class="single"
+        flat
+        bordered
+        v-for="(item, index) in ScriptList"
+        v-bind:key="index"
+      >
+        <q-card square bordered flat>
+          <q-item>
+            <q-item-section avatar>
+              <q-avatar>
+                <img
+                  :src="'https://scriptcat.org/api/v1/user/avatar/' + item.uid"
+                />
+              </q-avatar>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>
+                <a
+                  style="color: rgb(40, 86, 172)"
+                  target="_blank"
+                  :href="'/users/' + item.uid"
                 >
-                <span v-else class="col">暂无评分</span>
+                  {{ item.username }}
+                </a>
               </q-item-label>
-            </q-item>
-            <q-separator />
-            <q-item-label style="margin: 5px 5px 5px 0px">
-              <q-btn-group flat>
-                <q-btn
-                  flat
-                  icon="star"
-                  size="sm"
-                  color="primary"
-                  type="a"
-                  href="/comment/1"
+              <div class="text-body1">
+                <a
+                  class="text-black"
+                  target="_blank"
+                  :href="'/script-show-page/' + item.id"
                 >
-                  <q-tooltip>评分</q-tooltip>
-                </q-btn>
-                <q-separator vertical inset="1" />
-                <q-btn flat icon="share" size="sm" color="primary">
-                  <q-tooltip>分享</q-tooltip>
-                </q-btn>
-                <q-separator vertical inset="1" />
-                <q-btn flat icon="more_horiz" size="sm" color="black">
-                  <q-tooltip>更多</q-tooltip>
-                </q-btn>
-                <q-separator vertical inset="1" />
-                <q-btn flat icon="chat" size="sm" color="black">
-                  <q-tooltip>反馈</q-tooltip>
-                </q-btn>
-                <q-separator vertical inset="2" />
-              </q-btn-group>
+                  <b>{{ item.name }}</b>
+                </a>
+              </div>
+            </q-item-section>
+          </q-item>
+          <q-separator />
+          <q-card-section class="q-pt-none" style="margin: 10px 0px 0px 0px"
+            >{{ item.description }}
+          </q-card-section>
+          <q-separator />
+          <q-item class="block text-left">
+            <q-item-label class="row" caption>
+              <span class="col">今日安装</span>
+              <span class="col">总安装量</span>
+              <span class="col">创建日期</span>
+              <span class="col">最近更新</span>
+              <span class="col">评分</span>
             </q-item-label>
-          </q-card>
+            <q-item-label
+              class="row text-caption text-blue-10"
+              style="font-weight: bold"
+            >
+              <span class="col">{{ item.today_install }}</span>
+              <span class="col">{{ item.total_install }}</span>
+              <span class="col">{{ dateformat(item.createtime * 1000) }}</span>
+              <span v-if="item.updatetime !== 0" class="col">{{
+                dateformat(item.updatetime * 1000)
+              }}</span>
+              <span v-else class="col">{{
+                dateformat(item.createtime * 1000)
+              }}</span>
+              <span v-if="item.score != 0" class="col"
+                >{{ ((item.score * 2) / 10).toFixed(1) }} 分</span
+              >
+              <span v-else class="col">暂无评分</span>
+            </q-item-label>
+          </q-item>
+          <q-separator />
+          <q-item-label style="margin: 5px 5px 5px 0px">
+            <q-btn-group flat>
+              <q-btn
+                flat
+                icon="star"
+                size="sm"
+                color="primary"
+                type="a"
+                href="/comment/1"
+              >
+                <q-tooltip>评分</q-tooltip>
+              </q-btn>
+              <q-separator vertical inset="1" />
+              <q-btn flat icon="share" size="sm" color="primary">
+                <q-tooltip>分享</q-tooltip>
+              </q-btn>
+              <q-separator vertical inset="1" />
+              <q-btn flat icon="more_horiz" size="sm" color="black">
+                <q-tooltip>更多</q-tooltip>
+              </q-btn>
+              <q-separator vertical inset="1" />
+              <q-btn flat icon="chat" size="sm" color="black">
+                <q-tooltip>反馈</q-tooltip>
+              </q-btn>
+              <q-separator vertical inset="2" />
+            </q-btn-group>
+          </q-item-label>
         </q-card>
-      </q-intersection>
+      </q-card>
       <div class="flex flex-center">
         <q-pagination v-model="page" :max="Maxpage" direction-links />
       </div>
@@ -207,10 +200,10 @@
 
 <script lang="ts">
 import { ref, defineComponent, watch } from 'vue';
-import geScriptList from './getScriptList';
 import SearchLayout from 'components/Layout/SearchLayout.vue';
 import format from 'date-fns/format';
 import { useRouter, useRoute } from 'vue-router';
+import { getRecommendList } from 'src/apis/scripts';
 
 const iconcolorlist = [
   '#ff981b',
@@ -236,39 +229,41 @@ export default defineComponent({
         return format(value, 'yyyy-MM-dd');
       };
     },
-    ScriptList() {
-      return this.$store.state.scripts.scripts;
-    },
     Maxpage() {
       return Math.ceil(this.$store.state.scripts.total / 20);
     },
+    ScriptList() {
+      return this.$store.state.scripts.scripts;
+    },
   },
-  serverPrefetch() {
-    // return the Promise from the action
-    // so that the component waits before rendering
-    return this.$store.dispatch(
+  preFetch({ store, currentRoute }) {
+    return store.dispatch(
       'scripts/fetchScriptList',
       '/scripts?page=' +
-        (this.$route.query.page || 1).toString() +
+        (currentRoute.query.page || 1).toString() +
         '&count=20&keyword=' +
-        encodeURIComponent(<string>this.$route.query.keyword || '') +
+        encodeURIComponent(<string>currentRoute.query.keyword || '') +
         '&sort=' +
-        (this.$route.query.sort || 'today_download').toString() +
+        (currentRoute.query.sort || 'today_download').toString() +
         '&category=' +
-        (this.$route.query.category || '').toString() +
+        (currentRoute.query.category || '').toString() +
         '&domain=' +
-        (this.$route.query.domain || '').toString()
+        (currentRoute.query.domain || '').toString()
     );
   },
   setup() {
-    const recommondlist = ref({
+    const recommondlist = ref<{
+      download: DTO.Script[];
+      score: DTO.Script[];
+      new: DTO.Script[];
+    }>({
       download: [],
       score: [],
       new: [],
     });
     const router = useRouter();
     const route = useRoute();
-    const page = ref(Number(route.query.page)||1);
+    const page = ref(Number(route.query.page) || 1);
 
     watch(page, (newValue) => {
       const { href } = router.resolve({
@@ -282,30 +277,29 @@ export default defineComponent({
       window.open(href, '_self');
     });
 
-    geScriptList
-      .getRecommendList(
-        '/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain='
-      )
+    getRecommendList(
+      '/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain='
+    )
       .then((r) => {
         recommondlist.value.download = r.data.list;
       })
       .catch((e) => {
         console.log(e);
       });
-    geScriptList
-      .getRecommendList(
-        '/scripts?page=1&count=10&keyword=&sort=score&category=&domain='
-      )
+
+    getRecommendList(
+      '/scripts?page=1&count=10&keyword=&sort=score&category=&domain='
+    )
       .then((r) => {
         recommondlist.value.score = r.data.list;
       })
       .catch((e) => {
         console.log(e);
       });
-    geScriptList
-      .getRecommendList(
-        '/scripts?page=1&count=10&keyword=&sort=updatetime&category=&domain='
-      )
+
+    getRecommendList(
+      '/scripts?page=1&count=10&keyword=&sort=updatetime&category=&domain='
+    )
       .then((r) => {
         recommondlist.value.new = r.data.list;
       })

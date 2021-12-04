@@ -3,12 +3,15 @@ import qs from 'qs';
 import { Cookies } from 'quasar';
 
 class Http {
+
+  public baseURL = process.env.NODE_ENV === 'production' || process.env.SERVER
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    ? process.env.VUE_APP_HTTP_HOST!
+    : '/dev';
+
   private service = axios.create({
     withCredentials: true,
-    baseURL:
-      process.env.NODE_ENV === 'production' || process.env.SERVER
-        ? process.env.VUE_APP_HTTP_HOST
-        : '/dev',
+    baseURL: this.baseURL,
     timeout: 30000,
   });
 
@@ -42,16 +45,21 @@ class Http {
       }
     );
   }
-  public async get<T>(url: string, params = {}) {
-    return this.service.get<T>(url, { params });
+
+  public async get<T>(url: string, config?: AxiosRequestConfig) {
+    return this.service.get<T>(url, config);
   }
-  public async post(url: string, data = {}, config = {}) {
+
+  public async post<T>(url: string, data = {}, config?: AxiosRequestConfig) {
     data = qs.stringify(data); // form-data传参
-    return this.service.post(url, data, config);
+    return this.service.post<T>(url, data, config);
   }
-  public async put(url: string, data = {}, config = {}) {
-    return this.service.put(url, data, config);
+
+  public async put<T>(url: string, data = {}, config?: AxiosRequestConfig) {
+    data = qs.stringify(data); // form-data传参
+    return this.service.put<T>(url, data, config);
   }
+
 }
 
 export default new Http();

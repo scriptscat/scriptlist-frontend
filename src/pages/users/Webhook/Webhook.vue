@@ -4,8 +4,8 @@
       <q-card-actions>
         <div>
           <div class="text-h5">
-            <span style="vertical-align:middle;">
-              <img :src="cat" style="width:72px;" />
+            <span style="vertical-align: middle">
+              <img :src="cat" style="width: 72px" />
             </span>
             Sciptcat(脚本猫)的WebHook设置
           </div>
@@ -14,7 +14,7 @@
             <q-timeline color="primary">
               <div
                 class="text-h6"
-                style="margin-left:40px; padding-bottom:20px;"
+                style="margin-left: 40px; padding-bottom: 20px"
               >
                 与“脚本猫”绑定的Webhook（网页通知事件）可以基于代码仓库的更新而自动更新网站上对应的脚本。
                 <br />脚本猫支持 GitHub的push（推送）事件和
@@ -36,7 +36,7 @@
                 <q-tree
                   :nodes="simple"
                   node-key="label"
-                  :expanded.sync="expanded"
+                  v-bind:expanded="expanded"
                 >
                 </q-tree>
                 <q-btn
@@ -54,10 +54,13 @@
 </template>
 
 <script>
-import { baseURL } from "src/utils/axios";
-export default {
+import { defineComponent } from 'vue';
+import { getWebhook, updateWebhook } from 'src/apis/user';
+import http from 'src/utils/http';
+
+export default defineComponent({
   meta: {
-    title: "webhook"
+    title: 'webhook',
   },
   computed: {
     islogin() {
@@ -65,94 +68,106 @@ export default {
     },
     user() {
       return this.$store.state.user.user;
-    }
+    },
   },
   data() {
     return {
-      cat: require("../assets/cat.png"),
-      expanded: ["配置方法", "Url", "Content-Type", "Secret", "选择事件"],
+      cat: require('src/assets/cat.png'),
+      expanded: ['配置方法', 'Url', 'Content-Type', 'Secret', '选择事件'],
       simple: [
         {
-          label: "配置方法",
+          label: '配置方法',
           children: [
             {
-              label: "Url",
-              icon: "share",
-              children: [{
-                disabled: true,
-                label: "" }]
+              label: 'Url',
+              icon: 'share',
+              children: [
+                {
+                  disabled: true,
+                  label: '',
+                },
+              ],
             },
             {
-              label: "Content-Type",
-              children: [{
-                disabled: true,
-                label: "application/json" }]
+              label: 'Content-Type',
+              children: [
+                {
+                  disabled: true,
+                  label: 'application/json',
+                },
+              ],
             },
             {
-              label: "Secret",
-              children: [{ 
-                disabled: true,
-                label: "" }]
+              label: 'Secret',
+              children: [
+                {
+                  disabled: true,
+                  label: '',
+                },
+              ],
             },
             {
-              label: "选择事件",
+              label: '选择事件',
               children: [
                 {
                   label:
-                    '如果你想让Script的脚本只在"push"行为后更新,请选择"Just the push event"'
+                    '如果你想让Script的脚本只在"push"行为后更新,请选择"Just the push event"',
                 },
                 {
                   label:
-                    '如果你想让Script的脚本只在"releases"行为后更新,请选择"Let me select individual events"'
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                    '如果你想让Script的脚本只在"releases"行为后更新,请选择"Let me select individual events"',
+                },
+              ],
+            },
+          ],
+        },
+      ],
     };
   },
   methods: {
     RefreshSecret() {
-      this.put("user/webhook")
-        .then(response => {
-          if (response.data.msg === "ok") {
+      updateWebhook()
+        .then((response) => {
+          if (response.data.msg === 'ok') {
             if (response.data.code === 0) {
               this.simple[0].children[2].children[0].label =
                 response.data.data.token;
             }
           }
         })
-        .catch(error => {});
-    }
+        .catch((error) => {
+          console.trace(error);
+        });
+    },
   },
   created() {
     if (process.env.CLIENT) {
       if (!this.islogin) {
         this.$q.notify({
-          position: "top-right",
-          message: "当前尚未登陆！",
-          position: "top"
+          position: 'top-right',
+          message: '当前尚未登陆！',
+          position: 'top',
         });
-        this.$router.push({ path: "/" });
+        void this.$router.push({ path: '/' });
         return;
       }
-      //this.id = this.$route.query.id;
     }
-    this.get("/user/webhook")
-      .then(response => {
-        if (response.data.msg === "ok") {
+    getWebhook()
+      .then((response) => {
+        if (response.data.msg === 'ok') {
           if (response.data.code === 0) {
             this.simple[0].children[2].children[0].label =
               response.data.data.token;
             this.simple[0].children[0].children[0].label =
-              baseURL + "/webhook/" + this.user.uid;
+              http.baseURL + '/webhook/' + this.user.uid.toString();
           }
         }
       })
-      .catch(error => {});
-  }
-};
+      .catch((error) => {
+        console.trace(error);
+      });
+  },
+});
 </script>
 
 <style lang="scss" scoped>

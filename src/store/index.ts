@@ -8,6 +8,7 @@ import {
 import scripts from './scripts'
 import { ScriptsStateInterface } from './scripts/state'
 import user from './user'
+import { UserStateInterface } from './user/state'
 
 // import example from './module-example'
 // import { ExampleStateInterface } from './module-example/state';
@@ -26,6 +27,7 @@ export interface StateInterface {
   // example: ExampleStateInterface;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   scripts: ScriptsStateInterface
+  user: UserStateInterface
 }
 
 // provide typings for `this.$store`

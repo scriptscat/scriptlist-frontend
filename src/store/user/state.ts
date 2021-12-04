@@ -1,10 +1,14 @@
-export interface ExampleStateInterface {
-  prop: boolean;
+export interface UserStateInterface {
+  islogin: boolean
+  user?: DTO.User
+  userInfo?: DTO.User
 }
 
-function state(): ExampleStateInterface {
+function state(): UserStateInterface {
   return {
-    prop: false
+    islogin: false,
+    user: undefined,
+    userInfo: undefined,
   }
 };
 
