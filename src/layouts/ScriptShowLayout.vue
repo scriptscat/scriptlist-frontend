@@ -12,30 +12,30 @@
         indicator-color="primary"
       >
         <q-route-tab
-          :to="{ name: 'showPage', params: $route.params }"
+          :to="{ name: 'index', params: $route.params }"
           :name="0"
           label="脚本"
         />
         <q-route-tab
-          :to="{ name: 'showCode', params: $route.params }"
+          :to="{ name: 'issue', params: $route.params }"
           :name="1"
+          label="反馈"
+        />
+        <q-route-tab
+          :to="{ name: 'showComment', params: $route.params }"
+          :name="2"
+          label="评论"
+        />
+        <q-route-tab
+          :to="{ name: 'showCode', params: $route.params }"
+          :name="3"
           label="代码"
         />
         <q-route-tab
           :to="{ name: 'showHistory', params: $route.params }"
-          :name="2"
-          label="历史"
+          :name="4"
+          label="历史版本"
         />
-        <q-route-tab
-          :to="{ name: 'showComment', params: $route.params }"
-          :name="3"
-          label="评论"
-        />
-        <!-- <q-route-tab
-          to=""
-          :name="3"
-          label="反馈"
-        /> -->
         <q-route-tab
           :to="{ name: 'updateScript', params: $route.params }"
           :name="4"
