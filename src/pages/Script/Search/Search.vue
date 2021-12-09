@@ -1,6 +1,11 @@
 <template>
   <div class="flex justify-center">
-    <q-card-section flat bordered class="scriptshow" v-if="ScriptList.length !== 0">
+    <q-card-section
+      flat
+      bordered
+      class="scriptshow"
+      v-if="ScriptList.length !== 0"
+    >
       <q-card
         class="single"
         flat
@@ -202,6 +207,7 @@ import { ref, defineComponent, watch } from 'vue';
 import format from 'date-fns/format';
 import { useRouter, useRoute } from 'vue-router';
 import { getRecommendList } from 'src/apis/scripts';
+import { useMeta } from 'quasar';
 
 const iconcolorlist = [
   '#ff981b',
@@ -217,9 +223,6 @@ const iconcolorlist = [
 ];
 
 export default defineComponent({
-  meta: {
-    title: '用户脚本列表',
-  },
   name: 'search',
   computed: {
     dateformat: () => {
@@ -250,6 +253,9 @@ export default defineComponent({
     );
   },
   setup() {
+    useMeta({
+      title: '用户脚本列表',
+    });
     const recommondlist = ref<{
       download: DTO.Script[];
       score: DTO.Script[];

@@ -21,7 +21,7 @@ const routes = [
             component: () => import('layouts/IssueLayout.vue'),
             children: [
               { path: '', name: 'issue', component: () => import('pages/Script/Code/Issue.vue') },
-              { path: './:id/comment', name: 'issue-comment' }
+              // { path: './:id/comment', name: 'issue-comment' }
             ]
           },
           //     { path: "/script-show-page/:id/delete", name: "deleteScript", component: () => import('components/ScriptDescription/DeleteScript.vue') },

@@ -95,6 +95,7 @@
 </template>
 
 <script lang="ts">
+import { useMeta } from 'quasar';
 import { ref, defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -155,6 +156,10 @@ const columns = [
 export default defineComponent({
   name: 'Error404',
   setup() {
+    useMeta({
+      title: 'ScriptCat - 分享你的用户脚本',
+      titleTemplate: (title) => `${title}`,
+    });
     const SearchText = ref('');
     const router = useRouter();
     const Search = () => {

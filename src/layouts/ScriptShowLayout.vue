@@ -73,17 +73,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Cookies } from 'quasar';
+import { Cookies, useMeta } from 'quasar';
+import { useStore } from 'src/store';
 export default defineComponent({
-  meta() {
-    return {
-      title: 'ScriptCat',
-      titleTemplate: (title: string) => `${this.script.name} - ${title}`,
-      meta: {
-        description: { name: 'description', content: this.script.description },
-      },
-    };
-  },
   preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
       return;
@@ -94,6 +86,17 @@ export default defineComponent({
       cookies: cookies,
     });
   },
+  setup() {
+    const script = useStore().state.scripts.script;
+    useMeta({
+      title: 'ScriptCat',
+      titleTemplate: (title) => `${script.name} - ${title}`,
+      meta: {
+        description: { name: 'description', content: script.description },
+      },
+    });
+    return { script };
+  },
   computed: {
     isuserisauthor() {
       try {
@@ -101,9 +104,6 @@ export default defineComponent({
       } catch (error) {
         return false;
       }
-    },
-    script() {
-      return this.$store.state.scripts.script || <DTO.Script>{};
     },
   },
   data() {

@@ -38,7 +38,7 @@
         </div>
       </q-toolbar>
     </q-header>
-     <q-page-container view="hHh lpR fFf">
+    <q-page-container view="hHh lpR fFf">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -46,19 +46,9 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
-import { Cookies } from 'quasar';
+import { Cookies, useMeta } from 'quasar';
 import { fasGlobeAmericas, fasFlask } from '@quasar/extras/fontawesome-v5';
 export default defineComponent({
-  meta: {
-    titleTemplate: (title: string) => `${title} - ScriptCat`,
-    meta: {
-      description: {
-        name: 'description',
-        content: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚本',
-      },
-      keywords: { name: 'keywords', content: 'ScriptCat UserScript 用户脚本' },
-    },
-  },
   name: 'IndexLayout',
   computed: {
     islogin() {
@@ -79,6 +69,19 @@ export default defineComponent({
     });
   },
   setup() {
+    useMeta({
+      titleTemplate: (title: string) => `${title} - ScriptCat`,
+      meta: {
+        description: {
+          name: 'description',
+          content: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚本',
+        },
+        keywords: {
+          name: 'keywords',
+          content: 'ScriptCat UserScript 用户脚本',
+        },
+      },
+    });
     const leftDrawerOpen = ref(false);
     const search = ref('');
     const showAdvanced = ref(false);

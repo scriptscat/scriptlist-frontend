@@ -101,9 +101,23 @@
 import { ref, defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { fasGlobeAmericas, fasFlask } from '@quasar/extras/fontawesome-v5';
+import { useMeta } from 'quasar';
 export default defineComponent({
   name: 'SearchLayout',
   setup() {
+    useMeta({
+      titleTemplate: (title: string) => `${title} - ScriptCat`,
+      meta: {
+        description: {
+          name: 'description',
+          content: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚本',
+        },
+        keywords: {
+          name: 'keywords',
+          content: 'ScriptCat UserScript 用户脚本',
+        },
+      },
+    });
     const leftDrawerOpen = ref(false);
     const search = ref('');
     const showAdvanced = ref(false);
