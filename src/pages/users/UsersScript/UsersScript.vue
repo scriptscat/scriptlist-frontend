@@ -109,8 +109,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getWebhook, updateWebhook } from 'src/apis/user';
-import http from 'src/utils/http';
 import format from 'date-fns/format';
 
 export default defineComponent({
@@ -132,20 +130,20 @@ export default defineComponent({
   },
   
   setup() {
-    getWebhook()
-      .then((response) => {
-        if (response.data.msg === 'ok') {
-          if (response.data.code === 0) {
-            this.simple[0].children[2].children[0].label =
-              response.data.data.token;
-            this.simple[0].children[0].children[0].label =
-              http.baseURL + '/webhook/' + this.user.uid.toString();
-          }
-        }
-      })
-      .catch((error) => {
-        console.trace(error);
-      });
+    // getWebhook()
+    //   .then((response) => {
+    //     if (response.data.msg === 'ok') {
+    //       if (response.data.code === 0) {
+    //         this.simple[0].children[2].children[0].label =
+    //           response.data.data.token;
+    //         this.simple[0].children[0].children[0].label =
+    //           http.baseURL + '/webhook/' + this.user.uid.toString();
+    //       }
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.trace(error);
+    //   });
       
     return {
     }

@@ -47,4 +47,11 @@ declare namespace DTO {
         uid: number
     };
 
+    type Issue = {
+        id: number
+    }
+
+    type Comment = {
+        id: number
+    }
 }

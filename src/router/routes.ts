@@ -20,8 +20,8 @@ const routes = [
             path: 'issue',
             component: () => import('layouts/IssueLayout.vue'),
             children: [
-              { path: '', name: 'issue', component: () => import('pages/Script/Code/Issue.vue') },
-              // { path: './:id/comment', name: 'issue-comment' }
+              { path: '', name: 'issue', component: () => import('pages/Script/Code/Issue/Issue.vue') },
+              { path: ':issueId/comment', name: 'issue-comment', component: () => import('pages/Script/Code/Issue/Comment.vue') },
             ]
           },
           //     { path: "/script-show-page/:id/delete", name: "deleteScript", component: () => import('components/ScriptDescription/DeleteScript.vue') },

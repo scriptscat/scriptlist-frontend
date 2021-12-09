@@ -5,6 +5,7 @@ import {
   Store as VuexStore,
   useStore as vuexUseStore,
 } from 'vuex'
+import { IssuesStateInterface } from './issues/state'
 import scripts from './scripts'
 import { ScriptsStateInterface } from './scripts/state'
 import user from './user'
@@ -28,6 +29,7 @@ export interface StateInterface {
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
   scripts: ScriptsStateInterface
   user: UserStateInterface
+  issues: IssuesStateInterface
 }
 
 // provide typings for `this.$store`
