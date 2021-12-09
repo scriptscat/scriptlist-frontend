@@ -13,11 +13,14 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.12.1",
+    "@toast-ui/editor": "^2.5.4",
+    "@toast-ui/editor-plugin-code-syntax-highlight": "^3.0.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "date-fns": "^2.26.0",
     "dotenv": "^10.0.0",
     "echarts": "^5.2.2",
+    "prismjs": "^1.25.0",
     "quasar": "^2.0.0",
     "vue-i18n": "^9.0.0",
     "vuex": "^4.0.1"

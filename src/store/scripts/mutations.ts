@@ -6,9 +6,11 @@ const mutation: MutationTree<ScriptsStateInterface> = {
     state.scripts = list;
     // 处理bg类型脚本
     state.total = total;
-  }, updateScriptInfo(state, script: any) {
+  },
+  updateScriptInfo(state, script: any) {
     state.script = script;
-  }, SetIsManagerScript(state, status) {
+  },
+  SetIsManagerScript(state, status) {
     state.is_manager = status;
   }
 };

@@ -1,12 +1,8 @@
+import { Cookies } from 'quasar';
 import { ActionTree } from 'vuex';
 import http from '../../utils/http';
 import { StateInterface } from '../index';
 import { ScriptsStateInterface } from './state';
-
-export interface ScriptInfo {
-  code: number
-  data: any
-}
 
 const actions: ActionTree<ScriptsStateInterface, StateInterface> = {
   fetchScriptList({ commit }, url) {
@@ -19,8 +15,12 @@ const actions: ActionTree<ScriptsStateInterface, StateInterface> = {
         commit('updateScripts', { list: [], total: 0 });
       });
   },
-  fetchScriptInfo({ commit }, { id }) {
-    return http.get<ScriptInfo>('/scripts/' + <string>id, {}).then(response => {
+  fetchScriptInfo({ commit }, param: { id: number, cookies: Cookies }) {
+    return http.get<API.ScriptInfoResponse>('/scripts/' + param.id.toString(), {
+      headers: {
+        cookie: 'token=' + (param.cookies ? param.cookies.get('token') : ''),
+      },
+    }).then(response => {
       if (response.data.code === 0) {
         commit('updateScriptInfo', response.data.data);
       } else {

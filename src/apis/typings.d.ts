@@ -24,15 +24,23 @@ declare namespace API {
         token: string
     }>;
 
+    type ScriptInfoResponse = Response<DTO.Script>
+
 }
 
 declare namespace DTO {
 
     type Script = {
-        id: number, name: string, description: string, today_install: number, total_install: number
-        uid: number, username: string
+        id: number, name: string, namespace: string, description: string, today_install: number, total_install: number
+        uid: number, username: string, script: ScriptCode
+        content: string
         score: number
         createtime: number, updatetime: number
+        is_manager: boolean
+    }
+
+    type ScriptCode = {
+        version: string
     }
 
     type User = {
