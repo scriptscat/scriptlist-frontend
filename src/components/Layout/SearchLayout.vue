@@ -6,7 +6,7 @@
           :src="require('src/assets/cat.png')"
           style="width: 36px; vertical-align: middle; margin: 0px 10px 0px 12px"
         />
-        <!-- <div class="text-h5">ScriptCat</div> -->
+        <div class="title">ScriptCat</div>
       </q-toolbar-title>
       <q-input
         dense
@@ -35,7 +35,7 @@
             color="primary"
             @click="Search"
           />
-          <q-btn flat dense aria-label="Menu" icon="menu">
+          <!-- <q-btn flat dense aria-label="Menu" icon="menu">
             筛选
             <q-menu anchor="bottom end" self="top end">
               <div class="q-pa-md" style="width: 500px">
@@ -62,7 +62,7 @@
                 </div>
               </div>
             </q-menu>
-          </q-btn>
+          </q-btn> -->
         </template>
       </q-input>
       <q-space />
@@ -198,13 +198,16 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .GNL__toolbar-input {
-  width: 900px;
-  margin-left: 242px;
+  width: 875px;
+  margin-left: 9.0%;
 }
 @media screen and (max-width: 554px) {
   .GNL__toolbar-input {
     width: 100%;
-    margin-left: 10px;
+    margin-left: 0px;
+  }
+  .title{
+    display: none;
   }
 }
 </style>

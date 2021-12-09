@@ -20,11 +20,19 @@
             </q-badge> -->
           <q-tooltip>to be design</q-tooltip>
         </q-btn>
-        <q-btn round flat>
+        <q-btn v-if="islogin" round flat>
           <q-avatar size="26px">
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+            <img
+              :src="'https://scriptcat.org/api/v1/user/avatar/' + user.uid"
+            />
           </q-avatar>
-          <q-tooltip>Account</q-tooltip>
+          <q-tooltip>{{ user.username }}</q-tooltip>
+        </q-btn>
+        <q-btn v-else round flat>
+          <q-avatar size="26px">
+            <img src="https://scriptcat.org/api/v1/user/avatar/5" />
+          </q-avatar>
+          <q-tooltip>暂未登录</q-tooltip>
         </q-btn>
       </div>
     </q-toolbar>
@@ -33,9 +41,38 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
+import { Cookies } from 'quasar';
 import { fasGlobeAmericas, fasFlask } from '@quasar/extras/fontawesome-v5';
 export default defineComponent({
-  name: 'SearchLayout',
+  meta: {
+    titleTemplate: (title: string) => `${title} - ScriptCat`,
+    meta: {
+      description: {
+        name: 'description',
+        content: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚本',
+      },
+      keywords: { name: 'keywords', content: 'ScriptCat UserScript 用户脚本' },
+    },
+  },
+  name: 'IndexLayout',
+  computed: {
+    islogin() {
+      return this.$store.state.user.islogin;
+    },
+    user() {
+      return this.$store.state.user.user;
+    },
+  },
+  preFetch({ store, ssrContext }) {
+    if (!ssrContext) {
+      return;
+    }
+    const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
+    return store.dispatch('user/loginUserInfo', {
+      cookies: cookies,
+      res: ssrContext.res,
+    });
+  },
   setup() {
     const leftDrawerOpen = ref(false);
     const search = ref('');

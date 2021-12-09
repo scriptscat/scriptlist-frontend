@@ -12,7 +12,7 @@ const routes = [
       // { path: '/users/home', component: () => import('pages/ManageScript.vue') },
       // { path: '/scripts/submit-code', name: 'submit-code', component: () => import('pages/Script/SubmitCode/SubmitCode.vue') },
       { path: 'users/webhook', name: 'webhook', component: () => import('pages/Users/Webhook/Webhook.vue') },
-      { path: 'users/:id', name: 'users', component: () => import('pages/Users/Users.vue') },
+      { path: 'users/:id', name: 'users', component: () => import('pages/Users/UsersScript/UsersScript.vue') },
       // {
       //   path: 'script-show-page', component: () => import('pages/SciptShowPage.vue'),
       //   children: [

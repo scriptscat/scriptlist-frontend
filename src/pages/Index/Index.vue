@@ -199,7 +199,8 @@ export default defineComponent({
 }
 
 .my-card {
-  width: 425px;
+  max-width: 425px;
+  width: 100%;
   height: 350px;
   margin: 100px 50px 0px 50px;
 }

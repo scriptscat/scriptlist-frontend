@@ -1,7 +1,7 @@
 <template>
   <SearchLayout />
   <div class="flex justify-center">
-    <q-card flat bordered class="scriptshow" v-if="ScriptList.length !== 0">
+    <q-card-section flat bordered class="scriptshow" v-if="ScriptList.length !== 0">
       <q-card
         class="single"
         flat
@@ -9,7 +9,7 @@
         v-for="(item, index) in ScriptList"
         v-bind:key="index"
       >
-        <q-card square bordered flat>
+        <q-card bordered flat>
           <q-item>
             <q-item-section avatar>
               <q-avatar>
@@ -53,7 +53,7 @@
               <span class="col">评分</span>
             </q-item-label>
             <q-item-label
-              class="row text-caption text-blue-10"
+              class="row text-caption text-black"
               style="font-weight: bold"
             >
               <span class="col">{{ item.today_install }}</span>
@@ -78,23 +78,23 @@
                 flat
                 icon="star"
                 size="sm"
-                color="primary"
+                color="light-blue-10"
                 type="a"
                 href="/comment/1"
               >
                 <q-tooltip>评分</q-tooltip>
               </q-btn>
               <q-separator vertical inset="1" />
-              <q-btn flat icon="share" size="sm" color="primary">
+              <q-btn flat icon="chat" size="sm" color="light-blue-10">
+                <q-tooltip>反馈</q-tooltip>
+              </q-btn>
+              <q-separator vertical inset="1" />
+              <q-btn flat icon="share" size="sm" color="light-blue-10">
                 <q-tooltip>分享</q-tooltip>
               </q-btn>
               <q-separator vertical inset="1" />
-              <q-btn flat icon="more_horiz" size="sm" color="black">
+              <q-btn flat icon="more_horiz" size="sm" color="light-blue-10">
                 <q-tooltip>更多</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="chat" size="sm" color="black">
-                <q-tooltip>反馈</q-tooltip>
               </q-btn>
               <q-separator vertical inset="2" />
             </q-btn-group>
@@ -104,7 +104,7 @@
       <div class="flex flex-center">
         <q-pagination v-model="page" :max="Maxpage" direction-links />
       </div>
-    </q-card>
+    </q-card-section>
     <q-card flat bordered class="scriptshow" v-else> 暂无结果 </q-card>
 
     <div class="show-mess-page">
@@ -219,6 +219,9 @@ const iconcolorlist = [
 ];
 
 export default defineComponent({
+  meta: {
+    title: '用户脚本列表',
+  },
   name: 'search',
   components: {
     SearchLayout,
@@ -318,8 +321,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .scriptshow {
-  margin: 20px 20px 0px 10px;
-  padding: 10px;
+  padding: 15px;
   width: 915px;
   a {
     text-decoration: none;
