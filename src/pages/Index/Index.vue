@@ -1,105 +1,101 @@
 <template>
-  <div>
-    <IndexLayout />
-    <div align="center">
-      <div class="title text-h4">ScriptCat，比全更全的用户脚本托管平台</div>
-      <q-input
-        class="GNL__toolbar-input"
-        outlined
-        v-model="SearchText"
-        color="bg-grey-7"
-        placeholder="脚本猫，让你的浏览器可以做更多的事情"
-        v-on:keyup.enter="Search"
-      >
-        <template v-slot:prepend>
-          <q-icon v-if="SearchText === ''" name="done" />
-          <q-icon
-            v-else
-            name="clear"
-            class="cursor-pointer"
-            @click="SearchText = ''"
-          />
-        </template>
-        <template v-slot:append>
-          <q-btn
-            icon="search"
-            flat
-            dense
-            outline
-            color="primary"
-            @click="Search"
-          />
-          <q-btn flat dense aria-label="Menu" icon="menu">
-            筛选
-            <q-menu anchor="bottom end" self="top end">
-              <div class="q-pa-md" style="width: 500px">
-                <div class="row items-center">
-                  <div class="col-3 text-subtitle2">脚本类型</div>
-                  <q-input dense v-model="exactPhrase" />
-                  <div class="col-3 text-subtitle2">排序方式</div>
-                  <div class="col-9">
-                    <q-input dense v-model="hasWords" />
-                  </div>
+  <div align="center">
+    <div class="title text-h4">ScriptCat，比全更全的用户脚本托管平台</div>
+    <q-input
+      class="GNL__toolbar-input"
+      outlined
+      v-model="SearchText"
+      color="bg-grey-7"
+      placeholder="脚本猫，让你的浏览器可以做更多的事情"
+      v-on:keyup.enter="Search"
+    >
+      <template v-slot:prepend>
+        <q-icon v-if="SearchText === ''" name="done" />
+        <q-icon
+          v-else
+          name="clear"
+          class="cursor-pointer"
+          @click="SearchText = ''"
+        />
+      </template>
+      <template v-slot:append>
+        <q-btn
+          icon="search"
+          flat
+          dense
+          outline
+          color="primary"
+          @click="Search"
+        />
+        <q-btn flat dense aria-label="Menu" icon="menu">
+          筛选
+          <q-menu anchor="bottom end" self="top end">
+            <div class="q-pa-md" style="width: 500px">
+              <div class="row items-center">
+                <div class="col-3 text-subtitle2">脚本类型</div>
+                <q-input dense v-model="exactPhrase" />
+                <div class="col-3 text-subtitle2">排序方式</div>
+                <div class="col-9">
+                  <q-input dense v-model="hasWords" />
+                </div>
 
-                  <div class="col-12 q-pt-lg row justify-end">
-                    <q-btn
-                      flat
-                      dense
-                      no-caps
-                      color="grey-7"
-                      size="md"
-                      style="min-width: 68px"
-                      label="确认"
-                      v-close-popup
-                    />
-                  </div>
+                <div class="col-12 q-pt-lg row justify-end">
+                  <q-btn
+                    flat
+                    dense
+                    no-caps
+                    color="grey-7"
+                    size="md"
+                    style="min-width: 68px"
+                    label="确认"
+                    v-close-popup
+                  />
                 </div>
               </div>
-            </q-menu>
-          </q-btn>
-        </template>
-      </q-input>
+            </div>
+          </q-menu>
+        </q-btn>
+      </template>
+    </q-input>
 
-      <div class="flex flex-center">
-        <q-card
-          class="my-card"
-          flat
-          bordered
-          v-for="(value, index) in data"
-          :key="index"
-        >
-          <q-item class="bg-grey-1">
-            <q-item-section>
-              <div align="left">
-                <q-btn
-                  flat
-                  :color="value.color"
-                  :icon="value.icon"
-                  style="font-size: 17px"
-                >
-                  　{{ value.title }}
-                </q-btn>
-              </div>
-            </q-item-section>
-          </q-item>
-          <q-separator />
-          <q-card-section>
-            <q-card-section
-              align="left"
-              class="text-caption text-grey-8"
-              style="font-size: 13px"
-              v-html="value.content"
-            />
-          </q-card-section>
-        </q-card>
-      </div>
+    <div class="flex flex-center">
+      <q-card
+        class="my-card"
+        flat
+        bordered
+        v-for="(value, index) in data"
+        :key="index"
+      >
+        <q-item class="bg-grey-1">
+          <q-item-section>
+            <div align="left">
+              <q-btn
+                flat
+                :color="value.color"
+                :icon="value.icon"
+                style="font-size: 17px"
+              >
+                　{{ value.title }}
+              </q-btn>
+            </div>
+          </q-item-section>
+        </q-item>
+        <q-separator />
+        <q-card-section>
+          <q-card-section
+            align="left"
+            class="text-caption text-grey-8"
+            style="font-size: 13px"
+            v-html="value.content"
+          />
+        </q-card-section>
+      </q-card>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent, onMounted } from 'vue';
-import IndexLayout from 'components/Layout/IndexLayout.vue';
 import { useRouter } from 'vue-router';
 
 const shape = '0';
@@ -158,9 +154,6 @@ const columns = [
 
 export default defineComponent({
   name: 'Error404',
-  components: {
-    IndexLayout,
-  },
   setup() {
     const SearchText = ref('');
     const router = useRouter();

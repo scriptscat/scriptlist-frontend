@@ -1,5 +1,4 @@
 <template>
-  <SearchLayout />
   <div class="flex justify-center">
     <q-card-section flat bordered class="scriptshow" v-if="ScriptList.length !== 0">
       <q-card
@@ -200,7 +199,6 @@
 
 <script lang="ts">
 import { ref, defineComponent, watch } from 'vue';
-import SearchLayout from 'components/Layout/SearchLayout.vue';
 import format from 'date-fns/format';
 import { useRouter, useRoute } from 'vue-router';
 import { getRecommendList } from 'src/apis/scripts';
@@ -223,9 +221,6 @@ export default defineComponent({
     title: '用户脚本列表',
   },
   name: 'search',
-  components: {
-    SearchLayout,
-  },
   computed: {
     dateformat: () => {
       return (value: number | Date) => {

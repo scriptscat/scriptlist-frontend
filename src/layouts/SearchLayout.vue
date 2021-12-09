@@ -1,41 +1,46 @@
 <template>
-  <q-header bordered class="bg-grey-1 text-black" height-hint="64">
-    <q-toolbar class="GNL__toolbar">
-      <q-toolbar-title shrink class="row items-center no-wrap">
-        <img
-          :src="require('src/assets/cat.png')"
-          style="width: 36px; vertical-align: middle; margin: 0px 10px 0px 12px"
-        />
-        <div class="title">ScriptCat</div>
-      </q-toolbar-title>
-      <q-input
-        dense
-        class="GNL__toolbar-input"
-        outlined
-        v-model="SearchText"
-        color="bg-grey-7"
-        placeholder="脚本猫，让你的浏览器可以做更多的事情"
-        v-on:keyup.enter="Search"
-      >
-        <template v-slot:prepend>
-          <q-icon v-if="SearchText === ''" name="done" />
-          <q-icon
-            v-else
-            name="clear"
-            class="cursor-pointer"
-            @click="SearchText = ''"
+  <q-layout>
+    <q-header bordered class="bg-grey-1 text-black" height-hint="64">
+      <q-toolbar class="GNL__toolbar">
+        <q-toolbar-title shrink class="row items-center no-wrap">
+          <img
+            :src="require('src/assets/cat.png')"
+            style="
+              width: 36px;
+              vertical-align: middle;
+              margin: 0px 10px 0px 12px;
+            "
           />
-        </template>
-        <template v-slot:append>
-          <q-btn
-            icon="search"
-            flat
-            dense
-            outline
-            color="primary"
-            @click="Search"
-          />
-          <!-- <q-btn flat dense aria-label="Menu" icon="menu">
+          <div class="title">ScriptCat</div>
+        </q-toolbar-title>
+        <q-input
+          dense
+          class="GNL__toolbar-input"
+          outlined
+          v-model="SearchText"
+          color="bg-grey-7"
+          placeholder="脚本猫，让你的浏览器可以做更多的事情"
+          v-on:keyup.enter="Search"
+        >
+          <template v-slot:prepend>
+            <q-icon v-if="SearchText === ''" name="done" />
+            <q-icon
+              v-else
+              name="clear"
+              class="cursor-pointer"
+              @click="SearchText = ''"
+            />
+          </template>
+          <template v-slot:append>
+            <q-btn
+              icon="search"
+              flat
+              dense
+              outline
+              color="primary"
+              @click="Search"
+            />
+            <!-- <q-btn flat dense aria-label="Menu" icon="menu">
             筛选
             <q-menu anchor="bottom end" self="top end">
               <div class="q-pa-md" style="width: 500px">
@@ -63,29 +68,33 @@
               </div>
             </q-menu>
           </q-btn> -->
-        </template>
-      </q-input>
-      <q-space />
+          </template>
+        </q-input>
+        <q-space />
 
-      <div class="q-gutter-sm row items-center no-wrap">
-        <q-btn v-if="$q.screen.gt.sm" dense flat icon="apps">
-          <q-tooltip>Google Apps</q-tooltip>
-        </q-btn>
-        <q-btn round dense flat color="grey-8" icon="notifications">
-          <!-- <q-badge color="red" text-color="white" floating>
+        <div class="q-gutter-sm row items-center no-wrap">
+          <q-btn v-if="$q.screen.gt.sm" dense flat icon="apps">
+            <q-tooltip>Google Apps</q-tooltip>
+          </q-btn>
+          <q-btn round dense flat color="grey-8" icon="notifications">
+            <!-- <q-badge color="red" text-color="white" floating>
               2
             </q-badge> -->
-          <q-tooltip>to be design</q-tooltip>
-        </q-btn>
-        <q-btn round flat>
-          <q-avatar size="26px">
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-          </q-avatar>
-          <q-tooltip>Account</q-tooltip>
-        </q-btn>
-      </div>
-    </q-toolbar>
-  </q-header>
+            <q-tooltip>to be design</q-tooltip>
+          </q-btn>
+          <q-btn round flat>
+            <q-avatar size="26px">
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+            </q-avatar>
+            <q-tooltip>Account</q-tooltip>
+          </q-btn>
+        </div>
+      </q-toolbar>
+    </q-header>
+    <q-page-container view="hHh lpR fFf">
+      <router-view />
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script lang="ts">
@@ -199,14 +208,14 @@ export default defineComponent({
 <style lang="scss" scoped>
 .GNL__toolbar-input {
   width: 875px;
-  margin-left: 9.0%;
+  margin-left: 9%;
 }
 @media screen and (max-width: 554px) {
   .GNL__toolbar-input {
     width: 100%;
     margin-left: 0px;
   }
-  .title{
+  .title {
     display: none;
   }
 }

@@ -6,7 +6,6 @@ import { UserStateInterface } from './state';
 
 const actions: ActionTree<UserStateInterface, StateInterface> = {
   loginUserInfo({ commit }, param: { cookies: Cookies; res: Response }) {
-    console.log('login user info',param.cookies, param.cookies.get('token'));
     if (!param.cookies.get('token')) {
       return new Promise((resolve) => {
         resolve(undefined);
@@ -19,7 +18,6 @@ const actions: ActionTree<UserStateInterface, StateInterface> = {
         },
       })
       .then((response) => {
-        console.log(response);
         const headers: ResponseHeaders = response.headers;
         if (headers['set-cookie']) {
           param.res.headers.append('set-cookie', headers['set-cookie']);

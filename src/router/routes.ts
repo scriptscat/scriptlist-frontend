@@ -1,14 +1,9 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/IndexLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index/Index.vue') },
-      {
-        path: 'search',
-        name: 'search',
-        component: () => import('pages/Script/Search/Search.vue'),
-      },
       // { path: '/users/home', component: () => import('pages/ManageScript.vue') },
       // { path: '/scripts/submit-code', name: 'submit-code', component: () => import('pages/Script/SubmitCode/SubmitCode.vue') },
       { path: 'users/webhook', name: 'webhook', component: () => import('pages/Users/Webhook/Webhook.vue') },
@@ -28,6 +23,17 @@ const routes = [
       //   ]
       // }
     ],
+  },
+  {
+    path: '/search',
+    component: () => import('layouts/SearchLayout.vue'),
+    children: [
+      {
+        path: 'search',
+        name: 'search',
+        component: () => import('pages/Script/Search/Search.vue'),
+      }
+    ]
   },
 
   // Always leave this as last one,

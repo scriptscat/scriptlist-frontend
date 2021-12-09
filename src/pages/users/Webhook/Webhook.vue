@@ -7,7 +7,7 @@
             <span style="vertical-align: middle">
               <img :src="cat" style="width: 72px" />
             </span>
-            Sciptcat(脚本猫)的WebHook设置
+            Scriptcat(脚本猫)的WebHook设置
           </div>
 
           <div class="q-px-lg q-pb-md">
