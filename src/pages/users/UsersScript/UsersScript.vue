@@ -1,6 +1,19 @@
 <template>
-  <div class="page-padding padding-normal">
-    <q-card-section flat bordered class="scriptshow" v-if="ScriptList.length !== 0">
+  <div class="flex flex-center padding-normal">
+    <q-card-section
+      flat
+      bordered
+      class="scriptshow"
+      v-if="ScriptList.length !== 0"
+    >
+      <div class="author flex flex-center">
+        <q-avatar>
+          <img :src="'https://scriptcat.org/api/v1/user/avatar/' + User.uid" />
+        </q-avatar>
+        <div class="text-h4">
+        &nbsp;{{ User.username }}编写的脚本
+        </div>
+      </div>
       <q-card
         class="single"
         flat
@@ -10,23 +23,7 @@
       >
         <q-card bordered flat>
           <q-item>
-            <q-item-section avatar>
-              <q-avatar>
-                <img
-                  :src="'https://scriptcat.org/api/v1/user/avatar/' + item.uid"
-                />
-              </q-avatar>
-            </q-item-section>
             <q-item-section>
-              <q-item-label>
-                <a
-                  style="color: rgb(40, 86, 172)"
-                  target="_blank"
-                  :href="'/users/' + item.uid"
-                >
-                  {{ item.username }}
-                </a>
-              </q-item-label>
               <div class="text-body1">
                 <a
                   class="text-black"
@@ -100,7 +97,7 @@
           </q-item-label>
         </q-card>
       </q-card>
-      <div class="flex flex-center">
+      <div v-if="Maxpage>1" class="flex flex-center">
         <q-pagination v-model="page" :max="Maxpage" direction-links />
       </div>
     </q-card-section>
@@ -108,8 +105,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent,ref,watch } from 'vue';
 import format from 'date-fns/format';
+import { useRouter, useRoute } from 'vue-router';
 
 export default defineComponent({
   meta: {
@@ -124,40 +122,62 @@ export default defineComponent({
     Maxpage() {
       return Math.ceil(this.$store.state.scripts.total / 20);
     },
+    User() {
+      return this.$store.state.user.userInfo;
+    },
     ScriptList() {
       return this.$store.state.scripts.scripts;
     },
   },
-  
+
+  async preFetch({ store, currentRoute }) {
+    await store.dispatch('user/fetchUserInfo', {
+      uid: (currentRoute.params.id || '').toString(),
+    });
+    await store.dispatch(
+      'scripts/fetchScriptList',
+      '/user/scripts/' +
+        (currentRoute.params.id || '').toString() +
+        '?count=10&page=' + 
+        (currentRoute.query.page || 1).toString() 
+    );
+  },
+
   setup() {
-    // getWebhook()
-    //   .then((response) => {
-    //     if (response.data.msg === 'ok') {
-    //       if (response.data.code === 0) {
-    //         this.simple[0].children[2].children[0].label =
-    //           response.data.data.token;
-    //         this.simple[0].children[0].children[0].label =
-    //           http.baseURL + '/webhook/' + this.user.uid.toString();
-    //       }
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.trace(error);
-    //   });
-      
+    const route = useRoute();
+    const router = useRouter();
+    const page = ref(Number(route.query.page) || 1);
+
+    watch(page, (newValue) => {
+      const { href } = router.resolve({
+        query: {
+          keyword: route.query.keyword,
+          page: newValue,
+          category: route.query.category,
+        },
+      });
+      window.open(href, '_self');
+    });
+
     return {
-    }
-  }
+      page
+    };
+  },
 });
 </script>
 
 <style lang="scss" scoped>
-.title-wrap {
-  font-size: 18px;
-  font-weight: bold;
-  margin: 10px 0;
+.author {
+  margin: 10px 0px 20px 0px;
 }
-.padding-left {
-  padding-left: 20px;
+.scriptshow {
+  padding: 15px;
+  width: 1000px;
+  a {
+    text-decoration: none;
+  }
+}
+.single {
+  margin: 20px 0px 20px 0px;
 }
 </style>

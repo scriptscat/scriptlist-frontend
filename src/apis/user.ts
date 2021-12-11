@@ -11,3 +11,7 @@ export function getWebhook() {
 export function updateWebhook() {
     return http.put<API.WebhookResponse>('user/webhook');
 }
+
+export function getUser() {
+    return http.get<API.WebhookResponse>('user/webhook');
+}

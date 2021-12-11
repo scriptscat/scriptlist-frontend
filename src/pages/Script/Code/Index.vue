@@ -27,23 +27,6 @@
               </a>
             </div>
           </q-item-section>
-          <q-btn
-            flat
-            type="a"
-            class="text-caption"
-            style="font-size: 10px; height: 30px"
-            text-color="primary"
-            :href="'/script-show-page/' + id + '/comment'"
-            outline
-          >
-            <q-rating
-              size="10px"
-              :value="author.score / 10"
-              :max="5"
-              color="primary"
-            />
-            {{ ((author.score * 2) / 10).toFixed(1) }}分
-          </q-btn>
         </q-item>
 
         <q-separator />
@@ -56,6 +39,7 @@
         <q-card-section>
           <div class="install">
             <q-btn
+              outline
               class="text-caption"
               type="a"
               :href="
@@ -65,6 +49,7 @@
               :label="install"
             />
             <q-btn
+            no-wrap
               class="text-caption"
               type="a"
               target="_blank"
