@@ -1,50 +1,27 @@
 <template>
-  <q-drawer
-    v-model="leftDrawerOpen"
-    show-if-above
-    bordered
-    :mini="miniState"
-    class="bg-white"
-    :width="200"
-  >
-    <q-scroll-area class="fit">
-      <q-list padding class="text-grey-8">
-        <q-item
-          class="GNL__drawer-item"
-          v-ripple
+  <div class="main flex flex-center">
+    <q-card
+      bordered
+      flat
+      style="margin: 10px 0px 10px 0px; width: 100%; max-width: 1300px"
+    >
+      <q-tabs align="left">
+        <q-route-tab
           v-for="(item, index) in tabList"
           :key="index"
-          clickable
+          @click="expanded = true"
+          :to="{ name: item.name, params: $route.params }"
+          flat
+          outline
         >
-          <!-- <q-item-section avatar>
-              <q-icon :name="link.icon"/>
-            </q-item-section> -->
-          <q-btn
-            flat
-            :to="{ name: item.name, params: $route.params }"
-            icon="add"
-            outline
-            color="white"
-            class="text-black text-body1"
-          >
-          &nbsp;{{item.label}}
-          </q-btn>
-        </q-item>
-        <q-separator inset class="q-my-sm" />
-      </q-list>
-    </q-scroll-area>
-  </q-drawer>
-
-  <div class="main flex flex-left">
-    <q-card
-      flat
-      bordered
-      class="flex flex-left"
-      style="width: 100%; max-width: 1100px"
-    >
-      <div style="padding: 8px">
-        <router-view />
-      </div>
+          <div class="text-weight-medium" style="font-size:16px;">
+            {{ item.label }}
+          </div>
+        </q-route-tab>
+      </q-tabs>
+    </q-card>
+    <q-card flat bordered style="width: 100%; max-width: 1300px">
+      <router-view />
     </q-card>
   </div>
 </template>
@@ -69,19 +46,19 @@ export default defineComponent({
     const tabList = ref([
       {
         name: 'index',
-        label: '脚本详情',
-      },
-      {
-        name: 'issue',
-        label: '脚本反馈',
-      },
-      {
-        name: 'showComment',
-        label: '脚本评论',
+        label: '详情',
       },
       {
         name: 'showCode',
-        label: '脚本代码',
+        label: '代码',
+      },
+      {
+        name: 'issue',
+        label: '反馈',
+      },
+      {
+        name: 'showComment',
+        label: '评论',
       },
       {
         name: 'showHistory',
@@ -110,6 +87,7 @@ export default defineComponent({
     return {
       script,
       tabList,
+      expanded: ref(true),
     };
   },
   computed: {
@@ -166,11 +144,9 @@ export default defineComponent({
 }
 .GNL__drawer-item .q-item__label {
   color: #3c4043;
-  letter-spacing: .01785714em;
-  font-size: .875rem;
+  letter-spacing: 0.01785714em;
+  font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.25rem;
 }
-
 </style>
-

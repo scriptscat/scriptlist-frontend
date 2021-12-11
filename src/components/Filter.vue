@@ -1,31 +1,29 @@
 <template>
-  <q-card flat bordered class="single flex justify-end" style="padding: 10px">
-    <q-btn size="xs" style="padding: 0 10px; margin-right: 10px">
-      <q-select
-        v-model="category"
-        :options="categoryOptions"
-        borderless
-        dense
-        options-dense
-        multiple
-        label="排序方式"
-        style="min-width: 120px"
-      >
-      </q-select>
-    </q-btn>
-    <q-btn size="xs" style="padding: 0 10px">
-      <q-select
-        v-model="category"
-        :options="categoryOptions"
-        borderless
-        dense
-        options-dense
-        multiple
-        label="分类"
-        style="min-width: 80px"
-      >
-      </q-select>
-    </q-btn>
+  <q-card flat class="single flex justify-end">
+    <q-select
+      outlined
+      v-model="category"
+      :options="categoryOptions"
+      borderless
+      dense
+      options-dense
+      multiple
+      label="排序方式"
+      style="min-width: 120px"
+    >
+    </q-select>
+    <q-select
+      outlined
+      v-model="category"
+      :options="categoryOptions"
+      borderless
+      dense
+      options-dense
+      multiple
+      label="分类"
+      style="min-width: 120px; margin-left: 10px"
+    >
+    </q-select>
   </q-card>
 </template>
 

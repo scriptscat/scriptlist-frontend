@@ -7,4 +7,3 @@ export function getRecommendList(url: string) {
 export function getAllScript(url: string) {
   return Http.get<API.ScriptListResponse>(url)
 }
-
