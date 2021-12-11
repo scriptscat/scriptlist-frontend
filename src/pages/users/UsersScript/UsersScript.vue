@@ -10,10 +10,9 @@
         <q-avatar>
           <img :src="'https://scriptcat.org/api/v1/user/avatar/' + User.uid" />
         </q-avatar>
-        <div class="text-h4">
-        &nbsp;{{ User.username }}编写的脚本
-        </div>
+        <div class="text-h4">&nbsp;{{ User.username }}编写的脚本</div>
       </div>
+      <Filter />
       <q-card
         class="single"
         flat
@@ -97,7 +96,7 @@
           </q-item-label>
         </q-card>
       </q-card>
-      <div v-if="Maxpage>1" class="flex flex-center">
+      <div v-if="Maxpage > 1" class="flex flex-center">
         <q-pagination v-model="page" :max="Maxpage" direction-links />
       </div>
     </q-card-section>
@@ -105,13 +104,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent,ref,watch } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import format from 'date-fns/format';
 import { useRouter, useRoute } from 'vue-router';
+import Filter from 'src/components/Filter.vue';
 
 export default defineComponent({
   meta: {
     title: 'webhook',
+  },
+  components: {
+    Filter,
   },
   computed: {
     dateformat: () => {
@@ -138,8 +141,8 @@ export default defineComponent({
       'scripts/fetchScriptList',
       '/user/scripts/' +
         (currentRoute.params.id || '').toString() +
-        '?count=10&page=' + 
-        (currentRoute.query.page || 1).toString() 
+        '?count=10&page=' +
+        (currentRoute.query.page || 1).toString()
     );
   },
 
@@ -160,7 +163,7 @@ export default defineComponent({
     });
 
     return {
-      page
+      page,
     };
   },
 });

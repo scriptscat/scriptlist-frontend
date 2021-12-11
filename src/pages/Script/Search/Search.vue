@@ -6,6 +6,7 @@
       class="scriptshow"
       v-if="ScriptList.length !== 0"
     >
+      <Fliter />
       <q-card
         class="single"
         flat
@@ -208,6 +209,7 @@ import format from 'date-fns/format';
 import { useRouter, useRoute } from 'vue-router';
 import { getRecommendList } from 'src/apis/scripts';
 import { useMeta } from 'quasar';
+import Fliter from 'src/components/Filter.vue';
 
 const iconcolorlist = [
   '#ff981b',
@@ -223,6 +225,7 @@ const iconcolorlist = [
 ];
 
 export default defineComponent({
+  components: { Fliter },
   name: 'search',
   computed: {
     dateformat: () => {
@@ -321,6 +324,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.filter {
+  width: 915px;
+}
+
 .scriptshow {
   padding: 15px;
   width: 915px;
@@ -363,5 +370,21 @@ export default defineComponent({
   line-height: 18.4px;
   font-size: 12.1px;
   margin-right: 5px;
+}
+
+@media screen and (max-width: 1280px) {
+  .scriptshow {
+    width: 680px;
+  }
+}
+@media screen and (max-width: 1080px) {
+  .scriptshow {
+    width: 600px;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .show-mess-page {
+    display: none;
+  }
 }
 </style>

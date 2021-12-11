@@ -3,23 +3,34 @@
     <q-header bordered class="bg-grey-1 text-black" height-hint="64">
       <q-toolbar class="GNL__toolbar">
         <q-toolbar-title shrink class="row items-center no-wrap">
-          <img
-            :src="require('src/assets/cat.png')"
-            style="width: 36px; vertical-align: middle; margin-left: 12px"
-          />
+          <a
+            href="/"
+            class="row no-wrap"
+            style="text-decoration: none; color: #000"
+          >
+            <img
+              :src="require('src/assets/cat.png')"
+              style="
+                width: 36px;
+                vertical-align: middle;
+                margin: 0px 10px 0px 12px;
+              "
+            />
+            <div class="logo-title">ScriptCat</div>
+          </a>
         </q-toolbar-title>
 
         <q-space />
 
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn v-if="$q.screen.gt.sm" dense flat icon="apps">
-            <q-tooltip>Google Apps</q-tooltip>
+            <q-tooltip>用户管理</q-tooltip>
           </q-btn>
           <q-btn round dense flat color="grey-8" icon="notifications">
             <!-- <q-badge color="red" text-color="white" floating>
               2
             </q-badge> -->
-            <q-tooltip>to be design</q-tooltip>
+            <q-tooltip>通知-🚧建设中</q-tooltip>
           </q-btn>
           <q-btn v-if="islogin" round flat>
             <q-avatar size="26px">
@@ -170,4 +181,20 @@ export default defineComponent({
     font-size: .75rem
     &:hover
       color: #000
+</style>
+
+<style lang="scss" scoped>
+.GNL__toolbar-input {
+  width: 875px;
+  margin-left: 9%;
+}
+@media screen and (max-width: 554px) {
+  .GNL__toolbar-input {
+    width: 100%;
+    margin-left: 0px;
+  }
+  .logo-title {
+    display: none;
+  }
+}
 </style>

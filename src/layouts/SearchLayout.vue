@@ -3,15 +3,21 @@
     <q-header bordered class="bg-grey-1 text-black" height-hint="64">
       <q-toolbar class="GNL__toolbar">
         <q-toolbar-title shrink class="row items-center no-wrap">
-          <img
-            :src="require('src/assets/cat.png')"
-            style="
-              width: 36px;
-              vertical-align: middle;
-              margin: 0px 10px 0px 12px;
-            "
-          />
-          <div class="title">ScriptCat</div>
+          <a
+            href="/"
+            class="row no-wrap"
+            style="text-decoration: none; color: #000"
+          >
+            <img
+              :src="require('src/assets/cat.png')"
+              style="
+                width: 36px;
+                vertical-align: middle;
+                margin: 0px 10px 0px 12px;
+              "
+            />
+            <div class="logo-title">ScriptCat</div>
+          </a>
         </q-toolbar-title>
         <q-input
           dense
@@ -74,19 +80,27 @@
 
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn v-if="$q.screen.gt.sm" dense flat icon="apps">
-            <q-tooltip>Google Apps</q-tooltip>
+            <q-tooltip>用户管理</q-tooltip>
           </q-btn>
           <q-btn round dense flat color="grey-8" icon="notifications">
             <!-- <q-badge color="red" text-color="white" floating>
               2
             </q-badge> -->
-            <q-tooltip>to be design</q-tooltip>
+            <q-tooltip>通知-🚧建设中</q-tooltip>
           </q-btn>
-          <q-btn round flat>
+          <q-btn v-if="islogin" round flat>
             <q-avatar size="26px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+              <img
+                :src="'https://scriptcat.org/api/v1/user/avatar/' + user.uid"
+              />
             </q-avatar>
-            <q-tooltip>Account</q-tooltip>
+            <q-tooltip>{{ user.username }}</q-tooltip>
+          </q-btn>
+          <q-btn v-else round flat>
+            <q-avatar size="26px">
+              <img src="https://scriptcat.org/api/v1/user/avatar/5" />
+            </q-avatar>
+            <q-tooltip>暂未登录</q-tooltip>
           </q-btn>
         </div>
       </q-toolbar>
@@ -229,7 +243,7 @@ export default defineComponent({
     width: 100%;
     margin-left: 0px;
   }
-  .title {
+  .logo-title {
     display: none;
   }
 }
