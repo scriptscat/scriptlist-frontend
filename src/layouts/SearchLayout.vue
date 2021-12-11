@@ -115,9 +115,27 @@
 import { ref, defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { fasGlobeAmericas, fasFlask } from '@quasar/extras/fontawesome-v5';
-import { useMeta } from 'quasar';
+import { Cookies, useMeta } from 'quasar';
 export default defineComponent({
   name: 'SearchLayout',
+  computed: {
+    islogin() {
+      return this.$store.state.user.islogin;
+    },
+    user() {
+      return this.$store.state.user.user;
+    },
+  },
+  preFetch({ store, ssrContext }) {
+    if (!ssrContext) {
+      return;
+    }
+    const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
+    return store.dispatch('user/loginUserInfo', {
+      cookies: cookies,
+      res: ssrContext.res,
+    });
+  },
   setup() {
     useMeta({
       titleTemplate: (title: string) => `${title} - ScriptCat`,
