@@ -116,7 +116,7 @@
 import { defineComponent, ref, computed } from 'vue';
 import { useStore } from 'src/store';
 import { useRoute } from 'vue-router';
-import { Submit, getallscroe, GetMyScore } from 'src/apis/comment';
+import { submitComment, getAllScroe, getMyScore } from 'src/apis/comment';
 
 export default defineComponent({
   meta() {
@@ -144,7 +144,7 @@ export default defineComponent({
     }).toString();
 
     const SubmitMyViwer = () => {
-      Submit(id, {
+      submitComment(id, {
         score: mypostform.value.ratingpost * 10,
         message: mypostform.value.text,
       })
@@ -169,9 +169,8 @@ export default defineComponent({
           // });
         });
     };
-    getallscroe(id)
+    getAllScroe(id, 1, 20)
       .then((response) => {
-        console.log(response, 'response');
         if (response.data.code === 0) {
           for (let index = 0; index < response.data.list.length; index++) {
             if (response.data.list[index].avatar === '') {
@@ -184,15 +183,13 @@ export default defineComponent({
             //   'formatDate'
             // ](response.data.list[index].createtime, '年', '月', '日');
           }
-          console.log(response.data.list);
           userscorelist.value = response.data.list;
-          console.log(userscorelist.value, 1111);
         }
       })
       .catch((error) => {
         console.log(error);
       });
-    GetMyScore(id)
+    getMyScore(id)
       .then((response) => {
         if (response.data.code === 0) {
           mypostform.value.ratingpost = response.data.data.score / 10;
@@ -208,7 +205,7 @@ export default defineComponent({
       userscorelist,
       islogin,
       user,
-      SubmitMyViwer
+      SubmitMyViwer,
     };
   },
 });

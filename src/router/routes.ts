@@ -21,7 +21,7 @@ const routes = [
           // { path: 'code', name: 'showCode', component: () => import('pages/Script/Code/Code.vue') },
           //     { path: "/script-show-page/:id/history", name: "showHistory", component: () => import('components/ScriptDescription/History.vue') },
           {
-            path: '/script-show-page/:id/comment',
+            path: 'comment',
             name: 'showComment',
             component: () => import('pages/Script/Code/Comment.vue'),
           },
@@ -41,6 +41,7 @@ const routes = [
               },
             ],
           },
+          { path: '/script-show-page/:id/update', name: 'updateScript', component: () => import('pages/Script/Code/Update.vue') },
           //     { path: "/script-show-page/:id/delete", name: "deleteScript", component: () => import('components/ScriptDescription/DeleteScript.vue') },
           //     { path: "/script-show-page/:id/update", name: "updateScript", component: () => import('components/ScriptDescription/UpdataScript.vue') },
           //     { path: "/script-show-page/:id/statistic", name: "statistic", component: () => import('components/ScriptDescription/statistic.vue') },
