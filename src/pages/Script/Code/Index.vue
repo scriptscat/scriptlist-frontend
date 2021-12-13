@@ -109,8 +109,24 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import format from 'date-fns/format';
+const Viewer = async () =>
+  await import('@toast-ui/editor/dist/toastui-editor-viewer');
 
+import format from 'date-fns/format';
+import 'prismjs/themes/prism.css';
+import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
+const codeSyntaxHighlight = async () =>
+  await import('@toast-ui/editor-plugin-code-syntax-highlight');
+import Prism from 'prismjs';
+import { Viewer as tuiViewer } from '@toast-ui/editor';
+
+const editor = <
+  {
+    mkedit?: tuiViewer;
+  }
+>{
+  mkedit: undefined,
+};
 export default defineComponent({
   computed: {
     dateformat: () => {
@@ -125,10 +141,9 @@ export default defineComponent({
       return this.$store.state.scripts.script || <DTO.Script>{};
     },
   },
-  data(): { viewr?: { remove: () => void }; install: string } {
+  data() {
     return {
       install: '安装此脚本',
-      viewr: undefined,
     };
   },
   methods: {
@@ -145,40 +160,32 @@ export default defineComponent({
   },
   unmounted() {
     //this.editor.destroy();
-    if (this.viewr) {
-      console.log('this.viewr', this.viewr);
-      this.viewr.remove();
-      this.viewr = undefined;
+    if (editor.mkedit) {
+      console.log('this.viewr', editor.mkedit);
+      editor.mkedit = undefined;
     }
   },
   created() {
     if (process.env.CLIENT) {
       void this.$nextTick(() => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const Prism = require('prismjs');
-        require('prismjs/components/prism-clojure.js');
-        require('prismjs/components/prism-javascript.js');
-        require('prismjs/themes/prism.css');
-        require('@toast-ui/editor/dist/toastui-editor-viewer.css');
-        require('@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css');
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const Viewer = require('@toast-ui/editor/dist/toastui-editor-viewer');
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const codeSyntaxHighlight = require('@toast-ui/editor-plugin-code-syntax-highlight');
-        let el = document.querySelector('#editor');
-        if (!el) {
-          return;
-        }
-        el.innerHTML = '';
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        this.viewr = new Viewer({
-          el: el,
-          initialValue: this.author.content,
-          plugins: [[codeSyntaxHighlight, { highlighter: Prism }]],
-          linkAttributes: {
-            target: '_blank',
-          },
-        });
+        let handler = async () => {
+          let el = <HTMLElement>document.querySelector('#editor');
+          if (!el) {
+            return;
+          }
+          el.innerHTML = '';
+          editor.mkedit = new (await Viewer()).default({
+            el: el,
+            initialValue: this.author.content,
+            plugins: [
+              [(await codeSyntaxHighlight()).default, { highlighter: Prism }],
+            ],
+            linkAttributes: {
+              target: '_blank',
+            },
+          });
+        };
+        void handler();
       });
     }
   },

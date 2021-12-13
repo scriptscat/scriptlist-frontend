@@ -176,7 +176,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import {
   getScriptInfo,
   submitScript,
@@ -186,16 +186,35 @@ import { uploadImage as uploadImageApi } from 'src/apis/resource';
 import http from 'src/utils/http';
 import { AxiosError } from 'axios';
 import { useMeta } from 'quasar';
+import { toastui } from '@toast-ui/editor';
 const CodeMirror = async () => await import('codemirror');
 const Editor = async () => await import('@toast-ui/editor');
+const codeSyntaxHighlight = async () =>
+  await import('@toast-ui/editor-plugin-code-syntax-highlight');
+import Prism from 'prismjs';
 
 if (process.env.CLIENT) {
+  require('prismjs/themes/prism.css');
+  require('@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css');
+
   require('codemirror/lib/codemirror.css');
   require('codemirror/mode/javascript/javascript');
   // require("codemirror/theme/darcula.css");
   require('codemirror/theme/base16-light.css');
   require('@toast-ui/editor/dist/toastui-editor.css');
 }
+
+const editor = <
+  {
+    editor?: CodeMirror.EditorFromTextArea;
+    dtseditor?: CodeMirror.EditorFromTextArea;
+    mkedit?: toastui.Editor;
+  }
+>{
+  editor: undefined,
+  dtseditor: undefined,
+  mkedit: undefined,
+};
 
 export default defineComponent({
   name: 'SubmitCode',
@@ -209,23 +228,7 @@ export default defineComponent({
     useMeta({
       title: '提交新的脚本',
     });
-    if (process.env.CLIENT) {
-      const editor = ref<{
-        editor?: CodeMirror.EditorFromTextArea;
-        dtseditor?: CodeMirror.EditorFromTextArea;
-        mkedit?: toastui.Editor;
-      }>({
-        editor: undefined,
-        dtseditor: undefined,
-        mkedit: undefined,
-      });
-      return {
-        editor,
-      };
-    }
-    return {
-      editor: undefined,
-    };
+    return {};
   },
   data() {
     return {
@@ -249,17 +252,17 @@ export default defineComponent({
   },
   unmounted() {
     // 释放编辑器资源
-    if (this.editor && this.editor.editor) {
-      this.editor.editor.setValue('');
-      this.editor.editor.toTextArea();
-      this.editor.editor = undefined;
-      if (this.editor.dtseditor) {
-        this.editor.dtseditor.setValue('');
-        this.editor.dtseditor.toTextArea();
-        this.editor.dtseditor = undefined;
+    if (editor.editor) {
+      editor.editor.setValue('');
+      editor.editor.toTextArea();
+      editor.editor = undefined;
+      if (editor.dtseditor) {
+        editor.dtseditor.setValue('');
+        editor.dtseditor.toTextArea();
+        editor.dtseditor = undefined;
       }
-      if (this.editor.mkedit) {
-        this.editor.mkedit.remove();
+      if (editor.mkedit) {
+        editor.mkedit = undefined;
       }
     }
   },
@@ -267,8 +270,8 @@ export default defineComponent({
     if (process.env.CLIENT) {
       void this.$nextTick(() => {
         let handler = async () => {
-          if (this.editor) {
-            this.editor.editor = (await CodeMirror()).default.fromTextArea(
+          if (editor) {
+            editor.editor = (await CodeMirror()).default.fromTextArea(
               <HTMLTextAreaElement>this.$refs.textarea,
               {
                 //readOnly: true,//只读
@@ -279,13 +282,13 @@ export default defineComponent({
                 lineNumbers: true, // 显示行号
               }
             );
-            let scollinfo = this.editor.editor.getScrollInfo();
-            this.editor.editor.setSize(scollinfo.width, 400);
+            let scollinfo = editor.editor.getScrollInfo();
+            editor.editor.setSize(scollinfo.width, 400);
             if (this.id) {
               this.GetScriptData();
             }
 
-            this.editor.mkedit = new (await Editor()).default({
+            editor.mkedit = new (await Editor()).default({
               el: <HTMLElement>this.$refs.mkedite,
               previewStyle: 'tab',
               height: '400px',
@@ -296,6 +299,9 @@ export default defineComponent({
                   return false;
                 },
               },
+              plugins: [
+                [(await codeSyntaxHighlight()).default, { highlighter: Prism }],
+              ],
               //   autofocus: false,
             });
           }
@@ -310,12 +316,12 @@ export default defineComponent({
         .then((response) => {
           if (
             response.data.code === 0 &&
-            this.editor &&
-            this.editor.editor &&
-            this.editor.mkedit
+            editor &&
+            editor.editor &&
+            editor.mkedit
           ) {
-            this.editor.editor.setValue(response.data.data.script.code);
-            this.editor.mkedit.setMarkdown(response.data.data.content);
+            editor.editor.setValue(response.data.data.script.code);
+            editor.mkedit.setMarkdown(response.data.data.content);
             this.scripttype = response.data.data.type; //脚本类型
             this.publiccontrol = response.data.data.public; //公开/非公开
             this.unwell = response.data.data.unwell;
@@ -373,9 +379,9 @@ export default defineComponent({
       // console.log('ChangeDtsEditor',event)
       void this.$nextTick(() => {
         const handler = async () => {
-          if (this.editor) {
+          if (editor) {
             if (event === true) {
-              this.editor.dtseditor = (await CodeMirror()).default.fromTextArea(
+              editor.dtseditor = (await CodeMirror()).default.fromTextArea(
                 <HTMLTextAreaElement>this.$refs.dtstext,
                 {
                   //readOnly: true,//只读
@@ -386,14 +392,14 @@ export default defineComponent({
                   lineNumbers: true, // 显示行号
                 }
               );
-              this.editor.dtseditor.setValue(this.dtsvalue);
-              let dtscollinfo = this.editor.dtseditor.getScrollInfo();
-              this.editor.dtseditor.setSize(dtscollinfo.width, 400);
-            } else if (this.editor.dtseditor) {
-              this.dtsvalue = this.editor.dtseditor.getValue();
-              this.editor.dtseditor.setValue('');
-              this.editor.dtseditor.toTextArea();
-              this.editor.dtseditor = undefined;
+              editor.dtseditor.setValue(this.dtsvalue);
+              let dtscollinfo = editor.dtseditor.getScrollInfo();
+              editor.dtseditor.setSize(dtscollinfo.width, 400);
+            } else if (editor.dtseditor) {
+              this.dtsvalue = editor.dtseditor.getValue();
+              editor.dtseditor.setValue('');
+              editor.dtseditor.toTextArea();
+              editor.dtseditor = undefined;
             }
           }
         };
@@ -402,14 +408,14 @@ export default defineComponent({
       // console.log('this.dtseditor',this.dtseditor)
     },
     SubmitScript() {
-      if (!(this.editor && this.editor.editor && this.editor.mkedit)) {
+      if (!(editor && editor.editor && editor.mkedit)) {
         return;
       }
-      let codetext = this.editor.editor.getValue();
-      let marktext = this.editor.mkedit.getMarkdown();
+      let codetext = editor.editor.getValue();
+      let marktext = editor.mkedit.getMarkdown();
       let typetext = '';
-      if (this.scripttype === 3 && this.editor.dtseditor) {
-        typetext = this.editor.dtseditor.getValue();
+      if (this.scripttype === 3 && editor.dtseditor) {
+        typetext = editor.dtseditor.getValue();
       }
       if (this.id) {
         this.loading.publicloading = true;
@@ -493,12 +499,12 @@ export default defineComponent({
         let reader = new FileReader();
         reader.readAsText(file);
         reader.onloadend = () => {
-          if (!this.editor || !this.editor.editor) {
+          if (!editor || !editor.editor) {
             return;
           }
           let result = reader.result;
           console.log('result', result);
-          this.editor.editor.setValue(<string>result);
+          editor.editor.setValue(<string>result);
           (<HTMLInputElement>e.target).value = '';
         };
       }
