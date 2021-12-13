@@ -7,19 +7,19 @@
       borderless
       dense
       options-dense
-      multiple
       label="排序方式"
       style="min-width: 120px"
+      class="no-shadow"
     >
     </q-select>
     <q-select
+      disable
       outlined
       v-model="category"
       :options="categoryOptions"
       borderless
       dense
       options-dense
-      multiple
       label="分类"
       style="min-width: 120px; margin-left: 10px"
     >
@@ -43,7 +43,7 @@ export default defineComponent({
   },
   setup() {
     return {
-      categoryOptions: ['全部', 'ab', 'bc'],
+      categoryOptions: ['相关度', '安装量', '评分', '最新'],
     };
   },
   data() {
