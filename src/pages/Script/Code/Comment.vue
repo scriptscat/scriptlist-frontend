@@ -6,17 +6,8 @@
           <q-card-section>
             <div class="my-comment">
               <q-input
-                v-if="mypostform.text == ''"
                 label="填写您的评论并在下方进行评分（友善的反馈是交流的起点）"
                 class="text-area-control text-h6"
-                v-model="mypostform.text"
-                type="textarea"
-                borderless
-              />
-              <q-input
-                v-else
-                class="text-area-control"
-                style="font-size: 15px"
                 v-model="mypostform.text"
                 type="textarea"
                 borderless
@@ -45,7 +36,6 @@
             />
           </q-card-section>
         </q-card>
-        <q-separator />
       </div>
 
       <q-card v-else flat bordered class="q-mt-md">
@@ -80,17 +70,15 @@
                 </q-avatar>
                 <div style="flex: 1 1 0; padding-left: 15px">
                   <div class="flex items-center">
-                    <span style="color: #1a73e8; min-width: 60px">{{
+                    <span style="color: #1a73e8; margin-right: 15px">{{
                       item.username
                     }}</span>
-                    <span style="padding-left: 15px">{{
-                      item.createtime
-                    }}</span>
+                    <span>{{ dateformat(item.createtime * 1000) }}</span>
 
                     <q-rating
-                      style="padding-left: 5px"
+                      style="padding: 0px 0px 2px 10px"
                       readonly
-                      :value="item.score"
+                      v-model="item.score"
                       size="16px"
                       :max="5"
                       color="primary"
@@ -117,6 +105,7 @@ import { defineComponent, ref, computed } from 'vue';
 import { useStore } from 'src/store';
 import { useRoute } from 'vue-router';
 import { submitComment, getAllScroe, getMyScore } from 'src/apis/comment';
+import format from 'date-fns/format';
 
 export default defineComponent({
   meta() {
@@ -139,10 +128,12 @@ export default defineComponent({
     const user = computed(() => {
       return store.state.user.user;
     });
-    const id = computed(() => {
-      return route.params.id;
-    }).toString();
-
+    const id = route.params.id.toString();
+    const dateformat = computed(() => {
+      return (value: number | Date) => {
+        return format(value, 'yyyy-MM-dd');
+      };
+    });
     const SubmitMyViwer = () => {
       submitComment(id, {
         score: mypostform.value.ratingpost * 10,
@@ -179,9 +170,6 @@ export default defineComponent({
             }
             response.data.list[index].score =
               response.data.list[index].score / 10;
-            // response.data.list[index].createtime = this.$options.filters[
-            //   'formatDate'
-            // ](response.data.list[index].createtime, '年', '月', '日');
           }
           userscorelist.value = response.data.list;
         }
@@ -206,6 +194,7 @@ export default defineComponent({
       islogin,
       user,
       SubmitMyViwer,
+      dateformat,
     };
   },
 });

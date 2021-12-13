@@ -58,9 +58,9 @@ class Http {
   }
 
   public async put<T>(url: string, data?: any, config?: AxiosRequestConfig) {
-    if (data && !(data instanceof FormData)) {
-      data = qs.stringify(data); // form-data传参
-    }
+    // if (data && !(data instanceof FormData)) {
+    //   data = qs.stringify(data); // form-data传参
+    // }
     return this.service.put<T>(url, data, config);
   }
 

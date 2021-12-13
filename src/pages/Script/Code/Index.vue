@@ -1,18 +1,15 @@
 <template>
-  <div>
+  <div style="padding: 8px">
     <q-card flat class="my-card">
-      <q-card
-        class="single"
-        flat
-        bordered
-        v-bind:key="index"
-      >
+      <q-card class="single" flat bordered v-bind:key="index">
         <q-card bordered flat>
           <q-item>
             <q-item-section avatar>
               <q-avatar>
                 <img
-                  :src="'https://scriptcat.org/api/v1/user/avatar/' + author.uid"
+                  :src="
+                    'https://scriptcat.org/api/v1/user/avatar/' + author.uid
+                  "
                 />
               </q-avatar>
             </q-item-section>
@@ -43,7 +40,7 @@
           </q-card-section>
           <q-separator />
           <q-item class="block text-left">
-            <q-item-label class="row" style="width:600px" caption>
+            <q-item-label class="row" style="width: 600px" caption>
               <span class="col">今日安装</span>
               <span class="col">总安装量</span>
               <span class="col">创建日期</span>
@@ -52,11 +49,13 @@
             </q-item-label>
             <q-item-label
               class="row text-caption text-black"
-              style="font-weight: bold; width:600px"
+              style="font-weight: bold; width: 600px"
             >
               <span class="col">{{ author.today_install }}</span>
               <span class="col">{{ author.total_install }}</span>
-              <span class="col">{{ dateformat(author.createtime * 1000) }}</span>
+              <span class="col">{{
+                dateformat(author.createtime * 1000)
+              }}</span>
               <span v-if="author.updatetime !== 0" class="col">{{
                 dateformat(author.updatetime * 1000)
               }}</span>
@@ -100,7 +99,6 @@
         </q-card>
       </q-card>
       <q-card-section>
-
         <q-card-section>
           <div class="editor" id="editor">{{ author.content }}</div>
         </q-card-section>
