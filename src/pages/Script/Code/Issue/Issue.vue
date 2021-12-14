@@ -48,7 +48,7 @@
       </div>
     </q-card>
     <q-card bordered flat>
-      <q-card bordered style="padding:10px"> 
+      <q-card bordered style="padding: 10px">
         <a href="/123">2 打开</a>
         <a href="/123">3 处理</a>
       </q-card>
@@ -144,8 +144,13 @@
         </q-item>
       </q-list>
     </q-card>
-    <div class="q-pa-lg flex flex-center">
-      <q-pagination v-model="current" :max="5" direction-links />
+    <div class="flex flex-center">
+      <TablePagination
+        v-bind="page"
+        :maxpage="maxPage"
+        :maxlens="6"
+        :max="10"
+      />
     </div>
   </q-card-section>
 </template>
@@ -153,27 +158,39 @@
 <script lang="ts">
 import { Cookies } from 'quasar';
 import { defineComponent } from 'vue';
+import TablePagination from 'components/TablePagination.vue';
+
 export default defineComponent({
+  components: { TablePagination },
   preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
       return;
     }
     const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     return store.dispatch('issues/fetchIssueList', {
-      id: currentRoute.params.id,
-      page: 1,
+      scriptId: currentRoute.params.id,
+      page: parseInt(<string>currentRoute.query.page),
       count: 20,
       cookies: cookies,
     });
   },
-
-  components: {
-    // issueList() {
-    //   return this.$store.state.issues.issueList;
-    // },
-    // total() {
-    //   return this.$store.state.issues.total;
-    // },
+  computed: {
+    list() {
+      console.log(this.$store.state.issues.issueList);
+      return this.$store.state.issues.issueList;
+    },
+    total() {
+      return this.$store.state.issues.total;
+    },
+    maxPage() {
+      return Math.ceil(this.$store.state.scripts.total / 20);
+    },
+  },
+  data() {
+    return {
+      SearchText: '',
+      page: parseInt(<string>this.$route.query.page) || 1,
+    };
   },
 });
 </script>

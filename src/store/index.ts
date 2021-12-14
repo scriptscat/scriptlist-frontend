@@ -5,6 +5,7 @@ import {
   Store as VuexStore,
   useStore as vuexUseStore,
 } from 'vuex'
+import issues from './issues'
 import { IssuesStateInterface } from './issues/state'
 import scripts from './scripts'
 import { ScriptsStateInterface } from './scripts/state'
@@ -46,7 +47,8 @@ export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
       user,
-      scripts
+      scripts,
+      issues
     },
 
     // enable strict mode (adds overhead!)

@@ -83,7 +83,12 @@
         </q-card>
       </q-card>
       <div class="flex flex-center">
-        <q-pagination v-model="page" :max="Maxpage" direction-links />
+        <TablePagination
+          v-bind="page"
+          :maxpage="maxPage"
+          :maxlens="6"
+          :max="10"
+        />
       </div>
     </q-card-section>
     <q-card flat bordered class="scriptshow" v-else> 暂无结果 </q-card>
@@ -187,6 +192,7 @@ import { getRecommendList } from 'src/apis/scripts';
 import { useMeta } from 'quasar';
 import Fliter from 'src/components/Filter.vue';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
+import TablePagination from 'components/TablePagination.vue';
 
 const iconcolorlist = [
   '#ff981b',
@@ -202,7 +208,7 @@ const iconcolorlist = [
 ];
 
 export default defineComponent({
-  components: { Fliter, ScriptCardAction },
+  components: { Fliter, ScriptCardAction, TablePagination },
   name: 'search',
   computed: {
     dateformat: () => {
@@ -210,7 +216,7 @@ export default defineComponent({
         return format(value, 'yyyy-MM-dd');
       };
     },
-    Maxpage() {
+    maxPage() {
       return Math.ceil(this.$store.state.scripts.total / 20);
     },
     ScriptList() {
