@@ -121,11 +121,8 @@
               </q-avatar>
               <q-tooltip>{{ user.username }},通知-🚧建设中</q-tooltip>
             </q-btn>
-            <q-btn v-else round flat @click="gotoLogin">
-              <q-avatar size="26px">
-                <img :src="require('src/assets/defaultavatar.png')" />
-              </q-avatar>
-              <q-tooltip>暂未登录</q-tooltip>
+            <q-btn v-else flat @click="gotoLogin">
+              <div class="text-body1">暂未登录</div>
             </q-btn>
           </div>
           <q-btn
@@ -148,7 +145,7 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
 import { fasGlobeAmericas, fasFlask } from '@quasar/extras/fontawesome-v5';
 import { Cookies, useMeta } from 'quasar';
 export default defineComponent({
@@ -195,7 +192,19 @@ export default defineComponent({
     const byWebsite = ref('');
     const byDate = ref('Any time');
     const router = useRouter();
+    const route = useRoute();
     const SearchText = ref('');
+    const gotoLogin = () => {
+      window.open(
+        'https://bbs.tampermonkey.net.cn/plugin.php?id=codfrm_oauth2:oauth&client_id=' +
+          encodeURIComponent(<string>process.env.VUE_APP_BBS_OAUTH_CLIENT) +
+          '&scope=user&response_type=code&redirect_uri=' +
+          encodeURIComponent(<string>process.env.VUE_APP_HTTP_HOST) +
+          '%2Flogin%2Foauth%3Fredirect_uri%3D' +
+          encodeURIComponent(route.path),
+        '_self'
+      );
+    };
     function onClear() {
       exactPhrase.value = '';
       hasWords.value = '';
@@ -255,6 +264,7 @@ export default defineComponent({
       onClear,
       changeDate,
       Search,
+      gotoLogin
     };
   },
 });
