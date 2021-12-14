@@ -49,7 +49,7 @@
               onclick="window.open('/','_self')"
               label="首页"
               icon="home"
-              class="q-mx-md"
+              class="text-body1 q-mx-md"
             />
             <q-btn
               flat
@@ -57,7 +57,7 @@
               onclick="window.open('https://bbs.tampermonkey.net.cn/','_blank')"
               label="油猴论坛"
               icon="chat"
-              class="q-mx-md"
+              class="text-body1 q-mx-md"
             />
             <q-btn
               flat
@@ -65,30 +65,24 @@
               onclick="window.open('/search','_self')"
               label="脚本列表"
               icon="apps"
-              class="q-mx-md"
+              class="text-body1 q-mx-md"
             />
             <q-btn
               flat
               dense
               v-if="islogin"
-              onclick="window.open('/managescript','_self')"
+              onclick="window.open('/users/managescript','_self')"
               label="管理脚本"
               icon="menu"
-              class="q-mx-md"
+              class="text-body1 q-mx-md"
             />
-            <q-btn round dense flat color="grey-8" icon="notifications">
-              <!-- <q-badge color="red" text-color="white" floating>
-              2
-            </q-badge> -->
-              <q-tooltip>通知-🚧建设中</q-tooltip>
-            </q-btn>
             <q-btn v-if="islogin" round flat>
               <q-avatar size="26px">
                 <img
                   :src="'https://scriptcat.org/api/v1/user/avatar/' + user.uid"
                 />
               </q-avatar>
-              <q-tooltip>{{ user.username }}</q-tooltip>
+              <q-tooltip>{{ user.username }},通知-🚧建设中</q-tooltip>
             </q-btn>
             <q-btn v-else round flat @click="gotoLogin">
               <q-avatar size="26px">
@@ -255,7 +249,7 @@ export default defineComponent({
     margin-left: 0px;
   }
   .logo-title {
-    display: none;
+    font-size: 24px;
   }
   .btn-control {
     display: show;

@@ -8,7 +8,7 @@
       <q-tabs align="left">
         <div v-for="(item, index) in tabList" :key="index">
           <q-route-tab
-            v-if="isuserisauthor != 1 && index < 5"
+            v-if="isuserisauthor != false || index < 5"
             @click="expanded = true"
             :to="{ name: item.name, params: $route.params }"
             flat

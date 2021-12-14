@@ -79,29 +79,64 @@
         <q-space />
 
         <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn v-if="$q.screen.gt.sm" dense flat icon="apps">
-            <q-tooltip>用户管理</q-tooltip>
-          </q-btn>
-          <q-btn round dense flat color="grey-8" icon="notifications">
-            <!-- <q-badge color="red" text-color="white" floating>
-              2
-            </q-badge> -->
-            <q-tooltip>通知-🚧建设中</q-tooltip>
-          </q-btn>
-          <q-btn v-if="islogin" round flat>
-            <q-avatar size="26px">
-              <img
-                :src="'https://scriptcat.org/api/v1/user/avatar/' + user.uid"
-              />
-            </q-avatar>
-            <q-tooltip>{{ user.username }}</q-tooltip>
-          </q-btn>
-          <q-btn v-else round flat>
-            <q-avatar size="26px">
-              <img src="https://scriptcat.org/api/v1/user/avatar/5" />
-            </q-avatar>
-            <q-tooltip>暂未登录</q-tooltip>
-          </q-btn>
+          <div class="pc">
+            <q-btn
+              flat
+              dense
+              onclick="window.open('/','_self')"
+              label="首页"
+              icon="home"
+              class="text-body1 q-mx-md"
+            />
+            <q-btn
+              flat
+              dense
+              onclick="window.open('https://bbs.tampermonkey.net.cn/','_blank')"
+              label="油猴论坛"
+              icon="chat"
+              class="text-body1 q-mx-md"
+            />
+            <q-btn
+              flat
+              dense
+              onclick="window.open('/search','_self')"
+              label="脚本列表"
+              icon="apps"
+              class="text-body1 q-mx-md"
+            />
+            <q-btn
+              flat
+              dense
+              v-if="islogin"
+              onclick="window.open('/users/managescript','_self')"
+              label="管理脚本"
+              icon="menu"
+              class="text-body1 q-mx-md"
+            />
+            <q-btn v-if="islogin" round flat>
+              <q-avatar size="26px">
+                <img
+                  :src="'https://scriptcat.org/api/v1/user/avatar/' + user.uid"
+                />
+              </q-avatar>
+              <q-tooltip>{{ user.username }},通知-🚧建设中</q-tooltip>
+            </q-btn>
+            <q-btn v-else round flat @click="gotoLogin">
+              <q-avatar size="26px">
+                <img :src="require('src/assets/defaultavatar.png')" />
+              </q-avatar>
+              <q-tooltip>暂未登录</q-tooltip>
+            </q-btn>
+          </div>
+          <q-btn
+            style="display: none"
+            class="btn-control"
+            dense
+            flat
+            round
+            icon="menu"
+            @click="right = !right"
+          />
         </div>
       </q-toolbar>
     </q-header>
@@ -262,6 +297,12 @@ export default defineComponent({
     margin-left: 0px;
   }
   .logo-title {
+    font-size: 24px;
+  }
+  .btn-control {
+    display: show;
+  }
+  .pc {
     display: none;
   }
 }

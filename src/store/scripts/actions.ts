@@ -15,6 +15,19 @@ const actions: ActionTree<ScriptsStateInterface, StateInterface> = {
         commit('updateScripts', { list: [], total: 0 });
       });
   },
+  fetchUserScriptList({ commit }, param:{uid:number, cookies: Cookies }) {
+    return http.get<API.ScriptInfoResponse>('/user/scripts/' + param.uid.toString(), {
+      headers: {
+        cookie: 'token=' + (param.cookies ? param.cookies.get('token') : ''),
+      },
+    }).then(response => {
+        commit('updateScripts', response.data);
+      })
+      .catch(error => {
+        console.log(error);
+        commit('updateScripts', { list: [], total: 0 });
+      });
+  },
   fetchScriptInfo({ commit }, param: { id: number, cookies: Cookies }) {
     return http.get<API.ScriptInfoResponse>('/scripts/' + param.id.toString(), {
       headers: {
