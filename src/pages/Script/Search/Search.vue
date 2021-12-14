@@ -78,31 +78,7 @@
           </q-item>
           <q-separator />
           <q-item-label style="margin: 5px 5px 5px 0px">
-            <q-btn-group flat>
-              <q-btn
-                flat
-                icon="star"
-                size="sm"
-                color="light-blue-10"
-                type="a"
-                href="/comment/1"
-              >
-                <q-tooltip>评分</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="chat" size="sm" color="light-blue-10">
-                <q-tooltip>反馈</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="share" size="sm" color="light-blue-10">
-                <q-tooltip>分享</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="more_horiz" size="sm" color="light-blue-10">
-                <q-tooltip>更多</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="2" />
-            </q-btn-group>
+            <ScriptCardAction :id="item.id" :name="item.name" />
           </q-item-label>
         </q-card>
       </q-card>
@@ -210,6 +186,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { getRecommendList } from 'src/apis/scripts';
 import { useMeta } from 'quasar';
 import Fliter from 'src/components/Filter.vue';
+import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 
 const iconcolorlist = [
   '#ff981b',
@@ -225,7 +202,7 @@ const iconcolorlist = [
 ];
 
 export default defineComponent({
-  components: { Fliter },
+  components: { Fliter, ScriptCardAction },
   name: 'search',
   computed: {
     dateformat: () => {

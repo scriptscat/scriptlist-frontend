@@ -68,31 +68,7 @@
           </q-item>
           <q-separator />
           <q-item-label style="margin: 5px 5px 5px 0px">
-            <q-btn-group flat>
-              <q-btn
-                flat
-                icon="star"
-                size="sm"
-                color="light-blue-10"
-                type="a"
-                href="/comment/1"
-              >
-                <q-tooltip>评分</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="chat" size="sm" color="light-blue-10">
-                <q-tooltip>反馈</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="share" size="sm" color="light-blue-10">
-                <q-tooltip>分享</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="more_horiz" size="sm" color="light-blue-10">
-                <q-tooltip>更多</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="2" />
-            </q-btn-group>
+            <ScriptCardAction :id="item.id" :name="item.name" />
           </q-item-label>
         </q-card>
       </q-card>
@@ -109,6 +85,7 @@ import format from 'date-fns/format';
 import { useRouter, useRoute } from 'vue-router';
 import Filter from 'src/components/Filter.vue';
 import { Cookies } from 'quasar';
+import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 
 export default defineComponent({
   meta: {
@@ -116,6 +93,7 @@ export default defineComponent({
   },
   components: {
     Filter,
+    ScriptCardAction,
   },
   computed: {
     dateformat: () => {
@@ -134,17 +112,15 @@ export default defineComponent({
     },
   },
 
-  async preFetch({ store,ssrContext }) {
-    if(!ssrContext){
+  async preFetch({ store, ssrContext }) {
+    if (!ssrContext) {
       return;
     }
-    const cookies=process.env.SERVER?Cookies.parseSSR(ssrContext):Cookies;
-    await store.dispatch(
-      'scripts/fetchUserScriptList',{
-        uid:0,
-        cookies:cookies
-      }
-    );
+    const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
+    await store.dispatch('scripts/fetchUserScriptList', {
+      uid: 0,
+      cookies: cookies,
+    });
   },
 
   setup() {

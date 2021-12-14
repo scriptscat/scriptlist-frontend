@@ -101,31 +101,7 @@
           </q-btn-group>
           <q-separator />
           <q-item-label style="margin: 5px 5px 5px 0px">
-            <q-btn-group flat>
-              <q-btn
-                flat
-                icon="star"
-                size="sm"
-                color="light-blue-10"
-                type="a"
-                href="/comment/1"
-              >
-                <q-tooltip>评分</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="chat" size="sm" color="light-blue-10">
-                <q-tooltip>反馈</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="share" size="sm" color="light-blue-10">
-                <q-tooltip>分享</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="more_horiz" size="sm" color="light-blue-10">
-                <q-tooltip>更多</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="2" />
-            </q-btn-group>
+            <ScriptCardAction :id="id" :name="author.name" />
           </q-item-label>
         </q-card>
       </q-card>
@@ -142,7 +118,6 @@
 import { defineComponent } from 'vue';
 const Viewer = async () =>
   await import('@toast-ui/editor/dist/toastui-editor-viewer');
-
 import format from 'date-fns/format';
 import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
@@ -150,6 +125,7 @@ const codeSyntaxHighlight = async () =>
   await import('@toast-ui/editor-plugin-code-syntax-highlight');
 import Prism from 'prismjs';
 import { Viewer as tuiViewer } from '@toast-ui/editor';
+import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 
 const editor = <
   {
@@ -159,6 +135,9 @@ const editor = <
   mkedit: undefined,
 };
 export default defineComponent({
+  components: {
+    ScriptCardAction,
+  },
   computed: {
     dateformat: () => {
       return (value: number | Date) => {

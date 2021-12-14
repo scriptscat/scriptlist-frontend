@@ -29,7 +29,7 @@
 
           <q-card-section>
             <q-btn
-              @click="SubmitMyViwer"
+              @click="SubmitMyViewer"
               :disable="!islogin"
               color="primary"
               label="提交评价"
@@ -134,49 +134,6 @@ export default defineComponent({
         return format(value, 'yyyy-MM-dd');
       };
     });
-    const SubmitMyViwer = () => {
-      submitComment(id, {
-        score: mypostform.value.ratingpost * 10,
-        message: mypostform.value.text,
-      })
-        .then((response) => {
-          if (response.data.code === 0) {
-            // this.$q.notify({
-            //   message: '提交成功！',
-            //   position: 'center',
-            //   icon: 'tag_faces',
-            //   color: 'primary',
-            // });
-            // this.getallscroe(1);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          // this.$q.notify({
-          //   position: 'center',
-          //   message: '评分和评论都是必填项！',
-          //   icon: 'error',
-          //   color: 'red',
-          // });
-        });
-    };
-    getAllScroe(id, 1, 20)
-      .then((response) => {
-        if (response.data.code === 0) {
-          for (let index = 0; index < response.data.list.length; index++) {
-            if (response.data.list[index].avatar === '') {
-              response.data.list[index].avatar =
-                'https://scriptcat.org/api/v1/user/avatar/5';
-            }
-            response.data.list[index].score =
-              response.data.list[index].score / 10;
-          }
-          userscorelist.value = response.data.list;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
     getMyScore(id)
       .then((response) => {
         if (response.data.code === 0) {
@@ -193,9 +150,81 @@ export default defineComponent({
       userscorelist,
       islogin,
       user,
-      SubmitMyViwer,
       dateformat,
+      id,
     };
+  },
+  created() {
+    this.getallscore();
+  },
+  methods: {
+    getallscore() {
+      getAllScroe(this.id, 1, 20)
+        .then((response) => {
+          if (response.data.code === 0) {
+            for (let index = 0; index < response.data.list.length; index++) {
+              if (response.data.list[index].avatar === '') {
+                response.data.list[index].avatar =
+                  'https://scriptcat.org/api/v1/user/avatar/5';
+              }
+              response.data.list[index].score =
+                response.data.list[index].score / 10;
+            }
+            this.userscorelist = response.data.list;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    SubmitMyViewer() {
+      submitComment(this.id, {
+        score: this.mypostform.ratingpost * 10,
+        message: this.mypostform.text,
+      })
+        .then((response) => {
+          if (response.data.code === 0) {
+            this.$q.notify({
+              message: '提交成功!',
+              position: 'center',
+              icon: 'tag_faces',
+              color: 'primary',
+              timeout: 3000,
+              progress: true,
+              actions: [
+                {
+                  label: '关闭',
+                  color: 'yellow',
+                  handler: () => {
+                    /* ... */
+                  },
+                },
+              ],
+            });
+            this.getallscore();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$q.notify({
+            position: 'center',
+            message: '评分是必填项!',
+            icon: 'error',
+            color: 'red',
+            timeout: 3000,
+            progress: true,
+            actions: [
+              {
+                label: '关闭',
+                color: 'yellow',
+                handler: () => {
+                  /* ... */
+                },
+              },
+            ],
+          });
+        });
+    },
   },
 });
 </script>
