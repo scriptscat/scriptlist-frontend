@@ -22,30 +22,90 @@
 
         <q-space />
 
+        <q-drawer v-model="right" side="right" bordered>
+          <div v-for="(item, index) in itemlist" :key="index">
+            <q-item @click="JumpToPage(item)" clickable v-ripple>
+              <q-item-section avatar>
+                <q-icon :name="item.icon" />
+              </q-item-section>
+              <q-item-section>
+                {{
+                  item.name === '登陆'
+                    ? islogin === true
+                      ? user.username
+                      : item.name
+                    : item.name
+                }}
+              </q-item-section>
+            </q-item>
+            <q-separator v-if="item.sep" />
+          </div>
+        </q-drawer>
         <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn v-if="$q.screen.gt.sm" dense flat icon="apps">
-            <q-tooltip>用户管理</q-tooltip>
-          </q-btn>
-          <q-btn round dense flat color="grey-8" icon="notifications">
-            <!-- <q-badge color="red" text-color="white" floating>
+          <div class="pc">
+            <q-btn
+              flat
+              dense
+              onclick="window.open('/','_self')"
+              label="首页"
+              icon="home"
+              class="q-mx-md"
+            />
+            <q-btn
+              flat
+              dense
+              onclick="window.open('https://bbs.tampermonkey.net.cn/','_blank')"
+              label="油猴论坛"
+              icon="chat"
+              class="q-mx-md"
+            />
+            <q-btn
+              flat
+              dense
+              onclick="window.open('/search','_self')"
+              label="脚本列表"
+              icon="apps"
+              class="q-mx-md"
+            />
+            <q-btn
+              flat
+              dense
+              v-if="islogin"
+              onclick="window.open('/managescript','_self')"
+              label="管理脚本"
+              icon="menu"
+              class="q-mx-md"
+            />
+            <q-btn round dense flat color="grey-8" icon="notifications">
+              <!-- <q-badge color="red" text-color="white" floating>
               2
             </q-badge> -->
-            <q-tooltip>通知-🚧建设中</q-tooltip>
-          </q-btn>
-          <q-btn v-if="islogin" round flat>
-            <q-avatar size="26px">
-              <img
-                :src="'https://scriptcat.org/api/v1/user/avatar/' + user.uid"
-              />
-            </q-avatar>
-            <q-tooltip>{{ user.username }}</q-tooltip>
-          </q-btn>
-          <q-btn v-else round flat>
-            <q-avatar size="26px">
-              <img src="https://scriptcat.org/api/v1/user/avatar/5" />
-            </q-avatar>
-            <q-tooltip>暂未登录</q-tooltip>
-          </q-btn>
+              <q-tooltip>通知-🚧建设中</q-tooltip>
+            </q-btn>
+            <q-btn v-if="islogin" round flat>
+              <q-avatar size="26px">
+                <img
+                  :src="'https://scriptcat.org/api/v1/user/avatar/' + user.uid"
+                />
+              </q-avatar>
+              <q-tooltip>{{ user.username }}</q-tooltip>
+            </q-btn>
+            <q-btn v-else round flat @click="gotoLogin">
+              <q-avatar size="26px">
+                <img :src="require('src/assets/defaultavatar.png')" />
+              </q-avatar>
+              <q-tooltip>暂未登录</q-tooltip>
+            </q-btn>
+          </div>
+          <q-btn
+            style="display: none"
+            class="btn-control"
+            dense
+            flat
+            round
+            icon="menu"
+            @click="right = !right"
+          />
         </div>
       </q-toolbar>
     </q-header>
@@ -123,6 +183,7 @@ export default defineComponent({
       excludeWords,
       byWebsite,
       byDate,
+      right: ref(false),
       links1: [
         { icon: 'web', text: 'Top stories' },
         { icon: 'person', text: 'For you' },
@@ -194,6 +255,12 @@ export default defineComponent({
     margin-left: 0px;
   }
   .logo-title {
+    display: none;
+  }
+  .btn-control {
+    display: show;
+  }
+  .pc {
     display: none;
   }
 }

@@ -6,18 +6,19 @@
       style="margin: 10px 0px 10px 0px; width: 100%; max-width: 1300px"
     >
       <q-tabs align="left">
-        <q-route-tab
-          v-for="(item, index) in tabList"
-          :key="index"
-          @click="expanded = true"
-          :to="{ name: item.name, params: $route.params }"
-          flat
-          outline
-        >
-          <div class="text-weight-medium" style="font-size:16px;">
-            {{ item.label }}
-          </div>
-        </q-route-tab>
+        <div v-for="(item, index) in tabList" :key="index">
+          <q-route-tab
+            v-if="isuserisauthor != 1 && index < 5"
+            @click="expanded = true"
+            :to="{ name: item.name, params: $route.params }"
+            flat
+            outline
+          >
+            <div class="text-weight-medium" style="font-size: 16px">
+              {{ item.label }}
+            </div>
+          </q-route-tab>
+        </div>
       </q-tabs>
     </q-card>
     <q-card flat bordered style="width: 100%; max-width: 1300px">
@@ -27,9 +28,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { Cookies, useMeta } from 'quasar';
 import { useStore } from 'src/store';
+import { useRoute } from 'vue-router';
 export default defineComponent({
   preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
@@ -43,6 +45,20 @@ export default defineComponent({
   },
   setup() {
     const script = useStore().state.scripts.script;
+    const tab = 0;
+    const router = useRoute();
+    const store = useStore();
+    const id = router.params.id;
+    const author = computed(() => {
+      return store.state.scripts.script || <DTO.Script>{};
+    });
+    const isuserisauthor = computed(() => {
+      try {
+        return store.state.scripts.is_manager;
+      } catch (error) {
+        return false;
+      }
+    });
     const tabList = ref([
       {
         name: 'index',
@@ -58,7 +74,7 @@ export default defineComponent({
       },
       {
         name: 'showComment',
-        label: '评论',
+        label: '评分',
       },
       {
         name: 'showHistory',
@@ -88,44 +104,12 @@ export default defineComponent({
       script,
       tabList,
       expanded: ref(true),
+      tab,
+      id,
+      author,
+      isuserisauthor,
     };
   },
-  computed: {
-    id() {
-      return this.$route.params.id;
-    },
-    author() {
-      return this.$store.state.scripts.script || <DTO.Script>{};
-    },
-    isuserisauthor() {
-      try {
-        return this.$store.state.scripts.is_manager;
-      } catch (error) {
-        return false;
-      }
-    },
-  },
-  data() {
-    return {
-      tab: 0,
-    };
-  },
-  // created() {
-  //   this.id = parseInt(this.$route.params.id[0]);
-  //   if (!this.id) {
-  //     this.$q.notify({
-  //       position: 'top-right',
-  //       message: '访问路径存在问题',
-  //     });
-  //     void this.$router.push({ path: '/' });
-  //     return;
-  //   }
-  //   if (this.script) {
-  //     this.$store.commit('scripts/SetIsManagerScript', this.script.is_manager);
-  //   } else {
-  //     this.$store.commit('scripts/SetIsManagerScript', false);
-  //   }
-  // },
 });
 </script>
 

@@ -1,7 +1,13 @@
 <template>
-  <div style="padding: 8px">
+  <div>
     <q-card flat class="my-card">
-      <q-card class="single" flat bordered v-bind:key="index">
+      <q-card
+        style="padding: 8px"
+        class="single"
+        flat
+        bordered
+        v-bind:key="index"
+      >
         <q-card bordered flat>
           <q-item>
             <q-item-section avatar>
@@ -69,6 +75,26 @@
             </q-item-label>
           </q-item>
           <q-separator />
+          <q-btn-group flat class="install">
+            <q-btn
+              
+              class="text-caption"
+              type="a"
+              :href="'/scripts/' + author.name + '/source/' + id + '.user.js'"
+              color="primary"
+              :label="install"
+            />
+            <q-btn
+              outline
+              class="text-caption"
+              type="a"
+              target="_blank"
+              href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
+              color="primary"
+              label="如何安装?"
+            />
+          </q-btn-group>
+          <q-separator />
           <q-item-label style="margin: 5px 5px 5px 0px">
             <q-btn-group flat>
               <q-btn
@@ -99,9 +125,9 @@
         </q-card>
       </q-card>
       <q-card-section>
-        <q-card-section>
-          <div class="editor" id="editor">{{ author.content }}</div>
-        </q-card-section>
+        <div class="editor" id="editor">
+          {{ author.content }}
+        </div>
       </q-card-section>
     </q-card>
   </div>
@@ -228,7 +254,7 @@ export default defineComponent({
   .text-caption {
     color: 'primary';
     font-size: 13px;
-    margin-right: 5px;
+    margin: 10px 0px 10px 10px;
   }
 }
 .title {
