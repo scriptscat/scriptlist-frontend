@@ -77,10 +77,15 @@
           <q-separator />
           <q-btn-group flat class="install">
             <q-btn
-              
               class="text-caption"
               type="a"
-              :href="'/scripts/' + author.name + '/source/' + id + '.user.js'"
+              :href="
+                '/scripts/coed/' +
+                id +
+                '/' +
+                encodeURIComponent(author.name) +
+                '.user.js'
+              "
               color="primary"
               :label="install"
             />

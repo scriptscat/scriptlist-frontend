@@ -54,7 +54,7 @@ export default defineComponent({
     });
     const isuserisauthor = computed(() => {
       try {
-        return store.state.scripts.is_manager;
+        return store.state.scripts.script.is_manager;
       } catch (error) {
         return false;
       }
@@ -65,7 +65,7 @@ export default defineComponent({
         label: '详情',
       },
       {
-        name: 'showCode',
+        name: 'code',
         label: '代码',
       },
       {
@@ -73,15 +73,15 @@ export default defineComponent({
         label: '反馈',
       },
       {
-        name: 'showComment',
+        name: 'comment',
         label: '评分',
       },
       {
-        name: 'showHistory',
+        name: 'history',
         label: '历史版本',
       },
       {
-        name: 'updateScript',
+        name: 'update',
         label: '更新脚本',
       },
       {

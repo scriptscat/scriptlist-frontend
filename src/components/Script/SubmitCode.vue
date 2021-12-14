@@ -199,7 +199,6 @@ if (process.env.CLIENT) {
 
   require('codemirror/lib/codemirror.css');
   require('codemirror/mode/javascript/javascript');
-  // require("codemirror/theme/darcula.css");
   require('codemirror/theme/base16-light.css');
   require('@toast-ui/editor/dist/toastui-editor.css');
 }
@@ -270,41 +269,38 @@ export default defineComponent({
     if (process.env.CLIENT) {
       void this.$nextTick(() => {
         let handler = async () => {
-          if (editor) {
-            editor.editor = (await CodeMirror()).default.fromTextArea(
-              <HTMLTextAreaElement>this.$refs.textarea,
-              {
-                //readOnly: true,//只读
-                lineWrapping: true,
-                mode: 'javascript',
-                theme: 'base16-light', // 主日样式
-                // styleActiveLine: true, // 当前行高亮
-                lineNumbers: true, // 显示行号
-              }
-            );
-            let scollinfo = editor.editor.getScrollInfo();
-            editor.editor.setSize(scollinfo.width, 400);
-            if (this.id) {
-              this.GetScriptData();
+          editor.editor = (await CodeMirror()).default.fromTextArea(
+            <HTMLTextAreaElement>this.$refs.textarea,
+            {
+              //readOnly: true,//只读
+              lineWrapping: true,
+              mode: 'javascript',
+              theme: 'base16-light', // 主日样式
+              lineNumbers: true, // 显示行号
             }
-
-            editor.mkedit = new (await Editor()).default({
-              el: <HTMLElement>this.$refs.mkedite,
-              previewStyle: 'tab',
-              height: '400px',
-              hooks: {
-                addImageBlobHook: async (blob, callback) => {
-                  const uploadedImageURL = await this.uploadImage(blob);
-                  callback(uploadedImageURL, 'alt text');
-                  return false;
-                },
-              },
-              plugins: [
-                [(await codeSyntaxHighlight()).default, { highlighter: Prism }],
-              ],
-              //   autofocus: false,
-            });
+          );
+          let scollinfo = editor.editor.getScrollInfo();
+          editor.editor.setSize(scollinfo.width, 400);
+          if (this.id) {
+            this.GetScriptData();
           }
+
+          editor.mkedit = new (await Editor()).default({
+            el: <HTMLElement>this.$refs.mkedite,
+            previewStyle: 'tab',
+            height: '400px',
+            hooks: {
+              addImageBlobHook: async (blob, callback) => {
+                const uploadedImageURL = await this.uploadImage(blob);
+                callback(uploadedImageURL, 'alt text');
+                return false;
+              },
+            },
+            plugins: [
+              [(await codeSyntaxHighlight()).default, { highlighter: Prism }],
+            ],
+            //   autofocus: false,
+          });
         };
         void handler();
       });
@@ -312,11 +308,10 @@ export default defineComponent({
   },
   methods: {
     GetScriptData() {
-      getScriptInfo(this.id)
+      getScriptInfo(this.id, true)
         .then((response) => {
           if (
             response.data.code === 0 &&
-            editor &&
             editor.editor &&
             editor.mkedit
           ) {

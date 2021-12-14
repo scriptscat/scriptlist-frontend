@@ -10,9 +10,6 @@ const mutation: MutationTree<ScriptsStateInterface> = {
   updateScriptInfo(state, script: any) {
     state.script = script;
   },
-  SetIsManagerScript(state, status) {
-    state.is_manager = status;
-  }
 };
 
 export default mutation;

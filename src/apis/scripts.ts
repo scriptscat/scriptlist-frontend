@@ -8,8 +8,8 @@ export function getAllScript(url: string) {
   return http.get<API.ScriptListResponse>(url)
 }
 
-export function getScriptInfo(scriptId: number) {
-  return http.get<API.ScriptCodeResponse>('/scripts/' + scriptId.toString() + '/code')
+export function getScriptInfo(scriptId: number, withCode?: boolean) {
+  return http.get<API.ScriptCodeResponse>('/scripts/' + scriptId.toString() + (withCode ? '/code' : ''))
 }
 
 export function updateScriptCode(id: number, content: string, code: string, definition: string, changelog: string, scriptPublic: DTO.ScriptPublic, unwell: DTO.ScriptUnwell) {

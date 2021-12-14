@@ -2,7 +2,6 @@ export interface ScriptsStateInterface {
   scripts: DTO.Script[]
   total: number,
   script: DTO.Script,
-  is_manager: boolean
 }
 
 function state(): ScriptsStateInterface {
@@ -10,7 +9,6 @@ function state(): ScriptsStateInterface {
     scripts: [],
     total: 0,
     script: <DTO.Script>{},
-    is_manager: false,
   }
 };
 
