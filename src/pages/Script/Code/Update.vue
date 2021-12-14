@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 10px">
-    <SubmitCode :id="id"></SubmitCode>
+    <SubmitCode :id="id" :content="script.content"></SubmitCode>
   </div>
 </template>
 
@@ -19,6 +19,9 @@ export default defineComponent({
   computed: {
     islogin() {
       return this.$store.state.user.islogin;
+    },
+    script() {
+      return this.$store.state.scripts.script || <DTO.Script>{};
     },
   },
   created() {

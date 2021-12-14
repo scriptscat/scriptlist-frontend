@@ -222,6 +222,10 @@ export default defineComponent({
       type: Number,
       default: 0,
     },
+    content: {
+      type: String,
+      default: '',
+    },
   },
   setup() {
     useMeta({
@@ -287,6 +291,7 @@ export default defineComponent({
 
           editor.mkedit = new (await Editor()).default({
             el: <HTMLElement>this.$refs.mkedite,
+            initialValue: this.content,
             previewStyle: 'tab',
             height: '400px',
             hooks: {
@@ -299,7 +304,7 @@ export default defineComponent({
             plugins: [
               [(await codeSyntaxHighlight()).default, { highlighter: Prism }],
             ],
-            //   autofocus: false,
+            autofocus: false,
           });
         };
         void handler();
@@ -310,13 +315,8 @@ export default defineComponent({
     GetScriptData() {
       getScriptInfo(this.id, true)
         .then((response) => {
-          if (
-            response.data.code === 0 &&
-            editor.editor &&
-            editor.mkedit
-          ) {
+          if (response.data.code === 0 && editor.editor && editor.mkedit) {
             editor.editor.setValue(response.data.data.script.code);
-            editor.mkedit.setMarkdown(response.data.data.content);
             this.scripttype = response.data.data.type; //脚本类型
             this.publiccontrol = response.data.data.public; //公开/非公开
             this.unwell = response.data.data.unwell;

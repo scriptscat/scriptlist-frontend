@@ -22,25 +22,6 @@
 
         <q-space />
 
-        <q-drawer v-model="right" side="right" bordered>
-          <div v-for="(item, index) in itemlist" :key="index">
-            <q-item @click="JumpToPage(item)" clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon :name="item.icon" />
-              </q-item-section>
-              <q-item-section>
-                {{
-                  item.name === '登陆'
-                    ? islogin === true
-                      ? user.username
-                      : item.name
-                    : item.name
-                }}
-              </q-item-section>
-            </q-item>
-            <q-separator v-if="item.sep" />
-          </div>
-        </q-drawer>
         <div class="q-gutter-sm row items-center no-wrap">
           <div class="pc">
             <q-btn

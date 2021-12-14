@@ -6,7 +6,6 @@
         class="single"
         flat
         bordered
-        v-bind:key="index"
       >
         <q-card bordered flat>
           <q-item>
@@ -106,9 +105,7 @@
         </q-card>
       </q-card>
       <q-card-section>
-        <div class="editor" id="editor">
-          {{ author.content }}
-        </div>
+        <MarkdownView :content="author.content" />
       </q-card-section>
     </q-card>
   </div>
@@ -116,27 +113,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-const Viewer = async () =>
-  await import('@toast-ui/editor/dist/toastui-editor-viewer');
 import format from 'date-fns/format';
-import 'prismjs/themes/prism.css';
-import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
-const codeSyntaxHighlight = async () =>
-  await import('@toast-ui/editor-plugin-code-syntax-highlight');
-import Prism from 'prismjs';
-import { Viewer as tuiViewer } from '@toast-ui/editor';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
+import MarkdownView from '@Components/MarkdownView.vue';
 
-const editor = <
-  {
-    mkedit?: tuiViewer;
-  }
->{
-  mkedit: undefined,
-};
 export default defineComponent({
   components: {
     ScriptCardAction,
+    MarkdownView,
   },
   computed: {
     dateformat: () => {
@@ -145,7 +129,7 @@ export default defineComponent({
       };
     },
     id() {
-      return this.$route.params.id;
+      return parseInt(<string>this.$route.params.id);
     },
     author() {
       return this.$store.state.scripts.script || <DTO.Script>{};
@@ -167,37 +151,6 @@ export default defineComponent({
         query: { id: this.id },
       });
     },
-  },
-  unmounted() {
-    //this.editor.destroy();
-    if (editor.mkedit) {
-      console.log('this.viewr', editor.mkedit);
-      editor.mkedit = undefined;
-    }
-  },
-  created() {
-    if (process.env.CLIENT) {
-      void this.$nextTick(() => {
-        let handler = async () => {
-          let el = <HTMLElement>document.querySelector('#editor');
-          if (!el) {
-            return;
-          }
-          el.innerHTML = '';
-          editor.mkedit = new (await Viewer()).default({
-            el: el,
-            initialValue: this.author.content,
-            plugins: [
-              [(await codeSyntaxHighlight()).default, { highlighter: Prism }],
-            ],
-            linkAttributes: {
-              target: '_blank',
-            },
-          });
-        };
-        void handler();
-      });
-    }
   },
   mounted() {
     var api = <
