@@ -2,7 +2,7 @@
   <div class="flex">
     <div class="show-pag">
       <q-pagination
-        v-model="currentpage_"
+        v-model="current"
         :max="maxpage"
         :max-pages="maxlens"
         :to-fn="tolink"
@@ -15,45 +15,63 @@
         outlined
         v-model="toPage"
         class="pagination-input"
-        v-on:keyword.enter="refreshTableData(tolink(toPage))"
+        v-on:keyup.enter="refreshTableData(toPage)"
       ></q-input>
       <span> 页</span>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-
+import { defineComponent, ref } from 'vue';
+import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 export default defineComponent({
-  data() {
-    let query = '';
-    for (const key in this.$route.query) {
-      if (key == 'page') {
-        continue;
-      }
-      query += '&' + key + '=' + encodeURIComponent(<string>this.$route.query[key]);
-    }
+  setup() {
+    let currentPage = parseInt(<string>useRoute().query.page) || 1;
     return {
-      page: 0,
-      toPage: '', // 跳转至
-      currentpage_: this.currentpage || 1,
-      afterQuery: query,
+      toPage: ref(currentPage.toString()), // 跳转至
+      current: ref(currentPage),
+      afterQuery: '',
     };
   },
-  props: {
-    currentpage: {
-      type: Number,
+  watch: {
+    $route(currentRoute: RouteLocationNormalizedLoaded) {
+      this.reload(currentRoute);
+      this.reloadPage && this.reloadPage(currentRoute);
     },
+  },
+  props: {
     maxpage: {
       type: Number,
     },
     maxlens: {
       type: Number,
     },
+    reloadPage: {
+      type: Function,
+    },
+  },
+  created() {
+    this.reload(this.$route);
   },
   methods: {
-    refreshTableData(link: string) {
-      window.open(link, '_self');
+    refreshTableData() {
+      this.current = parseInt(this.toPage);
+      void this.$router.replace({
+        query: { page: this.toPage },
+      });
+    },
+    reload(currentRoute: RouteLocationNormalizedLoaded) {
+      this.current = parseInt(<string>currentRoute.query.page) || 1;
+      this.toPage = <string>currentRoute.query.page;
+      let query = '';
+      for (const key in currentRoute.query) {
+        if (key == 'page') {
+          continue;
+        }
+        query +=
+          '&' + key + '=' + encodeURIComponent(<string>currentRoute.query[key]);
+      }
+      this.afterQuery = query;
     },
     tolink(page: number) {
       return (

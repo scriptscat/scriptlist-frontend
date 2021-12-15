@@ -85,6 +85,7 @@
       <div class="flex flex-center">
         <TablePagination
           v-bind="page"
+          :reloadPage="reload"
           :maxpage="maxPage"
           :maxlens="6"
           :max="10"
@@ -185,9 +186,9 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, watch } from 'vue';
+import { ref, defineComponent } from 'vue';
 import format from 'date-fns/format';
-import { useRouter, useRoute } from 'vue-router';
+import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 import { getRecommendList } from 'src/apis/scripts';
 import { useMeta } from 'quasar';
 import Fliter from 'src/components/Filter.vue';
@@ -251,21 +252,8 @@ export default defineComponent({
       score: [],
       new: [],
     });
-    const router = useRouter();
     const route = useRoute();
     const page = ref(Number(route.query.page) || 1);
-
-    watch(page, (newValue) => {
-      const { href } = router.resolve({
-        name: 'search',
-        query: {
-          keyword: route.query.keyword,
-          page: newValue,
-          category: route.query.category,
-        },
-      });
-      window.open(href, '_self');
-    });
 
     getRecommendList(
       '/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain='
@@ -302,6 +290,33 @@ export default defineComponent({
       page,
       recommondlist,
     };
+  },
+  methods: {
+    reload(currentRoute: RouteLocationNormalizedLoaded) {
+      getRecommendList(
+        '/scripts?page=' +
+          (currentRoute.query.page || 1).toString() +
+          '&count=20&keyword=' +
+          encodeURIComponent(<string>currentRoute.query.keyword || '') +
+          '&sort=' +
+          (currentRoute.query.sort || 'today_download').toString() +
+          '&category=' +
+          (currentRoute.query.category || '').toString() +
+          '&domain=' +
+          (currentRoute.query.domain || '').toString()
+      )
+        .then((response) => {
+          if (response.data.code == 0) {
+            this.$store.commit('scripts/updateScripts', response.data);
+          } else {
+            this.$store.commit('scripts/updateScripts', { list: [], total: 0 });
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          this.$store.commit('scripts/updateScripts', { list: [], total: 0 });
+        });
+    },
   },
 });
 </script>
