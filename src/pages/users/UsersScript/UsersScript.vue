@@ -4,15 +4,30 @@
       flat
       bordered
       class="scriptshow"
-      v-if="ScriptList.length !== 0"
     >
+      <q-card v-if="self.uid == User.uid">
+        <q-card-actions>
+          <q-btn
+            flat
+            dense
+            label="自己的一些配置"
+            icon="home"
+            class="text-body1 q-mx-md"
+          />
+        </q-card-actions>
+      </q-card>
       <div class="author flex flex-center">
         <q-avatar>
           <img :src="'https://scriptcat.org/api/v1/user/avatar/' + User.uid" />
         </q-avatar>
         <div class="text-h4">&nbsp;{{ User.username }}编写的脚本</div>
       </div>
-      <Filter />
+      <Filter
+        :sort="$route.query.sort"
+        :category="$route.query.category"
+        @sortChange="sortChange"
+        @categoryChange="categoryChange"
+      />
       <q-card
         class="single"
         flat
@@ -68,53 +83,39 @@
           </q-item>
           <q-separator />
           <q-item-label style="margin: 5px 5px 5px 0px">
-            <q-btn-group flat>
-              <q-btn
-                flat
-                icon="star"
-                size="sm"
-                color="light-blue-10"
-                type="a"
-                href="/comment/1"
-              >
-                <q-tooltip>评分</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="chat" size="sm" color="light-blue-10">
-                <q-tooltip>反馈</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="share" size="sm" color="light-blue-10">
-                <q-tooltip>分享</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="1" />
-              <q-btn flat icon="more_horiz" size="sm" color="light-blue-10">
-                <q-tooltip>更多</q-tooltip>
-              </q-btn>
-              <q-separator vertical inset="2" />
-            </q-btn-group>
+            <ScriptCardAction :id="item.id" :name="item.name" />
           </q-item-label>
         </q-card>
       </q-card>
-      <div v-if="Maxpage > 1" class="flex flex-center">
-        <q-pagination v-model="page" :max="Maxpage" direction-links />
+      <div v-if="maxPage > 1" class="flex flex-center">
+        <TablePagination
+          v-bind="page"
+          :reloadPage="reload"
+          :maxpage="maxPage"
+          :maxlens="6"
+          :max="10"
+        />
       </div>
     </q-card-section>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, ref } from 'vue';
 import format from 'date-fns/format';
-import { useRouter, useRoute } from 'vue-router';
-import Filter from 'src/components/Filter.vue';
+import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
+import Filter from '@Components/Filter.vue';
+import TablePagination from '@Components/TablePagination.vue';
+import { fetchUserScriptList } from '@App/apis/scripts';
+import { Cookies, useMeta } from 'quasar';
+import { useStore } from '@App/store';
+import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 
 export default defineComponent({
-  meta: {
-    title: 'webhook',
-  },
   components: {
     Filter,
+    ScriptCardAction,
+    TablePagination,
   },
   computed: {
     dateformat: () => {
@@ -122,8 +123,11 @@ export default defineComponent({
         return format(value, 'yyyy-MM-dd');
       };
     },
-    Maxpage() {
+    maxPage() {
       return Math.ceil(this.$store.state.scripts.total / 20);
+    },
+    self() {
+      return this.$store.state.user.user;
     },
     User() {
       return this.$store.state.user.userInfo;
@@ -132,39 +136,78 @@ export default defineComponent({
       return this.$store.state.scripts.scripts;
     },
   },
-
-  async preFetch({ store, currentRoute }) {
+  async preFetch({ store, currentRoute, ssrContext }) {
+    if (!ssrContext) {
+      return;
+    }
+    const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     await store.dispatch('user/fetchUserInfo', {
       uid: (currentRoute.params.id || '').toString(),
+      cookies: cookies,
     });
-    await store.dispatch(
-      'scripts/fetchScriptList',
-      '/user/scripts/' +
-        (currentRoute.params.id || '').toString() +
-        '?count=10&page=' +
-        (currentRoute.query.page || 1).toString()
-    );
+    await store.dispatch('scripts/fetchUserScriptList', {
+      uid: parseInt(<string>currentRoute.params.id || '0'),
+      cookies: cookies,
+      page: currentRoute.query.page || 1,
+      count: 20,
+      keyword: encodeURIComponent(<string>currentRoute.query.keyword || ''),
+      sort: currentRoute.query.sort || 'today_download',
+      category: currentRoute.query.category || '',
+      domain: currentRoute.query.domain || '',
+    });
   },
-
+  created() {
+    console.log(this.User.uid, this.self.uid);
+  },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const page = ref(Number(route.query.page) || 1);
-
-    watch(page, (newValue) => {
-      const { href } = router.resolve({
-        query: {
-          keyword: route.query.keyword,
-          page: newValue,
-          category: route.query.category,
-        },
-      });
-      window.open(href, '_self');
+    useMeta({
+      title: useStore().state.user.userInfo.username,
     });
+    const route = useRoute();
+    const page = ref(Number(route.query.page) || 1);
 
     return {
       page,
     };
+  },
+  methods: {
+    reload(currentRoute: RouteLocationNormalizedLoaded) {
+      fetchUserScriptList({
+        uid: parseInt(<string>currentRoute.params.id || '0'),
+        page: parseInt(<string>currentRoute.query.page || '1'),
+        count: 20,
+        keyword: encodeURIComponent(<string>currentRoute.query.keyword || ''),
+        sort: <string>currentRoute.query.sort || 'today_download',
+        category: <string>currentRoute.query.category || '',
+        domain: <string>currentRoute.query.domain || '',
+      })
+        .then((response) => {
+          console.log(response);
+          if (response.data.code == 0) {
+            this.$store.commit('scripts/updateScripts', response.data);
+          } else {
+            this.$store.commit('scripts/updateScripts', { list: [], total: 0 });
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          this.$store.commit('scripts/updateScripts', { list: [], total: 0 });
+        });
+    },
+    sortChange(val: { value: string }) {
+      void this.$router.replace({
+        query: {
+          sort: val.value,
+        },
+      });
+    },
+    categoryChange(val: string[]) {
+      void this.$router.replace({
+        query: {
+          category: val.join(','),
+        },
+      });
+    },
   },
 });
 </script>

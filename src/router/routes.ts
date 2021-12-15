@@ -4,7 +4,7 @@ const routes = [
     component: () => import('layouts/IndexLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index/Index.vue') },
-      { path: '/users/managescript', component: () => import('pages/Users/ManageScript/ManageScript.vue') },
+      { path: '/users/managescript', component: () => import('pages/Users/UsersScript/UsersScript.vue') },
       // { path: '/scripts/submit-code', name: 'submit-code', component: () => import('pages/Script/SubmitCode/SubmitCode.vue') },
       { path: 'users/webhook', name: 'webhook', component: () => import('pages/Users/Webhook/Webhook.vue') },
       { path: 'users/script/new', name: 'submit-script', component: () => import('pages/Users/UsersScript/SubmitScript.vue') },

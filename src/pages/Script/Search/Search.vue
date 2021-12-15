@@ -6,7 +6,12 @@
       class="scriptshow"
       v-if="ScriptList.length !== 0"
     >
-      <Fliter />
+      <Filter
+        :sort="$route.query.sort"
+        :category="$route.query.category"
+        @sortChange="sortChange"
+        @categoryChange="categoryChange"
+      />
       <q-card
         class="single"
         flat
@@ -82,7 +87,7 @@
           </q-item-label>
         </q-card>
       </q-card>
-      <div class="flex flex-center">
+      <div v-if="maxPage > 1" class="flex flex-center">
         <TablePagination
           v-bind="page"
           :reloadPage="reload"
@@ -191,9 +196,9 @@ import format from 'date-fns/format';
 import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 import { getRecommendList } from 'src/apis/scripts';
 import { useMeta } from 'quasar';
-import Fliter from 'src/components/Filter.vue';
+import Filter from 'src/components/Filter.vue';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
-import TablePagination from 'components/TablePagination.vue';
+import TablePagination from '@Components/TablePagination.vue';
 
 const iconcolorlist = [
   '#ff981b',
@@ -209,7 +214,7 @@ const iconcolorlist = [
 ];
 
 export default defineComponent({
-  components: { Fliter, ScriptCardAction, TablePagination },
+  components: { Filter, ScriptCardAction, TablePagination },
   name: 'search',
   computed: {
     dateformat: () => {
@@ -316,6 +321,20 @@ export default defineComponent({
           console.log(e);
           this.$store.commit('scripts/updateScripts', { list: [], total: 0 });
         });
+    },
+    sortChange(val: { value: string }) {
+      void this.$router.replace({
+        query: {
+          sort: val.value,
+        },
+      });
+    },
+    categoryChange(val: string[]) {
+      void this.$router.replace({
+        query: {
+          category: val.join(','),
+        },
+      });
     },
   },
 });

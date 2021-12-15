@@ -2,8 +2,9 @@
   <q-card flat class="single flex justify-end">
     <q-select
       outlined
-      v-model="category"
-      :options="categoryOptions"
+      v-model="sort_"
+      :options="sortOptions"
+      @update:model-value="sortChange"
       borderless
       dense
       options-dense
@@ -15,8 +16,9 @@
     <q-select
       disable
       outlined
-      v-model="category"
+      v-model="category_"
       :options="categoryOptions"
+      @update:model-value="categoryChange"
       borderless
       dense
       options-dense
@@ -28,28 +30,55 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'Fliter',
   props: {
-    // options: {
-    //   type: Array,
-    //   required: false,
-    //   default() {
-    //     return ['a', 'b'];
-    //   },
-    // },
+    sort: {
+      type: String,
+      require: true,
+      default: 'today_download',
+    },
+    category: {
+      type: Array,
+      required: false,
+      default() {
+        return ['建设中'];
+      },
+    },
   },
-  setup() {
+  setup(props: { sort: string; category: unknown[] }) {
+    const sort_ = ref({ label: '', value: '' });
+    const options = [
+      { label: '日安装', value: 'today_download' },
+      { label: '总安装', value: 'total_download' },
+      { label: '评分', value: 'score' },
+      { label: '最新发布', value: 'createtime' },
+      { label: '最近更新', value: 'updatetime' },
+    ];
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].value == props.sort) {
+        sort_.value = options[i];
+        break;
+      }
+    }
+
     return {
-      categoryOptions: ['相关度', '安装量', '评分', '最新'],
+      //today_download 日安装 total_download 总安装 createtime 最新发布 score 评分 updatetime 最新更新
+      sortOptions: options,
+      categoryOptions: ['建设中'],
+      sort_: sort_,
+      category_: ref(props.category),
     };
   },
-  data() {
-    return {
-      category: [],
-    };
+  methods: {
+    sortChange(val: string) {
+      this.$emit('sortChange', val);
+    },
+    categoryChange(val: string) {
+      this.$emit('categoryChange', val);
+    },
   },
 });
 </script>

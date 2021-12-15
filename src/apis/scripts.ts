@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from 'axios';
+import { Cookies } from 'quasar';
 import http from 'src/utils/http';
 
 export function getRecommendList(url: string) {
@@ -50,4 +52,23 @@ export function getStatistics(id: number) {
 
 export function getRealtime(id: number) {
   return http.get<API.ScriptRealtimeStatisticResponse>('/statistics/script/' + id.toString() + '/realtime');
+}
+
+export function fetchUserScriptList(param: {
+  uid: number, sort: string, page: number, count: number,
+  category: string, domain: string, keyword: string, cookies?: Cookies
+}) {
+  const config = <AxiosRequestConfig>{};
+  if (param.cookies) {
+    config.headers = { cookie: 'token=' + (param.cookies ? param.cookies.get('token') : '') };
+  }
+  return http.get<API.ScriptInfoResponse>('/user/scripts/' + param.uid.toString() +
+    '?keyword=' +
+    encodeURIComponent(param.keyword || '') +
+    '&sort=' +
+    encodeURIComponent(param.sort || 'today_download').toString() +
+    '&category=' +
+    encodeURIComponent(param.category || '').toString() +
+    '&domain=' +
+    encodeURIComponent(param.domain || '').toString() + '&page=' + (param.page || 1).toString() + '&count=' + (param.count || 20).toString(), config);
 }

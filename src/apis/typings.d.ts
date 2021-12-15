@@ -5,6 +5,12 @@ declare namespace API {
         data: T;
     };
 
+    type PageRequest = {
+        [key: string]: string
+        page: number;
+        count: number;
+    };
+
     type OkResponse = Response<undefined>;
 
     type Response<T> = {
@@ -81,6 +87,7 @@ declare namespace DTO {
 
     type User = {
         uid: number
+        username: string
     };
 
     type Issue = {

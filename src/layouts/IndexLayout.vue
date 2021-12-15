@@ -58,7 +58,12 @@
               icon="menu"
               class="text-body1 q-mx-md"
             />
-            <q-btn v-if="islogin" round flat>
+            <q-btn
+              v-if="islogin"
+              round
+              flat
+              onclick="window.open('/users/managescript','_self')"
+            >
               <q-avatar size="26px">
                 <img
                   :src="'https://scriptcat.org/api/v1/user/avatar/' + user.uid"
