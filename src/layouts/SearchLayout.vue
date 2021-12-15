@@ -12,6 +12,7 @@
               :src="require('src/assets/cat.png')"
               style="
                 width: 36px;
+                height: 36px;
                 vertical-align: middle;
                 margin: 0px 10px 0px 12px;
               "
@@ -46,34 +47,6 @@
               color="primary"
               @click="Search"
             />
-            <!-- <q-btn flat dense aria-label="Menu" icon="menu">
-            筛选
-            <q-menu anchor="bottom end" self="top end">
-              <div class="q-pa-md" style="width: 500px">
-                <div class="row items-center">
-                  <div class="col-3 text-subtitle2">脚本类型</div>
-                  <q-input dense v-model="exactPhrase" />
-                  <div class="col-3 text-subtitle2">排序方式</div>
-                  <div class="col-9">
-                    <q-input dense v-model="hasWords" />
-                  </div>
-
-                  <div class="col-12 q-pt-lg row justify-end">
-                    <q-btn
-                      flat
-                      dense
-                      no-caps
-                      color="grey-7"
-                      size="md"
-                      style="min-width: 68px"
-                      label="确认"
-                      v-close-popup
-                    />
-                  </div>
-                </div>
-              </div>
-            </q-menu>
-          </q-btn> -->
           </template>
         </q-input>
         <q-space />
@@ -146,7 +119,6 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import { useRouter,useRoute } from 'vue-router';
-import { fasGlobeAmericas, fasFlask } from '@quasar/extras/fontawesome-v5';
 import { Cookies, useMeta } from 'quasar';
 export default defineComponent({
   name: 'SearchLayout',
@@ -182,15 +154,6 @@ export default defineComponent({
         },
       },
     });
-    const leftDrawerOpen = ref(false);
-    const search = ref('');
-    const showAdvanced = ref(false);
-    const showDateOptions = ref(false);
-    const exactPhrase = ref('');
-    const hasWords = ref('');
-    const excludeWords = ref('');
-    const byWebsite = ref('');
-    const byDate = ref('Any time');
     const router = useRouter();
     const route = useRoute();
     const SearchText = ref('');
@@ -205,17 +168,6 @@ export default defineComponent({
         '_self'
       );
     };
-    function onClear() {
-      exactPhrase.value = '';
-      hasWords.value = '';
-      excludeWords.value = '';
-      byWebsite.value = '';
-      byDate.value = 'Any time';
-    }
-    function changeDate(option: string) {
-      byDate.value = option;
-      showDateOptions.value = false;
-    }
     function Search() {
       const { href } = router.resolve({
         name: 'search',
@@ -226,43 +178,7 @@ export default defineComponent({
       window.open(href, '_self');
     }
     return {
-      leftDrawerOpen,
-      search,
-      showAdvanced,
-      showDateOptions,
-      exactPhrase,
-      hasWords,
-      excludeWords,
-      byWebsite,
-      byDate,
       SearchText,
-      links1: [
-        { icon: 'web', text: 'Top stories' },
-        { icon: 'person', text: 'For you' },
-        { icon: 'star_border', text: 'Favourites' },
-        { icon: 'search', text: 'Saved searches' },
-      ],
-      links2: [
-        { icon: 'flag', text: 'Canada' },
-        { icon: fasGlobeAmericas, text: 'World' },
-        { icon: 'place', text: 'Local' },
-        { icon: 'domain', text: 'Business' },
-        { icon: 'memory', text: 'Technology' },
-        { icon: 'local_movies', text: 'Entertainment' },
-        { icon: 'directions_bike', text: 'Sports' },
-        { icon: fasFlask, text: 'Science' },
-        { icon: 'fitness_center', text: 'Health ' },
-      ],
-      links3: [
-        { icon: '', text: 'Language & region' },
-        { icon: '', text: 'Settings' },
-        { icon: 'open_in_new', text: 'Get the Android app' },
-        { icon: 'open_in_new', text: 'Get the iOS app' },
-        { icon: '', text: 'Send feedback' },
-        { icon: 'open_in_new', text: 'Help' },
-      ],
-      onClear,
-      changeDate,
       Search,
       gotoLogin
     };
@@ -312,6 +228,9 @@ export default defineComponent({
   .btn-control {
     display: show;
   }
+}
+
+@media screen and (max-width: 1675px) {
   .pc {
     display: none;
   }
