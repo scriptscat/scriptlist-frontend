@@ -7,6 +7,7 @@ const actions: ActionTree<IssuesStateInterface, StateInterface> = {
   fetchIssueList({ commit }, param: { count: number, page: number, scriptId: number }) {
     return http.get('/scripts/' + param.scriptId.toString() + '/issues/?page=' + param.page.toString() + '&count=' + param.count.toString())
       .then(response => {
+        console.log(response.data);
         commit('updateIssueList', response.data);
       })
       .catch(error => {

@@ -5,15 +5,32 @@
       bordered
       class="scriptshow"
     >
-      <q-card v-if="self.uid == User.uid">
-        <q-card-actions>
+      <q-card v-if="self.uid == User.uid" bordered flat>
           <q-btn
-            flat
             dense
-            label="自己的一些配置"
+            flat
             icon="home"
-            class="text-body1 q-mx-md"
+            label="个人主页"
+            class="text-body1"
           />
+        <q-card-actions>
+          <q-btn-group flat>
+          <q-btn
+            dense
+            color="primary"
+            to="/users/script/new"
+            label="发布编写的脚本"
+            class="text-body"
+          />
+          <q-btn
+            outline
+            dense
+            label="设置webhook"
+            class="text-body"
+            to="/users/webhook"
+            style="margin-left:10px"
+          />
+          </q-btn-group>
         </q-card-actions>
       </q-card>
       <div class="author flex flex-center">

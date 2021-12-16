@@ -2,13 +2,7 @@
   <div>
     <div class="flex flex-center">
       <q-card flat>
-        <div class="text-h6">
-          <span style="vertical-align: middle">
-            <img :src="cat" style="width: 48px" />
-          </span>
-          安装及更新统计
-        </div>
-        <div class="text-caption flex flex-center">
+        <div class="text-body flex flex-center" style="margin-top:20px;">
           过去 7 天用户数 {{ weeklyNum }}
         </div>
       </q-card>

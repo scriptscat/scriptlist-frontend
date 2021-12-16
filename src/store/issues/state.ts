@@ -1,7 +1,6 @@
 export interface IssuesStateInterface {
-  issueList: DTO.Issue[]
+  issueList: DTO.IssueList[]
   commentList: DTO.Comment[]
-
   total: number
 }
 
