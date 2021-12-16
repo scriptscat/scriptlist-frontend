@@ -54,14 +54,14 @@ const routes = [
                 component: () => import('pages/Script/Code/Issue/Issue.vue'),
               },
               {
-                path: 'comment',
+                path: ':issue/comment',
                 name: 'issue-comment',
                 component: () => import('pages/Script/Code/Issue/Comment.vue'),
               },
               {
                 path: 'new',
                 name: 'issue-new',
-                component: () => import('pages/Script/Code/Issue/New.vue'),
+                component: () => import('pages/Script/Code/Issue/NewIssue.vue'),
               },
             ],
           },

@@ -22,7 +22,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, WatchStopHandle } from 'vue';
 import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 export default defineComponent({
   setup() {
@@ -32,12 +32,6 @@ export default defineComponent({
       current: ref(currentPage),
       afterQuery: '',
     };
-  },
-  watch: {
-    $route(currentRoute: RouteLocationNormalizedLoaded) {
-      this.reload(currentRoute);
-      this.reloadPage && this.reloadPage(currentRoute);
-    },
   },
   props: {
     maxpage: {
@@ -50,8 +44,19 @@ export default defineComponent({
       type: Function,
     },
   },
+  unmounted() {
+    this.watch();
+  },
+  data() {
+    return {
+      watch: <WatchStopHandle>{},
+    };
+  },
   created() {
-    this.reload(this.$route);
+    this.watch = this.$watch('$route.query', () => {
+      this.reload(this.$route);
+      this.reloadPage && this.reloadPage(this.$route);
+    });
   },
   methods: {
     refreshTableData() {

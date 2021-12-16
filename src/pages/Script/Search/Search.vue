@@ -35,7 +35,7 @@
                   target="_blank"
                   :href="'/users/' + item.uid"
                 >
-                  {{ item.username }}
+                  {{ item.username || '-' }}
                 </a>
               </q-item-label>
               <div class="text-body1">
@@ -51,7 +51,7 @@
           </q-item>
           <q-separator />
           <q-card-section class="q-pt-none" style="margin: 10px 0px 0px 0px"
-            >{{ item.description }}
+            >{{ item.description || '' }}
           </q-card-section>
           <q-separator />
           <q-item class="block text-left">
@@ -297,8 +297,9 @@ export default defineComponent({
     };
   },
   methods: {
-    reload(currentRoute: RouteLocationNormalizedLoaded) {
-      getRecommendList(
+    async reload(currentRoute: RouteLocationNormalizedLoaded) {
+      await this.$store.dispatch(
+        'scripts/fetchScriptList',
         '/scripts?page=' +
           (currentRoute.query.page || 1).toString() +
           '&count=20&keyword=' +
@@ -309,18 +310,7 @@ export default defineComponent({
           (currentRoute.query.category || '').toString() +
           '&domain=' +
           (currentRoute.query.domain || '').toString()
-      )
-        .then((response) => {
-          if (response.data.code == 0) {
-            this.$store.commit('scripts/updateScripts', response.data);
-          } else {
-            this.$store.commit('scripts/updateScripts', { list: [], total: 0 });
-          }
-        })
-        .catch((e) => {
-          console.log(e);
-          this.$store.commit('scripts/updateScripts', { list: [], total: 0 });
-        });
+      );
     },
     sortChange(val: { value: string }) {
       void this.$router.replace({

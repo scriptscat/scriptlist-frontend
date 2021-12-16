@@ -173,9 +173,6 @@ export default defineComponent({
       domain: currentRoute.query.domain || '',
     });
   },
-  created() {
-    console.log(this.User.uid, this.self.uid);
-  },
   setup() {
     useMeta({
       title: useStore().state.user.userInfo.username,
