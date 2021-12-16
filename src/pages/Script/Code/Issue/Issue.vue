@@ -236,6 +236,14 @@ export default defineComponent({
       list,
     };
   },
+  unmounted() {
+    void this.$store.commit('issues/resetPreFetch');
+  },
+  mounted() {
+    if (!this.$store.state.issues.preFetch) {
+      void this.reload(this.$route);
+    }
+  },
   methods: {
     async reload(currentRoute: RouteLocationNormalizedLoaded) {
       await this.$store.dispatch('issues/fetchIssueList', {

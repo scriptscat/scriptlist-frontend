@@ -9,7 +9,6 @@
         <div v-for="(item, index) in tabList" :key="index">
           <q-route-tab
             v-if="isuserisauthor != false || index < 5"
-            @click.prevent="toLink(item)"
             :to="{ name: item.name, params: $route.params }"
             flat
             outline
@@ -110,15 +109,6 @@ export default defineComponent({
       author,
       isuserisauthor,
     };
-  },
-  methods: {
-    toLink(item: { name: string }) {
-      const { href } = this.$router.resolve({
-        name: item.name,
-        params: this.$route.params,
-      });
-      window.location.href = href;
-    },
   },
 });
 </script>

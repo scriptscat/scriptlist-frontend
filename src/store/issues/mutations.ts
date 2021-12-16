@@ -6,6 +6,10 @@ const mutation: MutationTree<IssuesStateInterface> = {
     state.issueList = list;
     // 处理bg类型脚本
     state.total = total;
+    state.preFetch = true;
+  },
+  resetPreFetch(state) {
+    state.preFetch = false;
   }
 };
 

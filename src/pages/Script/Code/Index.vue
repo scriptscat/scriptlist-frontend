@@ -145,7 +145,6 @@ export default defineComponent({
       window.open('/script-show-page/' + id.toString() + '/comment');
     },
     JumpToManage() {
-      debugger;
       void this.$router.push({
         name: 'submitscript',
         query: { id: this.id },

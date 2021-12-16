@@ -53,7 +53,11 @@ export default defineComponent({
     };
   },
   created() {
+    const old = this.$route.path;
     this.watch = this.$watch('$route.query', () => {
+      if (old != this.$route.path) {
+        return;
+      }
       this.reload(this.$route);
       this.reloadPage && this.reloadPage(this.$route);
     });

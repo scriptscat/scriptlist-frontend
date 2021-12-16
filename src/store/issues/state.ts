@@ -2,6 +2,7 @@ export interface IssuesStateInterface {
   issueList: DTO.IssueList[]
   commentList: DTO.Comment[]
   total: number
+  preFetch: boolean
 }
 
 function state(): IssuesStateInterface {
@@ -9,6 +10,7 @@ function state(): IssuesStateInterface {
     issueList: [],
     commentList: [],
     total: 0,
+    preFetch: false
   }
 };
 
