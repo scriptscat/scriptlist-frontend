@@ -1,110 +1,108 @@
 <template>
   <q-card-section class="issue">
-    <q-item-section class="flex flex-left"> </q-item-section>
-    <q-card-section>
-      <q-btn-group flat style="margin: 0px 0px 10px 0px">
-        <q-btn color="primary" :to="'issue/new'" outline> 创建反馈 </q-btn>
-      </q-btn-group>
-      <q-table
-        flat
-        table-colspan="10"
-        :rows-per-page-options="[10]"
-        hide-no-data
-        square
-        bordered
-        table-header-class="bg-grey-1"
-        style="border-bottom: 1px solid lightgrey"
-        :rows="returnGoodsProgressData.datas"
-        :columns="returnGoodsProgressData.columns"
-        row-key="name"
-      >
-        <template v-slot:body-cell-catograry="props">
-          <q-td :props="props" auto-width>
-            <span v-for="(item, index) in props.value" v-bind:key="index">
-              <q-chip
-                v-if="item === 'bug'"
-                square
-                outline
-                color="red"
-                class="bg-red-1 no-border-radius"
-                size="sm"
-              >
-                BUG
-              </q-chip>
-              <q-chip
-                v-else-if="item === 'feature'"
-                square
-                outline
-                color="primary"
-                class="bg-blue-1 no-border-radius"
-                size="sm"
-              >
-                新功能
-              </q-chip>
-              <q-chip
-                v-else-if="item === 'question'"
-                square
-                outline
-                color="warning"
-                class="bg-orange-1 no-border-radius"
-                size="sm"
-              >
-                问题
-              </q-chip>
-            </span>
-          </q-td>
-        </template>
-        <template v-slot:body-cell-state="props">
-          <q-td :props="props" auto-width>
-            <span v-if="props.value === 1">
-              <q-icon name="lens" color="deep-orange" class="q-mx-sm" />
-              <q-chip
-                square
-                outline
-                color="deep-orange"
-                class="bg-deep-orange-1 no-border-radius"
-                size="sm"
-              >
-                待处理
-              </q-chip>
-            </span>
-            <span v-else-if="props.value === 3">
-              <q-icon
-                name="radio_button_checked"
-                color="positive"
-                class="q-mx-sm"
-              />
-              <q-chip
-                square
-                outline
-                color="positive"
-                class="bg-positive-1 no-border-radius"
-                size="sm"
-              >
-                完成
-              </q-chip>
-            </span>
-          </q-td>
-        </template>
-        <template v-slot:body-cell-title="props">
-          <q-td :props="props">
-            <span>
-              <div v-html="props.value" />
-            </span>
-          </q-td>
-        </template>
-      </q-table>
-    </q-card-section>
-    <div v-if="maxPage > 1" class="flex flex-center">
-      <TablePagination
-        v-bind="page"
-        :reloadPage="reload"
-        :maxpage="maxPage"
-        :maxlens="6"
-        :max="10"
-      />
-    </div>
+    <q-btn-group flat style="margin: 0px 0px 10px 0px">
+      <q-btn color="primary" :to="'issue/new'" outline> 创建反馈 </q-btn>
+    </q-btn-group>
+    <q-table
+      flat
+      table-colspan="10"
+      :rows-per-page-options="[20]"
+      hide-no-data
+      square
+      bordered
+      hide-bottom
+      table-header-class="bg-grey-1"
+      style="border-bottom: 1px solid lightgrey"
+      :rows="returnGoodsProgressData.datas"
+      :columns="returnGoodsProgressData.columns"
+      row-key="name"
+    >
+      <template v-slot:body-cell-catograry="props">
+        <q-td :props="props" auto-width>
+          <span v-for="(item, index) in props.value" v-bind:key="index">
+            <q-chip
+              v-if="item === 'bug'"
+              square
+              outline
+              color="red"
+              class="bg-red-1 no-border-radius"
+              size="sm"
+            >
+              BUG
+            </q-chip>
+            <q-chip
+              v-else-if="item === 'feature'"
+              square
+              outline
+              color="primary"
+              class="bg-blue-1 no-border-radius"
+              size="sm"
+            >
+              新功能
+            </q-chip>
+            <q-chip
+              v-else-if="item === 'question'"
+              square
+              outline
+              color="warning"
+              class="bg-orange-1 no-border-radius"
+              size="sm"
+            >
+              问题
+            </q-chip>
+          </span>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-state="props">
+        <q-td :props="props" auto-width>
+          <span v-if="props.value === 1">
+            <q-icon name="lens" color="deep-orange" class="q-mx-sm" />
+            <q-chip
+              square
+              outline
+              color="deep-orange"
+              class="bg-deep-orange-1 no-border-radius"
+              size="sm"
+            >
+              待处理
+            </q-chip>
+          </span>
+          <span v-else-if="props.value === 3">
+            <q-icon
+              name="radio_button_checked"
+              color="positive"
+              class="q-mx-sm"
+            />
+            <q-chip
+              square
+              outline
+              color="positive"
+              class="bg-positive-1 no-border-radius"
+              size="sm"
+            >
+              完成
+            </q-chip>
+          </span>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-title="props">
+        <q-td :props="props">
+          <span>
+            <div v-html="props.value" />
+          </span>
+        </q-td>
+      </template>
+    </q-table>
   </q-card-section>
+  <div v-if="maxPage > 1" class="flex flex-center">
+    <TablePagination
+      v-bind="page"
+      :reloadPage="reload"
+      :maxpage="maxPage"
+      :maxlens="6"
+      :max="10"
+    />
+  </div>
 </template>
 
 <script lang="ts">

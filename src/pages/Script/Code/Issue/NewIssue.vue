@@ -1,13 +1,36 @@
 <template>
-  <q-card>
-    <q-input outlined v-model="title" label="反馈标题" />
-    <div class="flex">
+  <q-card flat>
+    <q-input
+      outlined
+      dense
+      v-model="title"
+      placeholder="输入标题"
+      style="width: 300px; margin: 10px"
+    />
+    <q-select
+      outlined
+      multiple
+      v-model="label"
+      :options="['提出BUG','反馈问题','希望新功能']"
+      borderless
+      dense
+      options-dense
+      label="反馈类型"
+      style="width: 300px; margin: 10px"
+      class="no-shadow"
+    />
+    <div class="flex" style="margin: 10px">
       <div ref="mkedite"></div>
-      <div>
-        label
-      </div>
     </div>
-    <q-btn color="primary" @click="submitIssue"> 创建反馈 </q-btn>
+    <q-btn-group flat>
+      <q-btn
+        color="primary"
+        @click="submitIssue"
+        style="margin: 0px 0px 10px 10px"
+      >
+        创建反馈
+      </q-btn>
+    </q-btn-group>
   </q-card>
 </template>
 
@@ -55,6 +78,7 @@ export default defineComponent({
     return {
       title: '',
       content: '',
+      label: [],
     };
   },
   created() {
@@ -113,9 +137,21 @@ export default defineComponent({
       });
     },
     submitIssue() {
+      let submitLabel:Array<string> = []
+      this.label.forEach((val:string)=>{
+        if (val === '提出BUG') {
+          submitLabel.push('BUG')
+        }
+        if (val === '反馈问题') {
+          submitLabel.push('BUG')
+        }
+        if (val === '希望新功能') {
+          submitLabel.push('BUG')
+        }
+      })
+      console.log(submitLabel);
       console.log(editor.mkedit?.getMarkdown());
     },
-  },
+  }
 });
 </script>
-
