@@ -5,6 +5,8 @@
       icon="star"
       size="sm"
       color="light-blue-10"
+      type="a"
+      target="_blank"
       :to="{ name: 'comment', params: { id: id } }"
     >
       <q-tooltip>评分</q-tooltip>
@@ -15,6 +17,8 @@
       icon="chat"
       size="sm"
       color="light-blue-10"
+      type="a"
+      target="_blank"
       :to="{ name: 'issue', params: { id: id } }"
     >
       <q-tooltip>反馈</q-tooltip>
