@@ -16,6 +16,7 @@
     "@toast-ui/editor": "^2.5.4",
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.0.0",
     "axios": "^0.21.1",
+    "codemirror": "^5.64.0",
     "core-js": "^3.6.5",
     "date-fns": "^2.26.0",
     "dotenv": "^10.0.0",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app": "^3.2.3",
+    "@types/codemirror": "^5.60.5",
     "@types/node": "^12.20.21",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",

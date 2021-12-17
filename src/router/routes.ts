@@ -6,16 +6,9 @@ const routes = [
       { path: '', component: () => import('pages/Index/Index.vue') },
       // { path: '/users/home', component: () => import('pages/ManageScript.vue') },
       // { path: '/scripts/submit-code', name: 'submit-code', component: () => import('pages/Script/SubmitCode/SubmitCode.vue') },
-      {
-        path: 'users/webhook',
-        name: 'webhook',
-        component: () => import('pages/Users/Webhook/Webhook.vue'),
-      },
-      {
-        path: 'users/:id',
-        name: 'users',
-        component: () => import('pages/Users/UsersScript/UsersScript.vue'),
-      },
+      { path: 'users/webhook', name: 'webhook', component: () => import('pages/Users/Webhook/Webhook.vue') },
+      { path: 'users/script/new', name: 'submit-script', component: () => import('pages/Users/UsersScript/SubmitScript.vue') },
+      { path: 'users/:id', name: 'users', component: () => import('pages/Users/UsersScript/UsersScript.vue') },
       {
         path: 'script-show-page/:id',
         component: () => import('layouts/ScriptShowLayout.vue'),
@@ -57,7 +50,7 @@ const routes = [
     ],
   },
   {
-    path: '/search',
+    path: '/',
     component: () => import('layouts/SearchLayout.vue'),
     children: [
       {

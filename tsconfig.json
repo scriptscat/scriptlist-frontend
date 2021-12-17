@@ -21,7 +21,12 @@
       "quasar"
     ],
     "paths": {
-      "~/*": ["src/*"]
+      "@App/*": [
+        "src/*"
+      ],
+      "@Components/*": [
+        "src/components/*"
+      ],
     },
     "lib": [
       "esnext",
@@ -31,7 +36,7 @@
     ]
   },
   "exclude": [
-    "/dist", 
+    "/dist",
     ".quasar",
     "node_modules"
   ]

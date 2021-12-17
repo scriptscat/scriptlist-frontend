@@ -5,11 +5,19 @@ declare namespace API {
     data: T;
   };
 
-  type ListResponse<T> = {
-    code: number;
-    msg: string;
-    list: T[];
-  };
+    type OkResponse = Response<undefined>;
+
+    type Response<T> = {
+        code: number;
+        msg: string;
+        data: T;
+    };
+
+    type ListResponse<T> = {
+        code: number;
+        msg: string;
+        list: T[];
+    }
 
   type UserInfoResponse = Response<{
     user: DTO.User;
@@ -25,7 +33,11 @@ declare namespace API {
 
   type CommontResponse = Response<DTO.Comment>;
 
-  type CommontListResponse = ListResponse<DTO.CommentList>;
+    type ScriptCodeResponse = Response<DTO.Script>
+
+    type UploadImage = Response<DTO.UploadImage>
+
+    type SubmitScriptResponse = Response<{ id: number }>
 }
 
 declare namespace DTO {
@@ -54,18 +66,39 @@ declare namespace DTO {
     uid: number;
   };
 
-  type Issue = {
-    id: number;
-  };
+    type ScriptType = 1 | 2 | 3;
 
-  type Comment = {
-    score: number;
-    message: string;
-  };
+    type ScriptPublic = 1 | 2;
 
-  type CommentList = {
-    avatar: string;
-    score: number;
-    message: string;
-  };
+    type ScriptUnwell = 1 | 2;
+
+    type Script = {
+        id: number, name: string, namespace: string, description: string, today_install: number, total_install: number
+        uid: number, username: string, script: ScriptCode, type: ScriptType, public: ScriptPublic, unwell: ScriptUnwell
+        content: string
+        score: number
+        createtime: number, updatetime: number
+        is_manager: boolean
+    }
+
+    type ScriptCode = {
+        code: string
+        version: string
+    }
+
+    type User = {
+        uid: number
+    };
+
+    type Issue = {
+        id: number
+    }
+
+    type Comment = {
+        id: number
+    }
+
+    type UploadImage = {
+        id: string
+    }
 }
