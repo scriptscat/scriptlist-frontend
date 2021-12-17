@@ -43,3 +43,11 @@ export function submitScript(content: string, code: string, type: DTO.ScriptType
     }
   });
 }
+
+export function getStatistics(id: number) {
+  return http.get<API.ScriptStatisticResponse>('/statistics/script/' + id.toString());
+}
+
+export function getRealtime(id: number) {
+  return http.get<API.ScriptRealtimeStatisticResponse>('/statistics/script/' + id.toString() + '/realtime');
+}

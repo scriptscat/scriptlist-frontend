@@ -39,9 +39,25 @@ declare namespace API {
     type UploadImage = Response<DTO.UploadImage>
 
     type SubmitScriptResponse = Response<{ id: number }>
+
+    type ScriptStatisticResponse = Response<{
+        download: { pv: DTO.StatisticXY, realtime: DTO.StatisticXY, uv: DTO.StatisticXY, 'uv-lastweekly': DTO.StatisticXY }
+        member: { num: number }
+        update: { pv: DTO.StatisticXY, realtime: DTO.StatisticXY, uv: DTO.StatisticXY, 'uv-lastweekly': DTO.StatisticXY }
+    }>
+
+    type ScriptRealtimeStatisticResponse = Response<{
+        download: DTO.StatisticXY
+        update: DTO.StatisticXY
+    }>
 }
 
 declare namespace DTO {
+
+    type StatisticXY = {
+        x: string[]
+        y: string[]
+    };
 
     type ScriptType = 1 | 2 | 3;
 

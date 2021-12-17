@@ -44,7 +44,7 @@ const routes = [
           { path: 'update', name: 'update', component: () => import('pages/Script/Code/Update.vue') },
           //     { path: "/script-show-page/:id/delete", name: "deleteScript", component: () => import('components/ScriptDescription/DeleteScript.vue') },
           //     { path: "/script-show-page/:id/update", name: "updateScript", component: () => import('components/ScriptDescription/UpdataScript.vue') },
-          //     { path: "/script-show-page/:id/statistic", name: "statistic", component: () => import('components/ScriptDescription/statistic.vue') },
+          { path: 'statistic', name: 'statistic', component: () => import('pages/Script/Code/Statistic.vue') },
           //     { path: "/script-show-page/:id/manage", name: "manageScript", component: () => import('components/ScriptDescription/ManageScript.vue') },
         ],
       },
