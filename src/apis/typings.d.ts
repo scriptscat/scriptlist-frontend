@@ -1,9 +1,9 @@
 declare namespace API {
-  type Response<T> = {
-    code: number;
-    msg: string;
-    data: T;
-  };
+    type Response<T> = {
+        code: number;
+        msg: string;
+        data: T;
+    };
 
     type OkResponse = Response<undefined>;
 
@@ -19,20 +19,21 @@ declare namespace API {
         list: T[];
     }
 
-  type UserInfoResponse = Response<{
-    user: DTO.User;
-  }>;
+    type UserInfoResponse = Response<{
+        user: DTO.User;
+    }>;
 
-  type ScriptListResponse = ListResponse<DTO.Script>;
+    type ScriptListResponse = ListResponse<DTO.Script>;
 
-  type WebhookResponse = Response<{
-    token: string;
-  }>;
+    type WebhookResponse = Response<{
+        token: string;
+    }>;
 
-  type ScriptInfoResponse = Response<DTO.Script>;
+    type ScriptInfoResponse = Response<DTO.Script>;
 
-  type CommontResponse = Response<DTO.Comment>;
+    type CommontResponse = Response<DTO.Comment>;
 
+    type CommontListResponse = ListResponse<DTO.CommentList>;
     type ScriptCodeResponse = Response<DTO.Script>
 
     type UploadImage = Response<DTO.UploadImage>
@@ -41,30 +42,6 @@ declare namespace API {
 }
 
 declare namespace DTO {
-  type Script = {
-    id: number;
-    name: string;
-    namespace: string;
-    description: string;
-    today_install: number;
-    total_install: number;
-    uid: number;
-    username: string;
-    script: ScriptCode;
-    content: string;
-    score: number;
-    createtime: number;
-    updatetime: number;
-    is_manager: boolean;
-  };
-
-  type ScriptCode = {
-    version: string;
-  };
-
-  type User = {
-    uid: number;
-  };
 
     type ScriptType = 1 | 2 | 3;
 
@@ -95,8 +72,15 @@ declare namespace DTO {
     }
 
     type Comment = {
-        id: number
-    }
+        score: number;
+        message: string;
+    };
+
+    type CommentList = {
+        avatar: string;
+        score: number;
+        message: string;
+    };
 
     type UploadImage = {
         id: string

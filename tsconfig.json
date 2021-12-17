@@ -17,7 +17,6 @@
     "baseUrl": ".",
     "types": [
       "webpack",
-      "webpack-env",
       "quasar"
     ],
     "paths": {
