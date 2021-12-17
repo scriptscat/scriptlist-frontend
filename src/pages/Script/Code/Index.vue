@@ -105,7 +105,7 @@
         </q-card>
       </q-card>
       <q-card-section>
-        <MarkdownView :content="author.content" />
+        <MarkdownView id="content" :content="author.content" />
       </q-card-section>
     </q-card>
   </div>

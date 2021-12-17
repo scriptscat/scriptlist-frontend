@@ -7,6 +7,8 @@ import {
 } from 'vuex'
 import issues from './issues'
 import { IssuesStateInterface } from './issues/state'
+import other from './other'
+import { OtherStateInterface } from './other/state'
 import scripts from './scripts'
 import { ScriptsStateInterface } from './scripts/state'
 import user from './user'
@@ -31,6 +33,7 @@ export interface StateInterface {
   scripts: ScriptsStateInterface
   user: UserStateInterface
   issues: IssuesStateInterface
+  other: OtherStateInterface
 }
 
 // provide typings for `this.$store`
@@ -48,7 +51,8 @@ export default store(function (/* { ssrContext } */) {
     modules: {
       user,
       scripts,
-      issues
+      issues,
+      other
     },
 
     // enable strict mode (adds overhead!)
