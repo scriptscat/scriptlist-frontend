@@ -8,7 +8,7 @@
       <q-tabs align="left">
         <div v-for="(item, index) in tabList" :key="index">
           <q-route-tab
-            v-if="isuserisauthor != false || index < 5"
+            v-if="isuserisauthor != false || index < 4"
             :to="{ name: item.name, params: $route.params }"
             flat
             outline
@@ -76,10 +76,10 @@ export default defineComponent({
         name: 'comment',
         label: '评分',
       },
-      {
-        name: 'history',
-        label: '历史版本',
-      },
+      // {
+      //   name: 'history',
+      //   label: '历史版本',
+      // },
       {
         name: 'update',
         label: '更新脚本',
