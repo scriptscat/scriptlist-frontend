@@ -119,7 +119,6 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import format from 'date-fns/format';
 import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 import Filter from '@Components/Filter.vue';
 import TablePagination from '@Components/TablePagination.vue';
@@ -127,6 +126,7 @@ import { fetchUserScriptList } from '@App/apis/scripts';
 import { Cookies, useMeta } from 'quasar';
 import { useStore } from '@App/store';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
+import { formatDate } from '@App/utils/utils';
 
 export default defineComponent({
   components: {
@@ -135,11 +135,6 @@ export default defineComponent({
     TablePagination,
   },
   computed: {
-    dateformat: () => {
-      return (value: number | Date) => {
-        return format(value, 'yyyy-MM-dd');
-      };
-    },
     maxPage() {
       return Math.ceil(this.$store.state.scripts.total / 20);
     },
@@ -182,6 +177,7 @@ export default defineComponent({
 
     return {
       page,
+      dateformat: formatDate,
     };
   },
   methods: {

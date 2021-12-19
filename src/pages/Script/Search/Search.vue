@@ -51,7 +51,7 @@
           </q-item>
           <q-separator />
           <q-card-section class="q-pt-none" style="margin: 10px 0px 0px 0px"
-            >{{ item.description || '' }}
+            >{{ item.description || '-' }}
           </q-card-section>
           <q-separator />
           <q-item class="block text-left">
@@ -192,13 +192,13 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
-import format from 'date-fns/format';
 import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 import { getRecommendList } from 'src/apis/scripts';
 import { useMeta } from 'quasar';
 import Filter from 'src/components/Filter.vue';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 import TablePagination from '@Components/TablePagination.vue';
+import { formatDate } from '@App/utils/utils';
 
 const iconcolorlist = [
   '#ff981b',
@@ -217,11 +217,6 @@ export default defineComponent({
   components: { Filter, ScriptCardAction, TablePagination },
   name: 'search',
   computed: {
-    dateformat: () => {
-      return (value: number | Date) => {
-        return format(value, 'yyyy-MM-dd');
-      };
-    },
     maxPage() {
       return Math.ceil(this.$store.state.scripts.total / 20);
     },
@@ -294,6 +289,7 @@ export default defineComponent({
       iconcolorlist: ref(iconcolorlist),
       page,
       recommondlist,
+      dateformat: formatDate,
     };
   },
   methods: {

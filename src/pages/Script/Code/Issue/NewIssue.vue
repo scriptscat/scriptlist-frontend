@@ -1,42 +1,43 @@
 <template>
-  <q-card flat>
-    <q-input
-      outlined
-      dense
-      v-model="title"
-      placeholder="输入标题"
-      style="width: 300px; margin: 10px"
-    />
-    <q-select
-      outlined
-      multiple
-      v-model="label"
-      :options="['提出BUG','反馈问题','希望新功能']"
-      borderless
-      dense
-      options-dense
-      label="反馈类型"
-      style="width: 300px; margin: 10px"
-      class="no-shadow"
-    />
-    <div class="flex" style="margin: 10px">
-      <div ref="mkedite"></div>
+  <q-card flat class="row" style="padding: 8px">
+    <div class="col">
+      <q-input
+        outlined
+        dense
+        v-model="title"
+        placeholder="输入标题"
+        style="width: 80%; margin-bottom: 8px"
+      />
+      <div class="flex">
+        <div ref="mkedite"></div>
+      </div>
+      <q-btn-group flat>
+        <q-btn color="primary" @click="submitIssue" style="margin-top: 8px">
+          创建反馈
+        </q-btn>
+      </q-btn-group>
     </div>
-    <q-btn-group flat>
-      <q-btn
-        color="primary"
-        @click="submitIssue"
-        style="margin: 0px 0px 10px 10px"
-      >
-        创建反馈
-      </q-btn>
-    </q-btn-group>
+    <div class="col-3">
+      <q-select
+        outlined
+        multiple
+        v-model="label"
+        :options="labelOptions"
+        borderless
+        dense
+        options-dense
+        label="反馈类型"
+        style="width: 100%"
+        class="no-shadow"
+      />
+    </div>
   </q-card>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { uploadImage as uploadImageApi } from 'src/apis/resource';
+import { submitIssue } from 'src/apis/issue';
 import http from 'src/utils/http';
 import { useMeta } from 'quasar';
 import { toastui } from '@toast-ui/editor';
@@ -68,6 +69,11 @@ export default defineComponent({
 
     return {};
   },
+  computed: {
+    scriptId() {
+      return parseInt(<string>this.$route.params.id);
+    },
+  },
   unmounted() {
     // 释放编辑器资源
     if (editor.mkedit) {
@@ -79,6 +85,11 @@ export default defineComponent({
       title: '',
       content: '',
       label: [],
+      labelOptions: [
+        { label: '反馈BUG', value: 'bug' },
+        { label: '请求新功能', value: 'feature' },
+        { label: '提出问题', value: 'question' },
+      ],
     };
   },
   created() {
@@ -137,21 +148,52 @@ export default defineComponent({
       });
     },
     submitIssue() {
-      let submitLabel:Array<string> = []
-      this.label.forEach((val:string)=>{
-        if (val === '提出BUG') {
-          submitLabel.push('BUG')
-        }
-        if (val === '反馈问题') {
-          submitLabel.push('BUG')
-        }
-        if (val === '希望新功能') {
-          submitLabel.push('BUG')
-        }
-      })
-      console.log(submitLabel);
-      console.log(editor.mkedit?.getMarkdown());
+      console.log(this.label);
+      let labels: string[] = [];
+      this.label.forEach((val: { label: string; value: string }) => {
+        labels.push(val.value);
+      });
+      submitIssue(
+        this.scriptId,
+        this.title,
+        editor.mkedit?.getMarkdown() || '',
+        labels
+      )
+        .then((response) => {
+          if (response.data.code === 0) {
+            this.$q.notify('提交成功');
+            setTimeout(() => {
+              void this.$router.push({
+                name: 'issue-comment',
+                params: {
+                  id: this.scriptId,
+                  issue: response.data.data.id,
+                },
+              });
+            }, 3000);
+          } else {
+            this.$q.notify({
+              message: response.data.msg,
+              position: 'top',
+            });
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          if (error.response && error.response.data.msg !== undefined) {
+            this.$q.notify({
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              message: error.response.data.msg,
+              position: 'top',
+            });
+          } else {
+            this.$q.notify({
+              message: '系统错误!',
+              position: 'top',
+            });
+          }
+        });
     },
-  }
+  },
 });
 </script>

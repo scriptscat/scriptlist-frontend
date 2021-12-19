@@ -79,7 +79,7 @@
               class="text-caption"
               type="a"
               :href="
-                '/scripts/coed/' +
+                '/scripts/code/' +
                 id +
                 '/' +
                 encodeURIComponent(author.name) +
@@ -113,9 +113,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import format from 'date-fns/format';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 import MarkdownView from '@Components/MarkdownView.vue';
+import { formatDate } from '@App/utils/utils';
 
 export default defineComponent({
   components: {
@@ -123,11 +123,6 @@ export default defineComponent({
     MarkdownView,
   },
   computed: {
-    dateformat: () => {
-      return (value: number | Date) => {
-        return format(value, 'yyyy-MM-dd');
-      };
-    },
     id() {
       return parseInt(<string>this.$route.params.id);
     },
@@ -138,6 +133,7 @@ export default defineComponent({
   data() {
     return {
       install: '安装此脚本',
+      dateformat: formatDate,
     };
   },
   methods: {

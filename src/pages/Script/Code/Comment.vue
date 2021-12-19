@@ -105,7 +105,7 @@ import { defineComponent, ref, computed } from 'vue';
 import { useStore } from 'src/store';
 import { useRoute } from 'vue-router';
 import { submitComment, getAllScroe, getMyScore } from 'src/apis/comment';
-import format from 'date-fns/format';
+import { formatDate } from '@App/utils/utils';
 
 export default defineComponent({
   meta() {
@@ -118,7 +118,7 @@ export default defineComponent({
       ratingpost: 0,
       text: '',
     });
-    const userscorelist = ref(<DTO.CommentList[]>[]);
+    const userscorelist = ref(<DTO.Comment[]>[]);
     const store = useStore();
     const route = useRoute();
 
@@ -129,11 +129,6 @@ export default defineComponent({
       return store.state.user.user;
     });
     const id = route.params.id.toString();
-    const dateformat = computed(() => {
-      return (value: number | Date) => {
-        return format(value, 'yyyy-MM-dd');
-      };
-    });
     getMyScore(id)
       .then((response) => {
         if (response.data.code === 0) {
@@ -150,7 +145,7 @@ export default defineComponent({
       userscorelist,
       islogin,
       user,
-      dateformat,
+      dateformat: formatDate,
       id,
     };
   },

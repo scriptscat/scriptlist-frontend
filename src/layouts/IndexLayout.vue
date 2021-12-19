@@ -90,6 +90,7 @@
     <q-page-container view="hHh lpR fFf">
       <router-view />
     </q-page-container>
+    <Footer />
   </q-layout>
 </template>
 
@@ -97,8 +98,10 @@
 import { defineComponent } from 'vue';
 import { Cookies, useMeta } from 'quasar';
 import { useRoute } from 'vue-router';
+import Footer from '@Components/Footer.vue';
 
 export default defineComponent({
+  components: { Footer },
   name: 'IndexLayout',
   computed: {
     islogin() {

@@ -113,14 +113,18 @@
     <q-page-container view="hHh lpR fFf">
       <router-view />
     </q-page-container>
+    <Footer />
   </q-layout>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
-import { useRouter,useRoute } from 'vue-router';
+import { defineComponent, ref } from 'vue';
 import { Cookies, useMeta } from 'quasar';
+import { useRoute, useRouter } from 'vue-router';
+import Footer from '@Components/Footer.vue';
+
 export default defineComponent({
+  components: { Footer },
   name: 'SearchLayout',
   computed: {
     islogin() {
@@ -180,7 +184,7 @@ export default defineComponent({
     return {
       SearchText,
       Search,
-      gotoLogin
+      gotoLogin,
     };
   },
 });

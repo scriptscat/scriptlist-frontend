@@ -2,7 +2,7 @@
   <div>
     <div class="flex flex-center">
       <q-card flat>
-        <div class="text-body flex flex-center" style="margin-top:20px;">
+        <div class="text-body flex flex-center" style="margin-top: 20px">
           过去 7 天用户数 {{ weeklyNum }}
         </div>
       </q-card>
@@ -56,6 +56,7 @@ export default defineComponent({
       weeklyNum: 0,
       cat: require('assets/cat.png'),
       id: parseInt(<string>this.$route.params.id),
+      close: false,
     };
   },
   created() {
@@ -113,7 +114,11 @@ export default defineComponent({
       });
     this.fn();
   },
+  unmounted() {
+    this.close = true;
+  },
   mounted() {
+    this.close = false;
     this.real_time('realInstall', '实时下载数据', 0);
     this.real_time('realUpdate', '实时更新数据', 1);
   },
@@ -133,9 +138,10 @@ export default defineComponent({
         .catch((error) => {
           console.log(error);
         });
-      setTimeout(() => {
-        this.fn();
-      }, 5000);
+      !this.close &&
+        setTimeout(() => {
+          this.fn();
+        }, 5000);
     },
     real_time(name: string, title: string, id: number) {
       var chartDom = document.getElementById(name);
@@ -202,7 +208,12 @@ export default defineComponent({
       option && this.myChart[id].setOption(option);
     },
 
-    seven_day(name: string, title: string, week: string[][], lastweek: string[][]) {
+    seven_day(
+      name: string,
+      title: string,
+      week: string[][],
+      lastweek: string[][]
+    ) {
       var chartDom = document.getElementById(name);
       var myChart = echarts.init(<HTMLElement>chartDom);
       var option;

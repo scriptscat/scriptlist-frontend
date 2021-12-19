@@ -19,70 +19,12 @@
     >
       <template v-slot:body-cell-catograry="props">
         <q-td :props="props" auto-width>
-          <span v-for="(item, index) in props.value" v-bind:key="index">
-            <q-chip
-              v-if="item === 'bug'"
-              square
-              outline
-              color="red"
-              class="bg-red-1 no-border-radius"
-              size="sm"
-            >
-              BUG
-            </q-chip>
-            <q-chip
-              v-else-if="item === 'feature'"
-              square
-              outline
-              color="primary"
-              class="bg-blue-1 no-border-radius"
-              size="sm"
-            >
-              新功能
-            </q-chip>
-            <q-chip
-              v-else-if="item === 'question'"
-              square
-              outline
-              color="warning"
-              class="bg-orange-1 no-border-radius"
-              size="sm"
-            >
-              问题
-            </q-chip>
-          </span>
+          <IssueLabel :labels="props.value" />
         </q-td>
       </template>
       <template v-slot:body-cell-state="props">
         <q-td :props="props" auto-width>
-          <span v-if="props.value === 1">
-            <q-icon name="lens" color="deep-orange" class="q-mx-sm" />
-            <q-chip
-              square
-              outline
-              color="deep-orange"
-              class="bg-deep-orange-1 no-border-radius"
-              size="sm"
-            >
-              待处理
-            </q-chip>
-          </span>
-          <span v-else-if="props.value === 3">
-            <q-icon
-              name="radio_button_checked"
-              color="positive"
-              class="q-mx-sm"
-            />
-            <q-chip
-              square
-              outline
-              color="positive"
-              class="bg-positive-1 no-border-radius"
-              size="sm"
-            >
-              完成
-            </q-chip>
-          </span>
+          <IssueState :labels="props.value" />
         </q-td>
       </template>
       <template v-slot:body-cell-title="props">
@@ -93,16 +35,16 @@
         </q-td>
       </template>
     </q-table>
+    <div v-if="maxPage > 1" class="flex flex-center" style="margin-top: 10px">
+      <TablePagination
+        v-bind="page"
+        :reloadPage="reload"
+        :maxpage="maxPage"
+        :maxlens="6"
+        :max="10"
+      />
+    </div>
   </q-card-section>
-  <div v-if="maxPage > 1" class="flex flex-center">
-    <TablePagination
-      v-bind="page"
-      :reloadPage="reload"
-      :maxpage="maxPage"
-      :maxlens="6"
-      :max="10"
-    />
-  </div>
 </template>
 
 <script lang="ts">
@@ -112,9 +54,11 @@ import { useStore } from 'src/store';
 import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 import { formatDate } from '@App/utils/utils';
 import TablePagination from '@Components/TablePagination.vue';
+import IssueLabel from '@Components/IssueLabel.vue';
+import IssueState from '@Components/IssueState.vue';
 
 export default defineComponent({
-  components: { TablePagination },
+  components: { TablePagination, IssueLabel, IssueState },
   preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
       return;
@@ -172,7 +116,7 @@ export default defineComponent({
       return store.state.user.user.uid;
     });
 
-    let _list: DTO.IssueList[] = store.state.issues.issueList;
+    let _list: DTO.Issue[] = store.state.issues.issueList;
     const list = computed({
       get: () => {
         return _list;

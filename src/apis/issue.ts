@@ -1,11 +1,15 @@
 import http from 'src/utils/http';
 
 export function submitIssue(script: number, title: string, content: string, label: string[]) {
-	return http.post<API.OkResponse>('/scripts/' + script.toString() + '/issues', {
+	return http.post<API.IssueResponse>('/scripts/' + script.toString() + '/issues', {
 		title: title,
-		content: console,
+		content: content,
 		label: label.join(',')
 	});
+}
+
+export function fetchIssue(script: number, issue: number) {
+	return http.put<API.IssueResponse>('/scripts/' + script.toString() + '/issues/' + issue.toString());
 }
 
 export function updateIssue(script: number, issue: number, title: string, content: string, label: string[]) {
@@ -30,4 +34,12 @@ export function updateIssueComment(script: number, issue: number, comment: numbe
 
 export function fetchIssueList(param: { count: number, page: number, scriptId: number }) {
 	return http.get('/scripts/' + param.scriptId.toString() + '/issues/?page=' + param.page.toString() + '&count=' + param.count.toString());
+}
+
+export function closeIssue(script: number, issue: number) {
+	return http.put<API.OkResponse>('/scripts/' + script.toString() + '/issues/' + issue.toString() + '/close');
+}
+
+export function openIssue(script: number, issue: number) {
+	return http.put<API.OkResponse>('/scripts/' + script.toString() + '/issues/' + issue.toString() + '/open');
 }

@@ -30,6 +30,17 @@ export default defineComponent({
       return this.$store.state.other.markdown[this.id];
     },
   },
+  mounted() {
+    this.$store.commit('other/addMarkdown', {
+      id: this.id,
+      content: marked(this.content, {
+        baseUrl: this.$route.path,
+        mangle: true,
+        gfm: true,
+        renderer: new MarkdownRenderer(),
+      }),
+    });
+  },
   created() {
     if (process.env.CLIENT) {
       void this.$nextTick(() => {

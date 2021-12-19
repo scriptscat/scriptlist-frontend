@@ -23,6 +23,7 @@ declare namespace API {
     code: number;
     msg: string;
     list: T[];
+    total: number;
   };
 
   type UserInfoResponse = Response<{
@@ -39,12 +40,12 @@ declare namespace API {
 
   type CommontResponse = Response<DTO.Comment>;
 
-  type CommontListResponse = ListResponse<DTO.CommentList>;
+  type CommontListResponse = ListResponse<DTO.Comment>;
   type ScriptCodeResponse = Response<DTO.Script>;
 
   type IssueResponse = Response<DTO.Issue>;
 
-  type IssueListResponse = Response<DTO.IssueList[]>;
+  type IssueListResponse = ListResponse<DTO.Issue>;
 
   type UploadImage = Response<DTO.UploadImage>;
 
@@ -115,33 +116,37 @@ declare namespace DTO {
   };
 
   type Comment = {
+    avatar?: string;
     score: number;
     message: string;
   };
 
-  type CommentList = {
-    avatar: string;
-    score: number;
-    message: string;
-  };
-
-  type IssueList = {
-    createtime: number;
-    id: number;
-    title: string;
-    username: string;
-    message: string;
-    status: number;
-    labels: Array[string];
-  };
+  const IssueStatusOpen = 1;
+  const IssueStatusClose = 3;
+  type IssueStatus = IssueStatusOpen | IssueStatusClose;
 
   type Issue = {
-    createtime: number;
     id: number;
     title: string;
+    uid: number;
     username: string;
-    message: string;
+    content: string;
+    status: number;
+    labels: Array[string];
+    createtime: number;
   };
+
+  type IssueCommentType = 1 | 2 | 3;
+
+  type IssueComment = {
+    id: number;
+    uid: number;
+    username: string;
+    content: string;
+    type: IssueCommentType;
+    status: number;
+    createtime: number;
+  }
 
   type UploadImage = {
     id: string;

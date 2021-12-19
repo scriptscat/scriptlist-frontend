@@ -51,17 +51,29 @@ class Http {
   }
 
   public async post<T>(url: string, data?: any, config?: AxiosRequestConfig) {
+    config = config || {};
     if (data && !(data instanceof FormData)) {
       data = qs.stringify(data); // form-data传参
+      config.headers = config.headers || {};
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      config.headers['Content-Type'] = <string>'application/x-www-form-urlencoded';
     }
     return this.service.post<T>(url, data, config);
   }
 
   public async put<T>(url: string, data?: any, config?: AxiosRequestConfig) {
-    // if (data && !(data instanceof FormData)) {
-    //   data = qs.stringify(data); // form-data传参
-    // }
+    config = config || {};
+    if (data && !(data instanceof FormData)) {
+      data = qs.stringify(data); // form-data传参
+      config.headers = config.headers || {};
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      config.headers['Content-Type'] = <string>'application/x-www-form-urlencoded';
+    }
     return this.service.put<T>(url, data, config);
+  }
+
+  public async delete<T>(url: string, config?: AxiosRequestConfig) {
+    return this.service.delete<T>(url, config);
   }
 
 }

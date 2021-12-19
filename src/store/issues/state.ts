@@ -1,5 +1,6 @@
 export interface IssuesStateInterface {
-  issueList: DTO.IssueList[]
+  issueList: DTO.Issue[]
+  issue: DTO.Issue
   commentList: DTO.Comment[]
   total: number
   preFetch: boolean
@@ -8,6 +9,7 @@ export interface IssuesStateInterface {
 function state(): IssuesStateInterface {
   return {
     issueList: [],
+    issue: <DTO.Issue>{},
     commentList: [],
     total: 0,
     preFetch: false

@@ -8,8 +8,26 @@ const mutation: MutationTree<IssuesStateInterface> = {
     state.total = total;
     state.preFetch = true;
   },
+  updateIssue(state, { issue }) {
+    state.issue = issue;
+  },
+  updateCommentList(state, { list }) {
+    state.commentList = list || [];
+    state.preFetch = true;
+  },
   resetPreFetch(state) {
     state.preFetch = false;
+  },
+  addComment(state, comment) {
+    state.commentList.push(comment);
+  },
+  closeIssue(state, comment) {
+    state.issue.status = 3;
+    state.commentList.push(comment);
+  },
+  openIssue(state, comment) {
+    state.issue.status = 1;
+    state.commentList.push(comment);
   }
 };
 
