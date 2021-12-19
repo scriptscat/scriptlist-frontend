@@ -12,7 +12,12 @@ const routes = [
       {
         path: 'users/webhook',
         name: 'webhook',
-        component: () => import('pages/Users/Webhook/Webhook.vue'),
+        component: () => import('pages/Users/Setting/Webhook.vue'),
+      },
+      {
+        path: 'users/notify',
+        name: 'notify',
+        component: () => import('pages/Users/Setting/Notify.vue'),
       },
       {
         path: 'users/script/new',

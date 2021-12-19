@@ -6,7 +6,7 @@
       size="sm"
       color="light-blue-10"
       type="a"
-      target="_blank"
+      :target="target"
       :to="{ name: 'comment', params: { id: id } }"
     >
       <q-tooltip>评分</q-tooltip>
@@ -18,7 +18,7 @@
       size="sm"
       color="light-blue-10"
       type="a"
-      target="_blank"
+      :target="target"
       :to="{ name: 'issue', params: { id: id } }"
     >
       <q-tooltip>反馈</q-tooltip>
@@ -55,6 +55,10 @@ export default defineComponent({
     name: {
       type: String,
       default: '',
+    },
+    target: {
+      type: String,
+      default: '_blank',
     },
   },
   methods: {

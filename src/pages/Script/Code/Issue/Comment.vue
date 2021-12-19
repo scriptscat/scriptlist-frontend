@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 8px">
-    <div style="border-bottom: 1px solid #e4e4e4; padding-bottom: 30px">
+    <div style="border-bottom: 1px solid #e4e4e4; padding-bottom: 15px">
       <q-item-label
         lines="1"
         class="text-h5 flex justify-between"
@@ -13,7 +13,7 @@
       </q-item-label>
       <q-item-label caption lines="2">
         <div class="flex justify-start" style="line-height: 28px">
-          <IssueState :state="issue.state" />
+          <IssueStatus :status="issue.status" />
           <a
             :href="`/users/` + issue.uid"
             style="color: rgba(0, 0, 0, 0.54)"
@@ -177,9 +177,50 @@
           </q-card>
         </div>
       </div>
-      <!-- <div class="col-3"> -->
-      <!-- <p>侧边栏内容（打标签、关注、删除反馈什么的）</p> -->
-      <!-- </div> -->
+      <div class="col-3" style="padding: 10px">
+        <div class="info-item">
+          <div class="info-title">标签</div>
+          <div class="info-content">
+            <q-select
+              disable
+              outlined
+              multiple
+              v-model="label"
+              :options="labelOptions"
+              borderless
+              dense
+              options-dense
+              label="标签(建设中)"
+              style="width: 100%"
+              class="no-shadow"
+            />
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-title">关注</div>
+          <div class="info-content">
+            <q-btn color="primary" size="sm" style="width: 70%" disable
+              >关注</q-btn
+            >
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-title">参与人</div>
+          <div class="info-content flex justify-start">
+            <span v-for="(value, key) in joinMember" :key="key">
+              <a :href="'/users/' + value.uid" class="username" target="_blank">
+                <q-avatar size="25px">
+                  <img
+                    :src="
+                      'https://scriptcat.org/api/v1/user/avatar/' + value.uid
+                    "
+                  />
+                </q-avatar>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
     </q-card-section>
   </div>
 </template>
@@ -195,7 +236,7 @@ import Prism from 'prismjs';
 import http from 'src/utils/http';
 import { uploadImage as uploadImageApi } from 'src/apis/resource';
 import IssueLabel from '@Components/IssueLabel.vue';
-import IssueState from '@Components/IssueState.vue';
+import IssueStatus from '@Components/IssueStatus.vue';
 import MarkdownView from '@Components/MarkdownView.vue';
 import { formatDate } from '@App/utils/utils';
 
@@ -214,7 +255,7 @@ const editor = <
 };
 
 export default defineComponent({
-  components: { IssueLabel, IssueState, MarkdownView },
+  components: { IssueLabel, IssueStatus, MarkdownView },
   async preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
       return;
@@ -253,6 +294,7 @@ export default defineComponent({
   data() {
     return {
       dateformat: formatDate,
+      joinMember: <{ [key: number]: DTO.IssueComment }>{},
     };
   },
   unmounted() {
@@ -260,6 +302,19 @@ export default defineComponent({
   },
   created() {
     if (process.env.CLIENT) {
+      this.commentList.forEach((val) => {
+        this.joinMember[val.uid] = val;
+      });
+      this.$watch(
+        () => {
+          return this.commentList;
+        },
+        () => {
+          this.commentList.forEach((val) => {
+            this.joinMember[val.uid] = val;
+          });
+        }
+      );
       void this.$nextTick(() => {
         let handler = async () => {
           editor.mkedit = new (await Editor()).default({
@@ -492,5 +547,18 @@ export default defineComponent({
 
 .icon-description {
   padding-left: 10px;
+}
+
+.info-item {
+  border-bottom: 1px solid #b8b8b8;
+  padding: 10px;
+}
+
+.info-item .info-title {
+  font-weight: 600;
+}
+.info-item .info-content {
+  margin-top: 8px;
+  text-align: center;
 }
 </style>

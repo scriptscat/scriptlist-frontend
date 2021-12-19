@@ -195,7 +195,7 @@ import { ref, defineComponent } from 'vue';
 import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 import { getRecommendList } from 'src/apis/scripts';
 import { useMeta } from 'quasar';
-import Filter from 'src/components/Filter.vue';
+import Filter from '@App/components/ScriptFilter.vue';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 import TablePagination from '@Components/TablePagination.vue';
 import { formatDate } from '@App/utils/utils';

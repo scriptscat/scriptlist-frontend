@@ -1,7 +1,40 @@
 <template>
   <q-card-section class="issue">
-    <q-btn-group flat style="margin: 0px 0px 10px 0px">
+    <q-btn-group
+      flat
+      style="margin: 0px 0px 10px 0px; width: 100%"
+      class="flex justify-between"
+    >
       <q-btn color="primary" :to="'issue/new'" outline> 创建反馈 </q-btn>
+      <q-card flat class="single flex justify-end">
+        <q-select
+          disable
+          outlined
+          v-model="sort_"
+          :options="sortOptions"
+          @update:model-value="sortChange"
+          borderless
+          dense
+          options-dense
+          label="状态"
+          style="min-width: 120px"
+          class="no-shadow"
+        >
+        </q-select>
+        <q-select
+          disable
+          outlined
+          v-model="category_"
+          :options="categoryOptions"
+          @update:model-value="categoryChange"
+          borderless
+          dense
+          options-dense
+          label="标签"
+          style="min-width: 120px; margin-left: 10px"
+        >
+        </q-select>
+      </q-card>
     </q-btn-group>
     <q-table
       flat
@@ -24,7 +57,7 @@
       </template>
       <template v-slot:body-cell-state="props">
         <q-td :props="props" auto-width>
-          <IssueState :labels="props.value" />
+          <IssueStatus :status="props.value" />
         </q-td>
       </template>
       <template v-slot:body-cell-title="props">
@@ -55,10 +88,10 @@ import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 import { formatDate } from '@App/utils/utils';
 import TablePagination from '@Components/TablePagination.vue';
 import IssueLabel from '@Components/IssueLabel.vue';
-import IssueState from '@Components/IssueState.vue';
+import IssueStatus from '@App/components/IssueStatus.vue';
 
 export default defineComponent({
-  components: { TablePagination, IssueLabel, IssueState },
+  components: { TablePagination, IssueLabel, IssueStatus },
   preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
       return;

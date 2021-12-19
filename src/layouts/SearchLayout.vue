@@ -64,6 +64,7 @@
             <q-btn
               flat
               dense
+              size="md"
               onclick="window.open('https://bbs.tampermonkey.net.cn/','_blank')"
               label="油猴论坛"
               icon="chat"
@@ -72,6 +73,7 @@
             <q-btn
               flat
               dense
+              size="md"
               onclick="window.open('/search','_self')"
               label="脚本列表"
               icon="apps"
@@ -81,6 +83,7 @@
               flat
               dense
               v-if="islogin"
+              size="md"
               onclick="window.open('/users/managescript','_self')"
               label="管理脚本"
               icon="menu"

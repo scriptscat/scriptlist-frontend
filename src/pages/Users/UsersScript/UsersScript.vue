@@ -1,35 +1,33 @@
 <template>
   <div class="flex flex-center padding-normal">
-    <q-card-section
-      flat
-      bordered
-      class="scriptshow"
-    >
+    <q-card-section flat bordered class="scriptshow">
       <q-card v-if="self.uid == User.uid" bordered flat>
-          <q-btn
-            dense
-            flat
-            icon="home"
-            label="个人主页"
-            class="text-body1"
-          />
+        <q-btn dense flat icon="home" label="个人主页" class="text-body1" />
         <q-card-actions>
           <q-btn-group flat>
-          <q-btn
-            dense
-            color="primary"
-            to="/users/script/new"
-            label="发布编写的脚本"
-            class="text-body"
-          />
-          <q-btn
-            outline
-            dense
-            label="设置webhook"
-            class="text-body"
-            to="/users/webhook"
-            style="margin-left:10px"
-          />
+            <q-btn
+              dense
+              color="primary"
+              to="/users/script/new"
+              label="发布编写的脚本"
+              class="text-body"
+            />
+            <q-btn
+              outline
+              dense
+              label="设置webhook"
+              class="text-body"
+              to="/users/webhook"
+              style="margin-left: 10px"
+            />
+            <q-btn
+              outline
+              dense
+              label="设置通知"
+              class="text-body"
+              to="/users/notify"
+              style="margin-left: 10px"
+            />
           </q-btn-group>
         </q-card-actions>
       </q-card>
@@ -38,6 +36,17 @@
           <img :src="'https://scriptcat.org/api/v1/user/avatar/' + User.uid" />
         </q-avatar>
         <div class="text-h4">&nbsp;{{ User.username }}编写的脚本</div>
+      </div>
+      <div class="flex flex-center">
+        <span>0 关注 0 粉丝</span>
+        <q-btn
+          disable
+          size="xs"
+          color="blue"
+          v-if="self.uid != User.uid"
+          style="margin-left: 10px"
+          >+关注</q-btn
+        >
       </div>
       <Filter
         :sort="$route.query.sort"
@@ -120,7 +129,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
-import Filter from '@Components/Filter.vue';
+import Filter from '@App/components/ScriptFilter.vue';
 import TablePagination from '@Components/TablePagination.vue';
 import { fetchUserScriptList } from '@App/apis/scripts';
 import { Cookies, useMeta } from 'quasar';

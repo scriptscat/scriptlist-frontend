@@ -1,5 +1,12 @@
 <template>
   <div class="main flex flex-center">
+    <h4 style="display: block; width: 100%; max-width: 1300px">
+      <a
+        :href="'/script-show-page/' + script.id"
+        style="text-decoration: none; color: #000"
+        >{{ script.name }}</a
+      >
+    </h4>
     <q-card
       bordered
       flat

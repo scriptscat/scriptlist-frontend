@@ -1,5 +1,5 @@
 <template>
-  <span v-if="state === 1">
+  <span v-if="status == 1">
     <q-icon name="lens" color="deep-orange" class="q-mx-sm" />
     <q-chip
       square
@@ -11,7 +11,7 @@
       待处理
     </q-chip>
   </span>
-  <span v-else-if="state === 3">
+  <span v-else-if="status == 3">
     <q-icon name="radio_button_checked" color="positive" class="q-mx-sm" />
     <q-chip
       square
@@ -29,14 +29,12 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'Fliter',
+  name: 'IssueStatus',
   props: {
-    state: {
+    status: {
       type: Number,
-      required: false,
-      default() {
-        return 1;
-      },
+      required: true,
+      default: 1,
     },
   },
 });

@@ -1,12 +1,7 @@
 <template>
   <div>
     <q-card flat class="my-card">
-      <q-card
-        style="padding: 8px"
-        class="single"
-        flat
-        bordered
-      >
+      <q-card style="padding: 8px" class="single" flat bordered>
         <q-card bordered flat>
           <q-item>
             <q-item-section avatar>
@@ -19,7 +14,7 @@
               </q-avatar>
             </q-item-section>
             <q-item-section>
-              <q-item-label>
+              <q-item-label class="flex justify-between">
                 <a
                   style="color: rgb(40, 86, 172)"
                   target="_blank"
@@ -27,6 +22,22 @@
                 >
                   {{ author.username }}
                 </a>
+                <q-select
+                  outlined
+                  disable
+                  :options="[
+                    { value: 0, label: '未关注' },
+                    { value: 1, label: '版本更新' },
+                    { value: 2, label: '新建issue' },
+                    { value: 3, label: '任何' },
+                  ]"
+                  borderless
+                  dense
+                  options-dense
+                  label="关注(建设中)"
+                  style="width: 120px; height: 10px"
+                >
+                </q-select>
               </q-item-label>
               <div class="text-body1">
                 <a
@@ -100,7 +111,7 @@
           </q-btn-group>
           <q-separator />
           <q-item-label style="margin: 5px 5px 5px 0px">
-            <ScriptCardAction :id="id" :name="author.name" />
+            <ScriptCardAction :id="id" :name="author.name" target="_self" />
           </q-item-label>
         </q-card>
       </q-card>
