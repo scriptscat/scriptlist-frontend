@@ -4,7 +4,7 @@
       flat
       bordered
       class="scriptshow"
-      v-if="ScriptList.length !== 0"
+      v-show="ScriptList.length !== 0"
     >
       <Filter
         :sort="$route.query.sort"
@@ -87,7 +87,7 @@
           </q-item-label>
         </q-card>
       </q-card>
-      <div v-if="maxPage > 1" class="flex flex-center">
+      <div v-show="maxPage > 1" class="flex flex-center">
         <TablePagination
           v-bind="page"
           :reloadPage="reload"
@@ -97,7 +97,24 @@
         />
       </div>
     </q-card-section>
-    <q-card flat bordered class="scriptshow" v-else> 暂无结果 </q-card>
+    <div class="flex justify-center">
+      <q-card flat bordered class="scriptshow" v-show="ScriptList.length == 0">
+        <q-card-section
+          flat
+          bordered
+          class="scriptshow"
+          v-show="ScriptList.length !== 0"
+        >
+          <div class="text-h6">暂无结果</div>
+        </q-card-section>
+        <Filter
+          :sort="$route.query.sort"
+          :category="$route.query.category"
+          @sortChange="sortChange"
+          @categoryChange="categoryChange"
+        />
+      </q-card>
+    </div>
 
     <div class="show-mess-page">
       <q-list
@@ -192,7 +209,7 @@
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
-import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
+import { useRoute, useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { getRecommendList } from 'src/apis/scripts';
 import { useMeta } from 'quasar';
 import Filter from '@App/components/ScriptFilter.vue';
@@ -253,6 +270,7 @@ export default defineComponent({
       new: [],
     });
     const route = useRoute();
+    const router = useRouter();
     const page = ref(Number(route.query.page) || 1);
 
     getRecommendList(
@@ -285,11 +303,32 @@ export default defineComponent({
         console.log(e);
       });
 
+    const sortChange = (val: { value: string }) => {
+      return router.replace({
+        query: {
+          keyword: route.query.keyword,
+          category: route.query.category,
+          sort: val.value,
+        },
+      });
+    };
+    const categoryChange = (val: { value: string }) => {
+      return router.replace({
+        query: {
+          keyword: route.query.keyword,
+          sort: route.query.sort,
+          category: val.value,
+        },
+      });
+    };
+
     return {
       iconcolorlist: ref(iconcolorlist),
       page,
       recommondlist,
       dateformat: formatDate,
+      sortChange,
+      categoryChange,
     };
   },
   methods: {
@@ -307,20 +346,6 @@ export default defineComponent({
           '&domain=' +
           (currentRoute.query.domain || '').toString()
       );
-    },
-    sortChange(val: { value: string }) {
-      void this.$router.replace({
-        query: {
-          sort: val.value,
-        },
-      });
-    },
-    categoryChange(val: string[]) {
-      void this.$router.replace({
-        query: {
-          category: val.join(','),
-        },
-      });
     },
   },
 });

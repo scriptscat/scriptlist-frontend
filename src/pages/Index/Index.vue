@@ -27,7 +27,7 @@
           color="primary"
           @click="Search"
         />
-        <q-btn flat dense aria-label="Menu" icon="menu">
+        <!-- <q-btn flat dense aria-label="Menu" icon="menu">
           筛选
           <q-menu anchor="bottom end" self="top end">
             <div class="q-pa-md" style="width: 500px">
@@ -54,7 +54,7 @@
               </div>
             </div>
           </q-menu>
-        </q-btn>
+        </q-btn> -->
       </template>
     </q-input>
 

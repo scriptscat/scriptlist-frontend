@@ -1,5 +1,5 @@
 <template>
-  <q-layout>
+  <q-layout view="hHh lpR fFf">
     <q-header bordered class="bg-grey-1 text-black" height-hint="64">
       <q-toolbar class="GNL__toolbar">
         <q-toolbar-title shrink class="row items-center no-wrap">
@@ -31,7 +31,7 @@
               size="md"
               onclick="window.open('/','_self')"
               label="首页"
-              icon="home"
+              icon="fas fa-home"
               class="text-body1 q-mx-md"
             />
             <q-btn
@@ -75,8 +75,8 @@
               </q-avatar>
               <q-tooltip>{{ user.username }},通知-🚧建设中</q-tooltip>
             </q-btn>
-            <q-btn v-else flat @click="gotoLogin">
-              <div class="text-body1">暂未登录</div>
+            <q-btn size="md" v-else flat @click="gotoLogin">
+              <div class="text-ca"><i class="far fa-user"></i>&nbsp;暂未登录</div>
             </q-btn>
           </div>
           <q-btn

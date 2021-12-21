@@ -161,20 +161,25 @@ export default defineComponent({
       )
         .then((response) => {
           if (response.data.code === 0) {
-            this.$q.notify('提交成功');
-            setTimeout(() => {
-              void this.$router.push({
-                name: 'issue-comment',
-                params: {
-                  id: this.scriptId,
-                  issue: response.data.data.id,
-                },
-              });
-            }, 3000);
+            this.$q.notify({
+              color: 'primary',
+              icon: 'done',
+              message: '提交成功',
+              position: 'center',
+            });
+            void this.$router.push({
+              name: 'issue-comment',
+              params: {
+                id: this.scriptId,
+                issue: response.data.data.id,
+              },
+            });
           } else {
             this.$q.notify({
+              color: 'orange',
+              icon: 'warning',
               message: response.data.msg,
-              position: 'top',
+              position: 'center',
             });
           }
         })
@@ -182,14 +187,16 @@ export default defineComponent({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           if (error.response && error.response.data.msg !== undefined) {
             this.$q.notify({
+              color: 'orange',
+              icon: 'warning',
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               message: error.response.data.msg,
-              position: 'top',
+              position: 'center',
             });
           } else {
             this.$q.notify({
               message: '系统错误!',
-              position: 'top',
+              position: 'center',
             });
           }
         });
