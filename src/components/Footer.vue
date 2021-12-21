@@ -1,14 +1,8 @@
 <template>
-  <q-footer class="flex-center footer fixed-bottom" bordered>
-    <q-card-section class="col-12 row text-center" style="padding: 8px 0">
+  <q-footer reveal class="flex-center footer" bordered>
+    <q-card-section class="text-center">
       <div class="col-12">
-        <q-btn
-          type="a"
-          href="/"
-          flat
-          dense
-          color="grey-8"
-          target="_blank"
+        <q-btn type="a" href="/" flat dense color="grey-8" target="_blank"
           ><q-avatar square size="24px">
             <img src="/icons/favicon-32x32.png" /> </q-avatar
         ></q-btn>
