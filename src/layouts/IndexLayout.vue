@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout>
     <q-header bordered class="bg-grey-1 text-black" height-hint="64">
       <q-toolbar class="GNL__toolbar">
         <q-toolbar-title shrink class="row items-center no-wrap">
@@ -31,7 +31,7 @@
               size="md"
               onclick="window.open('/','_self')"
               label="首页"
-              icon="fas fa-home"
+              icon="home"
               class="text-body1 q-mx-md"
             />
             <q-btn

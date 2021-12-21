@@ -30,7 +30,6 @@
     <q-card flat bordered style="width: 100%; max-width: 1300px">
       <router-view />
     </q-card>
-    <Footer />
   </div>
 </template>
 
@@ -39,10 +38,9 @@ import { defineComponent, ref, computed } from 'vue';
 import { Cookies, useMeta } from 'quasar';
 import { useStore } from 'src/store';
 import { useRoute } from 'vue-router';
-import Footer from '@Components/Footer.vue';
 
 export default defineComponent({
-  components: { Footer },
+  components: {  },
   preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
       return;

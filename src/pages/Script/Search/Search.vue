@@ -98,21 +98,21 @@
       </div>
     </q-card-section>
     <div class="flex justify-center">
-      <q-card flat bordered class="scriptshow" v-show="ScriptList.length == 0">
-        <q-card-section
-          flat
-          bordered
-          class="scriptshow"
-          v-show="ScriptList.length !== 0"
-        >
-          <div class="text-h6">暂无结果</div>
-        </q-card-section>
+      <q-card flat bordered style="margin:20px 10px 0px 10px;width:880px;" v-show="ScriptList.length == 0">
         <Filter
           :sort="$route.query.sort"
           :category="$route.query.category"
           @sortChange="sortChange"
           @categoryChange="categoryChange"
         />
+        <q-card-section
+          flat
+          bordered
+          class="scriptshow"
+          v-show="ScriptList.length == 0"
+        >
+          <div class="text-h6">暂无结果</div>
+        </q-card-section>
       </q-card>
     </div>
 
