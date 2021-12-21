@@ -5,8 +5,9 @@ const mutation: MutationTree<UserStateInterface> = {
   updateUser(state, { islogin, user }) {
     state.islogin = islogin;
     state.user = user;
-  }, fetchUserInfo(state, { userInfo }) {
+  }, fetchUserInfo(state, { userInfo, follow }) {
     state.userInfo = userInfo;
+    state.follow = follow;
   }
 };
 

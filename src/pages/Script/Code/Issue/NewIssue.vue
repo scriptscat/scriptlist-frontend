@@ -148,7 +148,6 @@ export default defineComponent({
       });
     },
     submitIssue() {
-      console.log(this.label);
       let labels: string[] = [];
       this.label.forEach((val: { label: string; value: string }) => {
         labels.push(val.value);
@@ -167,13 +166,14 @@ export default defineComponent({
               message: '提交成功',
               position: 'center',
             });
-            void this.$router.push({
+            const { href } = this.$router.resolve({
               name: 'issue-comment',
               params: {
                 id: this.scriptId,
                 issue: response.data.data.id,
               },
             });
+            window.open(href, '_self');
           } else {
             this.$q.notify({
               color: 'orange',

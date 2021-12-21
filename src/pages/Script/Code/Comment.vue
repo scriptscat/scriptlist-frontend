@@ -106,14 +106,11 @@ import { useStore } from 'src/store';
 import { useRoute } from 'vue-router';
 import { submitComment, getAllScroe, getMyScore } from 'src/apis/comment';
 import { formatDate } from '@App/utils/utils';
+import { useMeta } from 'quasar';
 
 export default defineComponent({
-  meta() {
-    return {
-      title: '评论',
-    };
-  },
   setup() {
+    useMeta({ title: '评分' });
     const mypostform = ref({
       ratingpost: 0,
       text: '',

@@ -208,7 +208,7 @@
 </template>
 
 <script lang="ts">
-import { Cookies } from 'quasar';
+import { Cookies, useMeta } from 'quasar';
 import { defineComponent } from 'vue';
 import { toastui } from '@toast-ui/editor';
 const codeSyntaxHighlight = async () =>
@@ -221,6 +221,7 @@ import IssueLabel from '@Components/IssueLabel.vue';
 import IssueStatus from '@Components/IssueStatus.vue';
 import MarkdownView from '@Components/MarkdownView.vue';
 import { formatDate } from '@App/utils/utils';
+import { useStore } from '@App/store';
 
 if (process.env.CLIENT) {
   require('prismjs/themes/prism.css');
@@ -257,9 +258,6 @@ export default defineComponent({
     selfUid() {
       return this.$store.state.user.user.uid || 0;
     },
-    issue() {
-      return this.$store.state.issues.issue;
-    },
     commentList() {
       return this.$store.state.issues.commentList;
     },
@@ -272,6 +270,23 @@ export default defineComponent({
     scriptId() {
       return parseInt(<string>this.$route.params.id);
     },
+  },
+  setup() {
+    const store = useStore();
+    const script = store.state.scripts.script;
+    const issue = store.state.issues.issue;
+    useMeta({
+      title: issue.title,
+      titleTemplate: (title) =>
+        title + ' · 反馈 #' + issue.id.toString() + ' · ' + script.name,
+      meta: {
+        description: { name: 'description', content: issue.title },
+      },
+    });
+    return {
+      script,
+      issue,
+    };
   },
   data() {
     return {

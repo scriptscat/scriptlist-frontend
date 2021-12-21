@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { Cookies } from 'quasar';
+import { Cookies, useMeta } from 'quasar';
 import { defineComponent, ref, computed } from 'vue';
 import { useStore } from 'src/store';
 import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
@@ -110,6 +110,9 @@ export default defineComponent({
     },
   },
   setup() {
+    useMeta({
+      title:'反馈'
+    });
     const returnGoodsProgressData = ref({
       columns: [
         {

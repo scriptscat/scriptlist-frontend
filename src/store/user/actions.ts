@@ -45,7 +45,7 @@ const actions: ActionTree<UserStateInterface, StateInterface> = {
       })
       .then((response) => {
         if (response.data.code === 0) {
-          commit('fetchUserInfo', { userInfo: response.data.data.user });
+          commit('fetchUserInfo', { userInfo: response.data.data.user,follow:response.data.data.follow });
         } else {
           commit('fetchUserInfo', {});
         }

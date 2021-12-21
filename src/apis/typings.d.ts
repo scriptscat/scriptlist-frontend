@@ -11,7 +11,7 @@ declare namespace API {
     count: number;
   };
 
-  type OkResponse = Response<undefined>;
+  type OkResponse = Response<any>;
 
   type Response<T> = {
     code: number;
@@ -27,7 +27,12 @@ declare namespace API {
   };
 
   type UserInfoResponse = Response<{
+    follow: DTO.Follow;
     user: DTO.User;
+  }>;
+
+  type UserConfigResponse = Response<{
+    notify: DTO.UserNotify
   }>;
 
   type ScriptListResponse = ListResponse<DTO.Script>;
@@ -71,6 +76,8 @@ declare namespace API {
     download: DTO.StatisticXY;
     update: DTO.StatisticXY;
   }>;
+
+  type ScriptWatchResponse = Response<{ level: number }>;
 }
 
 declare namespace DTO {
@@ -115,6 +122,13 @@ declare namespace DTO {
     username: string;
   };
 
+  type Follow = {
+    // 粉丝
+    followers: number
+    // 关注
+    following: number
+  };
+
   type Comment = {
     avatar?: string;
     score: number;
@@ -151,4 +165,15 @@ declare namespace DTO {
   type UploadImage = {
     id: string;
   };
+
+  type UserNotify = {
+    at: boolean
+    create_script: boolean
+    score: boolean
+    script_issue: boolean
+    script_issue_comment: boolean
+    script_updat: boolean
+  };
+
 }
+

@@ -9,3 +9,5 @@ declare namespace NodeJS {
 interface ResponseHeaders {
   [key: string]: string
 }
+
+interface OptionItem { value: number; label: string }

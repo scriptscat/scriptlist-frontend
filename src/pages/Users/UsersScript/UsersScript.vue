@@ -23,7 +23,7 @@
             <q-btn
               outline
               dense
-              label="设置通知"
+              label="通知设置"
               class="text-body"
               to="/users/notify"
               style="margin-left: 10px"
@@ -38,15 +38,27 @@
         <div class="text-h4">&nbsp;{{ User.username }}编写的脚本</div>
       </div>
       <div class="flex flex-center">
-        <span>0 关注 0 粉丝</span>
-        <q-btn
-          disable
-          size="xs"
-          color="blue"
-          v-if="self.uid != User.uid"
-          style="margin-left: 10px"
-          >+关注</q-btn
+        <span
+          >{{ followNum.following }} 关注 {{ followNum.followers }} 粉丝</span
         >
+        <div v-if="self.uid && self.uid != User.uid">
+          <q-btn
+            v-if="isfollow"
+            size="xs"
+            color="blue"
+            style="margin-left: 10px"
+            @click="unfollowEvent"
+            >取消关注</q-btn
+          >
+          <q-btn
+            v-else
+            size="xs"
+            color="blue"
+            style="margin-left: 10px"
+            @click="followEvent"
+            >+关注</q-btn
+          >
+        </div>
       </div>
       <Filter
         :sort="$route.query.sort"
@@ -113,7 +125,7 @@
           </q-item-label>
         </q-card>
       </q-card>
-      <div v-if="maxPage > 1" class="flex flex-center">
+      <div v-show="maxPage > 1" class="flex flex-center">
         <TablePagination
           v-bind="page"
           :reloadPage="reload"
@@ -136,6 +148,7 @@ import { Cookies, useMeta } from 'quasar';
 import { useStore } from '@App/store';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 import { formatDate } from '@App/utils/utils';
+import { follow, isFollow, unfollow } from '@App/apis/user';
 
 export default defineComponent({
   components: {
@@ -155,6 +168,9 @@ export default defineComponent({
     },
     ScriptList() {
       return this.$store.state.scripts.scripts;
+    },
+    followNum() {
+      return this.$store.state.user.follow;
     },
   },
   async preFetch({ store, currentRoute, ssrContext }) {
@@ -183,13 +199,35 @@ export default defineComponent({
     });
     const route = useRoute();
     const page = ref(Number(route.query.page) || 1);
-
     return {
       page,
       dateformat: formatDate,
     };
   },
+  data() {
+    return {
+      isfollow: false,
+    };
+  },
+  async created() {
+    if (process.env.SERVER || !this.self.uid) {
+      return;
+    }
+    if ((await isFollow(this.User.uid)).data.data) {
+      this.isfollow = true;
+    }
+  },
   methods: {
+    followEvent() {
+      void follow(this.User.uid);
+      this.isfollow = true;
+      this.$q.notify('关注成功');
+    },
+    unfollowEvent() {
+      void unfollow(this.User.uid);
+      this.isfollow = false;
+      this.$q.notify('取消关注成功');
+    },
     reload(currentRoute: RouteLocationNormalizedLoaded) {
       fetchUserScriptList({
         uid: parseInt(<string>currentRoute.params.id || '0'),

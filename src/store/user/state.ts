@@ -2,6 +2,7 @@ export interface UserStateInterface {
   islogin: boolean
   user: DTO.User
   userInfo: DTO.User
+  follow:DTO.Follow
 }
 
 function state(): UserStateInterface {
@@ -9,6 +10,7 @@ function state(): UserStateInterface {
     islogin: false,
     user: <DTO.User>{},
     userInfo: <DTO.User>{},
+    follow:<DTO.Follow>{}
   }
 };
 

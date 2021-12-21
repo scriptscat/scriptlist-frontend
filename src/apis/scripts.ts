@@ -72,3 +72,15 @@ export function fetchUserScriptList(param: {
     '&domain=' +
     encodeURIComponent(param.domain || '').toString() + '&page=' + (param.page || 1).toString() + '&count=' + (param.count || 20).toString(), config);
 }
+
+export function watchLevel(scriptId: number) {
+  return http.get<API.ScriptWatchResponse>('/scripts/' + scriptId.toString() + '/watch');
+}
+
+export function watch(scriptId: number, level: number) {
+  return http.post<API.OkResponse>('/scripts/' + scriptId.toString() + '/watch', { level: level });
+}
+
+export function unwatch(scriptId: number) {
+  return http.delete<API.OkResponse>('/scripts/' + scriptId.toString() + '/watch');
+}

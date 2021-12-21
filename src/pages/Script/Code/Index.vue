@@ -24,17 +24,13 @@
                 </a>
                 <q-select
                   outlined
-                  disable
-                  :options="[
-                    { value: 0, label: '未关注' },
-                    { value: 1, label: '版本更新' },
-                    { value: 2, label: '新建issue' },
-                    { value: 3, label: '任何' },
-                  ]"
+                  v-model="scriptWatch"
+                  :options="watchOptions"
+                  :disable="!islogin"
                   borderless
                   dense
                   options-dense
-                  label="关注(建设中)"
+                  label="关注"
                   style="width: 120px; height: 10px"
                 >
                 </q-select>
@@ -127,6 +123,7 @@ import { defineComponent } from 'vue';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 import MarkdownView from '@Components/MarkdownView.vue';
 import { formatDate } from '@App/utils/utils';
+import { unwatch, watch, watchLevel } from '@App/apis/scripts';
 
 export default defineComponent({
   components: {
@@ -140,11 +137,45 @@ export default defineComponent({
     author() {
       return this.$store.state.scripts.script || <DTO.Script>{};
     },
+    islogin() {
+      return this.$store.state.user.islogin;
+    },
+  },
+  async created() {
+    if (process.env.SERVER || !this.islogin) {
+      return;
+    }
+    let level = (await watchLevel(this.id)).data.data.level;
+    this.scriptWatch = this.watchOptions[level];
+    this.$watch(
+      () => {
+        return this.scriptWatch;
+      },
+      () => {
+        if (this.scriptWatch.value) {
+          void watch(this.author.id, this.scriptWatch.value);
+          this.$q.notify('关注成功');
+        } else {
+          void unwatch(this.author.id);
+          this.$q.notify('取消关注成功');
+        }
+      }
+    );
   },
   data() {
     return {
       install: '安装此脚本',
       dateformat: formatDate,
+      scriptWatch: <OptionItem>{
+        value: 0,
+        label: '未关注',
+      },
+      watchOptions: <OptionItem[]>[
+        { value: 0, label: '未关注' },
+        { value: 1, label: '版本更新' },
+        { value: 2, label: '新建issue' },
+        { value: 3, label: '任何' },
+      ],
     };
   },
   methods: {

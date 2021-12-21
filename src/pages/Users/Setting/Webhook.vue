@@ -57,10 +57,12 @@
 import { defineComponent } from 'vue';
 import { getWebhook, updateWebhook } from 'src/apis/user';
 import http from 'src/utils/http';
+import { useMeta } from 'quasar';
 
 export default defineComponent({
-  meta: {
-    title: 'webhook',
+  setup() {
+    useMeta({ title: 'Webhook' });
+    return {};
   },
   computed: {
     islogin() {

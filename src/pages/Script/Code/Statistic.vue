@@ -37,12 +37,12 @@
 import { defineComponent } from 'vue';
 import * as echarts from 'echarts';
 import { getRealtime, getStatistics } from '@App/apis/scripts';
+import { useMeta } from 'quasar';
 
 export default defineComponent({
-  meta() {
-    return {
-      title: '统计',
-    };
+  setup() {
+    useMeta({ title: '统计' });
+    return {};
   },
   data() {
     return {
