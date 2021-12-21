@@ -1,6 +1,6 @@
 <template>
-  <q-footer class="flex-center footer" bordered>
-      <q-card-section class="col-12 row text-center q-pa-lg">
+  <q-footer reveal class="flex-center footer" bordered>
+      <q-card-section class="text-center">
         <div class="col-12">
           <q-btn type='a' href="https://github.com/scriptscat/scriptlist-frontend" icon="fab fa-github" flat dense color="grey-8"></q-btn>
           <q-btn type='a' href="https://t.me/scriptscat" icon="fab fa-telegram" flat dense color="grey-8"></q-btn>
