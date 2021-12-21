@@ -1,21 +1,16 @@
 <template>
-  <q-footer class="flex-center column footer">
-    <div class="flex flex-center top box">
-      <a
-        style="margin-right: 20px; text-decoration: none"
-        href="https://docs.scriptcat.org/"
-        >Docs</a
-      >
-      <img :src="cat" width="36px;" />
-      <a
-        style="margin-left: 20px; text-decoration: none"
-        href="https://github.com/scriptscat/"
-        >Github</a
-      >
-    </div>
-    <div class="flex flex-center" style="padding: 5px 0px 15px 0px">
-      <span>@2020-2021 最终解释权归ScriptCat所有</span>
-    </div>
+  <q-footer class="flex-center footer" bordered>
+      <q-card-section class="col-12 row text-center q-pa-lg">
+        <div class="col-12">
+          <q-btn type='a' href="https://github.com/scriptscat/scriptlist-frontend" icon="fab fa-github" flat dense color="grey-8"></q-btn>
+          <q-btn type='a' href="https://t.me/scriptscat" icon="fab fa-telegram" flat dense color="grey-8"></q-btn>
+          <q-btn type='a' href="https://jq.qq.com/?_wv=1027&k=nSHs0eBN" icon="fas fa-users" flat dense color="grey-8"></q-btn>
+          <q-btn type='a' href="https://docs.scriptcat.org/" icon="fas fa-question-circle" flat dense color="grey-8"></q-btn>
+        </div>
+        <div class="text-body1 col-12 q-mt-sm text-grey-8 text-weight-bold">
+          © 2021 ScriptCat. All rights reserved.
+        </div>
+      </q-card-section>
   </q-footer>
 </template>
 <script lang="ts">
@@ -34,7 +29,7 @@ export default defineComponent({
 .footer {
   background: #fff;
   color: #000;
-  width: 60%;
+  width: 100%;
   margin: 0 auto;
 }
 

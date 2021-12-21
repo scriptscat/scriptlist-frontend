@@ -14,7 +14,6 @@
     >
     </q-select>
     <q-select
-      disable
       outlined
       v-model="category_"
       :options="categoryOptions"
@@ -41,35 +40,46 @@ export default defineComponent({
       default: 'today_download',
     },
     category: {
-      type: Array,
-      required: false,
-      default() {
-        return ['建设中'];
-      },
+      type: String,
+      require: true,
+      default: '0',
     },
   },
-  setup(props: { sort: string; category: unknown[] }) {
+  setup(props: { sort: string; category: string; }) {
     const sort_ = ref({ label: '', value: '' });
-    const options = [
+    const sortOptions = [
       { label: '日安装', value: 'today_download' },
       { label: '总安装', value: 'total_download' },
       { label: '评分', value: 'score' },
       { label: '最新发布', value: 'createtime' },
       { label: '最近更新', value: 'updatetime' },
     ];
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].value == props.sort) {
-        sort_.value = options[i];
+    for (let i = 0; i < sortOptions.length; i++) {
+      if (sortOptions[i].value == props.sort) {
+        sort_.value = sortOptions[i];
         break;
       }
     }
 
+  const category_ = ref({ label: '', value: '' });
+  const categoryOptions = [
+    { label: '全部脚本', value: '0' },
+    { label: '定时脚本', value: '1' },
+    { label: '后台脚本', value: '2' }
+  ];
+  for (let i = 0; i < categoryOptions.length; i++) {
+    if (categoryOptions[i].value == props.category) {
+      category_.value = categoryOptions[i];
+      break;
+    }
+  }
+
     return {
       //today_download 日安装 total_download 总安装 createtime 最新发布 score 评分 updatetime 最新更新
-      sortOptions: options,
-      categoryOptions: ['建设中'],
+      sortOptions: sortOptions,
+      categoryOptions: categoryOptions,
       sort_: sort_,
-      category_: ref(props.category),
+      category_:category_,
     };
   },
   methods: {

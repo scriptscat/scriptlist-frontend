@@ -14,14 +14,6 @@
       <q-item-label caption lines="2">
         <div class="flex justify-start" style="line-height: 28px">
           <IssueStatus :status="issue.status" />
-          <a
-            :href="`/users/` + issue.uid"
-            style="color: rgba(0, 0, 0, 0.54)"
-            target="_blank"
-          >
-            用户名</a
-          >
-          <span style="margin-left: 4px">创建1天前 打开 · 10 评论</span>
         </div>
       </q-item-label>
     </div>
@@ -29,23 +21,19 @@
       <div class="col">
         <div class="row">
           <div class="comment-item row">
-            <div class="left col-1">
-              <a :href="'/users/' + issue.uid" class="username" target="_blank">
-                <q-avatar>
-                  <img
-                    :src="
-                      'https://scriptcat.org/api/v1/user/avatar/' + issue.uid
-                    "
-                  />
-                </q-avatar>
-              </a>
-            </div>
             <div class="right col">
               <div
                 :class="
                   issue.uid == selfUid ? 'comment-title self' : 'comment-title'
                 "
               >
+                <q-avatar size="25px">
+                  <img
+                    :src="
+                      'https://scriptcat.org/api/v1/user/avatar/' + issue.uid
+                    "
+                  />
+                </q-avatar>
                 <a :href="'/users/' + issue.uid" class="username">{{
                   issue.username
                 }}</a>
@@ -67,28 +55,19 @@
             :key="index"
             :id="`commit-` + comment.id"
           >
-            <div class="left col-1">
-              <a
-                :href="'/users/' + comment.uid"
-                class="username"
-                target="_blank"
-                v-if="comment.type == 1"
-              >
-                <q-avatar>
-                  <img
-                    :src="
-                      'https://scriptcat.org/api/v1/user/avatar/' + comment.uid
-                    "
-                  />
-                </q-avatar>
-              </a>
-            </div>
             <div v-if="comment.type == 1" class="right col">
               <div
                 :class="
                   issue.uid == selfUid ? 'comment-title self' : 'comment-title'
                 "
               >
+                <q-avatar size="25px">
+                  <img
+                    :src="
+                      'https://scriptcat.org/api/v1/user/avatar/' + comment.uid
+                    "
+                  />
+                </q-avatar>
                 <a :href="'/users/' + comment.uid" class="username">{{
                   comment.username
                 }}</a>
@@ -143,12 +122,13 @@
           </div>
         </div>
         <div>
-          <q-card>
+          <q-card flat bordered>
             <div>
               <div ref="mkedite"></div>
             </div>
             <div class="flex justify-end" style="padding: 8px">
               <q-btn
+                outline
                 color="secondary"
                 size="sm"
                 v-if="issue.status == 1"
@@ -157,6 +137,7 @@
                 关闭反馈
               </q-btn>
               <q-btn
+                outline
                 color="red"
                 size="sm"
                 v-if="issue.status == 3"
@@ -166,6 +147,7 @@
                 重新打开
               </q-btn>
               <q-btn
+                outline
                 color="primary"
                 size="sm"
                 @click="submitComment"
@@ -463,19 +445,6 @@ export default defineComponent({
   box-sizing: initial;
   position: relative;
   z-index: 10;
-}
-
-.comment-item .comment-title::before {
-  content: ' ';
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  margin-left: -14px;
-  margin-top: 8px;
-  border: 1px solid #d0d7de;
-  background-color: #f6f8fa;
-  clip-path: polygon(0% 0, 100% 0%, 0% 100%, 0 50%);
-  transform: rotate(-45deg);
 }
 
 .comment-item .comment-title {
