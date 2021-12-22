@@ -94,6 +94,7 @@
               "
               color="primary"
               :label="install"
+              @click="requestInstall"
             />
             <q-btn
               outline
@@ -124,6 +125,7 @@ import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 import MarkdownView from '@Components/MarkdownView.vue';
 import { formatDate } from '@App/utils/utils';
 import { unwatch, watch, watchLevel } from '@App/apis/scripts';
+import { csrfToken, downloadStatistics } from '@App/apis/other';
 
 export default defineComponent({
   components: {
@@ -161,6 +163,7 @@ export default defineComponent({
         }
       }
     );
+    this.csrf = (await csrfToken(this.id)).data.csrf;
   },
   data() {
     return {
@@ -176,6 +179,7 @@ export default defineComponent({
         { value: 2, label: '新建issue' },
         { value: 3, label: '任何' },
       ],
+      csrf: '',
     };
   },
   methods: {
@@ -186,6 +190,19 @@ export default defineComponent({
       void this.$router.push({
         name: 'submitscript',
         query: { id: this.id },
+      });
+    },
+    async requestInstall(ev: Event) {
+      ev.preventDefault();
+      await downloadStatistics(this.id, this.csrf).finally(() => {
+        // window.open(
+        //   '/scripts/code/' +
+        //     this.id.toString() +
+        //     '/' +
+        //     encodeURIComponent(this.author.name) +
+        //     '.user.js',
+        //   '_self'
+        // );
       });
     },
   },
