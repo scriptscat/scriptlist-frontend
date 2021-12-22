@@ -63,7 +63,6 @@ export default defineComponent({
 class MarkdownRenderer extends marked.Renderer {
   link(href: string, title: string, text: string) {
     const baseUrl = this.options.baseUrl || '';
-    console.log(href);
     if (!(href.startsWith('http://') || href.startsWith('https://'))) {
       if (href.startsWith('.')) {
         href = baseUrl + href.substring(1);

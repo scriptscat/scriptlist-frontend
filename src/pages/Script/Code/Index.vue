@@ -195,14 +195,14 @@ export default defineComponent({
     async requestInstall(ev: Event) {
       ev.preventDefault();
       await downloadStatistics(this.id, this.csrf).finally(() => {
-        // window.open(
-        //   '/scripts/code/' +
-        //     this.id.toString() +
-        //     '/' +
-        //     encodeURIComponent(this.author.name) +
-        //     '.user.js',
-        //   '_self'
-        // );
+        window.open(
+          '/scripts/code/' +
+            this.id.toString() +
+            '/' +
+            encodeURIComponent(this.author.name) +
+            '.user.js',
+          '_self'
+        );
       });
     },
   },
