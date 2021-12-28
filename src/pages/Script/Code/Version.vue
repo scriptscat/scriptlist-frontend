@@ -92,10 +92,10 @@ export default defineComponent({
     },
   },
   unmounted() {
-    void this.$store.commit('issues/resetPreFetch');
+    void this.$store.commit('scripts/resetPreFetch');
   },
   mounted() {
-    if (!this.$store.state.issues.preFetch) {
+    if (!this.$store.state.scripts.preFetch) {
       void this.reload(this.$route);
     }
   },
