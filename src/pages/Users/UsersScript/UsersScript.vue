@@ -60,12 +60,12 @@
           >
         </div>
       </div>
-      <Filter
+      <!-- <Filter
         :sort="$route.query.sort"
         :category="$route.query.category"
         @sortChange="sortChange"
         @categoryChange="categoryChange"
-      />
+      /> -->
       <q-card
         class="single"
         flat
@@ -125,7 +125,7 @@
           </q-item-label>
         </q-card>
       </q-card>
-      <div v-show="maxPage > 1" class="flex flex-center">
+      <!-- <div v-show="maxPage > 1" class="flex flex-center">
         <TablePagination
           v-bind="page"
           :reloadPage="reload"
@@ -133,7 +133,7 @@
           :maxlens="6"
           :max="10"
         />
-      </div>
+      </div> -->
     </q-card-section>
   </div>
 </template>
@@ -141,20 +141,20 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
-import Filter from '@App/components/ScriptFilter.vue';
-import TablePagination from '@Components/TablePagination.vue';
+// import Filter from '@App/components/ScriptFilter.vue';
+// import TablePagination from '@Components/TablePagination.vue';
 import { fetchUserScriptList } from '@App/apis/scripts';
 import { Cookies, useMeta } from 'quasar';
-import { useStore } from '@App/store';
+import { StateInterface, useStore } from '@App/store';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
-import { formatDate } from '@App/utils/utils';
+import { formatDate, goToLoginUrl } from '@App/utils/utils';
 import { follow, isFollow, unfollow } from '@App/apis/user';
 
 export default defineComponent({
   components: {
-    Filter,
+    // Filter,
     ScriptCardAction,
-    TablePagination,
+    // TablePagination,
   },
   computed: {
     maxPage() {
@@ -173,9 +173,12 @@ export default defineComponent({
       return this.$store.state.user.follow;
     },
   },
-  async preFetch({ store, currentRoute, ssrContext }) {
+  async preFetch({ store, currentRoute, ssrContext, redirect }) {
     if (!ssrContext) {
       return;
+    }
+    if (!(<StateInterface>store.state).user.islogin) {
+      return redirect(goToLoginUrl(currentRoute.path));
     }
     const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     await store.dispatch('user/fetchUserInfo', {
@@ -185,9 +188,9 @@ export default defineComponent({
     await store.dispatch('scripts/fetchUserScriptList', {
       uid: parseInt(<string>currentRoute.params.id || '0'),
       cookies: cookies,
-      page: currentRoute.query.page || 1,
-      count: 20,
-      keyword: encodeURIComponent(<string>currentRoute.query.keyword || ''),
+      // page: currentRoute.query.page || 1,
+      // count: 20,
+      // keyword: encodeURIComponent(<string>currentRoute.query.keyword || ''),
       sort: currentRoute.query.sort || 'today_download',
       category: currentRoute.query.category || '',
       domain: currentRoute.query.domain || '',

@@ -10,6 +10,14 @@ const mutation: MutationTree<ScriptsStateInterface> = {
   updateScriptInfo(state, script: any) {
     state.script = script;
   },
+  updateScriptVersion(state, { list, total }) {
+    state.version = list;
+    state.total = total;
+    state.preFetch = true;
+  },
+  resetPreFetch(state) {
+    state.preFetch = false;
+  },
 };
 
 export default mutation;

@@ -14,6 +14,10 @@ export function getScriptInfo(scriptId: number, withCode?: boolean) {
   return http.get<API.ScriptCodeResponse>('/scripts/' + scriptId.toString() + (withCode ? '/code' : ''))
 }
 
+export function updateSetting(scriptId: number, setting: DTO.ScriptSetting) {
+  return http.put<API.OkResponse>('/scripts/' + scriptId.toString(), setting);
+}
+
 export function updateScriptCode(id: number, content: string, code: string, definition: string, changelog: string, scriptPublic: DTO.ScriptPublic, unwell: DTO.ScriptUnwell) {
   const formData = new FormData();
   formData.append('content', content);
@@ -71,6 +75,15 @@ export function fetchUserScriptList(param: {
     encodeURIComponent(param.category || '').toString() +
     '&domain=' +
     encodeURIComponent(param.domain || '').toString() + '&page=' + (param.page || 1).toString() + '&count=' + (param.count || 20).toString(), config);
+}
+
+export function fetchVersionList(param: { id: number, page: number, count: number, cookies: Cookies }) {
+  const config = <AxiosRequestConfig>{};
+  if (param.cookies) {
+    config.headers = { cookie: 'token=' + (param.cookies ? param.cookies.get('token') : '') };
+  }
+  return http.get<API.ScriptVersionResponse>('/scripts/' + param.id.toString() +
+    '/versions?page=' + (param.page || 1).toString() + '&count=' + (param.count || 20).toString(), config);
 }
 
 export function watchLevel(scriptId: number) {

@@ -43,7 +43,7 @@ const routes = [
             name: 'code',
             component: () => import('pages/Script/Code/Code.vue'),
           },
-          //     { path: "/script-show-page/:id/history", name: "history", component: () => import('components/ScriptDescription/History.vue') },
+          { path: '/script-show-page/:id/version', name: 'version', component: () => import('pages/Script/Code/Version.vue'), },
           {
             path: 'comment',
             name: 'comment',
@@ -81,7 +81,7 @@ const routes = [
             name: 'statistic',
             component: () => import('pages/Script/Code/Statistic.vue'),
           },
-          //     { path: "/script-show-page/:id/manage", name: "manageScript", component: () => import('components/ScriptDescription/ManageScript.vue') },
+          { path: '/script-show-page/:id/manage', name: 'manage', component: () => import('pages/Script/Code/Manage.vue') },
         ],
       },
     ],

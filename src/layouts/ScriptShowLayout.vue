@@ -15,7 +15,7 @@
       <q-tabs align="left">
         <div v-for="(item, index) in tabList" :key="index">
           <q-route-tab
-            v-if="isuserisauthor != false || index < 4"
+            v-if="isuserisauthor != false || index < 5"
             :to="{ name: item.name, params: $route.params }"
             flat
             outline
@@ -40,7 +40,7 @@ import { useStore } from 'src/store';
 import { useRoute } from 'vue-router';
 
 export default defineComponent({
-  components: {  },
+  components: {},
   preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
       return;
@@ -84,10 +84,10 @@ export default defineComponent({
         name: 'comment',
         label: '评分',
       },
-      // {
-      //   name: 'history',
-      //   label: '历史版本',
-      // },
+      {
+        name: 'version',
+        label: '版本列表',
+      },
       {
         name: 'update',
         label: '更新脚本',
@@ -97,7 +97,7 @@ export default defineComponent({
         label: '安装统计',
       },
       {
-        name: 'manageScript',
+        name: 'manage',
         label: '脚本管理',
       },
     ]);
@@ -124,6 +124,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .main {
   margin: 10px 0px 0px 10px;
+  margin-bottom: 10px;
 }
 
 .GNL__drawer-item {

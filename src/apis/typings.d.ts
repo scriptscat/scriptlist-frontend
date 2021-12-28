@@ -43,9 +43,12 @@ declare namespace API {
 
   type ScriptInfoResponse = Response<DTO.Script>;
 
+  type ScriptVersionResponse = Response<DTO.ScriptCode>;
+
   type CommontResponse = Response<DTO.Comment>;
 
   type CommontListResponse = ListResponse<DTO.Comment>;
+
   type ScriptCodeResponse = Response<DTO.Script>;
 
   type IssueResponse = Response<DTO.Issue>;
@@ -110,7 +113,15 @@ declare namespace DTO {
     createtime: number;
     updatetime: number;
     is_manager: boolean;
+    setting?: ScriptSetting
   };
+
+  type ScriptSetting = {
+    sync_url: string,
+    sync_mode: string
+    content_url: string
+    definition_url: string
+  }
 
   type ScriptCode = {
     code: string;

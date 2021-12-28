@@ -1,4 +1,4 @@
-import { fetchUserScriptList } from '@App/apis/scripts';
+import { fetchUserScriptList, fetchVersionList } from '@App/apis/scripts';
 import { Cookies } from 'quasar';
 import { ActionTree } from 'vuex';
 import http from '../../utils/http';
@@ -43,6 +43,13 @@ const actions: ActionTree<ScriptsStateInterface, StateInterface> = {
       console.log(error);
       commit('updateScriptInfo', {});
     }
+  },
+  fetchVersionList({ commit }, param: { id: number, page: number, count: number, cookies: Cookies }) {
+    return fetchVersionList(param).then(resp => {
+      commit('updateScriptVersion', resp.data);
+    }).catch(() => {
+      commit('updateScriptVersion', { list: [], total: 0 });
+    });
   }
 };
 

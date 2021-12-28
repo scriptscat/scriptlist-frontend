@@ -45,6 +45,8 @@ const codeSyntaxHighlight = async () =>
   await import('@toast-ui/editor-plugin-code-syntax-highlight');
 const Editor = async () => await import('@toast-ui/editor');
 import Prism from 'prismjs';
+import { StateInterface } from '@App/store';
+import { goToLoginUrl } from '@App/utils/utils';
 
 if (process.env.CLIENT) {
   require('prismjs/themes/prism.css');
@@ -62,6 +64,11 @@ const editor = <
 
 export default defineComponent({
   name: 'NewIssue',
+  preFetch({ store, redirect, currentRoute }) {
+    if (!(<StateInterface>store.state).user.islogin) {
+      return redirect(goToLoginUrl(currentRoute.path));
+    }
+  },
   setup() {
     useMeta({
       title: '创建新反馈',

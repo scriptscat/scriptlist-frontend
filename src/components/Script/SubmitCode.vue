@@ -36,10 +36,10 @@
       <q-input
         outlined
         v-model="changelog"
+        type="textarea"
         label="更新记录"
         style="margin-bottom: 10px"
-        counter
-        maxlength="128"
+        rows="7"
         dense
       >
       </q-input>

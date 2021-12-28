@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <q-card-section>
     <div class="flex flex-center">
       <q-card flat>
         <div class="text-body flex flex-center" style="margin-top: 20px">
@@ -28,7 +28,7 @@
         </q-card-section>
       </q-card>
     </div>
-  </div>
+  </q-card-section>
 </template>
 
 <style scoped></style>
