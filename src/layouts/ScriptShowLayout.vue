@@ -102,8 +102,13 @@ export default defineComponent({
       },
     ]);
     useMeta({
-      title: 'ScriptCat',
-      titleTemplate: (title) => `${script.name} - ${title}`,
+      title: '',
+      titleTemplate: (title) => {
+        if (title) {
+          return `${script.name} - ${title}`;
+        }
+        return script.name;
+      },
       meta: {
         description: { name: 'description', content: script.description },
       },
