@@ -37,14 +37,13 @@
       </q-card>
     </q-btn-group>
     <q-table
+      no-data-label="暂无相关反馈"
       flat
       table-colspan="10"
       :rows-per-page-options="[20]"
-      hide-no-data
       square
       bordered
-      hide-bottom
-      table-header-class="bg-grey-1"
+      table-header-class=""
       style="border-bottom: 1px solid lightgrey"
       :rows="returnGoodsProgressData.datas"
       :columns="returnGoodsProgressData.columns"
@@ -111,14 +110,14 @@ export default defineComponent({
   },
   setup() {
     useMeta({
-      title:'反馈'
+      title: '反馈',
     });
     const returnGoodsProgressData = ref({
       columns: [
         {
           name: 'title',
           align: 'left',
-          label: '反馈标题',
+          label: '标题',
           field: 'title',
         },
         {

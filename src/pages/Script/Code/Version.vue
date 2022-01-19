@@ -1,6 +1,6 @@
 <template>
   <q-card-section>
-    <q-card v-for="(item, index) in version" :key="index" class="version-item">
+    <q-card flat v-for="(item, index) in version" :key="index" class="version-item">
       <q-card-section>
         <div class="text-h5">
           v{{ item.version }}
@@ -62,16 +62,16 @@ import MarkdownView from '@Components/MarkdownView.vue';
 
 export default defineComponent({
   components: { MarkdownView },
-  preFetch({ store, ssrContext, currentRoute }) {
-    if (!ssrContext) {
-      return;
-    }
-    const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
+  preFetch({ store, currentRoute }) {
+    // if (!ssrContext) {
+    //   return;
+    // }
+    // const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     return store.dispatch('scripts/fetchVersionList', {
       id: currentRoute.params.id,
       page: parseInt(<string>currentRoute.query.page || '1'),
       count: 20,
-      cookies: cookies,
+      // cookies: cookies,
     });
   },
   setup() {
@@ -97,7 +97,10 @@ export default defineComponent({
   mounted() {
     if (!this.$store.state.scripts.preFetch) {
       void this.reload(this.$route);
-    }
+    } 
+    // else {
+    //   this.version = this.$store.state.scripts.version;
+    // }
   },
   methods: {
     async reload(currentRoute: RouteLocationNormalizedLoaded) {
@@ -106,6 +109,7 @@ export default defineComponent({
         page: parseInt(<string>currentRoute.query.page || '1'),
         count: 20,
       });
+      console.log(this.$store.state.scripts.preFetch);
     },
   },
 });

@@ -2,9 +2,14 @@
   <q-footer reveal class="flex-center footer" bordered>
     <q-card-section class="text-center">
       <div class="col-12">
-        <q-btn type="a" href="/" flat dense color="grey-8" target="_blank"
-          ><q-avatar square size="24px">
-            <img src="/icons/favicon-32x32.png" /> </q-avatar
+        <q-btn
+          type="a"
+          href="/"
+          icon="fas fa-home"
+          flat
+          dense
+          color="grey-8"
+          target="_blank"
         ></q-btn>
         <q-btn
           type="a"

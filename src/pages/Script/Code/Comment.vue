@@ -1,7 +1,9 @@
 <template>
   <q-card-section>
     <div v-if="islogin">
-      <q-card flat bordered class="q-mt-md">
+      <q-card flat bordered>
+        <div class="text-h5" style="margin: 15px 15px 15px 15px">撰写评论</div>
+        <q-separator />
         <q-card-section>
           <div class="my-comment">
             <q-input
@@ -12,10 +14,11 @@
               borderless
             />
           </div>
-          <q-separator />
         </q-card-section>
+        <q-separator />
         <q-card-section class="q-pt-none">
           <q-rating
+            style="margin-top: 15px"
             icon-selected="star"
             icon-half="star_half"
             v-model="mypostform.ratingpost"
@@ -54,46 +57,41 @@
         <q-rating size="20px" :max="5" color="primary" disable />
       </q-card-section>
     </q-card>
-    <q-card flat bordered style="margin-top: 20px">
-      <q-expansion-item
-        switch-toggle
-        default-opened
-        icon="chat"
-        label="用户评价"
-      >
-        <q-card v-if="userscorelist.length != 0">
-          <div v-for="(item, index) in userscorelist" :key="index">
-            <div style="margin-left: 10px; margin-bottom: 5px" class="flex">
-              <q-avatar size="40px">
-                <img :src="item.avatar" />
-              </q-avatar>
-              <div style="flex: 1 1 0; padding-left: 15px">
-                <div class="flex items-center">
-                  <span style="color: #1a73e8; margin-right: 15px">{{
-                    item.username
-                  }}</span>
-                  <span>{{ dateformat(item.createtime * 1000) }}</span>
 
-                  <q-rating
-                    style="padding: 0px 0px 2px 10px"
-                    readonly
-                    v-model="item.score"
-                    size="16px"
-                    :max="5"
-                    color="primary"
-                  />
-                </div>
-                <div>
-                  <pre>{{ item.message }}</pre>
-                </div>
+    <q-card style="margin: 10px 0px 0px 0px" flat bordered>
+      <div class="text-h5" style="margin: 15px">用户评论</div>
+      <q-card v-if="userscorelist.length != 0">
+        <div v-for="(item, index) in userscorelist" :key="index">
+          <q-separator />
+          <div style="margin: 10px 5px 5px 10px" class="flex">
+            <q-avatar size="40px">
+              <img :src="item.avatar" />
+            </q-avatar>
+            <div style="flex: 1 1 0; padding-left: 15px">
+              <div class="flex items-center">
+                <span style="color: #1a73e8; margin-right: 15px">{{
+                  item.username
+                }}</span>
+                <span>{{ dateformat(item.createtime * 1000) }}</span>
+                <q-rating
+                  style="padding: 0px 0px 2px 10px"
+                  readonly
+                  v-model="item.score"
+                  size="16px"
+                  :max="5"
+                  color="primary"
+                />
+              </div>
+
+              <div class="text-substitute">
+                <pre>{{ item.message }}</pre>
               </div>
             </div>
-            <q-separator style="margin-bottom: 5px" />
           </div>
-        </q-card>
+        </div>
+      </q-card>
 
-        <div v-else style="margin: 15px">暂无用户评论，您可以来当第一位</div>
-      </q-expansion-item>
+      <div v-else style="margin: 15px">暂无用户评论，您可以来当第一位</div>
     </q-card>
   </q-card-section>
 </template>

@@ -227,7 +227,7 @@ export default defineComponent({
 }
 @media screen and (max-width: 554px) {
   .GNL__toolbar-input {
-    width: 100%;
+    width: 50%;
     margin-left: 0px;
   }
   .logo-title {

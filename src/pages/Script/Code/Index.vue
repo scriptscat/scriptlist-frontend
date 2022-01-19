@@ -14,35 +14,41 @@
               </q-avatar>
             </q-item-section>
             <q-item-section>
-              <q-item-label class="flex justify-between">
-                <a
-                  style="color: rgb(40, 86, 172)"
-                  target="_blank"
-                  :href="'/users/' + author.uid"
-                >
-                  {{ author.username }}
-                </a>
-                <q-select
-                  outlined
-                  v-model="scriptWatch"
-                  :options="watchOptions"
-                  :disable="!islogin"
-                  borderless
-                  dense
-                  options-dense
-                  label="关注"
-                  style="width: 120px; height: 10px"
-                >
-                </q-select>
-              </q-item-label>
-              <div class="text-body1">
-                <a
-                  class="text-black"
-                  target="_blank"
-                  :href="'/script-show-page/' + author.id"
-                >
-                  <b>{{ author.name }}</b>
-                </a>
+              <div class="flex justify-between">
+                <div style="width:calc(100% - 120px);">
+                  <q-item-label>
+                    <a
+                      style="color: rgb(40, 86, 172)"
+                      target="_blank"
+                      :href="'/users/' + author.uid"
+                    >
+                      {{ author.username }}
+                    </a>
+                  </q-item-label>
+                  <div class="text-body1">
+                    <a
+                      class="text-black"
+                      target="_blank"
+                      :href="'/script-show-page/' + author.id"
+                    >
+                      <b>{{ author.name }}</b>
+                    </a>
+                  </div>
+                </div>
+                <div>
+                  <q-select
+                    outlined
+                    v-model="scriptWatch"
+                    :options="watchOptions"
+                    :disable="!islogin"
+                    borderless
+                    dense
+                    options-dense
+                    label="关注"
+                    style="width: 120px; height: 10px"
+                  >
+                  </q-select>
+                </div>
               </div>
             </q-item-section>
           </q-item>

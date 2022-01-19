@@ -14,6 +14,7 @@ if (process.env.CLIENT) {
   require('codemirror/lib/codemirror.css');
   require('codemirror/mode/javascript/javascript');
   require('codemirror/theme/base16-light.css');
+  require('codemirror/theme/neo.css');
 }
 
 const editor = <
@@ -60,7 +61,7 @@ export default defineComponent({
                   readOnly: true,
                   lineWrapping: true,
                   mode: 'javascript',
-                  theme: 'base16-light', // 主日样式
+                  theme: 'neo', // 主日样式
                   lineNumbers: true, // 显示行号
                 }
               );
