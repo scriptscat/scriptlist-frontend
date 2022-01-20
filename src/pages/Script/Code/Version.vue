@@ -62,16 +62,16 @@ import MarkdownView from '@Components/MarkdownView.vue';
 
 export default defineComponent({
   components: { MarkdownView },
-  preFetch({ store, currentRoute }) {
-    // if (!ssrContext) {
-    //   return;
-    // }
-    // const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
+  preFetch({ store, currentRoute,ssrContext }) {
+    if (!ssrContext) {
+      return;
+    }
+    const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     return store.dispatch('scripts/fetchVersionList', {
       id: currentRoute.params.id,
       page: parseInt(<string>currentRoute.query.page || '1'),
       count: 20,
-      // cookies: cookies,
+      cookies: cookies,
     });
   },
   setup() {

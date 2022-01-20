@@ -65,9 +65,9 @@ const editor = <
 
 export default defineComponent({
   name: 'NewIssue',
-  preFetch({ store, currentRoute, ssrContext }) {
-    if (!(<StateInterface>store.state).user.islogin) {
-      return ssrContext?.res.redirect(goToLoginUrl(currentRoute.path));
+  preFetch({ store, currentRoute, redirect }) {
+    if (process.env.SERVER && !(<StateInterface>store.state).user.islogin) {
+      return redirect(goToLoginUrl(currentRoute.path));
     }
   },
   setup() {
