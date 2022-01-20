@@ -102,9 +102,9 @@ export default defineComponent({
       },
     ]);
     useMeta({
-      title: '',
+      title: '-',
       titleTemplate: (title) => {
-        if (title) {
+        if (title && title != '-') {
           return `${script.name} - ${title}`;
         }
         return script.name;
