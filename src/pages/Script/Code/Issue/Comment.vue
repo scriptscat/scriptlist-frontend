@@ -316,7 +316,7 @@ export default defineComponent({
         let handler = async () => {
           editor.mkedit = new (await Editor()).default({
             el: <HTMLElement>this.$refs.mkedite,
-            previewStyle: 'vertical',
+            previewStyle: 'tab',
             height: '400px',
             hooks: {
               addImageBlobHook: async (blob, callback) => {

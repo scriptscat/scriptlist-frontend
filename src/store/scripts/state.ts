@@ -12,7 +12,7 @@ function state(): ScriptsStateInterface {
     version: [],
     total: 0,
     script: <DTO.Script>{},
-    preFetch: true
+    preFetch: false
   }
 };
 
