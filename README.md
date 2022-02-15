@@ -1,26 +1,42 @@
-# ScriptCat (scriptlist-frontend)
+<img src="./src/assets/cat.png" width="120" height="120"/>
 
-ScriptCat-分享你的用户脚本
 
-## Install the dependencies
-```bash
-npm install
+## 介绍
+
+ScriptCat脚本库页面前端，用户可以在此页面搜索想要的脚本。
+
+## 技术栈
+
+- Quasar3
+- Vue3
+- TypeScript
+
+## 预览
+
+# 搜索页
+
+<img src="./src/assets/home.png" width="851" height="467"/>
+
+# 脚本库页面
+
+<img src="./src/assets/index.png" width="951" height="467"/>
+                                                       
+## 项目运行
+
+注意：本项目依赖node和quasar
+
+``` shell
+# git clone
+git clone git@github.com:scriptscat/scriptlist-frontend.git
+
+# Install the dependencies
+npm i
+
+# Start the app in development mode
+quasar dev -m ssr
+
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
-```
+## 协议
 
-### Lint the files
-```bash
-npm run lint
-```
-
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
+- MIT
