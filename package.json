@@ -5,6 +5,7 @@
   "productName": "ScriptCat",
   "author": "Dandanla <dandanmuaa@gmail.com>",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "echo \"No test specified\" && exit 0",
