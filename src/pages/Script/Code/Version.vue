@@ -1,6 +1,11 @@
 <template>
   <q-card-section>
-    <q-card flat v-for="(item, index) in version" :key="index" class="version-item">
+    <q-card
+      flat
+      v-for="(item, index) in version"
+      :key="index"
+      class="version-item"
+    >
       <q-card-section>
         <div class="text-h5">
           v{{ item.version }}
@@ -13,6 +18,9 @@
           >
             最新
           </q-chip>
+          <span class="text-caption" style="float: right">{{
+            dateformat(item.createtime * 1000)
+          }}</span>
         </div>
       </q-card-section>
       <q-separator />
@@ -59,10 +67,11 @@ import { Cookies, useMeta } from 'quasar';
 import { defineComponent } from 'vue';
 import { RouteLocationNormalizedLoaded } from 'vue-router';
 import MarkdownView from '@Components/MarkdownView.vue';
+import { formatDate } from '@App/utils/utils';
 
 export default defineComponent({
   components: { MarkdownView },
-  preFetch({ store, currentRoute,ssrContext }) {
+  preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
       return;
     }
@@ -97,7 +106,7 @@ export default defineComponent({
   mounted() {
     if (!this.$store.state.scripts.preFetch) {
       void this.reload(this.$route);
-    } 
+    }
     // else {
     //   this.version = this.$store.state.scripts.version;
     // }
@@ -111,6 +120,11 @@ export default defineComponent({
       });
       console.log(this.$store.state.scripts.preFetch);
     },
+  },
+  data() {
+    return {
+      dateformat: formatDate,
+    };
   },
 });
 </script>

@@ -32,7 +32,7 @@ declare namespace API {
   }>;
 
   type UserConfigResponse = Response<{
-    notify: DTO.UserNotify
+    notify: DTO.UserNotify;
   }>;
 
   type ScriptListResponse = ListResponse<DTO.Script>;
@@ -113,15 +113,16 @@ declare namespace DTO {
     createtime: number;
     updatetime: number;
     is_manager: boolean;
-    setting?: ScriptSetting
+    archive: number;
+    setting?: ScriptSetting;
   };
 
   type ScriptSetting = {
-    sync_url: string,
-    sync_mode: string
-    content_url: string
-    definition_url: string
-  }
+    sync_url: string;
+    sync_mode: string;
+    content_url: string;
+    definition_url: string;
+  };
 
   type ScriptCode = {
     code: string;
@@ -135,9 +136,9 @@ declare namespace DTO {
 
   type Follow = {
     // 粉丝
-    followers: number
+    followers: number;
     // 关注
-    following: number
+    following: number;
   };
 
   type Comment = {
@@ -171,20 +172,18 @@ declare namespace DTO {
     type: IssueCommentType;
     status: number;
     createtime: number;
-  }
+  };
 
   type UploadImage = {
     id: string;
   };
 
   type UserNotify = {
-    at: boolean
-    create_script: boolean
-    score: boolean
-    script_issue: boolean
-    script_issue_comment: boolean
-    script_updat: boolean
+    at: boolean;
+    create_script: boolean;
+    score: boolean;
+    script_issue: boolean;
+    script_issue_comment: boolean;
+    script_updat: boolean;
   };
-
 }
-

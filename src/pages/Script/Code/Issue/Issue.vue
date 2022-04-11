@@ -5,7 +5,15 @@
       style="margin: 0px 0px 10px 0px; width: 100%"
       class="flex justify-between"
     >
-      <q-btn color="primary" :to="'issue/new'" outline> 创建反馈 </q-btn>
+      <q-btn
+        v-if="script.archive"
+        color="primary"
+        outline
+      >
+        创建反馈
+        <q-tooltip> 脚本以归档,不能反馈 </q-tooltip>
+      </q-btn>
+      <q-btn v-else color="primary" :to="'issue/new'" outline> 创建反馈 </q-btn>
       <q-card flat class="single flex justify-end">
         <q-select
           disable
@@ -106,6 +114,9 @@ export default defineComponent({
   computed: {
     maxPage() {
       return Math.ceil(this.$store.state.issues.total / 20);
+    },
+    script() {
+      return this.$store.state.scripts.script || <DTO.Script>{};
     },
   },
   setup() {

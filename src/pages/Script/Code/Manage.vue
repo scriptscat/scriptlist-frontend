@@ -88,14 +88,36 @@
     </div>
     <div class="setting-item">
       <div class="title-wrap">脚本管理</div>
-      <div>暂未开放</div>
       <div class="row">
-        <q-btn label="归档脚本" size="md" color="orange">
+        <q-btn
+          v-if="archive"
+          label="取消归档"
+          size="md"
+          color="orange"
+          @click="onArchive"
+          loading="loading.archive"
+        >
+          <q-tooltip> 取消归档,继续维护 </q-tooltip>
+        </q-btn>
+        <q-btn
+          v-else
+          label="归档脚本"
+          size="md"
+          color="orange"
+          @click="onArchive"
+          loading="loading.archive"
+        >
           <q-tooltip>
             设置脚本为归档,提示用户不再维护,且脚本不能更新和反馈
           </q-tooltip>
         </q-btn>
-        <q-btn label="删除脚本" size="md" color="red" style="margin-left: 10px">
+        <q-btn
+          label="删除脚本"
+          size="md"
+          color="red"
+          style="margin-left: 10px"
+          @click="onDelete"
+        >
           <q-tooltip> 请注意!!!删除后不能再恢复!!! </q-tooltip>
         </q-btn>
       </div>
@@ -133,7 +155,13 @@
 </template>
 
 <script lang="ts">
-import { getScriptInfo, updateSetting } from '@App/apis/scripts';
+import {
+  archive,
+  deleteScript,
+  getScriptInfo,
+  unarchive,
+  updateSetting,
+} from '@App/apis/scripts';
 import { responseErrorHandler } from '@App/utils/utils';
 import { defineComponent } from 'vue';
 
@@ -141,6 +169,9 @@ export default defineComponent({
   computed: {
     id() {
       return parseInt(<string>this.$route.params.id);
+    },
+    script() {
+      return this.$store.state.scripts.script || <DTO.Script>{};
     },
   },
   methods: {
@@ -160,6 +191,7 @@ export default defineComponent({
             this.intervalmethod = response.data.data.setting.sync_mode;
             this.addtext = response.data.data.setting.content_url;
             this.dtscontext = response.data.data.setting.definition_url;
+            this.archive = response.data.data.archive;
           } else {
           }
         })
@@ -190,13 +222,61 @@ export default defineComponent({
           responseErrorHandler(this.$q, error);
         });
     },
+    onArchive() {
+      this.loading.archive = true;
+      let p;
+      if (this.archive) {
+        // 取消归档
+        p = unarchive(this.id);
+      } else {
+        // 归档
+        p = archive(this.id);
+      }
+      p.then((resp) => {
+        this.archive = this.archive ? 0 : 1;
+        this.loading.archive = false;
+        if (resp.data.code === 0) {
+          this.$q.notify({
+            message: (this.archive ? '归档成功' : '取消归档成功') + '!',
+            position: 'top',
+          });
+        }
+      }).catch((err) => {
+        this.loading.archive = false;
+        responseErrorHandler(this.$q, err);
+      });
+    },
+    onDelete() {
+      if (prompt('请再次输入脚本名以确认是否删除') !== this.script.name) {
+        return alert('输入错误,取消删除');
+      }
+      deleteScript(this.id)
+        .then((resp) => {
+          if (resp.data.code === 0) {
+            this.$q.notify({
+              color: 'primary',
+              icon: 'done',
+              message: '删除成功',
+              position: 'center',
+            });
+            void this.$router.push({
+              path: '/',
+            });
+          }
+        })
+        .catch((err) => {
+          responseErrorHandler(this.$q, err);
+        });
+    },
   },
   data() {
     return {
       dtscontrol: false,
       dtscontext: '',
+      archive: 0,
       loading: {
         uniteloading: false,
+        archive: false,
       },
       recommendaddress: '',
       intervalgetscript: '',

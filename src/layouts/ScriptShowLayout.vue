@@ -1,6 +1,9 @@
 <template>
   <div class="main flex flex-center">
     <h4 style="display: block; width: 100%; max-width: 1300px">
+      <q-banner v-if="script.archive" dense rounded class="bg-orange text-white" style="width: 100%;margin-bottom:10px">
+      此脚本已归档，作者不再进行维护
+      </q-banner>
       <a
         :href="'/script-show-page/' + script.id"
         style="text-decoration: none; color: #000"
