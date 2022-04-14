@@ -114,8 +114,9 @@
               type="a"
               target="_blank"
               :href="
-                'https://bbs.tampermonkey.net.cn/thread-2063-1-1.html' +
-                author.post_id
+                'https://bbs.tampermonkey.net.cn/thread-' +
+                author.post_id +
+                '-1-1.html'
               "
               icon="forum"
               color="primary"
