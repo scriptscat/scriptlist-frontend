@@ -11,7 +11,7 @@ import { defineComponent } from 'vue';
 import { marked } from 'marked';
 import 'prismjs/themes/prism.css';
 import Prism from 'prismjs';
-import 'github-markdown-css/github-markdown.css';
+import 'github-markdown-css/github-markdown-light.css';
 
 export default defineComponent({
   name: 'MarkdownView',

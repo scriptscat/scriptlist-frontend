@@ -11,7 +11,7 @@
     >
       <q-tooltip>评分</q-tooltip>
     </q-btn>
-    <q-separator vertical inset="1" />
+    <q-separator vertical inset />
     <q-btn
       flat
       icon="chat"
@@ -79,4 +79,3 @@ export default defineComponent({
   },
 });
 </script>
-

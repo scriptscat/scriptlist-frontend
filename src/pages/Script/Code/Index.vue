@@ -1,7 +1,12 @@
 <template>
   <div>
     <q-card flat class="my-card">
-      <q-card style="padding: 8px" class="single" flat bordered>
+      <q-card
+        style="padding: 8px; padding-bottom: 0"
+        class="single"
+        flat
+        bordered
+      >
         <q-card bordered flat>
           <q-item>
             <q-item-section avatar>
@@ -15,7 +20,7 @@
             </q-item-section>
             <q-item-section>
               <div class="flex justify-between">
-                <div style="width:calc(100% - 120px);">
+                <div style="width: calc(100% - 120px)">
                   <q-item-label>
                     <a
                       style="color: rgb(40, 86, 172)"
@@ -57,35 +62,7 @@
             >{{ author.description }}
           </q-card-section>
           <q-separator />
-          <q-item class="block text-left">
-            <q-item-label class="row" style="width: 600px" caption>
-              <span class="col">今日安装</span>
-              <span class="col">总安装量</span>
-              <span class="col">创建日期</span>
-              <span class="col">最近更新</span>
-              <span class="col">评分</span>
-            </q-item-label>
-            <q-item-label
-              class="row text-caption text-black"
-              style="font-weight: bold; width: 600px"
-            >
-              <span class="col">{{ author.today_install }}</span>
-              <span class="col">{{ author.total_install }}</span>
-              <span class="col">{{
-                dateformat(author.createtime * 1000)
-              }}</span>
-              <span v-if="author.updatetime !== 0" class="col">{{
-                dateformat(author.updatetime * 1000)
-              }}</span>
-              <span v-else class="col">{{
-                dateformat(author.createtime * 1000)
-              }}</span>
-              <span v-if="author.score != 0" class="col"
-                >{{ ((author.score * 2) / 10).toFixed(1) }} 分</span
-              >
-              <span v-else class="col">暂无评分</span>
-            </q-item-label>
-          </q-item>
+          <ScriptDataInfo :script="author" />
           <q-separator />
           <q-btn-group flat class="install">
             <q-btn
@@ -111,10 +88,132 @@
               color="primary"
               label="如何安装?"
             />
+            <q-separator
+              class="text-caption"
+              vertical
+              inset="1"
+              v-if="
+                author.script.meta_json['contributionurl'] || author.post_id
+              "
+            />
+            <q-btn
+              v-if="author.script.meta_json['contributionurl']"
+              outline
+              class="text-caption"
+              type="a"
+              target="_blank"
+              :href="author.script.meta_json['contributionurl'][0]"
+              icon="monetization_on"
+              color="secondary"
+              label="捐赠脚本"
+            />
+            <q-btn
+              v-if="author.post_id"
+              outline
+              class="text-caption"
+              type="a"
+              target="_blank"
+              :href="
+                'https://bbs.tampermonkey.net.cn/thread-2063-1-1.html' +
+                author.post_id
+              "
+              icon="forum"
+              color="primary"
+              label="论坛帖子"
+            />
           </q-btn-group>
           <q-separator />
-          <q-item-label style="margin: 5px 5px 5px 0px">
+          <q-item-label
+            style="margin: 5px 5px 5px 0px"
+            class="flex justify-between"
+          >
             <ScriptCardAction :id="id" :name="author.name" target="_self" />
+            <div style="display: inline-block">
+              <div style="display: inline-block">
+                <q-chip
+                  size="sm"
+                  icon="download"
+                  color="primary"
+                  text-color="white"
+                >
+                  {{ author.script.version }}
+                  <q-tooltip>
+                    脚本最新版本为:{{ author.script.version }}
+                  </q-tooltip>
+                </q-chip>
+              </div>
+              <!-- 不受欢迎的功能 -->
+              <div
+                style="display: inline-block"
+                v-for="name in antifeature"
+                :key="name[0]"
+              >
+                <q-chip
+                  v-if="name[0] == 'referral-link'"
+                  outline
+                  size="sm"
+                  color="amber"
+                  text-color="white"
+                >
+                  推荐链接
+                  <q-tooltip>
+                    该脚本可能会修改或重定向到作者的返佣链接
+                  </q-tooltip>
+                </q-chip>
+                <q-chip
+                  v-else-if="name[0] == 'ads'"
+                  outline
+                  size="sm"
+                  color="deep-orange"
+                  text-color="white"
+                >
+                  附带广告
+                  <q-tooltip> 该脚本会在你访问的页面上插入广告 </q-tooltip>
+                </q-chip>
+                <q-chip
+                  v-else-if="name[0] == 'payment'"
+                  outline
+                  size="sm"
+                  color="pink"
+                  text-color="white"
+                >
+                  付费脚本
+                  <q-tooltip> 该脚本需要你付费才能够正常使用 </q-tooltip>
+                </q-chip>
+                <q-chip
+                  v-else-if="name[0] == 'miner'"
+                  outline
+                  size="sm"
+                  color="orange"
+                  text-color="white"
+                >
+                  挖矿
+                  <q-tooltip> 该脚本存在挖坑行为 </q-tooltip>
+                </q-chip>
+                <q-chip
+                  v-else-if="name[0] == 'membership'"
+                  outline
+                  size="sm"
+                  color="amber"
+                  text-color="white"
+                >
+                  会员功能
+                  <q-tooltip> 该脚本需要注册会员才能正常使用 </q-tooltip>
+                </q-chip>
+                <q-chip
+                  v-else-if="name[0] == 'tracking'"
+                  outline
+                  size="sm"
+                  color="orange"
+                  text-color="white"
+                >
+                  信息追踪
+                  <q-tooltip> 该脚本会追踪你的用户信息 </q-tooltip>
+                </q-chip>
+              </div>
+              <!-- 脚本分类 -->
+              <ScriptCategory style="display: inline-block" :script="author" />
+            </div>
           </q-item-label>
         </q-card>
       </q-card>
@@ -129,7 +228,8 @@
 import { defineComponent } from 'vue';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 import MarkdownView from '@Components/MarkdownView.vue';
-import { formatDate } from '@App/utils/utils';
+import ScriptDataInfo from '@Components/Script/ScriptDataInfo.vue';
+import ScriptCategory from '@Components/Script/ScriptCategory.vue';
 import { unwatch, watch, watchLevel } from '@App/apis/scripts';
 import { csrfToken, downloadStatistics } from '@App/apis/other';
 
@@ -137,12 +237,14 @@ export default defineComponent({
   components: {
     ScriptCardAction,
     MarkdownView,
+    ScriptDataInfo,
+    ScriptCategory,
   },
   computed: {
     id() {
       return parseInt(<string>this.$route.params.id);
     },
-    author() {
+    author(): DTO.Script {
       return this.$store.state.scripts.script || <DTO.Script>{};
     },
     islogin() {
@@ -170,11 +272,15 @@ export default defineComponent({
       }
     );
     this.csrf = (await csrfToken(this.id)).data.csrf;
+
+    this.author.script.meta_json['antifeature']?.forEach((item) => {
+      this.antifeature.push(item.split(' '));
+    });
   },
   data() {
     return {
+      antifeature: <string[][]>[],
       install: '安装此脚本',
-      dateformat: formatDate,
       scriptWatch: <OptionItem>{
         value: 0,
         label: '未关注',

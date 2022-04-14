@@ -126,6 +126,7 @@ declare namespace DTO {
 
   type ScriptCode = {
     code: string;
+    meta_json: { [key: string]: string[] };
     version: string;
   };
 

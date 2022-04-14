@@ -54,36 +54,14 @@
             >{{ item.description || '-' }}
           </q-card-section>
           <q-separator />
-          <q-item class="block text-left">
-            <q-item-label class="row" caption>
-              <span class="col">今日安装</span>
-              <span class="col">总安装量</span>
-              <span class="col">创建日期</span>
-              <span class="col">最近更新</span>
-              <span class="col">评分</span>
-            </q-item-label>
-            <q-item-label
-              class="row text-caption text-black"
-              style="font-weight: bold"
-            >
-              <span class="col">{{ item.today_install }}</span>
-              <span class="col">{{ item.total_install }}</span>
-              <span class="col">{{ dateformat(item.createtime * 1000) }}</span>
-              <span v-if="item.updatetime !== 0" class="col">{{
-                dateformat(item.updatetime * 1000)
-              }}</span>
-              <span v-else class="col">{{
-                dateformat(item.createtime * 1000)
-              }}</span>
-              <span v-if="item.score != 0" class="col"
-                >{{ ((item.score * 2) / 10).toFixed(1) }} 分</span
-              >
-              <span v-else class="col">暂无评分</span>
-            </q-item-label>
-          </q-item>
+          <script-data-info :script="item" />
           <q-separator />
-          <q-item-label style="margin: 5px 5px 5px 0px">
+          <q-item-label
+            style="margin: 5px 5px 5px 0px"
+            class="flex justify-between"
+          >
             <ScriptCardAction :id="item.id" :name="item.name" />
+            <script-category :script="item" />
           </q-item-label>
         </q-card>
       </q-card>
@@ -98,7 +76,12 @@
       </div>
     </q-card-section>
     <div class="flex justify-center">
-      <q-card flat bordered style="margin:20px 10px 0px 10px;width:880px;" v-show="ScriptList.length == 0">
+      <q-card
+        flat
+        bordered
+        style="margin: 20px 10px 0px 10px; width: 880px"
+        v-show="ScriptList.length == 0"
+      >
         <Filter
           :sort="$route.query.sort"
           :category="$route.query.category"
@@ -216,6 +199,8 @@ import Filter from '@App/components/ScriptFilter.vue';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 import TablePagination from '@Components/TablePagination.vue';
 import { formatDate } from '@App/utils/utils';
+import ScriptDataInfo from '@App/components/Script/ScriptDataInfo.vue';
+import ScriptCategory from '@App/components/Script/ScriptCategory.vue';
 
 const iconcolorlist = [
   '#ff981b',
@@ -231,7 +216,13 @@ const iconcolorlist = [
 ];
 
 export default defineComponent({
-  components: { Filter, ScriptCardAction, TablePagination },
+  components: {
+    Filter,
+    ScriptCardAction,
+    TablePagination,
+    ScriptDataInfo,
+    ScriptCategory,
+  },
   name: 'search',
   computed: {
     maxPage() {

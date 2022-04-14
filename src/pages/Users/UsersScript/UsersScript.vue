@@ -32,10 +32,23 @@
         </q-card-actions>
       </q-card>
       <div class="author flex flex-center">
-        <q-avatar>
-          <img :src="'https://scriptcat.org/api/v1/user/avatar/' + User.uid" />
-        </q-avatar>
-        <div class="text-h4">&nbsp;{{ User.username }}编写的脚本</div>
+        <a
+          :href="'https://bbs.tampermonkey.net.cn/?' + User.uid"
+          target="_blank"
+        >
+          <q-avatar>
+            <img
+              :src="'https://scriptcat.org/api/v1/user/avatar/' + User.uid"
+            />
+          </q-avatar>
+        </a>
+        <a
+          :href="'https://bbs.tampermonkey.net.cn/?' + User.uid"
+          target="_blank"
+          style="color: #000000"
+          class="text-h4"
+          >&nbsp;{{ User.username }}</a
+        ><span class="text-h4"> 编写的脚本 </span>
       </div>
       <div class="flex flex-center">
         <span
@@ -92,33 +105,7 @@
             >{{ item.description }}
           </q-card-section>
           <q-separator />
-          <q-item class="block text-left">
-            <q-item-label class="row" caption>
-              <span class="col">今日安装</span>
-              <span class="col">总安装量</span>
-              <span class="col">创建日期</span>
-              <span class="col">最近更新</span>
-              <span class="col">评分</span>
-            </q-item-label>
-            <q-item-label
-              class="row text-caption text-black"
-              style="font-weight: bold"
-            >
-              <span class="col">{{ item.today_install }}</span>
-              <span class="col">{{ item.total_install }}</span>
-              <span class="col">{{ dateformat(item.createtime * 1000) }}</span>
-              <span v-if="item.updatetime !== 0" class="col">{{
-                dateformat(item.updatetime * 1000)
-              }}</span>
-              <span v-else class="col">{{
-                dateformat(item.createtime * 1000)
-              }}</span>
-              <span v-if="item.score != 0" class="col"
-                >{{ ((item.score * 2) / 10).toFixed(1) }} 分</span
-              >
-              <span v-else class="col">暂无评分</span>
-            </q-item-label>
-          </q-item>
+          <ScriptDataInfo :script="item" />
           <q-separator />
           <q-item-label style="margin: 5px 5px 5px 0px">
             <ScriptCardAction :id="item.id" :name="item.name" />
@@ -149,12 +136,14 @@ import { StateInterface, useStore } from '@App/store';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
 import { formatDate, goToLoginUrl } from '@App/utils/utils';
 import { follow, isFollow, unfollow } from '@App/apis/user';
+import ScriptDataInfo from '@App/components/Script/ScriptDataInfo.vue';
 
 export default defineComponent({
   components: {
     // Filter,
     ScriptCardAction,
     // TablePagination,
+    ScriptDataInfo,
   },
   computed: {
     maxPage() {
