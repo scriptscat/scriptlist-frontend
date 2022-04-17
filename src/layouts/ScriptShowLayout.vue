@@ -1,8 +1,14 @@
 <template>
-  <div class="main flex flex-center">
+  <div class="main flex flex-center" v-if="script">
     <h4 style="display: block; width: 100%; max-width: 1300px">
-      <q-banner v-if="script.archive" dense rounded class="bg-orange text-white" style="width: 100%;margin-bottom:10px">
-      此脚本已归档，作者不再进行维护
+      <q-banner
+        v-if="script.archive"
+        dense
+        rounded
+        class="bg-orange text-white"
+        style="width: 100%; margin-bottom: 10px"
+      >
+        此脚本已归档，作者不再进行维护
       </q-banner>
       <a
         :href="'/script-show-page/' + script.id"
@@ -34,6 +40,9 @@
       <router-view />
     </q-card>
   </div>
+  <div v-else>
+    <h4>{{ errMsg }}</h4>
+  </div>
 </template>
 
 <script lang="ts">
@@ -55,17 +64,23 @@ export default defineComponent({
     });
   },
   setup() {
-    const script = useStore().state.scripts.script;
+    const store = useStore();
+    const script = store.state.scripts.script;
+    if (!script) {
+      return {
+        script: undefined,
+        errMsg: store.state.scripts.errMsg,
+      };
+    }
     const tab = 0;
     const router = useRoute();
-    const store = useStore();
     const id = router.params.id;
     const author = computed(() => {
       return store.state.scripts.script || <DTO.Script>{};
     });
     const isuserisauthor = computed(() => {
       try {
-        return store.state.scripts.script.is_manager;
+        return author.value.is_manager;
       } catch (error) {
         return false;
       }

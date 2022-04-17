@@ -46,8 +46,12 @@ const codeSyntaxHighlight = async () =>
 const Editor = async () => await import('@toast-ui/editor');
 import Prism from 'prismjs';
 import { StateInterface, useStore } from '@App/store';
-import { goToLoginUrl } from '@App/utils/utils';
+import {
+  goToLoginUrl,
+  handleResponseError,
+} from '@App/utils/utils';
 import { useRoute } from 'vue-router';
+import { AxiosResponse } from 'axios';
 
 if (process.env.CLIENT) {
   require('prismjs/themes/prism.css');
@@ -134,30 +138,15 @@ export default defineComponent({
   methods: {
     uploadImage(blob: Blob | File): Promise<string> {
       return new Promise((resolve) => {
-        uploadImageApi(blob, 'script')
-          .then((response) => {
+        void handleResponseError(this.$q, uploadImageApi(blob, 'script')).then(
+          (response: AxiosResponse<API.UploadImage>) => {
             if (response.data.code === 0) {
               resolve(
                 http.baseURL + '/resource/image/' + response.data.data.id
               );
             }
-          })
-          .catch((error) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            if (error.response && error.response.data.msg !== undefined) {
-              this.$q.notify({
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                message: error.response.data.msg,
-                position: 'top',
-              });
-            } else {
-              this.$q.notify({
-                message: '系统错误!',
-                position: 'top',
-              });
-            }
-            resolve('error');
-          });
+          }
+        );
       });
     },
     submitIssue() {

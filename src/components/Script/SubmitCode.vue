@@ -184,7 +184,6 @@ import {
 } from 'src/apis/scripts';
 import { uploadImage as uploadImageApi } from 'src/apis/resource';
 import http from 'src/utils/http';
-import { AxiosError } from 'axios';
 import { useMeta } from 'quasar';
 import { toastui } from '@toast-ui/editor';
 const CodeMirror = async () => await import('codemirror');
@@ -346,22 +345,18 @@ export default defineComponent({
               resolve(
                 http.baseURL + '/resource/image/' + response.data.data.id
               );
-            }
-          })
-          .catch((error) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            if (error.response && error.response.data.msg !== undefined) {
-              this.$q.notify({
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                message: error.response.data.msg,
-                position: 'top',
-              });
             } else {
               this.$q.notify({
-                message: '系统错误!',
+                message: response.data.msg,
                 position: 'top',
               });
             }
+          })
+          .catch(() => {
+            this.$q.notify({
+              message: '系统错误!',
+              position: 'top',
+            });
             resolve('error');
           });
       });
@@ -428,23 +423,19 @@ export default defineComponent({
             if (response.data.code === 0) {
               this.publicid = this.id;
               this.control.success = true;
-            }
-          })
-          .catch((error: AxiosError) => {
-            this.loading.publicloading = false;
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            if (error.response && error.response.data.msg !== undefined) {
-              this.$q.notify({
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                message: error.response.data.msg,
-                position: 'top',
-              });
             } else {
               this.$q.notify({
-                message: '系统错误!',
+                message: response.data.msg,
                 position: 'top',
               });
             }
+          })
+          .catch(() => {
+            this.loading.publicloading = false;
+            this.$q.notify({
+              message: '系统错误!',
+              position: 'top',
+            });
           });
       } else {
         this.loading.publicloading = true;
@@ -464,23 +455,19 @@ export default defineComponent({
             if (response.data.code === 0) {
               this.publicid = response.data.data.id;
               this.control.success = true;
-            }
-          })
-          .catch((error: AxiosError) => {
-            this.loading.publicloading = false;
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            if (error.response && error.response.data.msg !== undefined) {
-              this.$q.notify({
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                message: error.response.data.msg,
-                position: 'top',
-              });
             } else {
               this.$q.notify({
-                message: '系统错误!',
+                message: response.data.msg,
                 position: 'top',
               });
             }
+          })
+          .catch(() => {
+            this.loading.publicloading = false;
+            this.$q.notify({
+              message: '系统错误!',
+              position: 'top',
+            });
           });
       }
     },

@@ -1,9 +1,10 @@
 export interface ScriptsStateInterface {
-  scripts: DTO.Script[]
-  version: DTO.ScriptCode[]
-  total: number,
-  script: DTO.Script,
-  preFetch: boolean
+  scripts: DTO.Script[];
+  version: DTO.ScriptCode[];
+  total: number;
+  script: DTO.Script | undefined;
+  preFetch: boolean;
+  errMsg: string;
 }
 
 function state(): ScriptsStateInterface {
@@ -11,9 +12,10 @@ function state(): ScriptsStateInterface {
     scripts: [],
     version: [],
     total: 0,
-    script: <DTO.Script>{},
-    preFetch: false
-  }
-};
+    script: undefined,
+    preFetch: false,
+    errMsg: '',
+  };
+}
 
 export default state;

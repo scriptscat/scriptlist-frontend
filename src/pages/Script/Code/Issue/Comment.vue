@@ -220,8 +220,9 @@ import { uploadImage as uploadImageApi } from 'src/apis/resource';
 import IssueLabel from '@Components/IssueLabel.vue';
 import IssueStatus from '@Components/IssueStatus.vue';
 import MarkdownView from '@Components/MarkdownView.vue';
-import { formatDate } from '@App/utils/utils';
+import { formatDate, handleResponseError } from '@App/utils/utils';
 import { useStore } from '@App/store';
+import { AxiosResponse } from 'axios';
 
 if (process.env.CLIENT) {
   require('prismjs/themes/prism.css');
@@ -273,7 +274,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const script = store.state.scripts.script;
+    const script = store.state.scripts.script || <DTO.Script>{};
     const issue = store.state.issues.issue;
     useMeta({
       title: issue.title,
@@ -344,22 +345,18 @@ export default defineComponent({
               resolve(
                 http.baseURL + '/resource/image/' + response.data.data.id
               );
-            }
-          })
-          .catch((error) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            if (error.response && error.response.data.msg !== undefined) {
-              this.$q.notify({
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                message: error.response.data.msg,
-                position: 'top',
-              });
             } else {
               this.$q.notify({
-                message: '系统错误!',
+                message: response.data.msg,
                 position: 'top',
               });
             }
+          })
+          .catch(() => {
+            this.$q.notify({
+              message: '系统错误!',
+              position: 'top',
+            });
             resolve('error');
           });
       });
@@ -371,25 +368,22 @@ export default defineComponent({
           issue: this.issueId,
           content: editor.mkedit?.getMarkdown() || '',
         })
-        .then(() => {
-          editor.mkedit?.setMarkdown('');
-          // this.$q.notify('评论成功');
-        })
-        .catch((error) => {
-          console.log(error);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          if (error.response && error.response.data.msg !== undefined) {
-            this.$q.notify({
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              message: error.response.data.msg,
-              position: 'top',
-            });
+        .then((response: AxiosResponse<API.OkResponse>) => {
+          if (response.data.code === 0) {
+            editor.mkedit?.setMarkdown('');
           } else {
             this.$q.notify({
-              message: '系统错误!',
+              message: response.data.msg,
               position: 'top',
             });
           }
+          // this.$q.notify('评论成功');
+        })
+        .catch(() => {
+          this.$q.notify({
+            message: '系统错误!',
+            position: 'top',
+          });
         });
     },
     closeIssue() {
@@ -398,45 +392,29 @@ export default defineComponent({
           script: this.scriptId,
           issue: this.issueId,
         })
-        .catch((error) => {
-          console.log(error);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          if (error.response && error.response.data.msg !== undefined) {
+        .then((response: AxiosResponse<API.OkResponse>) => {
+          if (response.data.code !== 0) {
             this.$q.notify({
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              message: error.response.data.msg,
-              position: 'top',
-            });
-          } else {
-            this.$q.notify({
-              message: '系统错误!',
+              message: response.data.msg,
               position: 'top',
             });
           }
+        })
+        .catch(() => {
+          this.$q.notify({
+            message: '系统错误!',
+            position: 'top',
+          });
         });
     },
     openIssue() {
-      this.$store
-        .dispatch('issues/openIssue', {
+      void handleResponseError(
+        this.$q,
+        this.$store.dispatch('issues/openIssue', {
           script: this.scriptId,
           issue: this.issueId,
         })
-        .catch((error) => {
-          console.log(error);
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          if (error.response && error.response.data.msg !== undefined) {
-            this.$q.notify({
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              message: error.response.data.msg,
-              position: 'top',
-            });
-          } else {
-            this.$q.notify({
-              message: '系统错误!',
-              position: 'top',
-            });
-          }
-        });
+      );
     },
   },
 });

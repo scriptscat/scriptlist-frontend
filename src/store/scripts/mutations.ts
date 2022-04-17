@@ -10,6 +10,9 @@ const mutation: MutationTree<ScriptsStateInterface> = {
   updateScriptInfo(state, script: any) {
     state.script = script;
   },
+  updateErrMsg(state, errMsg: string) {
+    state.errMsg = errMsg;
+  },
   updateScriptVersion(state, { list, total }) {
     state.version = list;
     state.total = total;

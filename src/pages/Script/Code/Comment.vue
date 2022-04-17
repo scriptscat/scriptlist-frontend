@@ -124,7 +124,7 @@ export default defineComponent({
     const id = route.params.id.toString();
     getMyScore(id)
       .then((response) => {
-        if (response.data.code === 0) {
+        if (response.data.code === 0 && response.data.data.score) {
           mypostform.value.ratingpost = response.data.data.score / 10;
           mypostform.value.text = response.data.data.message;
         }
@@ -190,6 +190,24 @@ export default defineComponent({
               ],
             });
             this.getallscore();
+          } else {
+            this.$q.notify({
+              message: response.data.msg,
+              position: 'center',
+              icon: 'tag_faces',
+              color: 'primary',
+              timeout: 3000,
+              progress: true,
+              actions: [
+                {
+                  label: '关闭',
+                  color: 'yellow',
+                  handler: () => {
+                    /* ... */
+                  },
+                },
+              ],
+            });
           }
         })
         .catch((error) => {

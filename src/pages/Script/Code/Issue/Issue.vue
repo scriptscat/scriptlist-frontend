@@ -5,11 +5,7 @@
       style="margin: 0px 0px 10px 0px; width: 100%"
       class="flex justify-between"
     >
-      <q-btn
-        v-if="script.archive"
-        color="primary"
-        outline
-      >
+      <q-btn v-if="script.archive" color="primary" outline>
         创建反馈
         <q-tooltip> 脚本以归档,不能反馈 </q-tooltip>
       </q-btn>
@@ -18,9 +14,9 @@
         <q-select
           disable
           outlined
-          v-model="sort_"
-          :options="sortOptions"
-          @update:model-value="sortChange"
+          v-model="state"
+          :options="stateOptions"
+          @update:model-value="stateChange"
           borderless
           dense
           options-dense
@@ -32,9 +28,9 @@
         <q-select
           disable
           outlined
-          v-model="category_"
-          :options="categoryOptions"
-          @update:model-value="categoryChange"
+          v-model="issueTag"
+          :options="issueTagOptions"
+          @update:model-value="issueTagChange"
           borderless
           dense
           options-dense
@@ -115,9 +111,6 @@ export default defineComponent({
     maxPage() {
       return Math.ceil(this.$store.state.issues.total / 20);
     },
-    script() {
-      return this.$store.state.scripts.script || <DTO.Script>{};
-    },
   },
   setup() {
     useMeta({
@@ -161,7 +154,9 @@ export default defineComponent({
     const id = computed(() => {
       return store.state.user.user.uid;
     });
-
+    const script = computed(() => {
+      return store.state.scripts.script || <DTO.Script>{};
+    });
     let _list: DTO.Issue[] = store.state.issues.issueList;
     const list = computed({
       get: () => {
@@ -174,7 +169,7 @@ export default defineComponent({
             todo: val.id,
             title:
               '<div class="text-caption" style="font-size:15px;"><a href="/script-show-page/' +
-              store.state.scripts.script.id.toString() +
+              script.value.id.toString() +
               '/issue/' +
               val.id.toString() +
               '/comment" class="issue-link">' +
@@ -198,7 +193,7 @@ export default defineComponent({
         todo: val.id,
         title:
           '<div class="text-caption" style="font-size:15px;"><a href="/script-show-page/' +
-          store.state.scripts.script.id.toString() +
+          script.value.id.toString() +
           '/issue/' +
           val.id.toString() +
           '/comment" class="issue-link">' +
@@ -216,12 +211,21 @@ export default defineComponent({
 
     const page = ref(Number(route.query.page) || 1);
     return {
+      script,
       page,
       returnGoodsProgressData,
       dateformat,
       uid,
       id,
       list,
+      stateOptions: [],
+      state: ref({ label: '建设中' }),
+      issueTagOptions: [
+        { label: '反馈BUG', value: 'bug' },
+        { label: '请求新功能', value: 'feature' },
+        { label: '提出问题', value: 'question' },
+      ],
+      issueTag: ref({ label: '建设中', value: '建设中' }),
     };
   },
   unmounted() {
@@ -240,6 +244,12 @@ export default defineComponent({
         count: 20,
       });
       this.list = this.$store.state.issues.issueList;
+    },
+    issueTagChange() {
+      return '';
+    },
+    stateChange() {
+      return '';
     },
   },
 });

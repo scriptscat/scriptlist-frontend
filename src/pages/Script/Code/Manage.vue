@@ -95,7 +95,7 @@
           size="md"
           color="orange"
           @click="onArchive"
-          loading="loading.archive"
+          :loading="loading.archive"
         >
           <q-tooltip> 取消归档,继续维护 </q-tooltip>
         </q-btn>
@@ -105,7 +105,7 @@
           size="md"
           color="orange"
           @click="onArchive"
-          loading="loading.archive"
+          :loading="loading.archive"
         >
           <q-tooltip>
             设置脚本为归档,提示用户不再维护,且脚本不能更新和反馈
@@ -162,7 +162,7 @@ import {
   unarchive,
   updateSetting,
 } from '@App/apis/scripts';
-import { responseErrorHandler } from '@App/utils/utils';
+import { handleResponseError } from '@App/utils/utils';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -201,12 +201,15 @@ export default defineComponent({
     },
     PushPartlyConfig() {
       this.loading.uniteloading = true;
-      updateSetting(this.id, {
-        sync_url: this.intervalgetscript,
-        content_url: this.addtext,
-        definition_url: this.dtscontext,
-        sync_mode: this.intervalmethod,
-      })
+      handleResponseError(
+        this.$q,
+        updateSetting(this.id, {
+          sync_url: this.intervalgetscript,
+          content_url: this.addtext,
+          definition_url: this.dtscontext,
+          sync_mode: this.intervalmethod,
+        })
+      )
         .then((response) => {
           this.loading.uniteloading = false;
           console.log(response, 'response');
@@ -217,9 +220,8 @@ export default defineComponent({
             });
           }
         })
-        .catch((error) => {
+        .catch(() => {
           this.loading.uniteloading = false;
-          responseErrorHandler(this.$q, error);
         });
     },
     onArchive() {
@@ -232,41 +234,38 @@ export default defineComponent({
         // 归档
         p = archive(this.id);
       }
-      p.then((resp) => {
-        this.archive = this.archive ? 0 : 1;
-        this.loading.archive = false;
-        if (resp.data.code === 0) {
-          this.$q.notify({
-            message: (this.archive ? '归档成功' : '取消归档成功') + '!',
-            position: 'top',
-          });
-        }
-      }).catch((err) => {
-        this.loading.archive = false;
-        responseErrorHandler(this.$q, err);
-      });
+      handleResponseError(this.$q, p)
+        .then((resp) => {
+          this.archive = this.archive ? 0 : 1;
+          this.loading.archive = false;
+          if (resp.data.code === 0) {
+            this.$q.notify({
+              message: (this.archive ? '归档成功' : '取消归档成功') + '!',
+              position: 'top',
+            });
+          }
+        })
+        .catch(() => {
+          this.loading.archive = false;
+        });
     },
     onDelete() {
       if (prompt('请再次输入脚本名以确认是否删除') !== this.script.name) {
         return alert('输入错误,取消删除');
       }
-      deleteScript(this.id)
-        .then((resp) => {
-          if (resp.data.code === 0) {
-            this.$q.notify({
-              color: 'primary',
-              icon: 'done',
-              message: '删除成功',
-              position: 'center',
-            });
-            void this.$router.push({
-              path: '/',
-            });
-          }
-        })
-        .catch((err) => {
-          responseErrorHandler(this.$q, err);
-        });
+      void handleResponseError(this.$q, deleteScript(this.id)).then((resp) => {
+        if (resp.data.code === 0) {
+          this.$q.notify({
+            color: 'primary',
+            icon: 'done',
+            message: '删除成功',
+            position: 'center',
+          });
+          void this.$router.push({
+            path: '/',
+          });
+        }
+      });
     },
   },
   data() {
