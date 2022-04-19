@@ -56,14 +56,6 @@ if (process.env.CLIENT) {
   require('@toast-ui/editor/dist/toastui-editor.css');
 }
 
-const editor = <
-  {
-    mkedit?: toastui.Editor;
-  }
->{
-  mkedit: undefined,
-};
-
 export default defineComponent({
   name: 'NewIssue',
   preFetch({ store, currentRoute, redirect }) {
@@ -81,7 +73,13 @@ export default defineComponent({
         window.location.href = goToLoginUrl(useRoute().path);
       }
     }
-    return {};
+    return {
+      editor: <
+        {
+          mkedit?: toastui.Editor;
+        }
+      >{ mkedit: undefined },
+    };
   },
   computed: {
     scriptId() {
@@ -90,8 +88,8 @@ export default defineComponent({
   },
   unmounted() {
     // 释放编辑器资源
-    if (editor.mkedit) {
-      editor.mkedit = undefined;
+    if (this.editor.mkedit) {
+      this.editor.mkedit = undefined;
     }
   },
   data() {
@@ -109,10 +107,11 @@ export default defineComponent({
   mounted() {
     void this.$nextTick(() => {
       let handler = async () => {
-        editor.mkedit = new (await Editor()).default({
+        this.editor.mkedit = new (await Editor()).default({
           el: <HTMLElement>this.$refs.mkedite,
           initialValue: this.content,
           previewStyle: 'tab',
+          placeholder: '请输入您要反馈的内容(友善的反馈是交流的起点)',
           height: '400px',
           hooks: {
             addImageBlobHook: async (blob, callback) => {
@@ -152,7 +151,7 @@ export default defineComponent({
       submitIssue(
         this.scriptId,
         this.title,
-        editor.mkedit?.getMarkdown() || '',
+        this.editor.mkedit?.getMarkdown() || '',
         labels
       )
         .then((response) => {

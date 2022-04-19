@@ -69,9 +69,16 @@
             </q-avatar>
             <div style="flex: 1 1 0; padding-left: 15px">
               <div class="flex items-center">
-                <span style="color: #1a73e8; margin-right: 15px">{{
-                  item.username
-                }}</span>
+                <a
+                  style="
+                    color: #1a73e8;
+                    margin-right: 15px;
+                    text-decoration: none;
+                  "
+                  target="_blank"
+                  :href="'/users/' + item.uid"
+                  >{{ item.username }}</a
+                >
                 <span>{{ dateformat(item.createtime * 1000) }}</span>
                 <q-rating
                   style="padding: 0px 0px 2px 10px"

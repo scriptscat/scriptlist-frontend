@@ -37,9 +37,7 @@
           target="_blank"
         >
           <q-avatar>
-            <img
-              :src="'https://scriptcat.org/api/v1/user/avatar/' + User.uid"
-            />
+            <img :src="'/api/v1/user/avatar/' + User.uid" />
           </q-avatar>
         </a>
         <a
@@ -49,6 +47,35 @@
           class="text-h4"
           >&nbsp;{{ User.username }}</a
         ><span class="text-h4"> 编写的脚本 </span>
+      </div>
+      <div class="flex flex-center">
+        <q-chip
+          color="red"
+          text-color="white"
+          icon="person"
+          size="sm"
+          v-if="User.isAdmin === 1"
+        >
+          管理员
+        </q-chip>
+        <q-chip
+          color="deep-purple"
+          text-color="white"
+          icon="person"
+          size="sm"
+          v-else-if="User.isAdmin === 2"
+        >
+          超级版主
+        </q-chip>
+        <q-chip
+          color="purple"
+          text-color="white"
+          icon="person"
+          size="sm"
+          v-else-if="User.isAdmin === 3"
+        >
+          版主
+        </q-chip>
       </div>
       <div class="flex flex-center">
         <span
@@ -132,9 +159,9 @@ import { useRoute, RouteLocationNormalizedLoaded } from 'vue-router';
 // import TablePagination from '@Components/TablePagination.vue';
 import { fetchUserScriptList } from '@App/apis/scripts';
 import { Cookies, useMeta } from 'quasar';
-import { StateInterface, useStore } from '@App/store';
+import { useStore } from '@App/store';
 import ScriptCardAction from '@Components/Script/ScriptCardAction.vue';
-import { formatDate, goToLoginUrl } from '@App/utils/utils';
+import { formatDate } from '@App/utils/utils';
 import { follow, isFollow, unfollow } from '@App/apis/user';
 import ScriptDataInfo from '@App/components/Script/ScriptDataInfo.vue';
 
@@ -162,12 +189,9 @@ export default defineComponent({
       return this.$store.state.user.follow;
     },
   },
-  async preFetch({ store, currentRoute, ssrContext, redirect }) {
+  async preFetch({ store, currentRoute, ssrContext  }) {
     if (!ssrContext) {
       return;
-    }
-    if (!(<StateInterface>store.state).user.islogin) {
-      return redirect(goToLoginUrl(currentRoute.path));
     }
     const cookies = process.env.SERVER ? Cookies.parseSSR(ssrContext) : Cookies;
     await store.dispatch('user/fetchUserInfo', {

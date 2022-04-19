@@ -318,6 +318,7 @@ export default defineComponent({
             el: <HTMLElement>this.$refs.mkedite,
             previewStyle: 'tab',
             height: '400px',
+            placeholder:'输入回复反馈内容（友善的反馈是交流的起点）',
             hooks: {
               addImageBlobHook: async (blob, callback) => {
                 const uploadedImageURL = await this.uploadImage(blob);
