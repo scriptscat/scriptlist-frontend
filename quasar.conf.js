@@ -140,6 +140,7 @@ module.exports = configure(function (ctx) {
 
       middlewares: [
         ctx.prod ? 'compression' : '',
+        'heapsnapshot',
         'render', // keep this as last one
       ],
     },

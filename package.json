@@ -34,6 +34,7 @@
     "@babel/eslint-parser": "^7.13.14",
     "@quasar/app": "^3.2.3",
     "@types/codemirror": "^5.60.5",
+    "@types/heapdump": "^0.3.1",
     "@types/marked": "^4.0.1",
     "@types/node": "^12.20.21",
     "@types/prismjs": "^1.16.6",
@@ -41,7 +42,9 @@
     "@typescript-eslint/parser": "^4.16.1",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-vue": "^7.0.0"
+    "eslint-plugin-vue": "^7.0.0",
+    "heapdump": "^0.3.15",
+    "os": "^0.1.2"
   },
   "browserslist": [
     "last 10 Chrome versions",

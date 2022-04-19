@@ -114,7 +114,7 @@ const columns = [
 ];
 
 export default defineComponent({
-  name: 'Error404',
+  name: 'Index',
   setup() {
     useMeta({
       title: 'ScriptCat - 分享你的用户脚本',
@@ -197,7 +197,6 @@ export default defineComponent({
         data.value[0].icon = 'done';
       }
     });
-
     return {
       shape: ref(shape),
       data,
