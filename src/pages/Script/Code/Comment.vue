@@ -97,7 +97,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useStore } from 'src/store';
 import { useRoute } from 'vue-router';
 import { submitComment, getAllScroe, getMyScore } from 'src/apis/comment';
@@ -115,23 +115,11 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
 
-    const islogin = computed(() => {
-      return store.state.user.islogin;
-    });
-    const user = computed(() => {
-      return store.state.user.user;
-    });
+    const islogin = store.state.user.islogin;
+
+    const user = store.state.user.user;
+
     const id = route.params.id.toString();
-    getMyScore(id)
-      .then((response) => {
-        if (response.data.code === 0 && response.data.data.score) {
-          mypostform.value.ratingpost = response.data.data.score / 10;
-          mypostform.value.text = response.data.data.message;
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
 
     return {
       mypostform,
@@ -142,28 +130,42 @@ export default defineComponent({
       id,
     };
   },
-  created() {
-    this.getallscore();
+  mounted() {
+    void this.getallscore();
+    getMyScore(this.id)
+      .then((response) => {
+        if (response.data.code === 0 && response.data.data.score) {
+          this.mypostform.ratingpost = response.data.data.score / 10;
+          this.mypostform.text = response.data.data.message;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   methods: {
     getallscore() {
-      getAllScroe(this.id, 1, 20)
-        .then((response) => {
-          if (response.data.code === 0) {
-            for (let index = 0; index < response.data.list.length; index++) {
-              if (response.data.list[index].avatar === '') {
-                response.data.list[index].avatar =
-                  'https://scriptcat.org/api/v1/user/avatar/5';
+      return new Promise<void>((resolve) => {
+        getAllScroe(this.id, 1, 20)
+          .then((response) => {
+            if (response.data.code === 0) {
+              for (let index = 0; index < response.data.list.length; index++) {
+                if (response.data.list[index].avatar === '') {
+                  response.data.list[index].avatar =
+                    'https://scriptcat.org/api/v1/user/avatar/5';
+                }
+                response.data.list[index].score =
+                  response.data.list[index].score / 10;
               }
-              response.data.list[index].score =
-                response.data.list[index].score / 10;
+              this.userscorelist = response.data.list;
             }
-            this.userscorelist = response.data.list;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+            resolve();
+          })
+          .catch((error) => {
+            console.log(error);
+            resolve();
+          });
+      });
     },
     SubmitMyViewer() {
       submitComment(this.id, {
@@ -189,7 +191,7 @@ export default defineComponent({
                 },
               ],
             });
-            this.getallscore();
+            void this.getallscore();
           } else {
             this.$q.notify({
               message: response.data.msg,

@@ -286,7 +286,7 @@ export default defineComponent({
       compareline: 3,
     };
   },
-  created() {
+  mounted() {
     this.GetPartlyConfig();
   },
 });

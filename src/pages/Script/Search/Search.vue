@@ -264,36 +264,6 @@ export default defineComponent({
     const router = useRouter();
     const page = ref(Number(route.query.page) || 1);
 
-    getRecommendList(
-      '/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain='
-    )
-      .then((r) => {
-        recommondlist.value.download = r.data.list;
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-
-    getRecommendList(
-      '/scripts?page=1&count=10&keyword=&sort=score&category=&domain='
-    )
-      .then((r) => {
-        recommondlist.value.score = r.data.list;
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-
-    getRecommendList(
-      '/scripts?page=1&count=10&keyword=&sort=updatetime&category=&domain='
-    )
-      .then((r) => {
-        recommondlist.value.new = r.data.list;
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-
     const sortChange = (val: { value: string }) => {
       return router.replace({
         query: {
@@ -321,6 +291,37 @@ export default defineComponent({
       sortChange,
       categoryChange,
     };
+  },
+  mounted() {
+    getRecommendList(
+      '/scripts?page=1&count=10&keyword=&sort=today_download&category=&domain='
+    )
+      .then((r) => {
+        this.recommondlist.download = r.data.list;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+    getRecommendList(
+      '/scripts?page=1&count=10&keyword=&sort=score&category=&domain='
+    )
+      .then((r) => {
+        this.recommondlist.score = r.data.list;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+    getRecommendList(
+      '/scripts?page=1&count=10&keyword=&sort=updatetime&category=&domain='
+    )
+      .then((r) => {
+        this.recommondlist.new = r.data.list;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   },
   methods: {
     async reload(currentRoute: RouteLocationNormalizedLoaded) {

@@ -60,6 +60,9 @@ export default defineComponent({
     };
   },
   created() {
+    if (process.env.SERVER) {
+      return;
+    }
     getStatistics(this.id)
       .then((response) => {
         if (response.data.code == 0) {

@@ -48,21 +48,18 @@ export default defineComponent({
     useMeta({ title: '通知设置' });
     return {};
   },
-  async created() {
-    if (process.env.CLIENT) {
-      let config = (await fetchUserConfig()).data.data;
-      this.options = config.notify;
-      this.$watch(
-        () => {
-          return this.options;
-        },
-        () => {
-          void updateUserNotifyConfig(this.options);
-        },
-        { deep: true }
-      );
-      return;
-    }
+  async mounted() {
+    let config = (await fetchUserConfig()).data.data;
+    this.options = config.notify;
+    this.$watch(
+      () => {
+        return this.options;
+      },
+      () => {
+        void updateUserNotifyConfig(this.options);
+      },
+      { deep: true }
+    );
   },
   data() {
     return {
@@ -72,5 +69,4 @@ export default defineComponent({
 });
 </script>
 
-<style >
-</style>
+<style></style>

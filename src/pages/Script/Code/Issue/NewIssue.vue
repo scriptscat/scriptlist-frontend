@@ -46,10 +46,7 @@ const codeSyntaxHighlight = async () =>
 const Editor = async () => await import('@toast-ui/editor');
 import Prism from 'prismjs';
 import { StateInterface, useStore } from '@App/store';
-import {
-  goToLoginUrl,
-  handleResponseError,
-} from '@App/utils/utils';
+import { goToLoginUrl, handleResponseError } from '@App/utils/utils';
 import { useRoute } from 'vue-router';
 import { AxiosResponse } from 'axios';
 
@@ -109,31 +106,29 @@ export default defineComponent({
       ],
     };
   },
-  created() {
-    if (process.env.CLIENT) {
-      void this.$nextTick(() => {
-        let handler = async () => {
-          editor.mkedit = new (await Editor()).default({
-            el: <HTMLElement>this.$refs.mkedite,
-            initialValue: this.content,
-            previewStyle: 'tab',
-            height: '400px',
-            hooks: {
-              addImageBlobHook: async (blob, callback) => {
-                const uploadedImageURL = await this.uploadImage(blob);
-                callback(uploadedImageURL, 'alt text');
-                return false;
-              },
+  mounted() {
+    void this.$nextTick(() => {
+      let handler = async () => {
+        editor.mkedit = new (await Editor()).default({
+          el: <HTMLElement>this.$refs.mkedite,
+          initialValue: this.content,
+          previewStyle: 'tab',
+          height: '400px',
+          hooks: {
+            addImageBlobHook: async (blob, callback) => {
+              const uploadedImageURL = await this.uploadImage(blob);
+              callback(uploadedImageURL, 'alt text');
+              return false;
             },
-            plugins: [
-              [(await codeSyntaxHighlight()).default, { highlighter: Prism }],
-            ],
-            autofocus: false,
-          });
-        };
-        void handler();
-      });
-    }
+          },
+          plugins: [
+            [(await codeSyntaxHighlight()).default, { highlighter: Prism }],
+          ],
+          autofocus: false,
+        });
+      };
+      void handler();
+    });
   },
   methods: {
     uploadImage(blob: Blob | File): Promise<string> {

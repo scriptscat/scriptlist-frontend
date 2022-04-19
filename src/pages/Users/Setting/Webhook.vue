@@ -142,17 +142,15 @@ export default defineComponent({
         });
     },
   },
-  created() {
-    if (process.env.CLIENT) {
-      if (!this.islogin) {
-        this.$q.notify({
-          position: 'top-right',
-          message: '当前尚未登陆！',
-          position: 'top',
-        });
-        void this.$router.push({ path: '/' });
-        return;
-      }
+  mounted() {
+    if (!this.islogin) {
+      this.$q.notify({
+        position: 'top-right',
+        message: '当前尚未登陆！',
+        position: 'top',
+      });
+      void this.$router.push({ path: '/' });
+      return;
     }
     getWebhook()
       .then((response) => {

@@ -96,8 +96,8 @@
 
 <script lang="ts">
 import { useMeta } from 'quasar';
-import { ref, defineComponent, onMounted, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { ref, defineComponent } from 'vue';
+import { useRoute } from 'vue-router';
 import { useStore } from 'src/store';
 
 const shape = '0';
@@ -163,40 +163,12 @@ export default defineComponent({
       },
     ]);
     const SearchText = ref('');
-    const router = useRouter();
     const route = useRoute();
     const store = useStore();
-    const Search = () => {
-      const { href } = router.resolve({
-        name: 'search',
-        query: {
-          keyword: SearchText.value,
-        },
-      });
-      window.open(href, '_blank');
-    };
 
     const id = route.params.id;
-    const author = computed(() => {
-      return store.state.scripts.script || <DTO.Script>{};
-    });
+    const author = store.state.scripts.script || <DTO.Script>{};
 
-    onMounted(() => {
-      let api = <
-          {
-            isInstalled: (
-              name: string,
-              namespace: string,
-              callback: (res: any, rej: any) => void
-            ) => void;
-          } // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        >(<any>window.external).Scriptcat || (<any>window.external).Tampermonkey;
-      if (api != undefined) {
-        data.value[0].title = '您已安装脚本猫';
-        data.value[0].color = 'green';
-        data.value[0].icon = 'done';
-      }
-    });
     return {
       shape: ref(shape),
       data,
@@ -204,8 +176,34 @@ export default defineComponent({
       SearchText,
       id,
       author,
-      Search,
     };
+  },
+  mounted() {
+    let api = <
+        {
+          isInstalled: (
+            name: string,
+            namespace: string,
+            callback: (res: any, rej: any) => void
+          ) => void;
+        } // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      >(<any>window.external).Scriptcat || (<any>window.external).Tampermonkey;
+    if (api != undefined) {
+      this.data[0].title = '您已安装脚本猫';
+      this.data[0].color = 'green';
+      this.data[0].icon = 'done';
+    }
+  },
+  methods: {
+    Search() {
+      const { href } = this.$router.resolve({
+        name: 'search',
+        query: {
+          keyword: this.SearchText,
+        },
+      });
+      window.open(href, '_blank');
+    },
   },
 });
 </script>

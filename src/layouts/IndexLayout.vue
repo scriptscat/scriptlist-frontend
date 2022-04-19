@@ -76,7 +76,9 @@
               <q-tooltip>{{ user.username }},通知-🚧建设中</q-tooltip>
             </q-btn>
             <q-btn size="md" v-else flat @click="gotoLogin">
-              <div class="text-ca"><i class="far fa-user"></i>&nbsp;暂未登录</div>
+              <div class="text-ca">
+                <i class="far fa-user"></i>&nbsp;暂未登录
+              </div>
             </q-btn>
           </div>
           <q-btn
@@ -101,7 +103,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Cookies, useMeta } from 'quasar';
-import { useRoute } from 'vue-router';
 import Footer from '@Components/Footer.vue';
 
 export default defineComponent({
@@ -139,21 +140,20 @@ export default defineComponent({
         },
       },
     });
-    const route = useRoute();
-    const gotoLogin = () => {
+    return {};
+  },
+  methods: {
+    gotoLogin() {
       window.open(
         'https://bbs.tampermonkey.net.cn/plugin.php?id=codfrm_oauth2:oauth&client_id=' +
           encodeURIComponent(<string>process.env.VUE_APP_BBS_OAUTH_CLIENT) +
           '&scope=user&response_type=code&redirect_uri=' +
           encodeURIComponent(<string>process.env.VUE_APP_HTTP_HOST) +
           '%2Flogin%2Foauth%3Fredirect_uri%3D' +
-          encodeURIComponent(route.path),
+          encodeURIComponent(this.$route.path),
         '_self'
       );
-    };
-    return {
-      gotoLogin,
-    };
+    },
   },
 });
 </script>

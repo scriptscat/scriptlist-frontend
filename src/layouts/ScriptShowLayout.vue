@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { Cookies, useMeta } from 'quasar';
 import { useStore } from 'src/store';
 import { useRoute } from 'vue-router';
@@ -75,16 +75,8 @@ export default defineComponent({
     const tab = 0;
     const router = useRoute();
     const id = router.params.id;
-    const author = computed(() => {
-      return store.state.scripts.script || <DTO.Script>{};
-    });
-    const isuserisauthor = computed(() => {
-      try {
-        return author.value.is_manager;
-      } catch (error) {
-        return false;
-      }
-    });
+    const author = store.state.scripts.script || <DTO.Script>{};
+    const isuserisauthor = author.is_manager || false;
     const tabList = ref([
       {
         name: 'index',

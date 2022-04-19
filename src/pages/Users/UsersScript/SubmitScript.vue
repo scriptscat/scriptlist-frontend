@@ -25,18 +25,16 @@ export default defineComponent({
       return this.$store.state.user.islogin;
     },
   },
-  created() {
-    if (process.env.CLIENT) {
-      if (!this.islogin) {
-        this.$q.notify({
-          message: '当前尚未登陆!',
-          position: 'top',
-        });
-        void this.$router.push({ path: '/' });
-        return;
-      }
-      //this.id = this.$route.query.id;
+  mounted() {
+    if (!this.islogin) {
+      this.$q.notify({
+        message: '当前尚未登陆!',
+        position: 'top',
+      });
+      void this.$router.push({ path: '/' });
+      return;
     }
+    //this.id = this.$route.query.id;
   },
 });
 </script>

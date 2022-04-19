@@ -24,7 +24,7 @@ export default defineComponent({
       return this.$store.state.scripts.script || <DTO.Script>{};
     },
   },
-  created() {
+  mounted() {
     if (!this.id) {
       this.$q.notify({
         message: '来路错误!',

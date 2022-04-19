@@ -230,14 +230,6 @@ if (process.env.CLIENT) {
   require('@toast-ui/editor/dist/toastui-editor.css');
 }
 
-const editor = <
-  {
-    mkedit?: toastui.Editor;
-  }
->{
-  mkedit: undefined,
-};
-
 export default defineComponent({
   components: { IssueLabel, IssueStatus, MarkdownView },
   async preFetch({ store, currentRoute, ssrContext }) {
@@ -287,6 +279,13 @@ export default defineComponent({
     return {
       script,
       issue,
+      editor: <
+        {
+          mkedit?: toastui.Editor;
+        }
+      >{
+        mkedit: undefined,
+      },
     };
   },
   data() {
@@ -315,7 +314,7 @@ export default defineComponent({
       );
       void this.$nextTick(() => {
         let handler = async () => {
-          editor.mkedit = new (await Editor()).default({
+          this.editor.mkedit = new (await Editor()).default({
             el: <HTMLElement>this.$refs.mkedite,
             previewStyle: 'tab',
             height: '400px',
@@ -366,11 +365,11 @@ export default defineComponent({
         .dispatch('issues/submitComment', {
           script: this.scriptId,
           issue: this.issueId,
-          content: editor.mkedit?.getMarkdown() || '',
+          content: this.editor.mkedit?.getMarkdown() || '',
         })
         .then((response: AxiosResponse<API.OkResponse>) => {
           if (response.data.code === 0) {
-            editor.mkedit?.setMarkdown('');
+            this.editor.mkedit?.setMarkdown('');
           } else {
             this.$q.notify({
               message: response.data.msg,
