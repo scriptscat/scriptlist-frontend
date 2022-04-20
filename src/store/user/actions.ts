@@ -3,6 +3,7 @@ import { StateInterface } from '../index';
 import { Cookies } from 'quasar';
 import http from 'src/utils/http';
 import { UserStateInterface } from './state';
+import { Response } from 'express';
 
 const actions: ActionTree<UserStateInterface, StateInterface> = {
   loginUserInfo({ commit }, param: { cookies: Cookies; res: Response }) {
@@ -20,7 +21,7 @@ const actions: ActionTree<UserStateInterface, StateInterface> = {
       .then((response) => {
         const headers: ResponseHeaders = response.headers;
         if (headers['set-cookie']) {
-          param.res.headers.append('set-cookie', headers['set-cookie']);
+          param.res.setHeader('set-cookie', headers['set-cookie']);
         }
         if (response.data.code === 0) {
           commit('updateUser', {
@@ -45,7 +46,10 @@ const actions: ActionTree<UserStateInterface, StateInterface> = {
       })
       .then((response) => {
         if (response.data.code === 0) {
-          commit('fetchUserInfo', { userInfo: response.data.data.user,follow:response.data.data.follow });
+          commit('fetchUserInfo', {
+            userInfo: response.data.data.user,
+            follow: response.data.data.follow,
+          });
         } else {
           commit('fetchUserInfo', {});
         }

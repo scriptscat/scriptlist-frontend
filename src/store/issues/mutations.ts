@@ -22,13 +22,19 @@ const mutation: MutationTree<IssuesStateInterface> = {
     state.commentList.push(comment);
   },
   closeIssue(state, comment) {
+    if (!state.issue) {
+      return;
+    }
     state.issue.status = 3;
     state.commentList.push(comment);
   },
   openIssue(state, comment) {
+    if (!state.issue) {
+      return;
+    }
     state.issue.status = 1;
     state.commentList.push(comment);
-  }
+  },
 };
 
 export default mutation;

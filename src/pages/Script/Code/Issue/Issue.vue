@@ -150,10 +150,6 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     const dateformat = formatDate;
-    const uid = ref();
-    const id = computed(() => {
-      return store.state.user.user.uid;
-    });
     const script = computed(() => {
       return store.state.scripts.script || <DTO.Script>{};
     });
@@ -215,8 +211,6 @@ export default defineComponent({
       page,
       returnGoodsProgressData,
       dateformat,
-      uid,
-      id,
       list,
       stateOptions: [],
       state: ref({ label: '建设中' }),

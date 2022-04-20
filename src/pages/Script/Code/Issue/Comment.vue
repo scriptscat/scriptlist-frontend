@@ -249,7 +249,7 @@ export default defineComponent({
   },
   computed: {
     selfUid() {
-      return this.$store.state.user.user.uid || 0;
+      return this.$store.state.user.user && this.$store.state.user.user.uid;
     },
     commentList() {
       return this.$store.state.issues.commentList;
@@ -268,6 +268,17 @@ export default defineComponent({
     const store = useStore();
     const script = store.state.scripts.script || <DTO.Script>{};
     const issue = store.state.issues.issue;
+    if (!issue) {
+      return {
+        editor: <
+          {
+            mkedit?: toastui.Editor;
+          }
+        >{
+          mkedit: undefined,
+        },
+      };
+    }
     useMeta({
       title: issue.title,
       titleTemplate: (title) =>
@@ -318,7 +329,7 @@ export default defineComponent({
             el: <HTMLElement>this.$refs.mkedite,
             previewStyle: 'tab',
             height: '400px',
-            placeholder:'输入回复反馈内容（友善的反馈是交流的起点）',
+            placeholder: '输入回复反馈内容（友善的反馈是交流的起点）',
             hooks: {
               addImageBlobHook: async (blob, callback) => {
                 const uploadedImageURL = await this.uploadImage(blob);

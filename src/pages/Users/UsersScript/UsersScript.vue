@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-center padding-normal">
     <q-card-section flat bordered class="scriptshow">
-      <q-card v-if="self.uid == User.uid" bordered flat>
+      <q-card v-if="self && self.uid == User.uid" bordered flat>
         <q-btn dense flat icon="home" label="个人主页" class="text-body1" />
         <q-card-actions>
           <q-btn-group flat>
@@ -81,7 +81,7 @@
         <span
           >{{ followNum.following }} 关注 {{ followNum.followers }} 粉丝</span
         >
-        <div v-if="self.uid && self.uid != User.uid">
+        <div v-if="self && self.uid != User.uid">
           <q-btn
             v-if="isfollow"
             size="xs"
@@ -226,7 +226,7 @@ export default defineComponent({
     };
   },
   async created() {
-    if (process.env.SERVER || !this.self.uid) {
+    if (process.env.SERVER || !this.self) {
       return;
     }
     if ((await isFollow(this.User.uid)).data.data) {

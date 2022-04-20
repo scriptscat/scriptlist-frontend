@@ -1,17 +1,17 @@
 export interface UserStateInterface {
-  islogin: boolean
-  user: DTO.User
-  userInfo: DTO.User
-  follow:DTO.Follow
+  islogin: boolean;
+  user?: DTO.User;
+  userInfo: DTO.User;
+  follow: DTO.Follow;
 }
 
 function state(): UserStateInterface {
   return {
     islogin: false,
-    user: <DTO.User>{},
+    user: undefined,
     userInfo: <DTO.User>{},
-    follow:<DTO.Follow>{}
-  }
-};
+    follow: <DTO.Follow>{},
+  };
+}
 
 export default state;
