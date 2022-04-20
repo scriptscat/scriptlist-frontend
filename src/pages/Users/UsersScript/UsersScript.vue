@@ -54,7 +54,7 @@
           text-color="white"
           icon="person"
           size="sm"
-          v-if="User.isAdmin === 1"
+          v-if="User.is_admin === 1"
         >
           管理员
         </q-chip>
@@ -63,7 +63,7 @@
           text-color="white"
           icon="person"
           size="sm"
-          v-else-if="User.isAdmin === 2"
+          v-else-if="User.is_admin === 2"
         >
           超级版主
         </q-chip>
@@ -72,7 +72,7 @@
           text-color="white"
           icon="person"
           size="sm"
-          v-else-if="User.isAdmin === 3"
+          v-else-if="User.is_admin === 3"
         >
           版主
         </q-chip>
