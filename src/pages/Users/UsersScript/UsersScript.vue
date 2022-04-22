@@ -189,7 +189,7 @@ export default defineComponent({
       return this.$store.state.user.follow;
     },
   },
-  async preFetch({ store, currentRoute, ssrContext  }) {
+  async preFetch({ store, currentRoute, ssrContext }) {
     if (!ssrContext) {
       return;
     }
@@ -225,13 +225,16 @@ export default defineComponent({
       isfollow: false,
     };
   },
-  async created() {
+  created() {
     if (process.env.SERVER || !this.self) {
       return;
     }
-    if ((await isFollow(this.User.uid)).data.data) {
-      this.isfollow = true;
-    }
+    let handler = async () => {
+      if ((await isFollow(this.User.uid)).data.data) {
+        this.isfollow = true;
+      }
+    };
+    void handler();
   },
   methods: {
     followEvent() {

@@ -15,7 +15,7 @@ const actions: ActionTree<UserStateInterface, StateInterface> = {
     return http
       .get<API.UserInfoResponse>('/user/info', {
         headers: {
-          cookie: 'token=' + param.cookies.get('token'),
+          cookie: 'token=' + (param.cookies.get('token') || ''),
         },
       })
       .then((response) => {
@@ -41,7 +41,9 @@ const actions: ActionTree<UserStateInterface, StateInterface> = {
     return http
       .get<API.UserInfoResponse>('/user/info/' + param.uid.toString(), {
         headers: {
-          cookie: 'token=' + (param.cookies ? param.cookies.get('token') : ''),
+          cookie:
+            'token=' +
+            ((param.cookies ? param.cookies.get('token') : '') || ''),
         },
       })
       .then((response) => {

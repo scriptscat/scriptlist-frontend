@@ -18,17 +18,17 @@ const mutation: MutationTree<IssuesStateInterface> = {
   resetPreFetch(state) {
     state.preFetch = false;
   },
-  addComment(state, comment) {
+  addComment(state, comment: DTO.IssueComment) {
     state.commentList.push(comment);
   },
-  closeIssue(state, comment) {
+  closeIssue(state, comment: DTO.IssueComment) {
     if (!state.issue) {
       return;
     }
     state.issue.status = 3;
     state.commentList.push(comment);
   },
-  openIssue(state, comment) {
+  openIssue(state, comment: DTO.IssueComment) {
     if (!state.issue) {
       return;
     }

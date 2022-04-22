@@ -297,7 +297,6 @@ export default defineComponent({
               addImageBlobHook: async (blob, callback) => {
                 const uploadedImageURL = await this.uploadImage(blob);
                 callback(uploadedImageURL, 'alt text');
-                return false;
               },
             },
             plugins: [
