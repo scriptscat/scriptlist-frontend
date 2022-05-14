@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.header-menu .light-menu-item > *,
+.header-menu .dark-menu-item > * {
+  vertical-align: middle !important;
+}
+
+.checkbox-round .dark-checkbox,
+.checkbox-round .light-checkbox {
+  border-radius: 50%;
+  overflow: hidden;
+}

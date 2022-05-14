@@ -1,42 +1,20 @@
 {
+  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    "noEmit": true,
-    "allowJs": true,
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "isolatedModules": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "target": "ES2019",
+    "strict": true,
     "baseUrl": ".",
-    "types": [
-      "webpack",
-      "quasar"
-    ],
     "paths": {
-      "@App/*": [
-        "src/*"
-      ],
-      "@Components/*": [
-        "src/components/*"
-      ],
+      "~/*": ["./app/*"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
-  },
-  "exclude": [
-    "/dist",
-    ".quasar",
-    "node_modules"
-  ]
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true
+  }
 }
