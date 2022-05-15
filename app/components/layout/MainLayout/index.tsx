@@ -1,4 +1,5 @@
-import { Divider, MenuProps } from 'antd';
+import type { MenuProps } from 'antd';
+import { Divider } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { Layout, Menu, Button, ConfigProvider } from 'antd';
 import type { ReactNode } from 'react';
@@ -11,6 +12,9 @@ import {
   ChromeOutlined,
 } from '@ant-design/icons';
 import { RiSunLine, RiMoonLine, RiComputerLine } from 'react-icons/ri';
+import { useLocation } from 'react-router-dom';
+import { Link } from '@remix-run/react';
+import Search from '~/components/Search';
 
 const { Header, Footer, Content } = Layout;
 
@@ -37,13 +41,18 @@ const items: MenuProps['items'] = [
   },
 ];
 
-const MainLayout: React.FC<{ children: ReactNode; styleMode: string }> = ({
-  children,
-  styleMode,
-}) => {
-  const [current, setCurrent] = useState('home');
+const MainLayout: React.FC<{
+  children: ReactNode;
+  styleMode: string;
+  oauthClient: string;
+  apiUrl: string;
+}> = ({ children, styleMode, oauthClient, apiUrl }) => {
   const [dark, setDark] = useState(styleMode || 'light');
   const [mode, setMode] = useState(styleMode || 'auto');
+  const location = useLocation();
+  const [current, setCurrent] = useState(
+    location.pathname == '/' ? 'home' : ''
+  );
 
   const modeMenu = (
     <Menu
@@ -105,29 +114,46 @@ const MainLayout: React.FC<{ children: ReactNode; styleMode: string }> = ({
       break;
   }
 
+  const gotoLogin = () => {
+    window.open(
+      'https://bbs.tampermonkey.net.cn/plugin.php?id=codfrm_oauth2:oauth&client_id=' +
+        encodeURIComponent(oauthClient) +
+        '&scope=user&response_type=code&redirect_uri=' +
+        encodeURIComponent(apiUrl) +
+        '%2Flogin%2Foauth%3Fredirect_uri%3D' +
+        encodeURIComponent(location.pathname + '?' + location.search),
+      '_self'
+    );
+  };
+
   return (
     <>
       <ConfigProvider prefixCls={dark}>
         <Layout className={dark}>
           <Header className="flex flex-row">
-            <div className="items-center flex flex-row basis-3/4">
-              <img
-                style={{
-                  width: '32px',
-                  height: '32px',
-                }}
-                src="/assets/logo.png"
-                alt="logo"
-              />
+            <div className="items-center flex flex-row justify-start basis-3/4">
+              <Link to="/" className="hidden lg:block min-w-max">
+                <img
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                  }}
+                  src="/assets/logo.png"
+                  alt="logo"
+                />
+              </Link>
               <Menu
                 selectedKeys={[current]}
                 mode="horizontal"
                 items={items}
-                className="header-menu !ml-4"
+                className="header-menu !ml-4 max-w-xs lg:max-w-none"
                 style={{
                   border: 0,
                 }}
               />
+              {location.pathname == '/search' && (
+                <Search className="h-9 border w-full" />
+              )}
             </div>
             <div className="flex items-center justify-end basis-1/4">
               <Space>
@@ -138,7 +164,7 @@ const MainLayout: React.FC<{ children: ReactNode; styleMode: string }> = ({
                 >
                   {DropdownIcon}
                 </Dropdown>
-                <Button type="primary" ghost href={"https://bbs.tampermonkey.net.cn/plugin.php?id=codfrm_oauth2:oauth&client_id=80mfto0y3b8v&scope=user&response_type=code&redirect_uri=https%3A%2F%2Fscriptcat.org%2Fapi%2Fv1%2Flogin%2Foauth%3Fredirect_uri%3D%2F"}>
+                <Button type="primary" ghost onClick={gotoLogin}>
                   登录
                 </Button>
               </Space>
@@ -171,7 +197,9 @@ const MainLayout: React.FC<{ children: ReactNode; styleMode: string }> = ({
                 GitHub
               </a>
             </div>
-            <p className="m-0 text-sm">© 2021-至今 ScriptCat. All rights reserved.</p>
+            <p className="m-0 text-sm">
+              © 2022-至今 ScriptCat. All rights reserved.
+            </p>
           </Footer>
         </Layout>
       </ConfigProvider>

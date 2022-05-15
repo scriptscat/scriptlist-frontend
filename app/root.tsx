@@ -3,6 +3,7 @@ import type {
   MetaFunction,
   LoaderFunction,
 } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -32,6 +33,8 @@ export const meta: MetaFunction = () => ({
   keyword: 'ScriptCat UserScript 用户脚本',
 });
 
+export const unstable_shouldReload = () => false;
+
 export const loader: LoaderFunction = async ({ request }) => {
   const cookieHeader = request.headers.get('Cookie');
   let styleMode = '';
@@ -39,9 +42,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     const cookie = parseCookie(cookieHeader);
     styleMode = cookie.styleMode ? cookie.styleMode : '';
   }
-  return {
+  return json({
     styleMode: styleMode,
-  };
+    ENV: {
+      APP_API_URL: process.env.APP_API_URL,
+      APP_BBS_OAUTH_CLIENT: process.env.APP_BBS_OAUTH_CLIENT,
+    },
+  });
 };
 
 export default function App() {
@@ -53,7 +60,11 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <MainLayout styleMode={config.styleMode}>
+        <MainLayout
+          styleMode={config.styleMode}
+          oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
+          apiUrl={config.ENV.APP_API_URL}
+        >
           <Outlet />
         </MainLayout>
         <ScrollRestoration />
