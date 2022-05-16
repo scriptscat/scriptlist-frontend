@@ -1,27 +1,90 @@
 import { RiseOutlined, TagsOutlined } from '@ant-design/icons';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Outlet, useLoaderData } from '@remix-run/react';
-import { Card, Radio, Select, Space } from 'antd';
+import {
+  Outlet,
+  useLoaderData,
+  useNavigate,
+  useSearchParams,
+} from '@remix-run/react';
+import { Card, Collapse, List, Radio, Select, Space, Tag } from 'antd';
 import { search } from '~/services/scripts/api';
-import type { SearchResponse } from '~/services/scripts/types';
+import type { Script, SearchResponse } from '~/services/scripts/types';
+import { replaceSearchParam } from '~/services/utils';
 
 // 加载热门脚本与分类等不希望重新加载的数据
 export const unstable_shouldReload = () => false;
 
+interface loaderResponse {
+  rank: {
+    total: Script[];
+    score: Script[];
+    update: Script[];
+  };
+}
+
 // 脚本列表使用嵌套路由实现
 export const loader: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url);
-  const resp = await search({
-    keyword: url.searchParams.get('keyword') || '',
+  const total = await search({
+    sort: 'total_download',
+    count: 10,
+  });
+  const score = await search({
+    sort: 'score',
+    count: 10,
+  });
+  const update = await search({
+    sort: 'updatetime',
+    count: 10,
   });
   return json({
-    resp: resp,
+    rank: {
+      total: total.list,
+      score: score.list,
+      update: update.list,
+    },
   });
 };
 
+const rankColor = [
+  '#f50',
+  '#f50',
+  '#87d068',
+  '#87d068',
+  '#b379dd',
+  '#b379dd',
+  '#2db7f5',
+  '#2db7f5',
+  '#dc7884',
+  '#dc7884',
+];
+
+const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
+  return (
+    <div className="flex flex-col gap-[2px]">
+      {list.map((item, index) => (
+        <div key={index}>
+          <Space className="!gap-1">
+            <Tag
+              className="!m-0"
+              color={rankColor[index]}
+              style={{ padding: index == 9 ? '0 3px' : '' }}
+            >
+              {index + 1}
+            </Tag>
+            <span className="text-sm !block !truncate">{item.name}</span>
+          </Space>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export default function Search() {
-  const loader = useLoaderData<{ resp: SearchResponse }>();
+  const loader = useLoaderData<loaderResponse>();
+  const params = useSearchParams();
+  const sort = params[0].get('sort') || 'day';
+  const navigate = useNavigate();
 
   return (
     <>
@@ -46,10 +109,21 @@ export default function Search() {
                 <Space>
                   <RiseOutlined />
                   <span>排序</span>
-                  <Radio.Group value="day" size="small">
+                  <Radio.Group
+                    defaultValue={sort}
+                    size="small"
+                    onChange={(val) => {
+                      let search = replaceSearchParam(location.search, {
+                        sort: val.target.value,
+                      });
+                      navigate({ search }, { replace: true });
+                    }}
+                  >
                     <Radio.Button value="day">日安装</Radio.Button>
-                    <Radio.Button value="total">总安装</Radio.Button>
+                    <Radio.Button value="total_download">总安装</Radio.Button>
                     <Radio.Button value="score">评分</Radio.Button>
+                    <Radio.Button value="createtime">最新发布</Radio.Button>
+                    <Radio.Button value="updatetime">最近更新</Radio.Button>
                   </Radio.Group>
                 </Space>
               </div>
@@ -64,6 +138,20 @@ export default function Search() {
               description="就来油猴中文网"
             ></Card.Meta>
           </Card>
+          <Collapse
+            defaultActiveKey={['1', '2', '3']}
+            className="rank-collapse"
+          >
+            <Collapse.Panel header="安装量推荐" key="1">
+              <RankList list={loader.rank.total} />
+            </Collapse.Panel>
+            <Collapse.Panel header="评分推荐" key="2">
+              <RankList list={loader.rank.score} />
+            </Collapse.Panel>
+            <Collapse.Panel header="最新脚本" key="3">
+              <RankList list={loader.rank.update} />
+            </Collapse.Panel>
+          </Collapse>
         </div>
       </div>
     </>

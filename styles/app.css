@@ -12,3 +12,14 @@
   border-radius: 50%;
   overflow: hidden;
 }
+
+.light-pagination-item-link .anticon,
+.dark-pagination-item-link .anticon {
+  vertical-align: text-top !important;
+}
+
+.rank-collapse .light-collapse-content-box,
+.rank-collapse .dark-collapse-content-box {
+  padding: 4px 4px !important;
+  overflow: hidden;
+}

@@ -18,6 +18,10 @@ import styles from './styles/app.css';
 import antdLight from './styles/light.css';
 import antdDark from './styles/dark.css';
 import { parseCookie } from 'utils/cookie';
+import { loginUserinfoAndRefushToken } from './services/users/api';
+import { User } from './services/users/types';
+import { createContext } from 'react';
+import { UserContext } from './context-manager';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -29,7 +33,7 @@ export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   title: 'ScriptCat - 分享你的用户脚本',
   description: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚',
-  viewport: 'width=device-width,initial-scale=1',
+  // viewport: 'width=device-width,initial-scale=1',
   keyword: 'ScriptCat UserScript 用户脚本',
 });
 
@@ -37,18 +41,36 @@ export const unstable_shouldReload = () => false;
 
 export const loader: LoaderFunction = async ({ request }) => {
   const cookieHeader = request.headers.get('Cookie');
+  let user: User | undefined;
+  const respInit: ResponseInit = {};
   let styleMode = '';
   if (cookieHeader) {
     const cookie = parseCookie(cookieHeader);
     styleMode = cookie.styleMode ? cookie.styleMode : '';
+    if (cookie.token) {
+      const resp = await loginUserinfoAndRefushToken({ token: cookie.token });
+      if (resp.setCookie) {
+        respInit.headers = new Headers();
+        resp.setCookie.forEach((item) => {
+          (respInit.headers as Headers).append('Set-Cookie', item);
+        });
+      }
+      user = resp.user;
+    }
   }
-  return json({
-    styleMode: styleMode,
-    ENV: {
-      APP_API_URL: process.env.APP_API_URL,
-      APP_BBS_OAUTH_CLIENT: process.env.APP_BBS_OAUTH_CLIENT,
+  return json(
+    {
+      styleMode: styleMode,
+      ENV: {
+        APP_API_URL: process.env.APP_API_URL,
+        APP_BBS_OAUTH_CLIENT: process.env.APP_BBS_OAUTH_CLIENT,
+      },
+      login: {
+        user: user,
+      },
     },
-  });
+    respInit
+  );
 };
 
 export default function App() {
@@ -60,13 +82,15 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <MainLayout
-          styleMode={config.styleMode}
-          oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
-          apiUrl={config.ENV.APP_API_URL}
-        >
-          <Outlet />
-        </MainLayout>
+        <UserContext.Provider value={{ user: config.login.user }}>
+          <MainLayout
+            styleMode={config.styleMode}
+            oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
+            apiUrl={config.ENV.APP_API_URL}
+          >
+            <Outlet />
+          </MainLayout>
+        </UserContext.Provider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

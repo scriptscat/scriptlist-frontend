@@ -5,7 +5,7 @@ import type { SearchResponse } from './types';
 
 export interface SearchParams extends Params {
   uid?: number;
-  sort?: string;
+  sort?: 'today' | 'score' | 'total_download' | 'createtime' | 'updatetime';
   page?: number;
   count?: number;
   category?: string;

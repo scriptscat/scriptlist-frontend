@@ -1,8 +1,8 @@
-import type { MenuProps } from 'antd';
+import { Avatar, MenuProps } from 'antd';
 import { Divider } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { Layout, Menu, Button, ConfigProvider } from 'antd';
-import type { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import {
@@ -10,11 +10,13 @@ import {
   HomeOutlined,
   CodeOutlined,
   ChromeOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { RiSunLine, RiMoonLine, RiComputerLine } from 'react-icons/ri';
 import { useLocation } from 'react-router-dom';
 import { Link } from '@remix-run/react';
 import Search from '~/components/Search';
+import { UserContext } from '~/context-manager';
 
 const { Header, Footer, Content } = Layout;
 
@@ -50,10 +52,8 @@ const MainLayout: React.FC<{
   const [dark, setDark] = useState(styleMode || 'light');
   const [mode, setMode] = useState(styleMode || 'auto');
   const location = useLocation();
-  const [current, setCurrent] = useState(
-    location.pathname == '/' ? 'home' : ''
-  );
-
+  const current = location.pathname == '/' ? 'home' : '';
+  const user = useContext(UserContext);
   const modeMenu = (
     <Menu
       className="!rounded-md border-inherit border-1 w-32 !mt-4"
@@ -84,6 +84,17 @@ const MainLayout: React.FC<{
           <p className="text-sm m-0">跟随系统</p>
         </Space>
       </Menu.Item>
+    </Menu>
+  );
+
+  const userMenu = (
+    <Menu className="!rounded-md border-inherit border-1 w-32 !mt-4">
+      <Menu.Item key="light">
+        <Space>
+          <UserOutlined />
+          <p className="text-sm m-0">个人中心</p>
+        </Space>
+      </Menu.Item>{' '}
     </Menu>
   );
 
@@ -156,7 +167,12 @@ const MainLayout: React.FC<{
               )}
             </div>
             <div className="flex items-center justify-end basis-1/4">
-              <Space>
+              <Space className="!gap-3">
+                {user.user && (
+                  <Button type="primary" size="small">
+                    发布脚本
+                  </Button>
+                )}
                 <Dropdown
                   overlay={modeMenu}
                   trigger={['click']}
@@ -164,9 +180,24 @@ const MainLayout: React.FC<{
                 >
                   {DropdownIcon}
                 </Dropdown>
-                <Button type="primary" ghost onClick={gotoLogin}>
-                  登录
-                </Button>
+                {user.user ? (
+                  <Dropdown
+                    overlay={userMenu}
+                    trigger={['click']}
+                    placement="bottomCenter"
+                  >
+                    <Avatar
+                      src={
+                        'https://scriptcat.org/api/v1/user/avatar/' +
+                        user.user.user.uid
+                      }
+                    ></Avatar>
+                  </Dropdown>
+                ) : (
+                  <Button type="primary" ghost onClick={gotoLogin}>
+                    登录
+                  </Button>
+                )}
               </Space>
             </div>
           </Header>
