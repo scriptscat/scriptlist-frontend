@@ -23,3 +23,7 @@
   padding: 4px 4px !important;
   overflow: hidden;
 }
+
+.script-info-item .anticon {
+  vertical-align: baseline !important;
+}

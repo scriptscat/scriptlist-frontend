@@ -1,11 +1,18 @@
 import type { Params } from '../http';
 import { request } from '../http';
 import { paramsToSearch } from '../utils';
-import type { SearchResponse } from './types';
+import type { ScriptResponse, SearchResponse } from './types';
+
+export type SortType =
+  | 'today'
+  | 'score'
+  | 'total_download'
+  | 'createtime'
+  | 'updatetime';
 
 export interface SearchParams extends Params {
   uid?: number;
-  sort?: 'today' | 'score' | 'total_download' | 'createtime' | 'updatetime';
+  sort?: SortType;
   page?: number;
   count?: number;
   category?: string;
@@ -16,7 +23,18 @@ export interface SearchParams extends Params {
 export async function search(params: SearchParams) {
   const resp = await request<SearchResponse>({
     url: '/scripts?' + paramsToSearch(params),
-    method: 'GET',
+    method: 'GET'
   });
   return resp.data;
+}
+
+export async function getScript(id: number) {
+  const resp = await request<ScriptResponse>({
+    url: '/scripts/' + id,
+    method: 'GET'
+  });
+  if (resp.status === 404) {
+    return null;
+  }
+  return resp.data.data;
 }

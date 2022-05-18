@@ -1,7 +1,7 @@
 import type {
   LinksFunction,
   MetaFunction,
-  LoaderFunction,
+  LoaderFunction, ErrorBoundaryComponent
 } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
@@ -10,8 +10,8 @@ import {
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration,
-  useLoaderData,
+  ScrollRestoration, useCatch,
+  useLoaderData
 } from '@remix-run/react';
 import MainLayout from '~/components/layout/MainLayout';
 import styles from './styles/app.css';
@@ -19,14 +19,14 @@ import antdLight from './styles/light.css';
 import antdDark from './styles/dark.css';
 import { parseCookie } from 'utils/cookie';
 import { loginUserinfoAndRefushToken } from './services/users/api';
-import { User } from './services/users/types';
+import { Follow, User } from './services/users/types';
 import { createContext } from 'react';
 import { UserContext } from './context-manager';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
   { rel: 'stylesheet', href: antdDark },
-  { rel: 'stylesheet', href: antdLight },
+  { rel: 'stylesheet', href: antdLight }
 ];
 
 export const meta: MetaFunction = () => ({
@@ -34,14 +34,14 @@ export const meta: MetaFunction = () => ({
   title: 'ScriptCat - 分享你的用户脚本',
   description: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚',
   // viewport: 'width=device-width,initial-scale=1',
-  keyword: 'ScriptCat UserScript 用户脚本',
+  keyword: 'ScriptCat UserScript 用户脚本'
 });
 
 export const unstable_shouldReload = () => false;
 
 export const loader: LoaderFunction = async ({ request }) => {
   const cookieHeader = request.headers.get('Cookie');
-  let user: User | undefined;
+  let user: { follow: Follow; user: User } | undefined;
   const respInit: ResponseInit = {};
   let styleMode = '';
   if (cookieHeader) {
@@ -63,11 +63,11 @@ export const loader: LoaderFunction = async ({ request }) => {
       styleMode: styleMode,
       ENV: {
         APP_API_URL: process.env.APP_API_URL,
-        APP_BBS_OAUTH_CLIENT: process.env.APP_BBS_OAUTH_CLIENT,
+        APP_BBS_OAUTH_CLIENT: process.env.APP_BBS_OAUTH_CLIENT
       },
       login: {
-        user: user,
-      },
+        user: user
+      }
     },
     respInit
   );
@@ -76,25 +76,25 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function App() {
   const config = useLoaderData();
   return (
-    <html lang="zh-cn">
-      <head>
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <UserContext.Provider value={{ user: config.login.user }}>
-          <MainLayout
-            styleMode={config.styleMode}
-            oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
-            apiUrl={config.ENV.APP_API_URL}
-          >
-            <Outlet />
-          </MainLayout>
-        </UserContext.Provider>
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
+    <html lang='zh-cn'>
+    <head>
+      <Meta />
+      <Links />
+    </head>
+    <body>
+    <UserContext.Provider value={{ user: config.login.user }}>
+      <MainLayout
+        styleMode={config.styleMode}
+        oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
+        apiUrl={config.ENV.APP_API_URL}
+      >
+        <Outlet />
+      </MainLayout>
+    </UserContext.Provider>
+    <ScrollRestoration />
+    <Scripts />
+    <LiveReload />
+    </body>
     </html>
   );
 }

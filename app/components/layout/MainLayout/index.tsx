@@ -1,8 +1,10 @@
-import { Avatar, MenuProps } from 'antd';
+import type { MenuProps } from 'antd';
+import { Avatar } from 'antd';
 import { Divider } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { Layout, Menu, Button, ConfigProvider } from 'antd';
-import { ReactNode, useContext } from 'react';
+import type { ReactNode } from 'react';
+import { useContext } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import {
@@ -49,7 +51,15 @@ const MainLayout: React.FC<{
   oauthClient: string;
   apiUrl: string;
 }> = ({ children, styleMode, oauthClient, apiUrl }) => {
-  const [dark, setDark] = useState(styleMode || 'light');
+  const [dark, _setDark] = useState(styleMode || 'light');
+  const setDark = (mode: string) => {
+    if (mode === 'light') {
+      document.body.style.backgroundColor = '#ffffff';
+    } else {
+      document.body.style.backgroundColor = '#000000';
+    }
+    _setDark(mode);
+  };
   const [mode, setMode] = useState(styleMode || 'auto');
   const location = useLocation();
   const current = location.pathname == '/' ? 'home' : '';
@@ -94,7 +104,7 @@ const MainLayout: React.FC<{
           <UserOutlined />
           <p className="text-sm m-0">个人中心</p>
         </Space>
-      </Menu.Item>{' '}
+      </Menu.Item>
     </Menu>
   );
 

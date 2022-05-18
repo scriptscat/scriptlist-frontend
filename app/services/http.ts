@@ -4,6 +4,7 @@ import axios from 'axios';
 let instance: AxiosInstance = axios.create({
   baseURL: process.env.APP_API_URL,
   timeout: 10000,
+  validateStatus: (status: number) =>  status < 500,
 });
 
 export interface Params {

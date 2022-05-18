@@ -64,7 +64,7 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
     <div className="flex flex-col gap-[2px]">
       {list.map((item, index) => (
         <div key={index}>
-          <Space className="!gap-1">
+          <div className="flex flex-row !gap-1">
             <Tag
               className="!m-0"
               color={rankColor[index]}
@@ -73,7 +73,7 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
               {index + 1}
             </Tag>
             <span className="text-sm !block !truncate">{item.name}</span>
-          </Space>
+          </div>
         </div>
       ))}
     </div>
@@ -131,7 +131,7 @@ export default function Search() {
           </Card>
           <Outlet />
         </div>
-        <div className="flex-col gap-3 hidden basis-1/4 md:flex">
+        <div className="flex-col gap-3 hidden basis-1/4 md:flex overflow-hidden">
           <Card>
             <Card.Meta
               title="学油猴脚本"

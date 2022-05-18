@@ -2,6 +2,7 @@ import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import SearchList from '~/components/Search/SearchList';
+import type { SortType } from '~/services/scripts/api';
 import { search } from '~/services/scripts/api';
 import type { SearchResponse } from '~/services/scripts/types';
 
@@ -12,7 +13,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const resp = await search({
     page: page,
     keyword: url.searchParams.get('keyword') || '',
-    sort: url.searchParams.get('sort') || '',
+    sort: (url.searchParams.get('sort') as SortType) || '',
   });
   return json({
     resp: resp,

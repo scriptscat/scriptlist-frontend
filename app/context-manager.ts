@@ -1,6 +1,15 @@
 import { createContext } from 'react';
-import { Follow, User } from './services/users/types';
+import type { Script } from './services/scripts/types';
+import type { Follow, User } from './services/users/types';
 
-export const UserContext = createContext<{
-  user: { user: User; follow: Follow } | undefined;
-}>({ user: undefined });
+export type UserContextData = {
+  user?: { user: User; follow: Follow };
+};
+
+export const UserContext = createContext<UserContextData>({});
+
+export type ScriptContextData = {
+  script?: Script;
+};
+
+export const ScriptContext = createContext<ScriptContextData>({});

@@ -6,13 +6,19 @@ import {
   StarFilled,
   ExclamationCircleOutlined,
   ShareAltOutlined,
+  QuestionCircleOutlined,
+  MoneyCollectOutlined,
 } from '@ant-design/icons';
 import { Link } from '@remix-run/react';
-import { Card, Avatar, Button, Divider, Tag } from 'antd';
+import { Card, Avatar, Button, Divider, Tag, Tooltip } from 'antd';
+import { RiMessage2Line } from 'react-icons/ri';
 import { formatDate } from 'utils/utils';
 import type { Script } from '~/services/scripts/types';
 
-const SearchItem: React.FC<{ script: Script }> = ({ script }) => {
+const SearchItem: React.FC<{
+  script: Script;
+  action?: boolean;
+}> = ({ script, action }) => {
   const gridStyle = {
     width: '100%',
     padding: '2px 8px',
@@ -35,10 +41,20 @@ const SearchItem: React.FC<{ script: Script }> = ({ script }) => {
               <Avatar src={script.avatar} />
             </div>
             <div className="flex flex-col flex-auto">
-              <Link className="text-xs" to={''}>
+              <Link
+                className="text-xs"
+                to={'/users/' + script.uid}
+                target="_blank"
+              >
                 {script.username}
               </Link>
-              <span className="text-lg">{script.name}</span>
+              <Link
+                className="text-lg text-black dark:text-white"
+                to={'/script-show-page/' + script.id}
+                target="_blank"
+              >
+                {script.name}
+              </Link>
             </div>
             <div>
               <Button type="link" className="!p-0">
@@ -93,6 +109,40 @@ const SearchItem: React.FC<{ script: Script }> = ({ script }) => {
             </div>
           </div>
         </Card.Grid>
+        {action && (
+          <Card.Grid hoverable={false} style={gridStyle}>
+            <div className="flex flex-row script-info-item px-2 py-1 gap-2">
+              <Button.Group>
+                <Button
+                  className="!rounded-none"
+                  type="primary"
+                  icon={<DownloadOutlined />}
+                >
+                  安装脚本
+                </Button>
+                <Button
+                  className="!rounded-none"
+                  type="primary"
+                  icon={<QuestionCircleOutlined />}
+                  color="#3874cb"
+                ></Button>
+              </Button.Group>
+              <Divider type="vertical" className="!h-auto" />
+              <Button
+                className="!rounded-none !bg-transparent !border-orange-400 !text-orange-400"
+                icon={<MoneyCollectOutlined />}
+              >
+                捐赠脚本
+              </Button>
+              <Button
+                className="!rounded-none !bg-transparent !border-blue-400 !text-blue-400"
+                icon={<RiMessage2Line className="!inline-block !m-0 !mr-2" />}
+              >
+                论坛帖子
+              </Button>
+            </div>
+          </Card.Grid>
+        )}
         <Card.Grid hoverable={false} style={gridStyle}>
           <div className="flex flex-row justify-between py-[2px]">
             <div className="flex flex-row items-center text-sm">
@@ -112,7 +162,14 @@ const SearchItem: React.FC<{ script: Script }> = ({ script }) => {
             </div>
             <div className="flex flex-row items-center">
               {script.category.map((category) => (
-                <Tag key={category.id} color="green">{category.name}</Tag>
+                <Tooltip
+                  title={'该脚本属于' + category.name + '分类'}
+                  color="green"
+                  placement="bottom"
+                  key={category.id}
+                >
+                  <Tag color="green">{category.name}</Tag>
+                </Tooltip>
               ))}
             </div>
           </div>
