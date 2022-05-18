@@ -23,15 +23,15 @@ export interface SearchParams extends Params {
 export async function search(params: SearchParams) {
   const resp = await request<SearchResponse>({
     url: '/scripts?' + paramsToSearch(params),
-    method: 'GET'
+    method: 'GET',
   });
   return resp.data;
 }
 
-export async function getScript(id: number) {
+export async function getScript(id: number, withCode?: boolean) {
   const resp = await request<ScriptResponse>({
-    url: '/scripts/' + id,
-    method: 'GET'
+    url: '/scripts/' + id + (withCode ? '/code' : ''),
+    method: 'GET',
   });
   if (resp.status === 404) {
     return null;

@@ -4,13 +4,14 @@ export type SearchResponse = APIListResponse<Script>;
 
 export type ScriptResponse = APIDataResponse<Script>;
 
-export interface Script {
+export type Script = {
   id: number;
   uid: number;
   avatar: string;
   username: string;
   name: string;
   description: string;
+  script: ScriptCode;
   content?: string;
   score: number; // 总分
   score_num: number; // 评分人数
@@ -19,10 +20,15 @@ export interface Script {
   category: Category[];
   createtime: number;
   updatetime: number;
-}
+};
 
 export interface Category {
   id: number;
   name: string;
   num: number;
 }
+
+export type ScriptCode = {
+  id: number;
+  code: string;
+};

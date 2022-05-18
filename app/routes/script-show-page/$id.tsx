@@ -11,9 +11,7 @@ import type { LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { getScript } from '~/services/scripts/api';
 import type { Script } from '~/services/scripts/types';
-import { useState } from 'react';
 import { ScriptContext } from '~/context-manager';
-import { CodeOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 export type LoaderData = {
   script: Script;
@@ -57,6 +55,14 @@ const items: MenuProps['items'] = [
   {
     key: 'code',
     label: <Link to={'./code'}>代码</Link>,
+  },
+  {
+    key: 'issue',
+    label: <Link to={'./issue'}>反馈</Link>,
+  },
+  {
+    key: 'comment',
+    label: <Link to={'./comment'}>评分</Link>,
   },
 ];
 

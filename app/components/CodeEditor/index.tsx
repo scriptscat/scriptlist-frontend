@@ -1,0 +1,112 @@
+import { useEffect } from 'react';
+
+let script: HTMLScriptElement;
+let codeScript: HTMLScriptElement;
+if (typeof document !== 'undefined') {
+  const initCode = document.createElement('script');
+  initCode.innerHTML = `
+    window.callbacks=[];
+    window.onInitCodeEditor=(callbacks)=>{
+      window.callbacks.push(callbacks);
+    }
+  `;
+  document.head.append(initCode);
+  script = document.createElement('script');
+  script.src = '/assets/monaco-editor/min/vs/loader.js';
+  script.onload = () => {
+    codeScript = document.createElement('script');
+    codeScript.innerHTML = `const dark =
+    document.querySelector("section").className.indexOf("dark") == -1
+      ? false
+      : true;
+  require.config({ paths: { vs: "/assets/monaco-editor/min/vs" } });
+  window.initCodeEditor = function (id, code, readOnly) {
+    return new Promise((resolve, reject) => {
+      require(["vs/editor/editor.main"], function () {
+        let el = document.getElementById("container-" + id);
+        if (!el) {
+          return;
+        }
+        let editor = monaco.editor.create(el, {
+          value: code,
+          language: "javascript",
+          readOnly: readOnly,
+          theme: dark ? "vs-dark" : "vs",
+        });
+        resolve(editor);
+      });
+    });
+  };
+  window.callbacks.forEach((callback) => {
+    callback();
+  });
+  window.callbacks = [];
+  `;
+    document.head.append(codeScript);
+  };
+
+  document.head.append(script);
+}
+
+const CodeEditor: React.FC<{ id: string; code: string; readOnly: boolean }> = ({
+  id,
+  code,
+  readOnly,
+}) => {
+  useEffect(() => {
+    let editor: monaco.editor.ICodeEditor | null = null;
+    if (
+      typeof window === 'undefined' ||
+      typeof (
+        window as unknown as {
+          initCodeEditor: any;
+        }
+      ).initCodeEditor === 'undefined'
+    ) {
+      (
+        window as unknown as {
+          onInitCodeEditor: (callback: () => void) => void;
+        }
+      ).onInitCodeEditor(async () => {
+        editor = await (
+          window as unknown as {
+            initCodeEditor: (
+              id: string,
+              code: string,
+              readOnly: boolean
+            ) => Promise<monaco.editor.ICodeEditor>;
+          }
+        ).initCodeEditor(id, code, readOnly);
+      });
+    } else {
+      (
+        window as unknown as {
+          initCodeEditor: (
+            id: string,
+            code: string,
+            readOnly: boolean
+          ) => Promise<monaco.editor.ICodeEditor>;
+        }
+      )
+        .initCodeEditor(id, code, readOnly)
+        .then((ret) => {
+          editor = ret;
+        });
+    }
+    return () => {
+      editor && editor.dispose();
+    };
+  });
+  return (
+    <>
+      <div className="h-full">
+        <div
+          id={'container-' + id}
+          className="overflow-hidden"
+          style={{ width: '100%', height: '100%' }}
+        ></div>
+      </div>
+    </>
+  );
+};
+export default CodeEditor;

@@ -1,8 +1,7 @@
 import type {
   LinksFunction,
   MetaFunction,
-  LoaderFunction, ErrorBoundaryComponent
-} from '@remix-run/node';
+  LoaderFunction} from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   Links,
@@ -10,8 +9,7 @@ import {
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration, useCatch,
-  useLoaderData
+  ScrollRestoration, useLoaderData
 } from '@remix-run/react';
 import MainLayout from '~/components/layout/MainLayout';
 import styles from './styles/app.css';
@@ -19,8 +17,7 @@ import antdLight from './styles/light.css';
 import antdDark from './styles/dark.css';
 import { parseCookie } from 'utils/cookie';
 import { loginUserinfoAndRefushToken } from './services/users/api';
-import { Follow, User } from './services/users/types';
-import { createContext } from 'react';
+import type { Follow, User } from './services/users/types';
 import { UserContext } from './context-manager';
 
 export const links: LinksFunction = () => [
