@@ -13,7 +13,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const resp = await search({
     page: page,
     keyword: url.searchParams.get('keyword') || '',
-    sort: (url.searchParams.get('sort') as SortType) || '',
+    sort: (url.searchParams.get('sort') as SortType) || 'today',
   });
   return json({
     resp: resp,

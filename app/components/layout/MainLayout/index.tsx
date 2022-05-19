@@ -73,7 +73,7 @@ const MainLayout: React.FC<{
         if (key == 'auto') {
           key = '';
         }
-        document.cookie = 'styleMode=' + key;
+        document.cookie = 'styleMode=' + key+";path=/";
       }}
     >
       <Menu.Item key="light">

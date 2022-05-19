@@ -1,6 +1,7 @@
 import type { Params } from './http';
 
-export function paramsToSearch(params: Params) {
+export function paramsToSearch(params?: Params) {
+  if (!params) return '';
   return Object.keys(params)
     .map((k) => k + '=' + encodeURIComponent(params[k]))
     .join('&');
@@ -13,7 +14,7 @@ export function replaceSearchParam(
   for (const key in params) {
     if (search.indexOf(key + '=') > -1) {
       const regex = new RegExp(key + '=.*?(&|$)');
-      search = search.replace(regex, key + '=' + params[key]+'$1');
+      search = search.replace(regex, key + '=' + params[key] + '$1');
     } else {
       search += (search ? search + '&' : '') + key + '=' + params[key];
     }

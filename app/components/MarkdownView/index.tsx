@@ -1,5 +1,4 @@
-import React, { FC } from 'react';
-import 'github-markdown-css/github-markdown-light.css';
+import React from 'react';
 import { marked } from 'marked';
 import { useLocation } from '@remix-run/react';
 
