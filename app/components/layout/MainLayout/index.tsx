@@ -24,22 +24,22 @@ const { Header, Footer, Content } = Layout;
 
 const items: MenuProps['items'] = [
   {
-    label: '首页',
+    label: <Link to={'/'}>首页</Link>,
     key: 'home',
     icon: <HomeOutlined />,
   },
   {
-    label: '社区',
+    label: <a href="https://bbs.tampermonkey.net.cn">社区</a>,
     key: 'bbs',
     icon: <MessageOutlined />,
   },
   {
-    label: '脚本列表',
+    label: <Link to={'/search'}>脚本列表</Link>,
     key: 'list',
     icon: <CodeOutlined />,
   },
   {
-    label: '浏览器扩展',
+    label: <a href="https://docs.scriptcat.org/">浏览器扩展</a>,
     key: 'extension',
     icon: <ChromeOutlined />,
   },
@@ -73,7 +73,7 @@ const MainLayout: React.FC<{
         if (key == 'auto') {
           key = '';
         }
-        document.cookie = 'styleMode=' + key+";path=/";
+        document.cookie = 'styleMode=' + key + ';path=/';
       }}
     >
       <Menu.Item key="light">
@@ -197,10 +197,7 @@ const MainLayout: React.FC<{
                     placement="bottomCenter"
                   >
                     <Avatar
-                      src={
-                        'https://scriptcat.org/api/v1/user/avatar/' +
-                        user.user.user.uid
-                      }
+                      src={'/api/v1/user/avatar/' + user.user.user.uid}
                     ></Avatar>
                   </Dropdown>
                 ) : (

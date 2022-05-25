@@ -28,6 +28,25 @@
   vertical-align: baseline !important;
 }
 
+.anticon-middle .anticon {
+  vertical-align: baseline !important;
+}
+
+.dark-card-body .ant-input {
+  background: transparent;
+  width: 100%;
+  height: 100%;
+}
+
+.statistic span {
+  display: block;
+  height: 24px;
+  font-size: 12px;
+  line-height: 16px;
+  width: 80px;
+  text-align: right;
+}
+
 /* github markdown css start */
 .dark h1,
 .dark h2,

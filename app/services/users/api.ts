@@ -22,3 +22,14 @@ export async function loginUserinfoAndRefushToken({
 
   return { user: resp.data.data, setCookie: resp.headers['set-cookie'] };
 }
+
+export async function GetUserInfo(uid: number) {
+  const resp = await request<LoginUserinfoResponse>({
+    url: '/user/info/' + uid,
+    method: 'GET',
+  });
+  if (resp.status == 404) {
+    return null;
+  }
+  return resp.data.data;
+}

@@ -1,3 +1,4 @@
+import React, { useImperativeHandle, useState } from 'react';
 import { useEffect } from 'react';
 
 let script: HTMLScriptElement;
@@ -27,6 +28,8 @@ if (typeof document !== 'undefined') {
         if (!el) {
           return;
         }
+        el.innerHTML = "";
+        el.style.display = "block";
         let editor = monaco.editor.create(el, {
           value: code,
           language: "javascript",
@@ -48,11 +51,21 @@ if (typeof document !== 'undefined') {
   document.head.append(script);
 }
 
-const CodeEditor: React.FC<{ id: string; code: string; readOnly: boolean }> = ({
-  id,
-  code,
-  readOnly,
-}) => {
+type Props = {
+  id: string;
+  code: string;
+  readOnly?: boolean;
+};
+
+const CodeEditor: React.ForwardRefRenderFunction<unknown, Props> = (
+  { id, code, readOnly },
+  ref
+) => {
+  const [_editor, setEditor] = useState<any>(null);
+  useImperativeHandle(ref, () => ({
+    editor: _editor,
+  }));
+
   useEffect(() => {
     let editor: monaco.editor.ICodeEditor | null = null;
     if (
@@ -76,7 +89,8 @@ const CodeEditor: React.FC<{ id: string; code: string; readOnly: boolean }> = ({
               readOnly: boolean
             ) => Promise<monaco.editor.ICodeEditor>;
           }
-        ).initCodeEditor(id, code, readOnly);
+        ).initCodeEditor(id, code, readOnly || false);
+        setEditor(editor);
       });
     } else {
       (
@@ -88,25 +102,28 @@ const CodeEditor: React.FC<{ id: string; code: string; readOnly: boolean }> = ({
           ) => Promise<monaco.editor.ICodeEditor>;
         }
       )
-        .initCodeEditor(id, code, readOnly)
+        .initCodeEditor(id, code, readOnly || false)
         .then((ret) => {
           editor = ret;
+          setEditor(editor);
         });
     }
     return () => {
       editor && editor.dispose();
     };
-  });
+  }, []);
   return (
     <>
       <div className="h-full">
         <div
           id={'container-' + id}
           className="overflow-hidden"
-          style={{ width: '100%', height: '100%' }}
-        ></div>
+          style={{ width: '100%', height: '100%', display: 'none' }}
+        >
+          {code}
+        </div>
       </div>
     </>
   );
 };
-export default CodeEditor;
+export default React.forwardRef(CodeEditor);

@@ -5,6 +5,7 @@ import { Card } from 'antd';
 import { getScript } from '~/services/scripts/api';
 import type { LoaderData } from '../$id';
 import CodeEditor from '~/components/CodeEditor';
+import UpdateScript from '~/components/UpdateScript';
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const script = await getScript(parseInt(params.id as string), true);
@@ -14,18 +15,12 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   return json({ script } as LoaderData);
 };
 
-export default function Code() {
+export default function Update() {
   const data = useLoaderData<LoaderData>();
 
   return (
     <Card>
-      <div id="code" className="code w-full h-[500px]">
-        <CodeEditor
-          id="view-code"
-          code={data.script.script.code || ''}
-          readOnly={true}
-        />
-      </div>
+      <UpdateScript code={data.script.script.code || ''}></UpdateScript>
     </Card>
   );
 }

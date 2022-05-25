@@ -23,4 +23,8 @@ export type IssueCommentListResponse = APIListResponse<IssueComment>;
 export type IssueComment = {
   id: number;
   uid: number;
+  username: string;
+  content: string;
+  type: 1 | 4 | 5;
+  createtime: number;
 };

@@ -21,6 +21,12 @@ type LoaderData = {
   total: number;
 };
 
+export const IssueTagMap: { [key: string]: string[] } = {
+  feature: ['新功能', 'geekblue'],
+  question: ['问题', 'cyan'],
+  bug: ['BUG', 'red'],
+};
+
 export const loader: LoaderFunction = async ({ params }) => {
   const data = await IssueList(parseInt(params.id as string), {});
   return json({ list: data.list, total: data.total } as LoaderData);
@@ -41,7 +47,6 @@ export default function Issue() {
           console.log(pagination);
         }}
         size="small"
-        bordered
       >
         <Column
           title="标题"
@@ -52,7 +57,6 @@ export default function Issue() {
               <div className="flex flex-col">
                 <Link
                   to={'./' + record.id + '/comment'}
-                  target="_blank"
                   className="text-base text-gray-500"
                 >
                   {title}
@@ -70,18 +74,16 @@ export default function Issue() {
           key="labels"
           width={200}
           render={(labels: string[]) => {
-            const map: { [key: string]: string[] } = {
-              feature: ['新功能', 'geekblue'],
-              question: ['问题', 'cyan'],
-              bug: ['BUG', 'red'],
-            };
             return (
               <div className="flex flex-row">
-                {labels.map((label) => (
-                  <Tag key={label} color={map[label][1]}>
-                    {map[label][0]}
-                  </Tag>
-                ))}
+                {labels.map(
+                  (label) =>
+                    IssueTagMap[label] && (
+                      <Tag key={label} color={IssueTagMap[label][1]}>
+                        {IssueTagMap[label][0]}
+                      </Tag>
+                    )
+                )}
               </div>
             );
           }}
