@@ -1,4 +1,5 @@
 import { Button, Checkbox, Switch } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
 import { useRef } from 'react';
 import { ClientOnly } from 'remix-utils';
 import CodeEditor from '../CodeEditor';
@@ -26,7 +27,10 @@ const UpdateScript: React.FC<{ code?: string; content?: string }> = ({
         {() => <MarkdownEditor id={'update-script'} content={content} />}
       </ClientOnly>
       <h3 className="text-lg">更新日志</h3>
-      <span>当前脚本更新的内容(支持markdown)</span>
+      <TextArea
+        placeholder="当前脚本更新的内容(支持markdown)"
+        className="!bg-transparent"
+      ></TextArea>
       <h3 className="text-lg">脚本访问权限</h3>
       <Switch checkedChildren="公开" unCheckedChildren="私有" defaultChecked />
       <h3 className="text-lg">不适内容</h3>

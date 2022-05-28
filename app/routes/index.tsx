@@ -55,7 +55,7 @@ export default function Index() {
           将 ScriptCat 添加至 {browser}
         </Button>
       </div>
-      <div className="flex flex-row justify-between gap-4">
+      <div className="flex flex-row justify-between gap-6">
         <Card className="flex-1 !rounded-xl">
           <div className="text-center">
             <img

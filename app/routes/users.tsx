@@ -1,19 +1,11 @@
-import { HomeOutlined } from '@ant-design/icons';
-import { json, LoaderFunction, MetaFunction } from '@remix-run/node';
-import {
-  Link,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  useCatch,
-  useLoaderData,
-} from '@remix-run/react';
-import { Avatar, Button, Card, Divider, Tag } from 'antd';
+import type { LoaderFunction, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { Outlet, useCatch, useLoaderData } from '@remix-run/react';
+import { Avatar, Button, Card, Tag } from 'antd';
 import { useContext } from 'react';
 import { UserContext } from '~/context-manager';
-import { GetUserInfo, loginUserinfoAndRefushToken } from '~/services/users/api';
-import { Follow, User } from '~/services/users/types';
+import { GetUserInfo } from '~/services/users/api';
+import type { Follow, User } from '~/services/users/types';
 
 type LoaderData = {
   user?: User;
@@ -57,8 +49,8 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 export default function Users() {
   const currentUser = useContext(UserContext);
   const data = useLoaderData<LoaderData>();
-  const user = data.user || (currentUser.user && currentUser.user.user);
-  const follow = data.follow || (currentUser.user && currentUser.user.follow);
+  const user = data.user || (currentUser.user && currentUser.user);
+  const follow = data.follow || (currentUser.follow && currentUser.follow);
   if (!user || !follow) {
     return (
       <>
@@ -71,32 +63,36 @@ export default function Users() {
   return (
     <>
       <div>
-        {currentUser.user && user.uid === currentUser.user.user.uid && (
+        {currentUser.user && user.uid === currentUser.user.uid && (
           <Card title={<span>个人中心</span>} className="!mb-3">
             <Button.Group>
-              <Button type="primary">发布编写的脚本</Button>
-              <Button>设置WEBHOOK</Button>
-              <Button>通知设置</Button>
+              <Button type="primary" href="/post-script">
+                发布编写的脚本
+              </Button>
+              <Button href="/users/webhook">设置WEBHOOK</Button>
+              <Button href="/users/notify">通知设置</Button>
             </Button.Group>
           </Card>
         )}
-        <div className="flex flex-col items-center">
-          <div className="flex flex-row">
-            <Avatar size={36} src={user.avatar} />
-            <Link
-              to={'https://bbs.tampermonkey.net?' + user.uid}
-              className="text-3xl"
-            >
-              {user.username}
-            </Link>
-            <span className="text-3xl ml-2">编写的脚本</span>
+        <Card className="!mb-3">
+          <div className="flex flex-col items-center">
+            <div className="flex flex-row">
+              <Avatar size={36} src={user.avatar} />
+              <a
+                type="link"
+                href={'https://bbs.tampermonkey.net.cn?' + user.uid}
+                className="!text-3xl"
+              >
+                {user.username}
+              </a>
+              <span className="text-3xl ml-2">编写的脚本</span>
+            </div>
+            <Tag color={'#f50'}>管理员</Tag>
+            <span>
+              {follow.following} 关注 {follow.followers} 粉丝
+            </span>
           </div>
-          <Tag color={'#f50'}>管理员</Tag>
-          <span>
-            {follow.following} 关注 {follow.followers} 粉丝
-          </span>
-          <Divider />
-        </div>
+        </Card>
         <Outlet />
       </div>
     </>

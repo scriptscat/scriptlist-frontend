@@ -99,11 +99,13 @@ const MainLayout: React.FC<{
 
   const userMenu = (
     <Menu className="!rounded-md border-inherit border-1 w-32 !mt-4">
-      <Menu.Item key="light">
-        <Space>
-          <UserOutlined />
-          <p className="text-sm m-0">个人中心</p>
-        </Space>
+      <Menu.Item>
+        <Link to={'/users/' + user.user?.user.uid}>
+          <Space className="anticon-middle">
+            <UserOutlined />
+            <p className="text-sm m-0">个人中心</p>
+          </Space>
+        </Link>
       </Menu.Item>
     </Menu>
   );
@@ -179,7 +181,7 @@ const MainLayout: React.FC<{
             <div className="flex items-center justify-end basis-1/4">
               <Space className="!gap-3">
                 {user.user && (
-                  <Button type="primary" size="small">
+                  <Button type="primary" size="small" href="/post-script">
                     发布脚本
                   </Button>
                 )}

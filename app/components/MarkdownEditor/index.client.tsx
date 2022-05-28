@@ -46,7 +46,7 @@ const MarkdownEditor: React.FC<{ id: string; content?: string }> = ({
   }, [content, editor]);
   return (
     <>
-      <div id={'markdown-editor-' + id}></div>
+      <div id={'markdown-editor-' + id} className="w-full"></div>
     </>
   );
 };

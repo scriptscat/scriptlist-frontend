@@ -1,0 +1,8 @@
+
+/.cache
+/build
+/public/build
+
+app/styles/*.css
+
+/.idea

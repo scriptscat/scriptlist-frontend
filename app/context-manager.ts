@@ -3,7 +3,8 @@ import type { Script } from './services/scripts/types';
 import type { Follow, User } from './services/users/types';
 
 export type UserContextData = {
-  user?: { user: User; follow: Follow };
+  user?: User;
+  follow?: Follow;
 };
 
 export const UserContext = createContext<UserContextData>({});
