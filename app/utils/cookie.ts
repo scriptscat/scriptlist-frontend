@@ -8,3 +8,12 @@ export function parseCookie(cookieHeader: string) {
       return cookies;
     }, {});
 }
+
+export function getToken(request: Request) {
+  const cookieHeader = request.headers.get('Cookie');
+  if (cookieHeader) {
+    const cookie = parseCookie(cookieHeader);
+    return cookie.token;
+  }
+  return undefined;
+}

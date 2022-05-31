@@ -1,4 +1,4 @@
-import { Card, Divider } from 'antd';
+import { Alert, Card, Divider } from 'antd';
 import { useState, useEffect } from 'react';
 import { Line, Column } from '@ant-design/plots';
 
@@ -100,6 +100,12 @@ const RealtimeColumn = () => {
 export default function Statistic() {
   return (
     <Card>
+      <Alert
+        message="TODO"
+        description="以下数据仅供参考"
+        type="info"
+        showIcon
+      />
       <Card className="!p-0">
         <Card.Grid hoverable={false} className="!w-full !p-2">
           <div className="flex flex-row justify-between statistic">

@@ -1,20 +1,17 @@
-import {
-  CheckCircleOutlined,
-  CheckCircleTwoTone,
-  InfoCircleTwoTone,
-} from '@ant-design/icons';
+import { CheckCircleTwoTone, InfoCircleTwoTone } from '@ant-design/icons';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
-import { Button, Card, Space, Table, Tag } from 'antd';
+import { Link, useLoaderData } from '@remix-run/react';
+import { Button, Card, Space, Table, Tag, Tooltip } from 'antd';
 import Column from 'antd/lib/table/Column';
-import { Link } from 'react-router-dom';
-import { formatDate } from 'utils/utils';
+import { formatDate } from '~/utils/utils';
 import { IssueList } from '~/services/scripts/issues/api';
 import type {
   Issue as IssueItem,
   IssueStatusType,
 } from '~/services/scripts/issues/types';
+import { useContext } from 'react';
+import { UserContext } from '~/context-manager';
 
 type LoaderData = {
   list: IssueItem[];
@@ -34,10 +31,23 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function Issue() {
   const data = useLoaderData<LoaderData>();
+  const user = useContext(UserContext);
   return (
     <Card>
       <Space className="mb-2">
-        <Button type="primary">创建反馈</Button>
+        <Tooltip
+          title={
+            user.user
+              ? '创建反馈时记得描述清楚问题哦,否则可能会被作者直接关闭'
+              : '请先登录后再创建反馈'
+          }
+        >
+          <Button type="primary" disabled={user.user ? false : true}>
+            <Link to={"./create"}>
+            创建反馈
+            </Link>
+          </Button>
+        </Tooltip>
       </Space>
       <Table
         rowKey={(record) => record.id}
@@ -76,14 +86,15 @@ export default function Issue() {
           render={(labels: string[]) => {
             return (
               <div className="flex flex-row">
-                {labels.map(
-                  (label) =>
-                    IssueTagMap[label] && (
-                      <Tag key={label} color={IssueTagMap[label][1]}>
-                        {IssueTagMap[label][0]}
-                      </Tag>
-                    )
-                )}
+                {labels &&
+                  labels.map(
+                    (label) =>
+                      IssueTagMap[label] && (
+                        <Tag key={label} color={IssueTagMap[label][1]}>
+                          {IssueTagMap[label][0]}
+                        </Tag>
+                      )
+                  )}
               </div>
             );
           }}

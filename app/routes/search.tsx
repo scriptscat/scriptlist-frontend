@@ -2,14 +2,15 @@ import { RiseOutlined, TagsOutlined } from '@ant-design/icons';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
+  Link,
   Outlet,
   useLoaderData,
   useNavigate,
   useSearchParams,
 } from '@remix-run/react';
-import { Card, Collapse, List, Radio, Select, Space, Tag } from 'antd';
+import { Avatar, Card, Collapse, Radio, Select, Space, Tag } from 'antd';
 import { search } from '~/services/scripts/api';
-import type { Script, SearchResponse } from '~/services/scripts/types';
+import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 
 // 加载热门脚本与分类等不希望重新加载的数据
@@ -64,16 +65,29 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
     <div className="flex flex-col gap-[2px]">
       {list.map((item, index) => (
         <div key={index}>
-          <div className="flex flex-row !gap-1">
-            <Tag
-              className="!m-0"
-              color={rankColor[index]}
-              style={{ padding: index == 9 ? '0 3px' : '' }}
-            >
-              {index + 1}
-            </Tag>
-            <span className="text-sm !block !truncate">{item.name}</span>
-          </div>
+          <Link
+            to={'/script-show-page/' + item.id}
+            target="_blank"
+            className="text-sm !block !truncate text-black dark:text-white"
+          >
+            {item.script.meta_json['icon'] ? (
+              <Avatar
+                className="min-w-[24px]"
+                shape="square"
+                size="small"
+                src={item.script.meta_json['icon'][0]}
+              />
+            ) : (
+              <Tag
+                className="!m-0"
+                color={rankColor[index]}
+                style={{ padding: index == 9 ? '0 3px' : '' }}
+              >
+                {index + 1}
+              </Tag>
+            )}
+            <span className="ml-1">{item.name}</span>
+          </Link>
         </div>
       ))}
     </div>

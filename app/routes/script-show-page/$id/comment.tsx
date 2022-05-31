@@ -1,6 +1,6 @@
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import {
   Avatar,
   Button,
@@ -9,18 +9,20 @@ import {
   Divider,
   Empty,
   List,
+  message,
   Rate,
   Skeleton,
   Space,
 } from 'antd';
+import type { TextAreaRef } from 'antd/lib/input/TextArea';
 import TextArea from 'antd/lib/input/TextArea';
-import { useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Link } from 'react-router-dom';
-import { formatDate } from 'utils/utils';
+import { formatDate, useDark } from '~/utils/utils';
 import MarkdownView from '~/components/MarkdownView';
-import { GetMyScore, ScoreList } from '~/services/scripts/api';
+import { GetMyScore, ScoreList, SubmitScore } from '~/services/scripts/api';
 import type { ScoreItem } from '~/services/scripts/types';
+import { UserContext } from '~/context-manager';
 
 type LoaderData = {
   id: number;
@@ -29,10 +31,10 @@ type LoaderData = {
   myScore: ScoreItem;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
   const id = parseInt(params.id as string);
   const list = await ScoreList(id);
-  const my = await GetMyScore(id);
+  const my = await GetMyScore(id, request);
   return json({
     id: id,
     list: list.list,
@@ -46,6 +48,27 @@ export default function Comment() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(loaderData.list);
   const [page, setPage] = useState(1);
+  const dark = useDark();
+  const user = useContext(UserContext);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const textEl = useRef<TextAreaRef>(null);
+  const [score, setScore] = useState(
+    (loaderData.myScore && loaderData.myScore.score / 10) || 5
+  );
+  const onSubmit = async () => {
+    setSubmitLoading(true);
+    const resp = await SubmitScore(
+      loaderData.id,
+      textEl!.current!.resizableTextArea?.props.value as string,
+      score * 10
+    );
+    if (resp.code === 0) {
+      message.success('评分成功');
+    } else {
+      message.error(resp.msg);
+    }
+    setSubmitLoading(false);
+  };
 
   const loadMoreData = async () => {
     if (loading) {
@@ -57,24 +80,42 @@ export default function Comment() {
     setLoading(false);
     setPage((page) => page + 1);
   };
-
   return (
     <Card>
       <Space className="w-full" direction="vertical">
         <Card title="撰写评论">
-          <TextArea
-            showCount
-            maxLength={100}
-            style={{ height: 120 }}
-            className="bg-transparent"
-            placeholder="填写您的评论并在下方进行评分，问题反馈请前往反馈区（友善的反馈是交流的起点）"
-          />
+          {user.user && (
+            <TextArea
+              showCount
+              prefixCls={dark ? 'dark-input' : 'light-input'}
+              maxLength={100}
+              style={{ height: 120 }}
+              ref={textEl}
+              defaultValue={loaderData.myScore && loaderData.myScore.message}
+              placeholder="填写您的评论并在下方进行评分，问题反馈请前往反馈区（友善的反馈是交流的起点）"
+            />
+          )}
+          {!user.user && (
+            <Empty className="border-t" description="请登录后再发表评论">
+              <Button
+                type="primary"
+                onClick={() => {
+                  const btn = document.querySelector(
+                    '#go-to-login'
+                  ) as HTMLButtonElement;
+                  btn.click();
+                }}
+              >
+                登录
+              </Button>
+            </Empty>
+          )}
           <Card.Meta
             className="!mt-2 justify-end"
             title={
               <Rate
-                allowHalf
-                defaultValue={5}
+                defaultValue={score}
+                onChange={(value) => setScore(value)}
                 tooltips={[
                   '👎',
                   '大失所望',
@@ -87,7 +128,16 @@ export default function Comment() {
           />
           <Card.Meta
             className="!mt-2 justify-end"
-            title={<Button type="primary">评分</Button>}
+            title={
+              <Button
+                type="primary"
+                loading={submitLoading}
+                onClick={onSubmit}
+                disabled={user.user ? false : true}
+              >
+                评分
+              </Button>
+            }
           />
         </Card>
         <Card title="用户评分">

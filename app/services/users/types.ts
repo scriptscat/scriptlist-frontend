@@ -9,6 +9,7 @@ export interface User {
   uid: number;
   username: string;
   avatar: string;
+  is_admin: 0 | 1 | 2 | 3;
 }
 
 export interface Follow {

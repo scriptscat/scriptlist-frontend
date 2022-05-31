@@ -5,10 +5,11 @@ import {
   InfoCircleFilled,
   CheckCircleFilled,
   MessageOutlined,
+  TagFilled,
 } from '@ant-design/icons';
 import type { LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import {
   Avatar,
   Button,
@@ -17,24 +18,44 @@ import {
   Divider,
   Empty,
   List,
+  message,
   Select,
   Space,
   Tag,
   Tooltip,
 } from 'antd';
-import { Link } from 'react-router-dom';
-import { formatDate } from 'utils/utils';
+import { formatDate } from '~/utils/utils';
+import type { MarkdownEditorRef } from '~/components/MarkdownEditor/index.client';
 import MarkdownEditor from '~/components/MarkdownEditor/index.client';
 import MarkdownView from '~/components/MarkdownView';
-import { GetIssue, IssueCommentList } from '~/services/scripts/issues/api';
-import type { Issue, IssueComment } from '~/services/scripts/issues/types';
+import {
+  CloseIssue,
+  GetIssue,
+  IssueCommentList,
+  IsWatchIssue,
+  ListWatchIssue,
+  OpenIssue,
+  PostComment,
+  UnwatchIssue,
+  UpdateLabels,
+  WatchIssue,
+} from '~/services/scripts/issues/api';
+import type {
+  Issue,
+  IssueComment,
+  IsWatchIssue as IsWatchIssueType,
+} from '~/services/scripts/issues/types';
 import { ClientOnly } from 'remix-utils';
-import { useState } from 'react';
-import { IssueTagMap } from '../index';
+import { useContext, useRef, useState } from 'react';
+import { ScriptContext, UserContext } from '~/context-manager';
+import type { APIResponse } from '~/services/http';
+import IssueLabel from '~/components/IssueLabel';
+import { User } from '~/services/users/types';
 
 type LoaderData = {
   issue: Issue;
   comments: IssueComment[];
+  isWatch: IsWatchIssueType;
 };
 
 export const meta: MetaFunction = ({ data, parentsData }) => {
@@ -55,27 +76,62 @@ export const meta: MetaFunction = ({ data, parentsData }) => {
   };
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const issue = await GetIssue(
-    parseInt(params.id as string),
-    parseInt(params.issueId as string)
-  );
+export const loader: LoaderFunction = async ({ params, request }) => {
+  const scriptId = parseInt(params.id as string);
+  const issueId = parseInt(params.issueId as string);
+  const issue = await GetIssue(scriptId, issueId);
   if (!issue) {
     throw new Response('反馈不存在', { status: 404, statusText: 'Not Found' });
   }
-  const commentList = await IssueCommentList(
-    parseInt(params.id as string),
-    parseInt(params.issueId as string)
-  );
+  const commentList = await IssueCommentList(scriptId, issueId);
+  const isWatch = await IsWatchIssue(scriptId, issueId, request);
   return json({
     issue: issue,
     comments: commentList,
+    isWatch: isWatch,
   } as LoaderData);
 };
 
 export default function Comment() {
   const data = useLoaderData<LoaderData>();
-  const [replyContent, setReplyContent] = useState('');
+  const [status, setStatus] = useState(data.issue.status);
+  const [list, setList] = useState(data.comments);
+  const script = useContext(ScriptContext);
+  const user = useContext(UserContext);
+  const editor = useRef<MarkdownEditorRef>();
+  const [loading, setLoading] = useState(false);
+  const [isWatch, setIsWatch] = useState(data.isWatch.watch);
+  const [labels, setLabels] = useState(data.issue.labels || []);
+
+  const joinMember: { [key: number]: number } = {};
+  joinMember[data.issue.uid] = 1;
+  list.forEach((item) => {
+    joinMember[item.uid] = 1;
+  });
+
+  const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
+    let json = JSON.parse(content);
+    return (
+      <div>
+        {json['add'].length > 0 && (
+          <span>
+            添加标签:{' '}
+            {json['add'].map((label: string) => (
+              <IssueLabel key={label} label={label} />
+            ))}
+          </span>
+        )}
+        {json['del'].length > 0 && (
+          <span>
+            删除标签:{' '}
+            {json['del'].map((label: string) => (
+              <IssueLabel key={label} label={label} />
+            ))}
+          </span>
+        )}
+      </div>
+    );
+  };
 
   return (
     <Card>
@@ -83,7 +139,7 @@ export default function Comment() {
         <div className="flex flex-col gap-2 basis-3/4">
           <span className="text-2xl">{data.issue.title}</span>
           <div className="flex flex-row items-center">
-            {data.issue.status === 1 ? (
+            {status === 1 ? (
               <Tag
                 icon={<InfoCircleTwoTone className="!align-baseline" />}
                 color="blue"
@@ -124,7 +180,7 @@ export default function Comment() {
             <List
               itemLayout="vertical"
               size="large"
-              dataSource={data.comments}
+              dataSource={list}
               className="!border-t !mt-2"
               renderItem={(item: IssueComment) => {
                 return (
@@ -160,7 +216,10 @@ export default function Comment() {
                                 for (let i = 0; i < lines.length; i++) {
                                   lines[i] = '> ' + lines[i];
                                 }
-                                setReplyContent(lines.join('\n') + '\n\n');
+                                editor.current?.editor &&
+                                  editor.current?.editor.setMarkdown(
+                                    lines.join('\n') + '\n\n'
+                                  );
                               }}
                             >
                               回复
@@ -183,6 +242,9 @@ export default function Comment() {
                             className="flex items-center gap-2"
                             style={{ position: 'relative', left: '-19px' }}
                           >
+                            {item.type == 3 && (
+                              <TagFilled className="text-xl !text-blue-400" />
+                            )}
                             {item.type == 4 && (
                               <InfoCircleFilled className="text-xl !text-orange-500" />
                             )}
@@ -199,7 +261,11 @@ export default function Comment() {
                             </Link>
                             <span className="text-xs text-gray-400">
                               {formatDate(item.createtime)}{' '}
-                              {item.type == 4 ? '打开反馈' : '关闭反馈'}
+                              {item.type == 3 && (
+                                <LabelsStatus content={item.content} />
+                              )}
+                              {item.type == 4 && '打开反馈'}
+                              {item.type == 5 && '关闭反馈'}
                             </span>
                           </div>
                         </div>
@@ -210,13 +276,88 @@ export default function Comment() {
               }}
             ></List>
           </ConfigProvider>
-          <ClientOnly fallback={<div></div>}>
-            {() => <MarkdownEditor id="reply" content={replyContent} />}
-          </ClientOnly>
-          <Space className="justify-end">
-            <Button>{data.issue.status == 1 ? '关闭反馈' : '开启付款'}</Button>
-            <Button type="primary">评论</Button>
-          </Space>
+          {user.user ? (
+            <div className="flex flex-col gap-2">
+              <ClientOnly fallback={<div></div>}>
+                {() => <MarkdownEditor id="reply" ref={editor} />}
+              </ClientOnly>
+              <Space className="justify-end">
+                {(user.user.uid == data.issue.uid ||
+                  user.user.is_admin > 1 ||
+                  script.script?.uid == user.user.uid) && (
+                  <Button
+                    loading={loading}
+                    onClick={async () => {
+                      setLoading(true);
+                      let resp: APIResponse;
+                      if (status == 1) {
+                        resp = await CloseIssue(
+                          script.script!.id,
+                          data.issue.id
+                        );
+                      } else {
+                        resp = await OpenIssue(
+                          script.script!.id,
+                          data.issue.id
+                        );
+                      }
+                      setLoading(false);
+                      if (resp.code == 0) {
+                        setStatus(status == 1 ? 3 : 1);
+                        setList([...list, resp.data]);
+                      } else {
+                        message.error(resp.msg);
+                      }
+                      return 1;
+                    }}
+                  >
+                    {status == 1 ? '关闭反馈' : '开启反馈'}
+                  </Button>
+                )}
+                <Button
+                  type="primary"
+                  loading={loading}
+                  onClick={() => {
+                    if (!editor.current || !editor.current.editor) {
+                      message.error('系统错误!未发现编辑器数据!');
+                      return;
+                    }
+                    setLoading(true);
+                    PostComment(
+                      script.script!.id,
+                      data.issue.id,
+                      editor.current.editor.getMarkdown()
+                    ).then((resp) => {
+                      setLoading(false);
+                      if (resp.code == 0) {
+                        message.success('回复成功!');
+                        editor.current!.setMarkdown('');
+                        setList([...list, resp.data]);
+                      } else {
+                        message.error(resp.msg);
+                      }
+                    });
+                  }}
+                >
+                  评论
+                </Button>
+              </Space>
+            </div>
+          ) : (
+            <Empty className="border-t" description="请登录后再发表评论">
+              <Button
+                type="primary"
+                onClick={() => {
+                  const btn = document.querySelector(
+                    '#go-to-login'
+                  ) as HTMLButtonElement;
+                  btn.click();
+                }}
+              >
+                登录
+              </Button>
+            </Empty>
+          )}
         </div>
         <div className="flex flex-col basis-1/4">
           <Space direction="vertical">
@@ -224,34 +365,91 @@ export default function Comment() {
             <Select
               mode="multiple"
               showArrow
-              tagRender={({ label, value, closable, onClose }) => {
+              tagRender={({ value, closable, onClose }) => {
                 const onPreventMouseDown = (event: any) => {
                   event.preventDefault();
                   event.stopPropagation();
                 };
                 return (
-                  <Tag
+                  <IssueLabel
+                    label={value}
                     className="anticon-middle"
-                    color={IssueTagMap[value][1]}
                     onMouseDown={onPreventMouseDown}
                     closable={closable}
                     onClose={onClose}
                     style={{ marginRight: 3 }}
-                  >
-                    {IssueTagMap[value][0]}
-                  </Tag>
+                  />
                 );
               }}
               style={{ width: '100%' }}
               options={[
-                { value: 'feature' },
+                { value: 'feature'},
                 { value: 'question' },
                 { value: 'bug' },
               ]}
-              value={data.issue.labels}
+              value={labels}
+              loading={loading}
+              onChange={(value) => setLabels(value)}
+              onBlur={async (value) => {
+                setLoading(true);
+                const resp = await UpdateLabels(
+                  script.script!.id,
+                  data.issue.id,
+                  labels
+                );
+                setLoading(false);
+                if (resp.code !== 0) {
+                  message.error(resp.msg);
+                } else {
+                  setList([...list, resp.data]);
+                }
+              }}
             />
           </Space>
           <Divider />
+          <Space direction="vertical">
+            <span className="text-lg font-bold">关注</span>
+            <div className="flex justify-center">
+              <Tooltip title="关注本反馈,当有新消息时会自动发送邮件通知">
+                <Button
+                  type="primary"
+                  size="small"
+                  loading={loading}
+                  onClick={async () => {
+                    setLoading(true);
+                    let resp: APIResponse;
+                    if (isWatch) {
+                      resp = await UnwatchIssue(
+                        script.script!.id,
+                        data.issue.id
+                      );
+                    } else {
+                      resp = await WatchIssue(script.script!.id, data.issue.id);
+                    }
+                    setLoading(false);
+                    if (resp.code == 0) {
+                      setIsWatch(isWatch ? 0 : 1);
+                    } else {
+                      message.error(resp.msg);
+                    }
+                  }}
+                >
+                  {isWatch ? '已关注' : '关注'}
+                </Button>
+              </Tooltip>
+            </div>
+          </Space>
+          <Divider />
+          <Space direction="vertical">
+            <span className="text-lg font-bold">参与人</span>
+            <Space>
+              {Object.keys(joinMember).map((key) => (
+                <Link key={key} to={`/users/${key}`} target="_blank">
+                  <Avatar src={'/api/v1/user/avatar/' + key} />
+                </Link>
+              ))}
+            </Space>
+          </Space>
         </div>
       </div>
     </Card>

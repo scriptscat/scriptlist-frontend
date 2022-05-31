@@ -1,5 +1,5 @@
 import { request } from '../http';
-import { Follow, LoginUserinfoResponse, User } from './types';
+import type { Follow, LoginUserinfoResponse, User } from './types';
 
 export async function loginUserinfoAndRefushToken({
   token,

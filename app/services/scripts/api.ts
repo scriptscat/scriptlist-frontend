@@ -1,10 +1,15 @@
+import type { APIResponse } from '../http';
 import { request } from '../http';
 import { paramsToSearch } from '../utils';
+import { IssueResponse } from './issues/types';
 import type {
+  CreateScriptResponse,
   MyScoreResponse,
   ScoreListResponse,
-  ScriptListResponse,
   ScriptResponse,
+  ScriptSetting,
+  ScriptSettingResponse,
+  ScriptVersionListResponse,
   SearchResponse,
 } from './types';
 
@@ -40,9 +45,24 @@ export async function search(params: SearchParams) {
   return resp.data;
 }
 
-export async function getScript(id: number, withCode?: boolean) {
+export async function getScript(id: number, req: Request, withCode?: boolean) {
   const resp = await request<ScriptResponse>({
     url: '/scripts/' + id + (withCode ? '/code' : ''),
+    method: 'GET',
+    headers: {
+      Cookie: req?.headers.get('Cookie') || '',
+    },
+  });
+  return resp.data;
+}
+
+export async function getScriptByVersion(
+  id: number,
+  version: string,
+  withCode?: boolean
+) {
+  const resp = await request<ScriptResponse>({
+    url: '/scripts/' + id + '/versions/' + version + (withCode ? '/code' : ''),
     method: 'GET',
   });
   if (resp.status === 404) {
@@ -60,7 +80,7 @@ export async function ScriptVersionList(
   id: number,
   params?: ScriptVersionListParams
 ) {
-  const resp = await request<ScriptListResponse>({
+  const resp = await request<ScriptVersionListResponse>({
     url: '/scripts/' + id + '/versions?' + paramsToSearch(params),
     method: 'GET',
   });
@@ -79,10 +99,13 @@ export async function ScoreList(id: number, params?: ScoreListParam) {
   return resp.data;
 }
 
-export async function GetMyScore(id: number) {
+export async function GetMyScore(id: number, req?: Request) {
   const resp = await request<MyScoreResponse>({
     url: '/scripts/' + id + '/score/self',
     method: 'GET',
+    headers: {
+      cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   if (resp.status === 404) {
     return null;
@@ -90,13 +113,59 @@ export async function GetMyScore(id: number) {
   return resp.data.data;
 }
 
-export async function GetScriptSetting(id: number, token: string) {
-  const resp = await request<ScriptResponse>({
+export async function GetScriptSetting(id: number, req: Request) {
+  const resp = await request<ScriptSettingResponse>({
     url: '/scripts/' + id + '/setting',
     method: 'GET',
     headers: {
-      cookie: 'token=' + token,
+      cookie: req.headers.get('Cookie') || '',
     },
   });
-  return resp.data.data;
+  return resp.data;
+}
+
+export async function SubmitScore(id: number, message: string, score: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/score',
+    method: 'PUT',
+    data: {
+      message,
+      score,
+    },
+  });
+  return resp.data;
+}
+
+export type UpdateCodeParams = {
+  content: string;
+  code: string;
+  definition?: string;
+  changelog: string;
+  public: 1 | 2;
+  unwell: 1 | 2;
+};
+
+export async function UpdateCode(id: number, params: UpdateCodeParams) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/code',
+    method: 'PUT',
+    data: params,
+  });
+  return resp.data;
+}
+
+export type CreateScriptParams = {
+  name: string;
+  description: string;
+  definition: string;
+  type: 1 | 2 | 3;
+} & UpdateCodeParams;
+
+export async function CreateScript(params: CreateScriptParams) {
+  const resp = await request<CreateScriptResponse>({
+    url: '/scripts',
+    method: 'POST',
+    data: params,
+  });
+  return resp.data;
 }

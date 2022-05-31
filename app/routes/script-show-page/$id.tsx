@@ -5,7 +5,7 @@ import {
   useLoaderData,
   useLocation,
 } from '@remix-run/react';
-import type { MenuProps } from 'antd';
+import { Alert, MenuProps } from 'antd';
 import { Menu } from 'antd';
 import type { LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -13,6 +13,8 @@ import { getScript } from '~/services/scripts/api';
 import type { Script } from '~/services/scripts/types';
 import { ScriptContext, UserContext } from '~/context-manager';
 import { useContext } from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export type LoaderData = {
   script: Script;
@@ -44,15 +46,15 @@ export const meta: MetaFunction = ({ data, location }) => {
 
 export function CatchBoundary() {
   const caught = useCatch();
-  return <span className="text-2xl">{caught.data}</span>;
+  return <span className="text-2xl dark:text-white">{caught.data}</span>;
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {
-  const script = await getScript(parseInt(params.id as string));
-  if (!script) {
-    throw new Response('脚本不存在', { status: 404, statusText: 'Not Found' });
+  const script = await getScript(parseInt(params.id as string), request);
+  if (script.code !== 0) {
+    throw new Response(script.msg, { status: 404, statusText: 'Not Found' });
   }
-  return json({ script } as LoaderData);
+  return json({ script: script.data } as LoaderData);
 };
 
 export default function ScriptShowPage() {
@@ -61,6 +63,7 @@ export default function ScriptShowPage() {
   const location = useLocation();
   const match = /\d+\/(\w+)(\/|$)/g.exec(location.pathname);
   const current = match ? match[1] : 'home';
+  const [forbidden, setForbidden] = useState(false);
 
   const items: MenuProps['items'] = [
     {
@@ -84,7 +87,7 @@ export default function ScriptShowPage() {
       label: <Link to={'./version'}>版本列表</Link>,
     },
   ];
-  if (users.user && users.user.user.uid === data.script.uid) {
+  if (users.user && users.user.uid === data.script.uid) {
     items.push(
       ...[
         {
@@ -102,10 +105,30 @@ export default function ScriptShowPage() {
       ]
     );
   }
+  useEffect(() => {
+    if (
+      !(users.user && users.user.uid === data.script.uid) &&
+      ['update', 'statistic', 'manage'].indexOf(current) !== -1
+    ) {
+      setForbidden(true);
+    } else {
+      setForbidden(false);
+    }
+  }, [users.user, data.script.uid, current]);
+  console.log(current, current in ['update', 'statistic', 'manage']);
 
   return (
     <>
       <div className="flex flex-col gap-3">
+        {data.script.archive != 0 && (
+          <Alert
+            message="脚本已归档"
+            description="该脚本已经被作者归档,脚本可能失效并且作者不再维护,您无法再进行问题反馈."
+            type="warning"
+            showIcon
+            closable
+          />
+        )}
         <Link
           to={'/script-show-page/' + data.script.id}
           className="text-2xl text-black dark:text-white"
@@ -115,7 +138,11 @@ export default function ScriptShowPage() {
         <Menu selectedKeys={[current]} mode="horizontal" items={items}></Menu>
 
         <ScriptContext.Provider value={{ script: data.script }}>
-          <Outlet />
+          {forbidden ? (
+            <span className="text-2xl dark:text-white">没有权限访问此页面</span>
+          ) : (
+            <Outlet />
+          )}
         </ScriptContext.Provider>
       </div>
     </>

@@ -1,6 +1,5 @@
-import { useSearchParams } from '@remix-run/react';
-import { Pagination } from 'antd';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
+import { ConfigProvider, Empty, List, Pagination } from 'antd';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 import SearchItem from './item';
@@ -18,23 +17,35 @@ const SearchList: React.FC<{
   return (
     <>
       <div className="flex flex-col gap-3">
-        {list.map((script) => (
-          <SearchItem key={script.id} script={script} />
-        ))}
-        <Pagination
-          showSizeChanger={false}
-          showQuickJumper
-          defaultCurrent={page}
-          current={page}
-          pageSize={20}
-          total={total}
-          onChange={(page) => {
-            let search = replaceSearchParam(location.search, {
-              page: page.toString(),
-            });
-            navigate({ search: search }, { replace: true });
-          }}
-        />
+        <ConfigProvider
+          renderEmpty={() => (
+            <Empty description="未搜索到结果,换个姿势试试吧" />
+          )}
+        >
+          <List
+            dataSource={list}
+            renderItem={(script, index) => (
+              <div className="mb-3">
+                <SearchItem key={script.id} script={script} />
+              </div>
+            )}
+            pagination={{
+              showSizeChanger: false,
+              showQuickJumper: true,
+              hideOnSinglePage: true,
+              defaultCurrent: page,
+              current: page,
+              pageSize: 20,
+              total: total,
+              onChange: (page) => {
+                let search = replaceSearchParam(location.search, {
+                  page: page.toString(),
+                });
+                navigate({ search: search }, { replace: true });
+              },
+            }}
+          ></List>
+        </ConfigProvider>
       </div>
     </>
   );

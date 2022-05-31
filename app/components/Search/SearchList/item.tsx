@@ -10,10 +10,46 @@ import {
   MoneyCollectOutlined,
 } from '@ant-design/icons';
 import { Link } from '@remix-run/react';
-import { Card, Avatar, Button, Divider, Tag, Tooltip } from 'antd';
+import { Card, Avatar, Button, Divider, Tag, Tooltip, message } from 'antd';
 import { RiMessage2Line } from 'react-icons/ri';
-import { formatDate } from 'utils/utils';
+import { formatDate } from '~/utils/utils';
 import type { Script } from '~/services/scripts/types';
+import ClipboardJS from 'clipboard';
+
+const antifeatures: {
+  [key: string]: { color: string; title: string; description: string };
+} = {
+  'referral-link': {
+    color: '#9254de',
+    title: '推荐链接',
+    description: '该脚本会修改或重定向到作者的返佣链接',
+  },
+  ads: {
+    color: '#faad14',
+    title: '附带广告',
+    description: '该脚本会在你访问的页面上插入广告',
+  },
+  payment: {
+    color: '#eb2f96',
+    title: '付费脚本',
+    description: '该脚本需要你付费才能够正常使用',
+  },
+  miner: {
+    color: '#fa541c',
+    title: '挖矿',
+    description: '该脚本存在挖坑行为',
+  },
+  membership: {
+    color: '#1890ff',
+    title: '会员功能',
+    description: '该脚本需要注册会员才能正常使用',
+  },
+  tracking: {
+    color: '#722ed1',
+    title: '信息追踪',
+    description: '该脚本会追踪你的用户信息',
+  },
+};
 
 const SearchItem: React.FC<{
   script: Script;
@@ -26,7 +62,6 @@ const SearchItem: React.FC<{
   const iconStyle = {
     height: '14px',
   };
-
   return (
     <>
       <Card
@@ -116,51 +151,113 @@ const SearchItem: React.FC<{
                 <Button
                   className="!rounded-none"
                   type="primary"
+                  href={
+                    '/scripts/code/' +
+                    script.id +
+                    '/' +
+                    encodeURIComponent(script.name) +
+                    '.user.js'
+                  }
                   icon={<DownloadOutlined />}
                 >
                   安装脚本
                 </Button>
-                <Button
-                  className="!rounded-none"
-                  type="primary"
-                  icon={<QuestionCircleOutlined />}
-                  color="#3874cb"
-                ></Button>
+                <Tooltip placement="bottom" title="如何安装?">
+                  <Button
+                    className="!rounded-none"
+                    type="primary"
+                    href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
+                    target="_blank"
+                    icon={<QuestionCircleOutlined />}
+                    color="#3874cb"
+                  ></Button>
+                </Tooltip>
               </Button.Group>
-              <Divider type="vertical" className="!h-auto" />
-              <Button
-                className="!rounded-none !bg-transparent !border-orange-400 !text-orange-400"
-                icon={<MoneyCollectOutlined />}
-              >
-                捐赠脚本
-              </Button>
-              <Button
-                className="!rounded-none !bg-transparent !border-blue-400 !text-blue-400"
-                icon={<RiMessage2Line className="!inline-block !m-0 !mr-2" />}
-              >
-                论坛帖子
-              </Button>
+              {(script.post_id ||
+                script.script.meta_json['contributionurl']) && (
+                <Divider type="vertical" className="!h-auto" />
+              )}
+              {script.script.meta_json['contributionurl'] && (
+                <Button
+                  className="!rounded-none !bg-transparent !border-orange-400 !text-orange-400"
+                  href={script.script.meta_json['contributionurl'][0]}
+                  target="_blank"
+                  icon={<MoneyCollectOutlined />}
+                >
+                  捐赠脚本
+                </Button>
+              )}
+              {script.post_id && (
+                <Button
+                  className="!rounded-none !bg-transparent !border-blue-400 !text-blue-400"
+                  icon={<RiMessage2Line className="!inline-block !m-0 !mr-2" />}
+                  href={`https://bbs.tampermonkey.net.cn/thread-${script.post_id}-1-1.html`}
+                  target="_blank"
+                >
+                  论坛帖子
+                </Button>
+              )}
             </div>
           </Card.Grid>
         )}
         <Card.Grid hoverable={false} style={gridStyle}>
           <div className="flex flex-row justify-between py-[2px]">
             <div className="flex flex-row items-center text-sm">
-              <Button icon={<StarFilled />} type="text" size="small"></Button>
+              <Tooltip title="评分" placement="bottom">
+                <Button
+                  icon={<StarFilled className="!text-yellow-300" />}
+                  type="text"
+                  size="small"
+                  className="anticon-middle"
+                  href={'/script-show-page/' + script.id + '/comment'}
+                  target={action ? '_self' : '_blank'}
+                ></Button>
+              </Tooltip>
               <Divider type="vertical" />
-              <Button
-                icon={<ExclamationCircleOutlined />}
-                type="text"
-                size="small"
-              ></Button>
+              <Tooltip title="反馈问题" placement="bottom">
+                <Button
+                  icon={
+                    <ExclamationCircleOutlined className="!text-cyan-500" />
+                  }
+                  type="text"
+                  size="small"
+                  className="anticon-middle"
+                  href={'/script-show-page/' + script.id + '/issue'}
+                  target={action ? '_self' : '_blank'}
+                ></Button>
+              </Tooltip>
               <Divider type="vertical" />
-              <Button
-                icon={<ShareAltOutlined />}
-                type="text"
-                size="small"
-              ></Button>
+              <Tooltip title="分享链接" placement="bottom">
+                <Button
+                  icon={<ShareAltOutlined className="!text-blue-500" />}
+                  type="text"
+                  size="small"
+                  className="anticon-middle"
+                  onClick={() => {
+                    new ClipboardJS('.share-script-btn', {
+                      text: () => {
+                        return (
+                          script.name +
+                          '\n' +
+                          window.location.origin +
+                          '/script-show-page/' +
+                          script.id
+                        );
+                      },
+                    });
+                    message.success('复制成功');
+                  }}
+                ></Button>
+              </Tooltip>
             </div>
             <div className="flex flex-row items-center">
+              <Tooltip
+                title={'脚本最新版本为:v' + script.script.version}
+                color="red"
+                placement="bottom"
+              >
+                <Tag color="red">{'v' + script.script.version}</Tag>
+              </Tooltip>
               {script.category.map((category) => (
                 <Tooltip
                   title={'该脚本属于' + category.name + '分类'}
@@ -171,6 +268,24 @@ const SearchItem: React.FC<{
                   <Tag color="green">{category.name}</Tag>
                 </Tooltip>
               ))}
+              {action &&
+                script.script.meta_json['antifeature'] &&
+                script.script.meta_json['antifeature'].map((antifeature) =>
+                  antifeatures[antifeature] ? (
+                    <Tooltip
+                      title={antifeatures[antifeature].description}
+                      color={antifeatures[antifeature].color}
+                      placement="bottom"
+                      key={antifeature}
+                    >
+                      <Tag color={antifeatures[antifeature].color}>
+                        {antifeatures[antifeature].title}
+                      </Tag>
+                    </Tooltip>
+                  ) : (
+                    <></>
+                  )
+                )}
             </div>
           </div>
         </Card.Grid>

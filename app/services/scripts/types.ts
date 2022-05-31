@@ -4,13 +4,18 @@ export type SearchResponse = APIListResponse<Script>;
 
 export type ScriptListResponse = APIListResponse<Script>;
 
+export type ScriptVersionListResponse = APIListResponse<ScriptCode>;
+
 export type ScriptResponse = APIDataResponse<Script>;
 
 export type ScriptSettingResponse = APIDataResponse<ScriptSetting>;
 
+export type CreateScriptResponse = APIDataResponse<Script>;
+
 export type Script = {
   id: number;
   uid: number;
+  post_id: number;
   avatar: string;
   username: string;
   name: string;
@@ -21,8 +26,10 @@ export type Script = {
   score_num: number; // 评分人数
   today_install: number; // 今日安装
   total_install: number; // 总安装
-  changelog: string;
-  version: string;
+  unwell: 1 | 2; // 不适内容
+  public: 1 | 2; // 是否公开
+  archive: 0 | 1; // 归档
+  type: 1 | 2 | 3; // 1: 普通脚本, 2: 公开脚本, 3: 私有脚本
   category: Category[];
   createtime: number;
   updatetime: number;
@@ -37,6 +44,11 @@ export interface Category {
 export type ScriptCode = {
   id: number;
   code: string;
+  changelog: string;
+  version: string;
+  meta_json: { [key: string]: string[] };
+  createtime: number;
+  updatetime: number;
 };
 
 export type ScoreListResponse = APIListResponse<ScoreItem>;
@@ -52,4 +64,9 @@ export type ScoreItem = {
   createtime: number;
 };
 
-export type ScriptSetting = {};
+export type ScriptSetting = {
+  sync_url: string;
+  content_url: string;
+  definition_url: string;
+  sync_mode: string;
+};

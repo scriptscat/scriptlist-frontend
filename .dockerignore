@@ -6,3 +6,4 @@
 app/styles/*.css
 
 /.idea
+/.vscode

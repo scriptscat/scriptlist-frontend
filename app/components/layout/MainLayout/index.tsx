@@ -1,4 +1,4 @@
-import type { MenuProps } from 'antd';
+import { MenuProps, message } from 'antd';
 import { Avatar } from 'antd';
 import { Divider } from 'antd';
 import { Dropdown, Space } from 'antd';
@@ -15,8 +15,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { RiSunLine, RiMoonLine, RiComputerLine } from 'react-icons/ri';
-import { useLocation } from 'react-router-dom';
-import { Link } from '@remix-run/react';
+import { Link, useLocation } from '@remix-run/react';
 import Search from '~/components/Search';
 import { UserContext } from '~/context-manager';
 
@@ -50,7 +49,9 @@ const MainLayout: React.FC<{
   styleMode: string;
   oauthClient: string;
   apiUrl: string;
-}> = ({ children, styleMode, oauthClient, apiUrl }) => {
+  onDarkModeChange: (dark: boolean) => void;
+}> = ({ children, styleMode, oauthClient, apiUrl, onDarkModeChange }) => {
+  const user = useContext(UserContext);
   const [dark, _setDark] = useState(styleMode || 'light');
   const setDark = (mode: string) => {
     if (mode === 'light') {
@@ -59,11 +60,14 @@ const MainLayout: React.FC<{
       document.body.style.backgroundColor = '#000000';
     }
     _setDark(mode);
+    message.config({
+      prefixCls: mode === 'light' ? 'light-message' : 'dark-message',
+    });
+    onDarkModeChange(mode === 'dark');
   };
   const [mode, setMode] = useState(styleMode || 'auto');
   const location = useLocation();
   const current = location.pathname == '/' ? 'home' : '';
-  const user = useContext(UserContext);
   const modeMenu = (
     <Menu
       className="!rounded-md border-inherit border-1 w-32 !mt-4"
@@ -100,7 +104,7 @@ const MainLayout: React.FC<{
   const userMenu = (
     <Menu className="!rounded-md border-inherit border-1 w-32 !mt-4">
       <Menu.Item>
-        <Link to={'/users/' + user.user?.user.uid}>
+        <Link to={'/users/' + user.user?.uid}>
           <Space className="anticon-middle">
             <UserOutlined />
             <p className="text-sm m-0">个人中心</p>
@@ -196,14 +200,14 @@ const MainLayout: React.FC<{
                   <Dropdown
                     overlay={userMenu}
                     trigger={['click']}
-                    placement="bottomCenter"
+                    placement="bottom"
                   >
                     <Avatar
-                      src={'/api/v1/user/avatar/' + user.user.user.uid}
+                      src={'/api/v1/user/avatar/' + user.user.uid}
                     ></Avatar>
                   </Dropdown>
                 ) : (
-                  <Button type="primary" ghost onClick={gotoLogin}>
+                  <Button id="go-to-login" type="primary" ghost onClick={gotoLogin}>
                     登录
                   </Button>
                 )}

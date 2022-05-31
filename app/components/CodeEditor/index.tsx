@@ -21,7 +21,7 @@ if (typeof document !== 'undefined') {
       ? false
       : true;
   require.config({ paths: { vs: "/assets/monaco-editor/min/vs" } });
-  window.initCodeEditor = function (id, code, readOnly) {
+  window.initCodeEditor = function (id, code, readOnly, diff, diffCode) {
     return new Promise((resolve, reject) => {
       require(["vs/editor/editor.main"], function () {
         let el = document.getElementById("container-" + id);
@@ -30,6 +30,7 @@ if (typeof document !== 'undefined') {
         }
         el.innerHTML = "";
         el.style.display = "block";
+        if(!diff){
         let editor = monaco.editor.create(el, {
           value: code,
           language: "javascript",
@@ -37,6 +38,19 @@ if (typeof document !== 'undefined') {
           theme: dark ? "vs-dark" : "vs",
         });
         resolve(editor);
+      }else{
+        let diffEditor = monaco.editor.createDiffEditor(el,{
+          readOnly: true,
+          theme: dark ? "vs-dark" : "vs",
+        });
+        let originalModel = monaco.editor.createModel(code, "javascript");
+        let modifiedModel = monaco.editor.createModel(diffCode, "javascript");
+        diffEditor.setModel({
+          original: originalModel,
+          modified: modifiedModel
+        });
+        resolve(diffEditor);
+      }
       });
     });
   };
@@ -53,14 +67,16 @@ if (typeof document !== 'undefined') {
 
 type Props = {
   id: string;
-  code: string;
+  code?: string;
+  diffCode?: string;
   readOnly?: boolean;
+  diff?: boolean;
 };
 
-const CodeEditor: React.ForwardRefRenderFunction<unknown, Props> = (
-  { id, code, readOnly },
-  ref
-) => {
+const CodeEditor: React.ForwardRefRenderFunction<
+  { editor: monaco.editor.IEditor },
+  Props
+> = ({ id, code, diffCode, readOnly, diff }, ref) => {
   const [_editor, setEditor] = useState<any>(null);
   useImperativeHandle(ref, () => ({
     editor: _editor,
@@ -86,10 +102,12 @@ const CodeEditor: React.ForwardRefRenderFunction<unknown, Props> = (
             initCodeEditor: (
               id: string,
               code: string,
-              readOnly: boolean
+              readOnly?: boolean,
+              diff?: boolean,
+              diffCode?: string
             ) => Promise<monaco.editor.ICodeEditor>;
           }
-        ).initCodeEditor(id, code, readOnly || false);
+        ).initCodeEditor(id, code || '', readOnly || false, diff, diffCode);
         setEditor(editor);
       });
     } else {
@@ -98,11 +116,13 @@ const CodeEditor: React.ForwardRefRenderFunction<unknown, Props> = (
           initCodeEditor: (
             id: string,
             code: string,
-            readOnly: boolean
+            readOnly: boolean,
+            diff?: boolean,
+            diffCode?: string
           ) => Promise<monaco.editor.ICodeEditor>;
         }
       )
-        .initCodeEditor(id, code, readOnly || false)
+        .initCodeEditor(id, code || '', readOnly || false, diff, diffCode)
         .then((ret) => {
           editor = ret;
           setEditor(editor);

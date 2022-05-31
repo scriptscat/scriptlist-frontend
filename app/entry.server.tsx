@@ -1,41 +1,42 @@
-import type { EntryContext } from '@remix-run/node';
+import { createRequestHandler, EntryContext } from '@remix-run/node';
 import { RemixServer } from '@remix-run/react';
 import { renderToString } from 'react-dom/server';
-import { parseCookie } from 'utils/cookie';
-import { UserContext, UserContextData } from './context-manager';
-import { loginUserinfoAndRefushToken } from './services/users/api';
-import { Follow, User } from './services/users/types';
 
-export default async function handleRequest(
+export default function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  const cookieHeader = request.headers.get('Cookie');
-  let user: UserContextData = {};
-  const respInit: ResponseInit = {};
-  if (cookieHeader) {
-    const cookie = parseCookie(cookieHeader);
-    if (cookie.token) {
-      const resp = await loginUserinfoAndRefushToken({ token: cookie.token });
-      if (resp.setCookie) {
-        respInit.headers = new Headers();
-        resp.setCookie.forEach((item) => {
-          (respInit.headers as Headers).append('Set-Cookie', item);
-        });
-      }
-      user = {
-        user: resp.user.user,
-        follow: resp.user.follow,
-      };
+  if (process.env.NODE_ENV === 'development') {
+    const url = new URL(request.url);
+    if (url.pathname.startsWith('/api/')) {
+      // 反向代理
+      let url = request.url.replace(
+        /^.*?\/api\/v1/g,
+        process.env.APP_API_URL || 'http://localhost:3000/api/v1'
+      );
+      let proxyUrl = new URL(
+        process.env.APP_API_URL || 'http://localhost:3000/api/v1'
+      );
+      let headers = new Headers();
+      request.headers.forEach((value, key) => {
+        if (key == 'host') {
+          headers.set('host', proxyUrl.host);
+        } else {
+          headers.set(key, request.headers.get(key)!);
+        }
+      });
+      return fetch(url, {
+        method: request.method,
+        headers: headers,
+        body: request.body,
+        redirect: request.redirect,
+      });
     }
   }
-
-  let markup = renderToString(
-    <UserContext.Provider value={user}>
-      <RemixServer context={remixContext} url={request.url} />
-    </UserContext.Provider>
+  const markup = renderToString(
+    <RemixServer context={remixContext} url={request.url} />
   );
 
   responseHeaders.set('Content-Type', 'text/html');
