@@ -66,7 +66,8 @@ const UpdateScript: React.FC<{
       <ClientOnly fallback={<div></div>}>
         {() => (
           <MarkdownEditor
-            id={'update-script'}
+            id={script ? 'update-script' : 'create-script'}
+            isCreate={!script}
             initialValue={script?.content}
             ref={markdown}
           />
@@ -79,46 +80,53 @@ const UpdateScript: React.FC<{
         className="!bg-transparent"
         onChange={(value) => setChangelog(value.target.value)}
       ></TextArea>
-      <h3 className="text-lg">脚本类型</h3>
-      <Radio.Group
-        onChange={(value) => setScriptType(value.target.value)}
-        value={scriptType}
-      >
-        <Space direction="vertical">
-          <Radio value={1}>
-            用户脚本,平常意义上的油猴脚本,包括脚本猫的后台脚本、定时脚本
-          </Radio>
-          <Radio value={3}>
-            脚本调用库,脚本@require所使用的库,只允许被其他脚本进行引用,不允许被用户安装
-          </Radio>
-          <Radio value={2}>
-            订阅脚本,脚本猫特有支持的类型,仅会在安装时弹出安装界面由用户确认订阅,后续的更新采用静默更新的方式
-            <a
-              href="https://docs.scriptcat.org/dev/subscribe.html"
-              target="_blank"
-              rel="noreferrer"
-            >
-              订阅模式
-            </a>
-          </Radio>
-        </Space>
-      </Radio.Group>
+      {script == undefined && (
+        <>
+          <h3 className="text-lg">脚本类型</h3>
+          <Radio.Group
+            onChange={(value) => setScriptType(value.target.value)}
+            value={scriptType}
+          >
+            <Space direction="vertical">
+              <Radio value={1}>
+                用户脚本,平常意义上的油猴脚本,包括脚本猫的后台脚本、定时脚本
+              </Radio>
+              <Radio value={3}>
+                脚本调用库,脚本@require所使用的库,只允许被其他脚本进行引用,不允许被用户安装
+              </Radio>
+              <Radio value={2}>
+                订阅脚本,脚本猫特有支持的类型,仅会在安装时弹出安装界面由用户确认订阅,后续的更新采用静默更新的方式
+                <a
+                  href="https://docs.scriptcat.org/dev/subscribe.html"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  订阅模式
+                </a>
+              </Radio>
+            </Space>
+          </Radio.Group>
+        </>
+      )}
       {scriptType == 3 && (
         <>
           <h3 className="text-lg">库描述信息</h3>
           <Input
             placeholder="库名称,类似脚本的@name"
+            value={name}
             onChange={(value) => setName(value.target.value)}
           />
           <TextArea
             prefixCls={dark ? 'dark-input' : 'light-input'}
             placeholder="库描述信息,类似脚本的@description"
+            value={description}
             onChange={(value) => setDescription(value.target.value)}
           />
           <h3 className="text-lg">库的定义文件(.d.ts)</h3>
           <TextArea
             prefixCls={dark ? 'dark-input' : 'light-input'}
             placeholder="库描述信息,类似脚本的@description"
+            value={definition}
             onChange={(value) => setDefinition(value.target.value)}
           />
         </>
@@ -163,8 +171,10 @@ const UpdateScript: React.FC<{
               changelog: changelog,
             })
           ) {
+            console.log('sub ok');
             markdown.current?.setMarkdown('');
           }
+          console.log('sub over');
           setLoading(false);
         }}
       >

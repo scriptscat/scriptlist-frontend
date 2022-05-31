@@ -1,17 +1,21 @@
-import { useLocation, useNavigate, useSearchParams } from '@remix-run/react';
-import { ConfigProvider, Empty, List, Pagination } from 'antd';
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from '@remix-run/react';
+import { Button, ConfigProvider, Empty, List } from 'antd';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 import SearchItem from './item';
 
+// 搜索结果列表
 const SearchList: React.FC<{
   list: Script[];
+  page: number;
   total: number;
-}> = ({ list, total }) => {
-  const params = useSearchParams();
+}> = ({ list, page, total }) => {
   const location = useLocation();
-  const page = parseInt(params[0].get('page') || '1');
-
   const navigate = useNavigate();
 
   return (
@@ -31,17 +35,23 @@ const SearchList: React.FC<{
             )}
             pagination={{
               showSizeChanger: false,
-              showQuickJumper: true,
               hideOnSinglePage: true,
               defaultCurrent: page,
               current: page,
               pageSize: 20,
               total: total,
-              onChange: (page) => {
-                let search = replaceSearchParam(location.search, {
-                  page: page.toString(),
-                });
-                navigate({ search: search }, { replace: true });
+              itemRender: (current, type, originalElement) => {
+                return (
+                  <Link
+                    to={{
+                      search: replaceSearchParam(location.search, {
+                        page: current,
+                      }),
+                    }}
+                  >
+                    {originalElement}
+                  </Link>
+                );
               },
             }}
           ></List>

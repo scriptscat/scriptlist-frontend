@@ -107,7 +107,6 @@ export default function Version() {
                           setDiff(-1);
                         }
                         if (diff != -1) {
-                          // diff
                           navigate({
                             pathname:
                               '/script-show-page/' +

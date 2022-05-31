@@ -25,6 +25,7 @@ import tuiEditor from '@toast-ui/editor/dist/toastui-editor.css';
 import tuiEditorDark from '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import { useState } from 'react';
 import { InitAxios } from './services/http';
+import { Modal } from 'antd';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -34,7 +35,7 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: tuiEditorDark },
 ];
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction = ({ data }) => {
   return {
     charset: 'utf-8',
     title: 'ScriptCat - 分享你的用户脚本',

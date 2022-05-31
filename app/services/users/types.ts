@@ -5,6 +5,10 @@ export type LoginUserinfoResponse = APIDataResponse<{
   user: User;
 }>;
 
+export type WebhookResponse = APIDataResponse<Webhook>;
+
+export type UserConfigResponse = APIDataResponse<UserConfig>;
+
 export interface User {
   uid: number;
   username: string;
@@ -18,3 +22,11 @@ export interface Follow {
   // 关注
   following: number;
 }
+
+export type Webhook = {
+  token: string;
+};
+
+export type UserConfig = {
+  notify: { [key: string]: boolean };
+};

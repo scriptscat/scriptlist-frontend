@@ -1,10 +1,20 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import SearchList from '~/components/Search/SearchList';
 import type { SortType } from '~/services/scripts/api';
 import { search } from '~/services/scripts/api';
 import type { SearchResponse } from '~/services/scripts/types';
+
+export type LoaderData = {
+  resp: SearchResponse;
+  page: number;
+};
+
+export const meta: MetaFunction = ({ data }: { data: LoaderData }) => ({
+  title:
+    '用户脚本列表 - ScriptCat',
+});
 
 // 脚本列表使用嵌套路由实现
 export const loader: LoaderFunction = async ({ request }) => {
@@ -17,14 +27,19 @@ export const loader: LoaderFunction = async ({ request }) => {
   });
   return json({
     resp: resp,
-  });
+    page: page,
+  } as LoaderData);
 };
 
 export default function Index() {
-  const loader = useLoaderData<{ resp: SearchResponse }>();
+  const loader = useLoaderData<LoaderData>();
   return (
     <>
-      <SearchList list={loader.resp.list} total={loader.resp.total} />
+      <SearchList
+        list={loader.resp.list}
+        total={loader.resp.total}
+        page={loader.page}
+      />
     </>
   );
 }

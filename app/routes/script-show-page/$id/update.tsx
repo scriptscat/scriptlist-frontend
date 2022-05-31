@@ -26,7 +26,6 @@ export default function Update() {
       <UpdateScript
         script={data.script}
         onSubmit={async (params) => {
-          console.log(params);
           let resp = await UpdateCode(data.script.id, params);
           if (resp.code === 0) {
             message.success('更新成功');

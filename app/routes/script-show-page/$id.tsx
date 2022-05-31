@@ -115,7 +115,6 @@ export default function ScriptShowPage() {
       setForbidden(false);
     }
   }, [users.user, data.script.uid, current]);
-  console.log(current, current in ['update', 'statistic', 'manage']);
 
   return (
     <>

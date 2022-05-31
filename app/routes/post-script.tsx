@@ -23,6 +23,7 @@ export default function PostScript() {
               message.error(resp.msg);
               return false;
             }
+            message.success('提交成功');
             navigate({
               pathname: '/script-show-page/' + resp.data.id,
             });

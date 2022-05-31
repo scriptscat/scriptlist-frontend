@@ -1,5 +1,11 @@
-import { request } from '../http';
-import type { Follow, LoginUserinfoResponse, User } from './types';
+import { APIResponse, request } from '../http';
+import type {
+  Follow,
+  LoginUserinfoResponse,
+  User,
+  UserConfigResponse,
+  WebhookResponse,
+} from './types';
 
 export async function loginUserinfoAndRefushToken({
   token,
@@ -32,4 +38,43 @@ export async function GetUserInfo(uid: number) {
     return null;
   }
   return resp.data.data;
+}
+
+export async function GetWebhook(req?: Request) {
+  const resp = await request<WebhookResponse>({
+    url: '/user/webhook',
+    method: 'GET',
+    headers: {
+      cookie: req?.headers.get('cookie') || '',
+    },
+  });
+  return resp.data;
+}
+
+export async function RefreshWebhookToken() {
+  const resp = await request<WebhookResponse>({
+    url: '/user/webhook',
+    method: 'PUT',
+  });
+  return resp.data;
+}
+
+export async function UserConfig(req: Request) {
+  const resp = await request<UserConfigResponse>({
+    url: '/user/config',
+    method: 'GET',
+    headers: {
+      cookie: req.headers.get('cookie') || '',
+    },
+  });
+  return resp.data;
+}
+
+export async function SetUsetNotify(notify: { [key: string]: boolean }) {
+  const resp = await request<APIResponse>({
+    url: '/user/config/notify',
+    method: 'PUT',
+    data: notify,
+  });
+  return resp.data;
 }

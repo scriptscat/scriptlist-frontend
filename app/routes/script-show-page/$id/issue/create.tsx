@@ -1,5 +1,6 @@
 import { useNavigate } from '@remix-run/react';
-import { InputRef, message } from 'antd';
+import type { InputRef} from 'antd';
+import { message } from 'antd';
 import { Button, Card, Input, Select, Space } from 'antd';
 import { useContext, useRef, useState } from 'react';
 import { ClientOnly } from 'remix-utils';

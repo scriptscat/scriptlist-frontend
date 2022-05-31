@@ -27,6 +27,7 @@ export interface APIListResponse<T> extends APIResponse {
   total: number;
 }
 
+// 初始化axios,会分两种情况,后端与前端,调用时的初始化参数不同
 export function InitAxios(config: AxiosRequestConfig) {
   instance = axios.create(config);
   instance.interceptors.response.use(
@@ -34,7 +35,7 @@ export function InitAxios(config: AxiosRequestConfig) {
       return res;
     },
     (err) => {
-      message.error('网络错误！请求失败！');
+      typeof window !== 'undefined' && message.error('网络错误！请求失败！');
       return Promise.reject(err);
     }
   );

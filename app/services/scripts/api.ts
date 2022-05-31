@@ -169,3 +169,47 @@ export async function CreateScript(params: CreateScriptParams) {
   });
   return resp.data;
 }
+
+// 更新脚本设置
+export async function UpdateScript(
+  id: number,
+  params: {
+    name?: string;
+    description?: string;
+    sync_url?: string;
+    content_url?: string;
+    definition_url?: string;
+    sync_mode?: 1 | 2;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id,
+    method: 'PUT',
+    data: params,
+  });
+  return resp.data;
+}
+
+export async function DeleteScript(id: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+
+export async function ArchiveScript(id: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/archive',
+    method: 'PUT',
+  });
+  return resp.data;
+}
+
+export async function UnarchiveScript(id: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/archive',
+    method: 'DELETE',
+  });
+  return resp.data;
+}

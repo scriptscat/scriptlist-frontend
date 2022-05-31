@@ -13,8 +13,8 @@ export type MarkdownEditorRef =
   | undefined;
 const MarkdownEditor: React.ForwardRefRenderFunction<
   MarkdownEditorRef,
-  { id: string; initialValue?: string }
-> = ({ id, initialValue }, ref) => {
+  { id: string; initialValue?: string; isCreate?: boolean }
+> = ({ id, initialValue, isCreate }, ref) => {
   const user = useContext(UserContext);
   const [editor, setEditor] = useState<Editor | undefined>();
   const [prompt, setPrompt] = useState('');
@@ -43,7 +43,7 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
             document.querySelector('section')!.className.indexOf('dark') == -1
               ? false
               : true;
-          if (localStorage['autosave_' + id]) {
+          if (!initialValue && localStorage['autosave_' + id]) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             initialValue = localStorage['autosave_' + id];
           }

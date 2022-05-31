@@ -1,7 +1,12 @@
 import { CheckCircleTwoTone, InfoCircleTwoTone } from '@ant-design/icons';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
+import {
+  Link,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from '@remix-run/react';
 import { Button, Card, Space, Table, Tag, Tooltip } from 'antd';
 import Column from 'antd/lib/table/Column';
 import { formatDate } from '~/utils/utils';
@@ -12,10 +17,12 @@ import type {
 } from '~/services/scripts/issues/types';
 import { useContext } from 'react';
 import { UserContext } from '~/context-manager';
+import { replaceSearchParam } from '~/services/utils';
 
 type LoaderData = {
   list: IssueItem[];
   total: number;
+  page: number;
 };
 
 export const IssueTagMap: { [key: string]: string[] } = {
@@ -24,14 +31,20 @@ export const IssueTagMap: { [key: string]: string[] } = {
   bug: ['BUG', 'red'],
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const data = await IssueList(parseInt(params.id as string), {});
-  return json({ list: data.list, total: data.total } as LoaderData);
+export const loader: LoaderFunction = async ({ params, request }) => {
+  const url = new URL(request.url);
+  const page = parseInt(url.searchParams.get('page') || '1');
+  const data = await IssueList(parseInt(params.id as string), {
+    page: page,
+  });
+  return json({ list: data.list, total: data.total, page: page } as LoaderData);
 };
 
 export default function Issue() {
   const data = useLoaderData<LoaderData>();
   const user = useContext(UserContext);
+  const location = useLocation();
+  const navigate = useNavigate();
   return (
     <Card>
       <Space className="mb-2">
@@ -43,18 +56,31 @@ export default function Issue() {
           }
         >
           <Button type="primary" disabled={user.user ? false : true}>
-            <Link to={"./create"}>
-            创建反馈
-            </Link>
+            <Link to={'./create'}>创建反馈</Link>
           </Button>
         </Tooltip>
       </Space>
       <Table
         rowKey={(record) => record.id}
         dataSource={data.list}
-        pagination={{ hideOnSinglePage: true, pageSize: 20, total: data.total }}
-        onChange={(pagination) => {
-          console.log(pagination);
+        pagination={{
+          hideOnSinglePage: true,
+          pageSize: 20,
+          total: data.total,
+          current: data.page,
+          itemRender: (current, type, originalElement) => {
+            return (
+              <Link
+                to={{
+                  search: replaceSearchParam(location.search, {
+                    page: current,
+                  }),
+                }}
+              >
+                {originalElement}
+              </Link>
+            );
+          },
         }}
         size="small"
       >

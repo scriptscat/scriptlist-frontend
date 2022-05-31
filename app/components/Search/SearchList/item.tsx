@@ -16,6 +16,7 @@ import { formatDate } from '~/utils/utils';
 import type { Script } from '~/services/scripts/types';
 import ClipboardJS from 'clipboard';
 
+// 不推荐的内容标签与描述
 const antifeatures: {
   [key: string]: { color: string; title: string; description: string };
 } = {
@@ -173,7 +174,7 @@ const SearchItem: React.FC<{
                   ></Button>
                 </Tooltip>
               </Button.Group>
-              {(script.post_id ||
+              {(script.post_id !== 0 ||
                 script.script.meta_json['contributionurl']) && (
                 <Divider type="vertical" className="!h-auto" />
               )}
@@ -187,7 +188,7 @@ const SearchItem: React.FC<{
                   捐赠脚本
                 </Button>
               )}
-              {script.post_id && (
+              {script.post_id !== 0 && (
                 <Button
                   className="!rounded-none !bg-transparent !border-blue-400 !text-blue-400"
                   icon={<RiMessage2Line className="!inline-block !m-0 !mr-2" />}

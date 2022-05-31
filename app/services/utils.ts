@@ -9,7 +9,7 @@ export function paramsToSearch(params?: Params) {
 
 export function replaceSearchParam(
   search: string,
-  params: { [key: string]: string }
+  params: { [key: string]: any }
 ): string {
   for (const key in params) {
     if (search.indexOf(key + '=') > -1) {

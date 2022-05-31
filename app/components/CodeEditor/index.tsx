@@ -73,6 +73,7 @@ type Props = {
   diff?: boolean;
 };
 
+// 因为服务端渲染的原因,remix不能配置,这里直接加载相关js文件进行导入.需要将monaco-editor的js文件存放在./public/assets/monaco-editor下
 const CodeEditor: React.ForwardRefRenderFunction<
   { editor: monaco.editor.IEditor },
   Props

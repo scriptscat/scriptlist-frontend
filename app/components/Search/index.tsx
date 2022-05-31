@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from '@remix-run/react';
 import { Input } from 'antd';
 import { useState } from 'react';
 
+// 搜索框样式
 const Search: React.FC<{ className?: string }> = ({ className }) => {
   const navigate = useNavigate();
   const params = useSearchParams();
