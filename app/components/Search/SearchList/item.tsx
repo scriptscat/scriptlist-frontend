@@ -8,13 +8,35 @@ import {
   ShareAltOutlined,
   QuestionCircleOutlined,
   MoneyCollectOutlined,
+  DownOutlined,
+  EyeFilled,
+  EllipsisOutlined,
 } from '@ant-design/icons';
-import { Link } from '@remix-run/react';
-import { Card, Avatar, Button, Divider, Tag, Tooltip, message } from 'antd';
+import { Link, useNavigate } from '@remix-run/react';
+import {
+  Card,
+  Avatar,
+  Button,
+  Divider,
+  Tag,
+  Tooltip,
+  message,
+  Space,
+  Dropdown,
+  Menu,
+} from 'antd';
 import { RiMessage2Line } from 'react-icons/ri';
 import { formatDate } from '~/utils/utils';
-import type { Script } from '~/services/scripts/types';
+import type { Script, WatchLevel } from '~/services/scripts/types';
 import ClipboardJS from 'clipboard';
+import ActionMenu from '~/components/ActionMenu';
+import {
+  DeleteScript,
+  UnwatchScript,
+  WatchScript,
+} from '~/services/scripts/api';
+
+export const WatchLevelMap = ['不关注', '版本更新', '新建反馈', '任何'];
 
 // 不推荐的内容标签与描述
 const antifeatures: {
@@ -54,8 +76,11 @@ const antifeatures: {
 
 const SearchItem: React.FC<{
   script: Script;
+  watch?: WatchLevel;
+  onWatch?: (level: WatchLevel) => void;
   action?: boolean;
-}> = ({ script, action }) => {
+  onDelete?: () => void;
+}> = ({ script, watch, action, onWatch, onDelete }) => {
   const gridStyle = {
     width: '100%',
     padding: '2px 8px',
@@ -63,6 +88,7 @@ const SearchItem: React.FC<{
   const iconStyle = {
     height: '14px',
   };
+  const navigate = useNavigate();
   return (
     <>
       <Card
@@ -93,9 +119,100 @@ const SearchItem: React.FC<{
               </Link>
             </div>
             <div>
-              <Button type="link" className="!p-0">
-                操作
-              </Button>
+              {action ? (
+                <Space>
+                  <Dropdown
+                    overlay={
+                      <Menu
+                        selectedKeys={[watch?.toString() || '0']}
+                        items={[
+                          {
+                            key: '0',
+                            label: '不关注',
+                          },
+                          {
+                            key: '1',
+                            label: '版本更新',
+                          },
+                          {
+                            key: '2',
+                            label: '新建issue',
+                          },
+                          {
+                            key: '3',
+                            label: '任何',
+                          },
+                        ]}
+                        onClick={(item) => {
+                          let resp;
+                          if (item.key === '0') {
+                            resp = UnwatchScript(script.id);
+                          } else {
+                            resp = WatchScript(script.id, parseInt(item.key));
+                          }
+                          resp.then((resp) => {
+                            if (resp.code !== 0) {
+                              message.error(resp.msg);
+                            } else {
+                              onWatch &&
+                                onWatch(parseInt(item.key) as WatchLevel);
+                            }
+                          });
+                        }}
+                      ></Menu>
+                    }
+                    trigger={['click']}
+                  >
+                    <Button size="small">
+                      <Space className="anticon-middle">
+                        <EyeFilled />
+                        {WatchLevelMap[watch || 0]}
+                        <DownOutlined />
+                      </Space>
+                    </Button>
+                  </Dropdown>
+                  <ActionMenu
+                    uid={script.uid}
+                    deleteLevel="super_moderator"
+                    allowSelfDelete
+                    onDeleteClick={async () => {
+                      const resp = await DeleteScript(script.id);
+                      if (resp.code == 0) {
+                        message.success('删除成功');
+                        navigate('/');
+                      } else {
+                        message.error(resp.msg);
+                      }
+                    }}
+                  >
+                    <Button
+                      type="default"
+                      size="small"
+                      className="!p-0"
+                      icon={<EllipsisOutlined />}
+                    ></Button>
+                  </ActionMenu>
+                </Space>
+              ) : (
+                <ActionMenu
+                  uid={script.uid}
+                  deleteLevel="super_moderator"
+                  allowSelfDelete
+                  onDeleteClick={async () => {
+                    const resp = await DeleteScript(script.id);
+                    if (resp.code == 0) {
+                      message.success('删除成功');
+                      onDelete && onDelete();
+                    } else {
+                      message.error(resp.msg);
+                    }
+                  }}
+                >
+                  <Button type="link" className="!p-0">
+                    操作
+                  </Button>
+                </ActionMenu>
+              )}
             </div>
           </div>
         </Card.Grid>
@@ -233,21 +350,9 @@ const SearchItem: React.FC<{
                   icon={<ShareAltOutlined className="!text-blue-500" />}
                   type="text"
                   size="small"
-                  className="anticon-middle"
-                  onClick={() => {
-                    new ClipboardJS('.share-script-btn', {
-                      text: () => {
-                        return (
-                          script.name +
-                          '\n' +
-                          window.location.origin +
-                          '/script-show-page/' +
-                          script.id
-                        );
-                      },
-                    });
-                    message.success('复制成功');
-                  }}
+                  className="anticon-middle copy-script-link"
+                  script-name={script.name}
+                  script-id={script.id}
                 ></Button>
               </Tooltip>
             </div>

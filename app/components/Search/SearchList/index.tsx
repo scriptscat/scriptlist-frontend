@@ -1,10 +1,6 @@
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from '@remix-run/react';
-import { Button, ConfigProvider, Empty, List } from 'antd';
+import { Link, useLocation } from '@remix-run/react';
+import { ConfigProvider, Empty, List } from 'antd';
+import { useState } from 'react';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 import SearchItem from './item';
@@ -14,9 +10,10 @@ const SearchList: React.FC<{
   list: Script[];
   page: number;
   total: number;
-}> = ({ list, page, total }) => {
+}> = (props) => {
   const location = useLocation();
-  const navigate = useNavigate();
+  const [total, setTotal] = useState(props.total);
+  const [list, setList] = useState(props.list);
 
   return (
     <>
@@ -30,14 +27,22 @@ const SearchList: React.FC<{
             dataSource={list}
             renderItem={(script, index) => (
               <div className="mb-3">
-                <SearchItem key={script.id} script={script} />
+                <SearchItem
+                  key={script.id}
+                  script={script}
+                  onDelete={() => {
+                    list.splice(index, 1);
+                    setList([...list]);
+                    setTotal((total) => total - 1);
+                  }}
+                />
               </div>
             )}
             pagination={{
               showSizeChanger: false,
               hideOnSinglePage: true,
-              defaultCurrent: page,
-              current: page,
+              defaultCurrent: props.page,
+              current: props.page,
               pageSize: 20,
               total: total,
               itemRender: (current, type, originalElement) => {

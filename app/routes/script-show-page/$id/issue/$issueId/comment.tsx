@@ -6,10 +6,12 @@ import {
   CheckCircleFilled,
   MessageOutlined,
   TagFilled,
+  EllipsisOutlined,
+  LinkOutlined,
 } from '@ant-design/icons';
 import type { LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
+import { Link, useLoaderData, useNavigate } from '@remix-run/react';
 import {
   Avatar,
   Button,
@@ -30,6 +32,8 @@ import MarkdownEditor from '~/components/MarkdownEditor/index.client';
 import MarkdownView from '~/components/MarkdownView';
 import {
   CloseIssue,
+  DeleteIssue,
+  DeleteIssueComment,
   GetIssue,
   IssueCommentList,
   IsWatchIssue,
@@ -46,11 +50,13 @@ import type {
   IsWatchIssue as IsWatchIssueType,
 } from '~/services/scripts/issues/types';
 import { ClientOnly } from 'remix-utils';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { ScriptContext, UserContext } from '~/context-manager';
 import type { APIResponse } from '~/services/http';
 import IssueLabel from '~/components/IssueLabel';
 import { User } from '~/services/users/types';
+import ActionMenu from '~/components/ActionMenu';
+import ClipboardJS from 'clipboard';
 
 type LoaderData = {
   issue: Issue;
@@ -96,6 +102,7 @@ export default function Comment() {
   const data = useLoaderData<LoaderData>();
   const [status, setStatus] = useState(data.issue.status);
   const [list, setList] = useState(data.comments);
+  const navigate = useNavigate();
   const script = useContext(ScriptContext);
   const user = useContext(UserContext);
   const editor = useRef<MarkdownEditorRef>();
@@ -133,11 +140,50 @@ export default function Comment() {
     );
   };
 
+  useEffect(() => {
+    new ClipboardJS('.copy-comment-link', {
+      text: (target) => {
+        message.success('复制成功');
+        return (
+          location.origin + location.pathname + target.getAttribute('copy-link')
+        );
+      },
+    });
+  });
+
   return (
     <Card>
       <div className="flex flex-row gap-3">
         <div className="flex flex-col gap-2 basis-3/4">
-          <span className="text-2xl">{data.issue.title}</span>
+          <div className="flex flex-row justify-between">
+            <span className="text-2xl">{data.issue.title}</span>
+            <ActionMenu
+              uid={[data.issue.uid, script.script?.uid || -1]}
+              deleteLevel="moderator"
+              allowSelfDelete
+              onDeleteClick={async () => {
+                const resp = await DeleteIssue(
+                  script.script!.id,
+                  data.issue.id
+                );
+                if (resp.code === 0) {
+                  message.success('删除成功');
+                  navigate({
+                    pathname: '../../issue',
+                  });
+                } else {
+                  message.error(resp.msg);
+                }
+              }}
+            >
+              <Button
+                type="default"
+                size="small"
+                className="!p-0"
+                icon={<EllipsisOutlined />}
+              ></Button>
+            </ActionMenu>
+          </div>
           <div className="flex flex-row items-center">
             {status === 1 ? (
               <Tag
@@ -188,18 +234,51 @@ export default function Comment() {
                     {item.type == 1 && (
                       <List.Item key={item.id} className="!px-0">
                         <div className="flex flex-col gap-2">
-                          <div className="flex flex-row items-center gap-2">
-                            <Link to={'/users/' + item.uid} target="_blank">
-                              <Avatar src={'/api/v1/user/avatar/' + item.uid} />
-                            </Link>
-                            <div className="flex flex-col">
+                          <div className="flex flex-row justify-between">
+                            <div className="flex flex-row items-center gap-2">
                               <Link to={'/users/' + item.uid} target="_blank">
-                                {item.username}
+                                <Avatar
+                                  src={'/api/v1/user/avatar/' + item.uid}
+                                />
                               </Link>
-                              <span className="text-xs text-gray-400">
-                                {formatDate(item.createtime)}
-                              </span>
+                              <div className="flex flex-col">
+                                <Link to={'/users/' + item.uid} target="_blank">
+                                  {item.username}
+                                </Link>
+                                <a
+                                  id={'comment-' + item.id}
+                                  href={'#comment-' + item.id}
+                                  className="text-xs text-gray-400"
+                                >
+                                  {formatDate(item.createtime)}
+                                </a>
+                              </div>
                             </div>
+                            <ActionMenu
+                              uid={[data.issue.uid, script.script?.uid || -1]}
+                              deleteLevel="moderator"
+                              allowSelfDelete
+                              onDeleteClick={async () => {
+                                const resp = await DeleteIssueComment(
+                                  script.script!.id,
+                                  data.issue.id,
+                                  item.id
+                                );
+                                if (resp.code === 0) {
+                                  message.success('删除成功');
+                                  setList(list.filter((i) => i.id !== item.id));
+                                } else {
+                                  message.error(resp.msg);
+                                }
+                              }}
+                            >
+                              <Button
+                                type="default"
+                                size="small"
+                                className="!p-0"
+                                icon={<EllipsisOutlined />}
+                              ></Button>
+                            </ActionMenu>
                           </div>
                           <MarkdownView
                             id={'comment-' + item.id}
@@ -223,6 +302,15 @@ export default function Comment() {
                               }}
                             >
                               回复
+                            </Button>
+                            <Button
+                              size="small"
+                              type="text"
+                              icon={<LinkOutlined />}
+                              className="!text-gray-400 anticon-middle copy-comment-link"
+                              copy-link={`#comment-${item.id}`}
+                            >
+                              链接
                             </Button>
                           </div>
                         </div>
@@ -260,7 +348,7 @@ export default function Comment() {
                               </Space>
                             </Link>
                             <span className="text-xs text-gray-400">
-                              {formatDate(item.createtime)}{' '}
+                              {formatDate(item.createtime)}
                               {item.type == 3 && (
                                 <LabelsStatus content={item.content} />
                               )}
@@ -383,7 +471,7 @@ export default function Comment() {
               }}
               style={{ width: '100%' }}
               options={[
-                { value: 'feature'},
+                { value: 'feature' },
                 { value: 'question' },
                 { value: 'bug' },
               ]}

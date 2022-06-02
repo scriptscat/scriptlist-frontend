@@ -100,23 +100,27 @@ export default function Manage() {
           value={contentUrl}
           onChange={(value) => setContentUrl(value.target.value)}
         />
-        <h3 className="text-lg">同步库描述文件</h3>
-        <span>
-          .d.ts文件,脚本猫支持(
-          <a
-            target="_blank"
-            href="https://docs.scriptcat.org/dev/meta.html#definition"
-            rel="noreferrer"
-          >
-            @definition
-          </a>
-          )
-        </span>
-        <Input
-          placeholder="库描述文件同步 URL"
-          value={definitionUrl}
-          onChange={(value) => setDefinitionUrl(value.target.value)}
-        />
+        {script.script?.type == 3 && (
+          <>
+            <h3 className="text-lg">同步库描述文件</h3>
+            <span>
+              .d.ts文件,脚本猫支持(
+              <a
+                target="_blank"
+                href="https://docs.scriptcat.org/dev/meta.html#definition"
+                rel="noreferrer"
+              >
+                @definition
+              </a>
+              )
+            </span>
+            <Input
+              placeholder="库描述文件同步 URL"
+              value={definitionUrl}
+              onChange={(value) => setDefinitionUrl(value.target.value)}
+            />
+          </>
+        )}
         <Button
           type="primary"
           loading={loading}

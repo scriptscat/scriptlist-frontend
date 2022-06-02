@@ -11,6 +11,7 @@ import type {
   ScriptSettingResponse,
   ScriptVersionListResponse,
   SearchResponse,
+  WatchLevelResponse,
 } from './types';
 
 export type SortType =
@@ -209,6 +210,42 @@ export async function ArchiveScript(id: number) {
 export async function UnarchiveScript(id: number) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + id + '/archive',
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+
+export async function WatchLevel(id: number, req?: Request) {
+  const resp = await request<WatchLevelResponse>({
+    url: '/scripts/' + id + '/watch',
+    method: 'GET',
+    headers: {
+      cookie: req?.headers.get('Cookie') || '',
+    },
+  });
+  return resp.data;
+}
+
+export async function WatchScript(id: number, level: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/watch',
+    method: 'POST',
+    data: { level },
+  });
+  return resp.data;
+}
+
+export async function UnwatchScript(id: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/watch',
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+
+export async function DeleteScore(scriptId: number, id: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + scriptId + '/score/' + id,
     method: 'DELETE',
   });
   return resp.data;

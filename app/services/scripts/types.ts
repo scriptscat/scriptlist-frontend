@@ -12,6 +12,10 @@ export type ScriptSettingResponse = APIDataResponse<ScriptSetting>;
 
 export type CreateScriptResponse = APIDataResponse<Script>;
 
+export type WatchLevelResponse = APIDataResponse<{
+  level: WatchLevel;
+}>;
+
 export type Script = {
   id: number;
   uid: number;
@@ -70,3 +74,5 @@ export type ScriptSetting = {
   definition_url: string;
   sync_mode: 1 | 2; // 1 自动 2 手动
 };
+
+export type WatchLevel = 0 | 1 | 2 | 3;

@@ -156,7 +156,12 @@ const MainLayout: React.FC<{
   return (
     <>
       <ConfigProvider prefixCls={dark}>
-        <Layout className={dark}>
+        <Layout
+          className={dark}
+          style={{
+            minHeight: '100%',
+          }}
+        >
           <Header className="flex flex-row">
             <div className="items-center flex flex-row justify-start basis-3/4">
               <Link to="/" className="hidden lg:block min-w-max">
@@ -207,7 +212,12 @@ const MainLayout: React.FC<{
                     ></Avatar>
                   </Dropdown>
                 ) : (
-                  <Button id="go-to-login" type="primary" ghost onClick={gotoLogin}>
+                  <Button
+                    id="go-to-login"
+                    type="primary"
+                    ghost
+                    onClick={gotoLogin}
+                  >
                     登录
                   </Button>
                 )}

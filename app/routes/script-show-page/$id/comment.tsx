@@ -20,9 +20,15 @@ import { useContext, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { formatDate, useDark } from '~/utils/utils';
 import MarkdownView from '~/components/MarkdownView';
-import { GetMyScore, ScoreList, SubmitScore } from '~/services/scripts/api';
+import {
+  DeleteScore,
+  GetMyScore,
+  ScoreList,
+  SubmitScore,
+} from '~/services/scripts/api';
 import type { ScoreItem } from '~/services/scripts/types';
-import { UserContext } from '~/context-manager';
+import { ScriptContext, UserContext } from '~/context-manager';
+import ActionMenu from '~/components/ActionMenu';
 
 type LoaderData = {
   id: number;
@@ -47,9 +53,11 @@ export default function Comment() {
   const loaderData = useLoaderData<LoaderData>();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(loaderData.list);
+  const [total, setTotal] = useState(loaderData.total);
   const [page, setPage] = useState(1);
   const dark = useDark();
   const user = useContext(UserContext);
+  const script = useContext(ScriptContext);
   const [submitLoading, setSubmitLoading] = useState(false);
   const textEl = useRef<TextAreaRef>(null);
   const [score, setScore] = useState(
@@ -62,8 +70,30 @@ export default function Comment() {
       textEl!.current!.resizableTextArea?.props.value as string,
       score * 10
     );
+    setSubmitLoading(false);
     if (resp.code === 0) {
       message.success('评分成功');
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].uid === user.user?.uid) {
+          data[i].score = score * 10;
+          data[i].message = textEl!.current!.resizableTextArea?.props
+            .value as string;
+          setData([...data]);
+          return;
+        }
+      }
+      setData([
+        {
+          id: 0,
+          uid: user.user!.uid,
+          username: user.user!.username,
+          avatar: user.user!.avatar,
+          score: score * 10,
+          message: textEl!.current!.resizableTextArea?.props.value as string,
+          createtime: new Date().getTime() / 1000,
+        },
+        ...data,
+      ]);
     } else {
       message.error(resp.msg);
     }
@@ -144,7 +174,7 @@ export default function Comment() {
           <InfiniteScroll
             dataLength={data.length}
             next={loadMoreData}
-            hasMore={data.length < loaderData.total}
+            hasMore={data.length < total}
             loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
             endMessage={<Divider plain>所有评论加载完毕</Divider>}
             scrollableTarget="scrollableDiv"
@@ -156,22 +186,49 @@ export default function Comment() {
             >
               <List
                 dataSource={data}
-                renderItem={(item) => (
-                  <List.Item key={item.id} className="!px-0">
+                renderItem={(item, index) => (
+                  <List.Item key={item.id} className="!block !px-0">
                     <div className="flex flex-col gap-2">
-                      <div className="flex flex-row items-center gap-2">
-                        <Link to={'/users/' + item.uid} target="_blank">
-                          <Avatar src={'/api/v1/user/avatar/' + item.uid} />
-                        </Link>
-                        <div className="flex flex-col">
+                      <div className="flex flex-row justify-between">
+                        <div className="flex flex-row items-center gap-2">
                           <Link to={'/users/' + item.uid} target="_blank">
-                            {item.username}
+                            <Avatar src={'/api/v1/user/avatar/' + item.uid} />
                           </Link>
-                          <span className="text-xs text-gray-400">
-                            {formatDate(item.createtime)}
-                          </span>
+                          <div className="flex flex-col">
+                            <Link to={'/users/' + item.uid} target="_blank">
+                              {item.username}
+                            </Link>
+                            <span className="text-xs text-gray-400">
+                              {formatDate(item.createtime)}
+                            </span>
+                          </div>
+                          <Rate
+                            value={item.score / 10}
+                            disabled
+                            allowHalf
+                          ></Rate>
                         </div>
-                        <Rate value={item.score / 10} disabled allowHalf></Rate>
+                        <ActionMenu
+                          uid={item.uid}
+                          deleteLevel="super_moderator"
+                          allowSelfDelete={false}
+                          onDeleteClick={async () => {
+                            const resp = await DeleteScore(
+                              script.script!.id,
+                              item.id
+                            );
+                            if (resp.code == 0) {
+                              message.success('删除成功');
+                              data.splice(index, 1);
+                              setData([...data]);
+                              setTotal((total) => total - 1);
+                            } else {
+                              message.error(resp.msg);
+                            }
+                          }}
+                        >
+                          <Button type="link">操作</Button>
+                        </ActionMenu>
                       </div>
                       <MarkdownView
                         id={'score-' + item.id}

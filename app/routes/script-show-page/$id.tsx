@@ -5,7 +5,7 @@ import {
   useLoaderData,
   useLocation,
 } from '@remix-run/react';
-import { Alert, MenuProps } from 'antd';
+import { Alert, MenuProps, message } from 'antd';
 import { Menu } from 'antd';
 import type { LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -15,6 +15,7 @@ import { ScriptContext, UserContext } from '~/context-manager';
 import { useContext } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import ClipboardJS from 'clipboard';
 
 export type LoaderData = {
   script: Script;
@@ -64,7 +65,23 @@ export default function ScriptShowPage() {
   const match = /\d+\/(\w+)(\/|$)/g.exec(location.pathname);
   const current = match ? match[1] : 'home';
   const [forbidden, setForbidden] = useState(false);
-
+  useEffect(() => {
+    const clipboard = new ClipboardJS('.copy-script-link', {
+      text: (target) => {
+        message.success('复制成功');
+        return (
+          target.getAttribute('script-name') +
+          '\n' +
+          window.location.origin +
+          '/script-show-page/' +
+          target.getAttribute('script-id')
+        );
+      },
+    });
+    return () => {
+      clipboard.destroy();
+    };
+  });
   const items: MenuProps['items'] = [
     {
       key: 'home',

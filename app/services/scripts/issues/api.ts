@@ -163,3 +163,24 @@ export async function SubmitIssue(
   });
   return resp.data;
 }
+
+export async function DeleteIssue(scriptId: number, issueId: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + scriptId + '/issues/' + issueId,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+
+export async function DeleteIssueComment(
+  scriptId: number,
+  issueId: number,
+  commentId: number
+) {
+  const resp = await request<APIResponse>({
+    url:
+      '/scripts/' + scriptId + '/issues/' + issueId + '/comment/' + commentId,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
