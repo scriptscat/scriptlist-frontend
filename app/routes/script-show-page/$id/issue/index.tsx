@@ -44,7 +44,6 @@ export default function Issue() {
   const data = useLoaderData<LoaderData>();
   const user = useContext(UserContext);
   const location = useLocation();
-  const navigate = useNavigate();
   return (
     <Card>
       <Space className="mb-2">
@@ -65,6 +64,7 @@ export default function Issue() {
         dataSource={data.list}
         pagination={{
           hideOnSinglePage: true,
+          showSizeChanger: false,
           pageSize: 20,
           total: data.total,
           current: data.page,

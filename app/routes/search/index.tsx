@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const resp = await search({
     page: page,
     keyword: url.searchParams.get('keyword') || '',
-    sort: (url.searchParams.get('sort') as SortType) || 'today',
+    sort: (url.searchParams.get('sort') as SortType) || 'today_download',
   });
   return json({
     resp: resp,

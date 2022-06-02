@@ -133,7 +133,7 @@ export default function Search() {
                       navigate({ search }, { replace: true });
                     }}
                   >
-                    <Radio.Button value="day">日安装</Radio.Button>
+                    <Radio.Button value="today_download">日安装</Radio.Button>
                     <Radio.Button value="total_download">总安装</Radio.Button>
                     <Radio.Button value="score">评分</Radio.Button>
                     <Radio.Button value="createtime">最新发布</Radio.Button>

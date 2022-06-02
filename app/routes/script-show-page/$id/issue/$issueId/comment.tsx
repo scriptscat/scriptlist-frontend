@@ -61,7 +61,6 @@ import ClipboardJS from 'clipboard';
 type LoaderData = {
   issue: Issue;
   comments: IssueComment[];
-  isWatch: IsWatchIssueType;
 };
 
 export const meta: MetaFunction = ({ data, parentsData }) => {
@@ -90,11 +89,9 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     throw new Response('反馈不存在', { status: 404, statusText: 'Not Found' });
   }
   const commentList = await IssueCommentList(scriptId, issueId);
-  const isWatch = await IsWatchIssue(scriptId, issueId, request);
   return json({
     issue: issue,
     comments: commentList,
-    isWatch: isWatch,
   } as LoaderData);
 };
 
@@ -107,9 +104,15 @@ export default function Comment() {
   const user = useContext(UserContext);
   const editor = useRef<MarkdownEditorRef>();
   const [loading, setLoading] = useState(false);
-  const [isWatch, setIsWatch] = useState(data.isWatch.watch);
+  const [isWatch, setIsWatch] = useState(0);
   const [labels, setLabels] = useState(data.issue.labels || []);
-
+  useEffect(() => {
+    if (user.user) {
+      IsWatchIssue(script.script!.id, data.issue.id).then((res) => {
+        setIsWatch(res.watch);
+      });
+    }
+  });
   const joinMember: { [key: number]: number } = {};
   joinMember[data.issue.uid] = 1;
   list.forEach((item) => {

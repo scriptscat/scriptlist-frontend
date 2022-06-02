@@ -100,7 +100,7 @@ const SearchItem: React.FC<{
         <Card.Grid hoverable={false} style={gridStyle}>
           <div className="flex flex-row items-center gap-1">
             <div>
-              <Avatar src={script.avatar} />
+              <Avatar src={'/api/v1/user/avatar/' + script.uid} />
             </div>
             <div className="flex flex-col flex-auto">
               <Link
@@ -222,17 +222,17 @@ const SearchItem: React.FC<{
         <Card.Grid hoverable={false} style={gridStyle}>
           <div className="flex flex-row gap-4 py-2">
             <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">总安装量</span>
-              <div className="text-xs font-semibold">
-                <DownloadOutlined className="!align-middle" style={iconStyle} />
-                <span>{script.total_install}</span>
-              </div>
-            </div>
-            <div className="flex flex-col text-center px-5">
               <span className="text-gray-500 text-sm">今日安装</span>
               <div className="text-xs font-semibold">
                 <DownloadOutlined className="!align-middle" style={iconStyle} />
                 <span>{script.today_install}</span>
+              </div>
+            </div>
+            <div className="flex flex-col text-center px-5">
+              <span className="text-gray-500 text-sm">总安装量</span>
+              <div className="text-xs font-semibold">
+                <DownloadOutlined className="!align-middle" style={iconStyle} />
+                <span>{script.total_install}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">

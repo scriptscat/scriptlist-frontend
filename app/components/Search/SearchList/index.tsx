@@ -1,6 +1,6 @@
 import { Link, useLocation } from '@remix-run/react';
 import { ConfigProvider, Empty, List } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 import SearchItem from './item';
@@ -14,6 +14,10 @@ const SearchList: React.FC<{
   const location = useLocation();
   const [total, setTotal] = useState(props.total);
   const [list, setList] = useState(props.list);
+  useEffect(() => {
+    setTotal(props.total);
+    setList(props.list);
+  }, [props.list, props.total]);
 
   return (
     <>

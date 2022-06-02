@@ -5,7 +5,8 @@ import {
   useLoaderData,
   useLocation,
 } from '@remix-run/react';
-import { Alert, MenuProps, message } from 'antd';
+import type { MenuProps} from 'antd';
+import { Alert, message } from 'antd';
 import { Menu } from 'antd';
 import type { LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
