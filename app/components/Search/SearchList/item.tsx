@@ -28,7 +28,6 @@ import {
 import { RiMessage2Line } from 'react-icons/ri';
 import { formatDate } from '~/utils/utils';
 import type { Script, WatchLevel } from '~/services/scripts/types';
-import ClipboardJS from 'clipboard';
 import ActionMenu from '~/components/ActionMenu';
 import {
   DeleteScript,

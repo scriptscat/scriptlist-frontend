@@ -1,5 +1,5 @@
 import { RiseOutlined, TagsOutlined } from '@ant-design/icons';
-import type { LoaderFunction, MetaFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   Link,
@@ -97,7 +97,7 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
 export default function Search() {
   const loader = useLoaderData<loaderResponse>();
   const params = useSearchParams();
-  const sort = params[0].get('sort') || 'day';
+  const sort = params[0].get('sort') || 'today_download';
   const navigate = useNavigate();
 
   return (
@@ -168,14 +168,11 @@ export default function Search() {
             defaultActiveKey={['1', '2', '3']}
             className="rank-collapse"
           >
-            <Collapse.Panel header="安装量推荐" key="1">
-              <RankList list={loader.rank.total} />
+            <Collapse.Panel header="最新脚本" key="3">
+              <RankList list={loader.rank.update} />
             </Collapse.Panel>
             <Collapse.Panel header="评分推荐" key="2">
               <RankList list={loader.rank.score} />
-            </Collapse.Panel>
-            <Collapse.Panel header="最新脚本" key="3">
-              <RankList list={loader.rank.update} />
             </Collapse.Panel>
           </Collapse>
         </div>
