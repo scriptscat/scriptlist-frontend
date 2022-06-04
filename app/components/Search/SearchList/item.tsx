@@ -35,6 +35,7 @@ import {
   UnwatchScript,
   WatchScript,
 } from '~/services/scripts/api';
+import { useEffect, useState } from 'react';
 
 export const WatchLevelMap = ['不关注', '版本更新', '新建反馈', '任何'];
 
@@ -89,6 +90,38 @@ const SearchItem: React.FC<{
     height: '14px',
   };
   const navigate = useNavigate();
+  const [installTitle, setInstallTitle] = useState('安装脚本');
+  useEffect(() => {
+    if (action) {
+      const api =
+        window &&
+        (((window.external as any).Scriptcat ||
+          (window.external as any).Tampermonkey) as {
+          isInstalled: (
+            name: string,
+            namespace: string,
+            callback: (res: any, rej: any) => void
+          ) => void;
+        });
+      if (api) {
+        api.isInstalled(
+          script.name,
+          (script.script.meta_json['namespace'] &&
+            script.script.meta_json['namespace'][0]) ||
+            '',
+          (res: { installed: boolean; version: string }) => {
+            if (res.installed === true) {
+              if (res.version == script.script.version) {
+                setInstallTitle('重新安装此脚本（版本' + res.version + '）');
+              } else {
+                setInstallTitle('更新到' + script.script.version + '版本');
+              }
+            }
+          }
+        );
+      }
+    }
+  });
   return (
     <>
       <Card
@@ -278,7 +311,7 @@ const SearchItem: React.FC<{
                   }
                   icon={<DownloadOutlined />}
                 >
-                  安装脚本
+                  {installTitle}
                 </Button>
                 <Tooltip placement="bottom" title="如何安装?">
                   <Button

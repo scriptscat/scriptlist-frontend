@@ -374,7 +374,7 @@ export default function Comment() {
               </ClientOnly>
               <Space className="justify-end">
                 {(user.user.uid == data.issue.uid ||
-                  user.user.is_admin > 1 ||
+                  user.user.is_admin >= 1 ||
                   script.script?.uid == user.user.uid) && (
                   <Button
                     loading={loading}
