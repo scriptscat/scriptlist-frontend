@@ -1,12 +1,7 @@
 import { CheckCircleTwoTone, InfoCircleTwoTone } from '@ant-design/icons';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import {
-  Link,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from '@remix-run/react';
+import { Link, useLoaderData, useLocation } from '@remix-run/react';
 import { Button, Card, Space, Table, Tag, Tooltip } from 'antd';
 import Column from 'antd/lib/table/Column';
 import { formatDate } from '~/utils/utils';
@@ -69,6 +64,19 @@ export default function Issue() {
           total: data.total,
           current: data.page,
           itemRender: (current, type, originalElement) => {
+            if (type !== 'page') {
+              return (
+                <Link
+                  to={{
+                    search: replaceSearchParam(location.search, {
+                      page: current,
+                    }),
+                  }}
+                >
+                  {originalElement}
+                </Link>
+              );
+            }
             return (
               <Link
                 to={{
@@ -77,7 +85,7 @@ export default function Issue() {
                   }),
                 }}
               >
-                {originalElement}
+                {current}
               </Link>
             );
           },

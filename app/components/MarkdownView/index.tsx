@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { marked } from 'marked';
 import { useLocation } from '@remix-run/react';
-
+import Prism from 'prismjs';
 class MarkdownRenderer extends marked.Renderer {
   link(href: string, title: string, text: string) {
     const baseUrl = this.options.baseUrl || '';
@@ -40,11 +40,17 @@ const MarkdownView: React.FC<{ id: string; content: string }> = ({
     mangle: true,
     gfm: true,
     renderer: new MarkdownRenderer(),
+    breaks: true,
+  });
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    ref.current && Prism.highlightAllUnder(ref.current, true);
   });
   return (
     <div
       className="viewer markdown-body"
       dangerouslySetInnerHTML={{ __html: html }}
+      ref={ref}
     ></div>
   );
 };

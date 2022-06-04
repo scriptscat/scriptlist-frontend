@@ -25,7 +25,7 @@ import tuiEditor from '@toast-ui/editor/dist/toastui-editor.css';
 import tuiEditorDark from '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import { useState } from 'react';
 import { InitAxios } from './services/http';
-import { Modal } from 'antd';
+import prism from 'prismjs/themes/prism.css';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -33,6 +33,7 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: antdLight },
   { rel: 'stylesheet', href: tuiEditor },
   { rel: 'stylesheet', href: tuiEditorDark },
+  { rel: 'stylesheet', href: prism },
 ];
 
 export const meta: MetaFunction = ({ data }) => {
