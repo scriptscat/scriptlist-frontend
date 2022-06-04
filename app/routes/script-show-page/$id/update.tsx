@@ -5,16 +5,12 @@ import { Card, message } from 'antd';
 import { getScript, UpdateCode } from '~/services/scripts/api';
 import type { LoaderData } from '../$id';
 import UpdateScript from '~/components/UpdateScript';
-import { useContext } from 'react';
-import { UserContext } from '~/context-manager';
-import { useEffect } from 'react';
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const script = await getScript(parseInt(params.id as string), request, true);
-  if (!script.data) {
-    throw new Response('脚本不存在', { status: 404, statusText: 'Not Found' });
-  }
-  return json({ script: script.data } as LoaderData);
+  return json({ script: script.data.data } as LoaderData, {
+    headers: script.headers,
+  });
 };
 
 export default function Update() {

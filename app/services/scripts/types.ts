@@ -100,14 +100,15 @@ export type Statistics = {
 
 export type StatisticsItem = {
   uv: StatisticsChart;
-  'uv-lastweekly': StatisticsChart;
   pv: StatisticsChart;
-  realtime: StatisticsChart;
+  'today-uv': number;
+  'yesterday-uv': number;
+  'week-uv': number;
 };
 
 export type StatisticsChart = {
   x: string[];
-  y: string[];
+  y: number[];
 };
 
 export type Realtime = {

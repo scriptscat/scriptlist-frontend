@@ -17,7 +17,7 @@ import type {
 } from './types';
 
 export type SortType =
-  | 'today'
+  | 'today_download'
   | 'score'
   | 'total_download'
   | 'createtime'
@@ -57,7 +57,11 @@ export async function search(
   return resp.data;
 }
 
-export async function getScript(id: number, req: Request, withCode?: boolean) {
+export async function getScript(
+  id: number,
+  req: Request,
+  withCode?: boolean,
+) {
   const resp = await request<ScriptResponse>({
     url: '/scripts/' + id + (withCode ? '/code' : ''),
     method: 'GET',
@@ -65,7 +69,7 @@ export async function getScript(id: number, req: Request, withCode?: boolean) {
       Cookie: req?.headers.get('Cookie') || '',
     },
   });
-  return resp.data;
+  return resp;
 }
 
 export async function getScriptByVersion(

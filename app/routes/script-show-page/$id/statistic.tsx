@@ -1,106 +1,98 @@
-import { Alert, Card, Divider } from 'antd';
+import { Card, Divider } from 'antd';
 import { useState, useEffect } from 'react';
-import { Line, Column } from '@ant-design/plots';
-import { json, LoaderFunction } from '@remix-run/node';
-import { Statistics } from '~/services/scripts/types';
-import { GetStatistics } from '~/services/scripts/api';
+import { Line, Column, Area } from '@ant-design/plots';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type {
+  Realtime,
+  Statistics,
+  StatisticsChart,
+} from '~/services/scripts/types';
+import { GetRealtime, GetStatistics } from '~/services/scripts/api';
 import { useLoaderData } from '@remix-run/react';
 import { useContext } from 'react';
-import { UserContext } from '~/context-manager';
+import { ScriptContext, UserContext } from '~/context-manager';
+import { splitNumber } from '~/utils/utils';
 
-// 周对比图
-const WeekLine = () => {
-  const [data, setData] = useState([]);
+// 30天pv uv图
+const PvUv: React.FC<{
+  title: string;
+  uv: StatisticsChart;
+  pv: StatisticsChart;
+}> = ({ title, uv, pv }) => {
+  const data = [{}];
 
-  useEffect(() => {
-    asyncFetch();
-  }, []);
+  for (let i = 0; i < uv.x.length; i++) {
+    data.push(
+      {
+        name: 'uv',
+        date: uv.x[i],
+        num: uv.y[i],
+      },
+      {
+        name: 'pv',
+        date: pv.x[i],
+        num: pv.y[i],
+      }
+    );
+  }
 
-  const asyncFetch = () => {
-    fetch(
-      'https://gw.alipayobjects.com/os/bmw-prod/55424a73-7cb8-4f79-b60d-3ab627ac5698.json'
-    )
-      .then((response) => response.json())
-      .then((json) => setData(json))
-      .catch((error) => {
-        console.log('fetch data failed', error);
-      });
-  };
   const config = {
     data,
-    xField: 'year',
-    yField: 'value',
-    seriesField: 'category',
-    yAxis: {
-      label: {
-        // 数值格式化为千分位
-        formatter: (v: any) =>
-          `${v}`.replace(/\d{1,3}(?=(\d{3})+$)/g, (s) => `${s},`),
-      },
-    },
-    color: ['#1979C9', '#D62A0D', '#FAA219'],
+    xField: 'date',
+    yField: 'num',
+    seriesField: 'name',
   };
 
-  return <Line {...config} />;
+  return (
+    <div className="flex flex-col items-center w-full">
+      <span>{title}</span>
+      <Area className="w-full" {...config} />
+    </div>
+  );
 };
 
-// 实时统计
-const RealtimeColumn = () => {
-  const data = [
-    {
-      type: '家具家电',
-      sales: 38,
-    },
-    {
-      type: '粮油副食',
-      sales: 52,
-    },
-    {
-      type: '生鲜水果',
-      sales: 61,
-    },
-    {
-      type: '美容洗护',
-      sales: 145,
-    },
-    {
-      type: '母婴用品',
-      sales: 48,
-    },
-    {
-      type: '进口食品',
-      sales: 38,
-    },
-    {
-      type: '食品饮料',
-      sales: 38,
-    },
-    {
-      type: '家庭清洁',
-      sales: 38,
-    },
-  ];
+const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
+  const [chartData, setChartData] = useState([{}]);
+  useEffect(() => {
+    const time = setInterval(async () => {
+      const resp = await GetRealtime(scriptId);
+      const data = resp.data;
+      const chartData = [];
+      for (let i = 0; i < data.download.x.length; i++) {
+        chartData.push(
+          {
+            name: '安装',
+            date: data.download.x[i],
+            num: data.download.y[i],
+          },
+          {
+            name: '更新',
+            date: data.update.x[i],
+            num: data.update.y[i],
+          }
+        );
+      }
+      setChartData(chartData);
+    }, 2000);
+    return () => {
+      clearInterval(time);
+    };
+  });
+
   const config = {
-    data,
-    xField: 'type',
-    yField: 'sales',
-    columnWidthRatio: 0.8,
-    xAxis: {
-      label: {
-        autoHide: true,
-        autoRotate: false,
-      },
-    },
-    meta: {
-      type: {
-        alias: '时间',
-      },
-      sales: {
-        alias: '数量',
-      },
-    },
+    data: chartData,
+    xField: 'date',
+    yField: 'num',
+    seriesField: 'name',
   };
-  return <Column {...config} />;
+
+  return (
+    <div className="flex flex-col items-center w-full">
+      <span>实时更新与下载量</span>
+      <Area className="w-full" {...config} />
+    </div>
+  );
 };
 
 export type LoaderData = {
@@ -121,6 +113,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 export default function Statistic() {
   const user = useContext(UserContext);
   const data = useLoaderData<LoaderData>();
+  const script = useContext(ScriptContext);
   return (
     <Card>
       <Card className="!p-0">
@@ -134,53 +127,82 @@ export default function Statistic() {
             </div>
             <div className="flex flex-col border-r p-4">
               <span>浏览数(PV)</span>
-              <span className="text-lg font-bold">{data.data.page['today-pv']}</span>
-              <span>100</span>
-              <span>100,000</span>
+              <span className="text-lg font-bold">
+                {splitNumber(data.data.page['today-pv'].toString())}
+              </span>
+              <span>
+                {splitNumber(data.data.page['yesterday-pv'].toString())}
+              </span>
+              <span>{splitNumber(data.data.page['week-pv'].toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
               <span>访客数(UV)</span>
-              <span className="text-lg font-bold">1,000</span>
-              <span>100</span>
-              <span>100,000</span>
+              <span className="text-lg font-bold">
+                {splitNumber(data.data.page['today-uv'].toString())}
+              </span>
+              <span>
+                {splitNumber(data.data.page['yesterday-uv'].toString())}
+              </span>
+              <span>{splitNumber(data.data.page['week-uv'].toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
               <span>安装数</span>
-              <span className="text-lg font-bold">1,000</span>
-              <span>100</span>
-              <span>100,000</span>
+              <span className="text-lg font-bold">
+                {splitNumber(data.data.download['today-uv'].toString())}
+              </span>
+              <span>
+                {splitNumber(data.data.download['yesterday-uv'].toString())}
+              </span>
+              <span>
+                {splitNumber(data.data.download['week-uv'].toString())}
+              </span>
             </div>
             <div className="flex flex-col border-r p-4">
               <span>更新数</span>
-              <span className="text-lg font-bold">1,000</span>
-              <span>100</span>
-              <span>100,000</span>
+              <span className="text-lg font-bold">
+                {splitNumber(data.data.update['today-uv'].toString())}
+              </span>
+              <span>
+                {splitNumber(data.data.update['yesterday-uv'].toString())}
+              </span>
+              <span>{splitNumber(data.data.update['week-uv'].toString())}</span>
             </div>
             {user.user!.is_admin == 1 && (
               <div className="flex flex-col p-4">
-                <span>独立用户数</span>
-                <span className="text-lg font-bold">1,000</span>
-                <span>100</span>
-                <span>100,000</span>
+                <span>平台用户数</span>
+                <span className="text-lg font-bold">
+                  {splitNumber(data.data.page['today-member'].toString())}
+                </span>
+                <span>
+                  {splitNumber(data.data.page['yesterday-member'].toString())}
+                </span>
+                <span>
+                  {splitNumber(data.data.page['week-member'].toString())}
+                </span>
               </div>
             )}
           </div>
         </Card.Grid>
       </Card>
       <Divider />
-      <div className="flex flex-row justify-between">
-        <RealtimeColumn />
-        <RealtimeColumn />
+      <div>
+        <RealtimeColumn scriptId={script.script!.id} />
+      </div>
+      <Divider />
+      <div>
+        <PvUv
+          title="30天安装uv/pv"
+          uv={data.data.download.uv}
+          pv={data.data.download.pv}
+        />
       </div>
       <Divider />
       <div className="flex flex-row justify-between">
-        <WeekLine />
-        <WeekLine />
-      </div>
-      <Divider />
-      <div className="flex flex-row justify-between">
-        <WeekLine />
-        <WeekLine />
+        <PvUv
+          title="30天更新uv/pv"
+          uv={data.data.update.uv}
+          pv={data.data.update.pv}
+        />
       </div>
       <Divider />
       <div className="text-center">

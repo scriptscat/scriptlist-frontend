@@ -53,10 +53,15 @@ export function CatchBoundary() {
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const script = await getScript(parseInt(params.id as string), request);
-  if (script.code !== 0) {
-    throw new Response(script.msg, { status: 404, statusText: 'Not Found' });
+  if (script.data.code !== 0) {
+    throw new Response(script.data.msg, {
+      status: 404,
+      statusText: 'Not Found',
+    });
   }
-  return json({ script: script.data } as LoaderData);
+  return json({ script: script.data.data } as LoaderData, {
+    headers: script.headers,
+  });
 };
 
 export default function ScriptShowPage() {

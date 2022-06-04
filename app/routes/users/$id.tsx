@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const total = await search(
     {
       uid: parseInt(params.id as string),
-      sort: 'today',
+      sort: 'today_download',
       page: page,
       count: 20,
     },
