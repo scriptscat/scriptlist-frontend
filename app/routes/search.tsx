@@ -64,7 +64,7 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
   return (
     <div className="flex flex-col gap-[2px]">
       {list.map((item, index) => (
-        <div key={index}>
+        <div key={index} className="my-[2px]">
           <Link
             to={'/script-show-page/' + item.id}
             target="_blank"
@@ -149,7 +149,19 @@ export default function Search() {
           <Card>
             <Card.Meta
               title="学油猴脚本"
-              description="就来油猴中文网"
+              description={
+                <span className="text-gray-400">
+                  就来
+                  <a
+                    href="https://bbs.tampermonkey.net.cn"
+                    className="text-gray-400"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    油猴中文网
+                  </a>
+                </span>
+              }
             ></Card.Meta>
           </Card>
           <Collapse

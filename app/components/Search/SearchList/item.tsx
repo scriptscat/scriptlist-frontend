@@ -97,14 +97,14 @@ const SearchItem: React.FC<{
           flexDirection: 'column',
         }}
       >
-        <Card.Grid hoverable={false} style={gridStyle}>
+        <Card.Grid hoverable={false} className="!p-2" style={gridStyle}>
           <div className="flex flex-row items-center gap-1">
             <div>
-              <Avatar src={'/api/v1/user/avatar/' + script.uid} />
+              <Avatar size="large" src={'/api/v1/user/avatar/' + script.uid} />
             </div>
             <div className="flex flex-col flex-auto">
               <Link
-                className="text-xs"
+                className="text-sm"
                 to={'/users/' + script.uid}
                 target="_blank"
               >
@@ -216,7 +216,7 @@ const SearchItem: React.FC<{
             </div>
           </div>
         </Card.Grid>
-        <Card.Grid hoverable={false} style={gridStyle}>
+        <Card.Grid hoverable={false} className="!py-2 !px-3" style={gridStyle}>
           {script.description}
         </Card.Grid>
         <Card.Grid hoverable={false} style={gridStyle}>

@@ -22,11 +22,14 @@ export const meta: MetaFunction = ({ data }: { data: LoaderData }) => ({
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get('page') || '1');
-  const resp = await search({
-    page: page,
-    keyword: url.searchParams.get('keyword') || '',
-    sort: (url.searchParams.get('sort') as SortType) || 'today_download',
-  });
+  const resp = await search(
+    {
+      page: page,
+      keyword: url.searchParams.get('keyword') || '',
+      sort: (url.searchParams.get('sort') as SortType) || 'today_download',
+    },
+    request
+  );
   return json({
     resp: resp,
     page: page,

@@ -53,10 +53,12 @@ export default function Version() {
                   </Space>
                   <span className="text-xs">{formatDate(item.createtime)}</span>
                 </div>
-                <MarkdownView
-                  id={'version-' + item.id}
-                  content={item.changelog || '作者偷懒没有写更新日志'}
-                />
+                <div className="py-2">
+                  <MarkdownView
+                    id={'version-' + item.id}
+                    content={item.changelog || '作者偷懒没有写更新日志'}
+                  />
+                </div>
               </div>
             </Card.Grid>
             <Card.Grid

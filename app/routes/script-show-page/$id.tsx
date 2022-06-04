@@ -5,7 +5,7 @@ import {
   useLoaderData,
   useLocation,
 } from '@remix-run/react';
-import type { MenuProps} from 'antd';
+import type { MenuProps } from 'antd';
 import { Alert, message } from 'antd';
 import { Menu } from 'antd';
 import type { LoaderFunction, MetaFunction } from '@remix-run/node';
@@ -105,7 +105,10 @@ export default function ScriptShowPage() {
       label: <Link to={'./version'}>版本列表</Link>,
     },
   ];
-  if (users.user && users.user.uid === data.script.uid) {
+  if (
+    users.user &&
+    (users.user.uid === data.script.uid || users.user.is_admin === 1)
+  ) {
     items.push(
       ...[
         {
@@ -125,7 +128,10 @@ export default function ScriptShowPage() {
   }
   useEffect(() => {
     if (
-      !(users.user && users.user.uid === data.script.uid) &&
+      !(
+        users.user &&
+        (users.user.uid === data.script.uid || users.user.is_admin === 1)
+      ) &&
       ['update', 'statistic', 'manage'].indexOf(current) !== -1
     ) {
       setForbidden(true);

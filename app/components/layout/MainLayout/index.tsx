@@ -1,4 +1,5 @@
-import { MenuProps, message } from 'antd';
+import type { MenuProps } from 'antd';
+import { message } from 'antd';
 import { Avatar } from 'antd';
 import { Divider } from 'antd';
 import { Dropdown, Space } from 'antd';
@@ -67,7 +68,12 @@ const MainLayout: React.FC<{
   };
   const [mode, setMode] = useState(styleMode || 'auto');
   const location = useLocation();
-  const current = location.pathname == '/' ? 'home' : '';
+  const current =
+    location.pathname == '/'
+      ? 'home'
+      : location.pathname == '/search'
+      ? 'list'
+      : '';
   const modeMenu = (
     <Menu
       className="!rounded-md border-inherit border-1 w-32 !mt-4"
@@ -79,39 +85,57 @@ const MainLayout: React.FC<{
         }
         document.cookie = 'styleMode=' + key + ';path=/';
       }}
-    >
-      <Menu.Item key="light">
-        <Space>
-          <RiSunLine />
-          <p className="text-sm m-0">Light</p>
-        </Space>
-      </Menu.Item>
-      <Menu.Item key="dark">
-        <Space>
-          <RiMoonLine />
-          <p className="text-sm m-0">Dark</p>
-        </Space>
-      </Menu.Item>
-      <Menu.Item key="auto">
-        <Space>
-          <RiComputerLine />
-          <p className="text-sm m-0">跟随系统</p>
-        </Space>
-      </Menu.Item>
-    </Menu>
+      items={[
+        {
+          label: (
+            <Space>
+              <RiSunLine />
+              <p className="text-sm m-0">Light</p>
+            </Space>
+          ),
+          key: 'light',
+        },
+        {
+          label: (
+            <Space>
+              <RiMoonLine />
+              <p className="text-sm m-0">Dark</p>
+            </Space>
+          ),
+          key: 'dark',
+        },
+        {
+          label: (
+            <Space>
+              <RiComputerLine />
+              <p className="text-sm m-0">跟随系统</p>
+            </Space>
+          ),
+          key: 'auto',
+        },
+      ]}
+    ></Menu>
   );
 
   const userMenu = (
-    <Menu className="!rounded-md border-inherit border-1 w-32 !mt-4">
-      <Menu.Item>
-        <Link to={'/users/' + user.user?.uid}>
-          <Space className="anticon-middle">
-            <UserOutlined />
-            <p className="text-sm m-0">个人中心</p>
-          </Space>
-        </Link>
-      </Menu.Item>
-    </Menu>
+    <Menu
+      className="!rounded-md border-inherit border-1 w-32 !mt-4"
+      items={[
+        {
+          label: (
+            <Link
+              to={{ pathname: '/users/' + user.user?.uid, search: 'self=true' }}
+            >
+              <Space className="anticon-middle">
+                <UserOutlined />
+                <p className="text-sm m-0">个人中心</p>
+              </Space>
+            </Link>
+          ),
+          key: 'users',
+        },
+      ]}
+    ></Menu>
   );
 
   useEffect(() => {

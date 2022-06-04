@@ -50,6 +50,19 @@ const SearchList: React.FC<{
               pageSize: 20,
               total: total,
               itemRender: (current, type, originalElement) => {
+                if (type !== 'page') {
+                  return (
+                    <Link
+                      to={{
+                        search: replaceSearchParam(location.search, {
+                          page: current,
+                        }),
+                      }}
+                    >
+                      {originalElement}
+                    </Link>
+                  );
+                }
                 return (
                   <Link
                     to={{
@@ -58,7 +71,7 @@ const SearchList: React.FC<{
                       }),
                     }}
                   >
-                    {originalElement}
+                    {current}
                   </Link>
                 );
               },

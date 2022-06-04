@@ -22,7 +22,6 @@ import {
   UpdateScript,
 } from '~/services/scripts/api';
 import type { ScriptSetting } from '~/services/scripts/types';
-import { useDark } from '~/utils/utils';
 
 type LoaderData = {
   setting: ScriptSetting;
@@ -30,7 +29,7 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const resp = await GetScriptSetting(parseInt(params.id as string), request);
-  if (resp.code === 3005) {
+  if (resp.code !== 0) {
     throw new Response('没有权限访问此页面', {
       status: 403,
       statusText: 'Forbidden ',

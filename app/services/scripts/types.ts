@@ -16,6 +16,10 @@ export type WatchLevelResponse = APIDataResponse<{
   level: WatchLevel;
 }>;
 
+export type StatisticsResponse = APIDataResponse<Statistics>;
+
+export type RealtimeResponse = APIDataResponse<Realtime>;
+
 export type Script = {
   id: number;
   uid: number;
@@ -76,3 +80,37 @@ export type ScriptSetting = {
 };
 
 export type WatchLevel = 0 | 1 | 2 | 3;
+
+export type Statistics = {
+  download: StatisticsItem;
+  update: StatisticsItem;
+  page: {
+    'today-pv': number;
+    'yesterday-pv': number;
+    'week-pv': number;
+    'today-uv': number;
+    'yesterday-uv': number;
+    'week-uv': number;
+    // 注册会员的安装数量
+    'today-member': number;
+    'yesterday-member': number;
+    'week-member': number;
+  };
+};
+
+export type StatisticsItem = {
+  uv: StatisticsChart;
+  'uv-lastweekly': StatisticsChart;
+  pv: StatisticsChart;
+  realtime: StatisticsChart;
+};
+
+export type StatisticsChart = {
+  x: string[];
+  y: string[];
+};
+
+export type Realtime = {
+  download: StatisticsChart;
+  update: StatisticsChart;
+};

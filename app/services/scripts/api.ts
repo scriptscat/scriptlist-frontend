@@ -5,12 +5,14 @@ import { IssueResponse } from './issues/types';
 import type {
   CreateScriptResponse,
   MyScoreResponse,
+  RealtimeResponse,
   ScoreListResponse,
   ScriptResponse,
   ScriptSetting,
   ScriptSettingResponse,
   ScriptVersionListResponse,
   SearchResponse,
+  StatisticsResponse,
   WatchLevelResponse,
 } from './types';
 
@@ -31,17 +33,26 @@ export type SearchParams = {
   keyword?: string;
 };
 
-export async function search(params: SearchParams) {
+export async function search(
+  params: SearchParams,
+  req?: Request
+): Promise<SearchResponse> {
   if (params.uid) {
     const resp = await request<SearchResponse>({
       url: '/user/scripts/' + params.uid + '?' + paramsToSearch(params),
       method: 'GET',
+      headers: {
+        cookie: req?.headers.get('cookie') || '',
+      },
     });
     return resp.data;
   }
   const resp = await request<SearchResponse>({
     url: '/scripts?' + paramsToSearch(params),
     method: 'GET',
+    headers: {
+      cookie: req?.headers.get('cookie') || '',
+    },
   });
   return resp.data;
 }
@@ -247,6 +258,25 @@ export async function DeleteScore(scriptId: number, id: number) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + scriptId + '/score/' + id,
     method: 'DELETE',
+  });
+  return resp.data;
+}
+
+export async function GetStatistics(scriptId: number, req: Request) {
+  const resp = await request<StatisticsResponse>({
+    url: '/statistics/script/' + scriptId,
+    method: 'GET',
+    headers: {
+      cookie: req.headers.get('Cookie') || '',
+    },
+  });
+  return resp.data;
+}
+
+export async function GetRealtime(scriptId: number) {
+  const resp = await request<RealtimeResponse>({
+    url: '/statistics/script/' + scriptId + '/realtime',
+    method: 'GET',
   });
   return resp.data;
 }

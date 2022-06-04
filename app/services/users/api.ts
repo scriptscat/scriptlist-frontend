@@ -1,4 +1,5 @@
 import { APIResponse, request } from '../http';
+import { SearchParams } from '../scripts/api';
 import type {
   Follow,
   LoginUserinfoResponse,

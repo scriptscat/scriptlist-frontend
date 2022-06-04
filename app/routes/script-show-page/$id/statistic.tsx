@@ -1,6 +1,12 @@
 import { Alert, Card, Divider } from 'antd';
 import { useState, useEffect } from 'react';
 import { Line, Column } from '@ant-design/plots';
+import { json, LoaderFunction } from '@remix-run/node';
+import { Statistics } from '~/services/scripts/types';
+import { GetStatistics } from '~/services/scripts/api';
+import { useLoaderData } from '@remix-run/react';
+import { useContext } from 'react';
+import { UserContext } from '~/context-manager';
 
 // 周对比图
 const WeekLine = () => {
@@ -97,15 +103,26 @@ const RealtimeColumn = () => {
   return <Column {...config} />;
 };
 
+export type LoaderData = {
+  data: Statistics;
+};
+
+export const loader: LoaderFunction = async ({ params, request }) => {
+  const resp = await GetStatistics(parseInt(params.id as string), request);
+  if (resp.code != 0) {
+    throw new Response(resp.msg, {
+      status: 403,
+      statusText: 'Forbidden',
+    });
+  }
+  return json({ data: resp.data } as LoaderData);
+};
+
 export default function Statistic() {
+  const user = useContext(UserContext);
+  const data = useLoaderData<LoaderData>();
   return (
     <Card>
-      <Alert
-        message="TODO"
-        description="以下数据仅供参考"
-        type="info"
-        showIcon
-      />
       <Card className="!p-0">
         <Card.Grid hoverable={false} className="!w-full !p-2">
           <div className="flex flex-row justify-between statistic">
@@ -117,7 +134,7 @@ export default function Statistic() {
             </div>
             <div className="flex flex-col border-r p-4">
               <span>浏览数(PV)</span>
-              <span className="text-lg font-bold">1,000</span>
+              <span className="text-lg font-bold">{data.data.page['today-pv']}</span>
               <span>100</span>
               <span>100,000</span>
             </div>
@@ -139,12 +156,14 @@ export default function Statistic() {
               <span>100</span>
               <span>100,000</span>
             </div>
-            <div className="flex flex-col p-4">
-              <span>独立用户数</span>
-              <span className="text-lg font-bold">1,000</span>
-              <span>100</span>
-              <span>100,000</span>
-            </div>
+            {user.user!.is_admin == 1 && (
+              <div className="flex flex-col p-4">
+                <span>独立用户数</span>
+                <span className="text-lg font-bold">1,000</span>
+                <span>100</span>
+                <span>100,000</span>
+              </div>
+            )}
           </div>
         </Card.Grid>
       </Card>
