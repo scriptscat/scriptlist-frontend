@@ -93,7 +93,7 @@ const SearchItem: React.FC<{
   useEffect(() => {
     if (action) {
       const api =
-        window &&
+        window && window.external &&
         (((window.external as any).Scriptcat ||
           (window.external as any).Tampermonkey) as {
           isInstalled: (
