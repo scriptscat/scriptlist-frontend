@@ -101,6 +101,30 @@ export default function App() {
       <head>
         <Meta />
         <Links />
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-N2X6MNVRL3"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-N2X6MNVRL3');`,
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `var _hmt = _hmt || [];
+          (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?9a2c8c9a94f471c29e7bb97a363d204f";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+          })();`,
+          }}
+        />
       </head>
       <body>
         <UserContext.Provider
