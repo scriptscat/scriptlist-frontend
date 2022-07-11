@@ -11,6 +11,7 @@ import {
   DownOutlined,
   EyeFilled,
   EllipsisOutlined,
+  CopyOutlined,
 } from '@ant-design/icons';
 import { Link, useNavigate } from '@remix-run/react';
 import {
@@ -24,6 +25,7 @@ import {
   Space,
   Dropdown,
   Menu,
+  Input,
 } from 'antd';
 import { RiMessage2Line } from 'react-icons/ri';
 import { formatDate } from '~/utils/utils';
@@ -93,7 +95,8 @@ const SearchItem: React.FC<{
   useEffect(() => {
     if (action) {
       const api =
-        window && window.external &&
+        window &&
+        window.external &&
         (((window.external as any).Scriptcat ||
           (window.external as any).Tampermonkey) as {
           isInstalled: (
@@ -297,32 +300,75 @@ const SearchItem: React.FC<{
         {action && (
           <Card.Grid hoverable={false} style={gridStyle}>
             <div className="flex flex-row script-info-item px-2 py-1 gap-2">
-              <Button.Group>
-                <Button
-                  className="!rounded-none"
-                  type="primary"
-                  href={
-                    '/scripts/code/' +
-                    script.id +
-                    '/' +
-                    encodeURIComponent(script.name) +
-                    '.user.js'
-                  }
-                  icon={<DownloadOutlined />}
-                >
-                  {installTitle}
-                </Button>
-                <Tooltip placement="bottom" title="如何安装?">
+              {(script.type == 1 || script.type == 2) && (
+                <Button.Group>
                   <Button
                     className="!rounded-none"
                     type="primary"
-                    href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
-                    target="_blank"
-                    icon={<QuestionCircleOutlined />}
-                    color="#3874cb"
-                  ></Button>
-                </Tooltip>
-              </Button.Group>
+                    href={
+                      '/scripts/code/' +
+                      script.id +
+                      '/' +
+                      encodeURIComponent(script.name) +
+                      '.user.js'
+                    }
+                    icon={<DownloadOutlined />}
+                  >
+                    {installTitle}
+                  </Button>
+                  <Tooltip placement="bottom" title="如何安装?">
+                    <Button
+                      className="!rounded-none"
+                      type="primary"
+                      href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
+                      target="_blank"
+                      icon={<QuestionCircleOutlined />}
+                      color="#3874cb"
+                    ></Button>
+                  </Tooltip>
+                </Button.Group>
+              )}
+              {script.type == 3 && (
+                <>
+                  <Input.Group compact>
+                    <Input
+                      style={{ width: '500px' }}
+                      defaultValue={
+                        '// @require https://scriptcat.org/lib/' +
+                        script.id +
+                        '/latest/' +
+                        encodeURIComponent(script.name) +
+                        '.js'
+                      }
+                      readOnly
+                    />
+                    <Tooltip placement="bottom" title="复制链接">
+                      <Button
+                        type="default"
+                        icon={<CopyOutlined />}
+                        className="copy-require-link"
+                        require-link={
+                          '// @require https://scriptcat.org/lib/' +
+                          script.id +
+                          '/latest/' +
+                          encodeURIComponent(script.name) +
+                          '.js'
+                        }
+                      ></Button>
+                    </Tooltip>
+                    <Tooltip placement="bottom" title="如何安装?">
+                      <Button
+                        className="!rounded-none"
+                        type="primary"
+                        href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
+                        target="_blank"
+                        icon={<QuestionCircleOutlined />}
+                        color="#3874cb"
+                      ></Button>
+                    </Tooltip>
+                  </Input.Group>
+                </>
+              )}
               {(script.post_id !== 0 ||
                 script.script.meta_json['contributionurl']) && (
                 <Divider type="vertical" className="!h-auto" />

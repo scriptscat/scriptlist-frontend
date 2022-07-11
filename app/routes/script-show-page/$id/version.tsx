@@ -1,4 +1,5 @@
 import {
+  CopyOutlined,
   DiffOutlined,
   DownloadOutlined,
   QuestionCircleOutlined,
@@ -6,7 +7,7 @@ import {
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
-import { Button, Card, List, Space, Tag, Tooltip } from 'antd';
+import { Button, Card, Input, List, Space, Tag, Tooltip } from 'antd';
 import { useContext, useState } from 'react';
 import { formatDate } from '~/utils/utils';
 import MarkdownView from '~/components/MarkdownView';
@@ -71,62 +72,140 @@ export default function Version() {
               className="script-info-item"
             >
               <div>
-                <Button.Group size="small">
-                  <Button
-                    className="!rounded-none"
-                    type="primary"
-                    href={
-                      '/scripts/code/' +
-                      script.script?.id +
-                      '/' +
-                      script.script?.name +
-                      '.user.js?version=' +
-                      item.version
-                    }
-                    icon={<DownloadOutlined />}
-                  >
-                    安装{item.version}
-                  </Button>
-
-                  <Tooltip placement="bottom" title="如何安装?">
+                {(script.script?.type == 1 || script.script?.type == 2) && (
+                  <Button.Group size="small">
                     <Button
                       className="!rounded-none"
                       type="primary"
-                      icon={<QuestionCircleOutlined />}
-                      color="#3874cb"
-                      href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
-                      target="_blank"
-                    ></Button>
-                  </Tooltip>
-
-                  <Tooltip placement="bottom" title="选择两个版本,对比代码变化">
-                    <Button
-                      className="!rounded-none"
-                      icon={<DiffOutlined />}
-                      danger={diff == index}
-                      onClick={() => {
-                        if (diff == index) {
-                          setDiff(-1);
+                      href={
+                        '/scripts/code/' +
+                        script.script?.id +
+                        '/' +
+                        script.script?.name +
+                        '.user.js?version=' +
+                        item.version
+                      }
+                      icon={<DownloadOutlined />}
+                    >
+                      安装{item.version}
+                    </Button>
+                    <Tooltip placement="bottom" title="如何安装?">
+                      <Button
+                        className="!rounded-none"
+                        type="primary"
+                        icon={<QuestionCircleOutlined />}
+                        color="#3874cb"
+                        href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
+                        target="_blank"
+                      ></Button>
+                    </Tooltip>
+                    <Tooltip
+                      placement="bottom"
+                      title="选择两个版本,对比代码变化"
+                    >
+                      <Button
+                        className="!rounded-none"
+                        icon={<DiffOutlined />}
+                        danger={diff == index}
+                        onClick={() => {
+                          if (diff == index) {
+                            setDiff(-1);
+                          }
+                          if (diff != -1) {
+                            navigate({
+                              pathname:
+                                '/script-show-page/' +
+                                script.script?.id +
+                                '/diff',
+                              search:
+                                '?version1=' +
+                                data.list[diff].version +
+                                '&version2=' +
+                                item.version,
+                            });
+                            return;
+                          }
+                          setDiff(index);
+                        }}
+                      ></Button>
+                    </Tooltip>
+                  </Button.Group>
+                )}
+                {script.script?.type == 3 && (
+                  <>
+                    <Input.Group compact>
+                      <Input
+                        style={{ width: '200px' }}
+                        defaultValue={
+                          '// @require https://scriptcat.org/lib/' +
+                          script.script.id +
+                          '/' +
+                          item.version +
+                          '/' +
+                          encodeURIComponent(script.script.name) +
+                          '.js'
                         }
-                        if (diff != -1) {
-                          navigate({
-                            pathname:
-                              '/script-show-page/' +
-                              script.script?.id +
-                              '/diff',
-                            search:
-                              '?version1=' +
-                              data.list[diff].version +
-                              '&version2=' +
-                              item.version,
-                          });
-                          return;
-                        }
-                        setDiff(index);
-                      }}
-                    ></Button>
-                  </Tooltip>
-                </Button.Group>
+                        readOnly
+                      />
+                      <Tooltip placement="bottom" title="复制链接">
+                        <Button
+                          type="default"
+                          icon={<CopyOutlined />}
+                          className="copy-require-link"
+                          require-link={
+                            '// @require https://scriptcat.org/lib/' +
+                            script.script.id +
+                            '/' +
+                            item.version +
+                            '/' +
+                            encodeURIComponent(script.script.name) +
+                            '.js'
+                          }
+                        ></Button>
+                      </Tooltip>
+                      <Tooltip placement="bottom" title="如何安装?">
+                        <Button
+                          className="!rounded-none"
+                          type="primary"
+                          href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
+                          target="_blank"
+                          icon={<QuestionCircleOutlined />}
+                          color="#3874cb"
+                        ></Button>
+                      </Tooltip>
+                      <Tooltip
+                        placement="bottom"
+                        title="选择两个版本,对比代码变化"
+                      >
+                        <Button
+                          className="!rounded-none"
+                          icon={<DiffOutlined />}
+                          danger={diff == index}
+                          onClick={() => {
+                            if (diff == index) {
+                              setDiff(-1);
+                            }
+                            if (diff != -1) {
+                              navigate({
+                                pathname:
+                                  '/script-show-page/' +
+                                  script.script?.id +
+                                  '/diff',
+                                search:
+                                  '?version1=' +
+                                  data.list[diff].version +
+                                  '&version2=' +
+                                  item.version,
+                              });
+                              return;
+                            }
+                            setDiff(index);
+                          }}
+                        ></Button>
+                      </Tooltip>
+                    </Input.Group>
+                  </>
+                )}
               </div>
             </Card.Grid>
           </Card>

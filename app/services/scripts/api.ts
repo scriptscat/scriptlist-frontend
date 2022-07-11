@@ -173,6 +173,7 @@ export async function UpdateCode(id: number, params: UpdateCodeParams) {
 export type CreateScriptParams = {
   name: string;
   description: string;
+  version:string;
   definition: string;
   type: 1 | 2 | 3;
 } & UpdateCodeParams;

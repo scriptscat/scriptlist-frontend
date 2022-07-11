@@ -21,7 +21,8 @@ const UpdateScript: React.FC<{
   const [isPublic, setPublic] = useState(script?.public || 1);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [definition, setDefinition] = useState(script?.description || '');
+  const [version, setVersion] = useState(script?.script.version || '1.0.0');
+  const [definition, setDefinition] = useState('');
   const [loading, setLoading] = useState(false);
   const [scriptType, setScriptType] = useState<1 | 2 | 3>(1);
 
@@ -122,12 +123,29 @@ const UpdateScript: React.FC<{
             value={description}
             onChange={(value) => setDescription(value.target.value)}
           />
+          <Input
+            prefixCls={dark ? 'dark-input' : 'light-input'}
+            placeholder="库版本,类似脚本的@version"
+            value={version}
+            onChange={(value) => setVersion(value.target.value)}
+          />
           <h3 className="text-lg">库的定义文件(.d.ts)</h3>
           <TextArea
             prefixCls={dark ? 'dark-input' : 'light-input'}
             placeholder="库描述信息,类似脚本的@description"
             value={definition}
             onChange={(value) => setDefinition(value.target.value)}
+          />
+        </>
+      )}
+      {script?.type == 3 && (
+        <>
+          <h3 className="text-lg">库版本</h3>
+          <Input
+            prefixCls={dark ? 'dark-input' : 'light-input'}
+            placeholder="库版本,类似脚本的@version"
+            value={version}
+            onChange={(value) => setVersion(value.target.value)}
           />
         </>
       )}
@@ -163,6 +181,7 @@ const UpdateScript: React.FC<{
               name: name,
               description: description,
               definition: definition,
+              version: version,
               type: scriptType,
               code: code,
               content: content,

@@ -88,6 +88,17 @@ export default function ScriptShowPage() {
       clipboard.destroy();
     };
   });
+  useEffect(() => {
+    const clipboard = new ClipboardJS('.copy-require-link', {
+      text: (target) => {
+        message.success('复制成功');
+        return target.getAttribute('require-link') || '';
+      },
+    });
+    return () => {
+      clipboard.destroy();
+    };
+  });
   const items: MenuProps['items'] = [
     {
       key: 'home',
