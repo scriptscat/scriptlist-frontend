@@ -336,7 +336,9 @@ const SearchItem: React.FC<{
                       defaultValue={
                         '// @require https://scriptcat.org/lib/' +
                         script.id +
-                        '/latest/' +
+                        '/' +
+                        script.script.version +
+                        '/' +
                         encodeURIComponent(script.name) +
                         '.js'
                       }
@@ -350,7 +352,9 @@ const SearchItem: React.FC<{
                         require-link={
                           '// @require https://scriptcat.org/lib/' +
                           script.id +
-                          '/latest/' +
+                          '/' +
+                          script.script.version +
+                          '/' +
                           encodeURIComponent(script.name) +
                           '.js'
                         }
