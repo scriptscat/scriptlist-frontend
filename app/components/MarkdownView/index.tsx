@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { marked } from 'marked';
 import { useLocation } from '@remix-run/react';
 import Prism from 'prismjs';
+import xss from 'xss';
 class MarkdownRenderer extends marked.Renderer {
   link(href: string, title: string, text: string) {
     const baseUrl = this.options.baseUrl || '';
@@ -49,7 +50,7 @@ const MarkdownView: React.FC<{ id: string; content: string }> = ({
   return (
     <div
       className="viewer markdown-body"
-      dangerouslySetInnerHTML={{ __html: html }}
+      dangerouslySetInnerHTML={{ __html: xss(html) }}
       ref={ref}
     ></div>
   );

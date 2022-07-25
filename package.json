@@ -35,7 +35,8 @@
     "react-icons": "^4.3.1",
     "react-infinite-scroll-component": "^6.1.0",
     "remix-utils": "^3.2.0",
-    "ua-parser-js": "^1.0.2"
+    "ua-parser-js": "^1.0.2",
+    "xss": "^1.0.13"
   },
   "devDependencies": {
     "@remix-run/dev": "^1.4.3",
