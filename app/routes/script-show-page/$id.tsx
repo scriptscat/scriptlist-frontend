@@ -17,6 +17,7 @@ import { useContext } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import ClipboardJS from 'clipboard';
+import { forwardHeaders } from '~/utils/cookie';
 
 export type LoaderData = {
   script: Script;
@@ -60,7 +61,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     });
   }
   return json({ script: script.data.data } as LoaderData, {
-    headers: script.headers,
+    headers: forwardHeaders(script),
   });
 };
 

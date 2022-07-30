@@ -1,3 +1,5 @@
+import { AxiosResponse, AxiosResponseHeaders } from 'axios';
+
 export function parseCookie(cookieHeader: string) {
   if (!cookieHeader) return {};
   return cookieHeader
@@ -16,4 +18,14 @@ export function getToken(request: Request) {
     return cookie.token;
   }
   return undefined;
+}
+
+export function forwardHeaders(resp: AxiosResponse): Headers {
+  let headers = new Headers();
+  if (resp.headers['set-cookie']) {
+    resp.headers['set-cookie'].forEach((val) => {
+      headers.append('set-cookie', val);
+    });
+  }
+  return headers;
 }
