@@ -11,14 +11,11 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   if (script.data.code != 0) {
     throw new Response('脚本不存在', { status: 404, statusText: 'Not Found' });
   }
-  return json({ script: script.data.data } as LoaderData, {
-    headers: script.headers,
-  });
+  return json({ script: script.data.data } as LoaderData);
 };
 
 export default function Code() {
   const data = useLoaderData<LoaderData>();
-
   return (
     <Card>
       <div id="code" className="code w-full h-[500px]">
