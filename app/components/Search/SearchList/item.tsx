@@ -458,8 +458,9 @@ const SearchItem: React.FC<{
               ))}
               {action &&
                 script.script.meta_json['antifeature'] &&
-                script.script.meta_json['antifeature'].map((antifeature) =>
-                  antifeatures[antifeature] ? (
+                script.script.meta_json['antifeature'].map((item) => {
+                  const antifeature = item.split(' ')[0];
+                  return antifeatures[antifeature] ? (
                     <Tooltip
                       title={antifeatures[antifeature].description}
                       color={antifeatures[antifeature].color}
@@ -472,8 +473,8 @@ const SearchItem: React.FC<{
                     </Tooltip>
                   ) : (
                     <></>
-                  )
-                )}
+                  );
+                })}
             </div>
           </div>
         </Card.Grid>
