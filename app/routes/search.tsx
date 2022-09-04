@@ -98,6 +98,7 @@ export default function Search() {
   const loader = useLoaderData<loaderResponse>();
   const params = useSearchParams();
   const sort = params[0].get('sort') || 'today_download';
+  const script_type = params[0].get('script_type') || '';
   const navigate = useNavigate();
 
   return (
@@ -110,13 +111,22 @@ export default function Search() {
                 <Space>
                   <TagsOutlined />
                   <span>分类</span>
-                  <Select
-                    mode="multiple"
-                    allowClear
+                  <Radio.Group
+                    defaultValue={script_type}
                     size="small"
-                    className="w-48"
-                    placeholder="分类标签"
-                  ></Select>
+                    onChange={(val) => {
+                      let search = replaceSearchParam(location.search, {
+                        script_type: val.target.value,
+                      });
+                      navigate({ search }, { replace: true });
+                    }}
+                  >
+                    <Radio.Button value="">全部</Radio.Button>
+                    <Radio.Button value="1">用户脚本</Radio.Button>
+                    <Radio.Button value="2">库</Radio.Button>
+                    <Radio.Button value="3">后台脚本</Radio.Button>
+                    <Radio.Button value="4">定时脚本</Radio.Button>
+                  </Radio.Group>
                 </Space>
               </div>
               <div>

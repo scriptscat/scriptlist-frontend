@@ -456,6 +456,15 @@ const SearchItem: React.FC<{
                   <Tag color="green">{category.name}</Tag>
                 </Tooltip>
               ))}
+              {script.type === 3 && (
+                <Tooltip
+                  title={'这是一个库,你可以使用@require引用它'}
+                  color="blue"
+                  placement="bottom"
+                >
+                  <Tag color="blue">@require库</Tag>
+                </Tooltip>
+              )}
               {action &&
                 script.script.meta_json['antifeature'] &&
                 script.script.meta_json['antifeature'].map((item) => {

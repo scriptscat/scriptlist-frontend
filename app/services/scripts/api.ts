@@ -23,12 +23,15 @@ export type SortType =
   | 'createtime'
   | 'updatetime';
 
+export type ScriptType = '' | '1' | '2' | '3' | '4';
+
 export type SearchParams = {
   uid?: number;
   sort?: SortType;
   page?: number;
   count?: number;
   category?: string;
+  script_type?: ScriptType;
   domain?: string;
   keyword?: string;
 };
@@ -57,11 +60,7 @@ export async function search(
   return resp.data;
 }
 
-export async function getScript(
-  id: number,
-  req: Request,
-  withCode?: boolean,
-) {
+export async function getScript(id: number, req: Request, withCode?: boolean) {
   const resp = await request<ScriptResponse>({
     url: '/scripts/' + id + (withCode ? '/code' : ''),
     method: 'GET',
@@ -173,7 +172,7 @@ export async function UpdateCode(id: number, params: UpdateCodeParams) {
 export type CreateScriptParams = {
   name: string;
   description: string;
-  version:string;
+  version: string;
   definition: string;
   type: 1 | 2 | 3;
 } & UpdateCodeParams;

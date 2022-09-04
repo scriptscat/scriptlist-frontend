@@ -5,7 +5,7 @@ import { message } from 'antd';
 import ClipboardJS from 'clipboard';
 import { useEffect } from 'react';
 import SearchList from '~/components/Search/SearchList';
-import type { SortType } from '~/services/scripts/api';
+import type { ScriptType, SortType } from '~/services/scripts/api';
 import { search } from '~/services/scripts/api';
 import type { SearchResponse } from '~/services/scripts/types';
 
@@ -27,6 +27,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       page: page,
       keyword: url.searchParams.get('keyword') || '',
       sort: (url.searchParams.get('sort') as SortType) || 'today_download',
+      script_type: (url.searchParams.get('script_type') as ScriptType) || '',
     },
     request
   );
