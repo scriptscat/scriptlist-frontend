@@ -28,7 +28,7 @@ import {
   Input,
 } from 'antd';
 import { RiMessage2Line } from 'react-icons/ri';
-import { formatDate } from '~/utils/utils';
+import { formatDate, splitNumber } from '~/utils/utils';
 import type { Script, WatchLevel } from '~/services/scripts/types';
 import ActionMenu from '~/components/ActionMenu';
 import {
@@ -260,14 +260,14 @@ const SearchItem: React.FC<{
               <span className="text-gray-500 text-sm">今日安装</span>
               <div className="text-xs font-semibold">
                 <DownloadOutlined className="!align-middle" style={iconStyle} />
-                <span>{script.today_install}</span>
+                <span>{splitNumber(script.today_install.toString())}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">
               <span className="text-gray-500 text-sm">总安装量</span>
               <div className="text-xs font-semibold">
                 <DownloadOutlined className="!align-middle" style={iconStyle} />
-                <span>{script.total_install}</span>
+                <span>{splitNumber(script.total_install.toString())}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">
