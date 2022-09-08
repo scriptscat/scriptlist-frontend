@@ -16,7 +16,7 @@ export function replaceSearchParam(
       const regex = new RegExp(key + '=.*?(&|$)');
       search = search.replace(regex, key + '=' + params[key] + '$1');
     } else {
-      search += (search ? search + '&' : '') + key + '=' + params[key];
+      search += (search ? '&' : '') + key + '=' + params[key];
     }
   }
   return search;
