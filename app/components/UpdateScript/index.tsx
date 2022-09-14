@@ -29,7 +29,11 @@ const UpdateScript: React.FC<{
   return (
     <div className="flex flex-col items-start gap-1">
       <span>
-        提交的代码应该准确并详细的描述其脚本功能，不得混淆、加密、尊重版权、并有限制的选择可信任，无危害的外部代码。
+        提交的代码应该严格遵守本站脚本发布的相关规定，否则将会按照规则进行处理。相关规定可前往
+        <a href="https://bbs.tampermonkey.net.cn/thread-3036-1-1.html">
+          脚本站审查规则
+        </a>
+        查看
       </span>
       <h3 className="text-lg">代码</h3>
       <div className="h-96 w-full">
