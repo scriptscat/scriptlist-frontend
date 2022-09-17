@@ -1,4 +1,4 @@
-import { MetaFunction } from '@remix-run/node';
+import type { MetaFunction } from '@remix-run/node';
 import { useNavigate } from '@remix-run/react';
 import { Card, message } from 'antd';
 import UpdateScript from '~/components/UpdateScript';

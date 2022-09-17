@@ -55,7 +55,7 @@ export default function Index() {
     return () => {
       clipboard.destroy();
     };
-  });
+  }, []);
   return (
     <>
       <SearchList

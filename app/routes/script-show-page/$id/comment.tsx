@@ -105,7 +105,7 @@ export default function Comment() {
       return;
     }
     setLoading(true);
-    const list = await ScoreList(loaderData.id, { page: page });
+    const list = await ScoreList(loaderData.id, { page: page + 1 });
     setData([...data, ...list.list]);
     setLoading(false);
     setPage((page) => page + 1);

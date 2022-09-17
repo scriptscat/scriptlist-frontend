@@ -1,31 +1,31 @@
 import {
-  DownloadOutlined,
   CalendarOutlined,
   CarryOutOutlined,
-  StarOutlined,
-  StarFilled,
-  ExclamationCircleOutlined,
-  ShareAltOutlined,
-  QuestionCircleOutlined,
-  MoneyCollectOutlined,
-  DownOutlined,
-  EyeFilled,
-  EllipsisOutlined,
   CopyOutlined,
+  DownloadOutlined,
+  DownOutlined,
+  EllipsisOutlined,
+  ExclamationCircleOutlined,
+  EyeFilled,
+  MoneyCollectOutlined,
+  QuestionCircleOutlined,
+  ShareAltOutlined,
+  StarFilled,
+  StarOutlined,
 } from '@ant-design/icons';
 import { Link, useNavigate } from '@remix-run/react';
 import {
-  Card,
   Avatar,
   Button,
+  Card,
   Divider,
-  Tag,
-  Tooltip,
+  Dropdown,
+  Input,
+  Menu,
   message,
   Space,
-  Dropdown,
-  Menu,
-  Input,
+  Tag,
+  Tooltip,
 } from 'antd';
 import { RiMessage2Line } from 'react-icons/ri';
 import { formatDate, splitNumber } from '~/utils/utils';
@@ -210,6 +210,7 @@ const SearchItem: React.FC<{
                     uid={script.uid}
                     deleteLevel="super_moderator"
                     allowSelfDelete
+                    punish
                     onDeleteClick={async () => {
                       const resp = await DeleteScript(script.id);
                       if (resp.code == 0) {
@@ -233,6 +234,7 @@ const SearchItem: React.FC<{
                   uid={script.uid}
                   deleteLevel="super_moderator"
                   allowSelfDelete
+                  punish
                   onDeleteClick={async () => {
                     const resp = await DeleteScript(script.id);
                     if (resp.code == 0) {

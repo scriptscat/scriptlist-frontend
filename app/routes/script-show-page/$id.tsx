@@ -88,7 +88,7 @@ export default function ScriptShowPage() {
     return () => {
       clipboard.destroy();
     };
-  });
+  }, []);
   useEffect(() => {
     const clipboard = new ClipboardJS('.copy-require-link', {
       text: (target) => {
@@ -99,7 +99,7 @@ export default function ScriptShowPage() {
     return () => {
       clipboard.destroy();
     };
-  });
+  }, []);
   const items: MenuProps['items'] = [
     {
       key: 'home',
@@ -165,6 +165,15 @@ export default function ScriptShowPage() {
             message="脚本已归档"
             description="该脚本已经被作者归档,脚本可能失效并且作者不再维护,您无法再进行问题反馈."
             type="warning"
+            showIcon
+            closable
+          />
+        )}
+        {data.script.danger && (
+          <Alert
+            message="脚本代码经过了不可读处理"
+            description="该脚本已经被作者经过了不可读处理,虽然脚本站已经经过了一层审查,但还是请不要给予危险权限."
+            type="error"
             showIcon
             closable
           />

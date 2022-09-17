@@ -37,7 +37,6 @@ import {
   GetIssue,
   IssueCommentList,
   IsWatchIssue,
-  ListWatchIssue,
   OpenIssue,
   PostComment,
   UnwatchIssue,
@@ -47,14 +46,12 @@ import {
 import type {
   Issue,
   IssueComment,
-  IsWatchIssue as IsWatchIssueType,
 } from '~/services/scripts/issues/types';
 import { ClientOnly } from 'remix-utils';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ScriptContext, UserContext } from '~/context-manager';
 import type { APIResponse } from '~/services/http';
 import IssueLabel from '~/components/IssueLabel';
-import { User } from '~/services/users/types';
 import ActionMenu from '~/components/ActionMenu';
 import ClipboardJS from 'clipboard';
 

@@ -1,7 +1,7 @@
 import type {
   LinksFunction,
-  MetaFunction,
   LoaderFunction,
+  MetaFunction,
 } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
@@ -40,8 +40,8 @@ export const meta: MetaFunction = ({ data }) => {
   return {
     charset: 'utf-8',
     title: 'ScriptCat - 分享你的用户脚本',
-    description: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚',
-    keyword: 'ScriptCat UserScript 用户脚本',
+    description: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚本',
+    keyword: 'ScriptCat,UserScript,用户脚本,脚本猫,油猴,油猴脚本',
   };
 };
 

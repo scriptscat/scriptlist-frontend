@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { marked } from 'marked';
 import { useLocation } from '@remix-run/react';
 import Prism from 'prismjs';
-import xss from 'xss';
+import xss, { whiteList } from 'xss';
 class MarkdownRenderer extends marked.Renderer {
   link(href: string, title: string, text: string) {
     const baseUrl = this.options.baseUrl || '';
@@ -47,10 +47,16 @@ const MarkdownView: React.FC<{ id: string; content: string }> = ({
   useEffect(() => {
     ref.current && Prism.highlightAllUnder(ref.current, true);
   });
+  const l = whiteList;
+  l.input = ['type', 'checked', 'disabled'];
   return (
     <div
       className="viewer markdown-body"
-      dangerouslySetInnerHTML={{ __html: xss(html) }}
+      dangerouslySetInnerHTML={{
+        __html: xss(html, {
+          whiteList: l,
+        }),
+      }}
       ref={ref}
     ></div>
   );

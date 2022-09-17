@@ -37,6 +37,7 @@ export type Script = {
   unwell: 1 | 2; // 不适内容
   public: 1 | 2; // 是否公开
   archive: 0 | 1; // 归档
+  danger: 0 | 1; // 存在危险性
   type: 1 | 2 | 3; // 1: 普通脚本, 2: 订阅脚本, 3: 库
   category: Category[];
   createtime: number;
