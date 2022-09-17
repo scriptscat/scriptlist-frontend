@@ -46,9 +46,10 @@ const MarkdownView: React.FC<{ id: string; content: string }> = ({
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     ref.current && Prism.highlightAllUnder(ref.current, true);
-  });
+  }, []);
   const l = whiteList;
   l.input = ['type', 'checked', 'disabled'];
+  l.code = ['class'];
   return (
     <div
       className="viewer markdown-body"
