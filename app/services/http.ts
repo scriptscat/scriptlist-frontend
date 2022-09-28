@@ -3,7 +3,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
 
 let instance: AxiosInstance = axios.create({
-  baseURL: typeof window == 'undefined' ? process.env.APP_API_URL : '/v1/api',
+  baseURL: typeof window == 'undefined' ? process.env.APP_API_PROXY : '/v1/api',
   timeout: 300000,
   validateStatus: (status: number) => status < 500,
 });

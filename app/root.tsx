@@ -86,10 +86,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function App() {
   const config = useLoaderData();
   const [dart, setDart] = useState(false);
+  // 设置axios
   InitAxios({
     baseURL:
       typeof window == 'undefined'
-        ? process.env.APP_API_URL
+        ? process.env.APP_API_PROXY
         : config.ENV.NODE_ENV == 'development'
         ? '/api/v1'
         : config.ENV.APP_API_URL,

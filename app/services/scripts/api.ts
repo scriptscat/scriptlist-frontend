@@ -1,14 +1,12 @@
 import type { APIResponse } from '../http';
 import { request } from '../http';
 import { paramsToSearch } from '../utils';
-import { IssueResponse } from './issues/types';
 import type {
   CreateScriptResponse,
   MyScoreResponse,
   RealtimeResponse,
   ScoreListResponse,
   ScriptResponse,
-  ScriptSetting,
   ScriptSettingResponse,
   ScriptVersionListResponse,
   SearchResponse,
@@ -57,6 +55,7 @@ export async function search(
       cookie: req?.headers.get('cookie') || '',
     },
   });
+  console.log(resp);
   return resp.data;
 }
 

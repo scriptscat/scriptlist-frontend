@@ -14,10 +14,10 @@ export default function handleRequest(
       // 反向代理
       let url = request.url.replace(
         /^.*?\/api\/v1/g,
-        process.env.APP_API_URL || 'http://localhost:3000/api/v1'
+        process.env.APP_API_PROXY || 'http://localhost:3000/api/v1'
       );
       let proxyUrl = new URL(
-        process.env.APP_API_URL || 'http://localhost:3000/api/v1'
+        process.env.APP_API_PROXY || 'http://localhost:3000/api/v1'
       );
       let headers = new Headers();
       request.headers.forEach((value, key) => {
