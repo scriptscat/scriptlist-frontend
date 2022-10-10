@@ -55,7 +55,6 @@ export async function search(
       cookie: req?.headers.get('cookie') || '',
     },
   });
-  console.log(resp);
   return resp.data;
 }
 

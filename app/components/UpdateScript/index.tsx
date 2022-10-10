@@ -194,10 +194,8 @@ const UpdateScript: React.FC<{
               changelog: changelog,
             })
           ) {
-            console.log('sub ok');
             markdown.current?.setMarkdown('');
           }
-          console.log('sub over');
           setLoading(false);
         }}
       >

@@ -1,9 +1,9 @@
 
-/.cache
-/build
-/public/build
+# /.cache
+# /build
+# /public/build
 
-app/styles/*.css
+# app/styles/*.css
 
 /.idea
 /.vscode

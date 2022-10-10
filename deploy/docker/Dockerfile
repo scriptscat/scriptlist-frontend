@@ -6,6 +6,4 @@ WORKDIR /www
 
 COPY . .
 
-RUN npm ci && npm run build
-
 CMD [ "npm","start" ]
