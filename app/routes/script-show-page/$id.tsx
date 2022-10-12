@@ -118,9 +118,9 @@ export default function ScriptShowPage() {
             反馈
             {data.script.issue_num > 0 && (
               <Tag
+                className="dark:!bg-gray-600 !bg-gray-200"
                 style={{
                   border: 0,
-                  background: '#efefef',
                   borderRadius: '50%',
                   fontWeight: '500',
                 }}
