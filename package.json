@@ -6,7 +6,8 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf ./public/build",
-    "build": "npm run build:css && remix build",
+    "build:monaco": "cp -r ./node_modules/monaco-editor/min ./public/assets/monaco-editor",
+    "build": "npm run build:monaco && npm run build:css && remix build",
     "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css && npm run light-css && npm run dark-css",
     "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
@@ -29,6 +30,7 @@
     "date-fns": "^2.28.0",
     "github-markdown-css": "^5.1.0",
     "marked": "^4.0.16",
+    "monaco-editor": "^0.34.0",
     "prismjs": "^1.27.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
