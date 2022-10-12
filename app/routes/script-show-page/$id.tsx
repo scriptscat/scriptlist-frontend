@@ -6,6 +6,7 @@ import {
   useLocation,
 } from '@remix-run/react';
 import type { MenuProps } from 'antd';
+import { Space, Tag } from 'antd';
 import { Alert, message } from 'antd';
 import { Menu } from 'antd';
 import type { LoaderFunction, MetaFunction } from '@remix-run/node';
@@ -20,7 +21,7 @@ import ClipboardJS from 'clipboard';
 import { forwardHeaders } from '~/utils/cookie';
 
 export type LoaderData = {
-  script: Script;
+  script: Script & { issue_num: number };
 };
 
 export const meta: MetaFunction = ({ data, location }) => {
@@ -111,7 +112,25 @@ export default function ScriptShowPage() {
     },
     {
       key: 'issue',
-      label: <Link to={'./issue'}>反馈</Link>,
+      label: (
+        <Link to={'./issue'}>
+          <Space>
+            反馈
+            {data.script.issue_num > 0 && (
+              <Tag
+                style={{
+                  border: 0,
+                  background: '#efefef',
+                  borderRadius: '50%',
+                  fontWeight: '500',
+                }}
+              >
+                {data.script.issue_num > 99 ? '99+' : data.script.issue_num}
+              </Tag>
+            )}
+          </Space>
+        </Link>
+      ),
     },
     {
       key: 'comment',
