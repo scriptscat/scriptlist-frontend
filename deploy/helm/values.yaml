@@ -60,10 +60,10 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls: 
+    - secretName: scriptcat-org-tls
+      hosts:
+        - scriptcat.org
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
