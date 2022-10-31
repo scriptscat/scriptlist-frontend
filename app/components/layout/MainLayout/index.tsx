@@ -188,27 +188,35 @@ const MainLayout: React.FC<{
         >
           <Header className="flex flex-row">
             <div className="items-center flex flex-row justify-start basis-3/4">
-              <Link to="/" className="hidden lg:block min-w-max">
-                <img
+              <div className="items-center flex flex-row w-full">
+                <Link to="/" className="hidden lg:block min-w-max">
+                  <img
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                    }}
+                    src="/assets/logo.png"
+                    alt="logo"
+                  />
+                </Link>
+                <Menu
+                  selectedKeys={[current]}
+                  mode="horizontal"
+                  items={items}
+                  className="header-menu !ml-4 max-w-xs lg:max-w-none w-full"
                   style={{
-                    width: '32px',
-                    height: '32px',
+                    border: 0,
                   }}
-                  src="/assets/logo.png"
-                  alt="logo"
                 />
-              </Link>
-              <Menu
-                selectedKeys={[current]}
-                mode="horizontal"
-                items={items}
-                className="header-menu !ml-4 max-w-xs lg:max-w-none"
-                style={{
-                  border: 0,
-                }}
-              />
+              </div>
               {location.pathname == '/search' && (
-                <Search className="h-9 border w-full" />
+                <div
+                  style={{
+                    width: '80%',
+                  }}
+                >
+                  <Search className="h-9 border w-full" />
+                </div>
               )}
             </div>
             <div className="flex items-center justify-end basis-1/4">
