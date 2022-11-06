@@ -221,11 +221,20 @@ const MainLayout: React.FC<{
             </div>
             <div className="flex items-center justify-end basis-1/4">
               <Space className="!gap-3">
-                {user.user && (
-                  <Button type="primary" size="small" href="/post-script">
-                    发布脚本
-                  </Button>
-                )}
+                <Button
+                  type="primary"
+                  size="small"
+                  onClick={() => {
+                    if (!user.user) {
+                      message.info('请先登录');
+                      return false;
+                    } else {
+                      window.open('/post-script', '_self');
+                    }
+                  }}
+                >
+                  发布脚本
+                </Button>
                 <Dropdown
                   overlay={modeMenu}
                   trigger={['click']}
