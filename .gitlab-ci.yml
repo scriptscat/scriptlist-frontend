@@ -10,8 +10,9 @@ stages:
 build:
   stage: build
   image: node:16-alpine3.14
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  only:
+    - main
+    - test/*
   script:
     - npm ci
     - npm run build
@@ -31,8 +32,9 @@ build:
 build-docker:
   stage: docker
   image: docker:rc
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  only:
+    - main
+    - test/*
   variables:
     DOCKER_HOST: tcp://docker-dind:2375
   cache:
@@ -48,14 +50,29 @@ build-docker:
     - docker build . -f deploy/docker/Dockerfile -t $REGISTRY/$REPOSITORY:$CI_COMMIT_SHORT_SHA
     - docker push $REGISTRY/$REPOSITORY:$CI_COMMIT_SHORT_SHA
 
-deploy-job:
+deploy-pro:
   stage: deploy
   image: alpine/helm:3.9.0
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  only:
+    - main
   script:
     - cd deploy/helm
     - |
       helm upgrade --install --namespace app $APP_NAME . -f values.yaml --kubeconfig $K3S_CONFIG \
       --set image.tag=$CI_COMMIT_SHORT_SHA --set image.repository=$REGISTRY/$REPOSITORY \
       --set env[1].value=$APP_API_PROXY
+
+deploy-pre:
+  stage: deploy
+  image: alpine/helm:3.9.0
+  only:
+    - test/*
+  script:
+    - cd deploy/helm
+    - |
+      helm upgrade --install --namespace app $APP_NAME-pre . -f values.yaml --kubeconfig $K3S_CONFIG \
+      --set image.tag=$CI_COMMIT_SHORT_SHA --set image.repository=$REGISTRY/$REPOSITORY \
+      --set env[0].value=https://$PRE_DOMAIN/api/v1 \
+      --set env[1].value=http://scriptcat-list-pre-backend.app.svc.cluster.local/api/v1 \
+      --set ingress.hosts[0].host=$PRE_DOMAIN \
+      --set ingress.tls[0].hosts[0]=$PRE_DOMAIN
