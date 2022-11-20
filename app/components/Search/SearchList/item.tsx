@@ -37,6 +37,7 @@ import {
   WatchScript,
 } from '~/services/scripts/api';
 import { useEffect, useState } from 'react';
+import AmpAD from '~/components/AmpAD';
 
 export const WatchLevelMap = ['不关注', '版本更新', '新建反馈', '任何'];
 
@@ -300,58 +301,43 @@ const SearchItem: React.FC<{
           </div>
         </Card.Grid>
         {action && (
-          <Card.Grid hoverable={false} style={gridStyle}>
-            <div className="flex flex-row script-info-item px-2 py-1 gap-2">
-              {(script.type == 1 || script.type == 2) && (
-                <Button.Group>
-                  <Button
-                    className="!rounded-none"
-                    type="primary"
-                    href={
-                      '/scripts/code/' +
-                      script.id +
-                      '/' +
-                      encodeURIComponent(script.name) +
-                      '.user.js'
-                    }
-                    icon={<DownloadOutlined />}
-                  >
-                    {installTitle}
-                  </Button>
-                  <Tooltip placement="bottom" title="如何安装?">
+          <>
+            <Card.Grid hoverable={false} style={gridStyle}>
+              <div className="flex flex-row script-info-item px-2 py-1 gap-2">
+                {(script.type == 1 || script.type == 2) && (
+                  <Button.Group>
                     <Button
                       className="!rounded-none"
                       type="primary"
-                      href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
-                      target="_blank"
-                      icon={<QuestionCircleOutlined />}
-                      color="#3874cb"
-                    ></Button>
-                  </Tooltip>
-                </Button.Group>
-              )}
-              {script.type == 3 && (
-                <>
-                  <Input.Group compact>
-                    <Input
-                      style={{ width: '500px' }}
-                      defaultValue={
-                        '// @require https://scriptcat.org/lib/' +
+                      href={
+                        '/scripts/code/' +
                         script.id +
                         '/' +
-                        script.script.version +
-                        '/' +
                         encodeURIComponent(script.name) +
-                        '.js'
+                        '.user.js'
                       }
-                      readOnly
-                    />
-                    <Tooltip placement="bottom" title="复制链接">
+                      icon={<DownloadOutlined />}
+                    >
+                      {installTitle}
+                    </Button>
+                    <Tooltip placement="bottom" title="如何安装?">
                       <Button
-                        type="default"
-                        icon={<CopyOutlined />}
-                        className="copy-require-link"
-                        require-link={
+                        className="!rounded-none"
+                        type="primary"
+                        href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
+                        target="_blank"
+                        icon={<QuestionCircleOutlined />}
+                        color="#3874cb"
+                      ></Button>
+                    </Tooltip>
+                  </Button.Group>
+                )}
+                {script.type == 3 && (
+                  <>
+                    <Input.Group compact>
+                      <Input
+                        style={{ width: '500px' }}
+                        defaultValue={
                           '// @require https://scriptcat.org/lib/' +
                           script.id +
                           '/' +
@@ -360,47 +346,67 @@ const SearchItem: React.FC<{
                           encodeURIComponent(script.name) +
                           '.js'
                         }
-                      ></Button>
-                    </Tooltip>
-                    <Tooltip placement="bottom" title="如何安装?">
-                      <Button
-                        className="!rounded-none"
-                        type="primary"
-                        href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
-                        target="_blank"
-                        icon={<QuestionCircleOutlined />}
-                        color="#3874cb"
-                      ></Button>
-                    </Tooltip>
-                  </Input.Group>
-                </>
-              )}
-              {(script.post_id !== 0 ||
-                script.script.meta_json['contributionurl']) && (
-                <Divider type="vertical" className="!h-auto" />
-              )}
-              {script.script.meta_json['contributionurl'] && (
-                <Button
-                  className="!rounded-none !bg-transparent !border-orange-400 !text-orange-400"
-                  href={script.script.meta_json['contributionurl'][0]}
-                  target="_blank"
-                  icon={<MoneyCollectOutlined />}
-                >
-                  捐赠脚本
-                </Button>
-              )}
-              {script.post_id !== 0 && (
-                <Button
-                  className="!rounded-none !bg-transparent !border-blue-400 !text-blue-400"
-                  icon={<RiMessage2Line className="!inline-block !m-0 !mr-2" />}
-                  href={`https://bbs.tampermonkey.net.cn/thread-${script.post_id}-1-1.html`}
-                  target="_blank"
-                >
-                  论坛帖子
-                </Button>
-              )}
-            </div>
-          </Card.Grid>
+                        readOnly
+                      />
+                      <Tooltip placement="bottom" title="复制链接">
+                        <Button
+                          type="default"
+                          icon={<CopyOutlined />}
+                          className="copy-require-link"
+                          require-link={
+                            '// @require https://scriptcat.org/lib/' +
+                            script.id +
+                            '/' +
+                            script.script.version +
+                            '/' +
+                            encodeURIComponent(script.name) +
+                            '.js'
+                          }
+                        ></Button>
+                      </Tooltip>
+                      <Tooltip placement="bottom" title="如何安装?">
+                        <Button
+                          className="!rounded-none"
+                          type="primary"
+                          href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
+                          target="_blank"
+                          icon={<QuestionCircleOutlined />}
+                          color="#3874cb"
+                        ></Button>
+                      </Tooltip>
+                    </Input.Group>
+                  </>
+                )}
+                {(script.post_id !== 0 ||
+                  script.script.meta_json['contributionurl']) && (
+                  <Divider type="vertical" className="!h-auto" />
+                )}
+                {script.script.meta_json['contributionurl'] && (
+                  <Button
+                    className="!rounded-none !bg-transparent !border-orange-400 !text-orange-400"
+                    href={script.script.meta_json['contributionurl'][0]}
+                    target="_blank"
+                    icon={<MoneyCollectOutlined />}
+                  >
+                    捐赠脚本
+                  </Button>
+                )}
+                {script.post_id !== 0 && (
+                  <Button
+                    className="!rounded-none !bg-transparent !border-blue-400 !text-blue-400"
+                    icon={
+                      <RiMessage2Line className="!inline-block !m-0 !mr-2" />
+                    }
+                    href={`https://bbs.tampermonkey.net.cn/thread-${script.post_id}-1-1.html`}
+                    target="_blank"
+                  >
+                    论坛帖子
+                  </Button>
+                )}
+              </div>
+            </Card.Grid>
+            <AmpAD adClient="ca-pub-8009073269666226" adSlot="5564381007" />
+          </>
         )}
         <Card.Grid hoverable={false} style={gridStyle}>
           <div className="flex flex-row justify-between py-[2px]">

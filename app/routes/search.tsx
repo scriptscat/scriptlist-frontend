@@ -9,6 +9,7 @@ import {
   useSearchParams,
 } from '@remix-run/react';
 import { Avatar, Card, Collapse, Radio, Select, Space, Tag } from 'antd';
+import AmpAD from '~/components/AmpAD';
 import { search } from '~/services/scripts/api';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
@@ -174,6 +175,7 @@ export default function Search() {
               }
             ></Card.Meta>
           </Card>
+          <AmpAD adClient="ca-pub-8009073269666226" adSlot="5564381007" />
           <Collapse
             defaultActiveKey={['1', '2', '3']}
             className="rank-collapse"
