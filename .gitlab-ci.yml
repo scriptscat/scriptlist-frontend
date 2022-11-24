@@ -21,7 +21,6 @@ build:
           - package-lock.json
       paths:
         - node_modules
-        - .cache
   artifacts:
     expire_in: 1 week
     paths:

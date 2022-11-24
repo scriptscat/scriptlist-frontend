@@ -175,7 +175,6 @@ export default function Search() {
               }
             ></Card.Meta>
           </Card>
-          <AmpAD adClient="ca-pub-8009073269666226" adSlot="5564381007" />
           <Collapse
             defaultActiveKey={['1', '2', '3']}
             className="rank-collapse"

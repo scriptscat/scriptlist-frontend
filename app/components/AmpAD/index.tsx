@@ -1,21 +1,36 @@
 // @ts-nocheck
 
 const AmpAD: React.FC<{
-  adClient: string;
-  adSlot: string;
-}> = ({ adClient, adSlot }) => {
+  width: string;
+  height: string;
+}> = ({ width, height }) => {
   return (
-    <amp-ad
-      width="100vw"
-      height="320"
-      type="adsense"
-      data-ad-client={adClient}
-      data-ad-slot={adSlot}
-      data-auto-format="rspv"
-      data-full-width=""
+    <div
+      className="ad"
+      style={{
+        width: '100%',
+        maxHeight: height,
+        overflow: 'hidden',
+        textAlign: 'center',
+      }}
     >
-      <div overflow=""></div>
-    </amp-ad>
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8009073269666226"
+        crossorigin="anonymous"
+      ></script>
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'inline-block', width: width, height: height }}
+        data-ad-client="ca-pub-8009073269666226"
+        data-ad-slot="5564381007"
+      ></ins>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: '(adsbygoogle = window.adsbygoogle || []).push({});',
+        }}
+      ></script>
+    </div>
   );
 };
 

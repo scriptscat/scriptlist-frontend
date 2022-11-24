@@ -405,7 +405,7 @@ const SearchItem: React.FC<{
                 )}
               </div>
             </Card.Grid>
-            <AmpAD adClient="ca-pub-8009073269666226" adSlot="5564381007" />
+            <AmpAD width="970px" height="100px" />
           </>
         )}
         <Card.Grid hoverable={false} style={gridStyle}>
