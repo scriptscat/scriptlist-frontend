@@ -37,7 +37,7 @@ import {
   WatchScript,
 } from '~/services/scripts/api';
 import { useEffect, useState } from 'react';
-import AmpAD from '~/components/AmpAD';
+import GoogleAd from '~/components/GoogleAd';
 
 export const WatchLevelMap = ['不关注', '版本更新', '新建反馈', '任何'];
 
@@ -405,7 +405,7 @@ const SearchItem: React.FC<{
                 )}
               </div>
             </Card.Grid>
-            <AmpAD width="970px" height="100px" />
+            <GoogleAd width="970px" height="100px" />
           </>
         )}
         <Card.Grid hoverable={false} style={gridStyle}>

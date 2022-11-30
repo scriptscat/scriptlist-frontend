@@ -9,7 +9,7 @@ import {
   useSearchParams,
 } from '@remix-run/react';
 import { Avatar, Card, Collapse, Radio, Select, Space, Tag } from 'antd';
-import AmpAD from '~/components/AmpAD';
+import GoogleAd from '~/components/GoogleAd';
 import { search } from '~/services/scripts/api';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
