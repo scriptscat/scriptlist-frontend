@@ -41,7 +41,7 @@ const GoogleAd: React.FC<{
         className="adsbygoogle"
         style={{ display: 'block' }}
         data-ad-client="ca-pub-8009073269666226"
-        data-ad-slot="5564381007"
+        data-ad-slot="5802101414"
         data-ad-format="horizontal"
       ></ins>
     </div>
