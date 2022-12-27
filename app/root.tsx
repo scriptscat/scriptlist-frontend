@@ -41,7 +41,7 @@ export const meta: MetaFunction = ({ data }) => {
     charset: 'utf-8',
     title: 'ScriptCat - 分享你的用户脚本',
     description: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚本',
-    keyword: 'ScriptCat,UserScript,用户脚本,脚本猫,油猴,油猴脚本',
+    keywords: 'ScriptCat,UserScript,用户脚本,脚本猫,油猴,油猴脚本',
   };
 };
 
@@ -104,7 +104,7 @@ export default function App() {
         <Links />
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8009073269666226"
           crossOrigin="anonymous"
         ></script>
         <script
