@@ -18,7 +18,7 @@ import styles from './styles/app.css';
 import antdLight from './styles/light.css';
 import antdDark from './styles/dark.css';
 import { parseCookie } from '~/utils/cookie';
-import { loginUserinfoAndRefushToken } from './services/users/api';
+import { getCurrentUserAndRefushToken } from './services/users/api';
 import type { Follow, User } from './services/users/types';
 import { UserContext } from './context-manager';
 import tuiEditor from '@toast-ui/editor/dist/toastui-editor.css';
@@ -56,7 +56,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const cookie = parseCookie(cookieHeader);
     styleMode = cookie.styleMode ? cookie.styleMode : '';
     if (cookie.token) {
-      const resp = await loginUserinfoAndRefushToken({ token: cookie.token });
+      const resp = await getCurrentUserAndRefushToken(request);
       if (resp.setCookie) {
         respInit.headers = new Headers();
         resp.setCookie.forEach((item) => {
@@ -75,8 +75,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         APP_BBS_OAUTH_CLIENT: process.env.APP_BBS_OAUTH_CLIENT,
       },
       login: {
-        user: user?.user,
-        follow: user?.follow,
+        user: user,
       },
     },
     respInit
@@ -136,7 +135,6 @@ export default function App() {
         <UserContext.Provider
           value={{
             user: config.login.user,
-            follow: config.login.follow,
             dark: dart,
             env: config.ENV,
           }}

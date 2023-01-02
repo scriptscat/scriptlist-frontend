@@ -43,10 +43,7 @@ import {
   UpdateLabels,
   WatchIssue,
 } from '~/services/scripts/issues/api';
-import type {
-  Issue,
-  IssueComment,
-} from '~/services/scripts/issues/types';
+import type { Issue, IssueComment } from '~/services/scripts/issues/types';
 import { ClientOnly } from 'remix-utils';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ScriptContext, UserContext } from '~/context-manager';
@@ -113,7 +110,7 @@ export default function Comment() {
   const joinMember: { [key: number]: number } = {};
   joinMember[data.issue.uid] = 1;
   list.forEach((item) => {
-    joinMember[item.uid] = 1;
+    joinMember[item.user_id] = 1;
   });
 
   const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
@@ -236,13 +233,17 @@ export default function Comment() {
                         <div className="flex flex-col gap-2">
                           <div className="flex flex-row justify-between">
                             <div className="flex flex-row items-center gap-2">
-                              <Link to={'/users/' + item.uid} target="_blank">
-                                <Avatar
-                                  src={'/api/v1/user/avatar/' + item.uid}
-                                />
+                              <Link
+                                to={'/users/' + item.user_id}
+                                target="_blank"
+                              >
+                                <Avatar src={item.avatar} />
                               </Link>
                               <div className="flex flex-col">
-                                <Link to={'/users/' + item.uid} target="_blank">
+                                <Link
+                                  to={'/users/' + item.user_id}
+                                  target="_blank"
+                                >
                                   {item.username}
                                 </Link>
                                 <a
@@ -339,11 +340,9 @@ export default function Comment() {
                             {item.type == 5 && (
                               <CheckCircleFilled className="text-xl !text-green-500" />
                             )}
-                            <Link to={'/users/' + item.uid} target="_blank">
+                            <Link to={'/users/' + item.user_id} target="_blank">
                               <Space>
-                                <Avatar
-                                  src={'/api/v1/user/avatar/' + item.uid}
-                                />
+                                <Avatar src={item.avatar} />
                                 <span>{item.username}</span>
                               </Space>
                             </Link>

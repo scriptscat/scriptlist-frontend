@@ -12,8 +12,8 @@ export type ScriptSettingResponse = APIDataResponse<ScriptSetting>;
 
 export type CreateScriptResponse = APIDataResponse<Script>;
 
-export type WatchLevelResponse = APIDataResponse<{
-  level: WatchLevel;
+export type ScriptStateResponse = APIDataResponse<{
+  watch: WatchLevel;
 }>;
 
 export type StatisticsResponse = APIDataResponse<Statistics>;
@@ -22,7 +22,7 @@ export type RealtimeResponse = APIDataResponse<Realtime>;
 
 export type Script = {
   id: number;
-  uid: number;
+  user_id: number;
   post_id: number;
   avatar: string;
   username: string;

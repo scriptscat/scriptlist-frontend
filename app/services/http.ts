@@ -23,8 +23,10 @@ export interface APIDataResponse<T> extends APIResponse {
 }
 
 export interface APIListResponse<T> extends APIResponse {
-  list: T[];
-  total: number;
+  data: {
+    list: T[];
+    total: number;
+  };
 }
 
 // 初始化axios,会分两种情况,后端与前端,调用时的初始化参数不同

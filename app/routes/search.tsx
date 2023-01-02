@@ -8,8 +8,7 @@ import {
   useNavigate,
   useSearchParams,
 } from '@remix-run/react';
-import { Avatar, Card, Collapse, Radio, Select, Space, Tag } from 'antd';
-import GoogleAd from '~/components/GoogleAd';
+import { Avatar, Card, Collapse, Radio, Space, Tag } from 'antd';
 import { search } from '~/services/scripts/api';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
@@ -19,7 +18,6 @@ export const unstable_shouldReload = () => false;
 
 interface loaderResponse {
   rank: {
-    total: Script[];
     score: Script[];
     update: Script[];
   };
@@ -27,10 +25,6 @@ interface loaderResponse {
 
 // 脚本列表使用嵌套路由实现
 export const loader: LoaderFunction = async ({ request }) => {
-  const total = await search({
-    sort: 'total_download',
-    count: 10,
-  });
   const score = await search({
     sort: 'score',
     count: 10,
@@ -41,9 +35,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   });
   return json({
     rank: {
-      total: total.list,
-      score: score.list,
-      update: update.list,
+      score: score.data.list,
+      update: update.data.list,
     },
   });
 };

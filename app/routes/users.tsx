@@ -76,7 +76,7 @@ export default function Users() {
         <Card className="!mb-3">
           <div className="flex flex-col items-center">
             <div className="flex flex-row">
-              <Avatar size={36} src={'/api/v1/user/avatar/' + user.uid} />
+              <Avatar size={36} src={user.avatar} />
               <Button
                 type="link"
                 href={'https://bbs.tampermonkey.net.cn?' + user.uid}

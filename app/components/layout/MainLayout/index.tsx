@@ -248,9 +248,7 @@ const MainLayout: React.FC<{
                     trigger={['click']}
                     placement="bottom"
                   >
-                    <Avatar
-                      src={'/api/v1/user/avatar/' + user.user.uid}
-                    ></Avatar>
+                    <Avatar src={user.user.avatar}></Avatar>
                   </Dropdown>
                 ) : (
                   <Button

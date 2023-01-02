@@ -192,7 +192,7 @@ export default function Comment() {
                       <div className="flex flex-row justify-between">
                         <div className="flex flex-row items-center gap-2">
                           <Link to={'/users/' + item.uid} target="_blank">
-                            <Avatar src={'/api/v1/user/avatar/' + item.uid} />
+                            <Avatar src={item.avatar} />
                           </Link>
                           <div className="flex flex-col">
                             <Link to={'/users/' + item.uid} target="_blank">

@@ -8,11 +8,7 @@ import type {
   WebhookResponse,
 } from './types';
 
-export async function loginUserinfoAndRefushToken({
-  token,
-}: {
-  token: string;
-}): Promise<{
+export async function getCurrentUserAndRefushToken(req: Request): Promise<{
   user: {
     follow: Follow;
     user: User;
@@ -20,19 +16,18 @@ export async function loginUserinfoAndRefushToken({
   setCookie?: string[];
 }> {
   const resp = await request<LoginUserinfoResponse>({
-    url: '/user/info',
+    url: '/users',
     method: 'GET',
     headers: {
-      cookie: 'token=' + token,
+      Cookie: (req && req.headers.get('Cookie')) || '',
     },
   });
-
   return { user: resp.data.data, setCookie: resp.headers['set-cookie'] };
 }
 
 export async function GetUserInfo(uid: number) {
   const resp = await request<LoginUserinfoResponse>({
-    url: '/user/info/' + uid,
+    url: '/users/' + uid + '/info',
     method: 'GET',
   });
   if (resp.status == 404) {

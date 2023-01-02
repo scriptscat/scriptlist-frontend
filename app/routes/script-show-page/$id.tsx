@@ -143,7 +143,7 @@ export default function ScriptShowPage() {
   ];
   if (
     users.user &&
-    (users.user.uid === data.script.uid || users.user.is_admin === 1)
+    (users.user.uid === data.script.user_id || users.user.is_admin === 1)
   ) {
     items.push(
       ...[
@@ -166,7 +166,7 @@ export default function ScriptShowPage() {
     if (
       !(
         users.user &&
-        (users.user.uid === data.script.uid || users.user.is_admin === 1)
+        (users.user.uid === data.script.user_id || users.user.is_admin === 1)
       ) &&
       ['update', 'statistic', 'manage'].indexOf(current) !== -1
     ) {
@@ -174,7 +174,7 @@ export default function ScriptShowPage() {
     } else {
       setForbidden(false);
     }
-  }, [users.user, data.script.uid, current]);
+  }, [users.user, data.script.user_id, current]);
 
   return (
     <>

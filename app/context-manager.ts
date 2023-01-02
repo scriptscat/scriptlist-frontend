@@ -4,7 +4,6 @@ import type { Follow, User } from './services/users/types';
 
 export type UserContextData = {
   user?: User;
-  follow?: Follow;
   dark?: boolean;
   env?: {
     APP_API_URL: string;
