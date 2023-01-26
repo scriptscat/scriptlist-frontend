@@ -89,7 +89,9 @@ export default function Webhook() {
         </Steps>
         <div className="flex flex-col">
           <span className="text-lg">Url</span>
-          <span className="text-sm">{user.env?.APP_API_URL}/webhook/4</span>
+          <span className="text-sm">
+            {user.env?.APP_API_URL}/webhook/{user.user?.user_id}
+          </span>
           <span className="text-lg mt-2">Content-Type</span>
           <span className="text-sm">application/json</span>
           <span className="text-lg mt-2">Secret</span>

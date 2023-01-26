@@ -32,7 +32,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const data = await IssueList(parseInt(params.id as string), {
     page: page,
   });
-  return json({ list: data.list, total: data.total, page: page } as LoaderData);
+  return json({ list: data.data.list, total: data.data.total, page: page } as LoaderData);
 };
 
 export default function Issue() {

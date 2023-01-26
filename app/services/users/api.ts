@@ -1,7 +1,8 @@
-import { APIResponse, request } from '../http';
-import { SearchParams } from '../scripts/api';
+import type { APIResponse } from '../http';
+import { request } from '../http';
 import type {
   Follow,
+  GetFollowResponse,
   LoginUserinfoResponse,
   User,
   UserConfigResponse,
@@ -9,10 +10,7 @@ import type {
 } from './types';
 
 export async function getCurrentUserAndRefushToken(req: Request): Promise<{
-  user: {
-    follow: Follow;
-    user: User;
-  };
+  user: User;
   setCookie?: string[];
 }> {
   const resp = await request<LoginUserinfoResponse>({
@@ -36,9 +34,17 @@ export async function GetUserInfo(uid: number) {
   return resp.data.data;
 }
 
+export async function GetFollow(uid: number) {
+  const resp = await request<GetFollowResponse>({
+    url: '/users/' + uid + '/follow',
+    method: 'GET',
+  });
+  return resp.data.data;
+}
+
 export async function GetWebhook(req?: Request) {
   const resp = await request<WebhookResponse>({
-    url: '/user/webhook',
+    url: '/users/webhook',
     method: 'GET',
     headers: {
       cookie: req?.headers.get('cookie') || '',
@@ -49,7 +55,7 @@ export async function GetWebhook(req?: Request) {
 
 export async function RefreshWebhookToken() {
   const resp = await request<WebhookResponse>({
-    url: '/user/webhook',
+    url: '/users/webhook',
     method: 'PUT',
   });
   return resp.data;
@@ -57,7 +63,7 @@ export async function RefreshWebhookToken() {
 
 export async function UserConfig(req: Request) {
   const resp = await request<UserConfigResponse>({
-    url: '/user/config',
+    url: '/users/config',
     method: 'GET',
     headers: {
       cookie: req.headers.get('cookie') || '',
@@ -68,9 +74,11 @@ export async function UserConfig(req: Request) {
 
 export async function SetUsetNotify(notify: { [key: string]: boolean }) {
   const resp = await request<APIResponse>({
-    url: '/user/config/notify',
+    url: '/users/config',
     method: 'PUT',
-    data: notify,
+    data: {
+      notify
+    },
   });
   return resp.data;
 }

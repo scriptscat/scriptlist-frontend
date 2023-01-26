@@ -27,11 +27,11 @@ interface loaderResponse {
 export const loader: LoaderFunction = async ({ request }) => {
   const score = await search({
     sort: 'score',
-    count: 10,
+    size: 10,
   });
   const update = await search({
     sort: 'updatetime',
-    count: 10,
+    size: 10,
   });
   return json({
     rank: {

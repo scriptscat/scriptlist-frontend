@@ -11,7 +11,7 @@ import type {
 
 type IssueListParams = {
   page?: number;
-  count?: number;
+  size?: number;
   keyword?: string;
   labels?: string;
   status?: string;
@@ -43,7 +43,7 @@ export async function IssueCommentList(scriptId: number, issueId: number) {
   if (resp.status === 404) {
     return null;
   }
-  return resp.data.list;
+  return resp.data.data.list;
 }
 
 export async function PostComment(

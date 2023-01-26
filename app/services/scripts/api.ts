@@ -24,10 +24,10 @@ export type SortType =
 export type ScriptType = '' | '1' | '2' | '3' | '4';
 
 export type SearchParams = {
-  uid?: number;
+  user_id?: number;
   sort?: SortType;
   page?: number;
-  count?: number;
+  size?: number;
   category?: string;
   script_type?: ScriptType;
   domain?: string;
@@ -38,9 +38,9 @@ export async function search(
   params: SearchParams,
   req?: Request
 ): Promise<SearchResponse> {
-  if (params.uid) {
+  if (params.user_id) {
     const resp = await request<SearchResponse>({
-      url: '/user/scripts/' + params.uid + '?' + paramsToSearch(params),
+      url: '/users/' + params.user_id + '/scripts?' + paramsToSearch(params),
       method: 'GET',
       headers: {
         cookie: req?.headers.get('cookie') || '',
@@ -86,7 +86,7 @@ export async function getScriptByVersion(
 
 export type ScriptVersionListParams = {
   page?: number;
-  count?: number;
+  size?: number;
 };
 
 export async function ScriptVersionList(
@@ -102,7 +102,7 @@ export async function ScriptVersionList(
 
 export type ScoreListParam = {
   page?: number;
-  count?: number;
+  size?: number;
 };
 
 export async function ScoreList(id: number, params?: ScoreListParam) {
@@ -185,7 +185,7 @@ export async function CreateScript(params: CreateScriptParams) {
 }
 
 // 更新脚本设置
-export async function UpdateScript(
+export async function UpdateScriptSetting(
   id: number,
   params: {
     name?: string;
@@ -197,7 +197,7 @@ export async function UpdateScript(
   }
 ) {
   const resp = await request<APIResponse>({
-    url: '/scripts/' + id,
+    url: '/scripts/' + id + '/setting',
     method: 'PUT',
     data: params,
   });
@@ -212,18 +212,11 @@ export async function DeleteScript(id: number) {
   return resp.data;
 }
 
-export async function ArchiveScript(id: number) {
+export async function ArchiveScript(id: number, archive: boolean) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + id + '/archive',
     method: 'PUT',
-  });
-  return resp.data;
-}
-
-export async function UnarchiveScript(id: number) {
-  const resp = await request<APIResponse>({
-    url: '/scripts/' + id + '/archive',
-    method: 'DELETE',
+    data: { archive },
   });
   return resp.data;
 }

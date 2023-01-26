@@ -15,7 +15,8 @@ export type IsWatchIssue = { watch: 0 | 1 };
 
 export type Issue = {
   id: number;
-  uid: number;
+  user_id: number;
+  avatar: string;
   title: string;
   content: string;
   username: string;

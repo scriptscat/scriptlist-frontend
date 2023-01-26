@@ -107,10 +107,10 @@ export default function Comment() {
       });
     }
   });
-  const joinMember: { [key: number]: number } = {};
-  joinMember[data.issue.uid] = 1;
+  const joinMember: { [key: number]: string } = {};
+  joinMember[data.issue.user_id] = data.issue.avatar;
   list.forEach((item) => {
-    joinMember[item.user_id] = 1;
+    joinMember[item.user_id] = item.avatar;
   });
 
   const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
@@ -155,7 +155,7 @@ export default function Comment() {
           <div className="flex flex-row justify-between">
             <span className="text-2xl">{data.issue.title}</span>
             <ActionMenu
-              uid={[data.issue.uid, script.script?.uid || -1]}
+              uid={[data.issue.user_id, script.script?.user_id || -1]}
               deleteLevel="moderator"
               allowSelfDelete
               onDeleteClick={async () => {
@@ -207,7 +207,7 @@ export default function Comment() {
             </Tooltip>
             <UserOutlined className="mr-1 !text-gray-400 " />
             <Link
-              to={'/users/' + data.issue.uid}
+              to={'/users/' + data.issue.user_id}
               target="_blank"
               className="text-gray-400 hover:text-gray-500 mr-1"
             >
@@ -256,7 +256,10 @@ export default function Comment() {
                               </div>
                             </div>
                             <ActionMenu
-                              uid={[data.issue.uid, script.script?.uid || -1]}
+                              uid={[
+                                data.issue.user_id,
+                                script.script?.user_id || -1,
+                              ]}
                               deleteLevel="moderator"
                               allowSelfDelete
                               onDeleteClick={async () => {
@@ -369,9 +372,9 @@ export default function Comment() {
                 {() => <MarkdownEditor id="reply" ref={editor} />}
               </ClientOnly>
               <Space className="justify-end">
-                {(user.user.uid == data.issue.uid ||
+                {(user.user.user_id == data.issue.user_id ||
                   user.user.is_admin >= 1 ||
-                  script.script?.uid == user.user.uid) && (
+                  script.script?.user_id == user.user.user_id) && (
                   <Button
                     loading={loading}
                     onClick={async () => {
@@ -532,7 +535,7 @@ export default function Comment() {
             <Space>
               {Object.keys(joinMember).map((key) => (
                 <Link key={key} to={`/users/${key}`} target="_blank">
-                  <Avatar src={'/api/v1/user/avatar/' + key} />
+                  <Avatar src={joinMember[key as unknown as number]} />
                 </Link>
               ))}
             </Space>

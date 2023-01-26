@@ -18,8 +18,7 @@ import {
   ArchiveScript,
   DeleteScript,
   GetScriptSetting,
-  UnarchiveScript,
-  UpdateScript,
+  UpdateScriptSetting,
 } from '~/services/scripts/api';
 import type { ScriptSetting } from '~/services/scripts/types';
 
@@ -99,7 +98,7 @@ export default function Manage() {
           value={contentUrl}
           onChange={(value) => setContentUrl(value.target.value)}
         />
-        {script.script?.type == 3 && (
+        {/* {script.script?.type == 3 && (
           <>
             <h3 className="text-lg">同步库描述文件</h3>
             <span>
@@ -119,13 +118,13 @@ export default function Manage() {
               onChange={(value) => setDefinitionUrl(value.target.value)}
             />
           </>
-        )}
+        )} */}
         <Button
           type="primary"
           loading={loading}
           onClick={async () => {
             setLoading(true);
-            let resp = await UpdateScript(script.script!.id, {
+            let resp = await UpdateScriptSetting(script.script!.id, {
               name: name,
               description: description,
               definition_url: definitionUrl,
@@ -146,7 +145,7 @@ export default function Manage() {
         <Divider></Divider>
         <h3 className="text-lg">脚本管理</h3>
         <Space>
-          {archive == 0 && (
+          {archive == 2 && (
             <Button
               type="primary"
               className="!bg-orange-400 !border-orange-400 hover:!bg-orange-300 hover:!border-orange-300"
@@ -161,7 +160,7 @@ export default function Manage() {
                   cancelText: '取消',
                   onOk: async () => {
                     setLoading(true);
-                    const resp = await ArchiveScript(script.script!.id);
+                    const resp = await ArchiveScript(script.script!.id, true);
                     setLoading(false);
                     if (resp.code === 0) {
                       message.success('归档成功');
@@ -190,11 +189,11 @@ export default function Manage() {
                   cancelText: '取消',
                   onOk: async () => {
                     setLoading(true);
-                    const resp = await UnarchiveScript(script.script!.id);
+                    const resp = await ArchiveScript(script.script!.id, false);
                     setLoading(false);
                     if (resp.code === 0) {
                       message.success('取消归档成功');
-                      setArchive(0);
+                      setArchive(2);
                     } else {
                       message.error(resp.msg);
                     }

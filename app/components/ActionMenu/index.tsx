@@ -47,7 +47,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
         (user.user.is_admin == 1 ||
           (deleteLevel == 'super_moderator' && user.user.is_admin <= 2) ||
           (deleteLevel == 'moderator' && user.user.is_admin <= 3))) ||
-      (allowSelfDelete && authorMap.has(user.user.uid))
+      (allowSelfDelete && authorMap.has(user.user.user_id))
     ) {
       items.push({
         label: (

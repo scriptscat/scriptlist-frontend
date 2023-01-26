@@ -36,8 +36,8 @@ export type Script = {
   total_install: number; // 总安装
   unwell: 1 | 2; // 不适内容
   public: 1 | 2; // 是否公开
-  archive: 0 | 1; // 归档
-  danger: 0 | 1; // 存在危险性
+  archive: 1 | 2; // 归档
+  danger: 1 | 2; // 存在危险性
   type: 1 | 2 | 3; // 1: 普通脚本, 2: 订阅脚本, 3: 库
   category: Category[];
   createtime: number;
@@ -65,7 +65,7 @@ export type MyScoreResponse = APIDataResponse<ScoreItem>;
 
 export type ScoreItem = {
   id: number;
-  uid: number;
+  user_id: number;
   username: string;
   avatar: string;
   score: number;
