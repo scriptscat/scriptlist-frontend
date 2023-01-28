@@ -69,8 +69,8 @@ deploy-pre:
     - |
       helm upgrade --install --namespace app $APP_NAME-pre . -f values.yaml --kubeconfig $K3S_CONFIG \
       --set image.tag=$CI_COMMIT_SHORT_SHA --set image.repository=$REGISTRY/$REPOSITORY \
-      --set env[0].value=https://$PRE_DOMAIN/api/v1 \
-      --set env[1].value=http://scriptcat-list-pre-backend.app.svc.cluster.local/api/v1 \
+      --set env[0].value=https://$PRE_DOMAIN/api/v2 \
+      --set env[1].value=http://scriptcat-list-pre-backend.app.svc.cluster.local/api/v2 \
       --set env[2].value=5uk70yummcoe \
       --set ingress.hosts[0].host=$PRE_DOMAIN \
       --set ingress.tls[0].hosts[0]=$PRE_DOMAIN

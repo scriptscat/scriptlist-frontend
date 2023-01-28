@@ -98,7 +98,7 @@ export default function Comment() {
   const user = useContext(UserContext);
   const editor = useRef<MarkdownEditorRef>();
   const [loading, setLoading] = useState(false);
-  const [isWatch, setIsWatch] = useState(0);
+  const [isWatch, setIsWatch] = useState(false);
   const [labels, setLabels] = useState(data.issue.labels || []);
   useEffect(() => {
     if (user.user) {
@@ -369,7 +369,14 @@ export default function Comment() {
           {user.user ? (
             <div className="flex flex-col gap-2">
               <ClientOnly fallback={<div></div>}>
-                {() => <MarkdownEditor id="reply" ref={editor} />}
+                {() => (
+                  <MarkdownEditor
+                    id="reply"
+                    comment="comment"
+                    linkId={data.issue.id}
+                    ref={editor}
+                  />
+                )}
               </ClientOnly>
               <Space className="justify-end">
                 {(user.user.user_id == data.issue.user_id ||
@@ -518,7 +525,7 @@ export default function Comment() {
                     }
                     setLoading(false);
                     if (resp.code == 0) {
-                      setIsWatch(isWatch ? 0 : 1);
+                      setIsWatch(isWatch);
                     } else {
                       message.error(resp.msg);
                     }

@@ -135,7 +135,8 @@ export async function IsWatchIssue(
 export async function WatchIssue(scriptId: number, issueId: number) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + scriptId + '/issues/' + issueId + '/watch',
-    method: 'POST',
+    method: 'PUT',
+    data: { watch: true },
   });
   return resp.data;
 }
@@ -143,7 +144,8 @@ export async function WatchIssue(scriptId: number, issueId: number) {
 export async function UnwatchIssue(scriptId: number, issueId: number) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + scriptId + '/issues/' + issueId + '/watch',
-    method: 'DELETE',
+    method: 'PUT',
+    data: { watch: false },
   });
   return resp.data;
 }

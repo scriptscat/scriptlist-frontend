@@ -82,29 +82,25 @@ export type ScriptSetting = {
 
 export type WatchLevel = 0 | 1 | 2 | 3;
 
-export type Statistics = {
-  download: StatisticsItem;
-  update: StatisticsItem;
-  page: {
-    'today-pv': number;
-    'yesterday-pv': number;
-    'week-pv': number;
-    'today-uv': number;
-    'yesterday-uv': number;
-    'week-uv': number;
-    // 注册会员的安装数量
-    'today-member': number;
-    'yesterday-member': number;
-    'week-member': number;
-  };
+export type Overview = {
+  today: number;
+  yesterday: number;
+  week: number;
 };
 
-export type StatisticsItem = {
-  uv: StatisticsChart;
-  pv: StatisticsChart;
-  'today-uv': number;
-  'yesterday-uv': number;
-  'week-uv': number;
+export type Statistics = {
+  page_pv: Overview;
+  page_uv: Overview;
+  download_uv: Overview;
+  update_uv: Overview;
+  uv_chart: {
+    download: StatisticsChart;
+    update: StatisticsChart;
+  };
+  pv_chart: {
+    download: StatisticsChart;
+    update: StatisticsChart;
+  };
 };
 
 export type StatisticsChart = {

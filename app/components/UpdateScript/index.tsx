@@ -72,6 +72,8 @@ const UpdateScript: React.FC<{
         {() => (
           <MarkdownEditor
             id={script ? 'update-script' : 'create-script'}
+            comment={script ? 'script' : 'create-script'}
+            linkId={script ? script.id : -1}
             isCreate={!script}
             initialValue={script?.content}
             ref={markdown}

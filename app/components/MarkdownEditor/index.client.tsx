@@ -11,10 +11,17 @@ import { UserContext } from '~/context-manager';
 export type MarkdownEditorRef =
   | { editor: Editor | undefined; setMarkdown: (markdown: string) => void }
   | undefined;
+
 const MarkdownEditor: React.ForwardRefRenderFunction<
   MarkdownEditorRef,
-  { id: string; initialValue?: string; isCreate?: boolean }
-> = ({ id, initialValue, isCreate }, ref) => {
+  {
+    id: string;
+    comment: string;
+    linkId: number;
+    initialValue?: string;
+    isCreate?: boolean;
+  }
+> = ({ id, comment, linkId, initialValue, isCreate }, ref) => {
   const user = useContext(UserContext);
   const [editor, setEditor] = useState<Editor | undefined>();
   const [prompt, setPrompt] = useState('');
@@ -55,7 +62,7 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
             hooks: {
               addImageBlobHook: async (blob, callback) => {
                 setImageLoading(true);
-                const resp = await UploadImage(blob, 'script');
+                const resp = await UploadImage(blob, comment, linkId);
                 setImageLoading(false);
                 if (resp.code === 0) {
                   callback(

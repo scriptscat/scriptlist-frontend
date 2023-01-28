@@ -11,7 +11,7 @@ export type WatchListResponse = APIListResponse<User>;
 
 export type IsWatchIssueResponse = APIDataResponse<IsWatchIssue>;
 
-export type IsWatchIssue = { watch: 0 | 1 };
+export type IsWatchIssue = { watch: boolean };
 
 export type Issue = {
   id: number;

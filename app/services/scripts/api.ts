@@ -251,7 +251,7 @@ export async function DeleteScore(scriptId: number, id: number) {
 
 export async function GetStatistics(scriptId: number, req: Request) {
   const resp = await request<StatisticsResponse>({
-    url: '/statistics/script/' + scriptId,
+    url: '/script/' + scriptId + '/statistics',
     method: 'GET',
     headers: {
       cookie: req.headers.get('Cookie') || '',
@@ -262,7 +262,7 @@ export async function GetStatistics(scriptId: number, req: Request) {
 
 export async function GetRealtime(scriptId: number) {
   const resp = await request<RealtimeResponse>({
-    url: '/statistics/script/' + scriptId + '/realtime',
+    url: '/script/' + scriptId + '/statistics/realtime',
     method: 'GET',
   });
   return resp.data;
