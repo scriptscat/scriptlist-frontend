@@ -43,8 +43,8 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const my = await GetMyScore(id, request);
   return json({
     id: id,
-    list: list.list,
-    total: list.total,
+    list: list.data.list,
+    total: list.data.total,
     myScore: my,
   } as LoaderData);
 };
