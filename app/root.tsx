@@ -91,7 +91,7 @@ export default function App() {
       typeof window == 'undefined'
         ? process.env.APP_API_PROXY
         : config.ENV.NODE_ENV == 'development'
-        ? '/api/v1'
+        ? '/api/v2'
         : config.ENV.APP_API_URL,
     timeout: 10000,
     validateStatus: (status: number) => status < 500,

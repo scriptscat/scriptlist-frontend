@@ -13,9 +13,9 @@ image:
 
 env:
   - name: APP_API_URL
-    value: https://scriptcat.org/api/v1
+    value: https://scriptcat.org/api/v2
   - name: APP_API_PROXY
-    value: http://scriptlist-cago.app.svc.cluster.local/api/v1
+    value: http://scriptlist-cago.app.svc.cluster.local/api/v2
   - name: APP_BBS_OAUTH_CLIENT
     value: 80mfto0y3b8v
 
