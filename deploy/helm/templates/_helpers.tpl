@@ -48,6 +48,14 @@ Selector labels
 {{- define "scriptcat-list-frontend.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "scriptcat-list-frontend.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+scriptlist.frontend.io/environment: {{ .Values.istio.environment }}
+{{- end }}
+
+{{/*
+用于灰度发布的selectorLabels
+*/}}
+{{- define "scriptcat-list-frontend.istioSelectorLabels" -}}
+app.kubernetes.io/name: {{ include "scriptcat-list-frontend.name" . }}
 {{- end }}
 
 {{/*

@@ -1,3 +1,5 @@
+# 开启了 istio 时使用 istio-service
+{{- if not .Values.istio.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,3 +15,4 @@ spec:
       name: http
   selector:
     {{- include "scriptcat-list-frontend.selectorLabels" . | nindent 4 }}
+{{- end }}

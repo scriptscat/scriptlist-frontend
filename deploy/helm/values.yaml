@@ -10,7 +10,6 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-
 env:
   - name: APP_API_URL
     value: https://scriptcat.org/api/v2
@@ -20,7 +19,7 @@ env:
     value: 80mfto0y3b8v
 
 imagePullSecrets: []
-nameOverride: ""
+nameOverride: "scriptlist-frontend"
 fullnameOverride: ""
 
 serviceAccount:
@@ -48,6 +47,18 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 80
+
+# 支持灰度发布,使用istio-gateway实现流量控制
+istio:
+  enabled: false
+  environment: prod # test | pre | canary | prod
+  hosts:
+    - scriptcat.org
+  canary:
+    match: # 染色规则
+      - headers:
+        cookie:
+          regex: "(admin=1)|(testflight=1)"
 
 ingress:
   enabled: true
