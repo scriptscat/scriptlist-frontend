@@ -78,3 +78,19 @@ deploy-pre:
       --set ingress.enabled=false \
       --set istio.enabled=true \
       --set istio.environment=canary
+
+deploy-test:
+  stage: deploy
+  image: alpine/helm:3.9.0
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^test\/.*$/
+  script:
+    - cd deploy/helm
+    - |
+      helm upgrade --install --namespace app $APP_NAME-test . -f values.yaml --kubeconfig $K3S_CONFIG \
+      --set image.tag=$CI_COMMIT_SHORT_SHA --set image.repository=$REGISTRY/$REPOSITORY \
+      --set env[0].value=https://test.$DOMAIN/api/v2 \
+      --set env[1].value=http://scriptlist-test-cago.app.svc.cluster.local/api/v2 \
+      --set env[2].value=sxIv1i8H1ZwnSAH \
+      --set ingress.hosts[0].host=test.$DOMAIN \
+      --set ingress.tls[0].hosts[0]=test.$DOMAIN
