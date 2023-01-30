@@ -32,7 +32,7 @@ spec:
     - {{ .Values.nameOverride }}-gateway
   http:
     - match:
-        {{- toYaml .Values.istio.match | nindent 8 }}
+        {{- toYaml .Values.istio.canary.match | nindent 8 }}
       route:
         - destination:
             host: {{ .Values.nameOverride }}

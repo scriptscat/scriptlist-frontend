@@ -1,4 +1,6 @@
-# 开启了 istio 时，不需要 ingress
+{{/*
+开启了 istio 时，不需要 ingress
+*/}}
 {{- if not .Values.istio.enabled -}}
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "scriptcat-list-frontend.fullname" . -}}

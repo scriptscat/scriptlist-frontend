@@ -58,9 +58,24 @@ deploy-pro:
     - |
       helm upgrade --install --namespace app $APP_NAME . -f values.yaml --kubeconfig $K3S_CONFIG \
       --set image.tag=$CI_COMMIT_SHORT_SHA --set image.repository=$REGISTRY/$REPOSITORY \
-      --set env[1].value=$APP_API_PROXY \
+      --set env[1].value=http://scriptlist-cago.app.svc.cluster.local/api/v2 \
       --set ingress.enabled=false \
       --set istio.enabled=true
+
+deploy-canary:
+  stage: deploy
+  image: alpine/helm:3.9.0
+  rules:
+    - if: $CI_COMMIT_BRANCH == "release/canary"
+  script:
+    - cd deploy/helm
+    - |
+      helm upgrade --install --namespace app $APP_NAME-canary . -f values.yaml --kubeconfig $K3S_CONFIG \
+      --set image.tag=$CI_COMMIT_SHORT_SHA --set image.repository=$REGISTRY/$REPOSITORY \
+      --set env[1].value=http://scriptlist-canary-cago.app.svc.cluster.local/api/v2 \
+      --set ingress.enabled=false \
+      --set istio.enabled=true \
+      --set istio.environment=canary
 
 deploy-pre:
   stage: deploy
@@ -70,14 +85,13 @@ deploy-pre:
   script:
     - cd deploy/helm
     - |
-      helm upgrade --install --namespace app $APP_NAME-canary . -f values.yaml --kubeconfig $K3S_CONFIG \
+      helm upgrade --install --namespace app $APP_NAME-pre . -f values.yaml --kubeconfig $K3S_CONFIG \
       --set image.tag=$CI_COMMIT_SHORT_SHA --set image.repository=$REGISTRY/$REPOSITORY \
-      --set env[0].value=https://$DOMAIN/api/v2 \
-      --set env[1].value=http://scriptlist-canary-cago.app.svc.cluster.local/api/v2 \
+      --set env[0].value=https://pre.$DOMAIN/api/v2 \
+      --set env[1].value=http://scriptlist-pre-cago.app.svc.cluster.local/api/v2 \
       --set env[2].value=5uk70yummcoe \
-      --set ingress.enabled=false \
-      --set istio.enabled=true \
-      --set istio.environment=canary
+      --set ingress.hosts[0].host=pre.$DOMAIN \
+      --set ingress.tls[0].hosts[0]=pre.$DOMAIN
 
 deploy-test:
   stage: deploy

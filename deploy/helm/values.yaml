@@ -57,8 +57,8 @@ istio:
   canary:
     match: # 染色规则
       - headers:
-        cookie:
-          regex: "(admin=1)|(testflight=1)"
+          cookie:
+            regex: "^(.*?;)?(token=.+?)(;.*)?$"
 
 ingress:
   enabled: true
