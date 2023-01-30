@@ -23,8 +23,8 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ params }) => {
   const resp = await ScriptVersionList(parseInt(params.id as string));
   return json({
-    list: resp.list,
-    total: resp.total,
+    list: resp.data.list,
+    total: resp.data.total,
   } as LoaderData);
 };
 export default function Version() {

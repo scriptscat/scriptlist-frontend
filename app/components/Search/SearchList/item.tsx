@@ -31,11 +31,7 @@ import { RiMessage2Line } from 'react-icons/ri';
 import { formatDate, splitNumber } from '~/utils/utils';
 import type { Script, WatchLevel } from '~/services/scripts/types';
 import ActionMenu from '~/components/ActionMenu';
-import {
-  DeleteScript,
-  UnwatchScript,
-  WatchScript,
-} from '~/services/scripts/api';
+import { DeleteScript, WatchScript } from '~/services/scripts/api';
 import { useEffect, useState } from 'react';
 import GoogleAd from '~/components/GoogleAd';
 
@@ -136,12 +132,12 @@ const SearchItem: React.FC<{
         <Card.Grid hoverable={false} className="!p-2" style={gridStyle}>
           <div className="flex flex-row items-center gap-1">
             <div>
-              <Avatar size="large" src={'/api/v1/user/avatar/' + script.uid} />
+              <Avatar size="large" src={script.avatar} />
             </div>
             <div className="flex flex-col flex-auto">
               <Link
                 className="text-sm"
-                to={'/users/' + script.uid}
+                to={'/users/' + script.user_id}
                 target="_blank"
               >
                 {script.username}
@@ -181,11 +177,7 @@ const SearchItem: React.FC<{
                         ]}
                         onClick={(item) => {
                           let resp;
-                          if (item.key === '0') {
-                            resp = UnwatchScript(script.id);
-                          } else {
-                            resp = WatchScript(script.id, parseInt(item.key));
-                          }
+                          resp = WatchScript(script.id, parseInt(item.key));
                           resp.then((resp) => {
                             if (resp.code !== 0) {
                               message.error(resp.msg);
@@ -208,7 +200,7 @@ const SearchItem: React.FC<{
                     </Button>
                   </Dropdown>
                   <ActionMenu
-                    uid={script.uid}
+                    uid={script.user_id}
                     deleteLevel="super_moderator"
                     allowSelfDelete
                     punish
@@ -232,7 +224,7 @@ const SearchItem: React.FC<{
                 </Space>
               ) : (
                 <ActionMenu
-                  uid={script.uid}
+                  uid={script.user_id}
                   deleteLevel="super_moderator"
                   allowSelfDelete
                   punish
@@ -454,7 +446,7 @@ const SearchItem: React.FC<{
               >
                 <Tag color="red">{'v' + script.script.version}</Tag>
               </Tooltip>
-              {script.category.map((category) => (
+              {script.category?.map((category) => (
                 <Tooltip
                   title={'该脚本属于' + category.name + '分类'}
                   color="green"

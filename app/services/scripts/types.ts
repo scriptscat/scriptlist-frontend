@@ -12,8 +12,8 @@ export type ScriptSettingResponse = APIDataResponse<ScriptSetting>;
 
 export type CreateScriptResponse = APIDataResponse<Script>;
 
-export type WatchLevelResponse = APIDataResponse<{
-  level: WatchLevel;
+export type ScriptStateResponse = APIDataResponse<{
+  watch: WatchLevel;
 }>;
 
 export type StatisticsResponse = APIDataResponse<Statistics>;
@@ -22,7 +22,7 @@ export type RealtimeResponse = APIDataResponse<Realtime>;
 
 export type Script = {
   id: number;
-  uid: number;
+  user_id: number;
   post_id: number;
   avatar: string;
   username: string;
@@ -36,8 +36,8 @@ export type Script = {
   total_install: number; // 总安装
   unwell: 1 | 2; // 不适内容
   public: 1 | 2; // 是否公开
-  archive: 0 | 1; // 归档
-  danger: 0 | 1; // 存在危险性
+  archive: 1 | 2; // 归档
+  danger: 1 | 2; // 存在危险性
   type: 1 | 2 | 3; // 1: 普通脚本, 2: 订阅脚本, 3: 库
   category: Category[];
   createtime: number;
@@ -65,7 +65,7 @@ export type MyScoreResponse = APIDataResponse<ScoreItem>;
 
 export type ScoreItem = {
   id: number;
-  uid: number;
+  user_id: number;
   username: string;
   avatar: string;
   score: number;
@@ -82,29 +82,25 @@ export type ScriptSetting = {
 
 export type WatchLevel = 0 | 1 | 2 | 3;
 
-export type Statistics = {
-  download: StatisticsItem;
-  update: StatisticsItem;
-  page: {
-    'today-pv': number;
-    'yesterday-pv': number;
-    'week-pv': number;
-    'today-uv': number;
-    'yesterday-uv': number;
-    'week-uv': number;
-    // 注册会员的安装数量
-    'today-member': number;
-    'yesterday-member': number;
-    'week-member': number;
-  };
+export type Overview = {
+  today: number;
+  yesterday: number;
+  week: number;
 };
 
-export type StatisticsItem = {
-  uv: StatisticsChart;
-  pv: StatisticsChart;
-  'today-uv': number;
-  'yesterday-uv': number;
-  'week-uv': number;
+export type Statistics = {
+  page_pv: Overview;
+  page_uv: Overview;
+  download_uv: Overview;
+  update_uv: Overview;
+  uv_chart: {
+    download: StatisticsChart;
+    update: StatisticsChart;
+  };
+  pv_chart: {
+    download: StatisticsChart;
+    update: StatisticsChart;
+  };
 };
 
 export type StatisticsChart = {

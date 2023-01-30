@@ -11,11 +11,12 @@ export type WatchListResponse = APIListResponse<User>;
 
 export type IsWatchIssueResponse = APIDataResponse<IsWatchIssue>;
 
-export type IsWatchIssue = { watch: 0 | 1 };
+export type IsWatchIssue = { watch: boolean };
 
 export type Issue = {
   id: number;
-  uid: number;
+  user_id: number;
+  avatar: string;
   title: string;
   content: string;
   username: string;
@@ -29,7 +30,8 @@ export type IssueCommentListResponse = APIListResponse<IssueComment>;
 
 export type IssueComment = {
   id: number;
-  uid: number;
+  user_id: number;
+  avatar: string;
   username: string;
   content: string;
   type: 1 | 2 | 3 | 4 | 5 | 6; // 1:comment 2:change-title 3:change-label 4:open 5:close 6:delete

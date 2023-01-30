@@ -16,19 +16,19 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ params, request }) => {
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get('page') || '1');
-  const total = await search(
+  const resp = await search(
     {
-      uid: parseInt(params.id as string),
+      user_id: parseInt(params.id as string),
       sort: 'today_download',
       page: page,
-      count: 20,
+      size: 20,
     },
     request
   );
   return json({
     script: {
-      list: total.list,
-      total: total.total,
+      list: resp.data.list,
+      total: resp.data.total,
       page: page,
     },
   } as LoaderData);

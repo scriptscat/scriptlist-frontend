@@ -11,7 +11,7 @@ import type {
 
 type IssueListParams = {
   page?: number;
-  count?: number;
+  size?: number;
   keyword?: string;
   labels?: string;
   status?: string;
@@ -43,7 +43,7 @@ export async function IssueCommentList(scriptId: number, issueId: number) {
   if (resp.status === 404) {
     return null;
   }
-  return resp.data.list;
+  return resp.data.data.list;
 }
 
 export async function PostComment(
@@ -135,7 +135,8 @@ export async function IsWatchIssue(
 export async function WatchIssue(scriptId: number, issueId: number) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + scriptId + '/issues/' + issueId + '/watch',
-    method: 'POST',
+    method: 'PUT',
+    data: { watch: true },
   });
   return resp.data;
 }
@@ -143,7 +144,8 @@ export async function WatchIssue(scriptId: number, issueId: number) {
 export async function UnwatchIssue(scriptId: number, issueId: number) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + scriptId + '/issues/' + issueId + '/watch',
-    method: 'DELETE',
+    method: 'PUT',
+    data: { watch: false },
   });
   return resp.data;
 }

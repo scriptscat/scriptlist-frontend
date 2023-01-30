@@ -1,0 +1,17 @@
+# 项目名 需要使用
+project: scriptlist-frontend
+
+nameOverride: ""
+fullnameOverride: ""
+
+istio:
+  hosts:
+    - scriptcat.org
+  match:
+  canary:
+    enabled: false
+    match: # 染色规则
+      - headers:
+          cookie:
+            regex: "^(.*?;)?(token=.+?)(;.*)?$"
+

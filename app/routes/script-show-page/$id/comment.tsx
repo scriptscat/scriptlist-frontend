@@ -43,8 +43,8 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const my = await GetMyScore(id, request);
   return json({
     id: id,
-    list: list.list,
-    total: list.total,
+    list: list.data.list,
+    total: list.data.total,
     myScore: my,
   } as LoaderData);
 };
@@ -74,7 +74,7 @@ export default function Comment() {
     if (resp.code === 0) {
       message.success('评分成功');
       for (let i = 0; i < data.length; i++) {
-        if (data[i].uid === user.user?.uid) {
+        if (data[i].user_id === user.user?.user_id) {
           data[i].score = score * 10;
           data[i].message = textEl!.current!.resizableTextArea?.props
             .value as string;
@@ -85,7 +85,7 @@ export default function Comment() {
       setData([
         {
           id: 0,
-          uid: user.user!.uid,
+          user_id: user.user!.user_id,
           username: user.user!.username,
           avatar: user.user!.avatar,
           score: score * 10,
@@ -191,11 +191,11 @@ export default function Comment() {
                     <div className="flex flex-col gap-2">
                       <div className="flex flex-row justify-between">
                         <div className="flex flex-row items-center gap-2">
-                          <Link to={'/users/' + item.uid} target="_blank">
-                            <Avatar src={'/api/v1/user/avatar/' + item.uid} />
+                          <Link to={'/users/' + item.user_id} target="_blank">
+                            <Avatar src={item.avatar} />
                           </Link>
                           <div className="flex flex-col">
-                            <Link to={'/users/' + item.uid} target="_blank">
+                            <Link to={'/users/' + item.user_id} target="_blank">
                               {item.username}
                             </Link>
                             <span className="text-xs text-gray-400">
@@ -209,7 +209,7 @@ export default function Comment() {
                           ></Rate>
                         </div>
                         <ActionMenu
-                          uid={item.uid}
+                          uid={item.user_id}
                           deleteLevel="super_moderator"
                           allowSelfDelete={false}
                           onDeleteClick={async () => {

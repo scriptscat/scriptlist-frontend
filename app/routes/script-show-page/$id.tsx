@@ -143,7 +143,7 @@ export default function ScriptShowPage() {
   ];
   if (
     users.user &&
-    (users.user.uid === data.script.uid || users.user.is_admin === 1)
+    (users.user.user_id === data.script.user_id || users.user.is_admin === 1)
   ) {
     items.push(
       ...[
@@ -166,7 +166,7 @@ export default function ScriptShowPage() {
     if (
       !(
         users.user &&
-        (users.user.uid === data.script.uid || users.user.is_admin === 1)
+        (users.user.user_id === data.script.user_id || users.user.is_admin === 1)
       ) &&
       ['update', 'statistic', 'manage'].indexOf(current) !== -1
     ) {
@@ -174,12 +174,12 @@ export default function ScriptShowPage() {
     } else {
       setForbidden(false);
     }
-  }, [users.user, data.script.uid, current]);
+  }, [users.user, data.script.user_id, current]);
 
   return (
     <>
       <div className="flex flex-col gap-3">
-        {data.script.archive != 0 && (
+        {data.script.archive == 1 && (
           <Alert
             message="脚本已归档"
             description="该脚本已经被作者归档,脚本可能失效并且作者不再维护,您无法再进行问题反馈."
@@ -188,7 +188,7 @@ export default function ScriptShowPage() {
             closable
           />
         )}
-        {data.script.danger && (
+        {data.script.danger == 1 && (
           <Alert
             message="脚本代码经过了不可读处理"
             description="该脚本已经被作者经过了不可读处理,虽然脚本站已经经过了一层审查,但还是请不要给予危险权限."

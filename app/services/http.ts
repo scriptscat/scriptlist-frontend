@@ -3,7 +3,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
 
 let instance: AxiosInstance = axios.create({
-  baseURL: typeof window == 'undefined' ? process.env.APP_API_PROXY : '/v1/api',
+  baseURL: typeof window == 'undefined' ? process.env.APP_API_PROXY : '/v2/api',
   timeout: 300000,
   validateStatus: (status: number) => status < 500,
 });
@@ -23,8 +23,10 @@ export interface APIDataResponse<T> extends APIResponse {
 }
 
 export interface APIListResponse<T> extends APIResponse {
-  list: T[];
-  total: number;
+  data: {
+    list: T[];
+    total: number;
+  };
 }
 
 // 初始化axios,会分两种情况,后端与前端,调用时的初始化参数不同

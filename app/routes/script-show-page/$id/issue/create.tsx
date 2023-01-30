@@ -1,5 +1,5 @@
 import { useNavigate } from '@remix-run/react';
-import type { InputRef} from 'antd';
+import type { InputRef } from 'antd';
 import { message } from 'antd';
 import { Button, Card, Input, Select, Space } from 'antd';
 import { useContext, useRef, useState } from 'react';
@@ -49,7 +49,14 @@ export default function Create() {
             ref={title}
           />
           <ClientOnly fallback={<div></div>}>
-            {() => <MarkdownEditor id="create-issue" ref={editor} />}
+            {() => (
+              <MarkdownEditor
+                id="create-issue"
+                comment="issue"
+                linkId={script.script!.id}
+                ref={editor}
+              />
+            )}
           </ClientOnly>
           <Space className="justify-end">
             <Button type="primary" onClick={onSubmit}>

@@ -2,14 +2,13 @@ import type { LoaderFunction, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   Outlet,
-  ShouldReloadFunction,
   useCatch,
   useLoaderData,
 } from '@remix-run/react';
 import { Avatar, Button, Card, Tag } from 'antd';
 import { useContext } from 'react';
 import { UserContext } from '~/context-manager';
-import { GetUserInfo } from '~/services/users/api';
+import { GetFollow, GetUserInfo } from '~/services/users/api';
 import type { Follow, User } from '~/services/users/types';
 
 type LoaderData = {
@@ -17,7 +16,7 @@ type LoaderData = {
   follow: Follow;
 };
 
-export const meta: MetaFunction = ({ data, location }) => {
+export const meta: MetaFunction = ({ data }) => {
   if (!data || !data.user) {
     return {
       title: '用户不存在 - ScriptCat',
@@ -34,7 +33,7 @@ export function CatchBoundary() {
   return <span className="text-2xl">{caught.data}</span>;
 }
 
-export const loader: LoaderFunction = async ({ params, request }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   if (params.id) {
     const user = await GetUserInfo(parseInt(params.id as string));
     if (!user) {
@@ -43,9 +42,10 @@ export const loader: LoaderFunction = async ({ params, request }) => {
         statusText: 'Not Found',
       });
     }
+    const follow = await GetFollow(parseInt(params.id as string));
     return json({
-      user: user.user,
-      follow: user.follow,
+      user: user,
+      follow: follow,
     } as LoaderData);
   }
   throw new Response('用户不存在', {
@@ -62,7 +62,7 @@ export default function Users() {
   return (
     <>
       <div>
-        {currentUser.user && user.uid === currentUser.user.uid && (
+        {currentUser.user && user.user_id === currentUser.user.user_id && (
           <Card title={<span>个人中心</span>} className="!mb-3">
             <Button.Group>
               <Button type="primary" href="/post-script">
@@ -76,10 +76,10 @@ export default function Users() {
         <Card className="!mb-3">
           <div className="flex flex-col items-center">
             <div className="flex flex-row">
-              <Avatar size={36} src={'/api/v1/user/avatar/' + user.uid} />
+              <Avatar size={36} src={user.avatar} />
               <Button
                 type="link"
-                href={'https://bbs.tampermonkey.net.cn?' + user.uid}
+                href={'https://bbs.tampermonkey.net.cn?' + user.user_id}
                 className="!text-3xl"
               >
                 {user.username}

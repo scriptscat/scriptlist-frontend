@@ -1,10 +1,9 @@
 import { Card, Divider } from 'antd';
 import { useState, useEffect } from 'react';
-import { Line, Column, Area } from '@ant-design/plots';
+import { Area } from '@ant-design/plots';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import type {
-  Realtime,
   Statistics,
   StatisticsChart,
 } from '~/services/scripts/types';
@@ -128,46 +127,46 @@ export default function Statistic() {
             <div className="flex flex-col border-r p-4">
               <span>浏览数(PV)</span>
               <span className="text-lg font-bold">
-                {splitNumber(data.data.page['today-pv'].toString())}
+                {splitNumber(data.data.page_pv.today.toString())}
               </span>
               <span>
-                {splitNumber(data.data.page['yesterday-pv'].toString())}
+                {splitNumber(data.data.page_pv.yesterday.toString())}
               </span>
-              <span>{splitNumber(data.data.page['week-pv'].toString())}</span>
+              <span>{splitNumber(data.data.page_pv.week.toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
               <span>访客数(UV)</span>
               <span className="text-lg font-bold">
-                {splitNumber(data.data.page['today-uv'].toString())}
+                {splitNumber(data.data.page_uv.today.toString())}
               </span>
               <span>
-                {splitNumber(data.data.page['yesterday-uv'].toString())}
+                {splitNumber(data.data.page_uv.yesterday.toString())}
               </span>
-              <span>{splitNumber(data.data.page['week-uv'].toString())}</span>
+              <span>{splitNumber(data.data.page_uv.week.toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
               <span>安装数</span>
               <span className="text-lg font-bold">
-                {splitNumber(data.data.download['today-uv'].toString())}
+                {splitNumber(data.data.download_uv.today.toString())}
               </span>
               <span>
-                {splitNumber(data.data.download['yesterday-uv'].toString())}
+                {splitNumber(data.data.download_uv.yesterday.toString())}
               </span>
               <span>
-                {splitNumber(data.data.download['week-uv'].toString())}
+                {splitNumber(data.data.download_uv.week.toString())}
               </span>
             </div>
             <div className="flex flex-col border-r p-4">
               <span>更新数</span>
               <span className="text-lg font-bold">
-                {splitNumber(data.data.update['today-uv'].toString())}
+                {splitNumber(data.data.update_uv.today.toString())}
               </span>
               <span>
-                {splitNumber(data.data.update['yesterday-uv'].toString())}
+                {splitNumber(data.data.update_uv.yesterday.toString())}
               </span>
-              <span>{splitNumber(data.data.update['week-uv'].toString())}</span>
+              <span>{splitNumber(data.data.update_uv.week.toString())}</span>
             </div>
-            {user.user!.is_admin == 1 && (
+            {/* {user.user!.is_admin == 1 && (
               <div className="flex flex-col p-4">
                 <span>平台用户数</span>
                 <span className="text-lg font-bold">
@@ -180,7 +179,7 @@ export default function Statistic() {
                   {splitNumber(data.data.page['week-member'].toString())}
                 </span>
               </div>
-            )}
+            )} */}
           </div>
         </Card.Grid>
       </Card>
@@ -192,16 +191,16 @@ export default function Statistic() {
       <div>
         <PvUv
           title="30天安装uv/pv"
-          uv={data.data.download.uv}
-          pv={data.data.download.pv}
+          uv={data.data.uv_chart.download}
+          pv={data.data.pv_chart.update}
         />
       </div>
       <Divider />
       <div className="flex flex-row justify-between">
         <PvUv
           title="30天更新uv/pv"
-          uv={data.data.update.uv}
-          pv={data.data.update.pv}
+          uv={data.data.uv_chart.update}
+          pv={data.data.pv_chart.update}
         />
       </div>
       <Divider />

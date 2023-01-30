@@ -43,10 +43,7 @@ import {
   UpdateLabels,
   WatchIssue,
 } from '~/services/scripts/issues/api';
-import type {
-  Issue,
-  IssueComment,
-} from '~/services/scripts/issues/types';
+import type { Issue, IssueComment } from '~/services/scripts/issues/types';
 import { ClientOnly } from 'remix-utils';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ScriptContext, UserContext } from '~/context-manager';
@@ -101,7 +98,7 @@ export default function Comment() {
   const user = useContext(UserContext);
   const editor = useRef<MarkdownEditorRef>();
   const [loading, setLoading] = useState(false);
-  const [isWatch, setIsWatch] = useState(0);
+  const [isWatch, setIsWatch] = useState(false);
   const [labels, setLabels] = useState(data.issue.labels || []);
   useEffect(() => {
     if (user.user) {
@@ -110,10 +107,10 @@ export default function Comment() {
       });
     }
   });
-  const joinMember: { [key: number]: number } = {};
-  joinMember[data.issue.uid] = 1;
+  const joinMember: { [key: number]: string } = {};
+  joinMember[data.issue.user_id] = data.issue.avatar;
   list.forEach((item) => {
-    joinMember[item.uid] = 1;
+    joinMember[item.user_id] = item.avatar;
   });
 
   const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
@@ -158,7 +155,7 @@ export default function Comment() {
           <div className="flex flex-row justify-between">
             <span className="text-2xl">{data.issue.title}</span>
             <ActionMenu
-              uid={[data.issue.uid, script.script?.uid || -1]}
+              uid={[data.issue.user_id, script.script?.user_id || -1]}
               deleteLevel="moderator"
               allowSelfDelete
               onDeleteClick={async () => {
@@ -210,7 +207,7 @@ export default function Comment() {
             </Tooltip>
             <UserOutlined className="mr-1 !text-gray-400 " />
             <Link
-              to={'/users/' + data.issue.uid}
+              to={'/users/' + data.issue.user_id}
               target="_blank"
               className="text-gray-400 hover:text-gray-500 mr-1"
             >
@@ -236,13 +233,17 @@ export default function Comment() {
                         <div className="flex flex-col gap-2">
                           <div className="flex flex-row justify-between">
                             <div className="flex flex-row items-center gap-2">
-                              <Link to={'/users/' + item.uid} target="_blank">
-                                <Avatar
-                                  src={'/api/v1/user/avatar/' + item.uid}
-                                />
+                              <Link
+                                to={'/users/' + item.user_id}
+                                target="_blank"
+                              >
+                                <Avatar src={item.avatar} />
                               </Link>
                               <div className="flex flex-col">
-                                <Link to={'/users/' + item.uid} target="_blank">
+                                <Link
+                                  to={'/users/' + item.user_id}
+                                  target="_blank"
+                                >
                                   {item.username}
                                 </Link>
                                 <a
@@ -255,7 +256,10 @@ export default function Comment() {
                               </div>
                             </div>
                             <ActionMenu
-                              uid={[data.issue.uid, script.script?.uid || -1]}
+                              uid={[
+                                data.issue.user_id,
+                                script.script?.user_id || -1,
+                              ]}
                               deleteLevel="moderator"
                               allowSelfDelete
                               onDeleteClick={async () => {
@@ -339,11 +343,9 @@ export default function Comment() {
                             {item.type == 5 && (
                               <CheckCircleFilled className="text-xl !text-green-500" />
                             )}
-                            <Link to={'/users/' + item.uid} target="_blank">
+                            <Link to={'/users/' + item.user_id} target="_blank">
                               <Space>
-                                <Avatar
-                                  src={'/api/v1/user/avatar/' + item.uid}
-                                />
+                                <Avatar src={item.avatar} />
                                 <span>{item.username}</span>
                               </Space>
                             </Link>
@@ -367,12 +369,19 @@ export default function Comment() {
           {user.user ? (
             <div className="flex flex-col gap-2">
               <ClientOnly fallback={<div></div>}>
-                {() => <MarkdownEditor id="reply" ref={editor} />}
+                {() => (
+                  <MarkdownEditor
+                    id="reply"
+                    comment="comment"
+                    linkId={data.issue.id}
+                    ref={editor}
+                  />
+                )}
               </ClientOnly>
               <Space className="justify-end">
-                {(user.user.uid == data.issue.uid ||
+                {(user.user.user_id == data.issue.user_id ||
                   user.user.is_admin >= 1 ||
-                  script.script?.uid == user.user.uid) && (
+                  script.script?.user_id == user.user.user_id) && (
                   <Button
                     loading={loading}
                     onClick={async () => {
@@ -516,7 +525,7 @@ export default function Comment() {
                     }
                     setLoading(false);
                     if (resp.code == 0) {
-                      setIsWatch(isWatch ? 0 : 1);
+                      setIsWatch(isWatch);
                     } else {
                       message.error(resp.msg);
                     }
@@ -533,7 +542,7 @@ export default function Comment() {
             <Space>
               {Object.keys(joinMember).map((key) => (
                 <Link key={key} to={`/users/${key}`} target="_blank">
-                  <Avatar src={'/api/v1/user/avatar/' + key} />
+                  <Avatar src={joinMember[key as unknown as number]} />
                 </Link>
               ))}
             </Space>

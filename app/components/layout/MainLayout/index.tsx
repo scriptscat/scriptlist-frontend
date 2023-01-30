@@ -123,9 +123,7 @@ const MainLayout: React.FC<{
       items={[
         {
           label: (
-            <Link
-              to={{ pathname: '/users/' + user.user?.uid, search: 'self=true' }}
-            >
+            <Link to={{ pathname: '/users/' + user.user?.user_id }}>
               <Space className="anticon-middle">
                 <UserOutlined />
                 <p className="text-sm m-0">个人中心</p>
@@ -248,9 +246,7 @@ const MainLayout: React.FC<{
                     trigger={['click']}
                     placement="bottom"
                   >
-                    <Avatar
-                      src={'/api/v1/user/avatar/' + user.user.uid}
-                    ></Avatar>
+                    <Avatar src={user.user.avatar}></Avatar>
                   </Dropdown>
                 ) : (
                   <Button

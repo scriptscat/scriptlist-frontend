@@ -59,8 +59,8 @@ export default function Index() {
   return (
     <>
       <SearchList
-        list={loader.resp.list}
-        total={loader.resp.total}
+        list={loader.resp.data.list}
+        total={loader.resp.data.total}
         page={loader.page}
       />
     </>

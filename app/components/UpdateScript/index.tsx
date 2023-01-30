@@ -72,6 +72,8 @@ const UpdateScript: React.FC<{
         {() => (
           <MarkdownEditor
             id={script ? 'update-script' : 'create-script'}
+            comment={script ? 'script' : 'create-script'}
+            linkId={script ? script.id : -1}
             isCreate={!script}
             initialValue={script?.content}
             ref={markdown}
@@ -133,13 +135,13 @@ const UpdateScript: React.FC<{
             value={version}
             onChange={(value) => setVersion(value.target.value)}
           />
-          <h3 className="text-lg">库的定义文件(.d.ts)</h3>
+          {/* <h3 className="text-lg">库的定义文件(.d.ts)</h3>
           <TextArea
             prefixCls={dark ? 'dark-input' : 'light-input'}
             placeholder="库描述信息,类似脚本的@description"
             value={definition}
             onChange={(value) => setDefinition(value.target.value)}
-          />
+          /> */}
         </>
       )}
       {script?.type == 3 && (
@@ -180,21 +182,25 @@ const UpdateScript: React.FC<{
             return message.error('内容不能为空');
           }
           setLoading(true);
-          if (
-            await onSubmit({
-              name: name,
-              description: description,
-              definition: definition,
-              version: version,
-              type: scriptType,
-              code: code,
-              content: content,
-              unwell: unwell,
-              public: isPublic,
-              changelog: changelog,
-            })
-          ) {
-            markdown.current?.setMarkdown('');
+          try {
+            if (
+              await onSubmit({
+                name: name,
+                description: description,
+                definition: definition,
+                version: version,
+                type: scriptType,
+                code: code,
+                content: content,
+                unwell: unwell,
+                public: isPublic,
+                changelog: changelog,
+              })
+            ) {
+              markdown.current?.setMarkdown('');
+            }
+          } catch (e) {
+            console.error(e);
           }
           setLoading(false);
         }}
