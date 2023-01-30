@@ -19,7 +19,7 @@ env:
     value: 80mfto0y3b8v
 
 imagePullSecrets: []
-nameOverride: "scriptlist-frontend"
+nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
@@ -47,18 +47,6 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 80
-
-# 支持灰度发布,使用istio-gateway实现流量控制
-istio:
-  enabled: false
-  environment: prod # test | pre | canary | prod
-  hosts:
-    - scriptcat.org
-  canary:
-    match: # 染色规则
-      - headers:
-          cookie:
-            regex: "^(.*?;)?(token=.+?)(;.*)?$"
 
 ingress:
   enabled: true

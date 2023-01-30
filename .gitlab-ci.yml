@@ -52,30 +52,38 @@ deploy-pro:
   stage: deploy
   image: alpine/helm:3.9.0
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "release/canary"
   script:
     - cd deploy/helm
     - |
       helm upgrade --install --namespace app $APP_NAME . -f values.yaml --kubeconfig $K3S_CONFIG \
       --set image.tag=$CI_COMMIT_SHORT_SHA --set image.repository=$REGISTRY/$REPOSITORY \
-      --set env[1].value=http://scriptlist-cago.app.svc.cluster.local/api/v2 \
-      --set ingress.enabled=false \
-      --set istio.enabled=true
+      --set env[1].value=http://scriptlist-cago.app.svc.cluster.local/api/v2
+
+# 服务器无资源,暂时移除灰度
+#      --set ingress.enabled=false
+#    - cd ../gateway
+#    - |
+#      helm upgrade --install --namespace $NAMESPACE $APP_NAME-gateway . --kubeconfig $K3S_CONFIG \
+#      --set istio.canary.enabled=false
 
 deploy-canary:
   stage: deploy
   image: alpine/helm:3.9.0
   rules:
-    - if: $CI_COMMIT_BRANCH == "release/canary"
+    - if: $CI_COMMIT_BRANCH == "deprecate/release/canary"
   script:
     - cd deploy/helm
     - |
       helm upgrade --install --namespace app $APP_NAME-canary . -f values.yaml --kubeconfig $K3S_CONFIG \
       --set image.tag=$CI_COMMIT_SHORT_SHA --set image.repository=$REGISTRY/$REPOSITORY \
       --set env[1].value=http://scriptlist-canary-cago.app.svc.cluster.local/api/v2 \
-      --set ingress.enabled=false \
-      --set istio.enabled=true \
-      --set istio.environment=canary
+      --set ingress.enabled=false
+    - cd ../gateway
+    - |
+      helm upgrade --install --namespace app $APP_NAME-gateway . --kubeconfig $K3S_CONFIG \
+      --set istio.canary.enabled=true
+
 
 deploy-pre:
   stage: deploy
@@ -91,7 +99,9 @@ deploy-pre:
       --set env[1].value=http://scriptlist-pre-cago.app.svc.cluster.local/api/v2 \
       --set env[2].value=5uk70yummcoe \
       --set ingress.hosts[0].host=pre.$DOMAIN \
-      --set ingress.tls[0].hosts[0]=pre.$DOMAIN
+      --set ingress.tls[0].hosts[0]=pre.$DOMAIN \
+      --set resources.requests.cpu=50m \
+      --set resources.requests.memory=128Mi
 
 deploy-test:
   stage: deploy
@@ -107,4 +117,6 @@ deploy-test:
       --set env[1].value=http://scriptlist-test-cago.app.svc.cluster.local/api/v2 \
       --set env[2].value=sxIv1i8H1ZwnSAH \
       --set ingress.hosts[0].host=test.$DOMAIN \
-      --set ingress.tls[0].hosts[0]=test.$DOMAIN
+      --set ingress.tls[0].hosts[0]=test.$DOMAIN \
+      --set resources.requests.cpu=50m \
+      --set resources.requests.memory=128Mi
