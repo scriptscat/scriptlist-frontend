@@ -67,7 +67,7 @@ export default function Comment() {
     setSubmitLoading(true);
     const resp = await SubmitScore(
       loaderData.id,
-      textEl!.current!.resizableTextArea?.props.value as string,
+      textEl!.current!.resizableTextArea!.textArea.value,
       score * 10
     );
     setSubmitLoading(false);
@@ -76,8 +76,7 @@ export default function Comment() {
       for (let i = 0; i < data.length; i++) {
         if (data[i].user_id === user.user?.user_id) {
           data[i].score = score * 10;
-          data[i].message = textEl!.current!.resizableTextArea?.props
-            .value as string;
+          data[i].message = textEl!.current!.resizableTextArea!.textArea.value;
           setData([...data]);
           return;
         }
@@ -89,7 +88,7 @@ export default function Comment() {
           username: user.user!.username,
           avatar: user.user!.avatar,
           score: score * 10,
-          message: textEl!.current!.resizableTextArea?.props.value as string,
+          message: textEl!.current!.resizableTextArea!.textArea.value,
           createtime: new Date().getTime() / 1000,
         },
         ...data,
