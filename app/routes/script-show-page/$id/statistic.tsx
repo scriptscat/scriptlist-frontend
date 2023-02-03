@@ -1,16 +1,13 @@
 import { Card, Divider } from 'antd';
 import { useState, useEffect } from 'react';
-import { Area } from '@ant-design/plots';
+import { Line } from '@ant-design/plots';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import type {
-  Statistics,
-  StatisticsChart,
-} from '~/services/scripts/types';
+import type { Statistics, StatisticsChart } from '~/services/scripts/types';
 import { GetRealtime, GetStatistics } from '~/services/scripts/api';
 import { useLoaderData } from '@remix-run/react';
 import { useContext } from 'react';
-import { ScriptContext, UserContext } from '~/context-manager';
+import { ScriptContext } from '~/context-manager';
 import { splitNumber } from '~/utils/utils';
 
 // 30天pv uv图
@@ -46,7 +43,7 @@ const PvUv: React.FC<{
   return (
     <div className="flex flex-col items-center w-full">
       <span>{title}</span>
-      <Area className="w-full" {...config} />
+      <Line className="w-full" {...config} />
     </div>
   );
 };
@@ -62,12 +59,12 @@ const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
         chartData.push(
           {
             name: '安装',
-            date: data.download.x[i],
+            time: data.download.x[i],
             num: data.download.y[i],
           },
           {
             name: '更新',
-            date: data.update.x[i],
+            time: data.update.x[i],
             num: data.update.y[i],
           }
         );
@@ -81,7 +78,7 @@ const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
 
   const config = {
     data: chartData,
-    xField: 'date',
+    xField: 'time',
     yField: 'num',
     seriesField: 'name',
   };
@@ -89,7 +86,12 @@ const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
   return (
     <div className="flex flex-col items-center w-full">
       <span>实时更新与下载量</span>
-      <Area className="w-full" {...config} />
+      <Line
+        className="w-full"
+        renderer="canvas"
+        animation={false}
+        {...config}
+      />
     </div>
   );
 };
@@ -110,7 +112,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export default function Statistic() {
-  const user = useContext(UserContext);
   const data = useLoaderData<LoaderData>();
   const script = useContext(ScriptContext);
   return (
@@ -129,9 +130,7 @@ export default function Statistic() {
               <span className="text-lg font-bold">
                 {splitNumber(data.data.page_pv.today.toString())}
               </span>
-              <span>
-                {splitNumber(data.data.page_pv.yesterday.toString())}
-              </span>
+              <span>{splitNumber(data.data.page_pv.yesterday.toString())}</span>
               <span>{splitNumber(data.data.page_pv.week.toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
@@ -139,9 +138,7 @@ export default function Statistic() {
               <span className="text-lg font-bold">
                 {splitNumber(data.data.page_uv.today.toString())}
               </span>
-              <span>
-                {splitNumber(data.data.page_uv.yesterday.toString())}
-              </span>
+              <span>{splitNumber(data.data.page_uv.yesterday.toString())}</span>
               <span>{splitNumber(data.data.page_uv.week.toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
@@ -152,9 +149,7 @@ export default function Statistic() {
               <span>
                 {splitNumber(data.data.download_uv.yesterday.toString())}
               </span>
-              <span>
-                {splitNumber(data.data.download_uv.week.toString())}
-              </span>
+              <span>{splitNumber(data.data.download_uv.week.toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
               <span>更新数</span>

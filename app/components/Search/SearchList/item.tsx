@@ -285,7 +285,7 @@ const SearchItem: React.FC<{
                 <StarOutlined className="!align-middle" style={iconStyle} />
                 <span>
                   {script.score
-                    ? ((script.score * 2) / 10).toFixed(1)
+                    ? (((script.score / script.score_num) * 2) / 10).toFixed(1)
                     : '暂无评分'}
                 </span>
               </div>
