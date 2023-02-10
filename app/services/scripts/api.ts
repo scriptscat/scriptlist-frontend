@@ -1,3 +1,4 @@
+import type { GrayControlValue } from '~/components/GrayControl';
 import type { APIResponse } from '../http';
 import { request } from '../http';
 import { paramsToSearch } from '../utils';
@@ -8,10 +9,10 @@ import type {
   ScoreListResponse,
   ScriptResponse,
   ScriptSettingResponse,
+  ScriptStateResponse,
   ScriptVersionListResponse,
   SearchResponse,
   StatisticsResponse,
-  ScriptStateResponse,
 } from './types';
 
 export type SortType =
@@ -154,6 +155,7 @@ export type UpdateCodeParams = {
   code: string;
   definition?: string;
   changelog: string;
+  is_pre_release: 0 | 1 | 2;
   public: 1 | 2;
   unwell: 1 | 2;
 };
@@ -173,6 +175,7 @@ export type CreateScriptParams = {
   version: string;
   definition: string;
   type: 1 | 2 | 3;
+  enable_pre_release: 1 | 2;
 } & UpdateCodeParams;
 
 export async function CreateScript(params: CreateScriptParams) {
@@ -264,6 +267,51 @@ export async function GetRealtime(scriptId: number) {
   const resp = await request<RealtimeResponse>({
     url: '/script/' + scriptId + '/statistics/realtime',
     method: 'GET',
+  });
+  return resp.data;
+}
+
+export async function UpdateCodeSetting(
+  scriptId: number,
+  codeId: number,
+  changelog: string,
+  is_pre_release: number
+) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + scriptId + '/code/' + codeId,
+    method: 'PUT',
+    data: { changelog, is_pre_release },
+  });
+  return resp.data;
+}
+
+export async function UpdateScriptPublic(scriptId: number, public_: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + scriptId + '/public',
+    method: 'PUT',
+    data: { public: public_ },
+  });
+  return resp.data;
+}
+
+export async function UpdateScriptUnwell(scriptId: number, unwell: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + scriptId + '/unwell',
+    method: 'PUT',
+    data: { unwell },
+  });
+  return resp.data;
+}
+
+export async function UpdateScriptGrayControls(
+  scriptId: number,
+  enablePreRelease: number,
+  grayControls: GrayControlValue[]
+) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + scriptId + '/gray',
+    method: 'PUT',
+    data: { enable_pre_release: enablePreRelease, gray_controls: grayControls },
   });
   return resp.data;
 }

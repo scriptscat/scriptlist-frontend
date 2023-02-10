@@ -1,3 +1,4 @@
+import type { GrayControlValue } from '~/components/GrayControl';
 import type { APIDataResponse, APIListResponse } from '../http';
 
 export type SearchResponse = APIListResponse<Script>;
@@ -39,6 +40,7 @@ export type Script = {
   archive: 1 | 2; // 归档
   danger: 1 | 2; // 存在危险性
   type: 1 | 2 | 3; // 1: 普通脚本, 2: 订阅脚本, 3: 库
+  enable_pre_release: 1 | 2; // 是否开启预发布
   category: Category[];
   createtime: number;
   updatetime: number;
@@ -54,6 +56,7 @@ export type ScriptCode = {
   id: number;
   code: string;
   changelog: string;
+  is_pre_release: number;
   version: string;
   meta_json: { [key: string]: string[] };
   createtime: number;
@@ -78,6 +81,8 @@ export type ScriptSetting = {
   content_url: string;
   definition_url: string;
   sync_mode: 1 | 2; // 1 自动 2 手动
+  gray_controls: GrayControlValue[];
+  enable_pre_release: 1 | 2; // 是否开启预发布
 };
 
 export type WatchLevel = 0 | 1 | 2 | 3;

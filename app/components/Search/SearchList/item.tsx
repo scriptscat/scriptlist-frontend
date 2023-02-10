@@ -6,6 +6,7 @@ import {
   DownOutlined,
   EllipsisOutlined,
   ExclamationCircleOutlined,
+  ExperimentOutlined,
   EyeFilled,
   MoneyCollectOutlined,
   QuestionCircleOutlined,
@@ -322,6 +323,31 @@ const SearchItem: React.FC<{
                         color="#3874cb"
                       ></Button>
                     </Tooltip>
+                    {script.enable_pre_release === 1 && (
+                      <Tooltip
+                        placement="bottom"
+                        title="安装预发布版本,这不是一个稳定的版本,请谨慎安装"
+                        color="orange"
+                      >
+                        <Button
+                          className="!rounded-none"
+                          type="primary"
+                          href={
+                            '/scripts/pre/' +
+                            script.id +
+                            '/' +
+                            encodeURIComponent(script.name) +
+                            '.user.js'
+                          }
+                          target="_blank"
+                          icon={<ExperimentOutlined />}
+                          style={{
+                            background: '#f98116',
+                            borderColor: '#f98116',
+                          }}
+                        ></Button>
+                      </Tooltip>
+                    )}
                   </Button.Group>
                 )}
                 {script.type == 3 && (
