@@ -1,4 +1,13 @@
-import { Button, Checkbox, Input, message, Radio, Space, Switch } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Input,
+  message,
+  Radio,
+  Space,
+  Switch,
+  Tooltip,
+} from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useRef, useState } from 'react';
 import { ClientOnly } from 'remix-utils';
@@ -22,9 +31,10 @@ const UpdateScript: React.FC<{
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [version, setVersion] = useState(script?.script.version || '1.0.0');
-  const [definition, setDefinition] = useState('');
+  const [definition] = useState('');
   const [loading, setLoading] = useState(false);
   const [scriptType, setScriptType] = useState<1 | 2 | 3>(1);
+  const [isPreRelease, setPreRelease] = useState<0 | 1 | 2>(0);
 
   return (
     <div className="flex flex-col items-start gap-1">
@@ -155,20 +165,44 @@ const UpdateScript: React.FC<{
           />
         </>
       )}
-      <h3 className="text-lg">脚本访问权限</h3>
-      <Switch
-        checkedChildren="公开"
-        unCheckedChildren="私有"
-        checked={isPublic === 1 ? true : false}
-        onChange={(value) => setPublic(value ? 1 : 2)}
-      />
-      <h3 className="text-lg">不适内容</h3>
-      <Checkbox
-        checked={unwell === 1 ? true : false}
-        onChange={(val) => setUnwell(val.target.checked ? 1 : 2)}
-      >
-        该网站可能存在令人不适内容，包括但不限于红蓝闪光频繁闪烁、对视觉、精神有侵害的内容。
-      </Checkbox>
+      {script !== undefined && (
+        <>
+          <h3 className="text-lg">版本设置</h3>
+          <Tooltip title="设置为预发布版本,正式版本不会更新至此版本,可在脚本管理页开启脚本预发布安装链接">
+            <Checkbox
+              indeterminate={isPreRelease === 0 && script.type === 1}
+              value={isPreRelease === 1 ? true : false}
+              onChange={(val) => {
+                setPreRelease(val.target.checked ? 1 : 2);
+              }}
+            >
+              {script.type === 1 ? '设置为预发布版本' : '标记为预发布版本'}
+            </Checkbox>
+          </Tooltip>
+          <h3 className="text-lg">更多设置</h3>
+          <span>
+            更多设置已经迁移至<a href="./manage">脚本管理</a>中
+          </span>
+        </>
+      )}
+      {script === undefined && (
+        <>
+          <h3 className="text-lg">脚本访问权限</h3>
+          <Switch
+            checkedChildren="公开"
+            unCheckedChildren="私有"
+            checked={isPublic === 1 ? true : false}
+            onChange={(value) => setPublic(value ? 1 : 2)}
+          />
+          <h3 className="text-lg">不适内容</h3>
+          <Checkbox
+            checked={unwell === 1 ? true : false}
+            onChange={(val) => setUnwell(val.target.checked ? 1 : 2)}
+          >
+            该网站可能存在令人不适内容，包括但不限于红蓝闪光频繁闪烁、对视觉、精神有侵害的内容。
+          </Checkbox>
+        </>
+      )}
       <Button
         type="primary"
         loading={loading}
@@ -195,6 +229,7 @@ const UpdateScript: React.FC<{
                 unwell: unwell,
                 public: isPublic,
                 changelog: changelog,
+                is_pre_release: isPreRelease,
               })
             ) {
               markdown.current?.setMarkdown('');

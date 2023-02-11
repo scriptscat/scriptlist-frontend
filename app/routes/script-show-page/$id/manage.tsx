@@ -1,24 +1,31 @@
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { json, LoaderFunction } from '@remix-run/node';
+import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import {
   Button,
   Card,
+  Checkbox,
   Divider,
   Input,
   message,
   Modal,
   Radio,
   Space,
+  Switch,
 } from 'antd';
 import { useContext } from 'react';
 import { useState } from 'react';
+import GrayControl from '~/components/GrayControl';
 import { ScriptContext } from '~/context-manager';
 import {
   ArchiveScript,
   DeleteScript,
   GetScriptSetting,
+  UpdateScriptGrayControls,
+  UpdateScriptPublic,
   UpdateScriptSetting,
+  UpdateScriptUnwell,
 } from '~/services/scripts/api';
 import type { ScriptSetting } from '~/services/scripts/types';
 
@@ -42,18 +49,22 @@ export default function Manage() {
   const script = useContext(ScriptContext);
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
-  const [archive, setArchive] = useState(script.script?.archive);
+  const [archive, setArchive] = useState(script.script!.archive);
   const [syncUrl, setSyncUrl] = useState(data.setting.sync_url);
   const [syncMode, setSyncMode] = useState<1 | 2>(data.setting.sync_mode);
   const [contentUrl, setContentUrl] = useState(data.setting.content_url);
-  const [name, setName] = useState(script.script?.name || '');
-  const [description, setDescription] = useState(
-    script.script?.description || ''
-  );
-  const [definitionUrl, setDefinitionUrl] = useState(
-    data.setting.definition_url
-  );
+  const [name, setName] = useState(script.script!.name);
+  const [description, setDescription] = useState(script.script!.description);
+  const [definitionUrl] = useState(data.setting.definition_url);
   const [loading, setLoading] = useState(false);
+  const [enablePreRelease, setEnablePreRelease] = useState(
+    script.script!.enable_pre_release || 2
+  );
+  const [grayControls, setGrayControls] = useState(
+    data.setting.gray_controls || []
+  );
+  const [isPublic, setIsPublic] = useState(script.script!.public);
+  const [unwell, setUnwell] = useState(script.script!.unwell);
 
   return (
     <Card>
@@ -142,6 +153,194 @@ export default function Manage() {
         >
           更新设置并且立刻同步
         </Button>
+        <Divider />
+        <h3 className="text-lg">脚本管理</h3>
+        <h4 className="text-base">脚本访问权限</h4>
+        <Switch
+          checkedChildren="公开"
+          unCheckedChildren="私有"
+          checked={isPublic === 1 ? true : false}
+          onChange={async (checked) => {
+            let resp = await UpdateScriptPublic(
+              script.script!.id,
+              checked ? 1 : 2
+            );
+            if (resp.code === 0) {
+              message.success('更新成功');
+              setIsPublic(checked ? 1 : 2);
+            } else {
+              message.error(resp.msg);
+            }
+          }}
+        />
+        <h4 className="text-base">不适内容</h4>
+        <Checkbox
+          checked={unwell === 1 ? true : false}
+          onChange={async (val) => {
+            let resp = await UpdateScriptUnwell(
+              script.script!.id,
+              val.target.checked ? 1 : 2
+            );
+            if (resp.code === 0) {
+              message.success('更新成功');
+              setUnwell(val.target.checked ? 1 : 2);
+            } else {
+              message.error(resp.msg);
+            }
+          }}
+        >
+          该网站可能存在令人不适内容，包括但不限于红蓝闪光频繁闪烁、对视觉、精神有侵害的内容。
+        </Checkbox>
+        {script.script!.type === 1 && (
+          <>
+            <Divider></Divider>
+            <h3 className="text-lg">脚本发布</h3>
+            <h4 className="text-base">开启预发布</h4>
+            <span>
+              开启预发布开关时, 当版本符合
+              <a
+                href="https://bbs.tampermonkey.net.cn/thread-3384-1-1.html"
+                target="_blank"
+                rel="noreferrer"
+              >
+                语义化版本
+              </a>
+              {'<pre-release>'}
+              时更新脚本将会自动标记为预发布版本,并且会在脚本首页提供预发布版本的安装按钮.
+            </span>
+            <span>
+              (首次开启会帮你新增三条策略：预发布用户更新到全部最新,正式版按权重在10天内逐步更新至最新正式版本,其它用户更新到上一正式版本)
+            </span>
+            <Switch
+              checkedChildren="开启"
+              unCheckedChildren="关闭"
+              checked={enablePreRelease === 1}
+              onClick={(value) => {
+                setGrayControls((prev) => {
+                  if (value) {
+                    let flag = false;
+                    prev.forEach((val) => {
+                      val.controls.forEach((v) => {
+                        if (v.type === 'pre-release') {
+                          flag = true;
+                        }
+                      });
+                    });
+                    !flag &&
+                      prev.push(
+                        {
+                          target_version: 'all-latest',
+                          controls: [
+                            {
+                              type: 'pre-release',
+                              params: {},
+                            },
+                          ],
+                        },
+                        {
+                          target_version: 'latest',
+                          controls: [
+                            {
+                              type: 'weight',
+                              params: {
+                                weight: 100,
+                                weight_day: 10,
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          target_version: 'latest^1',
+                          controls: [
+                            {
+                              type: 'weight',
+                              params: {
+                                weight: 100,
+                                weight_day: 0,
+                              },
+                            },
+                          ],
+                        }
+                      );
+                  }
+                  return [...prev];
+                });
+                setEnablePreRelease(value ? 1 : 2);
+              }}
+            />
+            <h3 className="text-lg">灰度发布</h3>
+            <span>
+              可配置一定的策略(策略有顺序性),使你的脚本用户更新到指定版本
+            </span>
+            <div className="flex flex-row flex-wrap gap-1">
+              {grayControls.map((val, index) => (
+                <GrayControl
+                  key={index}
+                  index={index}
+                  value={val}
+                  onClose={() => {
+                    setGrayControls((prev) => {
+                      prev.splice(index, 1);
+                      return [...prev];
+                    });
+                  }}
+                  onChange={(index, value) => {
+                    setGrayControls((prev) => {
+                      prev[index] = value;
+                      return [...prev];
+                    });
+                  }}
+                />
+              ))}
+              <Button
+                type="text"
+                icon={<PlusOutlined />}
+                size="large"
+                style={{
+                  marginLeft: '8px',
+                }}
+                onClick={() => {
+                  setGrayControls((prev) => {
+                    prev.push({
+                      target_version: 'latest',
+                      controls: [
+                        {
+                          type: 'weight',
+                          params: {
+                            weight: 100,
+                            weight_day: 10,
+                          },
+                        },
+                      ],
+                    });
+                    return [...prev];
+                  });
+                }}
+              />
+            </div>
+            <Button
+              type="primary"
+              loading={loading}
+              style={{ marginTop: '8px' }}
+              onClick={async () => {
+                setLoading(true);
+                let resp = await UpdateScriptGrayControls(
+                  script.script!.id,
+                  enablePreRelease,
+                  grayControls
+                );
+                if (resp.code === 0) {
+                  message.success('更新成功');
+                } else {
+                  message.error(resp.msg);
+                }
+                setLoading(false);
+              }}
+            >
+              保存并生效策略
+            </Button>
+          </>
+        )}
         <Divider></Divider>
         <h3 className="text-lg">脚本管理</h3>
         <Space>
