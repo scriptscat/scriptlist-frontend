@@ -339,7 +339,6 @@ const SearchItem: React.FC<{
                             encodeURIComponent(script.name) +
                             '.user.js'
                           }
-                          target="_blank"
                           icon={<ExperimentOutlined />}
                           style={{
                             background: '#f98116',

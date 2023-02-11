@@ -191,51 +191,117 @@ export default function Manage() {
         >
           该网站可能存在令人不适内容，包括但不限于红蓝闪光频繁闪烁、对视觉、精神有侵害的内容。
         </Checkbox>
-        <Divider></Divider>
-        <h3 className="text-lg">脚本发布</h3>
-        <h4 className="text-base">开启预发布</h4>
-        <span>
-          开启预发布开关时, 当版本符合
-          <a
-            href="https://bbs.tampermonkey.net.cn/thread-3384-1-1.html"
-            target="_blank"
-            rel="noreferrer"
-          >
-            语义化版本
-          </a>
-          {'<pre-release>'}
-          时更新脚本将会自动标记为预发布版本,并且会在脚本首页提供预发布版本的安装按钮.
-        </span>
-        <span>
-          (首次开启会帮你新增三条策略：预发布用户更新到全部最新,正式版按权重在10天内逐步更新至最新正式版本,其它用户更新到上一正式版本)
-        </span>
-        <Switch
-          checkedChildren="开启"
-          unCheckedChildren="关闭"
-          checked={enablePreRelease === 1}
-          onClick={(value) => {
-            setGrayControls((prev) => {
-              if (value) {
-                let flag = false;
-                prev.forEach((val) => {
-                  val.controls.forEach((v) => {
-                    if (v.type === 'pre-release') {
-                      flag = true;
-                    }
-                  });
-                });
-                !flag &&
-                  prev.push(
-                    {
-                      target_version: 'all-latest',
-                      controls: [
+        {script.script!.type === 1 && (
+          <>
+            <Divider></Divider>
+            <h3 className="text-lg">脚本发布</h3>
+            <h4 className="text-base">开启预发布</h4>
+            <span>
+              开启预发布开关时, 当版本符合
+              <a
+                href="https://bbs.tampermonkey.net.cn/thread-3384-1-1.html"
+                target="_blank"
+                rel="noreferrer"
+              >
+                语义化版本
+              </a>
+              {'<pre-release>'}
+              时更新脚本将会自动标记为预发布版本,并且会在脚本首页提供预发布版本的安装按钮.
+            </span>
+            <span>
+              (首次开启会帮你新增三条策略：预发布用户更新到全部最新,正式版按权重在10天内逐步更新至最新正式版本,其它用户更新到上一正式版本)
+            </span>
+            <Switch
+              checkedChildren="开启"
+              unCheckedChildren="关闭"
+              checked={enablePreRelease === 1}
+              onClick={(value) => {
+                setGrayControls((prev) => {
+                  if (value) {
+                    let flag = false;
+                    prev.forEach((val) => {
+                      val.controls.forEach((v) => {
+                        if (v.type === 'pre-release') {
+                          flag = true;
+                        }
+                      });
+                    });
+                    !flag &&
+                      prev.push(
                         {
-                          type: 'pre-release',
-                          params: {},
+                          target_version: 'all-latest',
+                          controls: [
+                            {
+                              type: 'pre-release',
+                              params: {},
+                            },
+                          ],
                         },
-                      ],
-                    },
-                    {
+                        {
+                          target_version: 'latest',
+                          controls: [
+                            {
+                              type: 'weight',
+                              params: {
+                                weight: 100,
+                                weight_day: 10,
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          target_version: 'latest^1',
+                          controls: [
+                            {
+                              type: 'weight',
+                              params: {
+                                weight: 100,
+                                weight_day: 0,
+                              },
+                            },
+                          ],
+                        }
+                      );
+                  }
+                  return [...prev];
+                });
+                setEnablePreRelease(value ? 1 : 2);
+              }}
+            />
+            <h3 className="text-lg">灰度发布</h3>
+            <span>
+              可配置一定的策略(策略有顺序性),使你的脚本用户更新到指定版本
+            </span>
+            <div className="flex flex-row flex-wrap gap-1">
+              {grayControls.map((val, index) => (
+                <GrayControl
+                  key={index}
+                  index={index}
+                  value={val}
+                  onClose={() => {
+                    setGrayControls((prev) => {
+                      prev.splice(index, 1);
+                      return [...prev];
+                    });
+                  }}
+                  onChange={(index, value) => {
+                    setGrayControls((prev) => {
+                      prev[index] = value;
+                      return [...prev];
+                    });
+                  }}
+                />
+              ))}
+              <Button
+                type="text"
+                icon={<PlusOutlined />}
+                size="large"
+                style={{
+                  marginLeft: '8px',
+                }}
+                onClick={() => {
+                  setGrayControls((prev) => {
+                    prev.push({
                       target_version: 'latest',
                       controls: [
                         {
@@ -246,95 +312,35 @@ export default function Manage() {
                           },
                         },
                       ],
-                    },
-                    {
-                      target_version: 'latest^1',
-                      controls: [
-                        {
-                          type: 'weight',
-                          params: {
-                            weight: 100,
-                            weight_day: 0,
-                          },
-                        },
-                      ],
-                    }
-                  );
-              }
-              return [...prev];
-            });
-            setEnablePreRelease(value ? 1 : 2);
-          }}
-        />
-        <h3 className="text-lg">灰度发布</h3>
-        <span>可配置一定的策略(策略有顺序性),使你的脚本用户更新到指定版本</span>
-        <div className="flex flex-row flex-wrap gap-1">
-          {grayControls.map((val, index) => (
-            <GrayControl
-              key={index}
-              index={index}
-              value={val}
-              onClose={() => {
-                setGrayControls((prev) => {
-                  prev.splice(index, 1);
-                  return [...prev];
-                });
+                    });
+                    return [...prev];
+                  });
+                }}
+              />
+            </div>
+            <Button
+              type="primary"
+              loading={loading}
+              style={{ marginTop: '8px' }}
+              onClick={async () => {
+                setLoading(true);
+                let resp = await UpdateScriptGrayControls(
+                  script.script!.id,
+                  enablePreRelease,
+                  grayControls
+                );
+                if (resp.code === 0) {
+                  message.success('更新成功');
+                } else {
+                  message.error(resp.msg);
+                }
+                setLoading(false);
               }}
-              onChange={(index, value) => {
-                setGrayControls((prev) => {
-                  prev[index] = value;
-                  return [...prev];
-                });
-              }}
-            />
-          ))}
-          <Button
-            type="text"
-            icon={<PlusOutlined />}
-            size="large"
-            style={{
-              marginLeft: '8px',
-            }}
-            onClick={() => {
-              setGrayControls((prev) => {
-                prev.push({
-                  target_version: 'latest',
-                  controls: [
-                    {
-                      type: 'weight',
-                      params: {
-                        weight: 100,
-                        weight_day: 10,
-                      },
-                    },
-                  ],
-                });
-                return [...prev];
-              });
-            }}
-          />
-        </div>
-        <Button
-          type="primary"
-          loading={loading}
-          style={{ marginTop: '8px' }}
-          onClick={async () => {
-            setLoading(true);
-            let resp = await UpdateScriptGrayControls(
-              script.script!.id,
-              enablePreRelease,
-              grayControls
-            );
-            if (resp.code === 0) {
-              message.success('更新成功');
-            } else {
-              message.error(resp.msg);
-            }
-            setLoading(false);
-          }}
-        >
-          保存并生效策略
-        </Button>
+            >
+              保存并生效策略
+            </Button>
+          </>
+        )}
         <Divider></Divider>
         <h3 className="text-lg">脚本管理</h3>
         <Space>

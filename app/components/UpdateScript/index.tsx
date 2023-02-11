@@ -165,20 +165,20 @@ const UpdateScript: React.FC<{
           />
         </>
       )}
-      <h3 className="text-lg">版本设置</h3>
-      <Tooltip title="设置为预发布版本,正式版本不会更新至此版本,可在脚本管理页开启脚本预发布安装链接">
-        <Checkbox
-          indeterminate={isPreRelease === 0}
-          value={isPreRelease === 1 ? true : false}
-          onChange={(val) => {
-            setPreRelease(val.target.checked ? 1 : 2);
-          }}
-        >
-          设置为预发布版本
-        </Checkbox>
-      </Tooltip>
       {script !== undefined && (
         <>
+          <h3 className="text-lg">版本设置</h3>
+          <Tooltip title="设置为预发布版本,正式版本不会更新至此版本,可在脚本管理页开启脚本预发布安装链接">
+            <Checkbox
+              indeterminate={isPreRelease === 0 && script.type === 1}
+              value={isPreRelease === 1 ? true : false}
+              onChange={(val) => {
+                setPreRelease(val.target.checked ? 1 : 2);
+              }}
+            >
+              {script.type === 1 ? '设置为预发布版本' : '标记为预发布版本'}
+            </Checkbox>
+          </Tooltip>
           <h3 className="text-lg">更多设置</h3>
           <span>
             更多设置已经迁移至<a href="./manage">脚本管理</a>中
