@@ -99,9 +99,8 @@ const GrayControl: React.FC<GrayControlProps> = ({
                   <Input
                     value={control.params.weight_day}
                     onChange={(val) => {
-                      value.controls[controlsIndex].params.weight_day = parseInt(
-                        val.target.value
-                      );
+                      value.controls[controlsIndex].params.weight_day =
+                        parseInt(val.target.value);
                       onChange(index, {
                         target_version: value.target_version,
                         controls: value.controls,
@@ -166,7 +165,13 @@ const GrayControl: React.FC<GrayControlProps> = ({
         >
           <Select.Option value="latest">最新正式版本</Select.Option>
           <Select.Option value="pre-latest">最新预发布版本</Select.Option>
-          <Select.Option value="all-latest">全部版本中的最新</Select.Option>
+          <Select.Option value="all-latest">最新版本</Select.Option>
+          <Select.Option value="latest^1">
+            上一正式版本
+          </Select.Option>
+          <Select.Option value="pre-latest^1">
+            上一预发布版本
+            </Select.Option>
         </Select>
       </Tooltip>
     </div>

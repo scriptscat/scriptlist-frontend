@@ -34,7 +34,6 @@ const UpdateScript: React.FC<{
   const [definition] = useState('');
   const [loading, setLoading] = useState(false);
   const [scriptType, setScriptType] = useState<1 | 2 | 3>(1);
-  const [enablePreRelease, setEnablePreRelease] = useState<1 | 2>(1);
   const [isPreRelease, setPreRelease] = useState<0 | 1 | 2>(0);
 
   return (
@@ -167,31 +166,6 @@ const UpdateScript: React.FC<{
         </>
       )}
       <h3 className="text-lg">版本设置</h3>
-      {script === undefined && (
-        <>
-          <h3 className="text-lg">开启预发布</h3>
-          <span>
-            开启预发布开关时, 当版本符合
-            <a
-              href="https://bbs.tampermonkey.net.cn/thread-3384-1-1.html"
-              target="_blank"
-              rel="noreferrer"
-            >
-              语义化版本
-            </a>
-            {'<pre-release>'}
-            时更新脚本将会自动标记为预发布版本,并且会在脚本首页提供预发布版本的安装按钮.
-          </span>
-          <Switch
-            checkedChildren="开启"
-            unCheckedChildren="关闭"
-            checked={enablePreRelease === 1 ? true : false}
-            onChange={(value) => {
-              setEnablePreRelease(value ? 1 : 2);
-            }}
-          />
-        </>
-      )}
       <Tooltip title="设置为预发布版本,正式版本不会更新至此版本,可在脚本管理页开启脚本预发布安装链接">
         <Checkbox
           indeterminate={isPreRelease === 0}
@@ -255,7 +229,6 @@ const UpdateScript: React.FC<{
                 unwell: unwell,
                 public: isPublic,
                 changelog: changelog,
-                enable_pre_release: enablePreRelease,
                 is_pre_release: isPreRelease,
               })
             ) {

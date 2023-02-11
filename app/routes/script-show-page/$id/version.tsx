@@ -97,7 +97,7 @@ export default function Version() {
         ></Input.TextArea>
         <Tooltip title="设置为预发布版本,正式版本不会更新至此版本,可在脚本管理页开启脚本预发布安装链接">
           <Checkbox
-            value={edit.is_pre_release === 1 ? true : false}
+            checked={edit.is_pre_release === 1 ? true : false}
             onChange={(val) => {
               setEdit({ ...edit, is_pre_release: val.target.checked ? 1 : 2 });
             }}
@@ -135,13 +135,13 @@ export default function Version() {
                         border: 0,
                       }}
                       onClick={() => {
-                        setModalOpen(true);
                         setEdit({
                           index: index,
                           id: item.id,
                           changelog: item.changelog,
                           is_pre_release: item.is_pre_release || 2,
                         });
+                        setModalOpen(true);
                       }}
                     />
                   </Button.Group>

@@ -206,7 +206,9 @@ export default function Manage() {
           {'<pre-release>'}
           时更新脚本将会自动标记为预发布版本,并且会在脚本首页提供预发布版本的安装按钮.
         </span>
-        <span>(首次开启会帮你新增一条预发布灰度规则)</span>
+        <span>
+          (首次开启会帮你新增三条策略：预发布用户更新到全部最新,正式版按权重在10天内逐步更新至最新正式版本,其它用户更新到上一正式版本)
+        </span>
         <Switch
           checkedChildren="开启"
           unCheckedChildren="关闭"
@@ -223,15 +225,41 @@ export default function Manage() {
                   });
                 });
                 !flag &&
-                  prev.push({
-                    target_version: 'all-latest',
-                    controls: [
-                      {
-                        type: 'pre-release',
-                        params: {},
-                      },
-                    ],
-                  });
+                  prev.push(
+                    {
+                      target_version: 'all-latest',
+                      controls: [
+                        {
+                          type: 'pre-release',
+                          params: {},
+                        },
+                      ],
+                    },
+                    {
+                      target_version: 'latest',
+                      controls: [
+                        {
+                          type: 'weight',
+                          params: {
+                            weight: 100,
+                            weight_day: 10,
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      target_version: 'latest^1',
+                      controls: [
+                        {
+                          type: 'weight',
+                          params: {
+                            weight: 100,
+                            weight_day: 0,
+                          },
+                        },
+                      ],
+                    }
+                  );
               }
               return [...prev];
             });

@@ -175,7 +175,6 @@ export type CreateScriptParams = {
   version: string;
   definition: string;
   type: 1 | 2 | 3;
-  enable_pre_release: 1 | 2;
 } & UpdateCodeParams;
 
 export async function CreateScript(params: CreateScriptParams) {
