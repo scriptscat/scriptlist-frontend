@@ -25,8 +25,12 @@ import {
 import { useContext, useState } from 'react';
 import { formatDate } from '~/utils/utils';
 import MarkdownView from '~/components/MarkdownView';
-import { ScriptContext } from '~/context-manager';
-import { ScriptVersionList, UpdateCodeSetting } from '~/services/scripts/api';
+import { ScriptContext, UserContext } from '~/context-manager';
+import {
+  ScriptCodeDelete,
+  ScriptVersionList,
+  UpdateCodeSetting,
+} from '~/services/scripts/api';
 import type { ScriptCode } from '~/services/scripts/types';
 
 type LoaderData = {
@@ -46,6 +50,7 @@ export default function Version() {
   const navigate = useNavigate();
   const [diff, setDiff] = useState(-1);
   const script = useContext(ScriptContext);
+  const user = useContext(UserContext);
   const [isModalOpen, setModalOpen] = useState(false);
   const [list, setList] = useState(data.list);
   const [edit, setEdit] = useState({
@@ -144,6 +149,40 @@ export default function Version() {
                         setModalOpen(true);
                       }}
                     />
+                    {user.user &&
+                      (script.script!.user_id == user.user.user_id ||
+                        user.user.is_admin > 0) && (
+                        <Popconfirm
+                          title="删除操作无法恢复,请确认是否删除"
+                          onConfirm={() => {
+                            ScriptCodeDelete(script.script!.id, item.id)
+                              .then((resp) => {
+                                if (resp.code === 0) {
+                                  message.success('删除成功');
+                                  setList((prev) => {
+                                    prev.splice(index, 1);
+                                    return [...prev];
+                                  });
+                                } else {
+                                  message.error(resp.msg);
+                                }
+                              })
+                              .catch((e) => {
+                                message.error('删除失败');
+                              });
+                          }}
+                          okText="确认"
+                          cancelText="取消"
+                        >
+                          <Button
+                            className="!rounded-none"
+                            icon={<DeleteOutlined />}
+                            style={{
+                              border: 0,
+                            }}
+                          />
+                        </Popconfirm>
+                      )}
                   </Button.Group>
                 </div>
                 <div className="py-2">

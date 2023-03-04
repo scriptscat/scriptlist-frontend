@@ -314,3 +314,11 @@ export async function UpdateScriptGrayControls(
   });
   return resp.data;
 }
+
+export async function ScriptCodeDelete(scriptId: number, codeId: number) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + scriptId + '/code/' + codeId,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
