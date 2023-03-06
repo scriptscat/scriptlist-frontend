@@ -1,29 +1,233 @@
 import { Line, Pie } from '@ant-design/plots';
-import { Card, Divider, Input, Progress, Table } from 'antd';
+import type { LoaderFunction } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import type { TablePaginationConfig } from 'antd';
+import { Card, Divider, Input, Progress, Table, Tooltip } from 'antd';
+import { json } from '@remix-run/node';
+import {
+  GetAdvRealtimeChart,
+  GetAdvStatistics,
+  GetOriginList,
+  GetVisitDomain,
+  GetVisitList,
+} from '~/services/scripts/api';
+import type {
+  AdvStatistics,
+  PieChart,
+  VisitListItem,
+} from '~/services/scripts/types';
+import React, { useContext, useEffect, useState } from 'react';
+import { ScriptContext } from '~/context-manager';
+import type { APIListResponse } from '~/services/http';
+import { formatDate, secondToMinute } from '~/utils/utils';
+
+export type LoaderData = {
+  data: AdvStatistics;
+};
+
+const PieChartList: React.FC<{
+  scriptId: number;
+  fetchDataFunc: (
+    scriptId: number,
+    page: number
+  ) => Promise<APIListResponse<PieChart>>;
+  columns: { title1: string; title2: string };
+}> = ({ scriptId, fetchDataFunc, columns }) => {
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState<PieChart[]>([]);
+  const [total, setTotal] = useState(0);
+  const fetchData = (page: number) => {
+    setLoading(true);
+    fetchDataFunc(scriptId, page).then((resp) => {
+      setData(resp.data.list);
+      setLoading(false);
+      setTotal(resp.data.total);
+    });
+  };
+  useEffect(() => {
+    fetchData(page);
+  }, [page]);
+  return (
+    <Table
+      className="flex-1"
+      size="small"
+      columns={[
+        {
+          title: columns.title1,
+          dataIndex: 'key',
+          key: 'key',
+          render(value, record, index) {
+            if (value == '') {
+              return '本地新建';
+            }
+            return value;
+          },
+        },
+        { title: columns.title2, dataIndex: 'value', key: 'value' },
+      ]}
+      dataSource={data}
+      loading={loading}
+      pagination={{
+        hideOnSinglePage: true,
+        total: total,
+        current: page,
+        pageSize: 20,
+        showSizeChanger: false,
+      }}
+      onChange={(pagination: TablePaginationConfig) => {
+        setPage(pagination.current || 1);
+      }}
+    ></Table>
+  );
+};
+
+const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState<VisitListItem[]>([]);
+  const [total, setTotal] = useState(0);
+  const fetchData = (page: number) => {
+    setLoading(true);
+    GetVisitList(scriptId, page).then((resp) => {
+      setData(resp.data.list);
+      setLoading(false);
+      setTotal(resp.data.total);
+    });
+  };
+  useEffect(() => {
+    fetchData(page);
+  }, [page]);
+  return (
+    <Table
+      className="flex-1"
+      size="small"
+      columns={[
+        {
+          title: '访客id',
+          dataIndex: 'visitor_id',
+          key: 'visitor_id',
+          render(value) {
+            // 截取16位
+            return value.slice(0, 16);
+          },
+        },
+        {
+          title: '访问页面',
+          dataIndex: 'operation_page',
+          key: 'operation_page',
+          render(value) {
+            // 超过20个字符就截取
+            if (value.length > 20) {
+              return (
+                <a href={value} target="_blank" rel="noreferrer">
+                  {value.slice(0, 20) + '...'}
+                </a>
+              );
+            }
+            return (
+              <a href={value} target="_blank" rel="noreferrer">
+                value
+              </a>
+            );
+          },
+        },
+        {
+          title: '停留时间',
+          dataIndex: 'duration',
+          key: 'duration',
+          render(value) {
+            if (value == '') {
+              return '-';
+            }
+            return secondToMinute(value);
+          },
+        },
+        {
+          title: '访问时间',
+          dataIndex: 'visit_time',
+          key: 'visit_time',
+          render(value) {
+            return formatDate(value);
+          },
+        },
+        {
+          title: '退出时间',
+          dataIndex: 'exit_time',
+          key: 'exit_time',
+          render(value) {
+            if (value == '') {
+              return '-';
+            }
+            return formatDate(value);
+          },
+        },
+      ]}
+      dataSource={data}
+      loading={loading}
+      pagination={{
+        hideOnSinglePage: true,
+        total: total,
+        current: page,
+        pageSize: 20,
+        showSizeChanger: false,
+      }}
+      onChange={(pagination: TablePaginationConfig) => {
+        setPage(pagination.current || 1);
+      }}
+    ></Table>
+  );
+};
+
+const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
+  const [chartData, setChartData] = useState([{}]);
+  useEffect(() => {
+    const time = setInterval(async () => {
+      const resp = await GetAdvRealtimeChart(scriptId);
+      const data = resp.data;
+      const chartData = [];
+      for (let i = 0; i < data.chart.x.length; i++) {
+        chartData.push({
+          name: '实时用户数量',
+          time: data.chart.x[i],
+          num: data.chart.y[i],
+        });
+      }
+      setChartData(chartData);
+    }, 2000);
+    return () => {
+      clearInterval(time);
+    };
+  });
+
+  return (
+    <Line
+      className="flex-4"
+      style={{ height: 300 }}
+      renderer="canvas"
+      animation={false}
+      data={chartData}
+      xField="time"
+      yField="num"
+      seriesField="name"
+    />
+  );
+};
+
+export const loader: LoaderFunction = async ({ params, request }) => {
+  const resp = await GetAdvStatistics(parseInt(params.id as string), request);
+  if (resp.code != 0) {
+    throw new Response(resp.msg, {
+      status: 403,
+      statusText: 'Forbidden',
+    });
+  }
+  return json({ data: resp.data } as LoaderData);
+};
 
 export default function Advanced() {
-  const origin = [
-    {
-      type: 'github',
-      value: 27,
-    },
-    {
-      type: 'scriptcat',
-      value: 25,
-    },
-    {
-      type: 'greasyfork',
-      value: 18,
-    },
-    {
-      type: '手动新建',
-      value: 15,
-    },
-    {
-      type: '其他',
-      value: 5,
-    },
-  ];
+  const data = useLoaderData<LoaderData>();
+  const script = useContext(ScriptContext);
 
   return (
     <>
@@ -39,12 +243,16 @@ export default function Advanced() {
               margin: '0 10px',
             }}
           />
-          才能获取数据
+          才能获取数据, 此功能还在测试中, 正式发布时可能会清空数据
         </span>
       </div>
       <div className="text-center">
-        <Progress percent={30} />
-        <span>受限于服务器资源,暂时限额1000000条数据</span>
+        <Tooltip title={data.data.limit.usage} placement="bottom">
+          <Progress
+            percent={Math.floor(data.data.limit.usage / data.data.limit.quota)}
+          />
+        </Tooltip>
+        <span>受限于服务器资源,暂时限额{data.data.limit.quota}条数据</span>
       </div>
       <Divider />
       <Card className="!p-0">
@@ -58,291 +266,79 @@ export default function Advanced() {
             </div>
             <div className="flex flex-col border-r p-4">
               <span>脚本执行数(pv)</span>
-              <span className="text-lg font-bold">1</span>
-              <span>2</span>
-              <span>3</span>
+              <span className="text-lg font-bold">{data.data.pv.today}</span>
+              <span>{data.data.pv.yesterday}</span>
+              <span>{data.data.pv.week}</span>
             </div>
             <div className="flex flex-col border-r p-4">
               <span>脚本用户数(uv)</span>
-              <span className="text-lg font-bold">1</span>
-              <span>2</span>
-              <span>3</span>
+              <span className="text-lg font-bold">{data.data.uv.today}</span>
+              <span>{data.data.uv.yesterday}</span>
+              <span>{data.data.uv.week}</span>
+            </div>
+            <div className="flex flex-col border-r p-4">
+              <span>ip数</span>
+              <span className="text-lg font-bold">{data.data.ip.today}</span>
+              <span>{data.data.ip.yesterday}</span>
+              <span>{data.data.ip.week}</span>
             </div>
             <div className="flex flex-col border-r p-4">
               <span>平均使用时间</span>
-              <span className="text-lg font-bold">1</span>
-              <span>2</span>
-              <span>3</span>
-            </div>
-            <div className="flex flex-col border-r p-4">
-              <span>新老用户</span>
-              <span className="text-lg font-bold">1|2</span>
-              <span>2|3</span>
-              <span>3|4</span>
+              <span className="text-lg font-bold">
+                {secondToMinute(data.data.use_time.today)}
+              </span>
+              <span>{secondToMinute(data.data.use_time.yesterday)}</span>
+              <span>{secondToMinute(data.data.use_time.week)}</span>
             </div>
           </div>
         </Card.Grid>
       </Card>
       <Divider />
-      <Card title="用户来源" size="small" bordered={false}>
-        <div className="flex flex-row">
+      <div className="flex flex-row w-full gap-4">
+        <Card
+          title="用户安装来源"
+          className="flex-1"
+          size="small"
+          bordered={false}
+        >
+          <PieChartList
+            scriptId={script.script!.id}
+            fetchDataFunc={GetOriginList}
+            columns={{ title1: '来源', title2: '用户数' }}
+          />
+        </Card>
+        <Card title="访问域" className="flex-1" size="small" bordered={false}>
+          <PieChartList
+            scriptId={script.script!.id}
+            fetchDataFunc={GetVisitDomain}
+            columns={{ title1: '访问域', title2: '用户数' }}
+          />
+        </Card>
+        <Card title="新老用户" className="flex-1" size="small" bordered={false}>
           <Pie
-            className="flex-4"
+            colorField="key"
             angleField="value"
-            colorField="type"
-            data={origin}
+            data={data.data.new_old_user}
           />
-          <Table
-            className="flex-1"
-            size="small"
-            columns={[
-              { title: '来源网站', dataIndex: 'origin', key: 'origin' },
-              { title: 'pv', dataIndex: 'pv', key: 'pv' },
-              { title: 'uv', dataIndex: 'uv', key: 'uv' },
-              {
-                title: '平均使用时长',
-                dataIndex: 'useTime',
-                key: 'useTime',
-              },
-            ]}
-            dataSource={[
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-            ]}
-          />
-        </div>
-      </Card>
+        </Card>
+      </div>
       <Divider />
       <div className="flex flex-row w-full gap-4">
         <Card title="版本分布" className="flex-1" size="small" bordered={false}>
-          <Pie
-            angleField="value"
-            colorField="type"
-            data={[
-              { value: 20, type: '1.0.1' },
-              { value: 30, type: '1.0.9' },
-              { value: 100, type: '1.2.1' },
-            ]}
-          />
+          <Pie colorField="key" angleField="value" data={data.data.version} />
         </Card>
-        <Card title="操作域" className="flex-1" size="small" bordered={false}>
-          <Pie
-            angleField="value"
-            colorField="type"
-            data={[
-              { value: 20, type: 'bbs.tampermonkey.net.cn' },
-              { value: 30, type: 'github.com' },
-              { value: 100, type: 'bilibili.com' },
-            ]}
-          />
+        <Card title="终端设备" className="flex-1" size="small" bordered={false}>
+          <Pie colorField="key" angleField="value" data={data.data.system} />
         </Card>
-        <Card title="系统环境" className="flex-1" size="small" bordered={false}>
-          <div className="flex flex-row">
-            <Pie
-              className="flex-1"
-              angleField="value"
-              colorField="type"
-              data={[
-                { value: 20, type: 'windows' },
-                { value: 30, type: 'mac' },
-                { value: 100, type: 'linux' },
-              ]}
-            />
-            <Pie
-              className="flex-1"
-              angleField="value"
-              colorField="type"
-              data={[
-                { value: 20, type: 'chrome' },
-                { value: 30, type: 'firefox' },
-                { value: 100, type: '360' },
-              ]}
-            />
-          </div>
+        <Card title="浏览器" className="flex-1" size="small" bordered={false}>
+          <Pie colorField="key" angleField="value" data={data.data.browser} />
         </Card>
       </div>
       <Divider />
       <Card title="实时用户" size="small" bordered={false}>
         <div className="flex flex-row gap-4">
-          <Line
-            className="flex-4"
-            style={{ height: 300 }}
-            renderer="canvas"
-            animation={false}
-            data={[
-              {
-                time: '2021-01-01 00:00:00',
-                num: 10,
-                name: 'uv',
-              },
-              {
-                time: '2021-01-01 00:00:00',
-                num: 17,
-                name: 'pv',
-              },
-              {
-                time: '2021-01-01 00:00:01',
-                num: 10,
-                name: 'uv',
-              },
-              {
-                time: '2021-01-01 00:00:01',
-                num: 17,
-                name: 'pv',
-              },
-            ]}
-            xField="time"
-            yField="num"
-            seriesField="name"
-          />
-          <Table
-            className="flex-1"
-            size="small"
-            columns={[
-              { title: '来源网站', dataIndex: 'origin', key: 'origin' },
-              { title: 'pv', dataIndex: 'pv', key: 'pv' },
-              { title: 'uv', dataIndex: 'uv', key: 'uv' },
-              {
-                title: '平均使用时长',
-                dataIndex: 'useTime',
-                key: 'useTime',
-              },
-            ]}
-            dataSource={[
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-              {
-                origin: '脚本猫',
-                pv: 100,
-                uv: 10,
-                useTime: '00:08:00',
-              },
-            ]}
-          />
+          <RealtimeColumn scriptId={script.script!.id} />
+          <VisitTable scriptId={script.script!.id} />
         </div>
       </Card>
     </>

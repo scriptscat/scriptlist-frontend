@@ -18,3 +18,15 @@ export function useDark() {
 export function splitNumber(num: string): string {
   return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
+
+export function unixToTime(unix: number) {
+  const date = new Date(unix * 1000);
+  return date.toLocaleString();
+}
+
+// 秒转化为几分钟:几秒,并填充0
+export function secondToMinute(second: number) {
+  const minute = Math.floor(second / 60);
+  const s = second % 60;
+  return `${minute < 10 ? '0' + minute : minute}:${s < 10 ? '0' + s : s}`;
+}
