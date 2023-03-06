@@ -26,6 +26,9 @@ export function unixToTime(unix: number) {
 
 // 秒转化为几分钟:几秒,并填充0
 export function secondToMinute(second: number) {
+  if (!second) {
+    return '00:00';
+  }
   const minute = Math.floor(second / 60);
   const s = second % 60;
   return `${minute < 10 ? '0' + minute : minute}:${s < 10 ? '0' + s : s}`;

@@ -47,6 +47,7 @@ const PieChartList: React.FC<{
   };
   useEffect(() => {
     fetchData(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   return (
     <Table
@@ -97,6 +98,7 @@ const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
   };
   useEffect(() => {
     fetchData(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
   return (
     <Table
@@ -137,9 +139,6 @@ const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
           dataIndex: 'duration',
           key: 'duration',
           render(value) {
-            if (value == '') {
-              return '-';
-            }
             return secondToMinute(value);
           },
         },
@@ -243,7 +242,7 @@ export default function Advanced() {
               margin: '0 10px',
             }}
           />
-          才能获取数据, 此功能还在测试中, 正式发布时可能会清空数据
+          才能获取数据, 此功能还在测试中, 可能还会有改动
         </span>
       </div>
       <div className="text-center">
