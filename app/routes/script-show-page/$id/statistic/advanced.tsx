@@ -232,16 +232,10 @@ export default function Advanced() {
     <>
       <div>
         <span>
-          高级统计需要在脚本中引用统计库
-          <Input
-            readOnly
-            value="// @require https://scriptcat.org/lib/1231/latest/statistic.js"
-            style={{
-              display: 'inline-block',
-              width: '50%',
-              margin: '0 10px',
-            }}
-          />
+          高级统计需要在脚本中引用
+          <a href="https://scriptcat.org/script-show-page/881" target="_blank" rel="noreferrer">
+            高级统计库
+          </a>
           才能获取数据, 此功能还在测试中, 可能还会有改动
         </span>
       </div>
