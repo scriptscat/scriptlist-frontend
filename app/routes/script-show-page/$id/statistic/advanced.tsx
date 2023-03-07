@@ -58,11 +58,26 @@ const PieChartList: React.FC<{
           title: columns.title1,
           dataIndex: 'key',
           key: 'key',
-          render(value, record, index) {
+          render(value: string, record, index) {
             if (value == '') {
               return '本地新建';
             }
-            return value;
+            // 截取长度,并检查有没有http前缀
+            if (!value.startsWith('http')) {
+              value = 'http://' + value;
+            }
+            if (value.length > 20) {
+              return (
+                <a href={value} target="_blank" rel="noreferrer">
+                  {value.slice(0, 20) + '...'}
+                </a>
+              );
+            }
+            return (
+              <a href={value} target="_blank" rel="noreferrer">
+                {value}
+              </a>
+            );
           },
         },
         { title: columns.title2, dataIndex: 'value', key: 'value' },
@@ -233,7 +248,11 @@ export default function Advanced() {
       <div>
         <span>
           高级统计需要在脚本中引用
-          <a href="https://scriptcat.org/script-show-page/881" target="_blank" rel="noreferrer">
+          <a
+            href="https://scriptcat.org/script-show-page/881"
+            target="_blank"
+            rel="noreferrer"
+          >
             高级统计库
           </a>
           才能获取数据, 此功能还在测试中, 可能还会有改动
