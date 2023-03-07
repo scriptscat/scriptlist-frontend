@@ -3,8 +3,11 @@ import type { APIResponse } from '../http';
 import { request } from '../http';
 import { paramsToSearch } from '../utils';
 import type {
+  AdvRealtimeChartResponse,
+  AdvStatisticsResponse,
   CreateScriptResponse,
   MyScoreResponse,
+  OriginListResponse,
   RealtimeResponse,
   ScoreListResponse,
   ScriptResponse,
@@ -13,6 +16,8 @@ import type {
   ScriptVersionListResponse,
   SearchResponse,
   StatisticsResponse,
+  VisitDomainResponse,
+  VisitListResponse,
 } from './types';
 
 export type SortType =
@@ -319,6 +324,50 @@ export async function ScriptCodeDelete(scriptId: number, codeId: number) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + scriptId + '/code/' + codeId,
     method: 'DELETE',
+  });
+  return resp.data;
+}
+
+// 高级统计
+export async function GetAdvStatistics(scriptId: number, req: Request) {
+  const resp = await request<AdvStatisticsResponse>({
+    url: '/statistics/' + scriptId + '/advanced',
+    method: 'GET',
+    headers: {
+      cookie: req.headers.get('Cookie') || '',
+    },
+  });
+  return resp.data;
+}
+
+export async function GetAdvRealtimeChart(scriptId: number) {
+  const resp = await request<AdvRealtimeChartResponse>({
+    url: '/statistics/' + scriptId + '/realtime/chart',
+    method: 'GET',
+  });
+  return resp.data;
+}
+
+export async function GetOriginList(scriptId: number, page: number) {
+  const resp = await request<OriginListResponse>({
+    url: '/statistics/' + scriptId + '/user-origin?page=' + page,
+    method: 'GET',
+  });
+  return resp.data;
+}
+
+export async function GetVisitDomain(scriptId: number, page: number) {
+  const resp = await request<VisitDomainResponse>({
+    url: '/statistics/' + scriptId + '/visit-domain?page=' + page,
+    method: 'GET',
+  });
+  return resp.data;
+}
+
+export async function GetVisitList(scriptId: number, page: number) {
+  const resp = await request<VisitListResponse>({
+    url: '/statistics/' + scriptId + '/visit?page=' + page,
+    method: 'GET',
   });
   return resp.data;
 }

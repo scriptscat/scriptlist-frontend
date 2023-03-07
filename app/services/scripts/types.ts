@@ -19,7 +19,47 @@ export type ScriptStateResponse = APIDataResponse<{
 
 export type StatisticsResponse = APIDataResponse<Statistics>;
 
+export type PieChart = Array<{ key: string; value: number }>;
+
+export type AdvStatistics = {
+  limit: { quota: number; usage: number };
+  pv: Overview;
+  uv: Overview;
+  ip: Overview;
+  use_time: Overview;
+  new_old_user: PieChart;
+  version: PieChart;
+  system: PieChart;
+  browser: PieChart;
+};
+
+export type AdvStatisticsResponse = APIDataResponse<AdvStatistics>;
+
+export type AdvRealtimeChart = {
+  chart: StatisticsChart;
+};
+
+export type AdvRealtimeChartResponse = APIDataResponse<AdvRealtimeChart>;
+
+export type AdvRealtime = {};
+
+export type AdvRealtimeResponse = APIDataResponse<AdvRealtime>;
+
 export type RealtimeResponse = APIDataResponse<Realtime>;
+
+export type OriginListResponse = APIListResponse<PieChart>;
+
+export type VisitDomainResponse = APIListResponse<PieChart>;
+
+export type VisitListItem = {
+  visitor_id: string;
+  operation_page: string;
+  duration: number;
+  visit_time: number;
+  exit_time: number;
+};
+
+export type VisitListResponse = APIListResponse<VisitListItem>;
 
 export type Script = {
   id: number;

@@ -39,7 +39,7 @@ export const meta: MetaFunction = ({ data, location }) => {
     comment: '评分',
     version: '版本列表',
     update: '更新脚本',
-    statistic: '安装统计',
+    statistic: '脚本统计',
     manage: '脚本管理',
   };
   return {
@@ -153,7 +153,7 @@ export default function ScriptShowPage() {
         },
         {
           key: 'statistic',
-          label: <Link to={'./statistic'}>安装统计</Link>,
+          label: <Link to={'./statistic'}>脚本统计</Link>,
         },
         {
           key: 'manage',
