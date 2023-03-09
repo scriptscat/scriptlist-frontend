@@ -1,8 +1,8 @@
 import { Line, Pie } from '@ant-design/plots';
 import type { LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import type { TablePaginationConfig } from 'antd';
-import { Card, Divider, Input, Progress, Table, Tooltip } from 'antd';
+import { Button, Input, List, message, TablePaginationConfig } from 'antd';
+import { Card, Divider, Progress, Table, Tooltip } from 'antd';
 import { json } from '@remix-run/node';
 import {
   GetAdvRealtimeChart,
@@ -10,6 +10,7 @@ import {
   GetOriginList,
   GetVisitDomain,
   GetVisitList,
+  UpdateWhitelist,
 } from '~/services/scripts/api';
 import type {
   AdvStatistics,
@@ -242,7 +243,23 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 export default function Advanced() {
   const data = useLoaderData<LoaderData>();
   const script = useContext(ScriptContext);
+  const [whitelist, setWhitelist] = useState<string[]>(
+    data.data.whitelist || []
+  );
+  const [whitelistAdd, setWhitelistAdd] = useState('');
 
+  const submitWhitlist = async () => {
+    const resp = await UpdateWhitelist(script.script!.id, [
+      ...whitelist,
+      whitelistAdd,
+    ]);
+    if (resp.code == 0) {
+      setWhitelist(resp.data.whitelist);
+      setWhitelistAdd('');
+    } else {
+      message.error(resp.msg);
+    }
+  };
   return (
     <>
       <div>
@@ -305,6 +322,63 @@ export default function Advanced() {
           </div>
         </Card.Grid>
       </Card>
+      <Divider orientation="left">统计key</Divider>
+      <Input value={data.data.statistics_key} readOnly style={{ width: 200 }} />
+      <Divider orientation="left">收集白名单</Divider>
+      <List
+        grid={{
+          gutter: 16,
+          xs: 1,
+          sm: 2,
+          md: 4,
+          lg: 4,
+          xl: 6,
+          xxl: 3,
+        }}
+        renderItem={(item) => {
+          return (
+            <List.Item>
+              <span>{item}</span>
+              <Button
+                type="link"
+                size="small"
+                onClick={async () => {
+                  const tmpWhitelist = whitelist.filter((v) => v != item);
+                  const resp = await UpdateWhitelist(
+                    script.script!.id,
+                    tmpWhitelist
+                  );
+                  if (resp.code == 0) {
+                    setWhitelist(resp.data.whitelist);
+                    setWhitelistAdd('');
+                  } else {
+                    message.error(resp.msg);
+                  }
+                }}
+              >
+                删除
+              </Button>
+            </List.Item>
+          );
+        }}
+        dataSource={whitelist}
+        footer={
+          <div>
+            <span>添加白名单: </span>
+            <Input
+              style={{ width: 200 }}
+              value={whitelistAdd}
+              onChange={(e) => {
+                setWhitelistAdd(e.target.value);
+              }}
+              onPressEnter={submitWhitlist}
+            />
+            <Button type="primary" onClick={submitWhitlist}>
+              添加
+            </Button>
+          </div>
+        }
+      />
       <Divider />
       <div className="flex flex-row w-full gap-4">
         <Card

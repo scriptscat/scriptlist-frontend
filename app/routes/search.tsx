@@ -9,7 +9,7 @@ import {
   useSearchParams,
 } from '@remix-run/react';
 import { Avatar, Card, Collapse, Radio, Space, Tag } from 'antd';
-import { search } from '~/services/scripts/api';
+import { lastScoreScript, search } from '~/services/scripts/api';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 
@@ -25,10 +25,7 @@ interface loaderResponse {
 
 // 脚本列表使用嵌套路由实现
 export const loader: LoaderFunction = async ({ request }) => {
-  const score = await search({
-    sort: 'score',
-    size: 10,
-  });
+  const score = await lastScoreScript();
   const update = await search({
     sort: 'updatetime',
     size: 10,
@@ -175,7 +172,7 @@ export default function Search() {
             <Collapse.Panel header="最新脚本" key="3">
               <RankList list={loader.rank.update} />
             </Collapse.Panel>
-            <Collapse.Panel header="评分推荐" key="2">
+            <Collapse.Panel header="最新评分" key="2">
               <RankList list={loader.rank.score} />
             </Collapse.Panel>
           </Collapse>
