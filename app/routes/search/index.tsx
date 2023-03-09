@@ -28,6 +28,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       keyword: url.searchParams.get('keyword') || '',
       sort: (url.searchParams.get('sort') as SortType) || 'today_download',
       script_type: (url.searchParams.get('script_type') as ScriptType) || '',
+      domain: url.searchParams.get('domain') || '',
     },
     request
   );

@@ -2,7 +2,7 @@ import { Line, Pie } from '@ant-design/plots';
 import type { LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import type { TablePaginationConfig } from 'antd';
-import { Card, Divider, Input, Progress, Table, Tooltip } from 'antd';
+import { Card, Divider, Progress, Table, Tooltip } from 'antd';
 import { json } from '@remix-run/node';
 import {
   GetAdvRealtimeChart,

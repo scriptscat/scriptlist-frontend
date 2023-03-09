@@ -64,6 +64,14 @@ export async function search(
   return resp.data;
 }
 
+export async function lastScoreScript() {
+  const resp = await request<SearchResponse>({
+    url: '/scripts/last-score',
+    method: 'GET',
+  });
+  return resp.data;
+}
+
 export async function getScript(id: number, req: Request, withCode?: boolean) {
   const resp = await request<ScriptResponse>({
     url: '/scripts/' + id + (withCode ? '/code' : ''),
