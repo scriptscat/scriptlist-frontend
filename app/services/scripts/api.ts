@@ -16,6 +16,7 @@ import type {
   ScriptVersionListResponse,
   SearchResponse,
   StatisticsResponse,
+  UpdateWhitelistResponse,
   VisitDomainResponse,
   VisitListResponse,
 } from './types';
@@ -376,6 +377,15 @@ export async function GetVisitList(scriptId: number, page: number) {
   const resp = await request<VisitListResponse>({
     url: '/statistics/' + scriptId + '/visit?page=' + page,
     method: 'GET',
+  });
+  return resp.data;
+}
+
+export async function UpdateWhitelist(scriptId: number, whitelist: string[]) {
+  const resp = await request<UpdateWhitelistResponse>({
+    url: '/statistics/' + scriptId + '/whitelist',
+    method: 'PUT',
+    data: { whitelist },
   });
   return resp.data;
 }

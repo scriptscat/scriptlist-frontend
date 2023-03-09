@@ -22,6 +22,8 @@ export type StatisticsResponse = APIDataResponse<Statistics>;
 export type PieChart = Array<{ key: string; value: number }>;
 
 export type AdvStatistics = {
+  statistics_key: string;
+  whitelist?: string[];
   limit: { quota: number; usage: number };
   pv: Overview;
   uv: Overview;
@@ -60,6 +62,8 @@ export type VisitListItem = {
 };
 
 export type VisitListResponse = APIListResponse<VisitListItem>;
+
+export type UpdateWhitelistResponse = APIDataResponse<{ whitelist: string[] }>;
 
 export type Script = {
   id: number;
