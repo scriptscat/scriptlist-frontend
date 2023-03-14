@@ -278,7 +278,9 @@ export default function Advanced() {
       <div className="text-center">
         <Tooltip title={data.data.limit.usage} placement="bottom">
           <Progress
-            percent={Math.floor(data.data.limit.usage / data.data.limit.quota)}
+            percent={
+              Math.floor(data.data.limit.usage / data.data.limit.quota) * 100
+            }
           />
         </Tooltip>
         <span>受限于服务器资源,暂时限额{data.data.limit.quota}条数据</span>
