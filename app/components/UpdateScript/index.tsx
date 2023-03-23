@@ -114,7 +114,7 @@ const UpdateScript: React.FC<{
               <Radio value={2}>
                 订阅脚本,脚本猫特有支持的类型,仅会在安装时弹出安装界面由用户确认订阅,后续的更新采用静默更新的方式
                 <a
-                  href="https://docs.scriptcat.org/dev/subscribe.html"
+                  href="https://docs.scriptcat.org/docs/dev/subscribe/"
                   target="_blank"
                   rel="noreferrer"
                 >
