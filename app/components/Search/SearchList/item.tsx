@@ -411,7 +411,7 @@ const SearchItem: React.FC<{
                               ? genRequire(
                                   script.id,
                                   script.name,
-                                  '^' + script.script.version
+                                  '%5E' + script.script.version
                                 )
                               : requireSelect == 2
                               ? genRequire(
