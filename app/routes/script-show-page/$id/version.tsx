@@ -266,7 +266,7 @@ export default function Version() {
                   <>
                     <Input.Group compact>
                       <Input
-                        style={{ width: '200px' }}
+                        style={{ width: '500px' }}
                         defaultValue={
                           '// @require https://scriptcat.org/lib/' +
                           script.script.id +

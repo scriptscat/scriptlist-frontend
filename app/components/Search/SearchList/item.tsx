@@ -24,6 +24,7 @@ import {
   Input,
   Menu,
   message,
+  Select,
   Space,
   Tag,
   Tooltip,
@@ -79,6 +80,18 @@ function checkVersem(str: string) {
   return reg.test(str);
 }
 
+function genRequire(scriptId: number, name: string, version: string) {
+  return (
+    '// @require https://scriptcat.org/lib/' +
+    scriptId +
+    '/' +
+    version +
+    '/' +
+    encodeURIComponent(name) +
+    '.js'
+  );
+}
+
 const SearchItem: React.FC<{
   script: Script;
   watch?: WatchLevel;
@@ -96,7 +109,7 @@ const SearchItem: React.FC<{
   const navigate = useNavigate();
   const [installTitle, setInstallTitle] = useState('安装脚本');
   // 判断是否为语义化版本
-  const isVersem = action && checkVersem(script.script.version);
+  const [requireSelect, setRequireSelect] = useState(1);
   useEffect(() => {
     if (action) {
       const api =
@@ -359,34 +372,58 @@ const SearchItem: React.FC<{
                 {script.type == 3 && (
                   <>
                     <Input.Group compact>
-                      <Input
+                      <Select
                         style={{ width: '500px' }}
-                        defaultValue={
-                          '// @require https://scriptcat.org/lib/' +
-                          script.id +
-                          '/' +
-                          (isVersem ? '^' : '') +
-                          script.script.version +
-                          '/' +
-                          encodeURIComponent(script.name) +
-                          '.js'
-                        }
-                        readOnly
-                      />
+                        value={requireSelect}
+                        onChange={(value) => {
+                          setRequireSelect(value);
+                        }}
+                      >
+                        <Select.Option value={1}>
+                          {genRequire(
+                            script.id,
+                            script.name,
+                            '^' + script.script.version
+                          ) + ' (最新兼容版本)'}
+                        </Select.Option>
+                        <Select.Option value={2}>
+                          {genRequire(
+                            script.id,
+                            script.name,
+                            '~' + script.script.version
+                          ) + ' (最新修复版本)'}
+                        </Select.Option>
+                        <Select.Option value={3}>
+                          {genRequire(
+                            script.id,
+                            script.name,
+                            script.script.version
+                          ) + ' (指定版本)'}
+                        </Select.Option>
+                      </Select>
                       <Tooltip placement="bottom" title="复制链接">
                         <Button
                           type="default"
                           icon={<CopyOutlined />}
                           className="copy-require-link"
                           require-link={
-                            '// @require https://scriptcat.org/lib/' +
-                            script.id +
-                            '/' +
-                            (isVersem ? '%5E' : '') +
-                            script.script.version +
-                            '/' +
-                            encodeURIComponent(script.name) +
-                            '.js'
+                            requireSelect == 1
+                              ? genRequire(
+                                  script.id,
+                                  script.name,
+                                  '^' + script.script.version
+                                )
+                              : requireSelect == 2
+                              ? genRequire(
+                                  script.id,
+                                  script.name,
+                                  '~' + script.script.version
+                                )
+                              : genRequire(
+                                  script.id,
+                                  script.name,
+                                  script.script.version
+                                )
                           }
                         ></Button>
                       </Tooltip>
