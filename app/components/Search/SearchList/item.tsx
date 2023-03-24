@@ -74,6 +74,11 @@ const antifeatures: {
   },
 };
 
+function checkVersem(str: string) {
+  const reg = /^(\d+)\.(\d+)\.(\d+)$/;
+  return reg.test(str);
+}
+
 const SearchItem: React.FC<{
   script: Script;
   watch?: WatchLevel;
@@ -90,6 +95,8 @@ const SearchItem: React.FC<{
   };
   const navigate = useNavigate();
   const [installTitle, setInstallTitle] = useState('安装脚本');
+  // 判断是否为语义化版本
+  const isVersem = action && checkVersem(script.script.version);
   useEffect(() => {
     if (action) {
       const api =
@@ -358,6 +365,7 @@ const SearchItem: React.FC<{
                           '// @require https://scriptcat.org/lib/' +
                           script.id +
                           '/' +
+                          (isVersem ? '^' : '') +
                           script.script.version +
                           '/' +
                           encodeURIComponent(script.name) +
@@ -374,6 +382,7 @@ const SearchItem: React.FC<{
                             '// @require https://scriptcat.org/lib/' +
                             script.id +
                             '/' +
+                            (isVersem ? '%5E' : '') +
                             script.script.version +
                             '/' +
                             encodeURIComponent(script.name) +
