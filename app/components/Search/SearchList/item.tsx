@@ -383,22 +383,22 @@ const SearchItem: React.FC<{
                           {genRequire(
                             script.id,
                             script.name,
-                            '^' + script.script.version
-                          ) + ' (最新兼容版本)'}
+                            script.script.version
+                          )}
                         </Select.Option>
                         <Select.Option value={2}>
                           {genRequire(
                             script.id,
                             script.name,
-                            '~' + script.script.version
-                          ) + ' (最新修复版本)'}
+                            '^' + script.script.version
+                          ) + ' (最新兼容版本)'}
                         </Select.Option>
                         <Select.Option value={3}>
                           {genRequire(
                             script.id,
                             script.name,
-                            script.script.version
-                          ) + ' (指定版本)'}
+                            '~' + script.script.version
+                          ) + ' (最新修复版本)'}
                         </Select.Option>
                       </Select>
                       <Tooltip placement="bottom" title="复制链接">
@@ -411,18 +411,18 @@ const SearchItem: React.FC<{
                               ? genRequire(
                                   script.id,
                                   script.name,
-                                  '%5E' + script.script.version
+                                  script.script.version
                                 )
                               : requireSelect == 2
                               ? genRequire(
                                   script.id,
                                   script.name,
-                                  '~' + script.script.version
+                                  '%5E' + script.script.version
                                 )
                               : genRequire(
                                   script.id,
                                   script.name,
-                                  script.script.version
+                                  '~' + script.script.version
                                 )
                           }
                         ></Button>

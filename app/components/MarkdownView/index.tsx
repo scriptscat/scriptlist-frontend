@@ -29,6 +29,14 @@ class MarkdownRenderer extends marked.Renderer {
       '</a>'
     );
   }
+
+  html(html: string): string {
+    // 判断是否为html标签，并加上controls="controls"属性
+    if (html.startsWith('<video') && !html.includes('controls="controls"')) {
+      html = html.replace('<video', '<video controls="controls"');
+    }
+    return html;
+  }
 }
 
 const MarkdownView: React.FC<{ id: string; content: string }> = ({
