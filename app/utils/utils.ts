@@ -2,6 +2,7 @@ import { formatDistance } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { useContext } from 'react';
 import { UserContext } from '../context-manager';
+import { Script } from '~/services/scripts/types';
 
 export function formatDate(value: number) {
   return formatDistance(value * 1000, new Date(), {
@@ -32,4 +33,12 @@ export function secondToMinute(second: number) {
   const minute = Math.floor(second / 60);
   const s = second % 60;
   return `${minute < 10 ? '0' + minute : minute}:${s < 10 ? '0' + s : s}`;
+}
+
+export function scriptName(script: Script) {
+  return script.script.meta_json['name:zh-cn'] || script.name;
+}
+
+export function scriptDescription(script: Script) {
+  return script.script.meta_json['description:zh-cn'] || script.description;
 }

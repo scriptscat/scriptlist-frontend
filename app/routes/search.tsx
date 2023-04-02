@@ -12,6 +12,7 @@ import { Avatar, Card, Collapse, Radio, Space, Tag } from 'antd';
 import { lastScoreScript, search } from '~/services/scripts/api';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
+import { scriptName } from '~/utils/utils';
 
 // 加载热门脚本与分类等不希望重新加载的数据
 export const unstable_shouldReload = () => false;
@@ -77,7 +78,7 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
                 {index + 1}
               </Tag>
             )}
-            <span className="ml-1">{item.name}</span>
+            <span className="ml-1">{scriptName(item)}</span>
           </Link>
         </div>
       ))}

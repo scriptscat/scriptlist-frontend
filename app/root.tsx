@@ -19,7 +19,7 @@ import antdLight from './styles/light.css';
 import antdDark from './styles/dark.css';
 import { parseCookie } from '~/utils/cookie';
 import { getCurrentUserAndRefushToken } from './services/users/api';
-import type { Follow, User } from './services/users/types';
+import type { User } from './services/users/types';
 import { UserContext } from './context-manager';
 import tuiEditor from '@toast-ui/editor/dist/toastui-editor.css';
 import tuiEditorDark from '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
@@ -49,7 +49,7 @@ export const unstable_shouldReload = () => false;
 
 export const loader: LoaderFunction = async ({ request }) => {
   const cookieHeader = request.headers.get('Cookie');
-  let user: { follow: Follow; user: User } | undefined;
+  let user: User | undefined;
   const respInit: ResponseInit = {};
   let styleMode = '';
   if (cookieHeader) {

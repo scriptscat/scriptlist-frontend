@@ -30,7 +30,7 @@ import {
   Tooltip,
 } from 'antd';
 import { RiMessage2Line } from 'react-icons/ri';
-import { formatDate, splitNumber } from '~/utils/utils';
+import { formatDate, scriptDescription, scriptName, splitNumber } from '~/utils/utils';
 import type { Script, WatchLevel } from '~/services/scripts/types';
 import ActionMenu from '~/components/ActionMenu';
 import { DeleteScript, WatchScript } from '~/services/scripts/api';
@@ -168,7 +168,7 @@ const SearchItem: React.FC<{
                 to={'/script-show-page/' + script.id}
                 target="_blank"
               >
-                {script.name}
+                {scriptName(script)}
               </Link>
             </div>
             <div>
@@ -268,7 +268,7 @@ const SearchItem: React.FC<{
           </div>
         </Card.Grid>
         <Card.Grid hoverable={false} className="!py-2 !px-3" style={gridStyle}>
-          {script.description}
+          {scriptDescription(script)}
         </Card.Grid>
         <Card.Grid hoverable={false} style={gridStyle}>
           <div className="flex flex-row gap-4 py-2">

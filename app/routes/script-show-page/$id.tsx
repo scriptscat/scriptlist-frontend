@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import ClipboardJS from 'clipboard';
 import { forwardHeaders } from '~/utils/cookie';
+import { scriptName } from '~/utils/utils';
 
 export type LoaderData = {
   script: Script & { issue_num: number };
@@ -166,7 +167,8 @@ export default function ScriptShowPage() {
     if (
       !(
         users.user &&
-        (users.user.user_id === data.script.user_id || users.user.is_admin === 1)
+        (users.user.user_id === data.script.user_id ||
+          users.user.is_admin === 1)
       ) &&
       ['update', 'statistic', 'manage'].indexOf(current) !== -1
     ) {
@@ -201,7 +203,7 @@ export default function ScriptShowPage() {
           to={'/script-show-page/' + data.script.id}
           className="text-2xl text-black dark:text-white"
         >
-          {data.script.name}
+          {scriptName(data.script)}
         </Link>
         <Menu selectedKeys={[current]} mode="horizontal" items={items}></Menu>
 

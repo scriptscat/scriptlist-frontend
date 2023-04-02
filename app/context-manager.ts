@@ -1,13 +1,12 @@
 import { createContext } from 'react';
 import type { Script } from './services/scripts/types';
-import type { Follow, User } from './services/users/types';
+import type { User } from './services/users/types';
 
 export type UserContextData = {
   user?: User;
   dark?: boolean;
   env?: {
     APP_API_URL: string;
-    
   };
 };
 
