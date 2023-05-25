@@ -1,7 +1,7 @@
+import type { V2_MetaFunction } from '@remix-run/react';
 import {
   Link,
   Outlet,
-  V2_MetaFunction,
   useCatch,
   useLoaderData,
   useLocation,
@@ -10,7 +10,7 @@ import type { MenuProps } from 'antd';
 import { Space, Tag } from 'antd';
 import { Alert, message } from 'antd';
 import { Menu } from 'antd';
-import type { LoaderFunction, MetaFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { getScript } from '~/services/scripts/api';
 import type { Script } from '~/services/scripts/types';
