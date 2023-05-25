@@ -1,10 +1,7 @@
-import type { LoaderFunction, MetaFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import {
-  Outlet,
-  useCatch,
-  useLoaderData,
-} from '@remix-run/react';
+import type { V2_MetaFunction } from '@remix-run/react';
+import { Outlet, useCatch, useLoaderData } from '@remix-run/react';
 import { Avatar, Button, Card, Tag } from 'antd';
 import { useContext } from 'react';
 import { UserContext } from '~/context-manager';
@@ -16,16 +13,11 @@ type LoaderData = {
   follow: Follow;
 };
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: V2_MetaFunction = ({ data }) => {
   if (!data || !data.user) {
-    return {
-      title: '用户不存在 - ScriptCat',
-      description: 'Not Found',
-    };
+    return [{ title: '用户不存在 - ScriptCat' }, { description: 'Not Found' }];
   }
-  return {
-    title: data.user.username + ' - ScriptCat',
-  };
+  return [{ title: data.user.username + ' - ScriptCat' }];
 };
 
 export function CatchBoundary() {

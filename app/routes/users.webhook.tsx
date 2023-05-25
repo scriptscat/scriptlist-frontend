@@ -1,6 +1,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import type { LoaderFunction, MetaFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import type { V2_MetaFunction } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import { Button, Card, message, Modal, Steps } from 'antd';
 import { useContext } from 'react';
@@ -13,9 +14,9 @@ export type LoaderData = {
   token: WebhookResp;
 };
 
-export const meta: MetaFunction = () => ({
-  title: 'Webhook管理 - ScriptCat',
-});
+export const meta: V2_MetaFunction = () => [
+  { title: 'Webhook管理 - ScriptCat' },
+];
 
 export const loader: LoaderFunction = async ({ request }) => {
   const resp = await GetWebhook(request);

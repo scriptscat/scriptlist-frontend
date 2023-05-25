@@ -234,9 +234,7 @@ const UpdateScript: React.FC<{
             ) {
               markdown.current?.setMarkdown('');
             }
-          } catch (e) {
-            console.error(e);
-          }
+          } catch (e) {}
           setLoading(false);
         }}
       >

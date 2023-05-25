@@ -9,8 +9,9 @@ import {
   EllipsisOutlined,
   LinkOutlined,
 } from '@ant-design/icons';
-import type { LoaderFunction, MetaFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import type { V2_MetaFunction } from '@remix-run/react';
 import { Link, useLoaderData, useNavigate } from '@remix-run/react';
 import {
   Avatar,
@@ -57,22 +58,22 @@ type LoaderData = {
   comments: IssueComment[];
 };
 
-export const meta: MetaFunction = ({ data, parentsData }) => {
+export const meta: V2_MetaFunction = ({ data, matches }) => {
   if (!data) {
-    return {
-      title: '未找到反馈 - ScriptCat',
-      description: 'Not Found',
-    };
+    return [{ title: '未找到反馈 - ScriptCat' }, { description: 'Not Found' }];
   }
-  return {
-    title:
-      data.issue.title +
-      ' · 反馈 #' +
-      data.issue.id +
-      ' · ' +
-      parentsData['routes/script-show-page/$id'].script.name +
-      ' - ScriptCat',
-  };
+  console.log(matches);
+  return [
+    {
+      title:
+        data.issue.title +
+        ' · 反馈 #' +
+        data.issue.id +
+        ' · ' +
+        (matches[1].data as any).script.name +
+        ' - ScriptCat',
+    },
+  ];
 };
 
 export const loader: LoaderFunction = async ({ params, request }) => {

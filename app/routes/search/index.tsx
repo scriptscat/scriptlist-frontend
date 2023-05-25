@@ -1,5 +1,6 @@
-import type { LoaderFunction, MetaFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import type { V2_MetaFunction } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import { message } from 'antd';
 import ClipboardJS from 'clipboard';
@@ -14,9 +15,11 @@ export type LoaderData = {
   page: number;
 };
 
-export const meta: MetaFunction = ({ data }: { data: LoaderData }) => ({
-  title: '用户脚本列表 - ScriptCat',
-});
+export const meta: V2_MetaFunction = ({ data }: { data: LoaderData }) => [
+  {
+    title: '用户脚本列表 - ScriptCat',
+  },
+];
 
 // 脚本列表使用嵌套路由实现
 export const loader: LoaderFunction = async ({ request }) => {

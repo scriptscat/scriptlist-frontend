@@ -14,7 +14,6 @@ const GoogleAd: React.FC<{
         // @ts-ignore
         t = null;
       } catch (e) {
-        console.warn(e);
         cnt++;
         if (cnt > 10) {
           clearInterval(t);

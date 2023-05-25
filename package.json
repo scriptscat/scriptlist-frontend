@@ -19,9 +19,9 @@
     "@ant-design/icons": "^4.7.0",
     "@ant-design/plots": "^1.2.4",
     "@antv/g-base": "0.5.11",
-    "@remix-run/node": "^1.4.3",
-    "@remix-run/react": "^1.4.3",
-    "@remix-run/serve": "^1.4.3",
+    "@remix-run/node": "^1.16.1",
+    "@remix-run/react": "^1.16.1",
+    "@remix-run/serve": "^1.16.1",
     "@toast-ui/editor": "^3.1.7",
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.0.0",
     "@types/ua-parser-js": "^0.7.36",
@@ -42,8 +42,8 @@
     "xss": "^1.0.13"
   },
   "devDependencies": {
-    "@remix-run/dev": "^1.4.3",
-    "@remix-run/eslint-config": "^1.4.3",
+    "@remix-run/dev": "^1.16.1",
+    "@remix-run/eslint-config": "^1.16.1",
     "@types/marked": "^4.0.3",
     "@types/prismjs": "^1.16.6",
     "@types/react": "^17.0.24",

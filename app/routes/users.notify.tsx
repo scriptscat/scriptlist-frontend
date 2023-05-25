@@ -1,13 +1,15 @@
-import { json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import type { LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import type { V2_MetaFunction } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import { Card, Checkbox, message, Space } from 'antd';
 import { useState } from 'react';
 import { SetUsetNotify, UserConfig } from '~/services/users/api';
-import { UserConfig as UserConfigItem } from '~/services/users/types';
+import type { UserConfig as UserConfigItem } from '~/services/users/types';
 
-export const meta: MetaFunction = () => ({
-  title: '用户通知管理 - ScriptCat',
-});
+export const meta: V2_MetaFunction = () => [
+  { title: '用户通知管理 - ScriptCat' },
+];
 
 const notifyItem = [
   {

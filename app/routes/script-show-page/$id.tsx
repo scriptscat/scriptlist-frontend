@@ -1,6 +1,7 @@
 import {
   Link,
   Outlet,
+  V2_MetaFunction,
   useCatch,
   useLoaderData,
   useLocation,
@@ -25,12 +26,9 @@ export type LoaderData = {
   script: Script & { issue_num: number };
 };
 
-export const meta: MetaFunction = ({ data, location }) => {
+export const meta: V2_MetaFunction = ({ data, location }) => {
   if (!data) {
-    return {
-      title: '未找到脚本 - ScriptCat',
-      description: 'Not Found',
-    };
+    return [{ title: '未找到脚本 - ScriptCat' }, { description: 'Not Found' }];
   }
   const match = /\d+\/(\w+)(\/|$)/g.exec(location.pathname);
   const current = match ? match[1] : 'home';
@@ -43,10 +41,10 @@ export const meta: MetaFunction = ({ data, location }) => {
     statistic: '脚本统计',
     manage: '脚本管理',
   };
-  return {
-    title: data.script.name + (map[current] ? ' - ' + map[current] : ''),
-    description: data.script.description,
-  };
+  return [
+    { title: data.script.name + (map[current] ? ' - ' + map[current] : '') },
+    { description: data.script.description },
+  ];
 };
 
 export function CatchBoundary() {
