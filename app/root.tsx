@@ -23,6 +23,7 @@ import tuiEditorDark from '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import { useState } from 'react';
 import { InitAxios } from './services/http';
 import prism from 'prismjs/themes/prism.css';
+import GoogleAdScript from './components/GoogleAd/script';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -98,11 +99,7 @@ export default function App() {
       <head>
         <Meta />
         <Links />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8009073269666226"
-          crossOrigin="anonymous"
-        ></script>
+        <GoogleAdScript />
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-N2X6MNVRL3"

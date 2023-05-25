@@ -1,9 +1,12 @@
-import { useNavigate } from '@remix-run/react';
+import { useLocation, useNavigate, useNavigation } from '@remix-run/react';
 import { useEffect } from 'react';
 
 const GoogleAdScript: React.FC = () => {
-  const nav = useNavigate();
-  console.log('nav', nav);
+  const location = useLocation();
+  // 如果pathname匹配/script-show-page/367/
+  if (!/\/script-show-page\/\d+[\/]$/.test(location.pathname)) {
+    return <></>;
+  }
   return (
     <>
       <script
