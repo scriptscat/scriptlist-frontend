@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 const GoogleAdScript: React.FC = () => {
   const location = useLocation();
   // 如果pathname匹配/script-show-page/367/
-  if (!/\/script-show-page\/\d+[\/]$/.test(location.pathname)) {
+  if (!/\/script-show-page\/\d+[/]?$/.test(location.pathname)) {
     return <></>;
   }
   return (
