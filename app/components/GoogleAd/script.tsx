@@ -1,5 +1,4 @@
-import { useLocation, useNavigate, useNavigation } from '@remix-run/react';
-import { useEffect } from 'react';
+import { useLocation } from '@remix-run/react';
 
 const GoogleAdScript: React.FC = () => {
   const location = useLocation();

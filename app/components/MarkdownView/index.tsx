@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { marked } from 'marked';
+import { Slugger, marked } from 'marked';
 import { useLocation } from '@remix-run/react';
 import Prism from 'prismjs';
 import xss, { whiteList } from 'xss';
@@ -58,6 +58,12 @@ const MarkdownView: React.FC<{ id: string; content: string }> = ({
   const l = whiteList;
   l.input = ['type', 'checked', 'disabled'];
   l.code = ['class'];
+  l.h1 = ['id'];
+  l.h2 = ['id'];
+  l.h3 = ['id'];
+  l.h4 = ['id'];
+  l.h5 = ['id'];
+  l.h6 = ['id'];
   return (
     <div
       className="viewer markdown-body"
