@@ -87,7 +87,10 @@ export default function Index() {
                 description={
                   <Space direction="vertical">
                     <span>还没有人来给脚本打分，快来成为第一个打分的人吧</span>
-                    <Button type="link" href="./comment">
+                    <Button
+                      type="link"
+                      href={'./' + script.script?.id + '/comment'}
+                    >
                       前往评分
                     </Button>
                   </Space>
