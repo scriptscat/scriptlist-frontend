@@ -1,10 +1,14 @@
-import { formatDistance } from 'date-fns';
+import { format, formatDistance } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { useContext } from 'react';
 import { UserContext } from '../context-manager';
-import { Script } from '~/services/scripts/types';
+import type { Script } from '~/services/scripts/types';
 
 export function formatDate(value: number) {
+  // 如果大于一年，显示年月日
+  if (value * 1000 < new Date().getTime() - 365 * 24 * 60 * 60 * 1000) {
+    return format(value * 1000, "yyyy年MM月dd日");
+  }
   return formatDistance(value * 1000, new Date(), {
     addSuffix: true,
     locale: zhCN,
