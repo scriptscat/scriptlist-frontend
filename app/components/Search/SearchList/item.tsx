@@ -30,7 +30,12 @@ import {
   Tooltip,
 } from 'antd';
 import { RiMessage2Line } from 'react-icons/ri';
-import { formatDate, scriptDescription, scriptName, splitNumber } from '~/utils/utils';
+import {
+  formatDate,
+  scriptDescription,
+  scriptName,
+  splitNumber,
+} from '~/utils/utils';
 import type { Script, WatchLevel } from '~/services/scripts/types';
 import ActionMenu from '~/components/ActionMenu';
 import { DeleteScript, WatchScript } from '~/services/scripts/api';
