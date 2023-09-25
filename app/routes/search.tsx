@@ -150,7 +150,20 @@ export default function Search() {
         <div className="flex-col gap-3 hidden basis-1/4 md:flex overflow-hidden">
           <Card>
             <Card.Meta
-              title="学油猴脚本"
+              title={
+                <div className="flex flex-row justify-between items-center">
+                  <span>学油猴脚本</span>
+                  <span className="text-xs">
+                    <a
+                      href="https://bbs.tampermonkey.net.cn/forum-75-1.html"
+                      className="text-gray-400"
+                      target="_blank"
+                    >
+                      建议/投诉/举报
+                    </a>
+                  </span>
+                </div>
+              }
               description={
                 <span className="text-gray-400">
                   就来
@@ -158,7 +171,6 @@ export default function Search() {
                     href="https://bbs.tampermonkey.net.cn"
                     className="text-gray-400"
                     target="_blank"
-                    rel="noreferrer"
                   >
                     油猴中文网
                   </a>

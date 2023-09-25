@@ -46,11 +46,6 @@
   text-align: right;
 }
 
-.markdown-body ol,
-.markdown-body ul {
-  list-style: disc;
-}
-
 /* github markdown css start */
 .dark h1,
 .dark h2,
@@ -455,7 +450,7 @@
 .markdown-body ol {
   margin-top: 0;
   margin-bottom: 0;
-  padding-left: 2em;
+  padding-left: 1em;
 }
 
 .markdown-body ol ol,
