@@ -1,12 +1,15 @@
 import { Button, Card, Checkbox, Space } from 'antd';
 import { QuestionCircleFilled, CodeFilled } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import UAParser from 'ua-parser-js';
 import Search from '~/components/Search';
 
 export default function Index() {
   const [browser, setBrowser] = useState('浏览器');
   const [installUrl] = useState('https://docs.scriptcat.org/use');
+  const { t } = useTranslation();
 
   useEffect(() => {
     const ua = new UAParser(navigator.userAgent);
@@ -25,7 +28,7 @@ export default function Index() {
     <div className="flex flex-col text-black dark:text-white gap-4">
       <div className="flex flex-col items-center gap-2">
         <span className="text-5xl m-0">Script Cat</span>
-        <span>比全更全的用户脚本托管平台</span>
+        <span>{t('subtitle')}</span>
         <Search className="w-4/5" />
         <span className="text-2xl">更强大的脚本执行扩展</span>
         <span>让你的浏览器拥有更多可能</span>
