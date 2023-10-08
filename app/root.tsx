@@ -8,7 +8,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  isRouteErrorResponse,
   useLoaderData,
+  useRouteError,
 } from '@remix-run/react';
 import MainLayout from '~/components/layout/MainLayout';
 import styles from './styles/app.css';
@@ -20,13 +22,13 @@ import type { User } from './services/users/types';
 import { UserContext } from './context-manager';
 import tuiEditor from '@toast-ui/editor/dist/toastui-editor.css';
 import tuiEditorDark from '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { InitAxios } from './services/http';
 import prism from 'prismjs/themes/prism.css';
 import GoogleAdScript from './components/GoogleAd/script';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
-import i18next from '~/i18next.server';
+import { getLocale } from './utils/utils';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -49,7 +51,8 @@ export const meta: V2_MetaFunction = ({ data }) => {
 export const unstable_shouldReload = () => false;
 
 export const loader: LoaderFunction = async ({ request }) => {
-  let locale = await i18next.getLocale(request);
+  // 根据路径设置语言
+  let locale = getLocale(request);
   const cookieHeader = request.headers.get('Cookie');
   let user: User | undefined;
   const respInit: ResponseInit = {};
@@ -79,7 +82,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       login: {
         user: user,
       },
-      locale,
+      locale: locale || 'en',
     },
     respInit
   );
@@ -93,9 +96,78 @@ export let handle = {
   i18n: 'common',
 };
 
+export function CatchBoundary() {
+  const error = useRouteError();
+  const [config, setConfig] = useState<any>();
+  const [dart, setDart] = useState(false);
+  const [locale, setLocale] = useState('en');
+
+  useEffect(() => {
+    fetch('/?_data=root').then((resp) => {
+      resp.json().then((data) => {
+        setConfig(data);
+        setDart(data.styleMode === 'dark');
+        setLocale(data.locale);
+        // This hook will change the i18n instance language to the current locale
+        // detected by the loader, this way, when we do something to change the
+        // language, this locale will change and i18next will load the correct
+        // translation files
+        useChangeLanguage(locale);
+      });
+    });
+  }, []);
+
+  // Get the locale from the loader
+
+  let { i18n } = useTranslation();
+
+  let data = 'Unknown Error';
+  let subtitle = '';
+  let title = 'Oh no!';
+  if (isRouteErrorResponse(error)) {
+    data = error.statusText;
+    title = error.statusText;
+    subtitle = error.data;
+  } else if (error instanceof Error) {
+    data = error.message;
+  }
+
+  return (
+    <html lang={locale} dir={i18n.dir()}>
+      <head>
+        <title>{title}</title>
+        <Meta />
+        <Links />
+      </head>
+      <body className={dart ? 'dark' : 'light'}>
+        <UserContext.Provider
+          value={{
+            user: config && config.login.user,
+            dark: dart,
+            env: config && config.ENV,
+          }}
+        >
+          <MainLayout
+            styleMode={config && config.styleMode}
+            oauthClient={config && config.ENV.APP_BBS_OAUTH_CLIENT}
+            apiUrl={config && config.ENV.APP_API_URL}
+            onDarkModeChange={(dart) => setDart(dart)}
+          >
+            <div className="text-2xl">{data}</div>
+            {subtitle && <div className="text-xl">{subtitle}</div>}
+          </MainLayout>
+        </UserContext.Provider>
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
+      </body>
+    </html>
+  );
+}
+
 export default function App() {
   const config = useLoaderData();
-  const [dart, setDart] = useState(false);
+  const [dart, setDart] = useState(config.styleMode === 'dark');
   // 设置axios
   InitAxios({
     baseURL:
@@ -109,7 +181,7 @@ export default function App() {
   });
 
   // Get the locale from the loader
-  let { locale } = useLoaderData<typeof loader>();
+  let { locale } = config;
 
   let { i18n } = useTranslation();
 
@@ -150,7 +222,7 @@ export default function App() {
           }}
         />
       </head>
-      <body>
+      <body className={dart ? 'dark' : 'light'}>
         <UserContext.Provider
           value={{
             user: config.login.user,

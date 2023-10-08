@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+body.dark {
+  color: #ffffffd9 !important;
+}
+
+body.light {
+  color: #000000d9 !important;
+}
+
 .header-menu .light-menu-item>*,
 .header-menu .dark-menu-item>* {
   vertical-align: middle !important;
