@@ -20,31 +20,48 @@ export default async function handleRequest(
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
-  if (process.env.NODE_ENV === 'development') {
-    const url = new URL(request.url);
-    if (url.pathname.startsWith('/api/')) {
-      // 反向代理
-      let url = request.url.replace(
-        /^.*?\/api\/v2/g,
-        process.env.APP_API_PROXY || 'http://localhost:3000/api/v2'
-      );
-      let proxyUrl = new URL(
-        process.env.APP_API_PROXY || 'http://localhost:3000/api/v2'
-      );
-      let headers = new Headers();
-      request.headers.forEach((value, key) => {
-        if (key == 'host') {
-          headers.set('host', proxyUrl.host);
-        } else {
-          headers.set(key, request.headers.get(key)!);
+  const url = new URL(request.url);
+  const splitPath = url.pathname.split('/');
+  if (splitPath.length > 1) {
+    switch (splitPath[1].toLowerCase()) {
+      case 'api':
+        if (process.env.NODE_ENV === 'development') {
+          // 反向代理
+          let url = request.url.replace(
+            /^.*?\/api\/v2/g,
+            process.env.APP_API_PROXY || 'http://localhost:3000/api/v2'
+          );
+          let proxyUrl = new URL(
+            process.env.APP_API_PROXY || 'http://localhost:3000/api/v2'
+          );
+          let headers = new Headers();
+          request.headers.forEach((value, key) => {
+            if (key == 'host') {
+              headers.set('host', proxyUrl.host);
+            } else {
+              headers.set(key, request.headers.get(key)!);
+            }
+          });
+          return fetch(url, {
+            method: request.method,
+            headers: headers,
+            body: request.body,
+            redirect: request.redirect,
+          });
         }
-      });
-      return fetch(url, {
-        method: request.method,
-        headers: headers,
-        body: request.body,
-        redirect: request.redirect,
-      });
+        break;
+      case 'script-show-page':
+      case 'users':
+      case 'search':
+      case 'post-script':
+        // 如果是以下面的路径开头的,则获取语言并重定向路径
+        let lng = await i18next.getLocale(request);
+        return new Response(null, {
+          status: 301,
+          headers: {
+            Location: `/${lng}${url.pathname}`,
+          },
+        });
     }
   }
 

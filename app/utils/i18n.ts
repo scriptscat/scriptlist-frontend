@@ -10,7 +10,7 @@ export async function i18nRedirect({ request }: { request: Request }) {
   return redirect('/' + locale + new URL(request.url).pathname, 301);
 }
 
-const lngMap: {
+export const lngMap: {
   [key: string]: { [key: string]: { name: string; value: string } };
 } = {
   en: { en: { name: 'English', value: 'en' } },
@@ -22,7 +22,11 @@ const lngMap: {
 
 // 根据路径获取语言
 export function getLocale(request: Request) {
-  let split = new URL(request.url).pathname.split('/');
+ return getLocaleByURL(request.url);
+}
+
+export function getLocaleByURL(url: string) {
+  let split = new URL(url).pathname.split('/');
   if (split.length < 1) {
     return 'en';
   }
@@ -36,6 +40,21 @@ export function getLocale(request: Request) {
   } else if (split.length === 2) {
     if (lngMap[lng] && lngMap[lng][locale]) {
       return lngMap[lng][locale].value;
+    }
+  }
+  return '';
+}
+
+export function getLocaleName(locale: string) {
+  let split = locale.split('-');
+  let lng = split[0];
+  if (split.length === 1) {
+    if (lngMap[lng] && lngMap[lng][locale]) {
+      return lngMap[lng][locale].name;
+    }
+  } else if (split.length === 2) {
+    if (lngMap[lng] && lngMap[lng][locale]) {
+      return lngMap[lng][locale].name;
     }
   }
   return '';

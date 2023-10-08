@@ -14,34 +14,35 @@ import {
   CodeOutlined,
   ChromeOutlined,
   UserOutlined,
+  GlobalOutlined,
 } from '@ant-design/icons';
 import { RiSunLine, RiMoonLine, RiComputerLine } from 'react-icons/ri';
 import { Link, useLocation } from '@remix-run/react';
 import Search from '~/components/Search';
 import { UserContext } from '~/context-manager';
 import { useLocale } from 'remix-i18next';
+import { getLocaleName, lngMap } from '~/utils/i18n';
+import { useTranslation } from 'react-i18next';
 
 const { Header, Footer, Content } = Layout;
 
 const MainLayout: React.FC<{
+  locale: string;
   children: ReactNode;
   oauthClient: string;
   apiUrl: string;
   onDarkModeChange: (dark: boolean) => void;
-}> = ({ children, oauthClient, apiUrl, onDarkModeChange }) => {
+}> = ({ children, locale, oauthClient, apiUrl, onDarkModeChange }) => {
   const user = useContext(UserContext);
   const [dark, _setDark] = useState(user.dark ? 'dark' : 'light');
   const [mode, setMode] = useState('auto');
+  const { t } = useTranslation();
+
   useEffect(() => {
     setMode(localStorage.getItem('styleMode') || 'auto');
   }, []);
-  const locale = '/' + useLocale();
+  const uLocale = '/' + locale;
   const setDark = (mode: string) => {
-    if (mode === 'light') {
-      document.body.style.backgroundColor = '#ffffff';
-    } else {
-      document.body.style.backgroundColor = '#000000';
-    }
     _setDark(mode);
     message.config({
       prefixCls: mode === 'light' ? 'light-message' : 'dark-message',
@@ -51,91 +52,33 @@ const MainLayout: React.FC<{
   };
   const location = useLocation();
   const current =
-    location.pathname == locale + '/'
+    location.pathname == uLocale + '/'
       ? 'home'
-      : location.pathname == locale + '/search'
+      : location.pathname == uLocale + '/search'
       ? 'list'
       : '';
   const items: MenuProps['items'] = [
     {
-      label: <Link to={locale + '/'}>首页</Link>,
+      label: <Link to={uLocale + '/'}>{t('home')}</Link>,
       key: 'home',
       icon: <HomeOutlined />,
     },
     {
-      label: <a href="https://bbs.tampermonkey.net.cn">社区</a>,
+      label: <a href="https://bbs.tampermonkey.net.cn">{t('community')}</a>,
       key: 'bbs',
       icon: <MessageOutlined />,
     },
     {
-      label: <Link to={locale + '/search'}>脚本列表</Link>,
+      label: <Link to={uLocale + '/search'}>{t('script_list')}</Link>,
       key: 'list',
       icon: <CodeOutlined />,
     },
     {
-      label: <a href="https://docs.scriptcat.org/">浏览器扩展</a>,
+      label: <a href="https://docs.scriptcat.org/">{t('browser_extension')}</a>,
       key: 'extension',
       icon: <ChromeOutlined />,
     },
   ];
-  const modeMenu = (
-    <Menu
-      className="!rounded-md border-inherit border-1 w-32 !mt-4"
-      selectedKeys={[mode]}
-      onClick={({ key }) => {
-        setMode(key);
-        localStorage.setItem('styleMode', key);
-      }}
-      items={[
-        {
-          label: (
-            <Space>
-              <RiSunLine />
-              <p className="text-sm m-0">Light</p>
-            </Space>
-          ),
-          key: 'light',
-        },
-        {
-          label: (
-            <Space>
-              <RiMoonLine />
-              <p className="text-sm m-0">Dark</p>
-            </Space>
-          ),
-          key: 'dark',
-        },
-        {
-          label: (
-            <Space>
-              <RiComputerLine />
-              <p className="text-sm m-0">跟随系统</p>
-            </Space>
-          ),
-          key: 'auto',
-        },
-      ]}
-    ></Menu>
-  );
-
-  const userMenu = (
-    <Menu
-      className="!rounded-md border-inherit border-1 w-32 !mt-4"
-      items={[
-        {
-          label: (
-            <Link to={{ pathname: locale + '/users/' + user.user?.user_id }}>
-              <Space className="anticon-middle">
-                <UserOutlined />
-                <p className="text-sm m-0">个人中心</p>
-              </Space>
-            </Link>
-          ),
-          key: 'users',
-        },
-      ]}
-    ></Menu>
-  );
 
   useEffect(() => {
     if (mode == 'auto') {
@@ -157,10 +100,10 @@ const MainLayout: React.FC<{
     }
   }, [mode]);
 
-  let DropdownIcon = <RiSunLine className="text-base" />;
+  let DropdownIcon = <RiSunLine className="text-base cursor-pointer" />;
   switch (dark) {
     case 'dark':
-      DropdownIcon = <RiMoonLine className="text-base" />;
+      DropdownIcon = <RiMoonLine className="text-base cursor-pointer" />;
       break;
   }
 
@@ -176,6 +119,21 @@ const MainLayout: React.FC<{
     );
   };
 
+  let localeList = [];
+  for (const [, lng] of Object.entries(lngMap)) {
+    for (const [key, value] of Object.entries(lng)) {
+      localeList.push({
+        label: value.name,
+        key: key,
+      });
+    }
+  }
+
+  localeList.push({
+    label: t('help_translate'),
+    key: 'help',
+  });
+
   return (
     <>
       <ConfigProvider prefixCls={dark}>
@@ -188,7 +146,7 @@ const MainLayout: React.FC<{
           <Header className="flex flex-row">
             <div className="items-center flex flex-row justify-start basis-3/4">
               <div className="items-center flex flex-row w-full">
-                <Link to={locale + '/'} className="hidden lg:block min-w-max">
+                <Link to={uLocale + '/'} className="hidden lg:block min-w-max">
                   <img
                     style={{
                       width: '32px',
@@ -208,7 +166,7 @@ const MainLayout: React.FC<{
                   }}
                 />
               </div>
-              {location.pathname == locale + '/search' && (
+              {location.pathname == uLocale + '/search' && (
                 <div
                   style={{
                     width: '80%',
@@ -225,25 +183,111 @@ const MainLayout: React.FC<{
                   size="small"
                   onClick={() => {
                     if (!user.user) {
-                      message.info('请先登录');
+                      message.info(t('please_login'));
                       return false;
                     } else {
-                      window.open(locale + '/post-script', '_self');
+                      window.open(uLocale + '/post-script', '_self');
                     }
                   }}
                 >
-                  发布脚本
+                  {t('publish_script')}
                 </Button>
                 <Dropdown
-                  overlay={modeMenu}
+                  menu={{
+                    className: '!rounded-md border-inherit border-1 w-32 !mt-4',
+                    selectedKeys: [mode],
+                    onClick: ({ key }) => {
+                      setMode(key);
+                      localStorage.setItem('styleMode', key);
+                    },
+                    items: [
+                      {
+                        label: (
+                          <Space>
+                            <RiSunLine />
+                            <p className="text-sm m-0">{t('light')}</p>
+                          </Space>
+                        ),
+                        key: 'light',
+                      },
+                      {
+                        label: (
+                          <Space>
+                            <RiMoonLine />
+                            <p className="text-sm m-0">{t('dark')}</p>
+                          </Space>
+                        ),
+                        key: 'dark',
+                      },
+                      {
+                        label: (
+                          <Space>
+                            <RiComputerLine />
+                            <p className="text-sm m-0">{t('system')}</p>
+                          </Space>
+                        ),
+                        key: 'auto',
+                      },
+                    ],
+                  }}
                   trigger={['click']}
                   placement="bottomLeft"
                 >
                   {DropdownIcon}
                 </Dropdown>
+                <Dropdown
+                  menu={{
+                    className: '!rounded-md border-inherit border-1 w-32 !mt-4',
+                    selectedKeys: [uLocale],
+                    onClick: ({ key }) => {
+                      if (key == 'help') {
+                        window.open(
+                          'https://github.com/scriptscat/scriptlist-frontend/tree/main/public/locales',
+                          '_blank'
+                        );
+                      } else {
+                        // 修改路径为对应的语言
+                        const newUrl = window.location.href.replace(
+                          uLocale,
+                          key
+                        );
+                        console.log(key);
+                        window.location.href = newUrl;
+                      }
+                    },
+                    items: localeList,
+                  }}
+                  trigger={['click']}
+                  placement="bottomLeft"
+                >
+                  <GlobalOutlined style={{ display: 'block' }} />
+                </Dropdown>
                 {user.user ? (
                   <Dropdown
-                    overlay={userMenu}
+                    menu={{
+                      className:
+                        '!rounded-md border-inherit border-1 w-32 !mt-4',
+                      items: [
+                        {
+                          label: (
+                            <Link
+                              to={{
+                                pathname:
+                                  uLocale + '/users/' + user.user?.user_id,
+                              }}
+                            >
+                              <Space className="anticon-middle">
+                                <UserOutlined />
+                                <p className="text-sm m-0">
+                                  {t('personal_center')}
+                                </p>
+                              </Space>
+                            </Link>
+                          ),
+                          key: 'users',
+                        },
+                      ],
+                    }}
                     trigger={['click']}
                     placement="bottom"
                   >
@@ -256,7 +300,7 @@ const MainLayout: React.FC<{
                     ghost
                     onClick={gotoLogin}
                   >
-                    登录
+                    {t('login')}
                   </Button>
                 )}
               </Space>
@@ -270,7 +314,7 @@ const MainLayout: React.FC<{
                 target="_blank"
                 rel="noreferrer"
               >
-                油猴中文网
+                {t('tampermonkey_chinese_website')}
               </a>
               <Divider type="vertical" />
               <a
@@ -278,7 +322,7 @@ const MainLayout: React.FC<{
                 target="_blank"
                 rel="noreferrer"
               >
-                脚本猫
+                {t('scriptcat')}
               </a>
               <Divider type="vertical" />
               <a
@@ -290,7 +334,7 @@ const MainLayout: React.FC<{
               </a>
             </div>
             <p className="m-0 text-sm">
-              © 2022-至今 ScriptCat. All rights reserved.
+              © 2022-至今 ScriptCat. {t('all_rights_reserved')}
             </p>
           </Footer>
         </Layout>

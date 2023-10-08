@@ -10,11 +10,10 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
   useLoaderData,
-  useNavigate,
-  useNavigation,
   useRouteError,
-  useTransition,
 } from '@remix-run/react';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import Backend from 'i18next-http-backend';
 import MainLayout from '~/components/layout/MainLayout';
 import styles from './styles/app.css';
 import antdLight from './styles/light.css';
@@ -25,14 +24,25 @@ import type { User } from './services/users/types';
 import { UserContext } from './context-manager';
 import tuiEditor from '@toast-ui/editor/dist/toastui-editor.css';
 import tuiEditorDark from '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { InitAxios } from './services/http';
 import prism from 'prismjs/themes/prism.css';
 import GoogleAdScript from './components/GoogleAd/script';
-import { useChangeLanguage } from 'remix-i18next';
-import { useTranslation } from 'react-i18next';
-import { getLocale } from './utils/i18n';
+import {
+  getInitialNamespaces,
+  useChangeLanguage,
+  useLocale,
+} from 'remix-i18next';
+import {
+  I18nContext,
+  I18nextProvider,
+  initReactI18next,
+  useTranslation,
+} from 'react-i18next';
+import { getLocale, getLocaleByURL } from './utils/i18n';
 import NavigationProcess from './components/NavigationProcess/NavigationProcess';
+import { createInstance } from 'i18next';
+import i18n from './i18n';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -105,25 +115,22 @@ export function CatchBoundary() {
   const [config, setConfig] = useState<any>();
   const [dart, setDart] = useState(false);
   const [locale, setLocale] = useState('en');
+  const i18n = useContext(I18nContext);
 
   useEffect(() => {
-    fetch('/?_data=root').then((resp) => {
+    fetch('/' + getLocaleByURL(location.href) + '/?_data=root').then((resp) => {
       resp.json().then((data) => {
         setConfig(data);
         setDart(data.styleMode === 'dark');
         setLocale(data.locale);
-        // This hook will change the i18n instance language to the current locale
-        // detected by the loader, this way, when we do something to change the
-        // language, this locale will change and i18next will load the correct
-        // translation files
-        useChangeLanguage(locale);
+        i18n.i18n.changeLanguage(data.locale);
       });
     });
   }, []);
 
   // Get the locale from the loader
 
-  let { i18n } = useTranslation();
+  let tr = useTranslation();
 
   let data = 'Unknown Error';
   let subtitle = '';
@@ -137,7 +144,7 @@ export function CatchBoundary() {
   }
 
   return (
-    <html lang={locale} dir={i18n.dir()}>
+    <html lang={locale} dir={tr.i18n.dir()}>
       <head>
         <title>{title}</title>
         <Meta />
@@ -152,6 +159,7 @@ export function CatchBoundary() {
           }}
         >
           <MainLayout
+            locale={locale}
             oauthClient={config && config.ENV.APP_BBS_OAUTH_CLIENT}
             apiUrl={config && config.ENV.APP_API_URL}
             onDarkModeChange={(dart) => setDart(dart)}
@@ -235,6 +243,7 @@ export default function App() {
         >
           <NavigationProcess />
           <MainLayout
+            locale={locale}
             oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
             apiUrl={config.ENV.APP_API_URL}
             onDarkModeChange={(dart) => setDart(dart)}

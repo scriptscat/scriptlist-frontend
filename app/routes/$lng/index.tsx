@@ -7,13 +7,13 @@ import UAParser from 'ua-parser-js';
 import Search from '~/components/Search';
 
 export default function Index() {
-  const [browser, setBrowser] = useState('浏览器');
   const [installUrl] = useState('https://docs.scriptcat.org/use');
   const { t } = useTranslation();
+  const [browser, setBrowser] = useState(t("browser"));
 
   useEffect(() => {
     const ua = new UAParser(navigator.userAgent);
-    //TODO: 跳转到对应的商店
+    // TODO: 跳转到对应的商店
     switch (ua.getBrowser().name) {
       case 'Edge':
         return setBrowser('Edge');
@@ -30,21 +30,21 @@ export default function Index() {
         <span className="text-5xl m-0">Script Cat</span>
         <span>{t('subtitle')}</span>
         <Search className="w-4/5" />
-        <span className="text-2xl">更强大的脚本执行扩展</span>
-        <span>让你的浏览器拥有更多可能</span>
+        <span className="text-2xl">{t('powerful_script_extension')}</span>
+        <span>{t('more_possibilities_for_your_browser')}</span>
         <div className="flex flex-row justify-center">
           <Space>
             <Checkbox className="checkbox-round !text-base" checked={true}>
-              油猴脚本
+              {t('greasemonkey_script')}
             </Checkbox>
             <Checkbox className="checkbox-round !text-base" checked={true}>
-              后台脚本
+              {t('background_script')}
             </Checkbox>
             <Checkbox className="checkbox-round !text-base" checked={true}>
-              定时脚本
+              {t('scheduled_script')}
             </Checkbox>
             <Checkbox className="checkbox-round !text-base" checked={true}>
-              云端脚本
+              {t('cloud_script')}
             </Checkbox>
           </Space>
         </div>
@@ -55,7 +55,7 @@ export default function Index() {
           target={'_blank'}
           href={installUrl}
         >
-          将 ScriptCat 添加至 {browser}
+          {t('add_scriptcat_to')} {browser}
         </Button>
       </div>
       <div className="flex flex-row justify-between gap-6">
@@ -70,20 +70,16 @@ export default function Index() {
               src="/assets/logo.png"
               alt="logo"
             />
-            <p className="text-3xl m-0">脚本猫</p>
+            <p className="text-3xl m-0">{t('scriptcat')}</p>
             <div className="text-left text-gray-500">
-              <p className="m-0">
-                脚本猫是一个可以执行用户脚本的浏览器扩展，让你的浏览器可以做更多的事情！
-                持续兼容油猴脚本中，已兼容90%+的油猴脚本，更多油猴特性完善中。
-                并且另外支持更强大的后台脚本和定时脚本!
-              </p>
+              <p className="m-0">{t('scriptcat_description')}</p>
               <p className="m-0 mt-2 font-bold">
-                如果您已经安装了其他脚本管理器（Tanmpermonkey（油猴）），可以选择不安装脚本猫。
+                {t('if_you_have_installed_other_script_managers')}
               </p>
               <p className="m-0 font-bold">
-                如果您想使用脚本猫，请先点击
+                {t('if_you_want_to_use_scriptcat')}{' '}
                 <a target="_blank" href={installUrl} rel="noreferrer">
-                  安装脚本猫。
+                  {t('install_scriptcat')}
                 </a>
               </p>
             </div>
@@ -95,19 +91,27 @@ export default function Index() {
               className="text-6xl"
               style={{ color: '#4695d5' }}
             />
-            <p className="text-3xl m-0">常见问题</p>
+            <p className="text-3xl m-0">{t('common_questions')}</p>
             <div className="text-left text-gray-500">
-              <p className="m-0 font-bold">1.油猴脚本有什么用？</p>
-              <p className="m-0">
-                他可以拓展网页功能，去除广告，增加易用性等等，提高你网上冲浪的体验。
+              <p className="m-0 font-bold">
+                {t('what_are_greasemonkey_scripts')}
               </p>
-              <p className="m-0 font-bold"> 2.ScriptCat脚本猫又是什么？</p>
               <p className="m-0">
-                参考了油猴的设计思路并且支持油猴脚本，实现了一个后台脚本运行的框架，并且也支持大部分的油猴脚本。推荐直接安装脚本猫，支持的脚本范围更广。
+                {t('greasemonkey_scripts_can_extend_web_page_functionality')}
               </p>
-              <p className="m-0 font-bold">3.如何使用油猴脚本？</p>
+              <p className="m-0 font-bold"> {t('what_is_scriptcat')}</p>
+              <p className="m-0">
+                {t(
+                  'scriptcat_is_based_on_greasemonkey_and_supports_most_greasemonkey_scripts'
+                )}
+              </p>
+              <p className="m-0 font-bold">
+                {t('how_to_use_greasemonkey_scripts')}
+              </p>
               <p>
-                使用油猴脚本首先需要安装油猴管理器，油猴管理器根据不同浏览器安装的方式有所不同。
+                {t(
+                  'using_greasemonkey_scripts_requires_installing_greasemonkey_manager'
+                )}
               </p>
             </div>
           </div>
@@ -115,31 +119,39 @@ export default function Index() {
         <Card className="flex-1 !rounded-xl">
           <div className="text-center">
             <CodeFilled className="text-6xl" style={{ color: '#4695d5' }} />
-            <p className="text-3xl m-0">成为开发者</p>
+            <p className="text-3xl m-0">{t('become_a_developer')}</p>
             <div className="text-left text-gray-500">
               <p className="m-0">
-                在您成为论坛开发者后，我们可以提供以下福利！
+                {t('as_a_forum_developer_we_can_offer_the_following_benefits')}
               </p>
-              <p className="m-0">1.论坛首页推荐！</p>
+              <p className="m-0">{t('1_forum_homepage_recommendation')}</p>
               <p className="m-0">
-                2.微信公众号文章推荐，公众号叛逆青年旅舍和一之哥哥转发您的文章！
-              </p>
-              <p className="m-0">
-                3.您将被邀请到技术氛围极好的开发者QQ群中，与更多志同道合的开发者进行技术上的交流！
+                {t('2_wechat_official_account_article_recommendation')}
               </p>
               <p className="m-0">
-                4.如果您愿意的话，我们也将在论坛、频道等展示您的介绍信息！
+                {t(
+                  '3_you_will_be_invited_to_a_technical_community_of_developers'
+                )}
               </p>
-              <p className="m-0">5.论坛、频道的开发者用户组权限，与众不同！ </p>
-              <p className="m-0">6.······</p>
               <p className="m-0">
-                如果您也想成为一名开发者，欢迎参考我们的教程，申请地址：
+                {t(
+                  '4_if_you_are_willing_we_will_also_display_your_information'
+                )}
+              </p>
+              <p className="m-0">
+                {t('5_forum_and_channel_developer_user_group_permissions')}
+              </p>
+              <p className="m-0">{t('6_and_more')}</p>
+              <p className="m-0">
+                {t(
+                  'if_you_also_want_to_become_a_developer_please_refer_to_our_tutorial'
+                )}
                 <a
                   href="https://bbs.tampermonkey.net.cn/thread-1234-1-1.html"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  油猴中文网
+                  {t('tampermonkey_chinese_website')}
                 </a>
               </p>
             </div>
