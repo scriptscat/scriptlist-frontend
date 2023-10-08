@@ -46,34 +46,3 @@ export function scriptName(script: Script) {
 export function scriptDescription(script: Script) {
   return script.script.meta_json['description:zh-cn'] || script.description;
 }
-
-const lngMap: {
-  [key: string]: { [key: string]: { name: string; value: string } };
-} = {
-  en: { en: { name: 'English', value: 'en' } },
-  zh: {
-    'zh-CN': { name: '简体中文', value: 'zh-CN' },
-    'zh-TW': { name: '繁體中文', value: 'zh-TW' },
-  },
-};
-
-// 根据路径获取语言
-export function getLocale(request: Request) {
-  let split = new URL(request.url).pathname.split('/');
-  if (split.length < 1) {
-    return 'en';
-  }
-  let locale = split[1];
-  split = locale.split('-');
-  let lng = split[0];
-  if (split.length === 1) {
-    if (lngMap[lng] && lngMap[lng][locale]) {
-      return lngMap[lng][locale].value;
-    }
-  } else if (split.length === 2) {
-    if (lngMap[lng] && lngMap[lng][locale]) {
-      return lngMap[lng][locale].value;
-    }
-  }
-  return '';
-}

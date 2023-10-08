@@ -2,9 +2,11 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate, useSearchParams } from '@remix-run/react';
 import { Input } from 'antd';
 import { useState } from 'react';
+import { useLocale } from 'remix-i18next';
 
 // 搜索框样式
 const Search: React.FC<{ className?: string }> = ({ className }) => {
+  const locale = '/' + useLocale();
   const navigate = useNavigate();
   const params = useSearchParams();
   const [keyword, setKeyword] = useState(params[0].get('keyword') || '');
@@ -25,14 +27,14 @@ const Search: React.FC<{ className?: string }> = ({ className }) => {
         onPressEnter={(event) => {
           const target = event.target as HTMLInputElement;
           navigate({
-            pathname: '/search',
+            pathname: locale + '/search',
             search: target.value ? `keyword=` + target.value : '',
           });
         }}
       />
       <Link
         to={{
-          pathname: '/search',
+          pathname: locale + '/search',
           search: keyword ? 'keyword=' + keyword : '',
         }}
       >

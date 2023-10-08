@@ -10,7 +10,10 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
   useLoaderData,
+  useNavigate,
+  useNavigation,
   useRouteError,
+  useTransition,
 } from '@remix-run/react';
 import MainLayout from '~/components/layout/MainLayout';
 import styles from './styles/app.css';
@@ -28,7 +31,8 @@ import prism from 'prismjs/themes/prism.css';
 import GoogleAdScript from './components/GoogleAd/script';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
-import { getLocale } from './utils/utils';
+import { getLocale } from './utils/i18n';
+import NavigationProcess from './components/NavigationProcess/NavigationProcess';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -148,7 +152,6 @@ export function CatchBoundary() {
           }}
         >
           <MainLayout
-            styleMode={config && config.styleMode}
             oauthClient={config && config.ENV.APP_BBS_OAUTH_CLIENT}
             apiUrl={config && config.ENV.APP_API_URL}
             onDarkModeChange={(dart) => setDart(dart)}
@@ -230,8 +233,8 @@ export default function App() {
             env: config.ENV,
           }}
         >
+          <NavigationProcess />
           <MainLayout
-            styleMode={config.styleMode}
             oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
             apiUrl={config.ENV.APP_API_URL}
             onDarkModeChange={(dart) => setDart(dart)}

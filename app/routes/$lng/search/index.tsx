@@ -5,6 +5,7 @@ import { useLoaderData } from '@remix-run/react';
 import { message } from 'antd';
 import ClipboardJS from 'clipboard';
 import { useEffect } from 'react';
+import { useLocale } from 'remix-i18next';
 import SearchList from '~/components/Search/SearchList';
 import type { ScriptType, SortType } from '~/services/scripts/api';
 import { search } from '~/services/scripts/api';
@@ -43,6 +44,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   const loader = useLoaderData<LoaderData>();
+  const locale = useLocale();
   useEffect(() => {
     const clipboard = new ClipboardJS('.copy-script-link', {
       text: (target) => {
@@ -51,6 +53,8 @@ export default function Index() {
           target.getAttribute('script-name') +
           '\n' +
           window.location.origin +
+          '/' +
+          locale +
           '/script-show-page/' +
           target.getAttribute('script-id')
         );

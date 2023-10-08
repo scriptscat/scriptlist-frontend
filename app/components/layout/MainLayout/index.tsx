@@ -19,41 +19,23 @@ import { RiSunLine, RiMoonLine, RiComputerLine } from 'react-icons/ri';
 import { Link, useLocation } from '@remix-run/react';
 import Search from '~/components/Search';
 import { UserContext } from '~/context-manager';
+import { useLocale } from 'remix-i18next';
 
 const { Header, Footer, Content } = Layout;
 
-const items: MenuProps['items'] = [
-  {
-    label: <Link to={'/'}>首页</Link>,
-    key: 'home',
-    icon: <HomeOutlined />,
-  },
-  {
-    label: <a href="https://bbs.tampermonkey.net.cn">社区</a>,
-    key: 'bbs',
-    icon: <MessageOutlined />,
-  },
-  {
-    label: <Link to={'/search'}>脚本列表</Link>,
-    key: 'list',
-    icon: <CodeOutlined />,
-  },
-  {
-    label: <a href="https://docs.scriptcat.org/">浏览器扩展</a>,
-    key: 'extension',
-    icon: <ChromeOutlined />,
-  },
-];
-
 const MainLayout: React.FC<{
   children: ReactNode;
-  styleMode: string;
   oauthClient: string;
   apiUrl: string;
   onDarkModeChange: (dark: boolean) => void;
-}> = ({ children, styleMode, oauthClient, apiUrl, onDarkModeChange }) => {
+}> = ({ children, oauthClient, apiUrl, onDarkModeChange }) => {
   const user = useContext(UserContext);
-  const [dark, _setDark] = useState(styleMode || 'light');
+  const [dark, _setDark] = useState(user.dark ? 'dark' : 'light');
+  const [mode, setMode] = useState('auto');
+  useEffect(() => {
+    setMode(localStorage.getItem('styleMode') || 'auto');
+  }, []);
+  const locale = '/' + useLocale();
   const setDark = (mode: string) => {
     if (mode === 'light') {
       document.body.style.backgroundColor = '#ffffff';
@@ -65,25 +47,44 @@ const MainLayout: React.FC<{
       prefixCls: mode === 'light' ? 'light-message' : 'dark-message',
     });
     onDarkModeChange(mode === 'dark');
+    document.cookie = 'styleMode=' + mode + ';path=/';
   };
-  const [mode, setMode] = useState(styleMode || 'auto');
   const location = useLocation();
   const current =
-    location.pathname == '/'
+    location.pathname == locale + '/'
       ? 'home'
-      : location.pathname == '/search'
+      : location.pathname == locale + '/search'
       ? 'list'
       : '';
+  const items: MenuProps['items'] = [
+    {
+      label: <Link to={locale + '/'}>首页</Link>,
+      key: 'home',
+      icon: <HomeOutlined />,
+    },
+    {
+      label: <a href="https://bbs.tampermonkey.net.cn">社区</a>,
+      key: 'bbs',
+      icon: <MessageOutlined />,
+    },
+    {
+      label: <Link to={locale + '/search'}>脚本列表</Link>,
+      key: 'list',
+      icon: <CodeOutlined />,
+    },
+    {
+      label: <a href="https://docs.scriptcat.org/">浏览器扩展</a>,
+      key: 'extension',
+      icon: <ChromeOutlined />,
+    },
+  ];
   const modeMenu = (
     <Menu
       className="!rounded-md border-inherit border-1 w-32 !mt-4"
       selectedKeys={[mode]}
       onClick={({ key }) => {
         setMode(key);
-        if (key == 'auto') {
-          key = '';
-        }
-        document.cookie = 'styleMode=' + key + ';path=/';
+        localStorage.setItem('styleMode', key);
       }}
       items={[
         {
@@ -123,7 +124,7 @@ const MainLayout: React.FC<{
       items={[
         {
           label: (
-            <Link to={{ pathname: '/users/' + user.user?.user_id }}>
+            <Link to={{ pathname: locale + '/users/' + user.user?.user_id }}>
               <Space className="anticon-middle">
                 <UserOutlined />
                 <p className="text-sm m-0">个人中心</p>
@@ -187,7 +188,7 @@ const MainLayout: React.FC<{
           <Header className="flex flex-row">
             <div className="items-center flex flex-row justify-start basis-3/4">
               <div className="items-center flex flex-row w-full">
-                <Link to="/" className="hidden lg:block min-w-max">
+                <Link to={locale + '/'} className="hidden lg:block min-w-max">
                   <img
                     style={{
                       width: '32px',
@@ -207,7 +208,7 @@ const MainLayout: React.FC<{
                   }}
                 />
               </div>
-              {location.pathname == '/search' && (
+              {location.pathname == locale + '/search' && (
                 <div
                   style={{
                     width: '80%',
@@ -227,7 +228,7 @@ const MainLayout: React.FC<{
                       message.info('请先登录');
                       return false;
                     } else {
-                      window.open('/post-script', '_self');
+                      window.open(locale + '/post-script', '_self');
                     }
                   }}
                 >

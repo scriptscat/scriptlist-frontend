@@ -41,6 +41,7 @@ import ActionMenu from '~/components/ActionMenu';
 import { DeleteScript, WatchScript } from '~/services/scripts/api';
 import { useEffect, useState } from 'react';
 import GoogleAd from '~/components/GoogleAd';
+import { useLocale } from 'remix-i18next';
 
 export const WatchLevelMap = ['不关注', '版本更新', '新建反馈', '任何'];
 
@@ -104,6 +105,7 @@ const SearchItem: React.FC<{
   action?: boolean;
   onDelete?: () => void;
 }> = ({ script, watch, action, onWatch, onDelete }) => {
+  const locale = '/' + useLocale();
   const gridStyle = {
     width: '100%',
     padding: '2px 8px',
@@ -163,14 +165,14 @@ const SearchItem: React.FC<{
             <div className="flex flex-col flex-auto">
               <Link
                 className="text-sm"
-                to={'/users/' + script.user_id}
+                to={locale + '/users/' + script.user_id}
                 target="_blank"
               >
                 {script.username}
               </Link>
               <Link
                 className="text-lg text-black dark:text-white"
-                to={'/script-show-page/' + script.id}
+                to={locale + '/script-show-page/' + script.id}
                 target="_blank"
               >
                 {scriptName(script)}
@@ -485,7 +487,7 @@ const SearchItem: React.FC<{
                   type="text"
                   size="small"
                   className="anticon-middle"
-                  href={'/script-show-page/' + script.id + '/comment'}
+                  href={locale + '/script-show-page/' + script.id + '/comment'}
                   target={action ? '_self' : '_blank'}
                 ></Button>
               </Tooltip>
@@ -498,7 +500,7 @@ const SearchItem: React.FC<{
                   type="text"
                   size="small"
                   className="anticon-middle"
-                  href={'/script-show-page/' + script.id + '/issue'}
+                  href={locale + '/script-show-page/' + script.id + '/issue'}
                   target={action ? '_self' : '_blank'}
                 ></Button>
               </Tooltip>

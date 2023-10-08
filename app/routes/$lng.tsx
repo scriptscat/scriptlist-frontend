@@ -1,7 +1,7 @@
 import { LoaderFunction } from '@remix-run/node';
 import { Outlet, isRouteErrorResponse, useRouteError } from '@remix-run/react';
 import { json } from 'remix-utils';
-import { getLocale } from '~/utils/utils';
+import { getLocale } from '~/utils/i18n';
 
 export function CatchBoundary() {
   let error = useRouteError();

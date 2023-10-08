@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 import SearchItem from './item';
+import { useLocale } from 'remix-i18next';
 
 // 搜索结果列表
 const SearchList: React.FC<{

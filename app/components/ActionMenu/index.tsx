@@ -13,6 +13,7 @@ export type MenuItemKey = 'delete';
 
 export type DeleteLevel = 'admin' | 'super_moderator' | 'moderator';
 export type ActionMenuProps = {
+  children: React.ReactNode;
   uid: number | number[];
   deleteLevel: DeleteLevel; // 删除等级 管理员 超级版主 版主
   allowSelfDelete: boolean; // 允许自己删除
