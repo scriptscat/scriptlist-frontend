@@ -9,8 +9,8 @@ import { useLoaderData } from '@remix-run/react';
 import { useContext } from 'react';
 import { ScriptContext } from '~/context-manager';
 import { splitNumber } from '~/utils/utils';
+import { useTranslation } from 'react-i18next';
 
-// 30天pv uv图
 const PvUv: React.FC<{
   title: string;
   uv: StatisticsChart;
@@ -50,6 +50,8 @@ const PvUv: React.FC<{
 
 const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
   const [chartData, setChartData] = useState([{}]);
+  const { t } = useTranslation();
+
   useEffect(() => {
     const time = setInterval(async () => {
       const resp = await GetRealtime(scriptId);
@@ -85,7 +87,7 @@ const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <span>实时更新与下载量</span>
+      <span>{t('realtime_update_download')}</span>
       <Line
         className="w-full"
         renderer="canvas"
@@ -114,6 +116,8 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 export default function Basic() {
   const data = useLoaderData<LoaderData>();
   const script = useContext(ScriptContext);
+  const { t } = useTranslation();
+
   return (
     <>
       <Card className="!p-0">
@@ -121,12 +125,12 @@ export default function Basic() {
           <div className="flex flex-row justify-between statistic">
             <div className="flex flex-col border-r pr-4 gap-1">
               <span></span>
-              <span>今日</span>
-              <span>昨日</span>
-              <span>本周</span>
+              <span>{t('today')}</span>
+              <span>{t('yesterday')}</span>
+              <span>{t('this_week')}</span>
             </div>
             <div className="flex flex-col border-r p-4">
-              <span>浏览数(PV)</span>
+              <span>{t('page_views')}</span>
               <span className="text-lg font-bold">
                 {splitNumber(data.data.page_pv.today.toString())}
               </span>
@@ -134,7 +138,7 @@ export default function Basic() {
               <span>{splitNumber(data.data.page_pv.week.toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
-              <span>访客数(UV)</span>
+              <span>{t('visitors')}</span>
               <span className="text-lg font-bold">
                 {splitNumber(data.data.page_uv.today.toString())}
               </span>
@@ -142,7 +146,7 @@ export default function Basic() {
               <span>{splitNumber(data.data.page_uv.week.toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
-              <span>安装数</span>
+              <span>{t('installs')}</span>
               <span className="text-lg font-bold">
                 {splitNumber(data.data.download_uv.today.toString())}
               </span>
@@ -152,7 +156,7 @@ export default function Basic() {
               <span>{splitNumber(data.data.download_uv.week.toString())}</span>
             </div>
             <div className="flex flex-col border-r p-4">
-              <span>更新数</span>
+              <span>{t('updates')}</span>
               <span className="text-lg font-bold">
                 {splitNumber(data.data.update_uv.today.toString())}
               </span>
@@ -163,7 +167,7 @@ export default function Basic() {
             </div>
             {/* {user.user!.is_admin == 1 && (
               <div className="flex flex-col p-4">
-                <span>平台用户数</span>
+                <span>{t('platform_users')}</span>
                 <span className="text-lg font-bold">
                   {splitNumber(data.data.page['today-member'].toString())}
                 </span>
@@ -185,7 +189,7 @@ export default function Basic() {
       <Divider />
       <div>
         <PvUv
-          title="30天安装uv/pv"
+          title={t('30_day_install_uv_pv')}
           uv={data.data.uv_chart.download}
           pv={data.data.pv_chart.update}
         />
@@ -193,14 +197,14 @@ export default function Basic() {
       <Divider />
       <div className="flex flex-row justify-between">
         <PvUv
-          title="30天更新uv/pv"
+          title={t('30_day_update_uv_pv')}
           uv={data.data.uv_chart.update}
           pv={data.data.pv_chart.update}
         />
       </div>
       <Divider />
       <div className="text-center">
-        <span>以上数据仅为参考，若有出入请以实际为准</span>
+        <span>{t('data_disclaimer')}</span>
       </div>
     </>
   );

@@ -14,6 +14,7 @@ import {
   Space,
   Switch,
 } from 'antd';
+import i18next, { t } from 'i18next';
 import { useContext } from 'react';
 import { useState } from 'react';
 import GrayControl from '~/components/GrayControl';
@@ -28,15 +29,19 @@ import {
   UpdateScriptUnwell,
 } from '~/services/scripts/api';
 import type { ScriptSetting } from '~/services/scripts/types';
+import { getLocale } from '~/utils/i18n';
 
 type LoaderData = {
   setting: ScriptSetting;
 };
 
 export const loader: LoaderFunction = async ({ params, request }) => {
+  const lng = getLocale(request, 'en')!;
+  let t = await i18next.getFixedT(lng);
+
   const resp = await GetScriptSetting(parseInt(params.id as string), request);
   if (resp.code !== 0) {
-    throw new Response('没有权限访问此页面', {
+    throw new Response(t('no_permission_access'), {
       status: 403,
       statusText: 'Forbidden ',
     });
@@ -70,46 +75,46 @@ export default function Manage() {
     <Card>
       {contextHolder}
       <div className="flex flex-col items-start gap-1">
-        {script.script!.type == 3 && (
+        {script.script!.type === 3 && (
           <>
-            <h3 className="text-lg">库信息设置</h3>
+            <h3 className="text-lg">{t('library_info_setting')}</h3>
             <Input
-              placeholder="库名称"
+              placeholder={t('library_name')}
               value={name}
               onChange={(value) => setName(value.target.value)}
             />
             <Input
-              placeholder="库描述"
+              placeholder={t('library_description')}
               value={description}
               onChange={(value) => setDescription(value.target.value)}
             />
           </>
         )}
-        <h3 className="text-lg">源代码同步</h3>
-        <span>自动从输入的地址中进行源代码同步操作。</span>
+        <h3 className="text-lg">{t('souce_code_sync')}</h3>
+        <span>{t('source_code_sync_description')}</span>
         <Input
-          placeholder="脚本源代码同步 URL"
+          placeholder={t('script_sync_url')}
           value={syncUrl}
           onChange={(value) => setSyncUrl(value.target.value)}
         />
-        <h3 className="text-lg">脚本同步方式</h3>
+        <h3 className="text-lg">{t('script_sync_method')}</h3>
         <Radio.Group
           onChange={(value) => setSyncMode(value.target.value)}
           value={syncMode}
         >
           <Space direction="vertical">
-            <Radio value={1}>自动，系统将在未来时间内定期进行更新检查</Radio>
-            <Radio value={2}>手动，仅在你手动点击按钮的时候进行更新检查</Radio>
+            <Radio value={1}>{t('auto_sync')}</Radio>
+            <Radio value={2}>{t('manual_sync')}</Radio>
           </Space>
         </Radio.Group>
-        <h3 className="text-lg">同步脚本附加信息</h3>
-        <span>强制使用markdown语法</span>
+        <h3 className="text-lg">{t('sync_script_info')}</h3>
+        <span>{t('use_markdown_syntax')}</span>
         <Input
-          placeholder="脚本README同步 URL"
+          placeholder={t('script_readme_sync_url')}
           value={contentUrl}
           onChange={(value) => setContentUrl(value.target.value)}
         />
-        {/* {script.script?.type == 3 && (
+        {/* {script.script?.type === 3 && (
           <>
             <h3 className="text-lg">同步库描述文件</h3>
             <span>
@@ -145,20 +150,20 @@ export default function Manage() {
             });
             setLoading(false);
             if (resp.code === 0) {
-              message.success('更新成功');
+              message.success(t('update_success'));
             } else {
               message.error(resp.msg);
             }
           }}
         >
-          更新设置并且立刻同步
+          {t('update_settings_and_sync_immediately')}
         </Button>
         <Divider />
-        <h3 className="text-lg">脚本管理</h3>
-        <h4 className="text-base">脚本访问权限</h4>
+        <h3 className="text-lg">{t('script_manage')}</h3>
+        <h4 className="text-base">{t('script_access')}</h4>
         <Switch
-          checkedChildren="公开"
-          unCheckedChildren="私有"
+          checkedChildren={t('public')}
+          unCheckedChildren={t('private')}
           checked={isPublic === 1 ? true : false}
           onChange={async (checked) => {
             let resp = await UpdateScriptPublic(
@@ -166,14 +171,14 @@ export default function Manage() {
               checked ? 1 : 2
             );
             if (resp.code === 0) {
-              message.success('更新成功');
+              message.success(t('update_success'));
               setIsPublic(checked ? 1 : 2);
             } else {
               message.error(resp.msg);
             }
           }}
         />
-        <h4 className="text-base">不适内容</h4>
+        <h4 className="text-base">{t('inappropriate_content')}</h4>
         <Checkbox
           checked={unwell === 1 ? true : false}
           onChange={async (val) => {
@@ -182,38 +187,36 @@ export default function Manage() {
               val.target.checked ? 1 : 2
             );
             if (resp.code === 0) {
-              message.success('更新成功');
+              message.success(t('update_success'));
               setUnwell(val.target.checked ? 1 : 2);
             } else {
               message.error(resp.msg);
             }
           }}
         >
-          该网站可能存在令人不适内容，包括但不限于红蓝闪光频繁闪烁、对视觉、精神有侵害的内容。
+          {t('potentially_inappropriate_content')}
         </Checkbox>
         {script.script!.type === 1 && (
           <>
             <Divider></Divider>
-            <h3 className="text-lg">脚本发布</h3>
-            <h4 className="text-base">开启预发布</h4>
+            <h3 className="text-lg">{t('script_release')}</h3>
+            <h4 className="text-base">{t('enable_pre_release')}</h4>
             <span>
-              开启预发布开关时, 当版本符合
+              {t('enable_pre_release_description')}
               <a
                 href="https://bbs.tampermonkey.net.cn/thread-3384-1-1.html"
                 target="_blank"
                 rel="noreferrer"
               >
-                语义化版本
+                {t('semantic_versioning')}
               </a>
               {'<pre-release>'}
-              时更新脚本将会自动标记为预发布版本,并且会在脚本首页提供预发布版本的安装按钮.
+              {t('pre_release_version_auto_mark')}
             </span>
-            <span>
-              (首次开启会帮你新增三条策略：预发布用户更新到全部最新,正式版按权重在10天内逐步更新至最新正式版本,其它用户更新到上一正式版本)
-            </span>
+            <span>({t('first_time_enable_pre_release')})</span>
             <Switch
-              checkedChildren="开启"
-              unCheckedChildren="关闭"
+              checkedChildren={t('enable')}
+              unCheckedChildren={t('disable')}
               checked={enablePreRelease === 1}
               onClick={(value) => {
                 setGrayControls((prev) => {
@@ -268,10 +271,8 @@ export default function Manage() {
                 setEnablePreRelease(value ? 1 : 2);
               }}
             />
-            <h3 className="text-lg">灰度发布</h3>
-            <span>
-              可配置一定的策略(策略有顺序性),使你的脚本用户更新到指定版本
-            </span>
+            <h3 className="text-lg">{t('gray_release')}</h3>
+            <span>{t('configure_strategies')}</span>
             <div className="flex flex-row flex-wrap gap-1">
               {grayControls.map((val, index) => (
                 <GrayControl
@@ -330,19 +331,19 @@ export default function Manage() {
                   grayControls
                 );
                 if (resp.code === 0) {
-                  message.success('更新成功');
+                  message.success(t('update_success'));
                 } else {
                   message.error(resp.msg);
                 }
                 setLoading(false);
               }}
             >
-              保存并生效策略
+              {t('save_and_apply_strategies')}
             </Button>
           </>
         )}
         <Divider></Divider>
-        <h3 className="text-lg">脚本管理</h3>
+        <h3 className="text-lg">{t('script_manage')}</h3>
         <Space>
           {archive == 2 && (
             <Button
@@ -351,18 +352,17 @@ export default function Manage() {
               loading={loading}
               onClick={() => {
                 modal.confirm({
-                  title: '确认是否归档',
-                  content:
-                    '归档后,脚本将不再支持更新,用户无法反馈,但是仍然可以使用',
+                  title: t('confirm_archive'),
+                  content: t('archive_content'),
                   icon: <ExclamationCircleOutlined />,
-                  okText: '确认',
-                  cancelText: '取消',
+                  okText: t('confirm'),
+                  cancelText: t('cancel'),
                   onOk: async () => {
                     setLoading(true);
                     const resp = await ArchiveScript(script.script!.id, true);
                     setLoading(false);
                     if (resp.code === 0) {
-                      message.success('归档成功');
+                      message.success(t('archive_success'));
                       setArchive(1);
                     } else {
                       message.error(resp.msg);
@@ -371,7 +371,7 @@ export default function Manage() {
                 });
               }}
             >
-              归档脚本
+              {t('archive_script')}
             </Button>
           )}
           {archive == 1 && (
@@ -381,17 +381,17 @@ export default function Manage() {
               loading={loading}
               onClick={() => {
                 modal.confirm({
-                  title: '确认是否取消归档',
-                  content: '取消归档后,脚本可以正常维护',
+                  title: t('confirm_unarchive'),
+                  content: t('unarchive_content'),
                   icon: <ExclamationCircleOutlined />,
-                  okText: '确认',
-                  cancelText: '取消',
+                  okText: t('confirm'),
+                  cancelText: t('cancel'),
                   onOk: async () => {
                     setLoading(true);
                     const resp = await ArchiveScript(script.script!.id, false);
                     setLoading(false);
                     if (resp.code === 0) {
-                      message.success('取消归档成功');
+                      message.success(t('unarchive_success'));
                       setArchive(2);
                     } else {
                       message.error(resp.msg);
@@ -400,7 +400,7 @@ export default function Manage() {
                 });
               }}
             >
-              取消归档
+              {t('unarchive_script')}
             </Button>
           )}
           <Button
@@ -409,18 +409,17 @@ export default function Manage() {
             danger
             onClick={() => {
               modal.confirm({
-                title: '确认是否删除脚本',
-                content:
-                  '请注意这是不可逆的操作,删除脚本后,所有数据将清空,但之前已经安装了的用户可以正常使用',
+                title: t('confirm_delete_script'),
+                content: t('delete_script_content'),
                 icon: <ExclamationCircleOutlined />,
-                okText: '确认',
-                cancelText: '取消',
+                okText: t('confirm'),
+                cancelText: t('cancel'),
                 onOk: async () => {
                   setLoading(true);
                   const resp = await DeleteScript(script.script!.id);
                   setLoading(false);
                   if (resp.code === 0) {
-                    message.success('删除成功');
+                    message.success(t('delete_success'));
                     navigate('/');
                   } else {
                     message.error(resp.msg);
@@ -429,12 +428,12 @@ export default function Manage() {
               });
             }}
           >
-            删除脚本
+            {t('delete_script')}
           </Button>
         </Space>
         <Divider></Divider>
-        <h3 className="text-lg">管理日志</h3>
-        <span>暂未开放</span>
+        <h3 className="text-lg">{t('manage_log')}</h3>
+        <span>{t('no_open')}</span>
       </div>
     </Card>
   );

@@ -77,7 +77,7 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
               <Tag
                 className="!m-0"
                 color={rankColor[index]}
-                style={{ padding: index == 9 ? '0 3px' : '' }}
+                style={{ padding: index === 9 ? '0 3px' : '' }}
               >
                 {index + 1}
               </Tag>
@@ -118,18 +118,22 @@ export default function Search() {
                       navigate({ search }, { replace: true });
                     }}
                   >
-                    <Radio.Button value="">全部</Radio.Button>
-                    <Radio.Button value="1">用户脚本</Radio.Button>
-                    <Radio.Button value="2">库</Radio.Button>
-                    <Radio.Button value="3">后台脚本</Radio.Button>
-                    <Radio.Button value="4">定时脚本</Radio.Button>
+                    <Radio.Button value="">{t('all')}</Radio.Button>
+                    <Radio.Button value="1">{t('user_script')}</Radio.Button>
+                    <Radio.Button value="2">{t('library')}</Radio.Button>
+                    <Radio.Button value="3">
+                      {t('background_script')}
+                    </Radio.Button>
+                    <Radio.Button value="4">
+                      {t('scheduled_script')}
+                    </Radio.Button>
                   </Radio.Group>
                 </Space>
               </div>
               <div>
                 <Space>
                   <RiseOutlined />
-                  <span>排序</span>
+                  <span>{t('sort')}</span>
                   <Radio.Group
                     defaultValue={sort}
                     size="small"
@@ -140,11 +144,19 @@ export default function Search() {
                       navigate({ search }, { replace: true });
                     }}
                   >
-                    <Radio.Button value="today_download">日安装</Radio.Button>
-                    <Radio.Button value="total_download">总安装</Radio.Button>
-                    <Radio.Button value="score">评分</Radio.Button>
-                    <Radio.Button value="createtime">最新发布</Radio.Button>
-                    <Radio.Button value="updatetime">最近更新</Radio.Button>
+                    <Radio.Button value="today_download">
+                      {t('daily_install')}
+                    </Radio.Button>
+                    <Radio.Button value="total_download">
+                      {t('total_install')}
+                    </Radio.Button>
+                    <Radio.Button value="score">{t('rating')}</Radio.Button>
+                    <Radio.Button value="createtime">
+                      {t('latest_release')}
+                    </Radio.Button>
+                    <Radio.Button value="updatetime">
+                      {t('recent_update')}
+                    </Radio.Button>
                   </Radio.Group>
                 </Space>
               </div>
@@ -157,27 +169,27 @@ export default function Search() {
             <Card.Meta
               title={
                 <div className="flex flex-row justify-between items-center">
-                  <span>学油猴脚本</span>
+                  <span>{t('learn_scripts')}</span>
                   <span className="text-xs">
                     <a
                       href="https://bbs.tampermonkey.net.cn/forum-75-1.html"
                       className="text-gray-400"
                       target="_blank"
                     >
-                      建议/投诉/举报
+                      {t('suggestions_complaints_reports')}
                     </a>
                   </span>
                 </div>
               }
               description={
                 <span className="text-gray-400">
-                  就来
+                  {t('visit')}
                   <a
                     href="https://bbs.tampermonkey.net.cn"
                     className="text-gray-400"
                     target="_blank"
                   >
-                    油猴中文网
+                    {t('tampermonkey_chinese_website')}
                   </a>
                 </span>
               }
@@ -187,10 +199,10 @@ export default function Search() {
             defaultActiveKey={['1', '2', '3']}
             className="rank-collapse"
           >
-            <Collapse.Panel header="最新脚本" key="3">
+            <Collapse.Panel header={t('latest_scripts')} key="3">
               <RankList list={loader.rank.update} />
             </Collapse.Panel>
-            <Collapse.Panel header="最新评分" key="2">
+            <Collapse.Panel header={t('latest_ratings')} key="2">
               <RankList list={loader.rank.score} />
             </Collapse.Panel>
           </Collapse>

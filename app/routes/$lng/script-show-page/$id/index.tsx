@@ -11,14 +11,13 @@ import {
   Space,
   message,
 } from 'antd';
-import type { TextAreaRef } from 'antd/lib/input/TextArea';
-import TextArea from 'antd/lib/input/TextArea';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ActionMenu from '~/components/ActionMenu';
 import MarkdownView from '~/components/MarkdownView';
 import SearchItem from '~/components/Search/SearchList/item';
-import { ScriptContext, UserContext } from '~/context-manager';
+import { ScriptContext } from '~/context-manager';
 import {
   DeleteScore,
   GetMyScore,
@@ -29,7 +28,7 @@ import type {
   ScoreItem,
   WatchLevel as WatchLevelType,
 } from '~/services/scripts/types';
-import { formatDate, useDark } from '~/utils/utils';
+import { formatDate } from '~/utils/utils';
 
 type LoaderData = {
   id: number;
@@ -55,6 +54,7 @@ export default function Index() {
   const [scoreData, setScoreData] = useState<ScoreItem[]>(loaderData.list);
   const script = useContext(ScriptContext);
   const [watch, setWatch] = useState<WatchLevelType>(0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (script.script) {
@@ -64,7 +64,7 @@ export default function Index() {
     }
   }, [script.script]);
   if (!script.script) {
-    return <div>脚本不存在</div>;
+    return <div>{t('script_not_exist')}</div>;
   }
   return (
     <>
@@ -79,19 +79,19 @@ export default function Index() {
       <Card>
         <MarkdownView content={script.script.content || ''} id={'readme'} />
       </Card>
-      <Card title="脚本评分">
+      <Card title={t('script_score')}>
         <Space className="w-full" direction="vertical">
           <ConfigProvider
             renderEmpty={() => (
               <Empty
                 description={
                   <Space direction="vertical">
-                    <span>还没有人来给脚本打分，快来成为第一个打分的人吧</span>
+                    <span>{t('no_score_yet')}</span>
                     <Button
                       type="link"
                       href={'./' + script.script?.id + '/comment'}
                     >
-                      前往评分
+                      {t('go_to_score')}
                     </Button>
                   </Space>
                 }
@@ -128,7 +128,7 @@ export default function Index() {
                             item.id
                           );
                           if (resp.code == 0) {
-                            message.success('删除成功');
+                            message.success(t('delete_success'));
                             scoreData.splice(index, 1);
                             setScoreData([...scoreData]);
                           } else {
@@ -136,7 +136,7 @@ export default function Index() {
                           }
                         }}
                       >
-                        <Button type="link">操作</Button>
+                        <Button type="link">{t('action')}</Button>
                       </ActionMenu>
                     </div>
                     <MarkdownView
@@ -151,7 +151,7 @@ export default function Index() {
           {scoreData.length > 0 && (
             <div className="w-full text-center">
               <Button type="link" href="./comment">
-                查看更多
+                {t('view_more')}
               </Button>
             </div>
           )}

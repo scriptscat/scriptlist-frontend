@@ -52,6 +52,10 @@ import type { APIResponse } from '~/services/http';
 import IssueLabel from '~/components/IssueLabel';
 import ActionMenu from '~/components/ActionMenu';
 import ClipboardJS from 'clipboard';
+import { useTranslation } from 'react-i18next';
+import { useLocale } from 'remix-i18next';
+import i18next from '~/i18next.server';
+import { getLocale } from '~/utils/i18n';
 
 type LoaderData = {
   issue: Issue;
@@ -60,17 +64,18 @@ type LoaderData = {
 
 export const meta: V2_MetaFunction = ({ data, matches }) => {
   if (!data) {
-    return [{ title: '未找到反馈 - ScriptCat' }, { description: 'Not Found' }];
+    return [{ title: ' - ScriptCat' }, { description: 'Not Found' }];
   }
-  console.log(matches);
   return [
     {
       title:
         data.issue.title +
-        ' · 反馈 #' +
+        ' · ' +
+        data.i18n_issue +
+        ' #' +
         data.issue.id +
         ' · ' +
-        (matches[1].data as any).script.name +
+        (matches[2].data as any).script.name +
         ' - ScriptCat',
     },
   ];
@@ -80,14 +85,46 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const scriptId = parseInt(params.id as string);
   const issueId = parseInt(params.issueId as string);
   const issue = await GetIssue(scriptId, issueId);
+  const lng = getLocale(request, 'en')!;
+  let t = await i18next.getFixedT(lng);
   if (!issue) {
-    throw new Response('反馈不存在', { status: 404, statusText: 'Not Found' });
+    throw new Response(t('issue_not_found'), {
+      status: 404,
+      statusText: 'Not Found',
+    });
   }
   const commentList = await IssueCommentList(scriptId, issueId);
   return json({
     issue: issue,
     comments: commentList,
+    i18n_issue: t('issue'),
   } as LoaderData);
+};
+
+const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
+  let json = JSON.parse(content);
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      {json['add'].length > 0 && (
+        <span>
+          {t('add_label')}:{' '}
+          {json['add'].map((label: string) => (
+            <IssueLabel key={label} label={label} />
+          ))}
+        </span>
+      )}
+      {json['del'].length > 0 && (
+        <span>
+          {t('delete_label')}:{' '}
+          {json['del'].map((label: string) => (
+            <IssueLabel key={label} label={label} />
+          ))}
+        </span>
+      )}
+    </div>
+  );
 };
 
 export default function Comment() {
@@ -101,52 +138,28 @@ export default function Comment() {
   const [loading, setLoading] = useState(false);
   const [isWatch, setIsWatch] = useState(false);
   const [labels, setLabels] = useState(data.issue.labels || []);
+  const locale = '/' + useLocale();
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (user.user) {
       IsWatchIssue(script.script!.id, data.issue.id).then((res) => {
         setIsWatch(res.watch);
       });
     }
-  });
-  const joinMember: { [key: number]: string } = {};
-  joinMember[data.issue.user_id] = data.issue.avatar;
-  list.forEach((item) => {
-    joinMember[item.user_id] = item.avatar;
-  });
-
-  const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
-    let json = JSON.parse(content);
-    return (
-      <div>
-        {json['add'].length > 0 && (
-          <span>
-            添加标签:{' '}
-            {json['add'].map((label: string) => (
-              <IssueLabel key={label} label={label} />
-            ))}
-          </span>
-        )}
-        {json['del'].length > 0 && (
-          <span>
-            删除标签:{' '}
-            {json['del'].map((label: string) => (
-              <IssueLabel key={label} label={label} />
-            ))}
-          </span>
-        )}
-      </div>
-    );
-  };
-
-  useEffect(() => {
     new ClipboardJS('.copy-comment-link', {
       text: (target) => {
-        message.success('复制成功');
+        message.success(t('copy_success'));
         return (
           location.origin + location.pathname + target.getAttribute('copy-link')
         );
       },
     });
+  });
+  const joinMember: { [key: number]: string } = {};
+  joinMember[data.issue.user_id] = data.issue.avatar;
+  list.forEach((item) => {
+    joinMember[item.user_id] = item.avatar;
   });
 
   return (
@@ -165,7 +178,7 @@ export default function Comment() {
                   data.issue.id
                 );
                 if (resp.code === 0) {
-                  message.success('删除成功');
+                  message.success(t('delete_success'));
                   navigate({
                     pathname: '../../issue',
                   });
@@ -188,7 +201,7 @@ export default function Comment() {
                 icon={<InfoCircleTwoTone className="!align-baseline" />}
                 color="blue"
               >
-                待处理
+                {t('pending')}
               </Tag>
             ) : (
               <Tag
@@ -200,27 +213,29 @@ export default function Comment() {
                 }
                 color="green"
               >
-                已处理
+                {t('resolved')}
               </Tag>
             )}
-            <Tooltip title="点击复制链接">
+            <Tooltip title={t('copy_link')}>
               <Tag>#{data.issue.id}</Tag>
             </Tooltip>
             <UserOutlined className="mr-1 !text-gray-400 " />
             <Link
-              to={'/users/' + data.issue.user_id}
+              to={locale + '/users/' + data.issue.user_id}
               target="_blank"
               className="text-gray-400 hover:text-gray-500 mr-1"
             >
               {data.issue.username}
             </Link>
             <span className="text-sm text-gray-400">
-              创建于 {formatDate(data.issue.createtime)}
+              {t('created_at')} {formatDate(data.issue.createtime)}
             </span>
           </div>
           <MarkdownView id="issue" content={data.issue.content}></MarkdownView>
 
-          <ConfigProvider renderEmpty={() => <Empty description="暂无回复" />}>
+          <ConfigProvider
+            renderEmpty={() => <Empty description={t('no_reply')} />}
+          >
             <List
               itemLayout="vertical"
               size="large"
@@ -235,14 +250,14 @@ export default function Comment() {
                           <div className="flex flex-row justify-between">
                             <div className="flex flex-row items-center gap-2">
                               <Link
-                                to={'/users/' + item.user_id}
+                                to={locale + '/users/' + item.user_id}
                                 target="_blank"
                               >
                                 <Avatar src={item.avatar} />
                               </Link>
                               <div className="flex flex-col">
                                 <Link
-                                  to={'/users/' + item.user_id}
+                                  to={locale + '/users/' + item.user_id}
                                   target="_blank"
                                 >
                                   {item.username}
@@ -270,7 +285,7 @@ export default function Comment() {
                                   item.id
                                 );
                                 if (resp.code === 0) {
-                                  message.success('删除成功');
+                                  message.success(t('delete_success'));
                                   setList(list.filter((i) => i.id !== item.id));
                                 } else {
                                   message.error(resp.msg);
@@ -306,7 +321,7 @@ export default function Comment() {
                                   );
                               }}
                             >
-                              回复
+                              {t('reply')}
                             </Button>
                             <Button
                               size="small"
@@ -315,7 +330,7 @@ export default function Comment() {
                               className="!text-gray-400 anticon-middle copy-comment-link"
                               copy-link={`#comment-${item.id}`}
                             >
-                              链接
+                              {t('link')}
                             </Button>
                           </div>
                         </div>
@@ -344,7 +359,10 @@ export default function Comment() {
                             {item.type == 5 && (
                               <CheckCircleFilled className="text-xl !text-green-500" />
                             )}
-                            <Link to={'/users/' + item.user_id} target="_blank">
+                            <Link
+                              to={locale + '/users/' + item.user_id}
+                              target="_blank"
+                            >
                               <Space>
                                 <Avatar src={item.avatar} />
                                 <span>{item.username}</span>
@@ -355,8 +373,8 @@ export default function Comment() {
                               {item.type == 3 && (
                                 <LabelsStatus content={item.content} />
                               )}
-                              {item.type == 4 && '打开反馈'}
-                              {item.type == 5 && '关闭反馈'}
+                              {item.type == 4 && t('open_feedback')}
+                              {item.type == 5 && t('close_feedback')}
                             </span>
                           </div>
                         </div>
@@ -409,7 +427,7 @@ export default function Comment() {
                       return 1;
                     }}
                   >
-                    {status == 1 ? '关闭反馈' : '开启反馈'}
+                    {status == 1 ? t('close_feedback') : t('open_feedback')}
                   </Button>
                 )}
                 <Button
@@ -417,7 +435,7 @@ export default function Comment() {
                   loading={loading}
                   onClick={() => {
                     if (!editor.current || !editor.current.editor) {
-                      message.error('系统错误!未发现编辑器数据!');
+                      message.error(t('system_error'));
                       return;
                     }
                     setLoading(true);
@@ -428,7 +446,7 @@ export default function Comment() {
                     ).then((resp) => {
                       setLoading(false);
                       if (resp.code == 0) {
-                        message.success('回复成功!');
+                        message.success(t('reply_success'));
                         editor.current!.setMarkdown('');
                         setList([...list, resp.data]);
                       } else {
@@ -437,12 +455,12 @@ export default function Comment() {
                     });
                   }}
                 >
-                  评论
+                  {t('issue_comment')}
                 </Button>
               </Space>
             </div>
           ) : (
-            <Empty className="border-t" description="请登录后再发表评论">
+            <Empty className="border-t" description={t('login_comment')}>
               <Button
                 type="primary"
                 onClick={() => {
@@ -452,14 +470,14 @@ export default function Comment() {
                   btn.click();
                 }}
               >
-                登录
+                {t('login')}
               </Button>
             </Empty>
           )}
         </div>
         <div className="flex flex-col basis-1/4">
           <Space direction="vertical">
-            <span className="text-lg font-bold">标签</span>
+            <span className="text-lg font-bold">{t('labels')}</span>
             <Select
               mode="multiple"
               showArrow
@@ -506,9 +524,9 @@ export default function Comment() {
           </Space>
           <Divider />
           <Space direction="vertical">
-            <span className="text-lg font-bold">关注</span>
+            <span className="text-lg font-bold">{t('watch')}</span>
             <div className="flex justify-center">
-              <Tooltip title="关注本反馈,当有新消息时会自动发送邮件通知">
+              <Tooltip title={t('watch_tooltip')}>
                 <Button
                   type="primary"
                   size="small"
@@ -532,17 +550,17 @@ export default function Comment() {
                     }
                   }}
                 >
-                  {isWatch ? '已关注' : '关注'}
+                  {isWatch ? t('watched') : t('watch')}
                 </Button>
               </Tooltip>
             </div>
           </Space>
           <Divider />
           <Space direction="vertical">
-            <span className="text-lg font-bold">参与人</span>
+            <span className="text-lg font-bold">{t('participants')}</span>
             <Space>
               {Object.keys(joinMember).map((key) => (
-                <Link key={key} to={`/users/${key}`} target="_blank">
+                <Link key={key} to={locale + `/users/${key}`} target="_blank">
                   <Avatar src={joinMember[key as unknown as number]} />
                 </Link>
               ))}

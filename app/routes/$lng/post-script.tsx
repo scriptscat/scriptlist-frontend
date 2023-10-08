@@ -1,17 +1,24 @@
-import type { V2_MetaFunction} from '@remix-run/react';
+import type { V2_MetaFunction } from '@remix-run/react';
 import { useNavigate } from '@remix-run/react';
 import { Card, message } from 'antd';
+import { useTranslation } from 'react-i18next';
+import { useLocale } from 'remix-i18next';
 import UpdateScript from '~/components/UpdateScript';
 import { CreateScript } from '~/services/scripts/api';
 
-export const meta: V2_MetaFunction = () => [
-  { title: '提交新的脚本 - ScriptCat' },
-  { description: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚' },
-  { keyword: 'ScriptCat UserScript 用户脚本' },
-];
+export const meta: V2_MetaFunction = () => {
+  const { t } = useTranslation();
+
+  return [
+    { title: t('submit_new_script') + ' - ScriptCat' },
+    { description: t('home_page_description') },
+  ];
+};
 
 export default function PostScript() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const locale = '/' + useLocale();
   return (
     <>
       <Card>
@@ -22,9 +29,9 @@ export default function PostScript() {
               message.error(resp.msg);
               return false;
             }
-            message.success('提交成功');
+            message.success(t('submit_success'));
             navigate({
-              pathname: '/script-show-page/' + resp.data.id,
+              pathname: locale + '/script-show-page/' + resp.data.id,
             });
             return true;
           }}

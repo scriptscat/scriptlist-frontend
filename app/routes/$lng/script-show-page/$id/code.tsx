@@ -6,11 +6,18 @@ import { getScript } from '~/services/scripts/api';
 import type { LoaderData } from '../$id';
 import CodeEditor from '~/components/CodeEditor';
 import { forwardHeaders } from '~/utils/cookie';
+import { getLocale } from '~/utils/i18n';
+import i18next from '~/i18next.server';
 
 export const loader: LoaderFunction = async ({ params, request }) => {
+  const lng = getLocale(request, 'en')!;
+  let t = await i18next.getFixedT(lng);
   const script = await getScript(parseInt(params.id as string), request, true);
   if (script.data.code != 0) {
-    throw new Response('脚本不存在', { status: 404, statusText: 'Not Found' });
+    throw new Response(t('script_not_exist'), {
+      status: 404,
+      statusText: 'Not Found',
+    });
   }
   return json({ script: script.data.data } as LoaderData, {
     headers: forwardHeaders(script),

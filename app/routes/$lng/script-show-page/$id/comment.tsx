@@ -29,6 +29,7 @@ import {
 import type { ScoreItem } from '~/services/scripts/types';
 import { ScriptContext, UserContext } from '~/context-manager';
 import ActionMenu from '~/components/ActionMenu';
+import { useTranslation } from 'react-i18next';
 
 type LoaderData = {
   id: number;
@@ -63,6 +64,8 @@ export default function Comment() {
   const [score, setScore] = useState(
     (loaderData.myScore && loaderData.myScore.score / 10) || 5
   );
+  const { t } = useTranslation();
+
   const onSubmit = async () => {
     setSubmitLoading(true);
     const resp = await SubmitScore(
@@ -72,7 +75,7 @@ export default function Comment() {
     );
     setSubmitLoading(false);
     if (resp.code === 0) {
-      message.success('评分成功');
+      message.success(t('comment_success'));
       for (let i = 0; i < data.length; i++) {
         if (data[i].user_id === user.user?.user_id) {
           data[i].score = score * 10;
@@ -112,7 +115,7 @@ export default function Comment() {
   return (
     <Card>
       <Space className="w-full" direction="vertical">
-        <Card title="撰写评论">
+        <Card title={t('write_comment')}>
           {user.user && (
             <TextArea
               showCount
@@ -121,11 +124,11 @@ export default function Comment() {
               style={{ height: 120 }}
               ref={textEl}
               defaultValue={loaderData.myScore && loaderData.myScore.message}
-              placeholder="填写您的评论并在下方进行评分，问题反馈请前往反馈区（友善的反馈是交流的起点）"
+              placeholder={t('write_comment_placeholder')}
             />
           )}
           {!user.user && (
-            <Empty className="border-t" description="请登录后再发表评论">
+            <Empty className="border-t" description={t('login_to_comment')}>
               <Button
                 type="primary"
                 onClick={() => {
@@ -135,7 +138,7 @@ export default function Comment() {
                   btn.click();
                 }}
               >
-                登录
+                {t('login')}
               </Button>
             </Empty>
           )}
@@ -146,11 +149,11 @@ export default function Comment() {
                 defaultValue={score}
                 onChange={(value) => setScore(value)}
                 tooltips={[
-                  '👎',
-                  '大失所望',
-                  '中规中矩',
-                  '白壁微瑕',
-                  '巧夺天工',
+                  t('rate_1'),
+                  t('rate_2'),
+                  t('rate_3'),
+                  t('rate_4'),
+                  t('rate_5'),
                 ]}
               />
             }
@@ -164,24 +167,22 @@ export default function Comment() {
                 onClick={onSubmit}
                 disabled={user.user ? false : true}
               >
-                评分
+                {t('commit_comment')}
               </Button>
             }
           />
         </Card>
-        <Card title="用户评分">
+        <Card title={t('user_scores')}>
           <InfiniteScroll
             dataLength={data.length}
             next={loadMoreData}
             hasMore={data.length < total}
             loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-            endMessage={<Divider plain>所有评论加载完毕</Divider>}
+            endMessage={<Divider plain>{t('all_comments_loaded')}</Divider>}
             scrollableTarget="scrollableDiv"
           >
             <ConfigProvider
-              renderEmpty={() => (
-                <Empty description="还没有人来给脚本打分，快来成为第一个打分的人吧" />
-              )}
+              renderEmpty={() => <Empty description={t('no_scores_yet')} />}
             >
               <List
                 dataSource={data}
@@ -226,7 +227,7 @@ export default function Comment() {
                             }
                           }}
                         >
-                          <Button type="link">操作</Button>
+                          <Button type="link">{t('action')}</Button>
                         </ActionMenu>
                       </div>
                       <MarkdownView

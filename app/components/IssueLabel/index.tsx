@@ -1,13 +1,16 @@
 import type { TagProps } from 'antd';
 import { Tag } from 'antd';
-
-export const IssueTagMap: { [key: string]: string[] } = {
-  feature: ['新功能', 'geekblue'],
-  question: ['问题', 'cyan'],
-  bug: ['BUG', 'red'],
-};
+import { useTranslation } from 'react-i18next';
 
 const IssueLabel: React.FC<TagProps & { label: string }> = (props) => {
+  const { t } = useTranslation();
+
+  const IssueTagMap: { [key: string]: string[] } = {
+    feature: [t('feature'), 'geekblue'],
+    question: [t('question'), 'cyan'],
+    bug: [t('bug'), 'red'],
+  };
+
   return IssueTagMap[props.label] ? (
     <Tag
       {...props}

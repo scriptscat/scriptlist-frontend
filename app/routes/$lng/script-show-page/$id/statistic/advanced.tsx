@@ -21,6 +21,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ScriptContext } from '~/context-manager';
 import type { APIListResponse } from '~/services/http';
 import { formatDate, secondToMinute } from '~/utils/utils';
+import { useTranslation } from 'react-i18next';
 
 export type LoaderData = {
   data: AdvStatistics;
@@ -34,6 +35,7 @@ const PieChartList: React.FC<{
   ) => Promise<APIListResponse<PieChart>>;
   columns: { title1: string; title2: string };
 }> = ({ scriptId, fetchDataFunc, columns }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [data, setData] = useState<PieChart[]>([]);
@@ -60,8 +62,8 @@ const PieChartList: React.FC<{
           dataIndex: 'key',
           key: 'key',
           render(value: string, record, index) {
-            if (value == '') {
-              return '本地新建';
+            if (value === '') {
+              return t('local_creation'); // Translate the text using the t function
             }
             // 截取长度,并检查有没有http前缀
             if (!value.startsWith('http')) {
@@ -100,6 +102,7 @@ const PieChartList: React.FC<{
 };
 
 const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
+  const { t } = useTranslation(); 
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [data, setData] = useState<VisitListItem[]>([]);
@@ -122,7 +125,7 @@ const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
       size="small"
       columns={[
         {
-          title: '访客id',
+          title: t('visitor_id'), // Translate the text using the t function
           dataIndex: 'visitor_id',
           key: 'visitor_id',
           render(value) {
@@ -131,7 +134,7 @@ const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
           },
         },
         {
-          title: '访问页面',
+          title: t('operation_page'), // Translate the text using the t function
           dataIndex: 'operation_page',
           key: 'operation_page',
           render(value) {
@@ -145,13 +148,13 @@ const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
             }
             return (
               <a href={value} target="_blank" rel="noreferrer">
-                value
+                {value}
               </a>
             );
           },
         },
         {
-          title: '停留时间',
+          title: t('duration'), // Translate the text using the t function
           dataIndex: 'duration',
           key: 'duration',
           render(value) {
@@ -159,7 +162,7 @@ const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
           },
         },
         {
-          title: '访问时间',
+          title: t('visit_time'), // Translate the text using the t function
           dataIndex: 'visit_time',
           key: 'visit_time',
           render(value) {
@@ -167,11 +170,11 @@ const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
           },
         },
         {
-          title: '退出时间',
+          title: t('exit_time'), // Translate the text using the t function
           dataIndex: 'exit_time',
           key: 'exit_time',
           render(value) {
-            if (value == '') {
+            if (value === '') {
               return '-';
             }
             return formatDate(value);
@@ -195,6 +198,7 @@ const VisitTable: React.FC<{ scriptId: number }> = ({ scriptId }) => {
 };
 
 const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
+  const { t } = useTranslation(); // Initialize the useTranslation hook
   const [chartData, setChartData] = useState([{}]);
   useEffect(() => {
     const time = setInterval(async () => {
@@ -203,7 +207,7 @@ const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
       const chartData = [];
       for (let i = 0; i < data.chart.x.length; i++) {
         chartData.push({
-          name: '实时用户数量',
+          name: t('realtime_user_count'), // Translate the text using the t function
           time: data.chart.x[i],
           num: data.chart.y[i],
         });
@@ -231,7 +235,7 @@ const RealtimeColumn: React.FC<{ scriptId: number }> = ({ scriptId }) => {
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const resp = await GetAdvStatistics(parseInt(params.id as string), request);
-  if (resp.code != 0) {
+  if (resp.code !== 0) {
     throw new Response(resp.msg, {
       status: 403,
       statusText: 'Forbidden',
@@ -241,6 +245,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
 };
 
 export default function Advanced() {
+  const { t } = useTranslation(); // Initialize the useTranslation hook
   const data = useLoaderData<LoaderData>();
   const script = useContext(ScriptContext);
   const [whitelist, setWhitelist] = useState<string[]>(
@@ -253,7 +258,7 @@ export default function Advanced() {
       ...whitelist,
       whitelistAdd,
     ]);
-    if (resp.code == 0) {
+    if (resp.code === 0) {
       setWhitelist(resp.data.whitelist);
       setWhitelistAdd('');
     } else {
@@ -264,15 +269,15 @@ export default function Advanced() {
     <>
       <div>
         <span>
-          高级统计需要在脚本中引用
+          {t('advanced_stats_require')}{' '}
           <a
             href="https://scriptcat.org/script-show-page/881"
             target="_blank"
             rel="noreferrer"
           >
-            高级统计库
-          </a>
-          才能获取数据, 此功能还在测试中, 可能还会有改动
+            {t('advanced_stats_lib')}
+          </a>{' '}
+          {t('advanced_stats_description')}
         </span>
       </div>
       <div className="text-center">
@@ -283,7 +288,10 @@ export default function Advanced() {
             )}
           />
         </Tooltip>
-        <span>受限于服务器资源,暂时限额{data.data.limit.quota}条数据</span>
+        <span>
+          {t('limited_server_resources')} {data.data.limit.quota}{' '}
+          {t('data_entries')}
+        </span>
       </div>
       <Divider />
       <Card className="!p-0">
@@ -291,30 +299,30 @@ export default function Advanced() {
           <div className="flex flex-row justify-between statistic">
             <div className="flex flex-col border-r pr-4 gap-1">
               <span></span>
-              <span>今日</span>
-              <span>昨日</span>
-              <span>本周</span>
+              <span>{t('today')}</span>
+              <span>{t('yesterday')}</span>
+              <span>{t('this_week')}</span>
             </div>
             <div className="flex flex-col border-r p-4">
-              <span>脚本执行数(pv)</span>
+              <span>{t('script_executions_pv')}</span>
               <span className="text-lg font-bold">{data.data.pv.today}</span>
               <span>{data.data.pv.yesterday}</span>
               <span>{data.data.pv.week}</span>
             </div>
             <div className="flex flex-col border-r p-4">
-              <span>脚本用户数(uv)</span>
+              <span>{t('script_users_uv')}</span>
               <span className="text-lg font-bold">{data.data.uv.today}</span>
               <span>{data.data.uv.yesterday}</span>
               <span>{data.data.uv.week}</span>
             </div>
             <div className="flex flex-col border-r p-4">
-              <span>ip数</span>
+              <span>{t('ip_count')}</span>
               <span className="text-lg font-bold">{data.data.ip.today}</span>
               <span>{data.data.ip.yesterday}</span>
               <span>{data.data.ip.week}</span>
             </div>
             <div className="flex flex-col border-r p-4">
-              <span>平均使用时间</span>
+              <span>{t('avg_usage_time')}</span>
               <span className="text-lg font-bold">
                 {secondToMinute(data.data.use_time.today)}
               </span>
@@ -324,9 +332,9 @@ export default function Advanced() {
           </div>
         </Card.Grid>
       </Card>
-      <Divider orientation="left">统计key</Divider>
+      <Divider orientation="left">{t('statistics_key')}</Divider>
       <Input value={data.data.statistics_key} readOnly style={{ width: 200 }} />
-      <Divider orientation="left">收集白名单</Divider>
+      <Divider orientation="left">{t('whitelist_collection')}</Divider>
       <List
         grid={{
           gutter: 16,
@@ -345,12 +353,12 @@ export default function Advanced() {
                 type="link"
                 size="small"
                 onClick={async () => {
-                  const tmpWhitelist = whitelist.filter((v) => v != item);
+                  const tmpWhitelist = whitelist.filter((v) => v !== item);
                   const resp = await UpdateWhitelist(
                     script.script!.id,
                     tmpWhitelist
                   );
-                  if (resp.code == 0) {
+                  if (resp.code === 0) {
                     setWhitelist(resp.data.whitelist);
                     setWhitelistAdd('');
                   } else {
@@ -358,7 +366,7 @@ export default function Advanced() {
                   }
                 }}
               >
-                删除
+                {t('delete')}
               </Button>
             </List.Item>
           );
@@ -366,7 +374,7 @@ export default function Advanced() {
         dataSource={whitelist}
         footer={
           <div>
-            <span>添加白名单: </span>
+            <span>{t('add_whitelist')}: </span>
             <Input
               style={{ width: 200 }}
               value={whitelistAdd}
@@ -376,7 +384,7 @@ export default function Advanced() {
               onPressEnter={submitWhitlist}
             />
             <Button type="primary" onClick={submitWhitlist}>
-              添加
+              {t('add')}
             </Button>
           </div>
         }
@@ -384,7 +392,7 @@ export default function Advanced() {
       <Divider />
       <div className="flex flex-row w-full gap-4">
         <Card
-          title="用户安装来源"
+          title={t('user_installation_source')}
           className="flex-1"
           size="small"
           bordered={false}
@@ -392,17 +400,27 @@ export default function Advanced() {
           <PieChartList
             scriptId={script.script!.id}
             fetchDataFunc={GetOriginList}
-            columns={{ title1: '来源', title2: '用户数' }}
+            columns={{ title1: t('source'), title2: t('user_count') }}
           />
         </Card>
-        <Card title="访问域" className="flex-1" size="small" bordered={false}>
+        <Card
+          title={t('visit_domain')}
+          className="flex-1"
+          size="small"
+          bordered={false}
+        >
           <PieChartList
             scriptId={script.script!.id}
             fetchDataFunc={GetVisitDomain}
-            columns={{ title1: '访问域', title2: '用户数' }}
+            columns={{ title1: t('visit_domain'), title2: t('user_count') }}
           />
         </Card>
-        <Card title="新老用户" className="flex-1" size="small" bordered={false}>
+        <Card
+          title={t('new_old_users')}
+          className="flex-1"
+          size="small"
+          bordered={false}
+        >
           <Pie
             colorField="key"
             angleField="value"
@@ -412,18 +430,33 @@ export default function Advanced() {
       </div>
       <Divider />
       <div className="flex flex-row w-full gap-4">
-        <Card title="版本分布" className="flex-1" size="small" bordered={false}>
+        <Card
+          title={t('version_distribution')}
+          className="flex-1"
+          size="small"
+          bordered={false}
+        >
           <Pie colorField="key" angleField="value" data={data.data.version} />
         </Card>
-        <Card title="终端设备" className="flex-1" size="small" bordered={false}>
+        <Card
+          title={t('terminal_devices')}
+          className="flex-1"
+          size="small"
+          bordered={false}
+        >
           <Pie colorField="key" angleField="value" data={data.data.system} />
         </Card>
-        <Card title="浏览器" className="flex-1" size="small" bordered={false}>
+        <Card
+          title={t('browsers')}
+          className="flex-1"
+          size="small"
+          bordered={false}
+        >
           <Pie colorField="key" angleField="value" data={data.data.browser} />
         </Card>
       </div>
       <Divider />
-      <Card title="实时用户" size="small" bordered={false}>
+      <Card title={t('realtime_users')} size="small" bordered={false}>
         <div className="flex flex-row gap-4">
           <RealtimeColumn scriptId={script.script!.id} />
           <VisitTable scriptId={script.script!.id} />

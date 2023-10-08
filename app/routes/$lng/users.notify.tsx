@@ -3,49 +3,28 @@ import { json } from '@remix-run/node';
 import type { V2_MetaFunction } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import { Card, Checkbox, message, Space } from 'antd';
+import i18next, { t } from 'i18next';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SetUsetNotify, UserConfig } from '~/services/users/api';
 import type { UserConfig as UserConfigItem } from '~/services/users/types';
+import { getLocale } from '~/utils/i18n';
 
-export const meta: V2_MetaFunction = () => [
-  { title: '用户通知管理 - ScriptCat' },
-];
-
-const notifyItem = [
-  {
-    key: 'at',
-    description: '艾特我时发送邮件通知',
-  },
-  {
-    key: 'create_script',
-    description: '关注的用户创建脚本时发送邮件通知',
-  },
-  {
-    key: 'score',
-    description: '当我的脚本被评分时发送通知',
-  },
-  {
-    key: 'script_update',
-    description: '关注的脚本更新时发送通知',
-  },
-  {
-    key: 'script_issue',
-    description: '关注的脚本创建反馈时发送通知',
-  },
-  {
-    key: 'script_issue_comment',
-    description: '关注的反馈有新评论时发送通知',
-  },
-];
+export const meta: V2_MetaFunction = () => {
+  const { t } = useTranslation();
+  return [{ title: t('user_notification_management') + ' - ScriptCat' }];
+};
 
 export type LoaderData = {
   config: UserConfigItem;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const lng = getLocale(request, 'en')!;
+  let t = await i18next.getFixedT(lng);
   const resp = await UserConfig(request);
   if (resp.code != 0) {
-    throw new Response('没有权限访问', {
+    throw new Response(t('no_permission_access'), {
       status: 403,
       statusText: 'Forbidden',
     });
@@ -60,10 +39,37 @@ export default function Notify() {
   const [notifyChecked, setNotifyChecked] = useState(data.config.notify);
   const [loading, setLoading] = useState(false);
 
+  const notifyItem = [
+    {
+      key: 'at',
+      description: t('at_me_send_email_notification'),
+    },
+    {
+      key: 'create_script',
+      description: t('notify_when_user_create_script'),
+    },
+    {
+      key: 'score',
+      description: t('notify_when_my_script_scored'),
+    },
+    {
+      key: 'script_update',
+      description: t('notify_when_followed_script_updated'),
+    },
+    {
+      key: 'script_issue',
+      description: t('notify_when_followed_script_created_feedback'),
+    },
+    {
+      key: 'script_issue_comment',
+      description: t('notify_when_followed_feedback_has_new_comment'),
+    },
+  ];
+
   return (
     <Card>
       <Space direction="vertical">
-        <span>当发送下面事件时,系统将会通过邮箱发送给您</span>
+        <span>{t('system_will_send_email_when_events_occur')}</span>
         {notifyItem.map((item, index) => (
           <Checkbox
             key={item.key}

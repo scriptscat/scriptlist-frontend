@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 import SearchItem from './item';
-import { useLocale } from 'remix-i18next';
+import { useTranslation } from 'react-i18next';
 
 // 搜索结果列表
 const SearchList: React.FC<{
@@ -15,6 +15,7 @@ const SearchList: React.FC<{
   const location = useLocation();
   const [total, setTotal] = useState(props.total);
   const [list, setList] = useState(props.list);
+  const { t } = useTranslation();
   useEffect(() => {
     setTotal(props.total);
     setList(props.list);
@@ -24,9 +25,7 @@ const SearchList: React.FC<{
     <>
       <div className="flex flex-col gap-3">
         <ConfigProvider
-          renderEmpty={() => (
-            <Empty description="未搜索到结果,换个姿势试试吧" />
-          )}
+          renderEmpty={() => <Empty description={t('no_search_result')} />}
         >
           <List
             dataSource={list}

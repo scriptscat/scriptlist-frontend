@@ -42,49 +42,7 @@ import { DeleteScript, WatchScript } from '~/services/scripts/api';
 import { useEffect, useState } from 'react';
 import GoogleAd from '~/components/GoogleAd';
 import { useLocale } from 'remix-i18next';
-
-export const WatchLevelMap = ['不关注', '版本更新', '新建反馈', '任何'];
-
-// 不推荐的内容标签与描述
-const antifeatures: {
-  [key: string]: { color: string; title: string; description: string };
-} = {
-  'referral-link': {
-    color: '#9254de',
-    title: '推荐链接',
-    description: '该脚本会修改或重定向到作者的返佣链接',
-  },
-  ads: {
-    color: '#faad14',
-    title: '附带广告',
-    description: '该脚本会在你访问的页面上插入广告',
-  },
-  payment: {
-    color: '#eb2f96',
-    title: '付费脚本',
-    description: '该脚本需要你付费才能够正常使用',
-  },
-  miner: {
-    color: '#fa541c',
-    title: '挖矿',
-    description: '该脚本存在挖坑行为',
-  },
-  membership: {
-    color: '#1890ff',
-    title: '会员功能',
-    description: '该脚本需要注册会员才能正常使用',
-  },
-  tracking: {
-    color: '#722ed1',
-    title: '信息追踪',
-    description: '该脚本会追踪你的用户信息',
-  },
-};
-
-function checkVersem(str: string) {
-  const reg = /^(\d+)\.(\d+)\.(\d+)$/;
-  return reg.test(str);
-}
+import { useTranslation } from 'react-i18next';
 
 function genRequire(scriptId: number, name: string, version: string) {
   return (
@@ -114,9 +72,52 @@ const SearchItem: React.FC<{
     height: '14px',
   };
   const navigate = useNavigate();
-  const [installTitle, setInstallTitle] = useState('安装脚本');
+  const { t } = useTranslation();
+  const [installTitle, setInstallTitle] = useState(t('install_script'));
   // 判断是否为语义化版本
   const [requireSelect, setRequireSelect] = useState(1);
+  const WatchLevelMap = [
+    t('not_follow'),
+    t('version_update'),
+    t('create_issue'),
+    t('any'),
+  ];
+  // 不推荐的内容标签与描述
+  const antifeatures: {
+    [key: string]: { color: string; title: string; description: string };
+  } = {
+    'referral-link': {
+      color: '#9254de',
+      title: t('referral_link'),
+      description: t('referral_link_description'),
+    },
+    ads: {
+      color: '#faad14',
+      title: t('ads'),
+      description: t('ads_description'),
+    },
+    payment: {
+      color: '#eb2f96',
+      title: t('payment_script'),
+      description: t('payment_script_description'),
+    },
+    miner: {
+      color: '#fa541c',
+      title: t('mining'),
+      description: t('mining_description'),
+    },
+    membership: {
+      color: '#1890ff',
+      title: t('membership_features'),
+      description: t('membership_features_description'),
+    },
+    tracking: {
+      color: '#722ed1',
+      title: t('tracking'),
+      description: t('tracking_description'),
+    },
+  };
+
   useEffect(() => {
     if (action) {
       const api =
@@ -139,9 +140,13 @@ const SearchItem: React.FC<{
           (res: { installed: boolean; version: string }) => {
             if (res.installed === true) {
               if (res.version == script.script.version) {
-                setInstallTitle('重新安装此脚本（版本' + res.version + '）');
+                setInstallTitle(
+                  t('reinstall_script_version', { version: res.version })
+                );
               } else {
-                setInstallTitle('更新到' + script.script.version + '版本');
+                setInstallTitle(
+                  t('update_script_version', { version: script.script.version })
+                );
               }
             }
           }
@@ -188,19 +193,19 @@ const SearchItem: React.FC<{
                         items={[
                           {
                             key: '0',
-                            label: '不关注',
+                            label: t('not_follow'),
                           },
                           {
                             key: '1',
-                            label: '版本更新',
+                            label: t('version_update'),
                           },
                           {
                             key: '2',
-                            label: '新建issue',
+                            label: t('create_issue'),
                           },
                           {
                             key: '3',
-                            label: '任何',
+                            label: t('any'),
                           },
                         ]}
                         onClick={(item) => {
@@ -235,7 +240,7 @@ const SearchItem: React.FC<{
                     onDeleteClick={async () => {
                       const resp = await DeleteScript(script.id);
                       if (resp.code == 0) {
-                        message.success('删除成功');
+                        message.success(t('delete_success'));
                         navigate('/');
                       } else {
                         message.error(resp.msg);
@@ -259,7 +264,7 @@ const SearchItem: React.FC<{
                   onDeleteClick={async () => {
                     const resp = await DeleteScript(script.id);
                     if (resp.code == 0) {
-                      message.success('删除成功');
+                      message.success(t('delete_success'));
                       onDelete && onDelete();
                     } else {
                       message.error(resp.msg);
@@ -267,7 +272,7 @@ const SearchItem: React.FC<{
                   }}
                 >
                   <Button type="link" className="!p-0">
-                    操作
+                    {t('action')}
                   </Button>
                 </ActionMenu>
               )}
@@ -280,41 +285,45 @@ const SearchItem: React.FC<{
         <Card.Grid hoverable={false} style={gridStyle}>
           <div className="flex flex-row gap-4 py-2">
             <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">今日安装</span>
+              <span className="text-gray-500 text-sm">
+                {t('today_install')}
+              </span>
               <div className="text-xs font-semibold">
                 <DownloadOutlined className="!align-middle" style={iconStyle} />
                 <span>{splitNumber(script.today_install.toString())}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">总安装量</span>
+              <span className="text-gray-500 text-sm">
+                {t('total_install')}
+              </span>
               <div className="text-xs font-semibold">
                 <DownloadOutlined className="!align-middle" style={iconStyle} />
                 <span>{splitNumber(script.total_install.toString())}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">创建日期</span>
+              <span className="text-gray-500 text-sm">{t('create_date')}</span>
               <div className="text-xs font-semibold">
                 <CalendarOutlined className="!align-middle" style={iconStyle} />
                 <span>{formatDate(script.createtime)}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">更新日期</span>
+              <span className="text-gray-500 text-sm">{t('update_date')}</span>
               <div className="text-xs font-semibold">
                 <CarryOutOutlined className="!align-middle" style={iconStyle} />
                 <span>{formatDate(script.updatetime)}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">用户评分</span>
+              <span className="text-gray-500 text-sm">{t('user_rating')}</span>
               <div className="text-xs font-semibold">
                 <StarOutlined className="!align-middle" style={iconStyle} />
                 <span>
                   {script.score
                     ? (((script.score / script.score_num) * 2) / 10).toFixed(1)
-                    : '暂无评分'}
+                    : t('no_rating')}
                 </span>
               </div>
             </div>
@@ -340,7 +349,7 @@ const SearchItem: React.FC<{
                     >
                       {installTitle}
                     </Button>
-                    <Tooltip placement="bottom" title="如何安装?">
+                    <Tooltip placement="bottom" title={t('how_to_install')}>
                       <Button
                         className="!rounded-none"
                         type="primary"
@@ -353,7 +362,7 @@ const SearchItem: React.FC<{
                     {script.enable_pre_release === 1 && (
                       <Tooltip
                         placement="bottom"
-                        title="安装预发布版本,这不是一个稳定的版本,请谨慎安装"
+                        title={t('install_pre_release_version')}
                         color="orange"
                       >
                         <Button
@@ -398,17 +407,17 @@ const SearchItem: React.FC<{
                             script.id,
                             script.name,
                             '^' + script.script.version
-                          ) + ' (最新兼容版本)'}
+                          ) + ' (latest compatible version)'}
                         </Select.Option>
                         <Select.Option value={3}>
                           {genRequire(
                             script.id,
                             script.name,
                             '~' + script.script.version
-                          ) + ' (最新修复版本)'}
+                          ) + ' (latest bugfix version)'}
                         </Select.Option>
                       </Select>
-                      <Tooltip placement="bottom" title="复制链接">
+                      <Tooltip placement="bottom" title={t('copy_link')}>
                         <Button
                           type="default"
                           icon={<CopyOutlined />}
@@ -434,7 +443,7 @@ const SearchItem: React.FC<{
                           }
                         ></Button>
                       </Tooltip>
-                      <Tooltip placement="bottom" title="如何安装?">
+                      <Tooltip placement="bottom" title={t('how_to_install')}>
                         <Button
                           className="!rounded-none"
                           type="primary"
@@ -458,7 +467,7 @@ const SearchItem: React.FC<{
                     target="_blank"
                     icon={<MoneyCollectOutlined />}
                   >
-                    捐赠脚本
+                    {t('donate_script')}
                   </Button>
                 )}
                 {script.post_id !== 0 && (
@@ -470,7 +479,7 @@ const SearchItem: React.FC<{
                     href={`https://bbs.tampermonkey.net.cn/thread-${script.post_id}-1-1.html`}
                     target="_blank"
                   >
-                    论坛帖子
+                    {t('forum_post')}
                   </Button>
                 )}
               </div>
@@ -481,7 +490,7 @@ const SearchItem: React.FC<{
         <Card.Grid hoverable={false} style={gridStyle}>
           <div className="flex flex-row justify-between py-[2px]">
             <div className="flex flex-row items-center text-sm">
-              <Tooltip title="评分" placement="bottom">
+              <Tooltip title={t('rating')} placement="bottom">
                 <Button
                   icon={<StarFilled className="!text-yellow-300" />}
                   type="text"
@@ -492,7 +501,7 @@ const SearchItem: React.FC<{
                 ></Button>
               </Tooltip>
               <Divider type="vertical" />
-              <Tooltip title="反馈问题" placement="bottom">
+              <Tooltip title={t('report_issue')} placement="bottom">
                 <Button
                   icon={
                     <ExclamationCircleOutlined className="!text-cyan-500" />
@@ -505,7 +514,7 @@ const SearchItem: React.FC<{
                 ></Button>
               </Tooltip>
               <Divider type="vertical" />
-              <Tooltip title="分享链接" placement="bottom">
+              <Tooltip title={t('share_link')} placement="bottom">
                 <Button
                   icon={<ShareAltOutlined className="!text-blue-500" />}
                   type="text"
@@ -518,15 +527,19 @@ const SearchItem: React.FC<{
             </div>
             <div className="flex flex-row items-center">
               <Tooltip
-                title={'脚本最新版本为:v' + script.script.version}
+                title={t('latest_script_version', {
+                  version: script.script.version,
+                })}
                 color="red"
                 placement="bottom"
               >
-                <Tag color="red">{'v' + script.script.version}</Tag>
+                <Tag color="red">
+                  {t('v', { version: script.script.version })}
+                </Tag>
               </Tooltip>
               {script.category?.map((category) => (
                 <Tooltip
-                  title={'该脚本属于' + category.name + '分类'}
+                  title={t('script_category', { category: category.name })}
                   color="green"
                   placement="bottom"
                   key={category.id}
@@ -536,7 +549,7 @@ const SearchItem: React.FC<{
               ))}
               {script.type === 3 && (
                 <Tooltip
-                  title={'这是一个库,你可以使用@require引用它'}
+                  title={t('library_script')}
                   color="blue"
                   placement="bottom"
                 >

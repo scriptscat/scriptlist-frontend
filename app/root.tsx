@@ -12,8 +12,6 @@ import {
   useLoaderData,
   useRouteError,
 } from '@remix-run/react';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import Backend from 'i18next-http-backend';
 import MainLayout from '~/components/layout/MainLayout';
 import styles from './styles/app.css';
 import antdLight from './styles/light.css';
@@ -28,21 +26,11 @@ import { useContext, useEffect, useState } from 'react';
 import { InitAxios } from './services/http';
 import prism from 'prismjs/themes/prism.css';
 import GoogleAdScript from './components/GoogleAd/script';
-import {
-  getInitialNamespaces,
-  useChangeLanguage,
-  useLocale,
-} from 'remix-i18next';
-import {
-  I18nContext,
-  I18nextProvider,
-  initReactI18next,
-  useTranslation,
-} from 'react-i18next';
+import { useChangeLanguage } from 'remix-i18next';
+import { I18nContext, useTranslation } from 'react-i18next';
 import { getLocale, getLocaleByURL } from './utils/i18n';
 import NavigationProcess from './components/NavigationProcess/NavigationProcess';
-import { createInstance } from 'i18next';
-import i18n from './i18n';
+import i18next from './i18next.server';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -56,9 +44,14 @@ export const links: LinksFunction = () => [
 export const meta: V2_MetaFunction = ({ data }) => {
   return [
     { charset: 'utf-8' },
-    { title: 'ScriptCat - 分享你的用户脚本' },
-    { description: '脚本猫脚本站,在这里你可以与全世界分享你的用户脚本' },
-    { keywords: 'ScriptCat,UserScript,用户脚本,脚本猫,油猴,油猴脚本' },
+    { title: 'ScriptCat - ' + data.home_page_title },
+    {
+      description: data.home_page_description,
+    },
+    {
+      keywords:
+        'ScriptCat,UserScript,Tampermonkey,Greasemonkey,Violentmonkey,用户脚本,脚本猫,油猴,油猴脚本',
+    },
   ];
 };
 
@@ -67,6 +60,7 @@ export const unstable_shouldReload = () => false;
 export const loader: LoaderFunction = async ({ request }) => {
   // 根据路径设置语言
   let locale = getLocale(request);
+  let t = await i18next.getFixedT(locale || 'en');
   const cookieHeader = request.headers.get('Cookie');
   let user: User | undefined;
   const respInit: ResponseInit = {};
@@ -97,6 +91,8 @@ export const loader: LoaderFunction = async ({ request }) => {
         user: user,
       },
       locale: locale || 'en',
+      home_page_title: t('home_page_title'),
+      home_page_description: t('home_page_description'),
     },
     respInit
   );

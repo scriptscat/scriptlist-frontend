@@ -21,25 +21,31 @@ import { useEffect } from 'react';
 import ClipboardJS from 'clipboard';
 import { forwardHeaders } from '~/utils/cookie';
 import { scriptName } from '~/utils/utils';
+import { useTranslation } from 'react-i18next';
+import { useLocale } from 'remix-i18next';
 
 export type LoaderData = {
   script: Script & { issue_num: number };
 };
 
 export const meta: V2_MetaFunction = ({ data, location }) => {
+  const { t } = useTranslation();
   if (!data) {
-    return [{ title: '未找到脚本 - ScriptCat' }, { description: 'Not Found' }];
+    return [
+      { title: t('script_not_found') + ' - ScriptCat' },
+      { description: 'Not Found' },
+    ];
   }
   const match = /\d+\/(\w+)(\/|$)/g.exec(location.pathname);
   const current = match ? match[1] : 'home';
   const map: { [key: string]: string } = {
-    code: '代码',
-    issue: '反馈',
-    comment: '评分',
-    version: '版本列表',
-    update: '更新脚本',
-    statistic: '脚本统计',
-    manage: '脚本管理',
+    code: t('code'),
+    issue: t('issue'),
+    comment: t('comment'),
+    version: t('version_list'),
+    update: t('update_script'),
+    statistic: t('script_statistic'),
+    manage: t('script_manage'),
   };
   return [
     { title: data.script.name + (map[current] ? ' - ' + map[current] : '') },
@@ -72,14 +78,18 @@ export default function ScriptShowPage() {
   const match = /\d+\/(\w+)(\/|$)/g.exec(location.pathname);
   const current = match ? match[1] : 'home';
   const [forbidden, setForbidden] = useState(false);
+  const { t } = useTranslation();
+  const locale = '/' + useLocale();
+
   useEffect(() => {
     const clipboard = new ClipboardJS('.copy-script-link', {
       text: (target) => {
-        message.success('复制成功');
+        message.success(t('copy_success'));
         return (
           target.getAttribute('script-name') +
           '\n' +
           window.location.origin +
+          locale +
           '/script-show-page/' +
           target.getAttribute('script-id')
         );
@@ -92,7 +102,7 @@ export default function ScriptShowPage() {
   useEffect(() => {
     const clipboard = new ClipboardJS('.copy-require-link', {
       text: (target) => {
-        message.success('复制成功');
+        message.success(t('copy_success'));
         return target.getAttribute('require-link') || '';
       },
     });
@@ -103,18 +113,18 @@ export default function ScriptShowPage() {
   const items: MenuProps['items'] = [
     {
       key: 'home',
-      label: <Link to={'./'}>首页</Link>,
+      label: <Link to={'./'}>{t('home')}</Link>,
     },
     {
       key: 'code',
-      label: <Link to={'./code'}>代码</Link>,
+      label: <Link to={'./code'}>{t('code')}</Link>,
     },
     {
       key: 'issue',
       label: (
         <Link to={'./issue'}>
           <Space>
-            反馈
+            {t('issue')}
             {data.script.issue_num > 0 && (
               <Tag
                 className="dark:!bg-gray-600 !bg-gray-200"
@@ -133,11 +143,11 @@ export default function ScriptShowPage() {
     },
     {
       key: 'comment',
-      label: <Link to={'./comment'}>评分</Link>,
+      label: <Link to={'./comment'}>{t('comment')}</Link>,
     },
     {
       key: 'version',
-      label: <Link to={'./version'}>版本列表</Link>,
+      label: <Link to={'./version'}>{t('version')}</Link>,
     },
   ];
   if (
@@ -148,15 +158,15 @@ export default function ScriptShowPage() {
       ...[
         {
           key: 'update',
-          label: <Link to={'./update'}>更新脚本</Link>,
+          label: <Link to={'./update'}>{t('update')}</Link>,
         },
         {
           key: 'statistic',
-          label: <Link to={'./statistic'}>脚本统计</Link>,
+          label: <Link to={'./statistic'}>{t('statistic')}</Link>,
         },
         {
           key: 'manage',
-          label: <Link to={'./manage'}>脚本管理</Link>,
+          label: <Link to={'./manage'}>{t('manage')}</Link>,
         },
       ]
     );
@@ -181,8 +191,8 @@ export default function ScriptShowPage() {
       <div className="flex flex-col gap-3">
         {data.script.archive == 1 && (
           <Alert
-            message="脚本已归档"
-            description="该脚本已经被作者归档,脚本可能失效并且作者不再维护,您无法再进行问题反馈."
+            message={t('script_archived')}
+            description={t('script_archived_description')}
             type="warning"
             showIcon
             closable
@@ -190,15 +200,15 @@ export default function ScriptShowPage() {
         )}
         {data.script.danger == 1 && (
           <Alert
-            message="脚本代码经过了不可读处理"
-            description="该脚本已经被作者经过了不可读处理,虽然脚本站已经经过了一层审查,但还是请不要给予危险权限."
+            message={t('script_code_obfuscated')}
+            description={t('script_code_obfuscated_description')}
             type="error"
             showIcon
             closable
           />
         )}
         <Link
-          to={'/script-show-page/' + data.script.id}
+          to={locale + '/script-show-page/' + data.script.id}
           className="text-2xl text-black dark:text-white"
         >
           {scriptName(data.script)}
@@ -207,7 +217,9 @@ export default function ScriptShowPage() {
 
         <ScriptContext.Provider value={{ script: data.script }}>
           {forbidden ? (
-            <span className="text-2xl dark:text-white">没有权限访问此页面</span>
+            <span className="text-2xl dark:text-white">
+              {t('no_permission')}
+            </span>
           ) : (
             <Outlet />
           )}

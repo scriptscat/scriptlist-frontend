@@ -5,6 +5,7 @@ import { useLoaderData } from '@remix-run/react';
 import { message } from 'antd';
 import ClipboardJS from 'clipboard';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocale } from 'remix-i18next';
 import SearchList from '~/components/Search/SearchList';
 import type { ScriptType, SortType } from '~/services/scripts/api';
@@ -16,11 +17,15 @@ export type LoaderData = {
   page: number;
 };
 
-export const meta: V2_MetaFunction = ({ data }: { data: LoaderData }) => [
-  {
-    title: '用户脚本列表 - ScriptCat',
-  },
-];
+export const meta: V2_MetaFunction = ({ data }: { data: LoaderData }) => {
+  console.log(data);
+  const { t } = useTranslation();
+  return [
+    {
+      title: t('search_page_title') + ' - ScriptCat',
+    },
+  ];
+};
 
 // 脚本列表使用嵌套路由实现
 export const loader: LoaderFunction = async ({ request }) => {
@@ -44,11 +49,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   const loader = useLoaderData<LoaderData>();
+  const { t } = useTranslation();
   const locale = useLocale();
   useEffect(() => {
     const clipboard = new ClipboardJS('.copy-script-link', {
       text: (target) => {
-        message.success('复制成功');
+        message.success(t('copy_success'));
         return (
           target.getAttribute('script-name') +
           '\n' +

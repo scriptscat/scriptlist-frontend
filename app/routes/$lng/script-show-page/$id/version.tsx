@@ -32,6 +32,7 @@ import {
   UpdateCodeSetting,
 } from '~/services/scripts/api';
 import type { ScriptCode } from '~/services/scripts/types';
+import { useTranslation } from 'react-i18next';
 
 type LoaderData = {
   list: ScriptCode[];
@@ -59,14 +60,15 @@ export default function Version() {
     changelog: '',
     is_pre_release: 2,
   });
+  const { t } = useTranslation();
 
   return (
     <Card>
       <Modal
-        title="版本设置"
+        title={t('version_setting')}
         open={isModalOpen}
-        okText="保存"
-        cancelText="取消"
+        okText={t('save')}
+        cancelText={t('cancel')}
         onOk={() => {
           UpdateCodeSetting(
             script.script!.id,
@@ -75,7 +77,7 @@ export default function Version() {
             edit.is_pre_release
           ).then((resp) => {
             if (resp.code === 0) {
-              message.success('更新成功');
+              message.success(t('update_success'));
               setModalOpen(false);
               setList((prev) => {
                 prev[edit.index].changelog = edit.changelog;
@@ -91,23 +93,23 @@ export default function Version() {
           setModalOpen(false);
         }}
       >
-        <span>更新日志</span>
+        <span>{t('changelog')}</span>
         <Input.TextArea
-          title="更新日志"
+          title={t('changelog')}
           rows={6}
           value={edit.changelog}
           onChange={(val) => {
             setEdit({ ...edit, changelog: val.target.value });
           }}
         ></Input.TextArea>
-        <Tooltip title="设置为预发布版本,正式版本不会更新至此版本,可在脚本管理页开启脚本预发布安装链接">
+        <Tooltip title={t('version_pre_release_tooltip')}>
           <Checkbox
             checked={edit.is_pre_release === 1 ? true : false}
             onChange={(val) => {
               setEdit({ ...edit, is_pre_release: val.target.checked ? 1 : 2 });
             }}
           >
-            设置为预发布版本
+            {t('set_pre_release')}
           </Checkbox>
         </Tooltip>
       </Modal>
@@ -127,9 +129,9 @@ export default function Version() {
                 <div className="flex flex-row justify-between">
                   <Space>
                     <span className="text-2xl">{item.version}</span>
-                    {index === 0 && <Tag color="green">最新</Tag>}
+                    {index === 0 && <Tag color="green">{t('latest')}</Tag>}
                     {item.is_pre_release === 1 && (
-                      <Tag color="orange">预发布</Tag>
+                      <Tag color="orange">{t('pre_release_version')}</Tag>
                     )}
                   </Space>
                   <Button.Group size="small">
@@ -153,12 +155,12 @@ export default function Version() {
                       (script.script!.user_id == user.user.user_id ||
                         user.user.is_admin > 0) && (
                         <Popconfirm
-                          title="删除操作无法恢复,请确认是否删除"
+                          title={t('delete_confirm')}
                           onConfirm={() => {
                             ScriptCodeDelete(script.script!.id, item.id)
                               .then((resp) => {
                                 if (resp.code === 0) {
-                                  message.success('删除成功');
+                                  message.success(t('delete_success'));
                                   setList((prev) => {
                                     prev.splice(index, 1);
                                     return [...prev];
@@ -168,11 +170,11 @@ export default function Version() {
                                 }
                               })
                               .catch((e) => {
-                                message.error('删除失败');
+                                message.error(t('delete_failed'));
                               });
                           }}
-                          okText="确认"
-                          cancelText="取消"
+                          okText={t('confirm')}
+                          cancelText={t('cancel')}
                         >
                           <Button
                             className="!rounded-none"
@@ -188,7 +190,7 @@ export default function Version() {
                 <div className="py-2">
                   <MarkdownView
                     id={'version-' + item.id}
-                    content={item.changelog || '作者偷懒没有写更新日志'}
+                    content={item.changelog || t('no_changelog')}
                   />
                 </div>
               </div>
@@ -218,9 +220,10 @@ export default function Version() {
                       }
                       icon={<DownloadOutlined />}
                     >
-                      安装{item.version}
+                      {t('install')}
+                      {item.version}
                     </Button>
-                    <Tooltip placement="bottom" title="如何安装?">
+                    <Tooltip placement="bottom" title={t('how_to_install')}>
                       <Button
                         className="!rounded-none"
                         type="primary"
@@ -232,7 +235,7 @@ export default function Version() {
                     </Tooltip>
                     <Tooltip
                       placement="bottom"
-                      title="选择两个版本,对比代码变化"
+                      title={t('compare_code_changes')}
                     >
                       <Button
                         className="!rounded-none"
@@ -278,7 +281,7 @@ export default function Version() {
                         }
                         readOnly
                       />
-                      <Tooltip placement="bottom" title="复制链接">
+                      <Tooltip placement="bottom" title={t('copy_link')}>
                         <Button
                           type="default"
                           icon={<CopyOutlined />}
@@ -294,7 +297,7 @@ export default function Version() {
                           }
                         ></Button>
                       </Tooltip>
-                      <Tooltip placement="bottom" title="如何安装?">
+                      <Tooltip placement="bottom" title={t('how_to_install')}>
                         <Button
                           className="!rounded-none"
                           type="primary"
@@ -306,7 +309,7 @@ export default function Version() {
                       </Tooltip>
                       <Tooltip
                         placement="bottom"
-                        title="选择两个版本,对比代码变化"
+                        title={t('compare_code_changes')}
                       >
                         <Button
                           className="!rounded-none"

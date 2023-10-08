@@ -2,13 +2,14 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Link, useNavigate, useSearchParams } from '@remix-run/react';
 import { Input } from 'antd';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocale } from 'remix-i18next';
 
-// 搜索框样式
 const Search: React.FC<{ className?: string }> = ({ className }) => {
   const locale = '/' + useLocale();
   const navigate = useNavigate();
   const params = useSearchParams();
+  const { t } = useTranslation();
   const [keyword, setKeyword] = useState(params[0].get('keyword') || '');
   const [clsName] = useState(
     (className ? className + ' ' : '') +
@@ -19,7 +20,7 @@ const Search: React.FC<{ className?: string }> = ({ className }) => {
   return (
     <div className={clsName}>
       <Input
-        placeholder="搜索脚本，开启新世界"
+        placeholder={t('search_scripts_placeholder')}
         size="large"
         bordered={false}
         defaultValue={keyword}

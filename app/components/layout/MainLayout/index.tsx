@@ -17,12 +17,13 @@ import {
   GlobalOutlined,
 } from '@ant-design/icons';
 import { RiSunLine, RiMoonLine, RiComputerLine } from 'react-icons/ri';
-import { Link, useLocation } from '@remix-run/react';
+import { Link, useLocation, useNavigate } from '@remix-run/react';
 import Search from '~/components/Search';
 import { UserContext } from '~/context-manager';
-import { useLocale } from 'remix-i18next';
-import { getLocaleName, lngMap } from '~/utils/i18n';
-import { useTranslation } from 'react-i18next';
+import { lngMap } from '~/utils/i18n';
+import { I18nContext, useTranslation } from 'react-i18next';
+import i18n from '~/i18n';
+import { useChangeLanguage } from 'remix-i18next';
 
 const { Header, Footer, Content } = Layout;
 
@@ -36,7 +37,10 @@ const MainLayout: React.FC<{
   const user = useContext(UserContext);
   const [dark, _setDark] = useState(user.dark ? 'dark' : 'light');
   const [mode, setMode] = useState('auto');
+  const i18n = useContext(I18nContext);
   const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setMode(localStorage.getItem('styleMode') || 'auto');
@@ -50,7 +54,6 @@ const MainLayout: React.FC<{
     onDarkModeChange(mode === 'dark');
     document.cookie = 'styleMode=' + mode + ';path=/';
   };
-  const location = useLocation();
   const current =
     location.pathname == uLocale + '/'
       ? 'home'
@@ -123,14 +126,14 @@ const MainLayout: React.FC<{
   for (const [, lng] of Object.entries(lngMap)) {
     for (const [key, value] of Object.entries(lng)) {
       localeList.push({
-        label: value.name,
+        label: <div className="text-sm">{value.name + '(' + key + ')'}</div>,
         key: key,
       });
     }
   }
 
   localeList.push({
-    label: t('help_translate'),
+    label: <div className="text-sm">{t('help_translate')}</div>,
     key: 'help',
   });
 
@@ -237,7 +240,7 @@ const MainLayout: React.FC<{
                 </Dropdown>
                 <Dropdown
                   menu={{
-                    className: '!rounded-md border-inherit border-1 w-32 !mt-4',
+                    className: '!rounded-md border-inherit border-1 w-50 !mt-4',
                     selectedKeys: [uLocale],
                     onClick: ({ key }) => {
                       if (key == 'help') {
@@ -247,12 +250,14 @@ const MainLayout: React.FC<{
                         );
                       } else {
                         // 修改路径为对应的语言
-                        const newUrl = window.location.href.replace(
+                        const newPathname = location.pathname.replace(
                           uLocale,
-                          key
+                          '/' + key
                         );
-                        console.log(key);
-                        window.location.href = newUrl;
+                        navigate({
+                          pathname: newPathname,
+                        });
+                        i18n.i18n.changeLanguage(key);
                       }
                     },
                     items: localeList,
@@ -333,9 +338,7 @@ const MainLayout: React.FC<{
                 GitHub
               </a>
             </div>
-            <p className="m-0 text-sm">
-              © 2022-至今 ScriptCat. {t('all_rights_reserved')}
-            </p>
+            <p className="m-0 text-sm">{t('all_rights_reserved')}</p>
           </Footer>
         </Layout>
       </ConfigProvider>

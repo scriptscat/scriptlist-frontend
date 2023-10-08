@@ -1,6 +1,7 @@
 import { CloseOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Input, Select, Slider, Tooltip } from 'antd';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export type GrayControlProps = {
   index: number;
@@ -31,6 +32,8 @@ const GrayControl: React.FC<GrayControlProps> = ({
   onChange,
   value,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div
       style={{
@@ -42,7 +45,7 @@ const GrayControl: React.FC<GrayControlProps> = ({
       className="flex flex-col gap-1"
     >
       <div className="flex flex-row justify-between">
-        <h4 className="text-base">策略{index + 1}</h4>
+        <h4 className="text-base">{t('strategy', { index: index + 1 })}</h4>
         <Button
           type="text"
           icon={<CloseOutlined />}
@@ -70,8 +73,8 @@ const GrayControl: React.FC<GrayControlProps> = ({
                 });
               }}
             >
-              <Select.Option value="weight">权重</Select.Option>
-              <Select.Option value="pre-release">预发布用户</Select.Option>
+              <Select.Option value="weight">{t('weight')}</Select.Option>
+              <Select.Option value="pre-release">{t('pre_release_user')}</Select.Option>
             </Select>
             {control.type == 'weight' && (
               <>
@@ -86,15 +89,11 @@ const GrayControl: React.FC<GrayControlProps> = ({
                   }}
                   tooltip={{
                     formatter: (val?: number) =>
-                      `将会推送${val || 0}%的流量到目标版本`,
+                      t('pre_release_slider_tooltip', { val: val || 0 }),
                   }}
                 />
                 <Tooltip
-                  title={
-                    '在' +
-                    control.params.weight_day +
-                    '天内,逐渐将流量更新至目标值,如果期望最终完全更新至指定版本,可设置100%,0天为直接更新指定流量至此版本'
-                  }
+                  title={t('pre_release_tooltip', { weight_day: control.params.weight_day })}
                 >
                   <Input
                     value={control.params.weight_day}
@@ -106,13 +105,13 @@ const GrayControl: React.FC<GrayControlProps> = ({
                         controls: value.controls,
                       });
                     }}
-                    addonAfter="天"
+                    addonAfter={t('days')}
                   />
                 </Tooltip>
               </>
             )}
             {control.type == 'cookie' && (
-              <Input placeholder="cookie正则表达式" />
+              <Input placeholder={t('cookie_regex_placeholder')} />
             )}
           </div>
         ))}
@@ -143,8 +142,8 @@ const GrayControl: React.FC<GrayControlProps> = ({
           />
         )}
       </div>
-      <h4 className="text-base">目标版本</h4>
-      <Tooltip title="除了选择下面的选项外,也可输入任意版本">
+      <h4 className="text-base">{t('pre_release_target_version')}</h4>
+      <Tooltip title={t('pre_release_tooltip_version')}>
         <Select
           mode="tags"
           value={value.target_version}
@@ -163,15 +162,11 @@ const GrayControl: React.FC<GrayControlProps> = ({
             }
           }}
         >
-          <Select.Option value="latest">最新正式版本</Select.Option>
-          <Select.Option value="pre-latest">最新预发布版本</Select.Option>
-          <Select.Option value="all-latest">最新版本</Select.Option>
-          <Select.Option value="latest^1">
-            上一正式版本
-          </Select.Option>
-          <Select.Option value="pre-latest^1">
-            上一预发布版本
-            </Select.Option>
+          <Select.Option value="latest">{t('latest_official_version')}</Select.Option>
+          <Select.Option value="pre-latest">{t('latest_pre_release_version')}</Select.Option>
+          <Select.Option value="all-latest">{t('latest_version')}</Select.Option>
+          <Select.Option value="latest^1">{t('previous_official_version')}</Select.Option>
+          <Select.Option value="pre-latest^1">{t('previous_pre_release_version')}</Select.Option>
         </Select>
       </Tooltip>
     </div>

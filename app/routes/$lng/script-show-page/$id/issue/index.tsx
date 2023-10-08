@@ -13,17 +13,13 @@ import type {
 import { useContext } from 'react';
 import { UserContext } from '~/context-manager';
 import { replaceSearchParam } from '~/services/utils';
+import IssueLabel from '~/components/IssueLabel';
+import { useTranslation } from 'react-i18next';
 
 type LoaderData = {
   list: IssueItem[];
   total: number;
   page: number;
-};
-
-export const IssueTagMap: { [key: string]: string[] } = {
-  feature: ['新功能', 'geekblue'],
-  question: ['问题', 'cyan'],
-  bug: ['BUG', 'red'],
 };
 
 export const loader: LoaderFunction = async ({ params, request }) => {
@@ -32,25 +28,31 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const data = await IssueList(parseInt(params.id as string), {
     page: page,
   });
-  return json({ list: data.data.list, total: data.data.total, page: page } as LoaderData);
+  return json({
+    list: data.data.list,
+    total: data.data.total,
+    page: page,
+  } as LoaderData);
 };
 
 export default function Issue() {
   const data = useLoaderData<LoaderData>();
   const user = useContext(UserContext);
   const location = useLocation();
+  const { t } = useTranslation();
+
   return (
     <Card>
       <Space className="mb-2">
         <Tooltip
           title={
             user.user
-              ? '创建反馈时记得描述清楚问题哦,否则可能会被作者直接关闭'
-              : '请先登录后再创建反馈'
+              ? t('create_feedback_description')
+              : t('login_required_message')
           }
         >
           <Button type="primary" disabled={user.user ? false : true}>
-            <Link to={'./create'}>创建反馈</Link>
+            <Link to={'./create'}>{t('create_feedback')}</Link>
           </Button>
         </Tooltip>
       </Space>
@@ -93,7 +95,7 @@ export default function Issue() {
         size="small"
       >
         <Column
-          title="标题"
+          title={t('title')}
           dataIndex="title"
           key="title"
           render={(title, record: IssueItem) => {
@@ -113,7 +115,7 @@ export default function Issue() {
           }}
         />
         <Column
-          title="标签"
+          title={t('labels')}
           dataIndex="labels"
           key="labels"
           width={200}
@@ -121,20 +123,15 @@ export default function Issue() {
             return (
               <div className="flex flex-row">
                 {labels &&
-                  labels.map(
-                    (label) =>
-                      IssueTagMap[label] && (
-                        <Tag key={label} color={IssueTagMap[label][1]}>
-                          {IssueTagMap[label][0]}
-                        </Tag>
-                      )
-                  )}
+                  labels.map((label) => (
+                    <IssueLabel key={label} label={label} />
+                  ))}
               </div>
             );
           }}
         />
         <Column
-          title="状态"
+          title={t('status')}
           dataIndex="status"
           key="status"
           width={120}
@@ -146,7 +143,7 @@ export default function Issue() {
                     icon={<InfoCircleTwoTone className="!align-baseline" />}
                     color="blue"
                   >
-                    待处理
+                    {t('pending')}
                   </Tag>
                 );
               default:
@@ -160,7 +157,7 @@ export default function Issue() {
                     }
                     color="green"
                   >
-                    已处理
+                    {t('resolved')}
                   </Tag>
                 );
             }

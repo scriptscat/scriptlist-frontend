@@ -6,6 +6,7 @@ import {
 import { Dropdown, Menu, Modal, Select, Space } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { UserContext } from '~/context-manager';
 
 const { Option } = Select;
@@ -34,6 +35,8 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
 }) => {
   const user = useContext(UserContext);
   const authorMap = new Map<number, boolean>();
+  const { t } = useTranslation();
+
   const [modal, contextHolder] = Modal.useModal();
   if (uid instanceof Array) {
     uid.forEach((v) => authorMap.set(v, true));
@@ -45,16 +48,16 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
     // 判断用户等级是否为管理员 或者 允许作者删除
     if (
       (user.user.is_admin > 0 &&
-        (user.user.is_admin == 1 ||
-          (deleteLevel == 'super_moderator' && user.user.is_admin <= 2) ||
-          (deleteLevel == 'moderator' && user.user.is_admin <= 3))) ||
+        (user.user.is_admin === 1 ||
+          (deleteLevel === 'super_moderator' && user.user.is_admin <= 2) ||
+          (deleteLevel === 'moderator' && user.user.is_admin <= 3))) ||
       (allowSelfDelete && authorMap.has(user.user.user_id))
     ) {
       items.push({
         label: (
           <Space className="anticon-middle">
             <DeleteOutlined />
-            <span>删除</span>
+            <span>{t('delete')}</span>
           </Space>
         ),
         key: 'delete',
@@ -64,7 +67,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
           label: (
             <Space className="anticon-middle">
               <ExclamationCircleOutlined />
-              <span>处罚</span>
+              <span>{t('punish')}</span>
             </Space>
           ),
           key: 'punish',
@@ -76,7 +79,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
     label: (
       <Space className="anticon-middle">
         <FileExclamationOutlined />
-        <span>举报</span>
+        <span>{t('report')}</span>
       </Space>
     ),
     key: 'report',
@@ -96,7 +99,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                 );
               } else if (value.key === 'punish') {
                 modal.confirm({
-                  title: '是否要给予处罚?',
+                  title: t('confirm_punish'),
                   content: (
                     <Space
                       direction="vertical"
@@ -104,7 +107,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                         width: '100%',
                       }}
                     >
-                      <span>请选择要处罚的选项</span>
+                      <span>{t('select_punish_option')}</span>
                       <Select defaultValue="lucy" style={{ width: '100%' }}>
                         <Option value="jack">Jack</Option>
                         <Option value="lucy">Lucy</Option>
@@ -113,7 +116,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                         </Option>
                         <Option value="Yiminghe">yiminghe</Option>
                       </Select>
-                      <span>处罚理由</span>
+                      <span>{t('punish_reason')}</span>
                       <TextArea
                         rows={2}
                         style={{ width: '100%', border: '1px solid #444' }}
@@ -121,19 +124,19 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                     </Space>
                   ),
                   icon: <ExclamationCircleOutlined />,
-                  okText: '确认',
-                  cancelText: '取消',
+                  okText: t('confirm'),
+                  cancelText: t('cancel'),
                   onOk: () => {
                     onDeleteClick();
                   },
                 });
               } else {
                 modal.confirm({
-                  title: '确认是否删除?',
-                  content: '请注意删除操作是不可逆的',
+                  title: t('confirm_delete'),
+                  content: t('delete_warning'),
                   icon: <ExclamationCircleOutlined />,
-                  okText: '确认',
-                  cancelText: '取消',
+                  okText: t('confirm'),
+                  cancelText: t('cancel'),
                   onOk: () => {
                     onDeleteClick();
                   },

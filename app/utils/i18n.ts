@@ -21,8 +21,8 @@ export const lngMap: {
 };
 
 // 根据路径获取语言
-export function getLocale(request: Request) {
- return getLocaleByURL(request.url);
+export function getLocale(request: Request, defaultLocale?: string) {
+  return getLocaleByURL(request.url) || defaultLocale;
 }
 
 export function getLocaleByURL(url: string) {

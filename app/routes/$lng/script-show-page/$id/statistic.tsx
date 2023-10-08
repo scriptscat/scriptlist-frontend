@@ -1,6 +1,7 @@
 import { Outlet, useLocation, useNavigate } from '@remix-run/react';
 import { Card, Divider, Radio } from 'antd';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function Statistic() {
   const location = useLocation();
@@ -8,6 +9,7 @@ export default function Statistic() {
     location.pathname.indexOf('advanced') === -1 ? 'basic' : 'advanced'
   );
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <Card>
@@ -34,7 +36,7 @@ export default function Statistic() {
             textAlign: 'center',
           }}
         >
-          基础统计
+          {t('basic_statistics')}
         </Radio.Button>
         <Radio.Button
           value="advanced"
@@ -47,7 +49,7 @@ export default function Statistic() {
             textAlign: 'center',
           }}
         >
-          高级统计
+          {t('advanced_statistics')}
         </Radio.Button>
       </Radio.Group>
       <Divider />
