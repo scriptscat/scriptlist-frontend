@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.markdown-body ol,
+.markdown-body ul,
+.markdown-body menu {
+  list-style: disc;
+}
+
 body.dark {
   color: #ffffffd9 !important;
 }
