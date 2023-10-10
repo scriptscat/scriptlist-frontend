@@ -44,7 +44,7 @@ export const links: LinksFunction = () => [
 export const meta: V2_MetaFunction = ({ data }) => {
   return [
     { charset: 'utf-8' },
-    { title: 'ScriptCat - ' + data.home_page_title },
+    { title: 'ScriptCat - ' + data.share_your_userscript },
     {
       description: data.home_page_description,
     },
@@ -60,6 +60,9 @@ export const unstable_shouldReload = () => false;
 export const loader: LoaderFunction = async ({ request }) => {
   // 根据路径设置语言
   let locale = getLocale(request);
+  if (!locale) {
+    locale = await i18next.getLocale(request);
+  }
   let t = await i18next.getFixedT(locale || 'en');
   const cookieHeader = request.headers.get('Cookie');
   let user: User | undefined;
@@ -86,12 +89,13 @@ export const loader: LoaderFunction = async ({ request }) => {
         NODE_ENV: process.env.NODE_ENV,
         APP_API_URL: process.env.APP_API_URL,
         APP_BBS_OAUTH_CLIENT: process.env.APP_BBS_OAUTH_CLIENT,
+        APP_ENV: process.env.APP_ENV,
       },
       login: {
         user: user,
       },
-      locale: locale || 'en',
-      home_page_title: t('home_page_title'),
+      locale: locale,
+      share_your_userscript: t('share_your_userscript'),
       home_page_description: t('home_page_description'),
     },
     respInit
@@ -247,6 +251,21 @@ export default function App() {
             <Outlet />
           </MainLayout>
         </UserContext.Provider>
+        {config.ENV.APP_ENV == 'pre' && (
+          <>
+            <script
+              type="text/javascript"
+              dangerouslySetInnerHTML={{
+                __html:
+                  "window._jipt = []; _jipt.push(['project', 'scriptlist']);",
+              }}
+            ></script>
+            <script
+              type="text/javascript"
+              src="//cdn.crowdin.com/jipt/jipt.js"
+            ></script>
+          </>
+        )}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

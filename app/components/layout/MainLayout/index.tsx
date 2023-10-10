@@ -245,7 +245,7 @@ const MainLayout: React.FC<{
                     onClick: ({ key }) => {
                       if (key == 'help') {
                         window.open(
-                          'https://github.com/scriptscat/scriptlist-frontend/tree/main/public/locales',
+                          'https://crowdin.com/project/scriptlist',
                           '_blank'
                         );
                       } else {

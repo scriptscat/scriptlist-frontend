@@ -13,7 +13,8 @@
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
     "start": "remix-serve build",
     "light-css": "./node_modules/less/bin/lessc --js --modify-var=\"ant-prefix=light\"  styles/light.less app/styles/light.css",
-    "dark-css": "./node_modules/less/bin/lessc --js --modify-var=\"ant-prefix=dark\" styles/dark.less app/styles/dark.css"
+    "dark-css": "./node_modules/less/bin/lessc --js --modify-var=\"ant-prefix=dark\" styles/dark.less app/styles/dark.css",
+    "crowdin": "crowdin"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",

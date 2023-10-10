@@ -22,7 +22,7 @@ export const meta: V2_MetaFunction = ({ data }: { data: LoaderData }) => {
   const { t } = useTranslation();
   return [
     {
-      title: t('search_page_title') + ' - ScriptCat',
+      title: t('userscript_list') + ' - ScriptCat',
     },
   ];
 };

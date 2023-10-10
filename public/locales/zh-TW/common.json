@@ -1,10 +1,10 @@
 {
-  "home_page_title": "分享你的用戶腳本",
+  "share_your_userscript": "分享你的用戶腳本",
   "home_page_description": "腳本貓腳本站,在這裡你可以與全世界分享你的用戶腳本",
-  "search_page_title": "用戶腳本列表",
+  "userscript_list": "用戶腳本列表",
 
   "browser": "瀏覽器",
-  "subtitle": "比全更全的用戶腳本託管平台",
+  "home_page_subtitle": "比全更全的用戶腳本託管平台",
   "powerful_script_extension": "更強大的腳本執行擴充",
   "more_possibilities_for_your_browser": "讓你的瀏覽器擁有更多可能性",
   "greasemonkey_script": "油猴腳本",

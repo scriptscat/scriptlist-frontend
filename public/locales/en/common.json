@@ -1,10 +1,10 @@
 {
-  "home_page_title": "Share your userscript",
+  "share_your_userscript": "Share your userscript",
   "home_page_description": "Scriptcat script site, where you can share your user scripts with the world",
-  "search_page_title": "User script list",
+  "userscript_list": "User script list",
 
   "browser": "Browser",
-  "subtitle": "A user script hosting platform more complete than any other",
+  "home_page_subtitle": "A user script hosting platform more complete than any other",
   "powerful_script_extension": "Enhanced script execution extension",
   "more_possibilities_for_your_browser": "Unlock more possibilities for your browser",
   "greasemonkey_script": "Greasemonkey Script",

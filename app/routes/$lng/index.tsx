@@ -28,7 +28,7 @@ export default function Index() {
     <div className="flex flex-col text-black dark:text-white gap-4">
       <div className="flex flex-col items-center gap-2">
         <span className="text-5xl m-0">Script Cat</span>
-        <span>{t('subtitle')}</span>
+        <span>{t('home_page_subtitle')}</span>
         <Search className="w-4/5" />
         <span className="text-2xl">{t('powerful_script_extension')}</span>
         <span>{t('more_possibilities_for_your_browser')}</span>
