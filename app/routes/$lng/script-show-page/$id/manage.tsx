@@ -14,11 +14,12 @@ import {
   Space,
   Switch,
 } from 'antd';
-import i18next, { t } from 'i18next';
 import { useContext } from 'react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import GrayControl from '~/components/GrayControl';
 import { ScriptContext } from '~/context-manager';
+import i18next from '~/i18next.server';
 import {
   ArchiveScript,
   DeleteScript,
@@ -70,6 +71,7 @@ export default function Manage() {
   );
   const [isPublic, setIsPublic] = useState(script.script!.public);
   const [unwell, setUnwell] = useState(script.script!.unwell);
+  const { t } = useTranslation();
 
   return (
     <Card>
@@ -213,7 +215,7 @@ export default function Manage() {
               {'<pre-release>'}
               {t('pre_release_version_auto_mark')}
             </span>
-            <span>({t('first_time_enable_pre_release')})</span>
+            <span>{t('first_time_enable_pre_release')}</span>
             <Switch
               checkedChildren={t('enable')}
               unCheckedChildren={t('disable')}

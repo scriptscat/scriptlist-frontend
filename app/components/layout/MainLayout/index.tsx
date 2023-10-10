@@ -254,10 +254,7 @@ const MainLayout: React.FC<{
                           uLocale,
                           '/' + key
                         );
-                        navigate({
-                          pathname: newPathname,
-                        });
-                        i18n.i18n.changeLanguage(key);
+                        window.open(newPathname, '_self');
                       }
                     },
                     items: localeList,

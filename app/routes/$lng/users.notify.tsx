@@ -3,9 +3,9 @@ import { json } from '@remix-run/node';
 import type { V2_MetaFunction } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 import { Card, Checkbox, message, Space } from 'antd';
-import i18next, { t } from 'i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import i18next from '~/i18next.server';
 import { SetUsetNotify, UserConfig } from '~/services/users/api';
 import type { UserConfig as UserConfigItem } from '~/services/users/types';
 import { getLocale } from '~/utils/i18n';
@@ -38,6 +38,7 @@ export default function Notify() {
   const data = useLoaderData<LoaderData>();
   const [notifyChecked, setNotifyChecked] = useState(data.config.notify);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const notifyItem = [
     {

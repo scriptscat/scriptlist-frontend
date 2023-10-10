@@ -47,7 +47,7 @@
   "system": "跟隨系統",
   "personal_center": "個人中心",
   "login": "登錄",
-  "all_rights_reserved": "© 2022-至今 ScriptCat. 版權所有",
+  "all_rights_reserved": "© 2022-至今 ScriptCat. All rights reserved.",
   "help_translate": "協助翻譯",
 
   "category": "分類",
@@ -116,7 +116,7 @@
   "no_rating": "暫無評分",
   "report_issue": "回報問題",
   "share_link": "分享連結",
-  "latest_script_version": "腳本最新版本為: v{{version}}）",
+  "latest_script_version": "腳本最新版本為: v{{version}}",
   "v": "v{{version}}",
   "script_category": "該腳本屬於{{category}}分類",
   "library_script": "這是一個函式庫,你可以用@require引用它",
@@ -140,7 +140,7 @@
 
   "strategy": "策略{{index}}",
   "weight": "權重",
-  "pre_release": "預發佈使用者",
+  "pre_release_user": "預發佈使用者",
   "pre_release_slider_tooltip": "將會推送{{val}}%的流量到目標版本",
   "pre_release_tooltip": "在{{weight_day}}天內，逐漸將流量更新至目標值。如果期望最終完全更新至指定版本，可設置100%，0天為直接更新指定流量至此版本",
   "days": "天",
@@ -175,6 +175,7 @@
   "user_script_describe": "用戶腳本，平常意義上的油猴腳本，包括腳本貓的後臺腳本、定時腳本",
   "script_library": "腳本調用庫，腳本@require所使用的庫，只允許被其他腳本進行引用，不允許被用戶安裝",
   "subscription_script": "訂閱腳本，腳本貓特有支持的類型，僅會在安裝時彈出安裝界面由用戶確認訂閱，後續的更新採用靜默更新的方式",
+  "subscription": "訂閱模式",
   "update_script_library_description": "庫描述信息",
   "update_script_library_name": "庫名稱，類似腳本的@name",
   "library_version": "庫版本，類似腳本的@version",
@@ -237,7 +238,7 @@
   "limited_server_resources": "受限於伺服器資源,暫時限額",
   "data_entries": "條資料",
   "statistics_key": "統計金鑰",
-  "whitelist_collection": "白名單集合",
+  "whitelist_collection": "收集白名单",
   "add_whitelist": "新增白名單",
   "add": "新增",
   "user_installation_source": "使用者安裝來源",
@@ -266,7 +267,7 @@
   "30_day_update_uv_pv": "30天更新uv/pv",
   "data_disclaimer": "以上數據僅供參考，若有出入請以實際為準",
 
-  "write_comment": "写评论",
+  "write_comment": "撰写评论",
   "comment_success": "评论提交成功",
   "write_comment_placeholder": "填写您的评论并在下方进行评分，问题反馈请前往反馈区（友善的反馈是交流的起点）",
   "login_to_comment": "请登录以发表评论",
@@ -377,5 +378,6 @@
   "webhook_step3_release_event_description": "如果您想讓 Script 的腳本只在「releases」行為後更新，請選擇「Let me select individual events」。",
   "webhook_refresh_secret_confirm_title": "確認是否刷新密鑰？",
   "webhook_refresh_secret_confirm_content": "請注意，刷新之後之前的密鑰將會失效，無法再恢復。",
-  "webhook_refresh_success_message": "刷新成功，請注意修改原來的密鑰。"
+  "webhook_refresh_success_message": "刷新成功，請注意修改原來的密鑰。",
+  "webhook_refresh_secret_button": "刷新密鑰"
 }

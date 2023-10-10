@@ -109,7 +109,7 @@ export default function Webhook() {
               title: t('webhook_refresh_secret_confirm_title'),
               content: t('webhook_refresh_secret_confirm_content'),
               icon: <ExclamationCircleOutlined />,
-              okText: t('onfirm'),
+              okText: t('confirm'),
               cancelText: t('cancel'),
               onOk: async () => {
                 setLoading(true);

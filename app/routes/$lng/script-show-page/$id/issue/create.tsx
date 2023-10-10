@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { Button, Card, Input, Select, Space } from 'antd';
 import { useContext, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocale } from 'remix-i18next';
 import { ClientOnly } from 'remix-utils';
 import IssueLabel from '~/components/IssueLabel';
 import type { MarkdownEditorRef } from '~/components/MarkdownEditor/index.client';
@@ -18,6 +19,7 @@ export default function Create() {
   const [labels, setLabels] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
+  const locale = '/' + useLocale();
 
   const navigate = useNavigate();
   const onSubmit = async () => {
@@ -33,6 +35,7 @@ export default function Create() {
       message.success(t('submit_success'));
       navigate({
         pathname:
+          locale +
           '/script-show-page/' +
           script.script!.id +
           '/issue/' +

@@ -6,8 +6,8 @@ import { Card } from 'antd';
 import { getScriptByVersion } from '~/services/scripts/api';
 import CodeEditor from '~/components/CodeEditor';
 import type { Script } from '~/services/scripts/types';
-import i18next from 'i18next';
 import { getLocale } from '~/utils/i18n';
+import i18next from '~/i18next.server';
 
 type LoaderData = {
   script1: Script;

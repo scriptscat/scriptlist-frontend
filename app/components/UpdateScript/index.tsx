@@ -56,7 +56,7 @@ const UpdateScript: React.FC<{
         />
       </div>
       <span>
-        {t('or_upload_local_code')}:
+        {t('or_upload_local_code')}
         <input
           type="file"
           accept="text/javascript,application/javascript"
@@ -109,7 +109,16 @@ const UpdateScript: React.FC<{
             <Space direction="vertical">
               <Radio value={1}>{t('user_script_describe')}</Radio>
               <Radio value={3}>{t('script_library')}</Radio>
-              <Radio value={2}>{t('subscription_script')}</Radio>
+              <Radio value={2}>
+                {t('subscription_script')}{' '}
+                <a
+                  href="https://docs.scriptcat.org/docs/dev/subscribe/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {t('subscription')}
+                </a>
+              </Radio>
             </Space>
           </Radio.Group>
         </>

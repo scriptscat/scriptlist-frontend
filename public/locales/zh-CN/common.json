@@ -48,7 +48,7 @@
   "system": "跟随系统",
   "personal_center": "个人中心",
   "login": "登录",
-  "all_rights_reserved": "© 2022-至今 ScriptCat. 版权所有",
+  "all_rights_reserved": "© 2022-至今 ScriptCat. All rights reserved.",
   "help_translate": "协助翻译",
 
   "category": "分类",
@@ -117,7 +117,7 @@
   "no_rating": "暂无评分",
   "report_issue": "反馈问题",
   "share_link": "分享链接",
-  "latest_script_version": "脚本最新版本为: v{{version}}）",
+  "latest_script_version": "脚本最新版本为: v{{version}}",
   "v": "v{{version}}",
   "script_category": "该脚本属于{{category}}分类",
   "library_script": "这是一个库,你可以使用@require引用它",
@@ -141,7 +141,7 @@
 
   "strategy": "策略{{index}}",
   "weight": "权重",
-  "pre_release": "预发布用户",
+  "pre_release_user": "预发布用户",
   "pre_release_slider_tooltip": "将会推送{{val}}%的流量到目标版本",
   "pre_release_tooltip": "在{{weight_day}}天内，逐渐将流量更新至目标值。如果期望最终完全更新至指定版本，可设置100%，0天为直接更新指定流量至此版本",
   "days": "天",
@@ -176,6 +176,7 @@
   "user_script_describe": "用户脚本，平常意义上的油猴脚本，包括脚本猫的后台脚本、定时脚本",
   "script_library": "脚本调用库，脚本@require所使用的库，只允许被其他脚本进行引用，不允许被用户安装",
   "subscription_script": "订阅脚本，脚本猫特有支持的类型，仅会在安装时弹出安装界面由用户确认订阅，后续的更新采用静默更新的方式",
+  "subscription": "订阅模式",
   "update_script_library_description": "库描述信息",
   "update_script_library_name": "库名称，类似脚本的@name",
   "library_version": "库版本，类似脚本的@version",
@@ -238,7 +239,7 @@
   "limited_server_resources": "受限于服务器资源,暂时限额",
   "data_entries": "条数据",
   "statistics_key": "统计密钥",
-  "whitelist_collection": "白名单集合",
+  "whitelist_collection": "收集白名单",
   "add_whitelist": "添加白名单",
   "add": "添加",
   "user_installation_source": "用户安装来源",
@@ -267,7 +268,7 @@
   "30_day_update_uv_pv": "30天更新uv/pv",
   "data_disclaimer": "以上数据仅为参考，若有出入请以实际为准",
 
-  "write_comment": "写评论",
+  "write_comment": "撰写评论",
   "comment_success": "评论提交成功",
   "write_comment_placeholder": "填写您的评论并在下方进行评分，问题反馈请前往反馈区（友善的反馈是交流的起点）",
   "login_to_comment": "请登录以发表评论",
@@ -305,6 +306,8 @@
   "semantic_versioning": "语义化版本",
   "pre_release_version_auto_mark": "时更新脚本将会自动标记为预发布版本,并且会在脚本首页提供预发布版本的安装按钮.",
   "first_time_enable_pre_release": "(首次开启会帮你新增三条策略：预发布用户更新到全部最新,正式版按权重在10天内逐步更新至最新正式版本,其它用户更新到上一正式版本)",
+  "enable": "开启",
+  "disable": "关闭",
   "gray_release": "灰度发布",
   "configure_strategies": "可配置一定的策略(策略有顺序性),使你的脚本用户更新到指定版本",
   "save_and_apply_strategies": "保存并应用策略",
@@ -378,5 +381,6 @@
   "webhook_step3_release_event_description": "如果你想让 Script 的脚本只在 \"releases\" 行为后更新，请选择 \"Let me select individual events\"。",
   "webhook_refresh_secret_confirm_title": "确认是否刷新密钥？",
   "webhook_refresh_secret_confirm_content": "请注意，刷新之后之前的密钥将会失效，无法再恢复。",
-  "webhook_refresh_success_message": "刷新成功，请注意修改原来的密钥。"
+  "webhook_refresh_success_message": "刷新成功，请注意修改原来的密钥。",
+  "webhook_refresh_secret_button": "刷新密钥"
 }

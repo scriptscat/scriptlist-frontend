@@ -147,7 +147,7 @@ export default function ScriptShowPage() {
     },
     {
       key: 'version',
-      label: <Link to={'./version'}>{t('version')}</Link>,
+      label: <Link to={'./version'}>{t('version_list')}</Link>,
     },
   ];
   if (
@@ -158,15 +158,15 @@ export default function ScriptShowPage() {
       ...[
         {
           key: 'update',
-          label: <Link to={'./update'}>{t('update')}</Link>,
+          label: <Link to={'./update'}>{t('update_script')}</Link>,
         },
         {
           key: 'statistic',
-          label: <Link to={'./statistic'}>{t('statistic')}</Link>,
+          label: <Link to={'./statistic'}>{t('script_statistic')}</Link>,
         },
         {
           key: 'manage',
-          label: <Link to={'./manage'}>{t('manage')}</Link>,
+          label: <Link to={'./manage'}>{t('script_manage')}</Link>,
         },
       ]
     );

@@ -116,7 +116,7 @@
   "no_rating": "No rating yet",
   "report_issue": "Report an issue",
   "share_link": "Share link",
-  "latest_script_version": "The latest version of the script is: v{{version}})",
+  "latest_script_version": "The latest version of the script is: v{{version}}",
   "v": "v{{version}}",
   "script_category": "This script belongs to the {{category}} category",
   "library_script": "This is a library, you can use @require to reference it",
@@ -140,7 +140,7 @@
 
   "strategy": "Strategy {{index}}",
   "weight": "Weight",
-  "pre_release": "Pre-release",
+  "pre_release_user": "Pre-release user",
   "pre_release_slider_tooltip": "Will push {{val}}% of traffic to the target version",
   "pre_release_tooltip": "Gradually update traffic to the target value within {{weight_day}} days. If you want to completely update to the specified version, set it to 100%, 0 days will directly update the specified traffic to this version",
   "days": "days",
@@ -175,6 +175,7 @@
   "user_script_describe": "User Script, commonly known as Tampermonkey script, including background scripts and scheduled scripts of ScriptCat",
   "script_library": "Script Library, libraries used by scripts with @require, only allowed to be referenced by other scripts, not allowed to be installed by users",
   "subscription_script": "Subscription Script, a type unique to ScriptCat, which will only prompt for installation confirmation by users when installed, and subsequent updates will be silently updated",
+  "subscription": "Subscription",
   "update_script_library_description": "Library Description",
   "update_script_library_name": "Library Name, similar to @name of a script",
   "library_version": "Library Version, similar to @version of a script",
@@ -377,7 +378,6 @@
   "webhook_step3_release_event_description": "If you want the script to be updated only after a 'release' action, select 'Let me select individual events'.",
   "webhook_refresh_secret_confirm_title": "Confirm Secret Refresh",
   "webhook_refresh_secret_confirm_content": "Please note that the previous secret will become invalid and cannot be restored after the refresh.",
-  "webhook_refresh_success_message": "Refresh successful. Please update the old secret."
-
-  
+  "webhook_refresh_success_message": "Refresh successful. Please update the old secret.",
+  "webhook_refresh_secret_button": "Refresh"
 }
