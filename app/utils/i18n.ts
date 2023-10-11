@@ -18,6 +18,9 @@ export const lngMap: {
     'zh-CN': { name: '简体中文', value: 'zh-CN' },
     'zh-TW': { name: '繁體中文', value: 'zh-TW' },
   },
+  ach: {
+    'ach-UG': { name: '伪语言', value: 'ach-UG' },
+  },
 };
 
 // 根据路径获取语言

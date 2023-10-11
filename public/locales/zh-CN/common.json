@@ -1,11 +1,6 @@
 {
-  "share_your_userscript": "分享你的用户脚本",
   "home_page_description": "脚本猫脚本站,在这里你可以与全世界分享你的用户脚本",
-
-  "userscript_list": "用户脚本列表",
-
   "browser": "浏览器",
-  "home_page_subtitle": "比全更全的用户脚本托管平台",
   "powerful_script_extension": "更强大的脚本执行扩展",
   "more_possibilities_for_your_browser": "让你的浏览器拥有更多可能",
   "greasemonkey_script": "油猴脚本",
@@ -15,16 +10,16 @@
   "add_scriptcat_to": "将 ScriptCat 添加到",
   "scriptcat": "脚本猫",
   "scriptcat_description": "脚本猫是一个可以执行用户脚本的浏览器扩展，让你的浏览器可以做更多的事情！ 持续兼容油猴脚本中，已兼容90%+的油猴脚本，更多油猴特性完善中。 并且另外支持更强大的后台脚本和定时脚本!",
-  "if_you_have_installed_other_script_managers": "如果您已经安装了其他脚本管理器，例如：Tanmpermonkey，您也可以选择不安装脚本猫。",
+  "if_you_have_installed_other_script_managers": "如果您已经安装了其他脚本管理器，例如：Tampermonkey，您也可以选择不安装脚本猫。",
   "if_you_want_to_use_scriptcat": "如果您想使用脚本猫，请先点击",
   "install_scriptcat": "安装脚本猫。",
   "common_questions": "常见问题",
   "what_are_greasemonkey_scripts": "1.油猴脚本有什么用？",
-  "greasemonkey_scripts_can_extend_web_page_functionality": "他可以拓展网页功能，去除广告，增加易用性等等，提高你网上冲浪的体验。",
+  "greasemonkey_scripts_can_extend_web_page_functionality": "它可以拓展网页功能，去除广告，增加易用性等等，提高你网上冲浪的体验。",
   "what_is_scriptcat": "2.ScriptCat脚本猫又是什么？",
-  "scriptcat_is_based_on_greasemonkey_and_supports_most_greasemonkey_scripts": "参考了油猴的设计思路并且支持油猴脚本，实现了一个后台脚本运行的框架，并且也支持大部分的油猴脚本。推荐直接安装脚本猫，支持的脚本范围更广。",
+  "scriptcat_is_based_on_greasemonkey_and_supports_most_greasemonkey_scripts": "我们参考了油猴的思路，重新设计并实现了一个支持运行后台脚本的框架，同时该框架也支持大部分的油猴脚本。强烈建议直接安装使用脚本猫，支持的脚本范围更广，功能更强大。",
   "how_to_use_greasemonkey_scripts": "3.如何使用油猴脚本？",
-  "using_greasemonkey_scripts_requires_installing_greasemonkey_manager": "使用油猴脚本首先需要安装油猴管理器，油猴管理器根据不同浏览器安装的方式有所不同。",
+  "using_greasemonkey_scripts_requires_installing_greasemonkey_manager": "要使用油猴脚本，首先需要安装油猴管理器。根据浏览器的不同，油猴管理器的安装方式也有所不同。",
   "become_a_developer": "成为开发者",
   "as_a_forum_developer_we_can_offer_the_following_benefits": "在您成为论坛开发者后，我们可以提供以下福利！",
   "1_forum_homepage_recommendation": "1.论坛首页推荐！",
@@ -35,7 +30,6 @@
   "6_and_more": "6.······",
   "if_you_also_want_to_become_a_developer_please_refer_to_our_tutorial": "如果您也想成为一名开发者，欢迎参考我们的教程，申请地址：",
   "tampermonkey_chinese_website": "油猴中文网",
-
   "copy_success": "复制成功",
   "home": "首页",
   "community": "社区",
@@ -50,13 +44,12 @@
   "login": "登录",
   "all_rights_reserved": "© 2022-至今 ScriptCat. All rights reserved.",
   "help_translate": "协助翻译",
-
   "category": "分类",
   "all": "全部",
   "user_script": "用户脚本",
   "library": "库",
   "sort": "排序",
-  "daily_install": "日安装",
+  "daily_install": "日安装量",
   "total_install": "总安装量",
   "rating": "评分",
   "latest_release": "最新发布",
@@ -66,9 +59,7 @@
   "visit": "就来 ",
   "latest_scripts": "最新脚本",
   "latest_ratings": "最新评分",
-
   "no_search_result": "未搜索到结果,换个姿势试试吧",
-
   "script_not_found": "未找到脚本",
   "code": "代码",
   "issue": "反馈",
@@ -83,14 +74,12 @@
   "script_code_obfuscated": "脚本代码经过了不可读处理",
   "script_code_obfuscated_description": "该脚本已经被作者经过了不可读处理,虽然脚本站已经经过了一层审查,但还是请不要给予危险权限.",
   "no_permission": "无权限",
-
   "script_not_exist": "脚本不存在",
   "script_score": "脚本评分",
   "no_score_yet": "还没有人来给脚本打分，快来成为第一个打分的人吧",
   "go_to_score": "前往评分",
   "action": "操作",
   "view_more": "查看更多",
-
   "install_script": "安装脚本",
   "reinstall_script_version": "重新安装此脚本（版本 {{version}}）",
   "update_script_version": "更新到 {{version}} 版本",
@@ -127,7 +116,6 @@
   "donate_script": "捐赠脚本",
   "forum_post": "论坛帖子",
   "delete_success": "删除成功",
-
   "delete": "删除",
   "punish": "处罚",
   "report": "举报",
@@ -138,7 +126,6 @@
   "cancel": "取消",
   "confirm_delete": "确认是否删除?",
   "delete_warning": "请注意删除操作是不可逆的",
-
   "strategy": "策略{{index}}",
   "weight": "权重",
   "pre_release_user": "预发布用户",
@@ -153,17 +140,13 @@
   "latest_version": "最新版本",
   "previous_official_version": "上一正式版本",
   "previous_pre_release_version": "上一预发布版本",
-
   "feature": "新功能",
   "question": "问题",
   "bug": "BUG",
-
   "input_feedback_content": "输入回复反馈内容（友善的反馈是交流的起点）",
   "image_upload_failed": "图片上传失败",
   "autosaved": "已自动保存",
-
   "search_scripts_placeholder": "搜索脚本，开启新世界",
-
   "submission_rules": "提交的代码应该严格遵守本站脚本发布的相关规定，否则将会按照规则进行处理。相关规定可前往",
   "script_review_rules": "脚本站审查规则",
   "view": "查看",
@@ -195,7 +178,6 @@
   "inappropriate_content_warning": "该网站可能存在令人不适内容，包括但不限于红蓝闪光频繁闪烁、对视觉、精神有侵害的内容。",
   "code_cannot_be_empty": "代码不能为空",
   "content_cannot_be_empty": "内容不能为空",
-
   "create_feedback_description": "创建反馈时记得描述清楚问题哦，否则可能会被作者直接关闭",
   "login_required_message": "请先登录后再创建反馈",
   "create_feedback": "创建反馈",
@@ -204,7 +186,6 @@
   "status": "状态",
   "pending": "待处理",
   "resolved": "已处理",
-
   "issue_not_found": "反馈不存在",
   "add_label": "添加标签",
   "delete_label": "删除标签",
@@ -221,11 +202,9 @@
   "watch_tooltip": "关注本反馈，当有新消息时会自动发送邮件通知",
   "watched": "已关注",
   "participants": "参与人",
-
   "submit_success": "提交成功",
   "describe_content": "使用标题简单概括你要描述的内容,然后在下方填写详细的信息.右侧可以选择反馈的类型.",
   "submit_feedback": "提交反馈",
-
   "local_creation": "本地创建",
   "realtime_user_count": "实时用户数",
   "visitor_id": "访客ID",
@@ -258,7 +237,6 @@
   "script_users_uv": "脚本用户数 (UV)",
   "ip_count": "IP 数量",
   "avg_usage_time": "平均使用时间",
-
   "realtime_update_download": "实时更新与下载量",
   "page_views": "浏览数(PV)",
   "visitors": "访客数(UV)",
@@ -267,7 +245,6 @@
   "30_day_install_uv_pv": "30天安装uv/pv",
   "30_day_update_uv_pv": "30天更新uv/pv",
   "data_disclaimer": "以上数据仅为参考，若有出入请以实际为准",
-
   "write_comment": "撰写评论",
   "comment_success": "评论提交成功",
   "write_comment_placeholder": "填写您的评论并在下方进行评分，问题反馈请前往反馈区（友善的反馈是交流的起点）",
@@ -281,9 +258,7 @@
   "user_scores": "用户评分",
   "all_comments_loaded": "所有评论已加载",
   "no_scores_yet": "还没有人来给脚本打分，快来成为第一个打分的人吧",
-
   "script_version_not_found": "脚本版本不存在",
-
   "no_permission_access": "没有权限访问此页面",
   "library_info_setting": "库信息设置",
   "library_name": "库名称",
@@ -325,12 +300,9 @@
   "update_success": "更新成功",
   "archive_success": "归档成功",
   "unarchive_success": "取消归档成功",
-
   "basic_statistics": "基础统计",
   "advanced_statistics": "高级统计",
-
   "submit_new_script": "提交新的脚本",
-
   "version_setting": "版本设置",
   "save": "保存",
   "set_pre_release": "设置为预发布版本",
@@ -342,7 +314,6 @@
   "no_changelog": "作者偷懒没有写更新日志",
   "install": "安装",
   "compare_code_changes": "选择两个版本，对比代码变化",
-
   "user_notification_management": "用户通知管理",
   "at_me_send_email_notification": "艾特我时发送邮件通知",
   "notify_when_user_create_script": "关注的用户创建脚本时发送邮件通知",
@@ -351,7 +322,6 @@
   "notify_when_followed_script_created_feedback": "关注的脚本创建反馈时发送通知",
   "notify_when_followed_feedback_has_new_comment": "关注的反馈有新评论时发送通知",
   "system_will_send_email_when_events_occur": "当发生下面事件时，系统将会通过邮箱发送给您",
-
   "user_not_found": "用户不存在",
   "user_publish_script": "发布编写的脚本",
   "set_webhook": "设置WEBHOOK",
@@ -362,7 +332,6 @@
   "moderator": "版主",
   "following": "关注",
   "followers": "粉丝",
-
   "webhook_management": "WebHook管理",
   "webhook_title": "Scriptcat(脚本猫)的WebHook设置",
   "webhook_description": "使用Webhook可以接受来自Github等地方等消息，在脚本页面的脚本管理中配置更新URL，可以实现自动的即时的脚本更新。",
@@ -382,5 +351,8 @@
   "webhook_refresh_secret_confirm_title": "确认是否刷新密钥？",
   "webhook_refresh_secret_confirm_content": "请注意，刷新之后之前的密钥将会失效，无法再恢复。",
   "webhook_refresh_success_message": "刷新成功，请注意修改原来的密钥。",
-  "webhook_refresh_secret_button": "刷新密钥"
+  "webhook_refresh_secret_button": "刷新密钥",
+  "share_your_userscript": "分享你的用户脚本",
+  "userscript_list": "用户脚本列表",
+  "home_page_subtitle": "比全更全的用户脚本托管平台"
 }
