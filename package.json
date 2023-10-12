@@ -6,7 +6,7 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf ./public/build",
-    "build:monaco": "cp -r ./node_modules/monaco-editor/min ./public/assets/monaco-editor",
+    "build:monaco": "copyfiles -r ./node_modules/monaco-editor/min ./public/assets/monaco-editor",
     "build": "npm run build:monaco && npm run build:css && remix build",
     "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css && npm run light-css && npm run dark-css",
     "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
@@ -58,6 +58,7 @@
     "@types/react-dom": "^18.2.0",
     "autoprefixer": "^10.4.7",
     "concurrently": "^7.1.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.11.0",
     "less": "^4.1.2",
     "postcss": "^8.4.13",

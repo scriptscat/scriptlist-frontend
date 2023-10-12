@@ -257,7 +257,7 @@ export default function App() {
               type="text/javascript"
               dangerouslySetInnerHTML={{
                 __html:
-                  "window._jipt = []; _jipt.push(['project', 'scriptlist']);",
+                  "window._jipt = []; _jipt.push(['project', 'scriptcat']);",
               }}
             ></script>
             <script

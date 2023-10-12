@@ -182,16 +182,12 @@ export default function Search() {
                 </div>
               }
               description={
-                <span className="text-gray-400">
-                  {t('visit')}
-                  <a
-                    href="https://bbs.tampermonkey.net.cn"
-                    className="text-gray-400"
-                    target="_blank"
-                  >
-                    {t('tampermonkey_chinese_website')}
-                  </a>
-                </span>
+                <span
+                  className="text-gray-400"
+                  dangerouslySetInnerHTML={{
+                    __html: t('learn_scripts_slogan'),
+                  }}
+                ></span>
               }
             ></Card.Meta>
           </Card>
