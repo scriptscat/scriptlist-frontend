@@ -11,7 +11,9 @@ export async function i18nRedirect({ request }: { request: Request }) {
 }
 
 export const lngMap: {
-  [key: string]: { [key: string]: { name: string; value: string } };
+  [key: string]: {
+    [key: string]: { name: string; value: string; hide?: boolean };
+  };
 } = {
   en: { en: { name: 'English', value: 'en' } },
   zh: {
@@ -19,7 +21,7 @@ export const lngMap: {
     'zh-TW': { name: '繁體中文', value: 'zh-TW' },
   },
   ach: {
-    'ach-UG': { name: '伪语言', value: 'ach-UG' },
+    'ach-UG': { name: '伪语言', value: 'ach-UG', hide: true },
   },
 };
 

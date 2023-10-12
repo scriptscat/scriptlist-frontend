@@ -251,7 +251,7 @@ export default function App() {
             <Outlet />
           </MainLayout>
         </UserContext.Provider>
-        {config.ENV.APP_ENV == 'pre' && (
+        {locale == 'ach-UG' && (
           <>
             <script
               type="text/javascript"

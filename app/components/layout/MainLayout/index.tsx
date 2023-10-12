@@ -125,10 +125,12 @@ const MainLayout: React.FC<{
   let localeList = [];
   for (const [, lng] of Object.entries(lngMap)) {
     for (const [key, value] of Object.entries(lng)) {
-      localeList.push({
-        label: <div className="text-sm">{value.name + '(' + key + ')'}</div>,
-        key: key,
-      });
+      if (!value.hide) {
+        localeList.push({
+          label: <div className="text-sm">{value.name + '(' + key + ')'}</div>,
+          key: key,
+        });
+      }
     }
   }
 
