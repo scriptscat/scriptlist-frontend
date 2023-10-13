@@ -29,10 +29,14 @@ import { I18nContext, useTranslation } from 'react-i18next';
 import { getLocale, getLocaleByURL } from './utils/i18n';
 import NavigationProcess from './components/NavigationProcess/NavigationProcess';
 import i18next from './i18next.server';
+import githubCss from './styles/github-markdown-css.css';
 import { ConfigProvider, theme } from 'antd';
+import { StyleProvider } from '@ant-design/cssinjs';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
+  { rel: 'stylesheet', href: githubCss },
+  { rel: 'stylesheet', href: '/styles/antd.min.css' },
   { rel: 'stylesheet', href: tuiEditor },
   { rel: 'stylesheet', href: tuiEditorDark },
   { rel: 'stylesheet', href: prism },
@@ -110,7 +114,7 @@ export let handle = {
 export function CatchBoundary() {
   const error = useRouteError();
   const [config, setConfig] = useState<any>();
-  const [dart, setDart] = useState(false);
+  const [dark, setDart] = useState(false);
   const [locale, setLocale] = useState('en');
   const i18n = useContext(I18nContext);
 
@@ -147,24 +151,31 @@ export function CatchBoundary() {
         <Meta />
         <Links />
       </head>
-      <body className={dart ? 'dark' : 'light'}>
-        <UserContext.Provider
-          value={{
-            user: config && config.login.user,
-            dark: dart,
-            env: config && config.ENV,
-          }}
-        >
-          <MainLayout
-            locale={locale}
-            oauthClient={config && config.ENV.APP_BBS_OAUTH_CLIENT}
-            apiUrl={config && config.ENV.APP_API_URL}
-            onDarkModeChange={(dart) => setDart(dart)}
+      <body
+        className={dark ? 'dark' : 'light'}
+        style={{
+          background: dark ? '#000' : '#fff',
+        }}
+      >
+        <StyleProvider hashPriority="high">
+          <UserContext.Provider
+            value={{
+              user: config && config.login.user,
+              dark: dark,
+              env: config && config.ENV,
+            }}
           >
-            <div className="text-2xl">{data}</div>
-            {subtitle && <div className="text-xl">{subtitle}</div>}
-          </MainLayout>
-        </UserContext.Provider>
+            <MainLayout
+              locale={locale}
+              oauthClient={config && config.ENV.APP_BBS_OAUTH_CLIENT}
+              apiUrl={config && config.ENV.APP_API_URL}
+              onDarkModeChange={(dart) => setDart(dart)}
+            >
+              <div className="text-2xl">{data}</div>
+              {subtitle && <div className="text-xl">{subtitle}</div>}
+            </MainLayout>
+          </UserContext.Provider>
+        </StyleProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
@@ -175,7 +186,7 @@ export function CatchBoundary() {
 
 export default function App() {
   const config = useLoaderData();
-  const [dart, setDart] = useState(config.styleMode === 'dark');
+  const [dark, setDart] = useState(config.styleMode === 'dark');
   // 设置axios
   InitAxios({
     baseURL:
@@ -230,30 +241,37 @@ export default function App() {
           }}
         />
       </head>
-      <body className={dart ? 'dark' : 'light'}>
-        <ConfigProvider
-          theme={{
-            algorithm: dart ? theme.darkAlgorithm : theme.defaultAlgorithm,
-          }}
-        >
-          <UserContext.Provider
-            value={{
-              user: config.login.user,
-              dark: dart,
-              env: config.ENV,
+      <body
+        className={dark ? 'dark' : 'light'}
+        style={{
+          background: dark ? '#000' : '#fff',
+        }}
+      >
+        <StyleProvider hashPriority="high">
+          <ConfigProvider
+            theme={{
+              algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
             }}
           >
-            <NavigationProcess />
-            <MainLayout
-              locale={locale}
-              oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
-              apiUrl={config.ENV.APP_API_URL}
-              onDarkModeChange={(dart) => setDart(dart)}
+            <UserContext.Provider
+              value={{
+                user: config.login.user,
+                dark: dark,
+                env: config.ENV,
+              }}
             >
-              <Outlet />
-            </MainLayout>
-          </UserContext.Provider>
-        </ConfigProvider>
+              <NavigationProcess />
+              <MainLayout
+                locale={locale}
+                oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
+                apiUrl={config.ENV.APP_API_URL}
+                onDarkModeChange={(dart) => setDart(dart)}
+              >
+                <Outlet />
+              </MainLayout>
+            </UserContext.Provider>
+          </ConfigProvider>
+        </StyleProvider>
         {locale == 'ach-UG' && (
           <>
             <script

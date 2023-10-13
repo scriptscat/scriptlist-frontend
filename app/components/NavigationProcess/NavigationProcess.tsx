@@ -26,13 +26,14 @@ export default function NavigationProcess() {
         className="w-full"
         style={{
           position: 'absolute',
-          top: 0,
+          top: -12,
           height: '2px',
-          overflow: 'hidden',
+          // overflow: 'hidden',
         }}
         size="small"
         showInfo={false}
         strokeColor="#1890ff"
+        strokeLinecap="butt"
       />
     )
   );
