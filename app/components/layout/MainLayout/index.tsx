@@ -1,5 +1,5 @@
 import type { MenuProps } from 'antd';
-import { message } from 'antd';
+import { message, theme } from 'antd';
 import { Avatar } from 'antd';
 import { Divider } from 'antd';
 import { Dropdown, Space } from 'antd';
@@ -19,6 +19,7 @@ import { RiSunLine, RiMoonLine, RiComputerLine } from 'react-icons/ri';
 import { Link, useLocation } from '@remix-run/react';
 import Search from '~/components/Search';
 import { UserContext } from '~/context-manager';
+import useToken from 'antd/es/theme/useToken';
 
 const { Header, Footer, Content } = Layout;
 
@@ -54,6 +55,7 @@ const MainLayout: React.FC<{
 }> = ({ children, styleMode, oauthClient, apiUrl, onDarkModeChange }) => {
   const user = useContext(UserContext);
   const [dark, _setDark] = useState(styleMode || 'light');
+  const { token } = theme.useToken();
   const setDark = (mode: string) => {
     if (mode === 'light') {
       document.body.style.backgroundColor = '#ffffff';
@@ -176,125 +178,121 @@ const MainLayout: React.FC<{
   };
 
   return (
-    <>
-      <ConfigProvider prefixCls={dark}>
-        <Layout
-          className={dark}
-          style={{
-            minHeight: '100%',
-          }}
-        >
-          <Header className="flex flex-row">
-            <div className="items-center flex flex-row justify-start basis-3/4">
-              <div className="items-center flex flex-row w-full">
-                <Link to="/" className="hidden lg:block min-w-max">
-                  <img
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                    }}
-                    src="/assets/logo.png"
-                    alt="logo"
-                  />
-                </Link>
-                <Menu
-                  selectedKeys={[current]}
-                  mode="horizontal"
-                  items={items}
-                  className="header-menu !ml-4 max-w-xs lg:max-w-none w-full"
-                  style={{
-                    border: 0,
-                  }}
-                />
-              </div>
-              {location.pathname == '/search' && (
-                <div
-                  style={{
-                    width: '80%',
-                  }}
-                >
-                  <Search className="h-9 border w-full" />
-                </div>
-              )}
+    <Layout
+      className={dark}
+      style={{
+        minHeight: '100%',
+      }}
+    >
+      <Header
+        className="flex flex-row"
+        style={{
+          background: token.colorBgContainer,
+        }}
+      >
+        <div className="items-center flex flex-row justify-start basis-3/4">
+          <div className="items-center flex flex-row w-full">
+            <Link to="/" className="hidden lg:block min-w-max">
+              <img
+                style={{
+                  width: '32px',
+                  height: '32px',
+                }}
+                src="/assets/logo.png"
+                alt="logo"
+              />
+            </Link>
+            <Menu
+              selectedKeys={[current]}
+              mode="horizontal"
+              items={items}
+              className="header-menu !ml-4 max-w-xs lg:max-w-none w-full"
+              style={{
+                border: 0,
+              }}
+            />
+          </div>
+          {location.pathname == '/search' && (
+            <div
+              style={{
+                width: '80%',
+              }}
+            >
+              <Search className="h-9 border w-full" />
             </div>
-            <div className="flex items-center justify-end basis-1/4">
-              <Space className="!gap-3">
-                <Button
-                  type="primary"
-                  size="small"
-                  onClick={() => {
-                    if (!user.user) {
-                      message.info('请先登录');
-                      return false;
-                    } else {
-                      window.open('/post-script', '_self');
-                    }
-                  }}
-                >
-                  发布脚本
-                </Button>
-                <Dropdown
-                  overlay={modeMenu}
-                  trigger={['click']}
-                  placement="bottomLeft"
-                >
-                  {DropdownIcon}
-                </Dropdown>
-                {user.user ? (
-                  <Dropdown
-                    overlay={userMenu}
-                    trigger={['click']}
-                    placement="bottom"
-                  >
-                    <Avatar src={user.user.avatar}></Avatar>
-                  </Dropdown>
-                ) : (
-                  <Button
-                    id="go-to-login"
-                    type="primary"
-                    ghost
-                    onClick={gotoLogin}
-                  >
-                    登录
-                  </Button>
-                )}
-              </Space>
-            </div>
-          </Header>
-          <Content className="w-4/5 m-auto p-4">{children}</Content>
-          <Footer className="flex flex-col items-center">
-            <div>
-              <a
-                href="https://bbs.tampermonkey.net.cn/"
-                target="_blank"
-                rel="noreferrer"
+          )}
+        </div>
+        <div className="flex items-center justify-end basis-1/4">
+          <Space className="!gap-3">
+            <Button
+              type="primary"
+              size="small"
+              onClick={() => {
+                if (!user.user) {
+                  message.info('请先登录');
+                  return false;
+                } else {
+                  window.open('/post-script', '_self');
+                }
+              }}
+            >
+              发布脚本
+            </Button>
+            <Dropdown
+              overlay={modeMenu}
+              trigger={['click']}
+              placement="bottomLeft"
+            >
+              {DropdownIcon}
+            </Dropdown>
+            {user.user ? (
+              <Dropdown
+                overlay={userMenu}
+                trigger={['click']}
+                placement="bottom"
               >
-                油猴中文网
-              </a>
-              <Divider type="vertical" />
-              <a
-                href="https://docs.scriptcat.org/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                脚本猫
-              </a>
-              <Divider type="vertical" />
-              <a
-                href="https://github.com/scriptscat"
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub
-              </a>
-            </div>
-            <p className="m-0 text-sm">
-              © 2022-至今 ScriptCat. All rights reserved.
-            </p>
-          </Footer>
-        </Layout>
-      </ConfigProvider>
-    </>
+                <Avatar src={user.user.avatar}></Avatar>
+              </Dropdown>
+            ) : (
+              <Button id="go-to-login" type="primary" ghost onClick={gotoLogin}>
+                登录
+              </Button>
+            )}
+          </Space>
+        </div>
+      </Header>
+      <Content className="w-4/5 m-auto p-4">{children}</Content>
+      <Footer className="flex flex-col items-center">
+        <div>
+          <a
+            href="https://bbs.tampermonkey.net.cn/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            油猴中文网
+          </a>
+          <Divider type="vertical" />
+          <a
+            href="https://docs.scriptcat.org/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            脚本猫
+          </a>
+          <Divider type="vertical" />
+          <a
+            href="https://github.com/scriptscat"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub
+          </a>
+        </div>
+        <p className="m-0 text-sm">
+          © 2022-至今 ScriptCat. All rights reserved.
+        </p>
+      </Footer>
+    </Layout>
   );
 };
 

@@ -12,8 +12,6 @@ import {
 } from '@remix-run/react';
 import MainLayout from '~/components/layout/MainLayout';
 import styles from './styles/app.css';
-import antdLight from './styles/light.css';
-import antdDark from './styles/dark.css';
 import { parseCookie } from '~/utils/cookie';
 import { getCurrentUserAndRefushToken } from './services/users/api';
 import type { User } from './services/users/types';
@@ -24,11 +22,10 @@ import { useState } from 'react';
 import { InitAxios } from './services/http';
 import prism from 'prismjs/themes/prism.css';
 import GoogleAdScript from './components/GoogleAd/script';
+import { ConfigProvider, theme } from 'antd';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
-  { rel: 'stylesheet', href: antdDark },
-  { rel: 'stylesheet', href: antdLight },
   { rel: 'stylesheet', href: tuiEditor },
   { rel: 'stylesheet', href: tuiEditorDark },
   { rel: 'stylesheet', href: prism },
@@ -82,7 +79,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   const config = useLoaderData();
-  const [dart, setDart] = useState(false);
+  const [dark, setDart] = useState(false);
   // 设置axios
   InitAxios({
     baseURL:
@@ -126,25 +123,31 @@ export default function App() {
         />
       </head>
       <body>
-        <UserContext.Provider
-          value={{
-            user: config.login.user,
-            dark: dart,
-            env: config.ENV,
+        <ConfigProvider
+          theme={{
+            algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
           }}
         >
-          <MainLayout
-            styleMode={config.styleMode}
-            oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
-            apiUrl={config.ENV.APP_API_URL}
-            onDarkModeChange={(dart) => setDart(dart)}
+          <UserContext.Provider
+            value={{
+              user: config.login.user,
+              dark: dark,
+              env: config.ENV,
+            }}
           >
-            <Outlet />
-          </MainLayout>
-        </UserContext.Provider>
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+            <MainLayout
+              styleMode={config.styleMode}
+              oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
+              apiUrl={config.ENV.APP_API_URL}
+              onDarkModeChange={(dart) => setDart(dart)}
+            >
+              <Outlet />
+            </MainLayout>
+          </UserContext.Provider>
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
+        </ConfigProvider>
       </body>
     </html>
   );
