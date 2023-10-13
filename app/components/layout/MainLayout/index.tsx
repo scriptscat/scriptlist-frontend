@@ -30,27 +30,32 @@ const MainLayout: React.FC<{
   children: ReactNode;
   oauthClient: string;
   apiUrl: string;
-  onDarkModeChange: (dark: boolean) => void;
-}> = ({ children, locale, oauthClient, apiUrl, onDarkModeChange }) => {
+  onStyleModeChang: (dark: boolean) => void;
+  onDarkModeChange: (mode: string) => void;
+}> = ({
+  children,
+  locale,
+  oauthClient,
+  apiUrl,
+  onStyleModeChang,
+  onDarkModeChange,
+}) => {
   const user = useContext(UserContext);
-  const [dark, _setDark] = useState(user.dark ? 'dark' : 'light');
-  const [mode, setMode] = useState('auto');
+  const dark = user.dark ? 'dark' : 'light';
+  const mode = user.darkMode || 'auto';
   const { t } = useTranslation();
   const location = useLocation();
 
-  useEffect(() => {
-    setMode(localStorage.getItem('styleMode') || 'auto');
-  }, []);
   const uLocale = '/' + locale;
   const { token } = theme.useToken();
   const setDark = (mode: string) => {
-    _setDark(mode);
     message.config({
       prefixCls: mode === 'light' ? 'light-message' : 'dark-message',
     });
-    onDarkModeChange(mode === 'dark');
+    onStyleModeChang(mode === 'dark');
     document.cookie = 'styleMode=' + mode + ';path=/';
   };
+
   const current =
     location.pathname == uLocale + '/'
       ? 'home'
@@ -123,10 +128,27 @@ const MainLayout: React.FC<{
   for (const [, lng] of Object.entries(lngMap)) {
     for (const [key, value] of Object.entries(lng)) {
       if (!value.hide) {
-        localeList.push({
-          label: <div className="text-sm">{value.name + '(' + key + ')'}</div>,
-          key: key,
-        });
+        if (key == 'help') {
+          localeList.push({
+            label: (
+              <a href="https://crowdin.com/project/scriptlist" target="_blank">
+                <div className="text-sm">{value.name + '(' + key + ')'}</div>
+              </a>
+            ),
+            key: key,
+          });
+        } else {
+          // 修改路径为对应的语言
+          const newPathname = location.pathname.replace(uLocale, '/' + key);
+          localeList.push({
+            label: (
+              <a href={newPathname}>
+                <div className="text-sm">{value.name + '(' + key + ')'}</div>
+              </a>
+            ),
+            key: key,
+          });
+        }
       }
     }
   }
@@ -205,8 +227,8 @@ const MainLayout: React.FC<{
                 className: '!rounded-md border-inherit border-1 w-32 !mt-4',
                 selectedKeys: [mode],
                 onClick: ({ key }) => {
-                  setMode(key);
-                  localStorage.setItem('styleMode', key);
+                  onDarkModeChange(key as any);
+                  document.cookie = 'darkMode=' + key + ';path=/';
                 },
                 items: [
                   {
@@ -247,28 +269,19 @@ const MainLayout: React.FC<{
               menu={{
                 className: '!rounded-md border-inherit border-1 w-50 !mt-4',
                 selectedKeys: [uLocale],
-                onClick: ({ key }) => {
-                  if (key == 'help') {
-                    window.open(
-                      'https://crowdin.com/project/scriptlist',
-                      '_blank'
-                    );
-                  } else {
-                    // 修改路径为对应的语言
-                    const newPathname = location.pathname.replace(
-                      uLocale,
-                      '/' + key
-                    );
-                    window.open(newPathname, '_self');
-                  }
-                },
                 items: localeList,
+                forceSubMenuRender: true,
               }}
               trigger={['click']}
               placement="bottomLeft"
             >
               <GlobalOutlined style={{ display: 'block' }} />
             </Dropdown>
+            <div style={{ display: 'none' }}>
+              {localeList.map((v) => {
+                return v.label;
+              })}
+            </div>
             {user.user ? (
               <Dropdown
                 menu={{

@@ -13,6 +13,7 @@ import {
   Rate,
   Skeleton,
   Space,
+  theme,
 } from 'antd';
 import type { TextAreaRef } from 'antd/lib/input/TextArea';
 import TextArea from 'antd/lib/input/TextArea';
@@ -65,6 +66,7 @@ export default function Comment() {
     (loaderData.myScore && loaderData.myScore.score / 10) || 5
   );
   const { t } = useTranslation();
+  const { token } = theme.useToken();
 
   const onSubmit = async () => {
     setSubmitLoading(true);
@@ -119,9 +121,12 @@ export default function Comment() {
           {user.user && (
             <TextArea
               showCount
-              prefixCls={dark ? 'dark-input' : 'light-input'}
               maxLength={100}
-              style={{ height: 120 }}
+              style={{
+                height: 120,
+                background: token.colorBgContainer,
+                borderColor: token.colorBorder,
+              }}
               ref={textEl}
               defaultValue={loaderData.myScore && loaderData.myScore.message}
               placeholder={t('write_comment_placeholder')}

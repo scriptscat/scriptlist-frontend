@@ -6,6 +6,7 @@ import {
   Radio,
   Space,
   Switch,
+  theme,
   Tooltip,
 } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -36,6 +37,7 @@ const UpdateScript: React.FC<{
   const [loading, setLoading] = useState(false);
   const [scriptType, setScriptType] = useState<1 | 2 | 3>(1);
   const [isPreRelease, setPreRelease] = useState<0 | 1 | 2>(0);
+  const { token } = theme.useToken();
   const { t } = useTranslation();
 
   return (
@@ -95,9 +97,12 @@ const UpdateScript: React.FC<{
       <h3 className="text-lg">{t('changelog')}</h3>
       <TextArea
         placeholder={t('current_script_update_content_support_markdown')}
-        prefixCls={dark ? 'dark-input' : 'light-input'}
         className="!bg-transparent"
         onChange={(value) => setChangelog(value.target.value)}
+        style={{
+          backgroundColor: token.colorBgContainer,
+          borderColor: token.colorBorder,
+        }}
       ></TextArea>
       {script == undefined && (
         <>

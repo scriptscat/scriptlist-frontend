@@ -69,9 +69,11 @@ export const loader: LoaderFunction = async ({ request }) => {
   let user: User | undefined;
   const respInit: ResponseInit = {};
   let styleMode = '';
+  let darkMode = '';
   if (cookieHeader) {
     const cookie = parseCookie(cookieHeader);
     styleMode = cookie.styleMode ? cookie.styleMode : '';
+    darkMode = cookie.darkMode ? cookie.darkMode : 'auto';
     if (cookie.token) {
       const resp = await getCurrentUserAndRefushToken(request);
       if (resp.setCookie) {
@@ -86,6 +88,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json(
     {
       styleMode: styleMode,
+      darkMode: darkMode,
       ENV: {
         NODE_ENV: process.env.NODE_ENV,
         APP_API_URL: process.env.APP_API_URL,
@@ -115,6 +118,7 @@ export function CatchBoundary() {
   const error = useRouteError();
   const [config, setConfig] = useState<any>();
   const [dark, setDart] = useState(false);
+  const [darkMode, setDarkMode] = useState<'light' | 'dark' | 'auto'>('auto');
   const [locale, setLocale] = useState('en');
   const i18n = useContext(I18nContext);
 
@@ -123,6 +127,7 @@ export function CatchBoundary() {
       resp.json().then((data) => {
         setConfig(data);
         setDart(data.styleMode === 'dark');
+        setDarkMode(data.darkMode);
         setLocale(data.locale);
         i18n.i18n.changeLanguage(data.locale);
       });
@@ -162,6 +167,7 @@ export function CatchBoundary() {
             value={{
               user: config && config.login.user,
               dark: dark,
+              darkMode: darkMode,
               env: config && config.ENV,
             }}
           >
@@ -169,7 +175,12 @@ export function CatchBoundary() {
               locale={locale}
               oauthClient={config && config.ENV.APP_BBS_OAUTH_CLIENT}
               apiUrl={config && config.ENV.APP_API_URL}
-              onDarkModeChange={(dart) => setDart(dart)}
+              onStyleModeChang={(dark: boolean) => {
+                setDart(dark);
+              }}
+              onDarkModeChange={(mode) => {
+                setDarkMode(mode as any);
+              }}
             >
               <div className="text-2xl">{data}</div>
               {subtitle && <div className="text-xl">{subtitle}</div>}
@@ -186,7 +197,10 @@ export function CatchBoundary() {
 
 export default function App() {
   const config = useLoaderData();
-  const [dark, setDart] = useState(config.styleMode === 'dark');
+  const [dark, setDark] = useState(config.styleMode === 'dark');
+  const [darkMode, setDarkMode] = useState<'light' | 'dark' | 'auto'>(
+    config.darkMode || 'auto'
+  );
   // 设置axios
   InitAxios({
     baseURL:
@@ -257,6 +271,7 @@ export default function App() {
               value={{
                 user: config.login.user,
                 dark: dark,
+                darkMode: darkMode,
                 env: config.ENV,
               }}
             >
@@ -265,7 +280,8 @@ export default function App() {
                 locale={locale}
                 oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
                 apiUrl={config.ENV.APP_API_URL}
-                onDarkModeChange={(dart) => setDart(dart)}
+                onStyleModeChang={(dark) => setDark(dark)}
+                onDarkModeChange={(mode) => setDarkMode(mode as any)}
               >
                 <Outlet />
               </MainLayout>

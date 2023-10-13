@@ -8,6 +8,7 @@ import { UploadImage } from '~/services/utils/api';
 import { useContext } from 'react';
 import { UserContext } from '~/context-manager';
 import { useTranslation } from 'react-i18next';
+import { useDark } from '~/utils/utils';
 
 export type MarkdownEditorRef =
   | { editor: Editor | undefined; setMarkdown: (markdown: string) => void }
@@ -49,10 +50,7 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
     if (!editor) {
       setEditor((editor) => {
         if (!editor) {
-          const dark =
-            document.querySelector('section')!.className.indexOf('dark') == -1
-              ? false
-              : true;
+          const dark = document.querySelector('body.dark') ? true : false;
           if (!initialValue && localStorage['autosave_' + id]) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             initialValue = localStorage['autosave_' + id];

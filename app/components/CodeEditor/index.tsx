@@ -16,10 +16,7 @@ if (typeof document !== 'undefined') {
   script.src = '/assets/monaco-editor/min/vs/loader.js';
   script.onload = () => {
     codeScript = document.createElement('script');
-    codeScript.innerHTML = `const dark =
-    document.querySelector("section").className.indexOf("dark") == -1
-      ? false
-      : true;
+    codeScript.innerHTML = `const dark = document.querySelector("body.dark") ? true : false;
   require.config({ paths: { vs: "/assets/monaco-editor/min/vs" } });
   window.initCodeEditor = function (id, code, readOnly, diff, diffCode) {
     return new Promise((resolve, reject) => {

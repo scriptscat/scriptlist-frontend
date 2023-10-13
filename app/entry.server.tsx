@@ -11,7 +11,7 @@ import i18n from './i18n'; // your i18n configuration file
 import { resolve } from 'node:path';
 import { getLocale } from './utils/i18n';
 
-const ABORT_DELAY = 5000;
+const ABORT_DELAY = 10000;
 
 export default async function handleRequest(
   request: Request,

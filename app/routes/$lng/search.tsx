@@ -8,7 +8,15 @@ import {
   useNavigate,
   useSearchParams,
 } from '@remix-run/react';
-import { Avatar, Card, Collapse, Radio, Space, Tag } from 'antd';
+import {
+  Avatar,
+  Card,
+  Collapse,
+  ConfigProvider,
+  Radio,
+  Space,
+  Tag,
+} from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useLocale } from 'remix-i18next';
 import i18n from '~/i18n';
@@ -191,17 +199,27 @@ export default function Search() {
               }
             ></Card.Meta>
           </Card>
-          <Collapse
-            defaultActiveKey={['1', '2', '3']}
-            className="rank-collapse"
+          <ConfigProvider
+            theme={{
+              components: {
+                Collapse: {
+                  contentPadding: '6px 6px',
+                },
+              },
+            }}
           >
-            <Collapse.Panel header={t('latest_scripts')} key="3">
-              <RankList list={loader.rank.update} />
-            </Collapse.Panel>
-            <Collapse.Panel header={t('latest_ratings')} key="2">
-              <RankList list={loader.rank.score} />
-            </Collapse.Panel>
-          </Collapse>
+            <Collapse
+              defaultActiveKey={['1', '2', '3']}
+              className="rank-collapse"
+            >
+              <Collapse.Panel header={t('latest_scripts')} key="3">
+                <RankList list={loader.rank.update} />
+              </Collapse.Panel>
+              <Collapse.Panel header={t('latest_ratings')} key="2">
+                <RankList list={loader.rank.score} />
+              </Collapse.Panel>
+            </Collapse>
+          </ConfigProvider>
         </div>
       </div>
     </>
