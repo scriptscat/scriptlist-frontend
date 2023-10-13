@@ -14,8 +14,6 @@ import {
 } from '@remix-run/react';
 import MainLayout from '~/components/layout/MainLayout';
 import styles from './styles/app.css';
-import antdLight from './styles/light.css';
-import antdDark from './styles/dark.css';
 import { parseCookie } from '~/utils/cookie';
 import { getCurrentUserAndRefushToken } from './services/users/api';
 import type { User } from './services/users/types';
@@ -31,11 +29,10 @@ import { I18nContext, useTranslation } from 'react-i18next';
 import { getLocale, getLocaleByURL } from './utils/i18n';
 import NavigationProcess from './components/NavigationProcess/NavigationProcess';
 import i18next from './i18next.server';
+import { ConfigProvider, theme } from 'antd';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
-  { rel: 'stylesheet', href: antdDark },
-  { rel: 'stylesheet', href: antdLight },
   { rel: 'stylesheet', href: tuiEditor },
   { rel: 'stylesheet', href: tuiEditorDark },
   { rel: 'stylesheet', href: prism },
@@ -234,23 +231,29 @@ export default function App() {
         />
       </head>
       <body className={dart ? 'dark' : 'light'}>
-        <UserContext.Provider
-          value={{
-            user: config.login.user,
-            dark: dart,
-            env: config.ENV,
+        <ConfigProvider
+          theme={{
+            algorithm: dart ? theme.darkAlgorithm : theme.defaultAlgorithm,
           }}
         >
-          <NavigationProcess />
-          <MainLayout
-            locale={locale}
-            oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
-            apiUrl={config.ENV.APP_API_URL}
-            onDarkModeChange={(dart) => setDart(dart)}
+          <UserContext.Provider
+            value={{
+              user: config.login.user,
+              dark: dart,
+              env: config.ENV,
+            }}
           >
-            <Outlet />
-          </MainLayout>
-        </UserContext.Provider>
+            <NavigationProcess />
+            <MainLayout
+              locale={locale}
+              oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
+              apiUrl={config.ENV.APP_API_URL}
+              onDarkModeChange={(dart) => setDart(dart)}
+            >
+              <Outlet />
+            </MainLayout>
+          </UserContext.Provider>
+        </ConfigProvider>
         {locale == 'ach-UG' && (
           <>
             <script

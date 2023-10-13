@@ -1,9 +1,9 @@
 import type { MenuProps } from 'antd';
-import { message } from 'antd';
+import { message, theme } from 'antd';
 import { Avatar } from 'antd';
 import { Divider } from 'antd';
 import { Dropdown, Space } from 'antd';
-import { Layout, Menu, Button, ConfigProvider } from 'antd';
+import { Layout, Menu, Button } from 'antd';
 import type { ReactNode } from 'react';
 import { useContext } from 'react';
 import { useEffect } from 'react';
@@ -22,8 +22,6 @@ import Search from '~/components/Search';
 import { UserContext } from '~/context-manager';
 import { lngMap } from '~/utils/i18n';
 import { I18nContext, useTranslation } from 'react-i18next';
-import i18n from '~/i18n';
-import { useChangeLanguage } from 'remix-i18next';
 
 const { Header, Footer, Content } = Layout;
 
@@ -46,6 +44,7 @@ const MainLayout: React.FC<{
     setMode(localStorage.getItem('styleMode') || 'auto');
   }, []);
   const uLocale = '/' + locale;
+  const { token } = theme.useToken();
   const setDark = (mode: string) => {
     _setDark(mode);
     message.config({
@@ -140,15 +139,18 @@ const MainLayout: React.FC<{
   });
 
   return (
-    <>
-      <ConfigProvider prefixCls={dark}>
-        <Layout
-          className={dark}
-          style={{
-            minHeight: '100%',
-          }}
-        >
-          <Header className="flex flex-row">
+    <Layout
+      className={dark}
+      style={{
+        minHeight: '100%',
+      }}
+    >
+      <Header
+        className="flex flex-row"
+        style={{
+          background: token.colorBgContainer,
+        }}
+      >
             <div className="items-center flex flex-row justify-start basis-3/4">
               <div className="items-center flex flex-row w-full">
                 <Link to={uLocale + '/'} className="hidden lg:block min-w-max">
@@ -340,8 +342,6 @@ const MainLayout: React.FC<{
             <p className="m-0 text-sm">{t('all_rights_reserved')}</p>
           </Footer>
         </Layout>
-      </ConfigProvider>
-    </>
   );
 };
 
