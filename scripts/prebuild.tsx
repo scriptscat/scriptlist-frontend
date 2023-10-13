@@ -24,4 +24,15 @@ const css = extractStyle((node) => (
   </>
 ));
 
+// 创建目录
+fs.mkdirSync('./public/styles', { recursive: true });
+// 生成css
 fs.writeFileSync(outputPath, css);
+
+// 拷贝monoac
+fs.cpSync(
+  './node_modules/monaco-editor/min/vs',
+  './public/assets/monaco-editor/min/vs',
+  { recursive: true }
+);
+

@@ -4,6 +4,7 @@ node_modules
 /build
 /public/build
 /public/styles/*
+/public/assets/monaco-editor/*
 .env
 
 /.idea
