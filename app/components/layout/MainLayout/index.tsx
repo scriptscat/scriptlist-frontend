@@ -307,7 +307,12 @@ const MainLayout: React.FC<{
         </div>
       </Header>
       <Content className="w-4/5 m-auto p-4">{children}</Content>
-      <Footer className="flex flex-col items-center">
+      <Footer
+        className="flex flex-col items-center"
+        style={{
+          background: token.colorBgContainer,
+        }}
+      >
         <div>
           <a
             href="https://bbs.tampermonkey.net.cn/"

@@ -10,7 +10,7 @@ stages:
 
 build:
   stage: build
-  image: node:18-alpine3.14
+  image: node:16-alpine3.14
   rules:
     - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH =~ /^release\/.*$/ || $CI_COMMIT_BRANCH =~ /^test\/.*$/
   script:
