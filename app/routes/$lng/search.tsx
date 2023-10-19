@@ -72,7 +72,7 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
           <Link
             to={'/' + locale + '/script-show-page/' + item.id}
             target="_blank"
-            className="text-sm !block !truncate text-black dark:text-white"
+            className="text-sm !block !truncate !text-black dark:!text-white"
           >
             {item.script.meta_json['icon'] ? (
               <Avatar

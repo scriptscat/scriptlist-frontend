@@ -84,6 +84,11 @@ export default function Users() {
                 type="link"
                 href={'https://bbs.tampermonkey.net.cn?' + user.user_id}
                 className="!text-3xl"
+                style={{
+                  padding: 0,
+                  border: 0,
+                  margin: 0,
+                }}
               >
                 {user.username}
               </Button>
