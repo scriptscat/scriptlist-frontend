@@ -7,7 +7,6 @@ import { Layout, Menu, Button } from 'antd';
 import type { ReactNode } from 'react';
 import { useContext } from 'react';
 import { useEffect } from 'react';
-import { useState } from 'react';
 import {
   MessageOutlined,
   HomeOutlined,
@@ -128,33 +127,26 @@ const MainLayout: React.FC<{
   for (const [, lng] of Object.entries(lngMap)) {
     for (const [key, value] of Object.entries(lng)) {
       if (!value.hide) {
-        if (key == 'help') {
-          localeList.push({
-            label: (
-              <a href="https://crowdin.com/project/scriptlist" target="_blank">
-                <div className="text-sm">{value.name + '(' + key + ')'}</div>
-              </a>
-            ),
-            key: key,
-          });
-        } else {
-          // 修改路径为对应的语言
-          const newPathname = location.pathname.replace(uLocale, '/' + key);
-          localeList.push({
-            label: (
-              <a href={newPathname}>
-                <div className="text-sm">{value.name + '(' + key + ')'}</div>
-              </a>
-            ),
-            key: key,
-          });
-        }
+        // 修改路径为对应的语言
+        const newPathname = location.pathname.replace(uLocale, '/' + key);
+        localeList.push({
+          label: (
+            <a href={newPathname}>
+              <div className="text-sm">{value.name + '(' + key + ')'}</div>
+            </a>
+          ),
+          key: key,
+        });
       }
     }
   }
 
   localeList.push({
-    label: <div className="text-sm">{t('help_translate')}</div>,
+    label: (
+      <a href="https://crowdin.com/project/scriptcat" target="_blank">
+        <div className="text-sm">{t('help_translate')}</div>
+      </a>
+    ),
     key: 'help',
   });
 

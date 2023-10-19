@@ -1,3 +1,7 @@
+import 'dayjs/locale/en';
+import 'dayjs/locale/zh-cn';
+import 'dayjs/locale/zh-tw';
+
 export default {
   // This is the list of languages your application supports
   supportedLngs: ['en', 'zh-CN', 'zh-TW', 'ach-UG'],

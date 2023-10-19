@@ -32,6 +32,8 @@ import i18next from './i18next.server';
 import githubCss from './styles/github-markdown-css.css';
 import { ConfigProvider, theme } from 'antd';
 import { StyleProvider } from '@ant-design/cssinjs';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -223,6 +225,10 @@ export default function App() {
   // language, this locale will change and i18next will load the correct
   // translation files
   useChangeLanguage(locale);
+
+  console.log(locale);
+  dayjs.locale(locale.toLocaleLowerCase());
+  dayjs.extend(relativeTime);
 
   return (
     <html lang={locale} dir={i18n.dir()}>

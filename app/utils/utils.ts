@@ -1,19 +1,17 @@
-import { format, formatDistance } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
 import { useContext } from 'react';
 import { UserContext } from '../context-manager';
 import type { Script } from '~/services/scripts/types';
+import dayjs from 'dayjs';
+import i18next from 'i18next';
 
 export function formatDate(value: number) {
   // 如果大于一年，显示年月日
-  if (value * 1000 < new Date().getTime() - 365 * 24 * 60 * 60 * 1000) {
-    return format(value * 1000, 'yyyy年MM月dd日');
+  if (value < new Date().getTime() / 1000 - 365 * 24 * 60 * 60) {
+    return dayjs(new Date(value * 1000)).format(i18next.t('timeFormat'));
   }
-  return formatDistance(value * 1000, new Date(), {
-    addSuffix: true,
-    locale: zhCN,
-  });
+  return dayjs(new Date(value * 1000)).fromNow();
 }
+
 export function useDark() {
   const user = useContext(UserContext);
   return user.dark;
