@@ -9,5 +9,6 @@ module.exports = {
   // publicPath: "/build/",
   future: {
     v2_meta: true,
-  }
+    unstable_tailwind: true,
+  },
 };

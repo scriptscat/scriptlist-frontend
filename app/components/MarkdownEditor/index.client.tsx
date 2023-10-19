@@ -7,6 +7,8 @@ import { message, Spin } from 'antd';
 import { UploadImage } from '~/services/utils/api';
 import { useContext } from 'react';
 import { UserContext } from '~/context-manager';
+import { useTranslation } from 'react-i18next';
+import { useDark } from '~/utils/utils';
 
 export type MarkdownEditorRef =
   | { editor: Editor | undefined; setMarkdown: (markdown: string) => void }
@@ -26,6 +28,8 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
   const [editor, setEditor] = useState<Editor | undefined>();
   const [prompt, setPrompt] = useState('');
   const [imageLoading, setImageLoading] = useState(false);
+  const { t } = useTranslation();
+
   useImperativeHandle(
     ref,
     () => {
@@ -46,10 +50,7 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
     if (!editor) {
       setEditor((editor) => {
         if (!editor) {
-          const dark =
-            document.querySelector('section')!.className.indexOf('dark') == -1
-              ? false
-              : true;
+          const dark = document.querySelector('body.dark') ? true : false;
           if (!initialValue && localStorage['autosave_' + id]) {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             initialValue = localStorage['autosave_' + id];
@@ -58,7 +59,7 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
             el: document.querySelector('#markdown-editor-' + id)!,
             previewStyle: 'tab',
             height: '400px',
-            placeholder: '输入回复反馈内容（友善的反馈是交流的起点）',
+            placeholder: t('input_feedback_content'),
             hooks: {
               addImageBlobHook: async (blob, callback) => {
                 setImageLoading(true);
@@ -70,7 +71,7 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
                     (blob as File).name
                   );
                 } else {
-                  message.error('图片上传失败');
+                  message.error(t('image_upload_failed'));
                 }
                 return false;
               },
@@ -89,7 +90,7 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
       setEditor((editor) => {
         if (editor && editor.getMarkdown()) {
           localStorage['autosave_' + id] = editor.getMarkdown();
-          setPrompt(new Date().toLocaleTimeString() + ' 已自动保存');
+          setPrompt(new Date().toLocaleTimeString() + ' ' + t('autosaved'));
         }
         return editor;
       });
@@ -106,7 +107,7 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
         {prompt && <span className="text-gray-400">{prompt}</span>}
         {imageLoading && (
           <Spin
-            tip="图片上传中..."
+            tip={t('uploading_image')}
             className="!relative top-[-250px] !h-0"
           ></Spin>
         )}

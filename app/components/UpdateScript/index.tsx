@@ -6,6 +6,7 @@ import {
   Radio,
   Space,
   Switch,
+  theme,
   Tooltip,
 } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
@@ -17,6 +18,7 @@ import { useDark } from '~/utils/utils';
 import CodeEditor from '../CodeEditor';
 import type { MarkdownEditorRef } from '../MarkdownEditor/index.client';
 import MarkdownEditor from '../MarkdownEditor/index.client';
+import { useTranslation } from 'react-i18next';
 
 const UpdateScript: React.FC<{
   script?: Script;
@@ -35,17 +37,19 @@ const UpdateScript: React.FC<{
   const [loading, setLoading] = useState(false);
   const [scriptType, setScriptType] = useState<1 | 2 | 3>(1);
   const [isPreRelease, setPreRelease] = useState<0 | 1 | 2>(0);
+  const { token } = theme.useToken();
+  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col items-start gap-1">
       <span>
-        提交的代码应该严格遵守本站脚本发布的相关规定，否则将会按照规则进行处理。相关规定可前往
+        {t('submission_rules')}
         <a href="https://bbs.tampermonkey.net.cn/thread-3036-1-1.html">
-          脚本站审查规则
+          {t('script_review_rules')}
         </a>
-        查看
+        {t('view')}
       </span>
-      <h3 className="text-lg">代码</h3>
+      <h3 className="text-lg">{t('code')}</h3>
       <div className="h-96 w-full">
         <CodeEditor
           id="view-code"
@@ -54,7 +58,7 @@ const UpdateScript: React.FC<{
         />
       </div>
       <span>
-        或本地上传代码:
+        {t('or_upload_local_code')}
         <input
           type="file"
           accept="text/javascript,application/javascript"
@@ -76,8 +80,8 @@ const UpdateScript: React.FC<{
           }}
         ></input>
       </span>
-      <h3 className="text-lg">附加信息</h3>
-      <span>更详细的描述，或者操作说明等</span>
+      <h3 className="text-lg">{t('additional_information')}</h3>
+      <span>{t('detailed_description_or_instructions')}</span>
       <ClientOnly fallback={<div></div>}>
         {() => (
           <MarkdownEditor
@@ -90,35 +94,34 @@ const UpdateScript: React.FC<{
           />
         )}
       </ClientOnly>
-      <h3 className="text-lg">更新日志</h3>
+      <h3 className="text-lg">{t('changelog')}</h3>
       <TextArea
-        placeholder="当前脚本更新的内容(支持markdown)"
-        prefixCls={dark ? 'dark-input' : 'light-input'}
+        placeholder={t('current_script_update_content_support_markdown')}
         className="!bg-transparent"
         onChange={(value) => setChangelog(value.target.value)}
+        style={{
+          backgroundColor: token.colorBgContainer,
+          borderColor: token.colorBorder,
+        }}
       ></TextArea>
       {script == undefined && (
         <>
-          <h3 className="text-lg">脚本类型</h3>
+          <h3 className="text-lg">{t('script_type')}</h3>
           <Radio.Group
             onChange={(value) => setScriptType(value.target.value)}
             value={scriptType}
           >
             <Space direction="vertical">
-              <Radio value={1}>
-                用户脚本,平常意义上的油猴脚本,包括脚本猫的后台脚本、定时脚本
-              </Radio>
-              <Radio value={3}>
-                脚本调用库,脚本@require所使用的库,只允许被其他脚本进行引用,不允许被用户安装
-              </Radio>
+              <Radio value={1}>{t('user_script_describe')}</Radio>
+              <Radio value={3}>{t('script_library')}</Radio>
               <Radio value={2}>
-                订阅脚本,脚本猫特有支持的类型,仅会在安装时弹出安装界面由用户确认订阅,后续的更新采用静默更新的方式
+                {t('subscription_script')}{' '}
                 <a
                   href="https://docs.scriptcat.org/docs/dev/subscribe/"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  订阅模式
+                  {t('subscription')}
                 </a>
               </Radio>
             </Space>
@@ -127,39 +130,32 @@ const UpdateScript: React.FC<{
       )}
       {scriptType == 3 && (
         <>
-          <h3 className="text-lg">库描述信息</h3>
+          <h3 className="text-lg">{t('update_script_library_description')}</h3>
           <Input
-            placeholder="库名称,类似脚本的@name"
+            placeholder={t('update_script_library_name')}
             value={name}
             onChange={(value) => setName(value.target.value)}
           />
           <TextArea
             prefixCls={dark ? 'dark-input' : 'light-input'}
-            placeholder="库描述信息,类似脚本的@description"
+            placeholder={t('library_description')}
             value={description}
             onChange={(value) => setDescription(value.target.value)}
           />
           <Input
             prefixCls={dark ? 'dark-input' : 'light-input'}
-            placeholder="库版本,类似脚本的@version"
+            placeholder={t('library_version')}
             value={version}
             onChange={(value) => setVersion(value.target.value)}
           />
-          {/* <h3 className="text-lg">库的定义文件(.d.ts)</h3>
-          <TextArea
-            prefixCls={dark ? 'dark-input' : 'light-input'}
-            placeholder="库描述信息,类似脚本的@description"
-            value={definition}
-            onChange={(value) => setDefinition(value.target.value)}
-          /> */}
         </>
       )}
       {script?.type == 3 && (
         <>
-          <h3 className="text-lg">库版本</h3>
+          <h3 className="text-lg">{t('library_version')}</h3>
           <Input
             prefixCls={dark ? 'dark-input' : 'light-input'}
-            placeholder="库版本,类似脚本的@version"
+            placeholder={t('library_version')}
             value={version}
             onChange={(value) => setVersion(value.target.value)}
           />
@@ -167,8 +163,8 @@ const UpdateScript: React.FC<{
       )}
       {script !== undefined && (
         <>
-          <h3 className="text-lg">版本设置</h3>
-          <Tooltip title="设置为预发布版本,正式版本不会更新至此版本,可在脚本管理页开启脚本预发布安装链接">
+          <h3 className="text-lg">{t('version_settings')}</h3>
+          <Tooltip title={t('set_as_prerelease_version_tooltip')}>
             <Checkbox
               indeterminate={isPreRelease === 0 && script.type === 1}
               value={isPreRelease === 1 ? true : false}
@@ -176,30 +172,34 @@ const UpdateScript: React.FC<{
                 setPreRelease(val.target.checked ? 1 : 2);
               }}
             >
-              {script.type === 1 ? '设置为预发布版本' : '标记为预发布版本'}
+              {script.type === 1
+                ? t('set_as_prerelease_version')
+                : t('mark_as_prerelease_version')}
             </Checkbox>
           </Tooltip>
-          <h3 className="text-lg">更多设置</h3>
+          <h3 className="text-lg">{t('more_settings')}</h3>
           <span>
-            更多设置已经迁移至<a href="./manage">脚本管理</a>中
+            {t('more_settings_moved_to')}
+            <a href="./manage">{t('script_management')}</a>
+            {t('page')}
           </span>
         </>
       )}
       {script === undefined && (
         <>
-          <h3 className="text-lg">脚本访问权限</h3>
+          <h3 className="text-lg">{t('script_access_permission')}</h3>
           <Switch
-            checkedChildren="公开"
-            unCheckedChildren="私有"
+            checkedChildren={t('public')}
+            unCheckedChildren={t('private')}
             checked={isPublic === 1 ? true : false}
             onChange={(value) => setPublic(value ? 1 : 2)}
           />
-          <h3 className="text-lg">不适内容</h3>
+          <h3 className="text-lg">{t('inappropriate_content')}</h3>
           <Checkbox
             checked={unwell === 1 ? true : false}
             onChange={(val) => setUnwell(val.target.checked ? 1 : 2)}
           >
-            该网站可能存在令人不适内容，包括但不限于红蓝闪光频繁闪烁、对视觉、精神有侵害的内容。
+            {t('inappropriate_content_warning')}
           </Checkbox>
         </>
       )}
@@ -209,11 +209,11 @@ const UpdateScript: React.FC<{
         onClick={async () => {
           let code = codeEditor.current?.editor.getValue();
           if (!code) {
-            return message.error('代码不能为空');
+            return message.error(t('code_cannot_be_empty'));
           }
           const content = markdown.current?.editor?.getMarkdown();
           if (!content) {
-            return message.error('内容不能为空');
+            return message.error(t('content_cannot_be_empty'));
           }
           setLoading(true);
           try {
@@ -238,7 +238,7 @@ const UpdateScript: React.FC<{
           setLoading(false);
         }}
       >
-        发布脚本
+        {t('publish_script')}
       </Button>
     </div>
   );
