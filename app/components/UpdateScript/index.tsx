@@ -102,6 +102,7 @@ const UpdateScript: React.FC<{
         style={{
           backgroundColor: token.colorBgContainer,
           borderColor: token.colorBorder,
+          color: token.colorText,
         }}
       ></TextArea>
       {script == undefined && (

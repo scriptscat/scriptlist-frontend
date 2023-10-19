@@ -39,14 +39,6 @@ h6 {
   overflow: hidden;
 }
 
-.script-info-item .anticon {
-  vertical-align: baseline !important;
-}
-
-.anticon-middle .anticon {
-  vertical-align: baseline !important;
-}
-
 .statistic span {
   display: block;
   height: 24px;

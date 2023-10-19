@@ -132,6 +132,8 @@ export function CatchBoundary() {
         setDarkMode(data.darkMode);
         setLocale(data.locale);
         i18n.i18n.changeLanguage(data.locale);
+        dayjs.locale(locale.toLocaleLowerCase());
+        dayjs.extend(relativeTime);
       });
     });
   }, []);
@@ -226,7 +228,6 @@ export default function App() {
   // translation files
   useChangeLanguage(locale);
 
-  console.log(locale);
   dayjs.locale(locale.toLocaleLowerCase());
   dayjs.extend(relativeTime);
 

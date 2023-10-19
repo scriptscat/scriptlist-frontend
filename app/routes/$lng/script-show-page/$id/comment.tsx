@@ -17,7 +17,7 @@ import {
 } from 'antd';
 import type { TextAreaRef } from 'antd/lib/input/TextArea';
 import TextArea from 'antd/lib/input/TextArea';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { formatDate, useDark } from '~/utils/utils';
 import MarkdownView from '~/components/MarkdownView';
@@ -114,6 +114,14 @@ export default function Comment() {
     setLoading(false);
     setPage((page) => page + 1);
   };
+  useEffect(() => {
+    if (textEl.current && textEl.current.resizableTextArea) {
+      textEl.current.resizableTextArea.textArea.style.backgroundColor =
+        token.colorBgContainer;
+      textEl.current.resizableTextArea.textArea.style.color = token.colorText;
+    }
+  }, [textEl, token.colorBgContainer]);
+
   return (
     <Card>
       <Space className="w-full" direction="vertical">
@@ -124,8 +132,9 @@ export default function Comment() {
               maxLength={100}
               style={{
                 height: 120,
-                background: token.colorBgContainer,
+                backgroundColor: token.colorBgContainer,
                 borderColor: token.colorBorder,
+                color: token.colorText,
               }}
               ref={textEl}
               defaultValue={loaderData.myScore && loaderData.myScore.message}

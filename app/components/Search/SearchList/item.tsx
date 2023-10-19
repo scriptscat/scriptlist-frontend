@@ -289,7 +289,7 @@ const SearchItem: React.FC<{
                 {t('today_install')}
               </span>
               <div className="text-xs font-semibold">
-                <DownloadOutlined className="!align-middle" style={iconStyle} />
+                <DownloadOutlined style={iconStyle} />
                 <span>{splitNumber(script.today_install.toString())}</span>
               </div>
             </div>
@@ -298,28 +298,28 @@ const SearchItem: React.FC<{
                 {t('total_install')}
               </span>
               <div className="text-xs font-semibold">
-                <DownloadOutlined className="!align-middle" style={iconStyle} />
+                <DownloadOutlined style={iconStyle} />
                 <span>{splitNumber(script.total_install.toString())}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">
               <span className="text-gray-500 text-sm">{t('create_date')}</span>
               <div className="text-xs font-semibold">
-                <CalendarOutlined className="!align-middle" style={iconStyle} />
+                <CalendarOutlined style={iconStyle} />
                 <span>{formatDate(script.createtime)}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">
               <span className="text-gray-500 text-sm">{t('update_date')}</span>
               <div className="text-xs font-semibold">
-                <CarryOutOutlined className="!align-middle" style={iconStyle} />
+                <CarryOutOutlined style={iconStyle} />
                 <span>{formatDate(script.updatetime)}</span>
               </div>
             </div>
             <div className="flex flex-col text-center px-5">
               <span className="text-gray-500 text-sm">{t('user_rating')}</span>
               <div className="text-xs font-semibold">
-                <StarOutlined className="!align-middle" style={iconStyle} />
+                <StarOutlined style={iconStyle} />
                 <span>
                   {script.score
                     ? (((script.score / script.score_num) * 2) / 10).toFixed(1)

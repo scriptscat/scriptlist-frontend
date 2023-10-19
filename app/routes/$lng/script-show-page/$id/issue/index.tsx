@@ -139,22 +139,14 @@ export default function Issue() {
             switch (status) {
               case 1:
                 return (
-                  <Tag
-                    icon={<InfoCircleTwoTone className="!align-baseline" />}
-                    color="blue"
-                  >
+                  <Tag icon={<InfoCircleTwoTone />} color="blue">
                     {t('pending')}
                   </Tag>
                 );
               default:
                 return (
                   <Tag
-                    icon={
-                      <CheckCircleTwoTone
-                        className="!align-baseline"
-                        twoToneColor="#52c41a"
-                      />
-                    }
+                    icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
                     color="green"
                   >
                     {t('resolved')}

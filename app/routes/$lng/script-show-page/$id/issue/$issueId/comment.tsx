@@ -197,20 +197,12 @@ export default function Comment() {
           </div>
           <div className="flex flex-row items-center">
             {status === 1 ? (
-              <Tag
-                icon={<InfoCircleTwoTone className="!align-baseline" />}
-                color="blue"
-              >
+              <Tag icon={<InfoCircleTwoTone />} color="blue">
                 {t('pending')}
               </Tag>
             ) : (
               <Tag
-                icon={
-                  <CheckCircleTwoTone
-                    className="!align-baseline"
-                    twoToneColor="#52c41a"
-                  />
-                }
+                icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
                 color="green"
               >
                 {t('resolved')}
