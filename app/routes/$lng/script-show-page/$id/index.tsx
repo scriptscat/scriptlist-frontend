@@ -1,4 +1,4 @@
-import { LoaderFunction, json } from '@remix-run/node';
+import { LinksFunction, LoaderFunction, json } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 import {
   Avatar,
@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ActionMenu from '~/components/ActionMenu';
-import MarkdownView from '~/components/MarkdownView';
+import MarkdownView, { markdownViewLinks } from '~/components/MarkdownView';
 import SearchItem from '~/components/Search/SearchList/item';
 import { ScriptContext } from '~/context-manager';
 import {
@@ -29,6 +29,8 @@ import type {
   WatchLevel as WatchLevelType,
 } from '~/services/scripts/types';
 import { formatDate } from '~/utils/utils';
+
+export const links: LinksFunction = () => [...markdownViewLinks()];
 
 type LoaderData = {
   id: number;

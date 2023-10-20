@@ -18,18 +18,14 @@ import { parseCookie } from '~/utils/cookie';
 import { getCurrentUserAndRefushToken } from './services/users/api';
 import type { User } from './services/users/types';
 import { UserContext } from './context-manager';
-import tuiEditor from '@toast-ui/editor/dist/toastui-editor.css';
-import tuiEditorDark from '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import { useContext, useEffect, useState } from 'react';
 import { InitAxios } from './services/http';
-import prism from 'prismjs/themes/prism.css';
 import GoogleAdScript from './components/GoogleAd/script';
 import { useChangeLanguage } from 'remix-i18next';
 import { I18nContext, useTranslation } from 'react-i18next';
 import { getLocale, getLocaleByURL } from './utils/i18n';
 import NavigationProcess from './components/NavigationProcess/NavigationProcess';
 import i18next from './i18next.server';
-import githubCss from './styles/github-markdown-css.css';
 import { ConfigProvider, theme } from 'antd';
 import { StyleProvider } from '@ant-design/cssinjs';
 import dayjs from 'dayjs';
@@ -37,11 +33,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
-  { rel: 'stylesheet', href: githubCss },
   { rel: 'stylesheet', href: '/styles/antd.min.css' },
-  { rel: 'stylesheet', href: tuiEditor },
-  { rel: 'stylesheet', href: tuiEditorDark },
-  { rel: 'stylesheet', href: prism },
 ];
 
 export const meta: V2_MetaFunction = ({ data }) => {

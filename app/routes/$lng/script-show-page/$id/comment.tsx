@@ -1,4 +1,4 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 import {
@@ -20,7 +20,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import { useContext, useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { formatDate, useDark } from '~/utils/utils';
-import MarkdownView from '~/components/MarkdownView';
+import MarkdownView, { markdownViewLinks } from '~/components/MarkdownView';
 import {
   DeleteScore,
   GetMyScore,
@@ -31,6 +31,8 @@ import type { ScoreItem } from '~/services/scripts/types';
 import { ScriptContext, UserContext } from '~/context-manager';
 import ActionMenu from '~/components/ActionMenu';
 import { useTranslation } from 'react-i18next';
+
+export const links: LinksFunction = () => [...markdownViewLinks()];
 
 type LoaderData = {
   id: number;

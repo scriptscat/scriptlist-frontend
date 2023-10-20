@@ -2,13 +2,23 @@ import React, { useEffect, useImperativeHandle } from 'react';
 import Editor from '@toast-ui/editor';
 import { useState } from 'react';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
+import tuiEditor from '@toast-ui/editor/dist/toastui-editor.css';
+import tuiEditorDark from '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import Prism from 'prismjs';
+import prismCss from 'prismjs/themes/prism.css';
 import { message, Spin } from 'antd';
 import { UploadImage } from '~/services/utils/api';
 import { useContext } from 'react';
 import { UserContext } from '~/context-manager';
 import { useTranslation } from 'react-i18next';
 import { useDark } from '~/utils/utils';
+import { LinksFunction } from '@remix-run/node';
+
+export const markdownEditorLinks: LinksFunction = () => [
+  { rel: 'stylesheet', href: tuiEditor },
+  { rel: 'stylesheet', href: tuiEditorDark },
+  { rel: 'stylesheet', href: prismCss },
+];
 
 export type MarkdownEditorRef =
   | { editor: Editor | undefined; setMarkdown: (markdown: string) => void }

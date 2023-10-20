@@ -9,7 +9,7 @@ import {
   EllipsisOutlined,
   LinkOutlined,
 } from '@ant-design/icons';
-import type { LoaderFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import type { V2_MetaFunction } from '@remix-run/react';
 import { Link, useLoaderData, useNavigate } from '@remix-run/react';
@@ -29,8 +29,10 @@ import {
 } from 'antd';
 import { formatDate } from '~/utils/utils';
 import type { MarkdownEditorRef } from '~/components/MarkdownEditor/index.client';
-import MarkdownEditor from '~/components/MarkdownEditor/index.client';
-import MarkdownView from '~/components/MarkdownView';
+import MarkdownEditor, {
+  markdownEditorLinks,
+} from '~/components/MarkdownEditor/index.client';
+import MarkdownView, { markdownViewLinks } from '~/components/MarkdownView';
 import {
   CloseIssue,
   DeleteIssue,
@@ -56,6 +58,11 @@ import { useTranslation } from 'react-i18next';
 import { useLocale } from 'remix-i18next';
 import i18next from '~/i18next.server';
 import { getLocale } from '~/utils/i18n';
+
+export const links: LinksFunction = () => [
+  ...markdownViewLinks(),
+  ...markdownEditorLinks(),
+];
 
 type LoaderData = {
   issue: Issue;

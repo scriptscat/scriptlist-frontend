@@ -6,7 +6,7 @@ import {
   EditOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import type { LoaderFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
 import {
@@ -24,7 +24,7 @@ import {
 } from 'antd';
 import { useContext, useState } from 'react';
 import { formatDate } from '~/utils/utils';
-import MarkdownView from '~/components/MarkdownView';
+import MarkdownView, { markdownViewLinks } from '~/components/MarkdownView';
 import { ScriptContext, UserContext } from '~/context-manager';
 import {
   ScriptCodeDelete,
@@ -33,6 +33,8 @@ import {
 } from '~/services/scripts/api';
 import type { ScriptCode } from '~/services/scripts/types';
 import { useTranslation } from 'react-i18next';
+
+export const links: LinksFunction = () => [...markdownViewLinks()];
 
 type LoaderData = {
   list: ScriptCode[];

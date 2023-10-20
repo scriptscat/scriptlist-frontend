@@ -1,8 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { Slugger, marked } from 'marked';
 import { useLocation } from '@remix-run/react';
+import githubCss from '~/styles/github-markdown-css.css';
 import Prism from 'prismjs';
+import prismCss from 'prismjs/themes/prism.css';
 import xss, { whiteList } from 'xss';
+import { LinksFunction } from '@remix-run/node';
+
+export const markdownViewLinks: LinksFunction = () => [
+  { rel: 'stylesheet', href: githubCss },
+  { rel: 'stylesheet', href: prismCss },
+];
+
 class MarkdownRenderer extends marked.Renderer {
   link(href: string, title: string, text: string) {
     const baseUrl = this.options.baseUrl || '';
