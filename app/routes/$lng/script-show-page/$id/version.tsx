@@ -249,10 +249,7 @@ export default function Version() {
                           }
                           if (diff != -1) {
                             navigate({
-                              pathname:
-                                '/script-show-page/' +
-                                script.script?.id +
-                                '/diff',
+                              pathname: '../diff',
                               search:
                                 '?version1=' +
                                 list[diff].version +
