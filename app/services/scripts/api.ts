@@ -238,12 +238,14 @@ export async function ArchiveScript(id: number, archive: boolean) {
 }
 
 export async function ScriptState(id: number, req?: Request) {
+  const headers: { [key: string]: string } = {};
+  if (req?.headers.get('Cookie')) {
+    headers.cookie = req.headers.get('Cookie') || '';
+  }
   const resp = await request<ScriptStateResponse>({
     url: '/scripts/' + id + '/state',
     method: 'GET',
-    headers: {
-      cookie: req?.headers.get('Cookie') || '',
-    },
+    headers,
   });
   return resp.data;
 }

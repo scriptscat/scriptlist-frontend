@@ -1,4 +1,6 @@
-FROM node:18-alpine3.14
+ARG BASEIMAGE=node:20-alpine3.16
+
+FROM ${BASEIMAGE}
 
 EXPOSE 3000
 
