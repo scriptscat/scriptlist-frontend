@@ -29,9 +29,7 @@ import {
 } from 'antd';
 import { formatDate } from '~/utils/utils';
 import type { MarkdownEditorRef } from '~/components/MarkdownEditor/index.client';
-import MarkdownEditor, {
-  markdownEditorLinks,
-} from '~/components/MarkdownEditor/index.client';
+import MarkdownEditor from '~/components/MarkdownEditor/index.client';
 import MarkdownView, { markdownViewLinks } from '~/components/MarkdownView';
 import {
   CloseIssue,
@@ -58,11 +56,11 @@ import { useTranslation } from 'react-i18next';
 import { useLocale } from 'remix-i18next';
 import i18next from '~/i18next.server';
 import { getLocale } from '~/utils/i18n';
+import { markdownEditorLinks } from '~/components/MarkdownEditor';
 
-export const links: LinksFunction = () => [
-  ...markdownViewLinks(),
-  ...markdownEditorLinks(),
-];
+export const links: LinksFunction = () => {
+  return [...markdownViewLinks(), ...markdownEditorLinks()];
+};
 
 type LoaderData = {
   issue: Issue;

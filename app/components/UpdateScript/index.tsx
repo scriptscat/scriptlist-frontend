@@ -17,11 +17,10 @@ import type { Script } from '~/services/scripts/types';
 import { useDark } from '~/utils/utils';
 import CodeEditor from '../CodeEditor';
 import type { MarkdownEditorRef } from '../MarkdownEditor/index.client';
-import MarkdownEditor, {
-  markdownEditorLinks,
-} from '../MarkdownEditor/index.client';
+import MarkdownEditor from '../MarkdownEditor/index.client';
 import { useTranslation } from 'react-i18next';
 import { LinksFunction } from '@remix-run/node';
+import { markdownEditorLinks } from '../MarkdownEditor';
 
 export const links: LinksFunction = () => [...markdownEditorLinks()];
 

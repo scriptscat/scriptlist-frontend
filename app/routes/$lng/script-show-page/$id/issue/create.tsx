@@ -8,10 +8,9 @@ import { useTranslation } from 'react-i18next';
 import { useLocale } from 'remix-i18next';
 import { ClientOnly } from 'remix-utils';
 import IssueLabel from '~/components/IssueLabel';
+import { markdownEditorLinks } from '~/components/MarkdownEditor';
 import type { MarkdownEditorRef } from '~/components/MarkdownEditor/index.client';
-import MarkdownEditor, {
-  markdownEditorLinks,
-} from '~/components/MarkdownEditor/index.client';
+import MarkdownEditor from '~/components/MarkdownEditor/index.client';
 import { ScriptContext } from '~/context-manager';
 import { SubmitIssue } from '~/services/scripts/issues/api';
 
