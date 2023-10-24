@@ -93,13 +93,16 @@ jobs:
         DOMAIN: ${{ env.ENV=='prod' && env.DOMAIN || format('{0}.{1}', env.ENV, env.DOMAIN) }}
         RESOURCE_CPU: ${{ env.ENV=='prod' && '500m' || '50m' }}
         RESOURCE_MEMORY: ${{ env.ENV=='prod' && '512Mi' || '128Mi' }}
+        INNER_DOMAIN: ${{ env.ENV=='prod' && 'scriptlist-cago' || format('scriptlist-{0}-cago', env.ENV) }}
+        APP_BBS_OAUTH_CLIENT: ${{ env.ENV=='prod' && '80mfto0y3b8v' || env.ENV=='pre' && '5uk70yummcoe' || 'sxIv1i8H1ZwnSAH' }}
       run: |
         cd deploy/helm
         helm upgrade --install \
         --namespace $NAMESPACE $APP_NAME . -f values.yaml \
         --set image.tag=${{ steps.vars.outputs.sha_short }} --set image.repository=$REGISTRY/$REPOSITORY \
-        --set etcdConfig.password=$ETCD_CONFIG_PASSWORD \
-        --set appConfig.env=${{ env.ENV }} \
+        --set env[0].value=https://$DOMAIN/api/v2 \
+        --set env[1].value=http://$INNER_DOMAIN.app.svc.cluster.local/api/v2 \
+        --set env[2].value=$APP_BBS_OAUTH_CLIENT \
         --set ingress.hosts[0].host=$DOMAIN \
         --set ingress.tls[0].hosts[0]=$DOMAIN \
         --set resources.requests.cpu=$RESOURCE_CPU \
