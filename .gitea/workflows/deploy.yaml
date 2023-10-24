@@ -89,8 +89,8 @@ jobs:
 
     - name: Deploy ${{ env.ENV }}
       env:
-        APP_NAME: ${{ env.APP_NAME }}${{ env.ENV=='prod' && '' || format('-{0}', env.ENV) }}
-        DOMAIN: ${{ env.ENV=='prod' && '' || format('{0}.', env.ENV) }}${{ env.DOMAIN }}
+        APP_NAME: ${{ env.APP_NAME }}${{ env.ENV=='prod' && env.APP_NAME || format('{0}-{1}', env.APP_NAME, env.ENV) }}
+        DOMAIN: ${{ env.ENV=='prod' && env.DOMAIN || format('{0}.{1}', env.ENV, env.DOMAIN) }}
         RESOURCE_CPU: ${{ env.ENV=='prod' && '500m' || '50m' }}
         RESOURCE_MEMORY: ${{ env.ENV=='prod' && '512Mi' || '128Mi' }}
       run: |
