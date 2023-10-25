@@ -25,9 +25,10 @@ export default function NavigationProcess() {
         percent={percent}
         className="w-full"
         style={{
-          position: 'absolute',
+          position: 'fixed',
           top: -12,
           height: '2px',
+          zIndex: 100,
           // overflow: 'hidden',
         }}
         size="small"

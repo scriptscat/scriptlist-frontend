@@ -89,11 +89,8 @@ export default function Index() {
                 description={
                   <Space direction="vertical">
                     <span>{t('no_score_yet')}</span>
-                    <Button
-                      type="link"
-                      href={'./' + script.script?.id + '/comment'}
-                    >
-                      {t('go_to_score')}
+                    <Button type="link">
+                      <Link to={'./comment'}>{t('go_to_score')}</Link>
                     </Button>
                   </Space>
                 }
@@ -152,8 +149,8 @@ export default function Index() {
           </ConfigProvider>
           {scoreData.length > 0 && (
             <div className="w-full text-center">
-              <Button type="link" href="./comment">
-                {t('view_more')}
+              <Button type="link">
+                <Link to={'./comment'}>{t('view_more')}</Link>
               </Button>
             </div>
           )}
