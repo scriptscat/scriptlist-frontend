@@ -72,11 +72,10 @@
   "script_archived": "腳本已歸檔",
   "script_archived_description": "該腳本已經被作者歸檔，腳本可能失效並且作者不再維護，你無法再進行問題反饋。",
   "script_code_obfuscated": "腳本代碼經過了不可讀處理",
-  "script_code_obfuscated_description": "該腳本已經被作者經過了不可讀處理，雖然腳本站已經經過了一層審查，但還是請不要給予危險權限。",
+  "script_code_obfuscated_description": "該腳本已經被作者經過了不可讀處理，雖然腳本站已經經過了一層審查，但還是請注意危險權限的授予。",
   "no_permission": "無權限",
   "script_not_exist": "腳本不存在",
   "script_score": "腳本評分",
-  "no_score_yet": "還沒有人來給腳本打分，快來成為第一個打分的人吧",
   "go_to_score": "前往評分",
   "action": "操作",
   "view_more": "查看更多",
@@ -354,5 +353,6 @@
   "webhook_refresh_secret_button": "刷新密鑰",
   "share_your_userscript": "分享你的用户腳本",
   "userscript_list": "用户腳本列表",
-  "home_page_subtitle": "比全更全的用户腳本托管平台"
+  "home_page_subtitle": "比全更全的用户腳本托管平台",
+  "time_format": "YYYY年MM月DD日"
 }

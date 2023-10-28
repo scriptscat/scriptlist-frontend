@@ -142,10 +142,14 @@ const UpdateScript: React.FC<{
             onChange={(value) => setName(value.target.value)}
           />
           <TextArea
-            prefixCls={dark ? 'dark-input' : 'light-input'}
             placeholder={t('library_description')}
             value={description}
             onChange={(value) => setDescription(value.target.value)}
+            style={{
+              backgroundColor: token.colorBgContainer,
+              borderColor: token.colorBorder,
+              color: token.colorText,
+            }}
           />
           <Input
             prefixCls={dark ? 'dark-input' : 'light-input'}

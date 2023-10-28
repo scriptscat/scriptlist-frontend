@@ -13,11 +13,13 @@ import {
   Radio,
   Space,
   Switch,
+  theme,
 } from 'antd';
 import { useContext } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import GrayControl from '~/components/GrayControl';
+import TextArea from '~/components/TextArea';
 import { ScriptContext } from '~/context-manager';
 import i18next from '~/i18next.server';
 import {
@@ -72,6 +74,7 @@ export default function Manage() {
   const [isPublic, setIsPublic] = useState(script.script!.public);
   const [unwell, setUnwell] = useState(script.script!.unwell);
   const { t } = useTranslation();
+  const { token } = theme.useToken();
 
   return (
     <Card>
@@ -85,7 +88,7 @@ export default function Manage() {
               value={name}
               onChange={(value) => setName(value.target.value)}
             />
-            <Input
+            <TextArea
               placeholder={t('library_description')}
               value={description}
               onChange={(value) => setDescription(value.target.value)}

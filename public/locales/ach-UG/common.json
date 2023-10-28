@@ -1,5 +1,5 @@
 {
-  "home_page_description": "crwdns5084:0crwdne5084:0",
+  "home_page_description": "crwdns6516:0crwdne6516:0",
   "browser": "crwdns5086:0crwdne5086:0",
   "powerful_script_extension": "crwdns5088:0crwdne5088:0",
   "more_possibilities_for_your_browser": "crwdns5090:0crwdne5090:0",
@@ -76,7 +76,6 @@
   "no_permission": "crwdns5232:0crwdne5232:0",
   "script_not_exist": "crwdns5234:0crwdne5234:0",
   "script_score": "crwdns5236:0crwdne5236:0",
-  "no_score_yet": "crwdns5238:0crwdne5238:0",
   "go_to_score": "crwdns5240:0crwdne5240:0",
   "action": "crwdns5242:0crwdne5242:0",
   "view_more": "crwdns5244:0crwdne5244:0",
@@ -354,5 +353,6 @@
   "webhook_refresh_secret_button": "crwdns5788:0crwdne5788:0",
   "share_your_userscript": "crwdns5790:0crwdne5790:0",
   "userscript_list": "crwdns5792:0crwdne5792:0",
-  "home_page_subtitle": "crwdns5794:0crwdne5794:0"
+  "home_page_subtitle": "crwdns5794:0crwdne5794:0",
+  "time_format": "crwdns6520:0crwdne6520:0"
 }

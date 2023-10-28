@@ -15,8 +15,6 @@ import {
   Space,
   theme,
 } from 'antd';
-import type { TextAreaRef } from 'antd/lib/input/TextArea';
-import TextArea from 'antd/lib/input/TextArea';
 import { useContext, useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { formatDate, useDark } from '~/utils/utils';
@@ -31,6 +29,8 @@ import type { ScoreItem } from '~/services/scripts/types';
 import { ScriptContext, UserContext } from '~/context-manager';
 import ActionMenu from '~/components/ActionMenu';
 import { useTranslation } from 'react-i18next';
+import TextArea from '~/components/TextArea';
+import { TextAreaRef } from 'antd/lib/input/TextArea';
 
 export const links: LinksFunction = () => [...markdownViewLinks()];
 
@@ -134,9 +134,6 @@ export default function Comment() {
               maxLength={100}
               style={{
                 height: 120,
-                backgroundColor: token.colorBgContainer,
-                borderColor: token.colorBorder,
-                color: token.colorText,
               }}
               ref={textEl}
               defaultValue={loaderData.myScore && loaderData.myScore.message}

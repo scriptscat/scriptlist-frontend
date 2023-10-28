@@ -76,7 +76,6 @@
   "no_permission": "No Permission",
   "script_not_exist": "Script does not exist",
   "script_score": "Script Score",
-  "no_score_yet": "No one has rated the script yet. Be the first to rate it!",
   "go_to_score": "Go to Rating",
   "action": "Action",
   "view_more": "View More",
@@ -355,5 +354,5 @@
   "share_your_userscript": "Share your userscript",
   "userscript_list": "Userscript List",
   "home_page_subtitle": "Fuller User Script Hosting Platform",
-  "timeFormat": "YYYY-MM-DD"
+  "time_format": "YYYY-MM-DD"
 }

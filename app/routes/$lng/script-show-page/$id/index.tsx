@@ -88,7 +88,7 @@ export default function Index() {
               <Empty
                 description={
                   <Space direction="vertical">
-                    <span>{t('no_score_yet')}</span>
+                    <span>{t('no_scores_yet')}</span>
                     <Button type="link">
                       <Link to={'./comment'}>{t('go_to_score')}</Link>
                     </Button>

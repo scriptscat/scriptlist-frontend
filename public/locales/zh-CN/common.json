@@ -72,11 +72,10 @@
   "script_archived": "脚本已归档",
   "script_archived_description": "该脚本已经被作者归档，脚本可能失效并且作者不再维护，你无法再进行问题反馈。",
   "script_code_obfuscated": "脚本代码经过了不可读处理",
-  "script_code_obfuscated_description": "该脚本已经被作者经过了不可读处理，虽然脚本站已经经过了一层审查，但还是请不要给予危险权限。",
+  "script_code_obfuscated_description": "该脚本已经被作者经过了不可读处理，虽然脚本站已经经过了一层审查，但还是请注意危险权限的授予。",
   "no_permission": "无权限",
   "script_not_exist": "脚本不存在",
   "script_score": "脚本评分",
-  "no_score_yet": "还没有人来给脚本打分，快来成为第一个打分的人吧",
   "go_to_score": "前往评分",
   "action": "操作",
   "view_more": "查看更多",
@@ -355,5 +354,5 @@
   "share_your_userscript": "分享你的用户脚本",
   "userscript_list": "用户脚本列表",
   "home_page_subtitle": "比全更全的用户脚本托管平台",
-  "timeFormat": "YYYY年MM月DD日"
+  "time_format": "YYYY年MM月DD日"
 }

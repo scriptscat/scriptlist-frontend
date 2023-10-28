@@ -4,10 +4,10 @@ import {
   FileExclamationOutlined,
 } from '@ant-design/icons';
 import { Dropdown, Menu, Modal, Select, Space } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '~/context-manager';
+import TextArea from '../TextArea';
 
 const { Option } = Select;
 export type MenuItemKey = 'delete';
