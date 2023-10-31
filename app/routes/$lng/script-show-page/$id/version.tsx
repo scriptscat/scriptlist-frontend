@@ -266,9 +266,18 @@ export default function Version() {
                 )}
                 {script.script?.type == 3 && (
                   <>
-                    <Input.Group compact>
+                    <Input.Group
+                      compact
+                      style={{
+                        width: 'auto',
+                      }}
+                    >
                       <Input
-                        style={{ width: '500px' }}
+                        style={{
+                          width: '500px',
+                          borderStartStartRadius: 0,
+                          borderEndStartRadius: 0,
+                        }}
                         defaultValue={
                           '// @require https://scriptcat.org/lib/' +
                           script.script.id +

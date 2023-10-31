@@ -43,6 +43,7 @@ export function getLocaleByURL(url: string) {
       return lngMap[lng][locale].value;
     }
   } else if (split.length === 2) {
+    locale = split[0] + '-' + split[1].toUpperCase();
     if (lngMap[lng] && lngMap[lng][locale]) {
       return lngMap[lng][locale].value;
     }

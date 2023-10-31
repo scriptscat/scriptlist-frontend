@@ -387,9 +387,12 @@ const SearchItem: React.FC<{
                 )}
                 {script.type == 3 && (
                   <>
-                    <Input.Group compact>
+                    <Input.Group compact className="!w-auto">
                       <Select
-                        style={{ width: '500px' }}
+                        style={{
+                          width: '500px',
+                        }}
+                        className="border-start-radius-0"
                         value={requireSelect}
                         onChange={(value) => {
                           setRequireSelect(value);

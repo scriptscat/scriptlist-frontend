@@ -1,5 +1,6 @@
 import { LoaderFunction } from '@remix-run/node';
 import { Outlet, isRouteErrorResponse, useRouteError } from '@remix-run/react';
+import { Typography } from 'antd';
 import { json } from 'remix-utils';
 import { getLocale } from '~/utils/i18n';
 
@@ -11,7 +12,7 @@ export function CatchBoundary() {
   } else if (error instanceof Error) {
     data = error.message;
   }
-  return <div className="text-2xl">{data}</div>;
+  return <Typography.Title>{data}</Typography.Title>;
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {

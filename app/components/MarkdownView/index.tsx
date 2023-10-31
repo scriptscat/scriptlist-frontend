@@ -1,15 +1,23 @@
 import React, { useEffect, useRef } from 'react';
-import { Slugger, marked } from 'marked';
+import { marked } from 'marked';
 import { useLocation } from '@remix-run/react';
 import githubCss from '~/styles/github-markdown-css.css';
 import Prism from 'prismjs';
-import prismCss from 'prismjs/themes/prism.css';
+import prismCss from 'prismjs/themes/prism.min.css'
 import xss, { whiteList } from 'xss';
 import { LinksFunction } from '@remix-run/node';
+
+// toolbar
+import prismToolbarCss from 'prismjs/plugins/toolbar/prism-toolbar.min.css';
+import 'prismjs/plugins/toolbar/prism-toolbar.min';
+
+// plugin
+import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min';
 
 export const markdownViewLinks: LinksFunction = () => [
   { rel: 'stylesheet', href: githubCss },
   { rel: 'stylesheet', href: prismCss },
+  { rel: 'stylesheet', href: prismToolbarCss },
 ];
 
 class MarkdownRenderer extends marked.Renderer {
@@ -76,6 +84,9 @@ const MarkdownView: React.FC<{ id: string; content: string }> = ({
   return (
     <div
       className="viewer markdown-body"
+      data-prismjs-copy="copy"
+      data-prismjs-copy-error="error"
+      data-prismjs-copy-success="success"
       dangerouslySetInnerHTML={{
         __html: xss(html, {
           whiteList: l,
