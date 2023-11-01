@@ -165,10 +165,11 @@ export default function Manage() {
         </Button>
         <Divider />
         <h3 className="text-lg">{t('script_manage')}</h3>
-        <h4 className="text-base">{t('script_access')}</h4>
+        <h4 className="text-base">{t('script_public')}</h4>
+        <span>{t('script_public_describe')}</span>
         <Switch
           checkedChildren={t('public')}
-          unCheckedChildren={t('private')}
+          unCheckedChildren={t('unpublic')}
           checked={isPublic === 1 ? true : false}
           onChange={async (checked) => {
             let resp = await UpdateScriptPublic(

@@ -196,10 +196,11 @@ const UpdateScript: React.FC<{
       )}
       {script === undefined && (
         <>
-          <h3 className="text-lg">{t('script_access_permission')}</h3>
+          <h3 className="text-lg">{t('script_public')}</h3>
+          <span>{t('script_public_describe')}</span>
           <Switch
             checkedChildren={t('public')}
-            unCheckedChildren={t('private')}
+            unCheckedChildren={t('unpublic')}
             checked={isPublic === 1 ? true : false}
             onChange={(value) => setPublic(value ? 1 : 2)}
           />
