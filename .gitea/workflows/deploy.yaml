@@ -62,7 +62,7 @@ jobs:
       with:
         push: true
         file: deploy/docker/Dockerfile
-        tags: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ steps.vars.outputs.sha_short }}
+        tags: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.ENV }}.${{ steps.vars.outputs.sha_short }}
         context: .
         build-args: |
           BASEIMAGE=${{ env.BASEIMAGE }}/node:20-alpine3.16
@@ -93,7 +93,7 @@ jobs:
         cd deploy/helm
         helm upgrade --install \
         --namespace $NAMESPACE $APP_NAME . -f values.yaml \
-        --set image.tag=${{ steps.vars.outputs.sha_short }} --set image.repository=$REGISTRY/$REPOSITORY \
+        --set image.tag=${{ env.ENV }}.${{ steps.vars.outputs.sha_short }} --set image.repository=$REGISTRY/$REPOSITORY \
         --set env[0].value=https://$DOMAIN/api/v2 \
         --set env[1].value=http://$INNER_DOMAIN.app.svc.cluster.local/api/v2 \
         --set env[2].value=$APP_BBS_OAUTH_CLIENT \

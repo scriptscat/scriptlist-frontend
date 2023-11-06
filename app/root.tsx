@@ -158,7 +158,10 @@ export function CatchBoundary() {
           background: dark ? '#000' : '#fff',
         }}
       >
-        <StyleProvider hashPriority="high">
+        <StyleProvider
+          hashPriority="high"
+          container={global.document && document && document.body}
+        >
           <UserContext.Provider
             value={{
               user: config && config.login.user,
@@ -197,6 +200,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState<'light' | 'dark' | 'auto'>(
     config.darkMode || 'auto'
   );
+
   // 设置axios
   InitAxios({
     baseURL:
@@ -260,11 +264,14 @@ export default function App() {
           background: dark ? '#000' : '#fff',
         }}
       >
-        <StyleProvider hashPriority="high">
-          <ConfigProvider
-            theme={{
-              algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
-            }}
+        <ConfigProvider
+          theme={{
+            algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+          }}
+        >
+          <StyleProvider
+            hashPriority="high"
+            container={global.document && document && document.body}
           >
             <UserContext.Provider
               value={{
@@ -285,8 +292,8 @@ export default function App() {
                 <Outlet />
               </MainLayout>
             </UserContext.Provider>
-          </ConfigProvider>
-        </StyleProvider>
+          </StyleProvider>
+        </ConfigProvider>
         {locale == 'ach-UG' && (
           <>
             <script
