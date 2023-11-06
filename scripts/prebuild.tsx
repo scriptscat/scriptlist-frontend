@@ -1,6 +1,7 @@
+import React from 'react';
 import fs from 'fs';
 import { extractStyle } from '@ant-design/static-style-extract';
-import React from 'react';
+import { StyleProvider } from '@ant-design/cssinjs';
 import { ConfigProvider, theme } from 'antd';
 
 const outputPath = './public/styles/antd.min.css';
@@ -12,14 +13,14 @@ const css = extractStyle((node) => (
         algorithm: theme.defaultAlgorithm,
       }}
     >
-      {node}
+      <StyleProvider hashPriority="high">{node}</StyleProvider>
     </ConfigProvider>
     <ConfigProvider
       theme={{
         algorithm: theme.darkAlgorithm,
       }}
     >
-      {node}
+      <StyleProvider hashPriority="high">{node}</StyleProvider>
     </ConfigProvider>
   </>
 ));
@@ -35,4 +36,3 @@ fs.cpSync(
   './public/assets/monaco-editor/min/vs',
   { recursive: true }
 );
-

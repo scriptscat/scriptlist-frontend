@@ -18,7 +18,6 @@ export type LoaderData = {
 };
 
 export const meta: V2_MetaFunction = ({ data }: { data: LoaderData }) => {
-  console.log(data);
   const { t } = useTranslation();
   return [
     {

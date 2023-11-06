@@ -7,12 +7,6 @@ on:
       - release/*
       - test/*
 
-  pull_request:
-    branches:
-      - main
-      - release/*
-      - test/*
-
 env:
   APP_NAME: ${{ github.event.repository.name }}
   NAMESPACE: app
