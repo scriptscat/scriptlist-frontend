@@ -209,7 +209,7 @@ export default function ScriptShowPage() {
         )}
         <Link
           to={locale + '/script-show-page/' + data.script.id}
-          className="text-2xl text-black dark:text-white"
+          className="text-2xl !text-black dark:!text-white dark:hover:!text-[#1677ff] hover:!text-[#1677ff]"
         >
           {scriptName(data.script)}
         </Link>

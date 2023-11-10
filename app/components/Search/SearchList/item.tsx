@@ -176,7 +176,7 @@ const SearchItem: React.FC<{
                 {script.username}
               </Link>
               <Link
-                className="text-lg text-black dark:text-white"
+                className="text-lg !text-black dark:!text-white dark:hover:!text-[#1677ff] hover:!text-[#1677ff]"
                 to={locale + '/script-show-page/' + script.id}
                 target="_blank"
               >
