@@ -52,3 +52,7 @@ h6 {
   border-start-start-radius: 0 !important;
   border-end-start-radius: 0 !important;
 }
+
+.text-nowrap{
+  text-wrap: nowrap;
+}
