@@ -335,6 +335,8 @@ const MainLayout: React.FC<{
             {t('scriptcat')}
           </a>
           <Divider type="vertical" />
+          <a href={uLocale + '/sitemap'}>{t('sitemap_title')}</a>
+          <Divider type="vertical" />
           <a
             href="https://github.com/scriptscat"
             target="_blank"

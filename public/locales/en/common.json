@@ -356,5 +356,7 @@
   "share_your_userscript": "Share your userscript",
   "userscript_list": "Userscript List",
   "home_page_subtitle": "Fuller User Script Hosting Platform",
-  "time_format": "YYYY-MM-DD"
+  "time_format": "YYYY-MM-DD",
+  "sitemap_title": "Sitemap",
+  "language_title": "Language List"
 }

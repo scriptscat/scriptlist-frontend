@@ -356,5 +356,7 @@
   "share_your_userscript": "分享你的用户脚本",
   "userscript_list": "用户脚本列表",
   "home_page_subtitle": "比全更全的用户脚本托管平台",
-  "time_format": "YYYY年MM月DD日"
+  "time_format": "YYYY年MM月DD日",
+  "sitemap_title": "网站地图",
+  "language_title": "语言列表"
 }
