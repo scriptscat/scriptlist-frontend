@@ -1,0 +1,7 @@
+#
+# robots.txt for ScriptCat
+#
+
+User-agent: *
+Allow: /
+Disallow: /ach-UG/
