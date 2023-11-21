@@ -56,10 +56,14 @@ export default async function handleRequest(
       case 'post-script':
         // 如果是以下面的路径开头的,则获取语言并重定向路径
         let lng = await i18next.getLocale(request);
+        let path = `/${lng}${url.pathname}`;
+        if (url.search) {
+          path += url.search;
+        }
         return new Response(null, {
           status: 301,
           headers: {
-            Location: `/${lng}${url.pathname}`,
+            Location: path,
           },
         });
     }

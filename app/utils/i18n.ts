@@ -7,7 +7,12 @@ export async function i18nRedirect({ request }: { request: Request }) {
   if (!locale) {
     return new Response('Not Found', { status: 404 });
   }
-  return redirect('/' + locale + new URL(request.url).pathname, 301);
+  const url = new URL(request.url);
+  let path = `/${locale}${url.pathname}`;
+  if (url.search) {
+    path += url.search;
+  }
+  return redirect(path, 301);
 }
 
 export const lngMap: {
