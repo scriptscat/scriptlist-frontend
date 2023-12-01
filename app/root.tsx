@@ -30,6 +30,8 @@ import { ConfigProvider, theme } from 'antd';
 import { StyleProvider } from '@ant-design/cssinjs';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import parser from 'ua-parser-js'; 
+import { setMediaContext } from './utils/utils';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -60,6 +62,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   let t = await i18next.getFixedT(locale || 'en');
   const cookieHeader = request.headers.get('Cookie');
+  const UA = request.headers.get('user-agent') ?? '';
+  const deviceType = parser(UA).device.type || 'desktop';
   let user: User | undefined;
   const respInit: ResponseInit = {};
   let styleMode = '';
@@ -81,6 +85,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   return json(
     {
+      deviceType:deviceType,
       styleMode: styleMode,
       darkMode: darkMode,
       ENV: {
@@ -226,7 +231,7 @@ export default function App() {
 
   dayjs.locale(locale.toLocaleLowerCase());
   dayjs.extend(relativeTime);
-
+  setMediaContext(config.deviceType === 'mobile' ? true : false);
   return (
     <html lang={locale} dir={i18n.dir()}>
       <head>
