@@ -51,15 +51,11 @@ type MediaQuerySettings = Partial<
   }
 >;
 
-export let mediaContext = false;
-export function setMediaContext(status:boolean) {
-  if(mediaContext!==status){
-    mediaContext = status;
-  }
-}
+export const MediaContext = createContext(false);
+
 export function useMediaQueryState(settings: MediaQuerySettings) {
   const mediaQuery = useMediaQuery(settings);
-  const [mediaState, setMediaState] = useState(mediaContext);
+  const [mediaState, setMediaState] = useState(useContext(MediaContext));
   useEffect(() => {
     setMediaState(mediaQuery);
   }, [mediaQuery]);

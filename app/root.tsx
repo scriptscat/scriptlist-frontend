@@ -30,8 +30,8 @@ import { ConfigProvider, theme } from 'antd';
 import { StyleProvider } from '@ant-design/cssinjs';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import parser from 'ua-parser-js'; 
-import { setMediaContext } from './utils/utils';
+import parser from 'ua-parser-js';
+import { MediaContext } from './utils/utils';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -85,7 +85,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   return json(
     {
-      deviceType:deviceType,
+      deviceType: deviceType,
       styleMode: styleMode,
       darkMode: darkMode,
       ENV: {
@@ -231,7 +231,6 @@ export default function App() {
 
   dayjs.locale(locale.toLocaleLowerCase());
   dayjs.extend(relativeTime);
-  setMediaContext(config.deviceType === 'mobile' ? true : false);
   return (
     <html lang={locale} dir={i18n.dir()}>
       <head>
@@ -269,36 +268,40 @@ export default function App() {
           background: dark ? '#000' : '#fff',
         }}
       >
-        <ConfigProvider
-          theme={{
-            algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
-          }}
+        <MediaContext.Provider
+          value={config.deviceType === 'mobile' ? true : false}
         >
-          <StyleProvider
-            hashPriority="high"
-            container={global.document && document && document.body}
+          <ConfigProvider
+            theme={{
+              algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+            }}
           >
-            <UserContext.Provider
-              value={{
-                user: config.login.user,
-                dark: dark,
-                darkMode: darkMode,
-                env: config.ENV,
-              }}
+            <StyleProvider
+              hashPriority="high"
+              container={global.document && document && document.body}
             >
-              <NavigationProcess />
-              <MainLayout
-                locale={locale}
-                oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
-                apiUrl={config.ENV.APP_API_URL}
-                onStyleModeChang={(dark) => setDark(dark)}
-                onDarkModeChange={(mode) => setDarkMode(mode as any)}
+              <UserContext.Provider
+                value={{
+                  user: config.login.user,
+                  dark: dark,
+                  darkMode: darkMode,
+                  env: config.ENV,
+                }}
               >
-                <Outlet />
-              </MainLayout>
-            </UserContext.Provider>
-          </StyleProvider>
-        </ConfigProvider>
+                <NavigationProcess />
+                <MainLayout
+                  locale={locale}
+                  oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
+                  apiUrl={config.ENV.APP_API_URL}
+                  onStyleModeChang={(dark) => setDark(dark)}
+                  onDarkModeChange={(mode) => setDarkMode(mode as any)}
+                >
+                  <Outlet />
+                </MainLayout>
+              </UserContext.Provider>
+            </StyleProvider>
+          </ConfigProvider>
+        </MediaContext.Provider>
         {locale == 'ach-UG' && (
           <>
             <script
