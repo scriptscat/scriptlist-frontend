@@ -271,7 +271,6 @@ const MainLayout: React.FC<{
             </Dropdown>
             <div style={{ display: 'none' }}>
               {localeList.map((v) => {
-
                 return <Fragment key={v.key}>{v.label}</Fragment>;
               })}
             </div>

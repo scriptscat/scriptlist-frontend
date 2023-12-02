@@ -256,8 +256,7 @@ export default function App() {
           (function() {
             var hm = document.createElement("script");
             hm.src = "https://hm.baidu.com/hm.js?9a2c8c9a94f471c29e7bb97a363d204f";
-            var s = document.getElementsByTagName("script")[0]; 
-            s.parentNode.insertBefore(hm, s);
+            document.querySelector('head').append(hm)
           })();`,
           }}
         />
