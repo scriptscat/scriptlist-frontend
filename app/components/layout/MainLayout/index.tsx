@@ -7,7 +7,7 @@ import { Layout, Menu, Button } from 'antd';
 import type { ReactNode } from 'react';
 import { Fragment, useContext } from 'react';
 import { useEffect } from 'react';
-import {
+import Icon, {
   MessageOutlined,
   HomeOutlined,
   CodeOutlined,
@@ -21,6 +21,7 @@ import Search from '~/components/Search';
 import { UserContext } from '~/context-manager';
 import { lngMap } from '~/utils/i18n';
 import { useTranslation } from 'react-i18next';
+import { moonLineIcon, sunLineIcon } from '~/utils/icon';
 
 const { Header, Footer, Content } = Layout;
 
@@ -104,10 +105,12 @@ const MainLayout: React.FC<{
     }
   }, [mode]);
 
-  let DropdownIcon = <RiSunLine className="text-base cursor-pointer" />;
+  let DropdownIcon = sunLineIcon({ className: 'text-base cursor-pointer' });
   switch (dark) {
     case 'dark':
-      DropdownIcon = <RiMoonLine className="text-base cursor-pointer" />;
+      DropdownIcon = moonLineIcon({
+        className: 'text-base cursor-pointer',
+      });
       break;
   }
 
