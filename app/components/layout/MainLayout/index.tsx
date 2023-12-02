@@ -5,7 +5,7 @@ import { Divider } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { Layout, Menu, Button } from 'antd';
 import type { ReactNode } from 'react';
-import { useContext } from 'react';
+import { Fragment, useContext } from 'react';
 import { useEffect } from 'react';
 import {
   MessageOutlined,
@@ -271,7 +271,8 @@ const MainLayout: React.FC<{
             </Dropdown>
             <div style={{ display: 'none' }}>
               {localeList.map((v) => {
-                return v.label;
+
+                return <Fragment key={v.key}>{v.label}</Fragment>;
               })}
             </div>
             {user.user ? (
