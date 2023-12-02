@@ -35,9 +35,11 @@ import {
   ArchiveScript,
   DeleteScript,
   GetScriptSetting,
+  UpdateLibInfo,
   UpdateScriptGrayControls,
   UpdateScriptPublic,
   UpdateScriptSetting,
+  UpdateScriptSync,
   UpdateScriptUnwell,
 } from '~/services/scripts/api';
 import type { Script, ScriptSetting } from '~/services/scripts/types';
@@ -45,6 +47,7 @@ import { getLocale } from '~/utils/i18n';
 import type { MenuProps } from 'antd';
 import { useMediaQueryState } from '~/utils/utils';
 import { TFunction } from 'i18next';
+import { APIResponse } from '~/services/http';
 
 type LoaderData = {
   setting: ScriptSetting;
@@ -116,7 +119,6 @@ export default function Manage() {
   const [contentUrl, setContentUrl] = useState(data.setting.content_url);
   const [name, setName] = useState(script.script!.name);
   const [description, setDescription] = useState(script.script!.description);
-  const [definitionUrl] = useState(data.setting.definition_url);
   const [loading, setLoading] = useState(false);
   const [enablePreRelease, setEnablePreRelease] = useState(
     script.script!.enable_pre_release || 2
@@ -140,6 +142,7 @@ export default function Manage() {
   }, []);
   return (
     <Card className="overflow-hidden">
+      {contextHolder}
       <div className={(isMobile ? 'flex-col flex' : 'flex') + ' min-h-[380px]'}>
         <Menu
           className="shrink-0"
@@ -151,21 +154,20 @@ export default function Manage() {
         />
         <div className="grow p-3">
           {((key) => {
-            function generateCodeSaveButton() {
+            function generateCodeSaveButton<T>(
+              requestFunc: (id: number, params: T) => Promise<APIResponse>,
+              paramCallback: () => T
+            ) {
               return (
                 <Button
                   type="primary"
                   loading={loading}
                   onClick={async () => {
                     setLoading(true);
-                    let resp = await UpdateScriptSetting(script.script!.id, {
-                      name: name,
-                      description: description,
-                      definition_url: definitionUrl,
-                      sync_url: syncUrl,
-                      sync_mode: syncMode,
-                      content_url: contentUrl,
-                    });
+                    let resp = await requestFunc(
+                      script.script!.id,
+                      paramCallback()
+                    );
                     setLoading(false);
                     if (resp.code === 0) {
                       message.success(t('update_success'));
@@ -201,7 +203,14 @@ export default function Manage() {
                           }
                         />
                       </div>
-                      <div>{generateCodeSaveButton()}</div>
+                      <div>
+                        {generateCodeSaveButton(UpdateLibInfo, () => {
+                          return {
+                            name,
+                            description,
+                          };
+                        })}
+                      </div>
                     </div>
                   </>
                 );
@@ -245,7 +254,16 @@ export default function Manage() {
                           }
                         />
                       </div>
-                      <div className="mt-3">{generateCodeSaveButton()}</div>
+                      <div className="mt-3">
+                        {' '}
+                        {generateCodeSaveButton(UpdateScriptSync, () => {
+                          return {
+                            content_url: contentUrl,
+                            sync_mode: syncMode,
+                            sync_url: syncUrl,
+                          };
+                        })}
+                      </div>
                     </div>
                   </>
                 );
