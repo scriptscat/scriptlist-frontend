@@ -3,7 +3,6 @@ import { json } from '@remix-run/node';
 import type { V2_MetaFunction } from '@remix-run/react';
 import { Outlet, useCatch, useLoaderData } from '@remix-run/react';
 import { Avatar, Button, Card, Tag } from 'antd';
-import { t } from 'i18next';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '~/context-manager';
@@ -60,6 +59,7 @@ export default function Users() {
   const data = useLoaderData<LoaderData>();
   const user = data.user;
   const follow = data.follow;
+  const { t } = useTranslation();
   return (
     <>
       <div>
