@@ -8,16 +8,18 @@ import { useContext } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '~/context-manager';
+import i18next from '~/i18next.server';
 import { GetWebhook, RefreshWebhookToken } from '~/services/users/api';
 import type { Webhook as WebhookResp } from '~/services/users/types';
+import { getLocale } from '~/utils/i18n';
 
 export type LoaderData = {
   token: WebhookResp;
+  title: string;
 };
 
-export const meta: V2_MetaFunction = () => {
-  const { t } = useTranslation();
-  return [{ title: t('webhook_management') + ' - ScriptCat' }];
+export const meta: V2_MetaFunction = ({ data }: { data: LoaderData }) => {
+  return [{ title: data?.title ?? 'Unknow - ScriptCat' }];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -28,7 +30,11 @@ export const loader: LoaderFunction = async ({ request }) => {
       statusText: 'Forbidden',
     });
   }
-  return json({ token: resp.data } as LoaderData);
+  const t = await i18next.getFixedT(getLocale(request, 'en') ?? 'en');
+  return json({
+    token: resp.data,
+    title: t('webhook_management') + ' - ScriptCat',
+  } as LoaderData);
 };
 
 export default function Webhook() {

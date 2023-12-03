@@ -16,15 +16,12 @@ import { getLocale } from '~/utils/i18n';
 type LoaderData = {
   user: User;
   follow: Follow;
+  title: string;
 };
 
 export const meta: V2_MetaFunction = ({ data }) => {
-  const { t } = useTranslation();
   if (!data || !data.user) {
-    return [
-      { title: t('user_not_found') + ' - ScriptCat' },
-      { description: 'Not Found' },
-    ];
+    return [{ title: 'Unkonw - ScriptCat' }, { description: 'Not Found' }];
   }
   return [{ title: data.user.username + ' - ScriptCat' }];
 };
@@ -49,6 +46,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     return json({
       user: user,
       follow: follow,
+      title: t('user_not_found') + ' - ScriptCat',
     } as LoaderData);
   }
   throw new Response(t('user_not_found'), {
