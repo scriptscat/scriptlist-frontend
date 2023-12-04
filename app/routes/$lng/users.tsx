@@ -7,7 +7,6 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '~/context-manager';
 import i18next from '~/i18next.server';
-import { request } from '~/services/http';
 import { GetFollow, GetUserInfo } from '~/services/users/api';
 import type { Follow, User } from '~/services/users/types';
 import { getLocale } from '~/utils/i18n';

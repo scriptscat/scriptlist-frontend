@@ -140,6 +140,7 @@ export default function Manage() {
       setActiveMenu(menuList[0].key as string);
     }
   }, []);
+  console.log('isMobile',isMobile)
   return (
     <Card className="overflow-hidden">
       {contextHolder}
