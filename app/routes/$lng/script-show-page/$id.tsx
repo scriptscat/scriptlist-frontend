@@ -51,22 +51,23 @@ export const loader: LoaderFunction = async ({ params, request }) => {
       statusText: 'Not Found',
     });
   }
-  // const t = await i18next.getFixedT(getLocale(request, 'en') ?? 'en');
-  // const pathname = new URL(request.url).pathname;
-  // const match = /\d+\/(\w+)(\/|$)/g.exec(pathname);
-  // const current = match ? match[1] : 'home';
-  // const map: { [key: string]: string } = {
-  //   code: t('code'),
-  //   issue: t('issue'),
-  //   comment: t('comment'),
-  //   version: t('version_list'),
-  //   update: t('update_script'),
-  //   statistic: t('script_statistic'),
-  //   manage: t('script_manage'),
-  // };
-  // const title =
-  //   script.data.data.name + (map[current] ? ' - ' + map[current] : '');
-  const title = script?.data?.data?.name ?? 'Script';
+  const t = await i18next.getFixedT(getLocale(request, 'en') ?? 'en');
+  const pathname = new URL(request.url).pathname;
+  const match = /\d+\/(\w+)(\/|$)/g.exec(pathname);
+  const current = match ? match[1] : 'home';
+  const map: { [key: string]: string } = {
+    code: t('code'),
+    issue: t('issue'),
+    comment: t('comment'),
+    version: t('version_list'),
+    update: t('update_script'),
+    statistic: t('script_statistic'),
+    manage: t('script_manage'),
+  };
+  const title =
+    (script?.data?.data?.name ?? 'Script ') +
+    (map[current] ? ' - ' + map[current] : '');
+    
   return json({ script: script.data.data, title: title } as LoaderData, {
     headers: forwardHeaders(script),
   });
