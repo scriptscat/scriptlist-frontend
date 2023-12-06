@@ -3,12 +3,10 @@ import { json } from '@remix-run/node';
 import type { V2_MetaFunction } from '@remix-run/react';
 import { Outlet, useCatch, useLoaderData } from '@remix-run/react';
 import { Avatar, Button, Card, Tag } from 'antd';
-import { t } from 'i18next';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '~/context-manager';
 import i18next from '~/i18next.server';
-import { request } from '~/services/http';
 import { GetFollow, GetUserInfo } from '~/services/users/api';
 import type { Follow, User } from '~/services/users/types';
 import { getLocale } from '~/utils/i18n';
@@ -16,15 +14,12 @@ import { getLocale } from '~/utils/i18n';
 type LoaderData = {
   user: User;
   follow: Follow;
+  title: string;
 };
 
 export const meta: V2_MetaFunction = ({ data }) => {
-  const { t } = useTranslation();
   if (!data || !data.user) {
-    return [
-      { title: t('user_not_found') + ' - ScriptCat' },
-      { description: 'Not Found' },
-    ];
+    return [{ title: 'Unkonw - ScriptCat' }, { description: 'Not Found' }];
   }
   return [{ title: data.user.username + ' - ScriptCat' }];
 };
@@ -49,6 +44,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
     return json({
       user: user,
       follow: follow,
+      title: t('user_not_found') + ' - ScriptCat',
     } as LoaderData);
   }
   throw new Response(t('user_not_found'), {
@@ -62,6 +58,7 @@ export default function Users() {
   const data = useLoaderData<LoaderData>();
   const user = data.user;
   const follow = data.follow;
+  const { t } = useTranslation();
   return (
     <>
       <div>

@@ -8,20 +8,22 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocale } from 'remix-i18next';
 import SearchList from '~/components/Search/SearchList';
+import i18next from '~/i18next.server';
 import type { ScriptType, SortType } from '~/services/scripts/api';
 import { search } from '~/services/scripts/api';
 import type { SearchResponse } from '~/services/scripts/types';
+import { getLocale } from '~/utils/i18n';
 
 export type LoaderData = {
   resp: SearchResponse;
   page: number;
+  title: string;
 };
 
 export const meta: V2_MetaFunction = ({ data }: { data: LoaderData }) => {
-  const { t } = useTranslation();
   return [
     {
-      title: t('userscript_list') + ' - ScriptCat',
+      title: data.title,
     },
   ];
 };
@@ -40,8 +42,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
     request
   );
+  const t = await i18next.getFixedT(getLocale(request, 'en') ?? 'en');
   return json({
     resp: resp,
+    title: t('userscript_list') + ' - ScriptCat',
     page: page,
   } as LoaderData);
 };

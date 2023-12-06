@@ -1,4 +1,12 @@
-import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  DeploymentUnitOutlined,
+  ExclamationCircleOutlined,
+  FileTextOutlined,
+  InfoCircleOutlined,
+  PartitionOutlined,
+  PlusOutlined,
+  SettingOutlined,
+} from '@ant-design/icons';
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
@@ -13,9 +21,10 @@ import {
   Radio,
   Space,
   Switch,
-  theme,
+  Menu,
 } from 'antd';
-import { useContext } from 'react';
+
+import { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import GrayControl from '~/components/GrayControl';
@@ -26,13 +35,19 @@ import {
   ArchiveScript,
   DeleteScript,
   GetScriptSetting,
+  UpdateLibInfo,
   UpdateScriptGrayControls,
   UpdateScriptPublic,
   UpdateScriptSetting,
+  UpdateScriptSync,
   UpdateScriptUnwell,
 } from '~/services/scripts/api';
-import type { ScriptSetting } from '~/services/scripts/types';
+import type { Script, ScriptSetting } from '~/services/scripts/types';
 import { getLocale } from '~/utils/i18n';
+import type { MenuProps } from 'antd';
+import { useMediaQueryState } from '~/utils/utils';
+import { TFunction } from 'i18next';
+import { APIResponse } from '~/services/http';
 
 type LoaderData = {
   setting: ScriptSetting;
@@ -52,6 +67,47 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   return json({ setting: resp.data } as LoaderData);
 };
 
+type MenuItem = Required<MenuProps>['items'];
+
+function generateManageMenuList(
+  script: Script,
+  t: TFunction<'translation', undefined>
+): MenuItem {
+  const type = script.type;
+  let menuList = [
+    {
+      label: t('library_info_setting'),
+      key: 'libMessSetting',
+      icon: <FileTextOutlined />,
+      type: 3,
+    },
+    {
+      label: t('souce_code_sync'),
+      key: 'codeSync',
+      icon: <DeploymentUnitOutlined />,
+    },
+    {
+      label: t('script_manage'),
+      key: 'scriptManage',
+      icon: <SettingOutlined />,
+    },
+    {
+      label: t('script_release'),
+      key: 'scriptPublish',
+      icon: <PartitionOutlined />,
+      type: 1,
+    },
+    {
+      label: t('manage_log'),
+      key: 'manageLog',
+      icon: <InfoCircleOutlined />,
+    },
+  ];
+  return menuList.filter((item) => {
+    return item.type === undefined || item.type === type;
+  });
+}
+
 export default function Manage() {
   const data = useLoaderData<LoaderData>();
   const script = useContext(ScriptContext);
@@ -63,7 +119,6 @@ export default function Manage() {
   const [contentUrl, setContentUrl] = useState(data.setting.content_url);
   const [name, setName] = useState(script.script!.name);
   const [description, setDescription] = useState(script.script!.description);
-  const [definitionUrl] = useState(data.setting.definition_url);
   const [loading, setLoading] = useState(false);
   const [enablePreRelease, setEnablePreRelease] = useState(
     script.script!.enable_pre_release || 2
@@ -74,372 +129,453 @@ export default function Manage() {
   const [isPublic, setIsPublic] = useState(script.script!.public);
   const [unwell, setUnwell] = useState(script.script!.unwell);
   const { t } = useTranslation();
-  const { token } = theme.useToken();
-
+  const [activeMenu, setActiveMenu] = useState<string>('');
+  const menuList = generateManageMenuList(script.script!, t);
+  const isMobile = useMediaQueryState({ query: '(max-width: 850px)' });
+  const menuClick: MenuProps['onClick'] = (event) => {
+    setActiveMenu(event.key);
+  };
+  useEffect(() => {
+    if (menuList[0] != null && menuList[0].key !== undefined) {
+      setActiveMenu(menuList[0].key as string);
+    }
+  }, []);
   return (
-    <Card>
+    <Card className="overflow-hidden">
       {contextHolder}
-      <div className="flex flex-col items-start gap-1">
-        {script.script!.type === 3 && (
-          <>
-            <h3 className="text-lg">{t('library_info_setting')}</h3>
-            <Input
-              placeholder={t('library_name')}
-              value={name}
-              onChange={(value) => setName(value.target.value)}
-            />
-            <TextArea
-              placeholder={t('library_description')}
-              value={description}
-              onChange={(value) => setDescription(value.target.value)}
-            />
-          </>
-        )}
-        <h3 className="text-lg">{t('souce_code_sync')}</h3>
-        <span>{t('source_code_sync_description')}</span>
-        <Input
-          placeholder={t('script_sync_url')}
-          value={syncUrl}
-          onChange={(value) => setSyncUrl(value.target.value)}
+      <div className={(isMobile ? 'flex-col flex' : 'flex') + ' min-h-[380px]'}>
+        <Menu
+          className="shrink-0"
+          selectedKeys={[activeMenu]}
+          onClick={menuClick}
+          style={isMobile ? {} : { width: 180 }}
+          mode={isMobile ? 'horizontal' : 'vertical'}
+          items={menuList}
         />
-        <h3 className="text-lg">{t('script_sync_method')}</h3>
-        <Radio.Group
-          onChange={(value) => setSyncMode(value.target.value)}
-          value={syncMode}
-        >
-          <Space direction="vertical">
-            <Radio value={1}>{t('auto_sync')}</Radio>
-            <Radio value={2}>{t('manual_sync')}</Radio>
-          </Space>
-        </Radio.Group>
-        <h3 className="text-lg">{t('sync_script_info')}</h3>
-        <span>{t('use_markdown_syntax')}</span>
-        <Input
-          placeholder={t('script_readme_sync_url')}
-          value={contentUrl}
-          onChange={(value) => setContentUrl(value.target.value)}
-        />
-        {/* {script.script?.type === 3 && (
-          <>
-            <h3 className="text-lg">同步库描述文件</h3>
-            <span>
-              .d.ts文件,脚本猫支持(
-              <a
-                target="_blank"
-                href="https://docs.scriptcat.org/dev/meta.html#definition"
-                rel="noreferrer"
-              >
-                @definition
-              </a>
-              )
-            </span>
-            <Input
-              placeholder="库描述文件同步 URL"
-              value={definitionUrl}
-              onChange={(value) => setDefinitionUrl(value.target.value)}
-            />
-          </>
-        )} */}
-        <Button
-          type="primary"
-          loading={loading}
-          onClick={async () => {
-            setLoading(true);
-            let resp = await UpdateScriptSetting(script.script!.id, {
-              name: name,
-              description: description,
-              definition_url: definitionUrl,
-              sync_url: syncUrl,
-              sync_mode: syncMode,
-              content_url: contentUrl,
-            });
-            setLoading(false);
-            if (resp.code === 0) {
-              message.success(t('update_success'));
-            } else {
-              message.error(resp.msg);
-            }
-          }}
-        >
-          {t('update_settings_and_sync_immediately')}
-        </Button>
-        <Divider />
-        <h3 className="text-lg">{t('script_manage')}</h3>
-        <h4 className="text-base">{t('script_public')}</h4>
-        <span>{t('script_public_describe')}</span>
-        <Switch
-          checkedChildren={t('public')}
-          unCheckedChildren={t('unpublic')}
-          checked={isPublic === 1 ? true : false}
-          onChange={async (checked) => {
-            let resp = await UpdateScriptPublic(
-              script.script!.id,
-              checked ? 1 : 2
-            );
-            if (resp.code === 0) {
-              message.success(t('update_success'));
-              setIsPublic(checked ? 1 : 2);
-            } else {
-              message.error(resp.msg);
-            }
-          }}
-        />
-        <h4 className="text-base">{t('inappropriate_content')}</h4>
-        <Checkbox
-          checked={unwell === 1 ? true : false}
-          onChange={async (val) => {
-            let resp = await UpdateScriptUnwell(
-              script.script!.id,
-              val.target.checked ? 1 : 2
-            );
-            if (resp.code === 0) {
-              message.success(t('update_success'));
-              setUnwell(val.target.checked ? 1 : 2);
-            } else {
-              message.error(resp.msg);
-            }
-          }}
-        >
-          {t('potentially_inappropriate_content')}
-        </Checkbox>
-        {script.script!.type === 1 && (
-          <>
-            <Divider></Divider>
-            <h3 className="text-lg">{t('script_release')}</h3>
-            <h4 className="text-base">{t('enable_pre_release')}</h4>
-            <span>
-              {t('enable_pre_release_description')}
-              <a
-                href="https://bbs.tampermonkey.net.cn/thread-3384-1-1.html"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {t('semantic_versioning')}
-              </a>
-              {'<pre-release>'}
-              {t('pre_release_version_auto_mark')}
-            </span>
-            <span>{t('first_time_enable_pre_release')}</span>
-            <Switch
-              checkedChildren={t('enable')}
-              unCheckedChildren={t('disable')}
-              checked={enablePreRelease === 1}
-              onClick={(value) => {
-                setGrayControls((prev) => {
-                  if (value) {
-                    let flag = false;
-                    prev.forEach((val) => {
-                      val.controls.forEach((v) => {
-                        if (v.type === 'pre-release') {
-                          flag = true;
-                        }
-                      });
-                    });
-                    !flag &&
-                      prev.push(
-                        {
-                          target_version: 'all-latest',
-                          controls: [
-                            {
-                              type: 'pre-release',
-                              params: {},
-                            },
-                          ],
-                        },
-                        {
-                          target_version: 'latest',
-                          controls: [
-                            {
-                              type: 'weight',
-                              params: {
-                                weight: 100,
-                                weight_day: 10,
-                              },
-                            },
-                          ],
-                        },
-                        {
-                          target_version: 'latest^1',
-                          controls: [
-                            {
-                              type: 'weight',
-                              params: {
-                                weight: 100,
-                                weight_day: 0,
-                              },
-                            },
-                          ],
-                        }
-                      );
-                  }
-                  return [...prev];
-                });
-                setEnablePreRelease(value ? 1 : 2);
-              }}
-            />
-            <h3 className="text-lg">{t('gray_release')}</h3>
-            <span>{t('configure_strategies')}</span>
-            <div className="flex flex-row flex-wrap gap-1">
-              {grayControls.map((val, index) => (
-                <GrayControl
-                  key={index}
-                  index={index}
-                  value={val}
-                  onClose={() => {
-                    setGrayControls((prev) => {
-                      prev.splice(index, 1);
-                      return [...prev];
-                    });
+        <div className="grow p-3">
+          {((key) => {
+            function generateCodeSaveButton<T>(
+              requestFunc: (id: number, params: T) => Promise<APIResponse>,
+              paramCallback: () => T
+            ) {
+              return (
+                <Button
+                  type="primary"
+                  loading={loading}
+                  onClick={async () => {
+                    setLoading(true);
+                    let resp = await requestFunc(
+                      script.script!.id,
+                      paramCallback()
+                    );
+                    setLoading(false);
+                    if (resp.code === 0) {
+                      message.success(t('update_success'));
+                    } else {
+                      message.error(resp.msg);
+                    }
                   }}
-                  onChange={(index, value) => {
-                    setGrayControls((prev) => {
-                      prev[index] = value;
-                      return [...prev];
-                    });
-                  }}
-                />
-              ))}
-              <Button
-                type="text"
-                icon={<PlusOutlined />}
-                size="large"
-                style={{
-                  marginLeft: '8px',
-                }}
-                onClick={() => {
-                  setGrayControls((prev) => {
-                    prev.push({
-                      target_version: 'latest',
-                      controls: [
-                        {
-                          type: 'weight',
-                          params: {
-                            weight: 100,
-                            weight_day: 10,
-                          },
-                        },
-                      ],
-                    });
-                    return [...prev];
-                  });
-                }}
-              />
-            </div>
-            <Button
-              type="primary"
-              loading={loading}
-              style={{ marginTop: '8px' }}
-              onClick={async () => {
-                setLoading(true);
-                let resp = await UpdateScriptGrayControls(
-                  script.script!.id,
-                  enablePreRelease,
-                  grayControls
+                >
+                  {t('update_settings_and_sync_immediately')}
+                </Button>
+              );
+            }
+            switch (key) {
+              case 'libMessSetting':
+                return (
+                  <>
+                    <div className="h-full flex flex-col ">
+                      <div>
+                        <h3 className="text-lg mb-2">
+                          {t('library_info_setting')}
+                        </h3>
+                        <Input
+                          placeholder={t('library_name')}
+                          value={name}
+                          onChange={(value) => setName(value.target.value)}
+                        />
+                        <TextArea
+                          className="!my-2 !min-h-[80px]"
+                          placeholder={t('library_description')}
+                          value={description}
+                          onChange={(value) =>
+                            setDescription(value.target.value)
+                          }
+                        />
+                      </div>
+                      <div>
+                        {generateCodeSaveButton(UpdateLibInfo, () => {
+                          return {
+                            name,
+                            description,
+                          };
+                        })}
+                      </div>
+                    </div>
+                  </>
                 );
-                if (resp.code === 0) {
-                  message.success(t('update_success'));
-                } else {
-                  message.error(resp.msg);
-                }
-                setLoading(false);
-              }}
-            >
-              {t('save_and_apply_strategies')}
-            </Button>
-          </>
-        )}
-        <Divider></Divider>
-        <h3 className="text-lg">{t('script_manage')}</h3>
-        <Space>
-          {archive == 2 && (
-            <Button
-              type="primary"
-              className="!bg-orange-400 !border-orange-400 hover:!bg-orange-300 hover:!border-orange-300"
-              loading={loading}
-              onClick={() => {
-                modal.confirm({
-                  title: t('confirm_archive'),
-                  content: t('archive_content'),
-                  icon: <ExclamationCircleOutlined />,
-                  okText: t('confirm'),
-                  cancelText: t('cancel'),
-                  onOk: async () => {
-                    setLoading(true);
-                    const resp = await ArchiveScript(script.script!.id, true);
-                    setLoading(false);
-                    if (resp.code === 0) {
-                      message.success(t('archive_success'));
-                      setArchive(1);
-                    } else {
-                      message.error(resp.msg);
-                    }
-                  },
-                });
-              }}
-            >
-              {t('archive_script')}
-            </Button>
-          )}
-          {archive == 1 && (
-            <Button
-              type="primary"
-              className="!bg-orange-400 !border-orange-400 hover:!bg-orange-300 hover:!border-orange-300"
-              loading={loading}
-              onClick={() => {
-                modal.confirm({
-                  title: t('confirm_unarchive'),
-                  content: t('unarchive_content'),
-                  icon: <ExclamationCircleOutlined />,
-                  okText: t('confirm'),
-                  cancelText: t('cancel'),
-                  onOk: async () => {
-                    setLoading(true);
-                    const resp = await ArchiveScript(script.script!.id, false);
-                    setLoading(false);
-                    if (resp.code === 0) {
-                      message.success(t('unarchive_success'));
-                      setArchive(2);
-                    } else {
-                      message.error(resp.msg);
-                    }
-                  },
-                });
-              }}
-            >
-              {t('unarchive_script')}
-            </Button>
-          )}
-          <Button
-            type="primary"
-            loading={loading}
-            danger
-            onClick={() => {
-              modal.confirm({
-                title: t('confirm_delete_script'),
-                content: t('delete_script_content'),
-                icon: <ExclamationCircleOutlined />,
-                okText: t('confirm'),
-                cancelText: t('cancel'),
-                onOk: async () => {
-                  setLoading(true);
-                  const resp = await DeleteScript(script.script!.id);
-                  setLoading(false);
-                  if (resp.code === 0) {
-                    message.success(t('delete_success'));
-                    navigate('/');
-                  } else {
-                    message.error(resp.msg);
-                  }
-                },
-              });
-            }}
-          >
-            {t('delete_script')}
-          </Button>
-        </Space>
-        <Divider></Divider>
-        <h3 className="text-lg">{t('manage_log')}</h3>
-        <span>{t('no_open')}</span>
+              case 'codeSync':
+                return (
+                  <>
+                    <div className="h-full flex flex-col">
+                      <div>
+                        <h3 className="text-lg mb-2">{t('souce_code_sync')}</h3>
+                        <span className="my-2 block">
+                          {t('source_code_sync_description')}
+                        </span>
+                        <Input
+                          placeholder={t('script_sync_url')}
+                          value={syncUrl}
+                          onChange={(value) => setSyncUrl(value.target.value)}
+                        />
+                        <h3 className="text-lg my-2">
+                          {t('script_sync_method')}
+                        </h3>
+                        <Radio.Group
+                          onChange={(value) => setSyncMode(value.target.value)}
+                          value={syncMode}
+                        >
+                          <Space direction="vertical">
+                            <Radio value={1}>{t('auto_sync')}</Radio>
+                            <Radio value={2}>{t('manual_sync')}</Radio>
+                          </Space>
+                        </Radio.Group>
+                        <h3 className="text-lg my-2">
+                          {t('sync_script_info')}
+                        </h3>
+                        <span className="my-2 block">
+                          {t('use_markdown_syntax')}
+                        </span>
+                        <Input
+                          placeholder={t('script_readme_sync_url')}
+                          value={contentUrl}
+                          onChange={(value) =>
+                            setContentUrl(value.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="mt-3">
+                        {' '}
+                        {generateCodeSaveButton(UpdateScriptSync, () => {
+                          return {
+                            content_url: contentUrl,
+                            sync_mode: syncMode,
+                            sync_url: syncUrl,
+                          };
+                        })}
+                      </div>
+                    </div>
+                  </>
+                );
+              case 'scriptManage':
+                return (
+                  <>
+                    <h4 className="text-lg mb-2">{t('script_public')}</h4>
+                    <span className="my-2 block">
+                      {t('script_public_describe')}
+                    </span>
+                    <Switch
+                      className="!block"
+                      checkedChildren={t('public')}
+                      unCheckedChildren={t('unpublic')}
+                      checked={isPublic === 1 ? true : false}
+                      onChange={async (checked) => {
+                        let resp = await UpdateScriptPublic(
+                          script.script!.id,
+                          checked ? 1 : 2
+                        );
+                        if (resp.code === 0) {
+                          message.success(t('update_success'));
+                          setIsPublic(checked ? 1 : 2);
+                        } else {
+                          message.error(resp.msg);
+                        }
+                      }}
+                    />
+                    <h4 className="text-lg my-2">
+                      {t('inappropriate_content')}
+                    </h4>
+                    <Checkbox
+                      checked={unwell === 1 ? true : false}
+                      onChange={async (val) => {
+                        let resp = await UpdateScriptUnwell(
+                          script.script!.id,
+                          val.target.checked ? 1 : 2
+                        );
+                        if (resp.code === 0) {
+                          message.success(t('update_success'));
+                          setUnwell(val.target.checked ? 1 : 2);
+                        } else {
+                          message.error(resp.msg);
+                        }
+                      }}
+                    >
+                      {t('potentially_inappropriate_content')}
+                    </Checkbox>
+                    <h3 className="text-lg my-2">{t('script_manage')}</h3>
+                    <Space>
+                      {archive == 2 && (
+                        <Button
+                          type="primary"
+                          className="!bg-orange-400 !border-orange-400 hover:!bg-orange-300 hover:!border-orange-300"
+                          loading={loading}
+                          onClick={() => {
+                            modal.confirm({
+                              title: t('confirm_archive'),
+                              content: t('archive_content'),
+                              icon: <ExclamationCircleOutlined />,
+                              okText: t('confirm'),
+                              cancelText: t('cancel'),
+                              onOk: async () => {
+                                setLoading(true);
+                                const resp = await ArchiveScript(
+                                  script.script!.id,
+                                  true
+                                );
+                                setLoading(false);
+                                if (resp.code === 0) {
+                                  message.success(t('archive_success'));
+                                  setArchive(1);
+                                } else {
+                                  message.error(resp.msg);
+                                }
+                              },
+                            });
+                          }}
+                        >
+                          {t('archive_script')}
+                        </Button>
+                      )}
+                      {archive == 1 && (
+                        <Button
+                          type="primary"
+                          className="!bg-orange-400 !border-orange-400 hover:!bg-orange-300 hover:!border-orange-300"
+                          loading={loading}
+                          onClick={() => {
+                            modal.confirm({
+                              title: t('confirm_unarchive'),
+                              content: t('unarchive_content'),
+                              icon: <ExclamationCircleOutlined />,
+                              okText: t('confirm'),
+                              cancelText: t('cancel'),
+                              onOk: async () => {
+                                setLoading(true);
+                                const resp = await ArchiveScript(
+                                  script.script!.id,
+                                  false
+                                );
+                                setLoading(false);
+                                if (resp.code === 0) {
+                                  message.success(t('unarchive_success'));
+                                  setArchive(2);
+                                } else {
+                                  message.error(resp.msg);
+                                }
+                              },
+                            });
+                          }}
+                        >
+                          {t('unarchive_script')}
+                        </Button>
+                      )}
+                      <Button
+                        type="primary"
+                        loading={loading}
+                        danger
+                        onClick={() => {
+                          modal.confirm({
+                            title: t('confirm_delete_script'),
+                            content: t('delete_script_content'),
+                            icon: <ExclamationCircleOutlined />,
+                            okText: t('confirm'),
+                            cancelText: t('cancel'),
+                            onOk: async () => {
+                              setLoading(true);
+                              const resp = await DeleteScript(
+                                script.script!.id
+                              );
+                              setLoading(false);
+                              if (resp.code === 0) {
+                                message.success(t('delete_success'));
+                                navigate('/');
+                              } else {
+                                message.error(resp.msg);
+                              }
+                            },
+                          });
+                        }}
+                      >
+                        {t('delete_script')}
+                      </Button>
+                    </Space>
+                  </>
+                );
+              case 'manageLog':
+                return (
+                  <>
+                    <h3 className="text-lg mb-2">{t('manage_log')}</h3>
+                    <span>{t('no_open')}</span>
+                  </>
+                );
+              case 'scriptPublish':
+                return (
+                  <>
+                    <h3 className="text-lg mb-2">{t('script_release')}</h3>
+                    <h4 className="text-base my-2">
+                      {t('enable_pre_release')}
+                    </h4>
+                    <span className="block">
+                      {t('enable_pre_release_description')}
+                      <a
+                        href="https://bbs.tampermonkey.net.cn/thread-3384-1-1.html"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {t('semantic_versioning')}
+                      </a>
+                      {'<pre-release>'}
+                      {t('pre_release_version_auto_mark')}
+                    </span>
+                    <span className="mb-2 block">
+                      {t('first_time_enable_pre_release')}
+                    </span>
+                    <Switch
+                      className="!block !my-2"
+                      checkedChildren={t('enable')}
+                      unCheckedChildren={t('disable')}
+                      checked={enablePreRelease === 1}
+                      onClick={(value) => {
+                        setGrayControls((prev) => {
+                          if (value) {
+                            let flag = false;
+                            prev.forEach((val) => {
+                              val.controls.forEach((v) => {
+                                if (v.type === 'pre-release') {
+                                  flag = true;
+                                }
+                              });
+                            });
+                            !flag &&
+                              prev.push(
+                                {
+                                  target_version: 'all-latest',
+                                  controls: [
+                                    {
+                                      type: 'pre-release',
+                                      params: {},
+                                    },
+                                  ],
+                                },
+                                {
+                                  target_version: 'latest',
+                                  controls: [
+                                    {
+                                      type: 'weight',
+                                      params: {
+                                        weight: 100,
+                                        weight_day: 10,
+                                      },
+                                    },
+                                  ],
+                                },
+                                {
+                                  target_version: 'latest^1',
+                                  controls: [
+                                    {
+                                      type: 'weight',
+                                      params: {
+                                        weight: 100,
+                                        weight_day: 0,
+                                      },
+                                    },
+                                  ],
+                                }
+                              );
+                          }
+                          return [...prev];
+                        });
+                        setEnablePreRelease(value ? 1 : 2);
+                      }}
+                    />
+                    <h3 className="text-lg mb-2">{t('gray_release')}</h3>
+                    <span className="my-2 block">
+                      {t('configure_strategies')}
+                    </span>
+                    <div className="flex flex-row flex-wrap gap-1">
+                      {grayControls.map((val, index) => (
+                        <GrayControl
+                          key={index}
+                          index={index}
+                          value={val}
+                          onClose={() => {
+                            setGrayControls((prev) => {
+                              prev.splice(index, 1);
+                              return [...prev];
+                            });
+                          }}
+                          onChange={(index, value) => {
+                            setGrayControls((prev) => {
+                              prev[index] = value;
+                              return [...prev];
+                            });
+                          }}
+                        />
+                      ))}
+                      <Button
+                        type="text"
+                        icon={<PlusOutlined />}
+                        size="large"
+                        style={{
+                          marginLeft: '8px',
+                        }}
+                        onClick={() => {
+                          setGrayControls((prev) => {
+                            prev.push({
+                              target_version: 'latest',
+                              controls: [
+                                {
+                                  type: 'weight',
+                                  params: {
+                                    weight: 100,
+                                    weight_day: 10,
+                                  },
+                                },
+                              ],
+                            });
+                            return [...prev];
+                          });
+                        }}
+                      />
+                    </div>
+                    <Button
+                      className="mt-2"
+                      type="primary"
+                      loading={loading}
+                      style={{ marginTop: '8px' }}
+                      onClick={async () => {
+                        setLoading(true);
+                        let resp = await UpdateScriptGrayControls(
+                          script.script!.id,
+                          enablePreRelease,
+                          grayControls
+                        );
+                        if (resp.code === 0) {
+                          message.success(t('update_success'));
+                        } else {
+                          message.error(resp.msg);
+                        }
+                        setLoading(false);
+                      }}
+                    >
+                      {t('save_and_apply_strategies')}
+                    </Button>
+                  </>
+                );
+              default:
+                return <div></div>;
+            }
+          })(activeMenu)}
+        </div>
       </div>
     </Card>
   );
