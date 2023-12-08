@@ -21,8 +21,9 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
     linkId: number;
     initialValue?: string;
     isCreate?: boolean;
+    placeholder?: string;
   }
-> = ({ id, comment, linkId, initialValue, isCreate }, ref) => {
+> = ({ id, comment, linkId, initialValue, isCreate, placeholder }, ref) => {
   const user = useContext(UserContext);
   const [editor, setEditor] = useState<Editor | undefined>();
   const [prompt, setPrompt] = useState('');
@@ -58,7 +59,7 @@ const MarkdownEditor: React.ForwardRefRenderFunction<
             el: document.querySelector('#markdown-editor-' + id)!,
             previewStyle: 'tab',
             height: '400px',
-            placeholder: t('input_feedback_content'),
+            placeholder: placeholder || t('input_feedback_content'),
             hooks: {
               addImageBlobHook: async (blob, callback) => {
                 setImageLoading(true);
