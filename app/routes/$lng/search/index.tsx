@@ -2,11 +2,6 @@ import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import type { V2_MetaFunction } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
-import { message } from 'antd';
-import ClipboardJS from 'clipboard';
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useLocale } from 'remix-i18next';
 import SearchList from '~/components/Search/SearchList';
 import i18next from '~/i18next.server';
 import type { ScriptType, SortType } from '~/services/scripts/api';
@@ -52,27 +47,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   const loader = useLoaderData<LoaderData>();
-  const { t } = useTranslation();
-  const locale = useLocale();
-  useEffect(() => {
-    const clipboard = new ClipboardJS('.copy-script-link', {
-      text: (target) => {
-        message.success(t('copy_success'));
-        return (
-          target.getAttribute('script-name') +
-          '\n' +
-          window.location.origin +
-          '/' +
-          locale +
-          '/script-show-page/' +
-          target.getAttribute('script-id')
-        );
-      },
-    });
-    return () => {
-      clipboard.destroy();
-    };
-  }, []);
+
   return (
     <>
       <SearchList
