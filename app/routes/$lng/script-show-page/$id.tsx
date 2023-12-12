@@ -23,34 +23,19 @@ import { forwardHeaders } from '~/utils/cookie';
 import { scriptName } from '~/utils/utils';
 import { useTranslation } from 'react-i18next';
 import { useLocale } from 'remix-i18next';
-
+import i18next from '~/i18next.server';
+import { getLocale } from '~/utils/i18n';
 export type LoaderData = {
   script: Script & { issue_num: number };
+  title: string;
 };
 
 export const meta: V2_MetaFunction = ({ data, location }) => {
-  const { t } = useTranslation();
   if (!data) {
-    return [
-      { title: t('script_not_found') + ' - ScriptCat' },
-      { description: 'Not Found' },
-    ];
+    return [{ title: 'Not Found - ScriptCat' }, { description: 'Not Found' }];
   }
-  const match = /\d+\/(\w+)(\/|$)/g.exec(location.pathname);
-  const current = match ? match[1] : 'home';
-  const map: { [key: string]: string } = {
-    code: t('code'),
-    issue: t('issue'),
-    comment: t('comment'),
-    version: t('version_list'),
-    update: t('update_script'),
-    statistic: t('script_statistic'),
-    manage: t('script_manage'),
-  };
-  return [
-    { title: data.script.name + (map[current] ? ' - ' + map[current] : '') },
-    { description: data.script.description },
-  ];
+
+  return [{ title: data.title }, { description: data.script.description }];
 };
 
 export function CatchBoundary() {
@@ -66,7 +51,24 @@ export const loader: LoaderFunction = async ({ params, request }) => {
       statusText: 'Not Found',
     });
   }
-  return json({ script: script.data.data } as LoaderData, {
+  const t = await i18next.getFixedT(getLocale(request, 'en') ?? 'en');
+  const pathname = new URL(request.url).pathname;
+  const match = /\d+\/(\w+)(\/|$)/g.exec(pathname);
+  const current = match ? match[1] : 'home';
+  const map: { [key: string]: string } = {
+    code: t('code'),
+    issue: t('issue'),
+    comment: t('comment'),
+    version: t('version_list'),
+    update: t('update_script'),
+    statistic: t('script_statistic'),
+    manage: t('script_manage'),
+  };
+  const title =
+    (script?.data?.data?.name ?? 'Script ') +
+    (map[current] ? ' - ' + map[current] : '');
+    
+  return json({ script: script.data.data, title: title } as LoaderData, {
     headers: forwardHeaders(script),
   });
 };
@@ -209,7 +211,7 @@ export default function ScriptShowPage() {
         )}
         <Link
           to={locale + '/script-show-page/' + data.script.id}
-          className="text-2xl text-black dark:text-white"
+          className="text-2xl !text-black dark:!text-white dark:hover:!text-[#1677ff] hover:!text-[#1677ff]"
         >
           {scriptName(data.script)}
         </Link>

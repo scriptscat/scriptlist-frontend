@@ -1,10 +1,12 @@
 import { Link, useLocation } from '@remix-run/react';
-import { ConfigProvider, Empty, List } from 'antd';
+import { ConfigProvider, Empty, List, message } from 'antd';
 import { useEffect, useState } from 'react';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 import SearchItem from './item';
 import { useTranslation } from 'react-i18next';
+import ClipboardJS from 'clipboard';
+import { useLocale } from 'remix-i18next';
 
 // 搜索结果列表
 const SearchList: React.FC<{
@@ -15,11 +17,32 @@ const SearchList: React.FC<{
   const location = useLocation();
   const [total, setTotal] = useState(props.total);
   const [list, setList] = useState(props.list);
+  const locale = '/' + useLocale();
   const { t } = useTranslation();
   useEffect(() => {
     setTotal(props.total);
     setList(props.list);
   }, [props.list, props.total]);
+
+  useEffect(() => {
+    const clipboard = new ClipboardJS('.copy-script-link', {
+      text: (target) => {
+        message.success(t('copy_success'));
+        return (
+          target.getAttribute('script-name') +
+          '\n' +
+          window.location.origin +
+          '/' +
+          locale +
+          '/script-show-page/' +
+          target.getAttribute('script-id')
+        );
+      },
+    });
+    return () => {
+      clipboard.destroy();
+    };
+  }, []);
 
   return (
     <>

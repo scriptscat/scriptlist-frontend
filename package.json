@@ -40,9 +40,10 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-infinite-scroll-component": "^6.1.0",
+    "react-responsive": "^9.0.2",
     "remix-i18next": "^5.4.0",
     "remix-utils": "^3.2.0",
-    "ua-parser-js": "^1.0.33",
+    "ua-parser-js": "^1.0.37",
     "xss": "^1.0.13"
   },
   "devDependencies": {

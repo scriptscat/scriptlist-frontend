@@ -200,6 +200,40 @@ export async function CreateScript(params: CreateScriptParams) {
   return resp.data;
 }
 
+// 更新库信息
+export async function UpdateLibInfo(
+  id: number,
+  params: {
+    name: string;
+    description: string;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/lib-info',
+    method: 'PUT',
+    data: params,
+  });
+  return resp.data;
+}
+
+// 更新同步配置
+export async function UpdateScriptSync(
+  id: number,
+  params: {
+    content_url: string;
+    sync_mode: number;
+    sync_url: string;
+    definition_url?: string;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/sync',
+    method: 'PUT',
+    data: params,
+  });
+  return resp.data;
+}
+
 // 更新脚本设置
 export async function UpdateScriptSetting(
   id: number,

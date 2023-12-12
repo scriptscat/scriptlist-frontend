@@ -10,6 +10,7 @@ import Backend from 'i18next-fs-backend';
 import i18n from './i18n'; // your i18n configuration file
 import { resolve } from 'node:path';
 import { getLocale } from './utils/i18n';
+import isbot from 'isbot';
 
 const ABORT_DELAY = 10 * 1000;
 
@@ -71,10 +72,14 @@ export default async function handleRequest(
       case 'search':
       case 'post-script':
         // 如果是以下面的路径开头的,则获取语言并重定向路径
+        let path = `/${lng}${url.pathname}`;
+        if (url.search) {
+          path += url.search;
+        }
         return new Response(null, {
           status: 301,
           headers: {
-            Location: `/${lng}${url.pathname}`,
+            Location: path,
           },
         });
     }
@@ -88,10 +93,10 @@ export default async function handleRequest(
       },
     });
   }
-  // let callbackName = isbot(request.headers.get('user-agent'))
-  //   ? 'onAllReady'
-  //   : 'onShellReady';
-  let callbackName = 'onAllReady';
+  let callbackName = isbot(request.headers.get('user-agent'))
+    ? 'onAllReady'
+    : 'onShellReady';
+  // let callbackName = 'onAllReady';
 
   let instance = createInstance();
   let lng = getLocale(request);

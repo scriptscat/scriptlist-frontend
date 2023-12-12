@@ -30,6 +30,8 @@ import { ConfigProvider, theme } from 'antd';
 import { StyleProvider } from '@ant-design/cssinjs';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import parser from 'ua-parser-js';
+import { MediaContext } from './utils/utils';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: styles },
@@ -60,6 +62,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   let t = await i18next.getFixedT(locale || 'en');
   const cookieHeader = request.headers.get('Cookie');
+  const UA = request.headers.get('user-agent') ?? '';
+  const deviceType = parser(UA).device.type || 'desktop';
   let user: User | undefined;
   const respInit: ResponseInit = {};
   let styleMode = '';
@@ -81,6 +85,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   return json(
     {
+      deviceType: deviceType,
       styleMode: styleMode,
       darkMode: darkMode,
       ENV: {
@@ -158,7 +163,10 @@ export function CatchBoundary() {
           background: dark ? '#000' : '#fff',
         }}
       >
-        <StyleProvider hashPriority="high">
+        <StyleProvider
+          hashPriority="high"
+          container={global.document && document && document.body}
+        >
           <UserContext.Provider
             value={{
               user: config && config.login.user,
@@ -197,6 +205,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState<'light' | 'dark' | 'auto'>(
     config.darkMode || 'auto'
   );
+
   // 设置axios
   InitAxios({
     baseURL:
@@ -222,7 +231,6 @@ export default function App() {
 
   dayjs.locale(locale.toLocaleLowerCase());
   dayjs.extend(relativeTime);
-
   return (
     <html lang={locale} dir={i18n.dir()}>
       <head>
@@ -248,8 +256,7 @@ export default function App() {
           (function() {
             var hm = document.createElement("script");
             hm.src = "https://hm.baidu.com/hm.js?9a2c8c9a94f471c29e7bb97a363d204f";
-            var s = document.getElementsByTagName("script")[0]; 
-            s.parentNode.insertBefore(hm, s);
+            document.querySelector('head').append(hm)
           })();`,
           }}
         />
@@ -260,33 +267,40 @@ export default function App() {
           background: dark ? '#000' : '#fff',
         }}
       >
-        <StyleProvider hashPriority="high">
+        <MediaContext.Provider
+          value={config.deviceType === 'mobile' ? true : false}
+        >
           <ConfigProvider
             theme={{
               algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
             }}
           >
-            <UserContext.Provider
-              value={{
-                user: config.login.user,
-                dark: dark,
-                darkMode: darkMode,
-                env: config.ENV,
-              }}
+            <StyleProvider
+              hashPriority="high"
+              container={global.document && document && document.body}
             >
-              <NavigationProcess />
-              <MainLayout
-                locale={locale}
-                oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
-                apiUrl={config.ENV.APP_API_URL}
-                onStyleModeChang={(dark) => setDark(dark)}
-                onDarkModeChange={(mode) => setDarkMode(mode as any)}
+              <UserContext.Provider
+                value={{
+                  user: config.login.user,
+                  dark: dark,
+                  darkMode: darkMode,
+                  env: config.ENV,
+                }}
               >
-                <Outlet />
-              </MainLayout>
-            </UserContext.Provider>
+                <NavigationProcess />
+                <MainLayout
+                  locale={locale}
+                  oauthClient={config.ENV.APP_BBS_OAUTH_CLIENT}
+                  apiUrl={config.ENV.APP_API_URL}
+                  onStyleModeChang={(dark) => setDark(dark)}
+                  onDarkModeChange={(mode) => setDarkMode(mode as any)}
+                >
+                  <Outlet />
+                </MainLayout>
+              </UserContext.Provider>
+            </StyleProvider>
           </ConfigProvider>
-        </StyleProvider>
+        </MediaContext.Provider>
         {locale == 'ach-UG' && (
           <>
             <script

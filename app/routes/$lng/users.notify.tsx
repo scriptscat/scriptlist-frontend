@@ -10,13 +10,13 @@ import { SetUsetNotify, UserConfig } from '~/services/users/api';
 import type { UserConfig as UserConfigItem } from '~/services/users/types';
 import { getLocale } from '~/utils/i18n';
 
-export const meta: V2_MetaFunction = () => {
-  const { t } = useTranslation();
-  return [{ title: t('user_notification_management') + ' - ScriptCat' }];
+export const meta: V2_MetaFunction = ({ data }: { data: LoaderData }) => {
+  return [{ title: data.title }];
 };
 
 export type LoaderData = {
   config: UserConfigItem;
+  title: string;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -31,6 +31,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
   return json({
     config: resp.data,
+    title: t('user_notification_management') + ' - ScriptCat',
   } as LoaderData);
 };
 

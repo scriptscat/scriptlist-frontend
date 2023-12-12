@@ -1,8 +1,9 @@
-import { useContext } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context-manager';
 import type { Script } from '~/services/scripts/types';
 import dayjs from 'dayjs';
 import i18next from 'i18next';
+import { MediaQueryAllQueryable, useMediaQuery } from 'react-responsive';
 
 export function formatDate(value: number) {
   // 如果大于一年，显示年月日
@@ -43,4 +44,20 @@ export function scriptName(script: Script) {
 
 export function scriptDescription(script: Script) {
   return script.script.meta_json['description:zh-cn'] || script.description;
+}
+type MediaQuerySettings = Partial<
+  MediaQueryAllQueryable & {
+    query?: string;
+  }
+>;
+
+export const MediaContext = createContext(false);
+
+export function useMediaQueryState(settings: MediaQuerySettings) {
+  const mediaQuery = useMediaQuery(settings);
+  const [mediaState, setMediaState] = useState(useContext(MediaContext));
+  useEffect(() => {
+    setMediaState(mediaQuery);
+  }, [mediaQuery]);
+  return mediaState;
 }

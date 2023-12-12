@@ -85,7 +85,7 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
               <Tag
                 className="!m-0"
                 color={rankColor[index]}
-                style={{ padding: index === 9 ? '0 3px' : '' }}
+                style={index === 9 ? { padding: '0 3px' } : {}}
               >
                 {index + 1}
               </Tag>

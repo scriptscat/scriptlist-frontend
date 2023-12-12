@@ -143,6 +143,7 @@
   "question": "问题",
   "bug": "BUG",
   "input_feedback_content": "输入回复反馈内容（友善的反馈是交流的起点）",
+  "input_script_describe": "请输入脚本描述",
   "image_upload_failed": "图片上传失败",
   "autosaved": "已自动保存",
   "search_scripts_placeholder": "搜索脚本，开启新世界",
@@ -356,5 +357,7 @@
   "share_your_userscript": "分享你的用户脚本",
   "userscript_list": "用户脚本列表",
   "home_page_subtitle": "比全更全的用户脚本托管平台",
-  "time_format": "YYYY年MM月DD日"
+  "time_format": "YYYY年MM月DD日",
+  "sitemap_title": "网站地图",
+  "language_title": "语言列表"
 }
