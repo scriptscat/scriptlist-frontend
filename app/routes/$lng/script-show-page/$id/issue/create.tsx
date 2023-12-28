@@ -95,9 +95,9 @@ export default function Create() {
               }}
               style={{ width: '100%' }}
               options={[
-                { value: 'feature' },
-                { value: 'question' },
-                { value: 'bug' },
+                { label: t('feature'), value: 'feature' },
+                { label: t('question'), value: 'question' },
+                { label: t('bug'), value: 'bug' },
               ]}
               loading={loading}
               onChange={(value) => setLabels(value)}
