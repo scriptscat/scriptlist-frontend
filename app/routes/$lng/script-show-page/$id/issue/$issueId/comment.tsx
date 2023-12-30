@@ -478,7 +478,8 @@ export default function Comment() {
             <Select
               mode="multiple"
               showArrow
-              tagRender={({ value, closable, onClose }) => {
+              tagRender={(args) => {
+                const { value, closable, onClose } = args;
                 const onPreventMouseDown = (event: any) => {
                   event.preventDefault();
                   event.stopPropagation();
@@ -496,9 +497,9 @@ export default function Comment() {
               }}
               style={{ width: '100%' }}
               options={[
-                { value: 'feature' },
-                { value: 'question' },
-                { value: 'bug' },
+                { label: t('feature'), value: 'feature' },
+                { label: t('question'), value: 'question' },
+                { label: t('bug'), value: 'bug' },
               ]}
               value={labels}
               loading={loading}

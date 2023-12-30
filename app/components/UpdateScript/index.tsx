@@ -95,6 +95,7 @@ const UpdateScript: React.FC<{
             isCreate={!script}
             initialValue={script?.content}
             ref={markdown}
+            placeholder={t('input_script_describe')}
           />
         )}
       </ClientOnly>

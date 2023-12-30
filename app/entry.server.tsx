@@ -23,6 +23,7 @@ export default async function handleRequest(
   const url = new URL(request.url);
   const splitPath = url.pathname.split('/');
   if (splitPath.length > 1) {
+    let lng = await i18next.getLocale(request);
     switch (splitPath[1].toLowerCase()) {
       case 'api':
         if (process.env.NODE_ENV === 'development') {
@@ -50,12 +51,27 @@ export default async function handleRequest(
           });
         }
         break;
+      case 'u':
+      case 's':
+        if(splitPath[2].match(/^\d+$/)) {
+          const type= splitPath[1].toLowerCase() == 'u' 
+                      ? splitPath[1] = 'users' 
+                      : splitPath[1] = 'script-show-page'
+          return new Response(null, {
+            status: 301,
+            headers: {
+              Location: `/${lng}/${type}/${splitPath[2]}`,
+            },
+          });
+        } else throw new Response('Page not found', {
+          status: 404,
+          statusText: 'Not Found',
+        });
       case 'script-show-page':
       case 'users':
       case 'search':
       case 'post-script':
         // 如果是以下面的路径开头的,则获取语言并重定向路径
-        let lng = await i18next.getLocale(request);
         let path = `/${lng}${url.pathname}`;
         if (url.search) {
           path += url.search;
@@ -69,6 +85,14 @@ export default async function handleRequest(
     }
   }
 
+  if(url.pathname.match(/\/[us]\/\d+\/?$/)) {
+    return new Response(null, {
+      status: 301,
+      headers: {
+        Location: url.pathname.replace(/\/[us]\//, (match) => match ==='/u/' ? '/users/' : '/script-show-page/'),
+      },
+    });
+  }
   let callbackName = isbot(request.headers.get('user-agent'))
     ? 'onAllReady'
     : 'onShellReady';
