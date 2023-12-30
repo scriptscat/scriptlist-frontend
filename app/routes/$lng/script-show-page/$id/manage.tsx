@@ -7,6 +7,8 @@ import {
   PlusOutlined,
   SettingOutlined,
 } from '@ant-design/icons';
+import { ApartmentOutlined, UserOutlined } from '@ant-design/icons';
+
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useNavigate } from '@remix-run/react';
@@ -48,6 +50,8 @@ import type { MenuProps } from 'antd';
 import { useMediaQueryState } from '~/utils/utils';
 import { TFunction } from 'i18next';
 import { APIResponse } from '~/services/http';
+import { UserGroup } from './permission/userGroup';
+import { AccessRole } from './permission/accessRole';
 
 type LoaderData = {
   setting: ScriptSetting;
@@ -101,6 +105,16 @@ function generateManageMenuList(
       label: t('manage_log'),
       key: 'manageLog',
       icon: <InfoCircleOutlined />,
+    },
+    {
+      label: t('access_role_manage'),
+      key: 'accessRole',
+      icon: <ApartmentOutlined />,
+    },
+    {
+      label: t('user_group_manage'),
+      key: 'userGroup',
+      icon: <UserOutlined />,
     },
   ];
   return menuList.filter((item) => {
@@ -571,6 +585,11 @@ export default function Manage() {
                     </Button>
                   </>
                 );
+              case 'accessRole':
+                return <AccessRole id={script.script!.id}></AccessRole>;
+              case 'userGroup':
+                return <UserGroup id={script.script!.id}></UserGroup>;
+
               default:
                 return <div></div>;
             }

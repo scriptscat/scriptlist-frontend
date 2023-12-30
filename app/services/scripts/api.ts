@@ -152,6 +152,28 @@ export async function GetScriptSetting(id: number, req: Request) {
   return resp.data;
 }
 
+export async function GetAccessRoleList(
+  id: number,
+  page: number = 1,
+) {
+  const resp = await request<ScriptSettingResponse>({
+    url: '/scripts/' + id + '/access?page=' + page,
+    method: 'GET',
+  });
+  return resp.data;
+}
+
+export async function GetUserGroupList(
+  id: number,
+  page: number = 1,
+) {
+  const resp = await request<ScriptSettingResponse>({
+    url: '/scripts/' + id + '/group?page=' + page,
+    method: 'GET',
+  });
+  return resp.data;
+}
+
 export async function SubmitScore(id: number, message: string, score: number) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + id + '/score',

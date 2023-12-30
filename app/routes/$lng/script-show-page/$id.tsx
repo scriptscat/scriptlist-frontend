@@ -67,7 +67,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const title =
     (script?.data?.data?.name ?? 'Script ') +
     (map[current] ? ' - ' + map[current] : '');
-    
+
   return json({ script: script.data.data, title: title } as LoaderData, {
     headers: forwardHeaders(script),
   });
