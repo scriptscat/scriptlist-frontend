@@ -6,34 +6,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMediaQueryState } from '~/utils/utils';
 
-const AccessRoleManage: React.FC<{}> = () => {
-  const { t } = useTranslation();
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-lg">{t('access_role_manage')}</span>
-        <Button type="primary" className="min-w-[100px]">
-          {t('add_user')}
-        </Button>
-      </div>
-      <div>111</div>
-    </div>
-  );
-};
-const UserGroupManage: React.FC<{}> = () => {
-  const { t } = useTranslation();
-  return (
-    <div>
-      <div className="flex justify-between items-center my-2">
-        <span className="text-lg">{t('user_group_manage')}</span>
-        <Button type="primary" className="min-w-[100px]">
-          {t('add_group')}
-        </Button>
-      </div>
-      <div>111</div>
-    </div>
-  );
-};
+
 
 export default function Permission() {
   const [activeMenu, setActiveMenu] = useState<string>('');

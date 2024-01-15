@@ -161,3 +161,12 @@ export type Realtime = {
   download: StatisticsChart;
   update: StatisticsChart;
 };
+
+export interface ScriptGroup {
+  createtime: number;
+  description: string;
+  id: number;
+  member: Array<any>;
+  member_count: number;
+  name: string;
+}

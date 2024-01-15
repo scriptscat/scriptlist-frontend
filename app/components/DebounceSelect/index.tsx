@@ -54,16 +54,21 @@ export function DebounceSelect<
         value = value.slice(value.length - maxCount, value.length);
       }
     }
-    console.log('value', value, option);
     onChange && onChange(value, value);
   };
 
   return (
     <Select
-      labelInValue
+  
       filterOption={false}
       onSearch={debounceFetcher}
-      notFoundContent={fetching ? <Spin size="small" /> : null}
+      notFoundContent={
+        fetching ? (
+          <div className='flex justify-center items-center min-h-[50px]'>
+            <Spin size="small" />
+          </div>
+        ) : null
+      }
       onChange={hanldeChange}
       {...props}
       options={options}

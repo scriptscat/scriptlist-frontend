@@ -1,5 +1,5 @@
 import type { GrayControlValue } from '~/components/GrayControl';
-import type { APIResponse } from '../http';
+import type { APIDataResponse, APIResponse } from '../http';
 import { request } from '../http';
 import { paramsToSearch } from '../utils';
 import type {
@@ -10,6 +10,7 @@ import type {
   OriginListResponse,
   RealtimeResponse,
   ScoreListResponse,
+  ScriptGroup,
   ScriptResponse,
   ScriptSettingResponse,
   ScriptStateResponse,
@@ -152,24 +153,200 @@ export async function GetScriptSetting(id: number, req: Request) {
   return resp.data;
 }
 
-export async function GetAccessRoleList(
+export interface GroupItem {
+  list: Array<{
+    id: number;
+    name: string;
+  }>;
+}
+export interface UserItem {
+  users: Array<{
+    user_id: number;
+    username: string;
+  }>;
+}
+
+export async function GetGroupList(id: number, query: string) {
+  const resp = await request<APIDataResponse<GroupItem>>({
+    url: '/scripts/' + id + '/group?query=' + query + '&size=5',
+    method: 'GET',
+  });
+  return resp.data;
+}
+export async function GetUserList(query: string) {
+  const resp = await request<APIDataResponse<UserItem>>({
+    url: '/users/search?query=' + query,
+    method: 'GET',
+  });
+  return resp.data;
+}
+export async function CreateGroup(
   id: number,
-  page: number = 1,
+  option: {
+    name: string;
+    description: string;
+  }
 ) {
-  const resp = await request<ScriptSettingResponse>({
-    url: '/scripts/' + id + '/access?page=' + page,
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/group`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+export interface GroupAndUserLIst {
+  label: string;
+  value: string | number;
+}
+export async function GetGroupAndUserList(
+  id: number,
+  query: string
+): Promise<GroupAndUserLIst[]> {
+  const promiseList = await Promise.all([
+    GetGroupList(id, query),
+    GetUserList(query),
+  ]);
+  let userList: UserItem['users'] | Array<GroupAndUserLIst> =
+    promiseList[1]?.data?.users ?? [];
+
+  userList = userList.map((item) => {
+    return {
+      label: item.username,
+      value: 'user-' + item.user_id,
+    };
+  });
+  let groupList: GroupItem['list'] | Array<GroupAndUserLIst> =
+    promiseList[0]?.data?.list ?? [];
+  groupList = groupList.map((item) => {
+    return {
+      label: item.name,
+      value: 'group-' + item.id,
+    };
+  });
+  return [...groupList, ...userList];
+}
+
+export async function GetInviteList(id: number, gid: number = 1, page: number) {
+  const resp = await request<
+    APIDataResponse<{
+      list: Array<any>;
+      total: number;
+    }>
+  >({
+    url: `/scripts/${id}/invite/group/${gid}/code`,
     method: 'GET',
   });
   return resp.data;
 }
 
-export async function GetUserGroupList(
+export async function GetAccessRoleList(id: number, page: number = 1) {
+  const resp = await request<
+    APIDataResponse<{
+      list: Array<any>;
+      total: number;
+    }>
+  >({
+    url: '/scripts/' + id + '/access?page=' + page,
+    method: 'GET',
+  });
+  return resp.data;
+}
+export async function DeleteAccess(id: number, aid: number) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/access/${aid}`,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+export async function DeleteInvite(id: number, code_id: number | string) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/invite/code/${code_id}`,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+export async function UpdateAccessRole(
   id: number,
-  page: number = 1,
+  aid: string,
+  option: {
+    expiretime: number;
+    role: 'visitor' | 'admin';
+  }
 ) {
-  const resp = await request<ScriptSettingResponse>({
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/access/' + aid,
+    method: 'PUT',
+    data: {
+      expiretime: option.expiretime,
+      role: option.role,
+    },
+  });
+  return resp.data;
+}
+export async function CreateInviteCode(
+  id: number,
+  option: {
+    audit: boolean;
+    count: string;
+    days: number;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/invite/code`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+export async function CreateAccessUser(
+  id: number,
+  option: {
+    expiretime: number;
+    role: string;
+    user_id: number;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/access/user`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+
+export async function CreateAccessGroup(
+  id: number,
+  option: {
+    expiretime: number;
+    role: string;
+    group_id: number;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/access/group`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+
+export async function GetScriptGroupList(id: number, page: number = 1) {
+  const resp = await request<
+    APIDataResponse<{
+      list: Array<ScriptGroup>;
+      total: number;
+    }>
+  >({
     url: '/scripts/' + id + '/group?page=' + page,
     method: 'GET',
+  });
+  return resp.data;
+}
+
+export async function DeleteScriptGroup(id: number, gid: number) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/group/${gid}`,
+    method: 'DELETE',
   });
   return resp.data;
 }
