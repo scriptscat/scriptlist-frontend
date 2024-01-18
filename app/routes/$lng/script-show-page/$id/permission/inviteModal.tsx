@@ -1,5 +1,13 @@
 import { useTranslation } from 'react-i18next';
-import { Button, Form, InputNumber, Modal, Select, Switch } from 'antd';
+import {
+  Button,
+  Form,
+  InputNumber,
+  Modal,
+  Select,
+  Switch,
+  message,
+} from 'antd';
 import { useEffect, useState } from 'react';
 import { CreateInviteCode, GetInviteList } from '~/services/scripts/api';
 import { CheckCircleTwoTone } from '@ant-design/icons';
@@ -9,21 +17,29 @@ export const InviteModal: React.FC<{
   status: boolean;
   onChange: (status: boolean) => void;
   id: number;
-}> = ({ status, onChange, id }) => {
+  groupID?: number;
+}> = ({ status, onChange, id, groupID }) => {
   const { t } = useTranslation();
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
 
   const handleOk = () => {
-    form.validateFields().then((values) => {
-      CreateInviteCode(id, {
-        audit: values.audit,
-        count: values.count,
-        days: values.days,
-      });
-      setOpenSuccessModal(true);
-    }).catch((err)=>{
-      
-    })
+    form
+      .validateFields()
+      .then((values) => {
+        CreateInviteCode(id, groupID, {
+          audit: values.audit,
+          count: values.count,
+          days: values.days,
+        }).then((resp) => {
+          if (resp.code == 0) {
+            message.success(t('submit_success'));
+            setOpenSuccessModal(true);
+          } else {
+            message.error(resp.msg);
+          }
+        });
+      })
+      .catch((err) => {});
   };
   const [inviteText, setInviteText] = useState('');
   const handleCancel = () => {

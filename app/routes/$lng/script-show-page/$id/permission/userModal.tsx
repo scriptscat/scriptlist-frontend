@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import {
   CreateAccessGroup,
   CreateAccessUser,
+  CreateGroupUser,
   DeleteInvite,
   GetGroupAndUserList,
   GetInviteList,
@@ -22,12 +23,16 @@ interface User {
 }
 async function getSearchUserList(
   id: number,
-  username: string
+  username: string,
+  filterGroup: boolean
 ): Promise<User[]> {
-  return GetGroupAndUserList(id, username);
+  return GetGroupAndUserList(id, username, filterGroup);
 }
 
-export const InvitePage: React.FC<{ id: number }> = ({ id }) => {
+export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
+  id,
+  groupID,
+}) => {
   const [modal, contextHolder] = Modal.useModal();
   const [deleteLoading, setDeleteLoading] = useState(false);
   const { t } = useTranslation();
@@ -43,7 +48,7 @@ export const InvitePage: React.FC<{ id: number }> = ({ id }) => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const getPageData = () => {
-    GetInviteList(id, 1, page).then((res) => {
+    GetInviteList(id, page, groupID).then((res) => {
       if (res.code === 0) {
         setList(res.data.list);
         setTotal(res.data.total);
@@ -105,7 +110,7 @@ export const InvitePage: React.FC<{ id: number }> = ({ id }) => {
                   setDeleteLoading(false);
                   if (result.code == 0) {
                     message.success(t('delete_success'));
-                    //  getPageData();
+                    getPageData();
                   } else {
                     message.error(result.msg);
                   }
@@ -135,6 +140,7 @@ export const InvitePage: React.FC<{ id: number }> = ({ id }) => {
       </div>
       {openInviteModal && (
         <InviteModal
+          groupID={groupID}
           id={id}
           status={openInviteModal}
           onChange={(status) => setOpenInviteModal(status)}
@@ -149,44 +155,53 @@ export const UserModal: React.FC<{
   status: boolean;
   onChange: (status: boolean) => void;
   id: number;
-}> = ({ status, onChange, id }) => {
+  groupID?: number;
+}> = ({ status, onChange, id, groupID }) => {
   const { t } = useTranslation();
 
   const handleOk = () => {
-    form.validateFields().then((values) => {
-      const arr = values.user[0].split('-');
-      const type = arr[0];
-      const targetId = arr[1];
-      const role = values.role;
-      const time =
-        values.time === undefined || values.time === null
-          ? 0
-          : values.time.unix();
-      let promise = undefined;
-      if (type === 'user') {
-        promise = CreateAccessUser(id, {
-          expiretime: time,
-          role: role,
-          user_id: parseInt(targetId),
-        });
-      } else {
-        promise = CreateAccessGroup(id, {
-          expiretime: time,
-          role: role,
-          group_id: parseInt(targetId),
-        });
-      }
-      promise.then((resp) => {
-        if (resp.code == 0) {
-          message.success(t('submit_success'));
-          handleCancel();
+    form
+      .validateFields()
+      .then((values) => {
+        debugger;
+        const arr = values.user[0].split('-');
+        const type = arr[0];
+        const targetId = arr[1];
+        const role = values.role;
+        const time =
+          values.time === undefined || values.time === null
+            ? 0
+            : values.time.unix();
+        let promise = undefined;
+        if (type === 'user') {
+          promise =
+            groupID === undefined
+              ? CreateAccessUser(id, {
+                  expiretime: time,
+                  role: role,
+                  user_id: parseInt(targetId),
+                })
+              : CreateGroupUser(id, groupID, {
+                  expiretime: time,
+                  user_id: parseInt(targetId),
+                });
         } else {
-          message.error(resp.msg);
+          promise = CreateAccessGroup(id, {
+            expiretime: time,
+            role: role,
+            group_id: parseInt(targetId),
+          });
         }
-      });
-    }).catch((err)=>{
-      
-    })
+        promise.then((resp) => {
+          if (resp.code == 0) {
+            message.success(t('submit_success'));
+            handleCancel();
+          } else {
+            message.error(resp.msg);
+          }
+        });
+      })
+      .catch((err) => {});
   };
   const handleCancel = () => {
     onChange(false);
@@ -223,18 +238,22 @@ export const UserModal: React.FC<{
                 maxCount={1}
                 mode="multiple"
                 fetchOptions={(username) => {
-                  return getSearchUserList(id, username);
+                  return getSearchUserList(id, username, groupID !== undefined);
                 }}
               ></DebounceSelect>
             </Form.Item>
-            <Form.Item label={t('grant_permission')} name="role">
-              <Select
-                options={[
-                  { value: 'guest', label: t('visitor') },
-                  { value: 'manager', label: t('admin') },
-                ]}
-              />
-            </Form.Item>
+            {groupID === undefined ? (
+              <Form.Item label={t('grant_permission')} name="role">
+                <Select
+                  options={[
+                    { value: 'guest', label: t('visitor') },
+                    { value: 'manager', label: t('admin') },
+                  ]}
+                />
+              </Form.Item>
+            ) : (
+              <></>
+            )}
             <Form.Item label={t('expire_time')} name="time">
               <DatePicker
                 className="w-full"

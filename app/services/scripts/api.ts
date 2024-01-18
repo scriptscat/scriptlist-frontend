@@ -1,5 +1,5 @@
 import type { GrayControlValue } from '~/components/GrayControl';
-import type { APIDataResponse, APIResponse } from '../http';
+import type { APIDataResponse, APIListResponse, APIResponse } from '../http';
 import { request } from '../http';
 import { paramsToSearch } from '../utils';
 import type {
@@ -159,6 +159,16 @@ export interface GroupItem {
     name: string;
   }>;
 }
+export interface GroupMember {
+  avatar: string;
+  createtime: number;
+  expiretime: number;
+  id: number;
+  invite_status: number;
+  is_expire: boolean;
+  user_id: number;
+  username: string;
+}
 export interface UserItem {
   users: Array<{
     user_id: number;
@@ -169,6 +179,17 @@ export interface UserItem {
 export async function GetGroupList(id: number, query: string) {
   const resp = await request<APIDataResponse<GroupItem>>({
     url: '/scripts/' + id + '/group?query=' + query + '&size=5',
+    method: 'GET',
+  });
+  return resp.data;
+}
+export async function GetGroupMemberList(
+  id: number,
+  gid: number,
+  page: number
+) {
+  const resp = await request<APIListResponse<GroupMember>>({
+    url: `/scripts/${id}/group/${gid}/member`,
     method: 'GET',
   });
   return resp.data;
@@ -200,10 +221,12 @@ export interface GroupAndUserLIst {
 }
 export async function GetGroupAndUserList(
   id: number,
-  query: string
+  query: string,
+  filterGroup: boolean = false
 ): Promise<GroupAndUserLIst[]> {
+  //APIDataResponse<GroupItem>
   const promiseList = await Promise.all([
-    GetGroupList(id, query),
+    filterGroup ? Promise.resolve(undefined) : GetGroupList(id, query),
     GetUserList(query),
   ]);
   let userList: UserItem['users'] | Array<GroupAndUserLIst> =
@@ -215,8 +238,8 @@ export async function GetGroupAndUserList(
       value: 'user-' + item.user_id,
     };
   });
-  let groupList: GroupItem['list'] | Array<GroupAndUserLIst> =
-    promiseList[0]?.data?.list ?? [];
+  let groupList: GroupItem['list'] | Array<GroupAndUserLIst> = [];
+  groupList = promiseList[0]?.data?.list ?? [];
   groupList = groupList.map((item) => {
     return {
       label: item.name,
@@ -226,14 +249,17 @@ export async function GetGroupAndUserList(
   return [...groupList, ...userList];
 }
 
-export async function GetInviteList(id: number, gid: number = 1, page: number) {
+export async function GetInviteList(id: number, page: number, gid?: number) {
   const resp = await request<
     APIDataResponse<{
       list: Array<any>;
       total: number;
     }>
   >({
-    url: `/scripts/${id}/invite/group/${gid}/code`,
+    url:
+      gid === undefined
+        ? `/scripts/${id}/invite/code`
+        : `/scripts/${id}/invite/group/${gid}/code`,
     method: 'GET',
   });
   return resp.data;
@@ -254,6 +280,13 @@ export async function GetAccessRoleList(id: number, page: number = 1) {
 export async function DeleteAccess(id: number, aid: number) {
   const resp = await request<APIResponse>({
     url: `/scripts/${id}/access/${aid}`,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+export async function DeleteGroupUser(id: number, gid: number, mid: number) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/group/${gid}/member/${mid}`,
     method: 'DELETE',
   });
   return resp.data;
@@ -285,6 +318,7 @@ export async function UpdateAccessRole(
 }
 export async function CreateInviteCode(
   id: number,
+  gid: number | undefined,
   option: {
     audit: boolean;
     count: string;
@@ -292,7 +326,10 @@ export async function CreateInviteCode(
   }
 ) {
   const resp = await request<APIResponse>({
-    url: `/scripts/${id}/invite/code`,
+    url:
+      gid === undefined
+        ? `/scripts/${id}/invite/code`
+        : `/scripts/${id}/invite/group/${gid}/code`,
     method: 'POST',
     data: option,
   });
@@ -308,6 +345,21 @@ export async function CreateAccessUser(
 ) {
   const resp = await request<APIResponse>({
     url: `/scripts/${id}/access/user`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+export async function CreateGroupUser(
+  id: number,
+  gid: number,
+  option: {
+    expiretime: number;
+    user_id: number;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/group/${gid}/member`,
     method: 'POST',
     data: option,
   });

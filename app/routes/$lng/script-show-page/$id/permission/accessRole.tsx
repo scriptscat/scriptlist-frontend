@@ -87,8 +87,12 @@ export const AccessRole: React.FC<{ id: number }> = ({ id }) => {
                   )}
 
                   <div>
-                    {t('format_date', timestampToDateObj(script.expiretime)) +
-                      t('expire')}
+                    {script.expiretime !== 0
+                      ? t(
+                          'format_date',
+                          timestampToDateObj(script.expiretime)
+                        ) + t('expire')
+                      : t('no_expire')}
                   </div>
                   <Select
                     className="min-w-[110px] !mx-2"
