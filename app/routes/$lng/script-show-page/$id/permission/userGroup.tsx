@@ -221,7 +221,11 @@ export const CreateGroupModal: React.FC<{
         >
           <Input />
         </Form.Item>
-        <Form.Item label={t('group_description')} name="description">
+        <Form.Item
+          rules={[{ required: true, message: t('please_input_content') }]}
+          label={t('group_description')}
+          name="description"
+        >
           <Input.TextArea rows={6} />
         </Form.Item>
       </Form>
@@ -238,17 +242,23 @@ export const UserGroup: React.FC<{ id: number }> = ({ id }) => {
   const [page, setPage] = useState(1);
   const [modal, contextHolder] = Modal.useModal();
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [listLoading, setListLoading] = useState(false);
   const getPageData = () => {
-    GetScriptGroupList(id, page).then((res) => {
-      if (res.code === 0) {
-        setList(res.data.list);
-        setTotal(res.data.total);
-      }
-    });
+    setListLoading(true);
+    GetScriptGroupList(id, page)
+      .then((res) => {
+        if (res.code === 0) {
+          setList(res.data.list);
+          setTotal(res.data.total);
+        }
+      })
+      .finally(() => {
+        setListLoading(false);
+      });
   };
   useEffect(() => {
     getPageData();
-  }, []);
+  }, [page]);
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
@@ -266,6 +276,7 @@ export const UserGroup: React.FC<{ id: number }> = ({ id }) => {
           renderEmpty={() => <Empty description={t('no_user_group')} />}
         >
           <List
+            loading={listLoading}
             dataSource={list}
             renderItem={(script, index) => (
               <div className="mb-3 flex">
@@ -330,6 +341,9 @@ export const UserGroup: React.FC<{ id: number }> = ({ id }) => {
               </div>
             )}
             pagination={{
+              onChange: (page) => {
+                setPage(page);
+              },
               showSizeChanger: false,
               hideOnSinglePage: true,
               defaultCurrent: page,

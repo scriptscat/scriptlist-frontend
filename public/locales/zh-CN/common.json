@@ -397,8 +397,9 @@
   "un_select_user": "未选择用户",
   "wait_confirm": "待确认",
   "format_date": "{{year}}年{{month}}月{{day}}日",
-  "expire":"到期",
-  "group_name":"组名称",
-  "group_description":"描述",
-  "please_input_content":"请输入内容"
+  "expire": "到期",
+  "no_expire": "无日期限制",
+  "group_name": "组名称",
+  "group_description": "描述",
+  "please_input_content": "请输入内容"
 }

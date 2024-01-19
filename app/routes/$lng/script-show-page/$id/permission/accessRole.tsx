@@ -31,17 +31,23 @@ export const AccessRole: React.FC<{ id: number }> = ({ id }) => {
   const locale = '/' + useLocale();
   const [list, setList] = useState<Array<any>>([]);
   const [page, setPage] = useState(1);
+  const [listLoading, setListLoading] = useState(false);
   const getPageData = () => {
-    GetAccessRoleList(id, page).then((res) => {
-      if (res.code === 0) {
-        setList(res.data.list);
-        setTotal(res.data.total);
-      }
-    });
+    setListLoading(true);
+    GetAccessRoleList(id, page)
+      .then((res) => {
+        if (res.code === 0) {
+          setList(res.data.list);
+          setTotal(res.data.total);
+        }
+      })
+      .finally(() => {
+        setListLoading(false);
+      });
   };
   useEffect(() => {
     getPageData();
-  }, []);
+  }, [page]);
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
@@ -59,6 +65,7 @@ export const AccessRole: React.FC<{ id: number }> = ({ id }) => {
           renderEmpty={() => <Empty description={t('no_access_role')} />}
         >
           <List
+                    loading={listLoading}
             dataSource={list}
             renderItem={(script, index) => (
               <div className="mb-3 flex">
@@ -158,6 +165,9 @@ export const AccessRole: React.FC<{ id: number }> = ({ id }) => {
               </div>
             )}
             pagination={{
+              onChange: (page) => {
+                setPage(page);
+              },
               showSizeChanger: false,
               hideOnSinglePage: true,
               defaultCurrent: page,
