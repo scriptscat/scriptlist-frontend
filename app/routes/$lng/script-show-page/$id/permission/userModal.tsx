@@ -321,7 +321,7 @@ export const UserModal: React.FC<{
     {
       key: 'code',
       label: t('invite_by_code'),
-      children: <InvitePage id={id} />,
+      children: <InvitePage id={id} groupID={groupID} />,
     },
   ];
   return (
@@ -335,7 +335,6 @@ export const UserModal: React.FC<{
       width={700}
       footer={(_, { OkBtn, CancelBtn }) => (
         <>
-          
           {activeKey === 'user' ? <CancelBtn /> : <></>}
           {activeKey === 'user' ? <OkBtn /> : <></>}
         </>

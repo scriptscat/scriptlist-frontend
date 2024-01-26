@@ -298,6 +298,16 @@ export async function DeleteInvite(id: number, code_id: number | string) {
   });
   return resp.data;
 }
+export async function HandleInvite(code: string, accept: boolean) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/invite/${code}/accept`,
+    method: 'PUT',
+    data: {
+      accept: accept,
+    },
+  });
+  return resp.data;
+}
 export async function UpdateAccessRole(
   id: number,
   aid: string,
@@ -395,15 +405,29 @@ export async function GetScriptGroupList(id: number, page: number = 1) {
   return resp.data;
 }
 
-export async function GetInviteMessage(code:string) {
-  const resp = await request<
-    APIDataResponse<{
-      list: Array<ScriptGroup>;
-      total: number;
-    }>
-  >({
+export interface inviteDetail {
+  invite_status: number; //1 未使用，2使用，3过期，4等待，5拒绝
+  script: {
+    username: string;
+    name: string;
+  };
+  group?: {
+    name: string;
+    description: string;
+  };
+  access?: {
+    role: string;
+  };
+}
+export async function GetInviteMessage(code: string, req?: Request) {
+  const headers: { [key: string]: string } = {};
+  if (req?.headers.get('Cookie')) {
+    headers.cookie = req.headers.get('Cookie') || '';
+  }
+  const resp = await request<APIDataResponse<inviteDetail>>({
     url: `/scripts/invite/${code}`,
     method: 'GET',
+    headers,
   });
   return resp.data;
 }
