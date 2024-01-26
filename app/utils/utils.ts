@@ -12,6 +12,7 @@ export function formatDate(value: number) {
   }
   return dayjs(new Date(value * 1000)).fromNow();
 }
+
 export function timestampToDateObj(value: number) {
   const date = new Date(value * 1000);
   return {

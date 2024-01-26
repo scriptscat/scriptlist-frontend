@@ -85,10 +85,11 @@ jobs:
       env:
         APP_NAME: ${{ env.ENV=='prod' && env.APP_NAME || format('{0}-{1}', env.APP_NAME, env.ENV) }}
         DOMAIN: ${{ env.ENV=='prod' && env.DOMAIN || format('{0}.{1}', env.ENV, env.DOMAIN) }}
-        RESOURCE_CPU: ${{ env.ENV=='prod' && '500m' || '50m' }}
-        RESOURCE_MEMORY: ${{ env.ENV=='prod' && '512Mi' || '128Mi' }}
+        RESOURCE_CPU: ${{ env.ENV=='prod' && '500m' || '200m' }}
+        RESOURCE_MEMORY: ${{ env.ENV=='prod' && '512Mi' || '256Mi' }}
         INNER_DOMAIN: ${{ env.ENV=='prod' && 'scriptlist-cago' || format('scriptlist-{0}-cago', env.ENV) }}
         APP_BBS_OAUTH_CLIENT: ${{ env.ENV=='prod' && '80mfto0y3b8v' || env.ENV=='pre' && '5uk70yummcoe' || 'sxIv1i8H1ZwnSAH' }}
+        AUTO_SCALING: ${{ env.ENV=='prod' && 'true' || 'false' }}
       run: |
         cd deploy/helm
         helm upgrade --install \
@@ -100,5 +101,6 @@ jobs:
         --set ingress.hosts[0].host=$DOMAIN \
         --set ingress.tls[0].hosts[0]=$DOMAIN \
         --set resources.requests.cpu=$RESOURCE_CPU \
-        --set resources.requests.memory=$RESOURCE_MEMORY
+        --set resources.requests.memory=$RESOURCE_MEMORY \
+        --set autoscaling.enabled=$AUTO_SCALING
 
