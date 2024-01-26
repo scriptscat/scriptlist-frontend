@@ -258,8 +258,8 @@ export async function GetInviteList(id: number, page: number, gid?: number) {
   >({
     url:
       gid === undefined
-        ? `/scripts/${id}/invite/code`
-        : `/scripts/${id}/invite/group/${gid}/code`,
+        ? `/scripts/${id}/invite/code?page=${page}`
+        : `/scripts/${id}/invite/group/${gid}/code?page=${page}`,
     method: 'GET',
   });
   return resp.data;
@@ -325,7 +325,7 @@ export async function CreateInviteCode(
     days: number;
   }
 ) {
-  const resp = await request<APIResponse>({
+  const resp = await request<APIDataResponse<{ code: Array<string> }>>({
     url:
       gid === undefined
         ? `/scripts/${id}/invite/code`
@@ -390,6 +390,19 @@ export async function GetScriptGroupList(id: number, page: number = 1) {
     }>
   >({
     url: '/scripts/' + id + '/group?page=' + page,
+    method: 'GET',
+  });
+  return resp.data;
+}
+
+export async function GetInviteMessage(code:string) {
+  const resp = await request<
+    APIDataResponse<{
+      list: Array<ScriptGroup>;
+      total: number;
+    }>
+  >({
+    url: `/scripts/invite/${code}`,
     method: 'GET',
   });
   return resp.data;

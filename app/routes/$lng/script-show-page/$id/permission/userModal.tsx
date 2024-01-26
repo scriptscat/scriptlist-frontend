@@ -17,6 +17,7 @@ import { CopyOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { message } from 'antd';
 
 import { InviteModal } from './inviteModal';
+import { timestampToDateObj } from '~/utils/utils';
 interface User {
   label: React.ReactNode;
   value: string | number;
@@ -37,37 +38,44 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
   const [deleteLoading, setDeleteLoading] = useState(false);
   const { t } = useTranslation();
   const [openInviteModal, setOpenInviteModal] = useState(false);
+  const [listLoading, setListLoading] = useState(false);
+
   const copyInviteLink = () => {};
   interface DataType {
     key: string;
-    invite_code: string;
-    expiry_date: string;
-    status: number;
+    expiretime: number;
+    code: string;
+    invite_status: number;
   }
   const [list, setList] = useState<Array<any>>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const getPageData = () => {
-    GetInviteList(id, page, groupID).then((res) => {
-      if (res.code === 0) {
-        setList(res.data.list);
-        setTotal(res.data.total);
-      }
-    });
+    setListLoading(true);
+    GetInviteList(id, page, groupID)
+      .then((res) => {
+        if (res.code === 0) {
+          setList(res.data.list);
+          setTotal(res.data.total);
+        }
+      })
+      .finally(() => {
+        setListLoading(false);
+      });
   };
   useEffect(() => {
     getPageData();
-  }, []);
+  }, [page]);
   const inviteColumns: ColumnsType<DataType> = [
     {
       title: t('invite_code'),
-      dataIndex: 'invite_code',
-      key: 'invite_code',
+      dataIndex: 'code',
+      key: 'code',
       align: 'center',
       render: (text) => (
         <span
           onClick={copyInviteLink}
-          className="cursor-pointer  hover:!text-[#3388FF]"
+          className="cursor-pointer  hover:!text-[#3388FF] flex"
         >
           {text}
           <CopyOutlined className="pl-1 !text-[#3388FF]" />
@@ -76,15 +84,41 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
     },
     {
       title: t('expiry_date'),
-      dataIndex: 'expiry_date',
-      key: 'expiry_date',
+      dataIndex: 'expiretime',
+      key: 'expiretime',
       align: 'center',
+      render: (expiretime) => (
+        <span>
+          {expiretime !== 0
+            ? t('format_date', timestampToDateObj(expiretime)) + t('expire')
+            : t('no_expire')}
+        </span>
+      ),
     },
     {
       title: t('status'),
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'invite_status',
+      key: 'invite_status',
       align: 'center',
+      render: (invite_status) => {
+        let status_text = '';
+        if (invite_status === 1) {
+          status_text = t('un_used');
+        }
+        if (invite_status === 2) {
+          status_text = t('used');
+        }
+        if (invite_status === 3) {
+          status_text = t('expired');
+        }
+        if (invite_status === 4) {
+          status_text = t('wait_pending');
+        }
+        if (invite_status === 5) {
+          status_text = t('rejected');
+        }
+        return <span>{status_text}</span>;
+      },
     },
     {
       title: t('action'),
@@ -93,9 +127,13 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       align: 'center',
       render: (text, record, index) => (
         <>
-          <Button size="small" type="link">
-            {t('allow')}
-          </Button>
+          {record.invite_status === 4 ? (
+            <Button size="small" type="link">
+              {t('allow')}
+            </Button>
+          ) : (
+            <></>
+          )}
           <Button
             onClick={async () => {
               modal.confirm({
@@ -106,7 +144,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
                 cancelText: t('cancel'),
                 onOk: async () => {
                   setDeleteLoading(true);
-                  const result = await DeleteInvite(id, record.invite_code);
+                  const result = await DeleteInvite(id, record.code);
                   setDeleteLoading(false);
                   if (result.code == 0) {
                     message.success(t('delete_success'));
@@ -136,7 +174,22 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
         </Button>
       </div>
       <div>
-        <Table columns={inviteColumns} dataSource={list} />
+        <Table
+          loading={listLoading}
+          columns={inviteColumns}
+          dataSource={list}
+          pagination={{
+            onChange: (page) => {
+              setPage(page);
+            },
+            showSizeChanger: false,
+            hideOnSinglePage: true,
+            defaultCurrent: page,
+            current: page,
+            pageSize: 20,
+            total: total,
+          }}
+        />
       </div>
       {openInviteModal && (
         <InviteModal
@@ -158,6 +211,7 @@ export const UserModal: React.FC<{
   groupID?: number;
 }> = ({ status, onChange, id, groupID }) => {
   const { t } = useTranslation();
+  const [activeKey, setActiveKey] = useState('user');
 
   const handleOk = () => {
     form
@@ -278,8 +332,20 @@ export const UserModal: React.FC<{
       onCancel={handleCancel}
       cancelText={t('cancel')}
       okText={t('add')}
+      width={700}
+      footer={(_, { OkBtn, CancelBtn }) => (
+        <>
+          
+          {activeKey === 'user' ? <CancelBtn /> : <></>}
+          {activeKey === 'user' ? <OkBtn /> : <></>}
+        </>
+      )}
     >
-      <Tabs defaultActiveKey="1" items={items} />
+      <Tabs
+        activeKey={activeKey}
+        onChange={(key) => setActiveKey(key)}
+        items={items}
+      />
     </Modal>
   );
 };

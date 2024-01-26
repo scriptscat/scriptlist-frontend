@@ -65,7 +65,7 @@ export const AccessRole: React.FC<{ id: number }> = ({ id }) => {
           renderEmpty={() => <Empty description={t('no_access_role')} />}
         >
           <List
-                    loading={listLoading}
+            loading={listLoading}
             dataSource={list}
             renderItem={(script, index) => (
               <div className="mb-3 flex">

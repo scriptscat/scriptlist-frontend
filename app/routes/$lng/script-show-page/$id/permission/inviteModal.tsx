@@ -8,10 +8,11 @@ import {
   Switch,
   message,
 } from 'antd';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CreateInviteCode, GetInviteList } from '~/services/scripts/api';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
+import ClipboardJS from 'clipboard';
 
 export const InviteModal: React.FC<{
   status: boolean;
@@ -21,7 +22,12 @@ export const InviteModal: React.FC<{
 }> = ({ status, onChange, id, groupID }) => {
   const { t } = useTranslation();
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
-
+  const [inviteCodeList, setInviteCodeLIst] = useState<Array<string>>([]);
+  useEffect(() => {
+    if (openSuccessModal === false) {
+      setInviteCodeLIst([]);
+    }
+  }, [openSuccessModal]);
   const handleOk = () => {
     form
       .validateFields()
@@ -33,6 +39,7 @@ export const InviteModal: React.FC<{
         }).then((resp) => {
           if (resp.code == 0) {
             message.success(t('submit_success'));
+            setInviteCodeLIst(resp.data.code);
             setOpenSuccessModal(true);
           } else {
             message.error(resp.msg);
@@ -41,12 +48,36 @@ export const InviteModal: React.FC<{
       })
       .catch((err) => {});
   };
-  const [inviteText, setInviteText] = useState('');
   const handleCancel = () => {
     onChange(false);
   };
   const [form] = Form.useForm();
+  const inviteBaseURL = window.location.origin + '/invite-confirm?code=';
+  let clipboard: undefined | ClipboardJS = undefined;
+  const measuredRef = useCallback((node: HTMLElement) => {
+    if (node !== null) {
+      clipboard = new ClipboardJS(node, {
+        text: () =>
+          inviteCodeList
+            .map((code) => {
+              return inviteBaseURL + code;
+            })
+            .join('\n'),
+      }); 
 
+      clipboard.on('success', function (e: any) {
+        message.success(t('copy_success'));
+      });
+      clipboard.on('error', function (e: any) {
+        message.warning(t('copy_fail'));
+      });
+    }
+  }, []);
+  useEffect(() => {
+    return () => {
+      clipboard?.destroy && clipboard.destroy();
+    };
+  }, []);
   return (
     <>
       <Modal
@@ -64,23 +95,17 @@ export const InviteModal: React.FC<{
             form={form}
             initialValues={{ layout: 'horizontal' }}
           >
-            <Form.Item label={t('create_number')} name="count">
-              <InputNumber
-                className="!w-full"
-                min={1}
-                precision={0}
-                defaultValue={1}
-              />
+            <Form.Item label={t('create_number')} name="count" initialValue={1}>
+              <InputNumber className="!w-full" min={1} precision={0} />
             </Form.Item>
-            <Form.Item label={t('expiry_date')} name="days">
+            <Form.Item label={t('expiry_date')} name="days" initialValue={0}>
               <Select
-                defaultValue=""
                 options={[
-                  { value: '1', label: 1 + t('days') },
-                  { value: '3', label: 3 + t('days') },
-                  { value: '7', label: 7 + t('days') },
-                  { value: '15', label: 15 + t('days') },
-                  { value: '0', label: t('no_limit') },
+                  { value: 1, label: 1 + t('days') },
+                  { value: 3, label: 3 + t('days') },
+                  { value: 7, label: 7 + t('days') },
+                  { value: 15, label: 15 + t('days') },
+                  { value: 0, label: t('no_limit') },
                 ]}
               />
             </Form.Item>
@@ -105,16 +130,22 @@ export const InviteModal: React.FC<{
         style={{ top: 10 }}
         open={openSuccessModal}
         footer={[
-          <Button type="primary" onClick={() => setOpenSuccessModal(false)}>
-            {t('enter')}
+          <Button ref={measuredRef} type="primary">
+            {t('copy_link')}
+          </Button>,
+          <Button onClick={() => setOpenSuccessModal(false)}>
+            {t('disable')}
           </Button>,
         ]}
       >
         <div>
           <div className="mb-3">{t('create_invite_list_as_follows')}:</div>
           <TextArea
-            value={inviteText}
-            onChange={(e) => setInviteText(e.target.value)}
+            value={inviteCodeList
+              .map((code) => {
+                return inviteBaseURL + code;
+              })
+              .join('\n')}
             autoSize={{ minRows: 5, maxRows: 10 }}
           />
         </div>

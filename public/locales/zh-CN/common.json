@@ -396,10 +396,17 @@
   "visitor": "访客",
   "un_select_user": "未选择用户",
   "wait_confirm": "待确认",
+  "accepted": "已接受",
+  "rejected": "已拒绝", 
+  "un_used": "未使用", 
+  "used": "已使用", 
+  "expired": "已过期", 
+  "wait_pending": "等待审核", 
   "format_date": "{{year}}年{{month}}月{{day}}日",
   "expire": "到期",
   "no_expire": "无日期限制",
   "group_name": "组名称",
   "group_description": "描述",
-  "please_input_content": "请输入内容"
+  "please_input_content": "请输入内容",
+  "copy_fail":"复制失败"
 }

@@ -37,7 +37,6 @@ export const ManageModal: React.FC<{
   const [modal, contextHolder] = Modal.useModal();
   const [openUserDialog, setopenUserDialog] = useState(false);
 
-  const handleOk = () => {};
   const handleCancel = () => {
     onChange(false);
   };
