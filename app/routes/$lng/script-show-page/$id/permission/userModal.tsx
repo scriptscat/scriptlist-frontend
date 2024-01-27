@@ -18,6 +18,7 @@ import { message } from 'antd';
 
 import { InviteModal } from './inviteModal';
 import { timestampToDateObj } from '~/utils/utils';
+import ClipboardJS from 'clipboard';
 interface User {
   label: React.ReactNode;
   value: string | number;
@@ -42,6 +43,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
 
   const copyInviteLink = () => {};
   interface DataType {
+    id: string;
     key: string;
     expiretime: number;
     code: string;
@@ -64,8 +66,25 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       });
   };
   useEffect(() => {
-    getPageData();
-  }, [page]);
+    if (openInviteModal === false) {
+      getPageData();
+    }
+  }, [page, openInviteModal]);
+  let clipboard: ClipboardJS | undefined = undefined;
+  useEffect(() => {
+    clipboard = new ClipboardJS('.copy-text');
+    clipboard.on('success', function (e: any) {
+      message.success(t('copy_success'));
+    });
+    clipboard.on('error', function (e: any) {
+      message.warning(t('copy_fail'));
+    });
+
+    return () => {
+      clipboard?.destroy && clipboard.destroy();
+    };
+  }, []);
+
   const inviteColumns: ColumnsType<DataType> = [
     {
       title: t('invite_code'),
@@ -75,7 +94,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       render: (text) => (
         <span
           onClick={copyInviteLink}
-          className="cursor-pointer  hover:!text-[#3388FF] flex"
+          className="cursor-pointer  hover:!text-[#3388FF] flex copy-text"
         >
           {text}
           <CopyOutlined className="pl-1 !text-[#3388FF]" />
@@ -144,7 +163,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
                 cancelText: t('cancel'),
                 onOk: async () => {
                   setDeleteLoading(true);
-                  const result = await DeleteInvite(id, record.code);
+                  const result = await DeleteInvite(id, record.id);
                   setDeleteLoading(false);
                   if (result.code == 0) {
                     message.success(t('delete_success'));
@@ -175,6 +194,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       </div>
       <div>
         <Table
+          rowKey="id"
           loading={listLoading}
           columns={inviteColumns}
           dataSource={list}

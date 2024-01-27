@@ -189,7 +189,7 @@ export async function GetGroupMemberList(
   page: number
 ) {
   const resp = await request<APIListResponse<GroupMember>>({
-    url: `/scripts/${id}/group/${gid}/member`,
+    url: `/scripts/${id}/group/${gid}/member?page=${page}`,
     method: 'GET',
   });
   return resp.data;

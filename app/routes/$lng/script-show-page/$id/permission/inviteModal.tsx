@@ -54,30 +54,27 @@ export const InviteModal: React.FC<{
   const [form] = Form.useForm();
   const inviteBaseURL = window.location.origin + '/invite-confirm?code=';
   let clipboard: undefined | ClipboardJS = undefined;
-  const measuredRef = useCallback((node: HTMLElement) => {
-    if (node !== null) {
-      clipboard = new ClipboardJS(node, {
-        text: () =>
-          inviteCodeList
-            .map((code) => {
-              return inviteBaseURL + code;
-            })
-            .join('\n'),
-      }); 
-
-      clipboard.on('success', function (e: any) {
-        message.success(t('copy_success'));
-      });
-      clipboard.on('error', function (e: any) {
-        message.warning(t('copy_fail'));
-      });
-    }
-  }, []);
   useEffect(() => {
+    clipboard = new ClipboardJS('copy-btn', {
+      text: () =>
+        inviteCodeList
+          .map((code) => {
+            return inviteBaseURL + code;
+          })
+          .join('\n'),
+    });
+
+    clipboard.on('success', function (e: any) {
+      message.success(t('copy_success'));
+    });
+    clipboard.on('error', function (e: any) {
+      message.warning(t('copy_fail'));
+    });
     return () => {
       clipboard?.destroy && clipboard.destroy();
     };
   }, []);
+
   return (
     <>
       <Modal
@@ -113,6 +110,7 @@ export const InviteModal: React.FC<{
               label={t('administrator_review')}
               name="audit"
               initialValue={false}
+              valuePropName="checked"
             >
               <Switch></Switch>
             </Form.Item>
@@ -130,10 +128,10 @@ export const InviteModal: React.FC<{
         style={{ top: 10 }}
         open={openSuccessModal}
         footer={[
-          <Button ref={measuredRef} type="primary">
+          <Button key="copy" className="copy-btn" type="primary">
             {t('copy_link')}
           </Button>,
-          <Button onClick={() => setOpenSuccessModal(false)}>
+          <Button key="back" onClick={() => setOpenSuccessModal(false)}>
             {t('disable')}
           </Button>,
         ]}

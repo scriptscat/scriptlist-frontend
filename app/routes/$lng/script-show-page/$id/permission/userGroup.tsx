@@ -33,6 +33,7 @@ export const ManageModal: React.FC<{
   id: number;
   groupID: number;
 }> = ({ status, onChange, id, groupID }) => {
+  const [listLoading, setListLoading] = useState(false);
   const { t } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
   const [openUserDialog, setopenUserDialog] = useState(false);
@@ -44,16 +45,21 @@ export const ManageModal: React.FC<{
   const [list, setList] = useState<Array<GroupMember>>([]);
   const [page, setPage] = useState(1);
   const getPageData = () => {
-    GetGroupMemberList(id, groupID, page).then((res) => {
-      if (res.code === 0) {
-        setList(res.data.list);
-        setTotal(res.data.total);
-      }
-    });
+    setListLoading(true);
+    GetGroupMemberList(id, groupID, page)
+      .then((res) => {
+        if (res.code === 0) {
+          setList(res.data.list);
+          setTotal(res.data.total);
+        }
+      })
+      .finally(() => {
+        setListLoading(false);
+      });
   };
   useEffect(() => {
     getPageData();
-  }, []);
+  }, [page]);
   const locale = '/' + useLocale();
   const [deleteLoading, setDeleteLoading] = useState(false);
   return (
@@ -62,7 +68,7 @@ export const ManageModal: React.FC<{
       open={status}
       onCancel={handleCancel}
       footer={[
-        <Button type="primary" onClick={handleCancel}>
+        <Button key="back" type="primary" onClick={handleCancel}>
           {t('disable')}
         </Button>,
       ]}
@@ -74,6 +80,7 @@ export const ManageModal: React.FC<{
           </Button>
         </div>
         <List
+           loading={listLoading}
           dataSource={list}
           renderItem={(script, index) => (
             <div className="mb-3 flex">
@@ -143,6 +150,9 @@ export const ManageModal: React.FC<{
             </div>
           )}
           pagination={{
+            onChange: (page) => {
+              setPage(page);
+            },
             showSizeChanger: false,
             hideOnSinglePage: true,
             defaultCurrent: page,
