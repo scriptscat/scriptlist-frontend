@@ -22,10 +22,12 @@ export const InviteModal: React.FC<{
 }> = ({ status, onChange, id, groupID }) => {
   const { t } = useTranslation();
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
-  const [inviteCodeList, setInviteCodeLIst] = useState<Array<string>>([]);
+  const [inviteCodeText, setInviteCodeText] = useState('');
+  const codeTextRef = useRef('');
+  codeTextRef.current = inviteCodeText;
   useEffect(() => {
     if (openSuccessModal === false) {
-      setInviteCodeLIst([]);
+      setInviteCodeText('');
     }
   }, [openSuccessModal]);
   const handleOk = () => {
@@ -39,7 +41,15 @@ export const InviteModal: React.FC<{
         }).then((resp) => {
           if (resp.code == 0) {
             message.success(t('submit_success'));
-            setInviteCodeLIst(resp.data.code);
+            const inviteBaseURL =
+              window.location.origin + '/invite-confirm?code=';
+            setInviteCodeText(
+              resp.data.code
+                .map((code) => {
+                  return inviteBaseURL + code;
+                })
+                .join('\n')
+            );
             setOpenSuccessModal(true);
           } else {
             message.error(resp.msg);
@@ -52,16 +62,13 @@ export const InviteModal: React.FC<{
     onChange(false);
   };
   const [form] = Form.useForm();
-  const inviteBaseURL = window.location.origin + '/invite-confirm?code=';
+
   let clipboard: undefined | ClipboardJS = undefined;
   useEffect(() => {
-    clipboard = new ClipboardJS('copy-btn', {
-      text: () =>
-        inviteCodeList
-          .map((code) => {
-            return inviteBaseURL + code;
-          })
-          .join('\n'),
+    clipboard = new ClipboardJS('.copy-btn', {
+      text: () => {
+        return codeTextRef.current;
+      },
     });
 
     clipboard.on('success', function (e: any) {
@@ -139,11 +146,7 @@ export const InviteModal: React.FC<{
         <div>
           <div className="mb-3">{t('create_invite_list_as_follows')}:</div>
           <TextArea
-            value={inviteCodeList
-              .map((code) => {
-                return inviteBaseURL + code;
-              })
-              .join('\n')}
+            value={inviteCodeText}
             autoSize={{ minRows: 5, maxRows: 10 }}
           />
         </div>

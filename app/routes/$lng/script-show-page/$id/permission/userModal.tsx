@@ -84,6 +84,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       clipboard?.destroy && clipboard.destroy();
     };
   }, []);
+  const inviteBaseURL = window.location.origin + '/invite-confirm?code=';
 
   const inviteColumns: ColumnsType<DataType> = [
     {
@@ -94,6 +95,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       render: (text) => (
         <span
           onClick={copyInviteLink}
+          data-clipboard-text={inviteBaseURL + text}
           className="cursor-pointer  hover:!text-[#3388FF] flex copy-text"
         >
           {text}
