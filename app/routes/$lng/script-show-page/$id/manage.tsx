@@ -46,7 +46,7 @@ import {
 } from '~/services/scripts/api';
 import type { Script, ScriptSetting } from '~/services/scripts/types';
 import { getLocale } from '~/utils/i18n';
-import type { MenuProps } from 'antd';
+import type { MenuProps, RadioChangeEvent } from 'antd';
 import { useMediaQueryState } from '~/utils/utils';
 import { TFunction } from 'i18next';
 import { APIResponse } from '~/services/http';
@@ -286,26 +286,35 @@ export default function Manage() {
                   <>
                     <h4 className="text-lg mb-2">{t('script_public')}</h4>
                     <span className="my-2 block">
-                      {t('script_public_describe')}
+                      {isPublic === 3
+                        ? t('script_private_describe')
+                        : t('script_public_describe')}
                     </span>
-                    <Switch
-                      className="!block"
-                      checkedChildren={t('public')}
-                      unCheckedChildren={t('unpublic')}
-                      checked={isPublic === 1 ? true : false}
-                      onChange={async (checked) => {
+                    <Radio.Group
+                      options={[
+                        { value: 1, label: t('public') },
+                        { value: 2, label: t('unpublic') },
+                        { value: 3, label: t('private') },
+                      ]}
+                      onChange={async ({
+                        target: { value },
+                      }: RadioChangeEvent) => {
                         let resp = await UpdateScriptPublic(
                           script.script!.id,
-                          checked ? 1 : 2
+                          value
                         );
                         if (resp.code === 0) {
                           message.success(t('update_success'));
-                          setIsPublic(checked ? 1 : 2);
+                          setIsPublic(value);
                         } else {
                           message.error(resp.msg);
                         }
                       }}
+                      value={isPublic}
+                      optionType="button"
+                      buttonStyle="solid"
                     />
+
                     <h4 className="text-lg my-2">
                       {t('inappropriate_content')}
                     </h4>

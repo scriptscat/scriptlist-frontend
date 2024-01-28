@@ -2,8 +2,10 @@ import { useTranslation } from 'react-i18next';
 import type { ColumnsType } from 'antd/es/table';
 import { Button, DatePicker, Form, Modal, Select, Table, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
+import { useLocale } from 'remix-i18next';
 import {
+  AllowInviteCode,
   CreateAccessGroup,
   CreateAccessUser,
   CreateGroupUser,
@@ -19,6 +21,7 @@ import { message } from 'antd';
 import { InviteModal } from './inviteModal';
 import { timestampToDateObj } from '~/utils/utils';
 import ClipboardJS from 'clipboard';
+import { Link } from '@remix-run/react';
 interface User {
   label: React.ReactNode;
   value: string | number;
@@ -35,8 +38,10 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
   id,
   groupID,
 }) => {
+  const locale = '/' + useLocale();
   const [modal, contextHolder] = Modal.useModal();
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [allowLoading, setAllowLoading] = useState(false);
   const { t } = useTranslation();
   const [openInviteModal, setOpenInviteModal] = useState(false);
   const [listLoading, setListLoading] = useState(false);
@@ -48,6 +53,8 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
     expiretime: number;
     code: string;
     invite_status: number;
+    username: string;
+    used: number;
   }
   const [list, setList] = useState<Array<any>>([]);
   const [page, setPage] = useState(1);
@@ -121,19 +128,41 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       dataIndex: 'invite_status',
       key: 'invite_status',
       align: 'center',
-      render: (invite_status) => {
-        let status_text = '';
+      render: (invite_status, record) => {
+        let status_text: string | ReactElement = '';
         if (invite_status === 1) {
           status_text = t('un_used');
         }
         if (invite_status === 2) {
-          status_text = t('used');
+          status_text = (
+            <>
+              <Link
+                className="text-sm"
+                to={locale + '/users/' + record.used}
+                target="_blank"
+              >
+                {`[${record.username}]`}
+              </Link>
+              <span>{t('used')}</span>
+            </>
+          );
         }
         if (invite_status === 3) {
           status_text = t('expired');
         }
         if (invite_status === 4) {
-          status_text = t('wait_pending');
+          status_text = (
+            <>
+              <Link
+                className="text-sm"
+                to={locale + '/users/' + record.used}
+                target="_blank"
+              >
+                {`[${record.username}]`}
+              </Link>
+              <span>{t('wait_pending')}</span>
+            </>
+          );
         }
         if (invite_status === 5) {
           status_text = t('rejected');
@@ -149,7 +178,32 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       render: (text, record, index) => (
         <>
           {record.invite_status === 4 ? (
-            <Button size="small" type="link">
+            <Button
+
+            loading={allowLoading}
+              onClick={async () => {
+                modal.confirm({
+                  title: t('invite_by_code'),
+                  content: t('confirm_allow'),
+                  icon: <ExclamationCircleOutlined />,
+                  okText: t('confirm'),
+                  cancelText: t('cancel'),
+                  onOk: async () => {
+                    setAllowLoading(true);
+                    const result = await AllowInviteCode(id, record.id, 1);
+                    setAllowLoading(false);
+                    if (result.code == 0) {
+                      message.success(t('submit_success'));
+                      getPageData();
+                    } else {
+                      message.error(result.msg);
+                    }
+                  },
+                });
+              }}
+              size="small"
+              type="link"
+            >
               {t('allow')}
             </Button>
           ) : (

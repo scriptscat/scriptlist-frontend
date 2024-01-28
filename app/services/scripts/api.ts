@@ -308,6 +308,20 @@ export async function HandleInvite(code: string, accept: boolean) {
   });
   return resp.data;
 }
+export async function AllowInviteCode(
+  id: string | number,
+  code_id: string,
+  status: 1 | 2
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/invite/code/${code_id}/audit`,
+    method: 'PUT',
+    data: {
+      status: status,
+    },
+  });
+  return resp.data;
+}
 export async function UpdateAccessRole(
   id: number,
   aid: string,
@@ -458,7 +472,7 @@ export type UpdateCodeParams = {
   definition?: string;
   changelog: string;
   is_pre_release: 0 | 1 | 2;
-  public: 1 | 2;
+  public: 1 | 2 | 3;
   unwell: 1 | 2;
 };
 

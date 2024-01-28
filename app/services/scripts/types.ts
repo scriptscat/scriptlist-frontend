@@ -80,7 +80,7 @@ export type Script = {
   today_install: number; // 今日安装
   total_install: number; // 总安装
   unwell: 1 | 2; // 不适内容
-  public: 1 | 2; // 是否公开
+  public: 1 | 2 | 3; // 是否公开
   archive: 1 | 2; // 归档
   danger: 1 | 2; // 存在危险性
   type: 1 | 2 | 3; // 1: 普通脚本, 2: 订阅脚本, 3: 库

@@ -124,6 +124,7 @@
   "confirm": "确认",
   "cancel": "取消",
   "confirm_delete": "确认是否删除?",
+  "confirm_allow": "确认是否同意?",
   "delete_warning": "请注意删除操作是不可逆的",
   "strategy": "策略{{index}}",
   "weight": "权重",
@@ -410,6 +411,7 @@
   "group_description": "描述",
   "please_input_content": "请输入内容",
   "copy_fail": "复制失败",
-  "readable":"可读",
-  "writeable":"可写"
+  "readable": "可读",
+  "writeable": "可写",
+  "script_private_describe": "私有脚本不会显示在脚本列表中, 他人也无法看见, 也无法未经授权通过链接访问"
 }

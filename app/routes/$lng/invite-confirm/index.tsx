@@ -194,14 +194,19 @@ export default function inviteConfirm() {
     return <></>;
   }
   return (
-    <div className="h-full flex justify-center items-center">
-      <div className="flex w-[40%] flex-col max-w-[500px] bg-white rounded-md p-5">
+    <div className="h-full flex justify-center items-center text-xl">
+      <Card
+        title={<div className='flex justify-center'>{t('invite_confirm')}</div>}
+        className="w-[40%] max-w-[500px]"
+      >
+        <InviteDetail invite_status={invite_status} />
+      </Card>
+      {/* <div className="flex w-[40%] flex-col max-w-[500px] bg-white rounded-md p-5">
         <div className="flex justify-center text-xl w-full">
           {t('invite_confirm')}
         </div>
         <Divider />
-        <InviteDetail invite_status={invite_status} />
-      </div>
+      </div> */}
     </div>
   );
 }

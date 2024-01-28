@@ -4,6 +4,7 @@ import {
   Input,
   message,
   Radio,
+  RadioChangeEvent,
   Space,
   Switch,
   theme,
@@ -33,7 +34,7 @@ const UpdateScript: React.FC<{
   const markdown = useRef<MarkdownEditorRef>(null);
   const [changelog, setChangelog] = useState('');
   const [unwell, setUnwell] = useState(script?.unwell || 2);
-  const [isPublic, setPublic] = useState(script?.public || 1);
+  const [isPublic, setPublic] = useState<1 | 2 | 3>(script?.public || 1);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [version, setVersion] = useState(script?.script.version || '1.0.0');
@@ -198,13 +199,25 @@ const UpdateScript: React.FC<{
       {script === undefined && (
         <>
           <h3 className="text-lg">{t('script_public')}</h3>
-          <span>{t('script_public_describe')}</span>
-          <Switch
-            checkedChildren={t('public')}
-            unCheckedChildren={t('unpublic')}
-            checked={isPublic === 1 ? true : false}
-            onChange={(value) => setPublic(value ? 1 : 2)}
+          <Radio.Group
+            options={[
+              { value: 1, label: t('public') },
+              { value: 2, label: t('unpublic') },
+              { value: 3, label: t('private') },
+            ]}
+            onChange={({ target: { value } }: RadioChangeEvent) =>
+              setPublic(value)
+            }
+            value={isPublic}
+            optionType="button"
+            buttonStyle="solid"
           />
+
+          <span>
+            {isPublic === 3
+              ? t('script_private_describe')
+              : t('script_public_describe')}
+          </span>
           <h3 className="text-lg">{t('inappropriate_content')}</h3>
           <Checkbox
             checked={unwell === 1 ? true : false}
