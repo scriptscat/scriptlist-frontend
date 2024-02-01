@@ -80,7 +80,7 @@ export const ManageModal: React.FC<{
           </Button>
         </div>
         <List
-           loading={listLoading}
+          loading={listLoading}
           dataSource={list}
           renderItem={(script, index) => (
             <div className="mb-3 flex">
@@ -165,6 +165,7 @@ export const ManageModal: React.FC<{
           <UserModal
             status={openUserDialog}
             groupID={groupID}
+            hideGroup={true}
             onChange={(status) => {
               if (status === false) {
                 getPageData();

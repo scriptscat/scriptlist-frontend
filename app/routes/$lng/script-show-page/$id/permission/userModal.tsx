@@ -11,7 +11,9 @@ import {
   CreateGroupUser,
   DeleteInvite,
   GetGroupAndUserList,
+  GetGroupList,
   GetInviteList,
+  GetUserList,
 } from '~/services/scripts/api';
 
 import { DebounceSelect } from '~/components/DebounceSelect';
@@ -179,8 +181,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
         <>
           {record.invite_status === 4 ? (
             <Button
-
-            loading={allowLoading}
+              loading={allowLoading}
               onClick={async () => {
                 modal.confirm({
                   title: t('invite_by_code'),
@@ -285,18 +286,28 @@ export const UserModal: React.FC<{
   onChange: (status: boolean) => void;
   id: number;
   groupID?: number;
-}> = ({ status, onChange, id, groupID }) => {
+  hideUser?: boolean;
+  hideGroup?: boolean;
+  hideInvite?: boolean;
+}> = ({
+  status,
+  onChange,
+  id,
+  groupID,
+  hideUser = false,
+  hideGroup = false,
+  hideInvite = false,
+}) => {
   const { t } = useTranslation();
   const [activeKey, setActiveKey] = useState('user');
 
   const handleOk = () => {
+    const form = activeKey === 'user' ? userForm : groupForm;
     form
       .validateFields()
       .then((values) => {
-        debugger;
-        const arr = values.user[0].split('-');
-        const type = arr[0];
-        const targetId = arr[1];
+        const type = activeKey;
+        const targetId = values.user[0];
         const role = values.role;
         const time =
           values.time === undefined || values.time === null
@@ -336,10 +347,11 @@ export const UserModal: React.FC<{
   const handleCancel = () => {
     onChange(false);
   };
-  const [form] = Form.useForm();
-
-  const items: TabsProps['items'] = [
-    {
+  const [userForm] = Form.useForm();
+  const [groupForm] = Form.useForm();
+  const items: TabsProps['items'] = [];
+  if (!hideUser) {
+    items.push({
       key: 'user',
       label: t('invite_by_username'),
       children: (
@@ -347,7 +359,7 @@ export const UserModal: React.FC<{
           <Form
             labelCol={{ span: 4 }}
             layout="horizontal"
-            form={form}
+            form={userForm}
             initialValues={{ role: 'guest' }}
           >
             <Form.Item
@@ -367,8 +379,14 @@ export const UserModal: React.FC<{
               <DebounceSelect
                 maxCount={1}
                 mode="multiple"
-                fetchOptions={(username) => {
-                  return getSearchUserList(id, username, groupID !== undefined);
+                fetchOptions={async (username) => {
+                  const userList = await GetUserList(username);
+                  return (userList.data?.users ?? []).map((item) => {
+                    return {
+                      label: item.username,
+                      value: item.user_id,
+                    };
+                  });
                 }}
               ></DebounceSelect>
             </Form.Item>
@@ -393,13 +411,77 @@ export const UserModal: React.FC<{
           </Form>
         </div>
       ),
-    },
-    {
+    });
+  }
+  if (!hideGroup) {
+    items.push({
+      key: 'group',
+      label: t('invite_by_user_group'),
+      children: (
+        <div>
+          <Form
+            labelCol={{ span: 4 }}
+            layout="horizontal"
+            form={groupForm}
+            initialValues={{ role: 'guest' }}
+          >
+            <Form.Item
+              label={t('user_group')}
+              name="user"
+              hasFeedback
+              validateTrigger="onBlur"
+              rules={[
+                {
+                  type: 'array',
+                  required: true,
+                  len: 1,
+                  message: t('un_select_user'),
+                },
+              ]}
+            >
+              <DebounceSelect
+                maxCount={1}
+                mode="multiple"
+                fetchOptions={async (name) => {
+                  if (id !== undefined) {
+                    const userList = await GetGroupList(id, name);
+                    return (userList.data?.list ?? []).map((item) => {
+                      return {
+                        label: item.name,
+                        value: item.id,
+                      };
+                    });
+                  }
+                  return [];
+                }}
+              ></DebounceSelect>
+            </Form.Item>
+            <Form.Item label={t('grant_permission')} name="role">
+              <Select
+                options={[
+                  { value: 'guest', label: t('visitor') },
+                  { value: 'manager', label: t('admin') },
+                ]}
+              />
+            </Form.Item>
+            <Form.Item label={t('expire_time')} name="time">
+              <DatePicker
+                className="w-full"
+                placeholder={t('please_select_date')}
+              />
+            </Form.Item>
+          </Form>
+        </div>
+      ),
+    });
+  }
+  if (!hideInvite) {
+    items.push({
       key: 'code',
       label: t('invite_by_code'),
       children: <InvitePage id={id} groupID={groupID} />,
-    },
-  ];
+    });
+  }
   return (
     <Modal
       title={t('please_select_user_or_group')}
@@ -411,8 +493,8 @@ export const UserModal: React.FC<{
       width={700}
       footer={(_, { OkBtn, CancelBtn }) => (
         <>
-          {activeKey === 'user' ? <CancelBtn /> : <></>}
-          {activeKey === 'user' ? <OkBtn /> : <></>}
+          {activeKey !== 'code' ? <CancelBtn /> : <></>}
+          {activeKey !== 'code' ? <OkBtn /> : <></>}
         </>
       )}
     >

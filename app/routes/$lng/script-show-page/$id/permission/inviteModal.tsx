@@ -7,6 +7,7 @@ import {
   Select,
   Switch,
   message,
+  theme,
 } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CreateInviteCode, GetInviteList } from '~/services/scripts/api';
@@ -62,6 +63,7 @@ export const InviteModal: React.FC<{
     onChange(false);
   };
   const [form] = Form.useForm();
+  const { token } = theme.useToken();
 
   let clipboard: undefined | ClipboardJS = undefined;
   useEffect(() => {
@@ -146,8 +148,14 @@ export const InviteModal: React.FC<{
         <div>
           <div className="mb-3">{t('create_invite_list_as_follows')}:</div>
           <TextArea
+          className="!bg-transparent"
             value={inviteCodeText}
             autoSize={{ minRows: 5, maxRows: 10 }}
+            style={{
+              backgroundColor: token.colorBgContainer,
+              borderColor: token.colorBorder,
+              color: token.colorText,
+            }}
           />
         </div>
       </Modal>
