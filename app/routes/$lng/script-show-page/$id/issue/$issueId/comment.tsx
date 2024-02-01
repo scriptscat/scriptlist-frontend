@@ -89,7 +89,7 @@ export const meta: V2_MetaFunction = ({ data, matches }) => {
 export const loader: LoaderFunction = async ({ params, request }) => {
   const scriptId = parseInt(params.id as string);
   const issueId = parseInt(params.issueId as string);
-  const issue = await GetIssue(scriptId, issueId);
+  const issue = await GetIssue(scriptId, issueId, request);
   const lng = getLocale(request, 'en')!;
   let t = await i18next.getFixedT(lng);
   if (!issue) {
@@ -98,7 +98,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
       statusText: 'Not Found',
     });
   }
-  const commentList = await IssueCommentList(scriptId, issueId);
+  const commentList = await IssueCommentList(scriptId, issueId, request);
   return json({
     issue: issue,
     comments: commentList,

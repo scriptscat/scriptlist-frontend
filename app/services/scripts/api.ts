@@ -88,11 +88,15 @@ export async function getScript(id: number, req: Request, withCode?: boolean) {
 export async function getScriptByVersion(
   id: number,
   version: string,
-  withCode?: boolean
+  withCode?: boolean,
+  req?: Request
 ) {
   const resp = await request<ScriptResponse>({
     url: '/scripts/' + id + '/versions/' + version + (withCode ? '/code' : ''),
     method: 'GET',
+    headers: {
+      Cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   if (resp.status === 404) {
     return null;
@@ -107,11 +111,15 @@ export type ScriptVersionListParams = {
 
 export async function ScriptVersionList(
   id: number,
-  params?: ScriptVersionListParams
+  params?: ScriptVersionListParams,
+  req?: Request
 ) {
   const resp = await request<ScriptVersionListResponse>({
     url: '/scripts/' + id + '/versions?' + paramsToSearch(params),
     method: 'GET',
+    headers: {
+      Cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   return resp.data;
 }
@@ -121,9 +129,16 @@ export type ScoreListParam = {
   size?: number;
 };
 
-export async function ScoreList(id: number, params?: ScoreListParam) {
+export async function ScoreList(
+  id: number,
+  params?: ScoreListParam,
+  req?: Request
+) {
   const resp = await request<ScoreListResponse>({
     url: '/scripts/' + id + '/score?' + paramsToSearch(params),
+    headers: {
+      Cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   return resp.data;
 }

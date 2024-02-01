@@ -17,18 +17,32 @@ type IssueListParams = {
   status?: string;
 };
 
-export async function IssueList(scriptId: number, params?: IssueListParams) {
+export async function IssueList(
+  scriptId: number,
+  params?: IssueListParams,
+  req?: Request
+) {
   const resp = await request<IssueListResponse>({
     url: '/scripts/' + scriptId + '/issues?' + paramsToSearch(params),
     method: 'GET',
+    headers: {
+      Cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   return resp.data;
 }
 
-export async function GetIssue(scriptId: number, issueId: number) {
+export async function GetIssue(
+  scriptId: number,
+  issueId: number,
+  req?: Request
+) {
   const resp = await request<IssueResponse>({
     url: '/scripts/' + scriptId + '/issues/' + issueId,
     method: 'GET',
+    headers: {
+      Cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   if (resp.status === 404) {
     return null;
@@ -36,9 +50,16 @@ export async function GetIssue(scriptId: number, issueId: number) {
   return resp.data.data;
 }
 
-export async function IssueCommentList(scriptId: number, issueId: number) {
+export async function IssueCommentList(
+  scriptId: number,
+  issueId: number,
+  req?: Request
+) {
   const resp = await request<IssueCommentListResponse>({
     url: '/scripts/' + scriptId + '/issues/' + issueId + '/comment',
+    headers: {
+      Cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   if (resp.status === 404) {
     return null;

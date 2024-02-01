@@ -41,7 +41,7 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const id = parseInt(params.id as string);
-  const list = await ScoreList(id);
+  const list = await ScoreList(id, undefined, request);
   const my = await GetMyScore(id, request);
   return json({
     id: id,
