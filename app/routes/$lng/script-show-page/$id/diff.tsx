@@ -17,7 +17,7 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ params, request }) => {
   const lng = getLocale(request, 'en')!;
   let t = await i18next.getFixedT(lng);
-  
+
   const id = parseInt(params.id as string);
   const url = new URL(request.url);
   const version1 = url.searchParams.get('version1');
@@ -25,14 +25,14 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   if (!version1 || !version2) {
     return redirect('/script-show-page/' + id);
   }
-  const script1 = await getScriptByVersion(id, version1, true);
+  const script1 = await getScriptByVersion(id, version1, true, request);
   if (!script1) {
     throw new Response(t('script_version_not_found'), {
       status: 404,
       statusText: 'Not Found',
     });
   }
-  const script2 = await getScriptByVersion(id, version2, true);
+  const script2 = await getScriptByVersion(id, version2, true, request);
   if (!script2) {
     throw new Response(t('script_version_not_found'), {
       status: 404,

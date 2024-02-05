@@ -41,13 +41,18 @@ type LoaderData = {
   total: number;
 };
 
-export const loader: LoaderFunction = async ({ params }) => {
-  const resp = await ScriptVersionList(parseInt(params.id as string));
+export const loader: LoaderFunction = async ({ params, request }) => {
+  const resp = await ScriptVersionList(
+    parseInt(params.id as string),
+    undefined,
+    request
+  );
   return json({
     list: resp.data.list,
     total: resp.data.total,
   } as LoaderData);
 };
+
 export default function Version() {
   const data = useLoaderData<LoaderData>();
   const navigate = useNavigate();

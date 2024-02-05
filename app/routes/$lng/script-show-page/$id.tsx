@@ -26,7 +26,7 @@ import { useLocale } from 'remix-i18next';
 import i18next from '~/i18next.server';
 import { getLocale } from '~/utils/i18n';
 export type LoaderData = {
-  script: Script & { issue_num: number };
+  script: Script & { issue_num: number; role: string };
   title: string;
 };
 
@@ -67,7 +67,6 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const title =
     (script?.data?.data?.name ?? 'Script ') +
     (map[current] ? ' - ' + map[current] : '');
-    
   return json({ script: script.data.data, title: title } as LoaderData, {
     headers: forwardHeaders(script),
   });
@@ -154,7 +153,9 @@ export default function ScriptShowPage() {
   ];
   if (
     users.user &&
-    (users.user.user_id === data.script.user_id || users.user.is_admin === 1)
+    (users.user.user_id === data.script.user_id ||
+      users.user.is_admin === 1 ||
+      data.script.role === 'manager')
   ) {
     items.push(
       ...[
@@ -178,7 +179,8 @@ export default function ScriptShowPage() {
       !(
         users.user &&
         (users.user.user_id === data.script.user_id ||
-          users.user.is_admin === 1)
+          users.user.is_admin === 1||
+          data.script.role === 'manager')
       ) &&
       ['update', 'statistic', 'manage'].indexOf(current) !== -1
     ) {

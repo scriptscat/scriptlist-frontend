@@ -1,5 +1,5 @@
 import type { GrayControlValue } from '~/components/GrayControl';
-import type { APIResponse } from '../http';
+import type { APIDataResponse, APIListResponse, APIResponse } from '../http';
 import { request } from '../http';
 import { paramsToSearch } from '../utils';
 import type {
@@ -10,6 +10,7 @@ import type {
   OriginListResponse,
   RealtimeResponse,
   ScoreListResponse,
+  ScriptGroup,
   ScriptResponse,
   ScriptSettingResponse,
   ScriptStateResponse,
@@ -87,11 +88,15 @@ export async function getScript(id: number, req: Request, withCode?: boolean) {
 export async function getScriptByVersion(
   id: number,
   version: string,
-  withCode?: boolean
+  withCode?: boolean,
+  req?: Request
 ) {
   const resp = await request<ScriptResponse>({
     url: '/scripts/' + id + '/versions/' + version + (withCode ? '/code' : ''),
     method: 'GET',
+    headers: {
+      Cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   if (resp.status === 404) {
     return null;
@@ -106,11 +111,15 @@ export type ScriptVersionListParams = {
 
 export async function ScriptVersionList(
   id: number,
-  params?: ScriptVersionListParams
+  params?: ScriptVersionListParams,
+  req?: Request
 ) {
   const resp = await request<ScriptVersionListResponse>({
     url: '/scripts/' + id + '/versions?' + paramsToSearch(params),
     method: 'GET',
+    headers: {
+      Cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   return resp.data;
 }
@@ -120,9 +129,16 @@ export type ScoreListParam = {
   size?: number;
 };
 
-export async function ScoreList(id: number, params?: ScoreListParam) {
+export async function ScoreList(
+  id: number,
+  params?: ScoreListParam,
+  req?: Request
+) {
   const resp = await request<ScoreListResponse>({
     url: '/scripts/' + id + '/score?' + paramsToSearch(params),
+    headers: {
+      Cookie: (req && req.headers.get('Cookie')) || '',
+    },
   });
   return resp.data;
 }
@@ -152,6 +168,307 @@ export async function GetScriptSetting(id: number, req: Request) {
   return resp.data;
 }
 
+export interface GroupItem {
+  list: Array<{
+    id: number;
+    name: string;
+  }>;
+}
+export interface GroupMember {
+  avatar: string;
+  createtime: number;
+  expiretime: number;
+  id: number;
+  invite_status: number;
+  is_expire: boolean;
+  user_id: number;
+  username: string;
+}
+export interface UserItem {
+  users: Array<{
+    user_id: number;
+    username: string;
+  }>;
+}
+
+export async function GetGroupList(id: number, query: string) {
+  const resp = await request<APIDataResponse<GroupItem>>({
+    url: '/scripts/' + id + '/group?query=' + query + '&size=5',
+    method: 'GET',
+  });
+  return resp.data;
+}
+export async function GetGroupMemberList(
+  id: number,
+  gid: number,
+  page: number
+) {
+  const resp = await request<APIListResponse<GroupMember>>({
+    url: `/scripts/${id}/group/${gid}/member?page=${page}`,
+    method: 'GET',
+  });
+  return resp.data;
+}
+export async function GetUserList(query: string) {
+  const resp = await request<APIDataResponse<UserItem>>({
+    url: '/users/search?query=' + query,
+    method: 'GET',
+  });
+  return resp.data;
+}
+export async function CreateGroup(
+  id: number,
+  option: {
+    name: string;
+    description: string;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/group`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+export interface GroupAndUserLIst {
+  label: string;
+  value: string | number;
+}
+export async function GetGroupAndUserList(
+  id: number,
+  query: string,
+  filterGroup: boolean = false
+): Promise<GroupAndUserLIst[]> {
+  //APIDataResponse<GroupItem>
+  const promiseList = await Promise.all([
+    filterGroup ? Promise.resolve(undefined) : GetGroupList(id, query),
+    GetUserList(query),
+  ]);
+  let userList: UserItem['users'] | Array<GroupAndUserLIst> =
+    promiseList[1]?.data?.users ?? [];
+
+  userList = userList.map((item) => {
+    return {
+      label: item.username,
+      value: 'user-' + item.user_id,
+    };
+  });
+  let groupList: GroupItem['list'] | Array<GroupAndUserLIst> = [];
+  groupList = promiseList[0]?.data?.list ?? [];
+  groupList = groupList.map((item) => {
+    return {
+      label: item.name,
+      value: 'group-' + item.id,
+    };
+  });
+  return [...groupList, ...userList];
+}
+
+export async function GetInviteList(id: number, page: number, gid?: number) {
+  const resp = await request<
+    APIDataResponse<{
+      list: Array<any>;
+      total: number;
+    }>
+  >({
+    url:
+      gid === undefined
+        ? `/scripts/${id}/invite/code?page=${page}`
+        : `/scripts/${id}/invite/group/${gid}/code?page=${page}`,
+    method: 'GET',
+  });
+  return resp.data;
+}
+
+export async function GetAccessRoleList(id: number, page: number = 1) {
+  const resp = await request<
+    APIDataResponse<{
+      list: Array<any>;
+      total: number;
+    }>
+  >({
+    url: '/scripts/' + id + '/access?page=' + page,
+    method: 'GET',
+  });
+  return resp.data;
+}
+export async function DeleteAccess(id: number, aid: number) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/access/${aid}`,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+export async function DeleteGroupUser(id: number, gid: number, mid: number) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/group/${gid}/member/${mid}`,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+export async function DeleteInvite(id: number, code_id: number | string) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/invite/code/${code_id}`,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+export async function HandleInvite(code: string, accept: boolean) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/invite/${code}/accept`,
+    method: 'PUT',
+    data: {
+      accept: accept,
+    },
+  });
+  return resp.data;
+}
+export async function AllowInviteCode(
+  id: string | number,
+  code_id: string,
+  status: 1 | 2
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/invite/code/${code_id}/audit`,
+    method: 'PUT',
+    data: {
+      status: status,
+    },
+  });
+  return resp.data;
+}
+export async function UpdateAccessRole(
+  id: number,
+  aid: string,
+  option: {
+    expiretime: number;
+    role: 'visitor' | 'admin';
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/access/' + aid,
+    method: 'PUT',
+    data: {
+      expiretime: option.expiretime,
+      role: option.role,
+    },
+  });
+  return resp.data;
+}
+export async function CreateInviteCode(
+  id: number,
+  gid: number | undefined,
+  option: {
+    audit: boolean;
+    count: string;
+    days: number;
+  }
+) {
+  const resp = await request<APIDataResponse<{ code: Array<string> }>>({
+    url:
+      gid === undefined
+        ? `/scripts/${id}/invite/code`
+        : `/scripts/${id}/invite/group/${gid}/code`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+export async function CreateAccessUser(
+  id: number,
+  option: {
+    expiretime: number;
+    role: string;
+    user_id: number;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/access/user`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+export async function CreateGroupUser(
+  id: number,
+  gid: number,
+  option: {
+    expiretime: number;
+    user_id: number;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/group/${gid}/member`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+
+export async function CreateAccessGroup(
+  id: number,
+  option: {
+    expiretime: number;
+    role: string;
+    group_id: number;
+  }
+) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/access/group`,
+    method: 'POST',
+    data: option,
+  });
+  return resp.data;
+}
+
+export async function GetScriptGroupList(id: number, page: number = 1) {
+  const resp = await request<
+    APIDataResponse<{
+      list: Array<ScriptGroup>;
+      total: number;
+    }>
+  >({
+    url: '/scripts/' + id + '/group?page=' + page,
+    method: 'GET',
+  });
+  return resp.data;
+}
+
+export interface inviteDetail {
+  invite_status: number; //1 未使用，2使用，3过期，4等待，5拒绝
+  script: {
+    username: string;
+    name: string;
+  };
+  group?: {
+    name: string;
+    description: string;
+  };
+  access?: {
+    role: string;
+  };
+}
+export async function GetInviteMessage(code: string, req?: Request) {
+  const headers: { [key: string]: string } = {};
+  if (req?.headers.get('Cookie')) {
+    headers.cookie = req.headers.get('Cookie') || '';
+  }
+  const resp = await request<APIDataResponse<inviteDetail>>({
+    url: `/scripts/invite/${code}`,
+    method: 'GET',
+    headers,
+  });
+  return resp.data;
+}
+
+export async function DeleteScriptGroup(id: number, gid: number) {
+  const resp = await request<APIResponse>({
+    url: `/scripts/${id}/group/${gid}`,
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+
 export async function SubmitScore(id: number, message: string, score: number) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + id + '/score',
@@ -170,7 +487,7 @@ export type UpdateCodeParams = {
   definition?: string;
   changelog: string;
   is_pre_release: 0 | 1 | 2;
-  public: 1 | 2;
+  public: 1 | 2 | 3;
   unwell: 1 | 2;
 };
 
