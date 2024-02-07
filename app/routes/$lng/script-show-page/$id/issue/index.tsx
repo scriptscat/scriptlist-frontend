@@ -25,9 +25,13 @@ type LoaderData = {
 export const loader: LoaderFunction = async ({ params, request }) => {
   const url = new URL(request.url);
   const page = parseInt(url.searchParams.get('page') || '1');
-  const data = await IssueList(parseInt(params.id as string), {
-    page: page,
-  });
+  const data = await IssueList(
+    parseInt(params.id as string),
+    {
+      page: page,
+    },
+    request
+  );
   return json({
     list: data.data.list,
     total: data.data.total,

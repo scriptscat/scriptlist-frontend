@@ -61,7 +61,6 @@ const LanguageList: React.FC<{}> = () => {
   });
   return (
     <>
-      {' '}
       <Flex className="-mt-3 -ml-3" wrap="wrap">
         {languageList.map((languageObj) => (
           <div
