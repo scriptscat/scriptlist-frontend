@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
-import { debounce } from 'lodash';
 import { Select, SelectProps, Spin } from 'antd';
+import { debounce } from 'lodash-es';
 export interface DebounceSelectProps<ValueType = any>
   extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
   fetchOptions: (search: string) => Promise<ValueType[]>;
@@ -42,7 +42,6 @@ export function DebounceSelect<
         setFetching(false);
       });
     };
-
     return debounce(loadOptions, debounceTimeout);
   }, [fetchOptions, debounceTimeout]);
   const hanldeChange = (
@@ -59,12 +58,11 @@ export function DebounceSelect<
 
   return (
     <Select
-  
       filterOption={false}
       onSearch={debounceFetcher}
       notFoundContent={
         fetching ? (
-          <div className='flex justify-center items-center min-h-[50px]'>
+          <div className="flex justify-center items-center min-h-[50px]">
             <Spin size="small" />
           </div>
         ) : null

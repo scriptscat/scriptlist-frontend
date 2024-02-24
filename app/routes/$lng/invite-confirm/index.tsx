@@ -5,6 +5,8 @@ import pageStylesHref from './page.css';
 import { Badge, Button, Card, Divider, message } from 'antd';
 import { json, redirect } from '@remix-run/node';
 import type { LoaderFunction } from '@remix-run/node';
+import { useLocale } from 'remix-i18next';
+
 import {
   GetInviteMessage,
   HandleInvite,
@@ -34,6 +36,7 @@ export default function inviteConfirm() {
   const isGroup = codeData.group !== undefined;
   const username = codeData.script.username;
   const scriptname = codeData.script.name;
+  const locale = '/' + useLocale();
   const { t } = useTranslation();
   const sbumitInvite = async (status: boolean) => {
     const result = await HandleInvite(code, status);
@@ -200,6 +203,9 @@ export default function inviteConfirm() {
         className="w-[40%] max-w-[500px]"
       >
         <InviteDetail invite_status={invite_status} />
+        <div className='flex justify-center'>
+        <Button href={locale +"/script-show-page/"+codeData.script.id}>{t('back_script_page')}</Button>
+        </div>
       </Card>
       {/* <div className="flex w-[40%] flex-col max-w-[500px] bg-white rounded-md p-5">
         <div className="flex justify-center text-xl w-full">
