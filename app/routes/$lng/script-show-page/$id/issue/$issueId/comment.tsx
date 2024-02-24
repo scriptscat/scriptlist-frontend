@@ -170,7 +170,7 @@ export default function Comment() {
   return (
     <Card>
       <div className="flex flex-row gap-3">
-        <div className="flex flex-col gap-2 basis-3/4">
+        <div className="flex flex-col gap-2 basis-3/4 !w-3/4">
           <div className="flex flex-row justify-between">
             <span className="text-2xl">{data.issue.title}</span>
             <ActionMenu
