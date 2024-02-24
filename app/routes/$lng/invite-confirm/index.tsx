@@ -20,8 +20,14 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (code === null) {
     return redirect('/');
   }
-  const codeData = await GetInviteMessage(code, request);
-  return json({ data: codeData.data, code });
+  const resp = await GetInviteMessage(code, request);
+  if (resp.code != 0) {
+    throw new Response(resp.msg, {
+      status: 403,
+      statusText: 'Forbidden',
+    });
+  }
+  return json({ data: resp.data, code });
 };
 
 export const links: LinksFunction = () => [
@@ -30,6 +36,7 @@ export const links: LinksFunction = () => [
 export default function inviteConfirm() {
   const revalidator = useRevalidator();
   const data = useLoaderData<{ data: inviteDetail; code: string }>();
+  console.log('codeData',data)
   const codeData = data.data;
   const invite_status = codeData.invite_status;
   const code = data.code;
