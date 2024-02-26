@@ -439,6 +439,7 @@ export interface inviteDetail {
   script: {
     username: string;
     name: string;
+    id: number;
   };
   group?: {
     name: string;

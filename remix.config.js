@@ -2,6 +2,7 @@
  * @type {import('@remix-run/dev').AppConfig}
  */
 module.exports = {
+  serverDependenciesToBundle: ["lodash-es"],
   ignoredRouteFiles: ['**/.*', '**/*.css'],
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",

@@ -5,6 +5,8 @@ import pageStylesHref from './page.css';
 import { Badge, Button, Card, Divider, message } from 'antd';
 import { json, redirect } from '@remix-run/node';
 import type { LoaderFunction } from '@remix-run/node';
+import { useLocale } from 'remix-i18next';
+
 import {
   GetInviteMessage,
   HandleInvite,
@@ -18,8 +20,14 @@ export const loader: LoaderFunction = async ({ request }) => {
   if (code === null) {
     return redirect('/');
   }
-  const codeData = await GetInviteMessage(code, request);
-  return json({ data: codeData.data, code });
+  const resp = await GetInviteMessage(code, request);
+  if (resp.code != 0) {
+    throw new Response(resp.msg, {
+      status: 403,
+      statusText: 'Forbidden',
+    });
+  }
+  return json({ data: resp.data, code });
 };
 
 export const links: LinksFunction = () => [
@@ -28,12 +36,14 @@ export const links: LinksFunction = () => [
 export default function inviteConfirm() {
   const revalidator = useRevalidator();
   const data = useLoaderData<{ data: inviteDetail; code: string }>();
+  console.log('codeData',data)
   const codeData = data.data;
   const invite_status = codeData.invite_status;
   const code = data.code;
   const isGroup = codeData.group !== undefined;
   const username = codeData.script.username;
   const scriptname = codeData.script.name;
+  const locale = '/' + useLocale();
   const { t } = useTranslation();
   const sbumitInvite = async (status: boolean) => {
     const result = await HandleInvite(code, status);
@@ -200,6 +210,9 @@ export default function inviteConfirm() {
         className="w-[40%] max-w-[500px]"
       >
         <InviteDetail invite_status={invite_status} />
+        <div className='flex justify-center'>
+        <Button href={locale +"/script-show-page/"+codeData.script.id}>{t('back_script_page')}</Button>
+        </div>
       </Card>
       {/* <div className="flex w-[40%] flex-col max-w-[500px] bg-white rounded-md p-5">
         <div className="flex justify-center text-xl w-full">

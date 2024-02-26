@@ -415,5 +415,6 @@
   "copy_fail": "复制失败",
   "readable": "可读",
   "writeable": "可写",
+  "back_script_page": "返回脚本页",
   "script_private_describe": "私有脚本不会显示在脚本列表中, 他人也无法看见, 也无法未经授权通过链接访问"
 }
