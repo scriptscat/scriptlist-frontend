@@ -3,14 +3,12 @@ import { marked } from 'marked';
 import { useLocation } from '@remix-run/react';
 import githubCss from '~/styles/github-markdown-css.css';
 import Prism from 'prismjs';
-import prismCss from 'prismjs/themes/prism.min.css'
+import prismCss from 'prismjs/themes/prism.min.css';
 import xss, { whiteList } from 'xss';
 import { LinksFunction } from '@remix-run/node';
-
 // toolbar
 import prismToolbarCss from 'prismjs/plugins/toolbar/prism-toolbar.min.css';
 import 'prismjs/plugins/toolbar/prism-toolbar.min';
-
 // plugin
 import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min';
 
@@ -70,7 +68,7 @@ const MarkdownView: React.FC<{ id: string; content: string }> = ({
   });
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    ref.current && Prism.highlightAllUnder(ref.current, true);
+    ref.current && Prism.highlightAllUnder(ref.current, false);
   }, []);
   const l = whiteList;
   l.input = ['type', 'checked', 'disabled'];
