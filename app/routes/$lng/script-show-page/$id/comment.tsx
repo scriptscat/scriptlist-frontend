@@ -14,6 +14,7 @@ import {
   Skeleton,
   Space,
   theme,
+  Typography,
 } from 'antd';
 import { useContext, useEffect, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -59,16 +60,13 @@ export default function Comment() {
   const [data, setData] = useState(loaderData.list);
   const [total, setTotal] = useState(loaderData.total);
   const [page, setPage] = useState(1);
-  const dark = useDark();
   const user = useContext(UserContext);
   const script = useContext(ScriptContext);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const textEl = useRef<TextAreaRef>(null);
   const [score, setScore] = useState(
     (loaderData.myScore && loaderData.myScore.score / 10) || 5
   );
   const { t } = useTranslation();
-  const { token } = theme.useToken();
 
   const onSubmit = async () => {
     setSubmitLoading(true);
@@ -116,13 +114,6 @@ export default function Comment() {
     setLoading(false);
     setPage((page) => page + 1);
   };
-  useEffect(() => {
-    if (textEl.current && textEl.current.resizableTextArea) {
-      textEl.current.resizableTextArea.textArea.style.backgroundColor =
-        token.colorBgContainer;
-      textEl.current.resizableTextArea.textArea.style.color = token.colorText;
-    }
-  }, [textEl, token.colorBgContainer]);
 
   return (
     <Card>
@@ -135,7 +126,6 @@ export default function Comment() {
               style={{
                 height: 120,
               }}
-              ref={textEl}
               defaultValue={loaderData.myScore && loaderData.myScore.message}
               placeholder={t('write_comment_placeholder')}
             />

@@ -64,3 +64,11 @@ h6 {
 .markdown-body ol {
   list-style: decimal;
 }
+
+.dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.dark .ant-input-data-count {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
