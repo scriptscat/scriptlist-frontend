@@ -191,7 +191,7 @@ export default function Basic() {
         <PvUv
           title={t('30_day_install_uv_pv')}
           uv={data.data.uv_chart.download}
-          pv={data.data.pv_chart.update}
+          pv={data.data.pv_chart.download}
         />
       </div>
       <Divider />
