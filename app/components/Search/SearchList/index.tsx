@@ -32,7 +32,6 @@ const SearchList: React.FC<{
           target.getAttribute('script-name') +
           '\n' +
           window.location.origin +
-          '/' +
           locale +
           '/script-show-page/' +
           target.getAttribute('script-id')
