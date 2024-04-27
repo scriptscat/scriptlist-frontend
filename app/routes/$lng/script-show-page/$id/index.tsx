@@ -66,7 +66,7 @@ export default function Index() {
     }
   }, [script.script]);
   if (!script.script) {
-    return <div>{t('script_not_exist')}</div>;
+    return <div>错误: {t('script_not_exist')}</div>;
   }
   return (
     <>

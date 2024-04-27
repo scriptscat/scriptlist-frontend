@@ -191,11 +191,11 @@ const SearchItem: React.FC<{
               )}
             </>
           }
-          color="green"
+          color="pink"
           placement="bottom"
           key={script.script.meta_json['license'][0]}
         >
-          <Tag color="green">{script.script.meta_json['license'][0]}</Tag>
+          <Tag color="pink">{script.script.meta_json['license'][0]}</Tag>
         </Tooltip>
       );
     }
