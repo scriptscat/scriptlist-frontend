@@ -31,7 +31,6 @@ import { ScriptContext, UserContext } from '~/context-manager';
 import ActionMenu from '~/components/ActionMenu';
 import { useTranslation } from 'react-i18next';
 import TextArea from '~/components/TextArea';
-import { TextAreaRef } from 'antd/lib/input/TextArea';
 
 export const links: LinksFunction = () => [...markdownViewLinks()];
 
@@ -66,22 +65,21 @@ export default function Comment() {
   const [score, setScore] = useState(
     (loaderData.myScore && loaderData.myScore.score / 10) || 5
   );
+  const [scoreMessage, setScoreMessage] = useState(
+    loaderData.myScore && loaderData.myScore.message
+  );
   const { t } = useTranslation();
 
   const onSubmit = async () => {
     setSubmitLoading(true);
-    const resp = await SubmitScore(
-      loaderData.id,
-      textEl!.current!.resizableTextArea!.textArea.value,
-      score * 10
-    );
+    const resp = await SubmitScore(loaderData.id, scoreMessage, score * 10);
     setSubmitLoading(false);
     if (resp.code === 0) {
       message.success(t('comment_success'));
       for (let i = 0; i < data.length; i++) {
         if (data[i].user_id === user.user?.user_id) {
           data[i].score = score * 10;
-          data[i].message = textEl!.current!.resizableTextArea!.textArea.value;
+          data[i].message = scoreMessage;
           setData([...data]);
           return;
         }
@@ -93,7 +91,7 @@ export default function Comment() {
           username: user.user!.username,
           avatar: user.user!.avatar,
           score: score * 10,
-          message: textEl!.current!.resizableTextArea!.textArea.value,
+          message: scoreMessage,
           createtime: new Date().getTime() / 1000,
         },
         ...data,
@@ -126,7 +124,10 @@ export default function Comment() {
               style={{
                 height: 120,
               }}
-              defaultValue={loaderData.myScore && loaderData.myScore.message}
+              value={scoreMessage}
+              onChange={(v) => {
+                setScoreMessage(v.target.value);
+              }}
               placeholder={t('write_comment_placeholder')}
             />
           )}
