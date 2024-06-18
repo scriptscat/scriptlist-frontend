@@ -32,10 +32,16 @@ export type LoaderData = {
 
 export const meta: V2_MetaFunction = ({ data, location }) => {
   if (!data) {
-    return [{ title: 'Not Found - ScriptCat' }, { description: 'Not Found' }];
+    return [{ title: 'Not Found - ScriptCat' }, { description: 'Not Found' }, {
+      name: "viewport",
+      content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    },];
   }
 
-  return [{ title: data.title }, { description: data.script.description }];
+  return [{ title: data.title }, { description: data.script.description }, {
+    name: "viewport",
+    content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  },];
 };
 
 export function CatchBoundary() {
@@ -179,7 +185,7 @@ export default function ScriptShowPage() {
       !(
         users.user &&
         (users.user.user_id === data.script.user_id ||
-          users.user.is_admin === 1||
+          users.user.is_admin === 1 ||
           data.script.role === 'manager')
       ) &&
       ['update', 'statistic', 'manage'].indexOf(current) !== -1

@@ -276,6 +276,18 @@ export default function App() {
           <ConfigProvider
             theme={{
               algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+              components: {
+                Layout: {
+                  headerPadding: 0,
+                  headerHeight: 36,
+                  footerPadding: 24
+                },
+                Menu: {
+                  itemPaddingInline: 5,
+                  iconMarginInlineEnd: 2
+                },
+              },
+              cssVar: true
             }}
           >
             <StyleProvider

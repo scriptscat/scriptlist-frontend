@@ -32,22 +32,24 @@ export default function Index() {
         <Search className="w-4/5" />
         <span className="text-2xl">{t('powerful_script_extension')}</span>
         <span>{t('more_possibilities_for_your_browser')}</span>
-        <div className="flex flex-row justify-center">
-          <Space>
+        <Space className="flex flex-row justify-center">
+          <div>
             <Checkbox className="checkbox-round !text-base" checked={true}>
               {t('greasemonkey_script')}
             </Checkbox>
             <Checkbox className="checkbox-round !text-base" checked={true}>
               {t('background_script')}
             </Checkbox>
+          </div>
+          <div>
             <Checkbox className="checkbox-round !text-base" checked={true}>
               {t('scheduled_script')}
             </Checkbox>
             <Checkbox className="checkbox-round !text-base" checked={true}>
               {t('cloud_script')}
             </Checkbox>
-          </Space>
-        </div>
+          </div>
+        </Space>
         <Button
           type="primary"
           className="!px-6"
@@ -58,19 +60,21 @@ export default function Index() {
           {t('add_scriptcat_to')} {browser}
         </Button>
       </div>
-      <div className="flex flex-row justify-between gap-6">
+      <div className="flex flex-col justify-between gap-6 lg:flex-row">
         <Card className="flex-1 !rounded-xl">
-          <div className="text-center">
-            <img
-              style={{
-                width: '64px',
-                height: '64px',
-                display: 'inline-block',
-              }}
-              src="/assets/logo.png"
-              alt="logo"
-            />
-            <p className="text-3xl m-0">{t('scriptcat')}</p>
+          <div className="text-center flex flex-col sm:max-lg:flex-row">
+            <div className="card-title">
+              <img
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  display: 'inline-block',
+                }}
+                src="/assets/logo.png"
+                alt="logo"
+              />
+              <p className="text-3xl m-0">{t('scriptcat')}</p>
+            </div>
             <div className="text-left text-gray-500">
               <p className="m-0">{t('scriptcat_description')}</p>
               <p className="m-0 mt-2 font-bold">
@@ -86,12 +90,14 @@ export default function Index() {
           </div>
         </Card>
         <Card className="flex-1 !rounded-xl">
-          <div className="text-center">
-            <QuestionCircleFilled
-              className="text-6xl"
-              style={{ color: '#4695d5' }}
-            />
-            <p className="text-3xl m-0">{t('common_questions')}</p>
+          <div className="text-center flex flex-col sm:max-lg:flex-row">
+            <div className="card-title">
+              <QuestionCircleFilled
+                className="text-6xl"
+                style={{ color: '#4695d5' }}
+              />
+              <p className="text-3xl m-0">{t('common_questions')}</p>
+            </div>
             <div className="text-left text-gray-500">
               <p className="m-0 font-bold">
                 {t('what_are_greasemonkey_scripts')}
@@ -117,9 +123,11 @@ export default function Index() {
           </div>
         </Card>
         <Card className="flex-1 !rounded-xl">
-          <div className="text-center">
-            <CodeFilled className="text-6xl" style={{ color: '#4695d5' }} />
-            <p className="text-3xl m-0">{t('become_a_developer')}</p>
+          <div className="text-center flex flex-col sm:max-lg:flex-row">
+            <div className="card-title">
+              <CodeFilled className="text-6xl" style={{ color: '#4695d5' }} />
+              <p className="text-3xl m-0">{t('become_a_developer')}</p>
+            </div>
             <div className="text-left text-gray-500">
               <p className="m-0">
                 {t('as_a_forum_developer_we_can_offer_the_following_benefits')}
