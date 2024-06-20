@@ -5,7 +5,7 @@
   "license": "MIT",
   "sideEffects": false,
   "scripts": {
-    "clean": "rm -rf ./public/build",
+    "clean": "rimraf ./public/build",
     "build": "npm run prebuild && remix build",
     "dev": "npm run predev && remix dev",
     "start": "remix-serve build",
@@ -63,6 +63,7 @@
     "eslint": "^8.51.0",
     "less": "^4.1.2",
     "postcss": "^8.4.13",
+    "rimraf": "^5.0.7",
     "tailwindcss": "^3.3.3",
     "ts-node": "^10.9.1",
     "tslib": "^2.6.2",
