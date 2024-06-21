@@ -116,7 +116,7 @@ export let handle = {
   i18n: 'common',
 };
 
-export function CatchBoundary() {
+export function ErrorBoundary() {
   const error = useRouteError();
   const [config, setConfig] = useState<any>();
   const [dark, setDart] = useState(false);

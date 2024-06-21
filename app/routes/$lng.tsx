@@ -4,7 +4,7 @@ import { Typography } from 'antd';
 import { json } from 'remix-utils';
 import { getLocale } from '~/utils/i18n';
 
-export function CatchBoundary() {
+export function ErrorBoundary() {
   let error = useRouteError();
   let data = 'Unknown Error';
   if (isRouteErrorResponse(error)) {

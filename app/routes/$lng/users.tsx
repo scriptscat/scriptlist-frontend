@@ -26,7 +26,7 @@ export const meta: V2_MetaFunction = ({ data }) => {
   return ret;
 };
 
-export function CatchBoundary() {
+export function ErrorBoundary() {
   const caught = useCatch();
   return <span className="text-2xl">{caught.data}</span>;
 }

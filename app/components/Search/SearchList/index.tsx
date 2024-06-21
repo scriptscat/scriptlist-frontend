@@ -52,7 +52,7 @@ const SearchList: React.FC<{
           <List
             dataSource={list}
             renderItem={(script, index) => (
-              <div className="mb-3">
+              <div className="mb-3" key={script.id}>
                 <SearchItem
                   key={script.id}
                   script={script}

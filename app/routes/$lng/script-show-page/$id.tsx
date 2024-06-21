@@ -44,7 +44,7 @@ export const meta: V2_MetaFunction = ({ data, location }) => {
   },];
 };
 
-export function CatchBoundary() {
+export function ErrorBoundary() {
   const caught = useCatch();
   return <span className="text-2xl dark:text-white">{caught.data}</span>;
 }
