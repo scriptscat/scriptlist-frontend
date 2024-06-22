@@ -29,7 +29,7 @@ export default function Index() {
       <div className="flex flex-col items-center gap-2">
         <span className="text-5xl m-0">Script Cat</span>
         <span>{t('home_page_subtitle')}</span>
-        <Search className="w-4/5" />
+        <Search className="w-full md:w-4/5" />
         <span className="text-2xl">{t('powerful_script_extension')}</span>
         <span>{t('more_possibilities_for_your_browser')}</span>
         <Space className="flex flex-row justify-center">
