@@ -10,7 +10,9 @@ module.exports = {
   // serverBuildPath: "build/index.js",
   // publicPath: "/build/",
   future: {
-    v2_dev: true,
+    v2_dev: {
+      port: 8002,
+    },
     v2_meta: true,
     v2_errorBoundary: true,
     v2_normalizeFormMethod: true,
@@ -18,9 +20,5 @@ module.exports = {
     // v2_routeConvention: true,
   },
   serverModuleFormat: 'cjs',
-  serverDependenciesToBundle: [
-    'axios',
-    'marked',
-    'lodash-es'
-  ],
+  serverDependenciesToBundle: ['axios', 'marked', 'lodash-es'],
 };
