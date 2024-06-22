@@ -288,7 +288,7 @@ const SearchItem: React.FC<{
       <Card.Grid hoverable={false} style={gridStyle}>
         <div className="flex flex-col sm:flex-row gap-4 py-2 justify-evenly">
           {labels.map(info =>
-            <div className="flex flex-row text-center px-5 sm:max-xl:flex-col">
+            <div className="flex flex-row text-center px-5 sm:max-xl:flex-col" key={JSON.stringify(info)}>
               <span className="text-gray-500 text-sm mr-2.5 sm:max-xl:mr-0">
                 {t(info.label)}
               </span>

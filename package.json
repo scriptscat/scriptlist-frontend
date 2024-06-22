@@ -50,6 +50,7 @@
   "devDependencies": {
     "@remix-run/dev": "^1.16.1",
     "@remix-run/eslint-config": "^1.16.1",
+    "@remix-run/v1-route-convention": "^0.1.4",
     "@types/lodash": "^4.14.202",
     "@types/lodash-es": "^4.17.12",
     "@types/marked": "^4.0.3",

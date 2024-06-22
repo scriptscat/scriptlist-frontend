@@ -1,6 +1,6 @@
 import { Link, useLocation } from '@remix-run/react';
 import { ConfigProvider, Empty, List, message } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, isValidElement, cloneElement } from 'react';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
 import SearchItem from './item';
@@ -72,18 +72,13 @@ const SearchList: React.FC<{
               pageSize: 20,
               total: total,
               itemRender: (current, type, originalElement) => {
-                if (type !== 'page') {
-                  return (
-                    <Link
-                      to={{
-                        search: replaceSearchParam(location.search, {
-                          page: current,
-                        }),
-                      }}
-                    >
-                      {originalElement}
-                    </Link>
-                  );
+                if (current === 0) return originalElement;
+                if (type.startsWith('jump') && isValidElement(originalElement) && originalElement.type === "a") {
+                  return cloneElement(originalElement, {
+                    href: location.pathname + replaceSearchParam(location.search, {
+                      page: current,
+                    })
+                  } as React.HTMLProps<HTMLAnchorElement>);;
                 }
                 return (
                   <Link
@@ -93,7 +88,7 @@ const SearchList: React.FC<{
                       }),
                     }}
                   >
-                    {current}
+                    {type !== 'page' ? originalElement : current}
                   </Link>
                 );
               },
