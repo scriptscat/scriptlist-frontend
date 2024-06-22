@@ -19,9 +19,6 @@ module.exports = {
   },
   serverModuleFormat: 'cjs',
   serverDependenciesToBundle: [
-    // /^rehype.*/,
-    // /^remark.*/,
-    // /^unified.*/,
     'axios',
     'marked',
     'lodash-es'

@@ -2,7 +2,8 @@ import type { V2_MetaFunction } from '@remix-run/react';
 import {
   Link,
   Outlet,
-  useCatch,
+  useRouteError,
+  isRouteErrorResponse,
   useLoaderData,
   useLocation,
 } from '@remix-run/react';
@@ -45,8 +46,8 @@ export const meta: V2_MetaFunction = ({ data, location }) => {
 };
 
 export function ErrorBoundary() {
-  const caught = useCatch();
-  return <span className="text-2xl dark:text-white">{caught.data}</span>;
+  const caught = useRouteError();
+  return <span className="text-2xl dark:text-white">{isRouteErrorResponse(caught) ? caught.data : 'Unknown Error'}</span>;
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {

@@ -1,7 +1,7 @@
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import type { V2_MetaFunction } from '@remix-run/react';
-import { Outlet, useCatch, useLoaderData } from '@remix-run/react';
+import { Outlet, useRouteError, useLoaderData, isRouteErrorResponse } from '@remix-run/react';
 import { Avatar, Button, Card, Tag } from 'antd';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,8 +27,8 @@ export const meta: V2_MetaFunction = ({ data }) => {
 };
 
 export function ErrorBoundary() {
-  const caught = useCatch();
-  return <span className="text-2xl">{caught.data}</span>;
+  const caught = useRouteError();
+  return <span className="text-2xl">{isRouteErrorResponse(caught) ? caught.data : 'Unknown Error'}</span>;
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {
