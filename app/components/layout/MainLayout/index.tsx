@@ -302,7 +302,7 @@ const MainLayout: React.FC<{
           </Space>
         </div>
       </Header>
-      <Content className="min-[900px]:w-4/5 m-auto p-4">{children}</Content>
+      <Content className="w-full min-[900px]:w-4/5 m-auto p-4">{children}</Content>
       <Footer
         className="flex flex-col items-center"
         style={{

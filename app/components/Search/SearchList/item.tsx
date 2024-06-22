@@ -166,7 +166,7 @@ const SearchItem: React.FC<{
   return (
     <Card className="overflow-hidden border-[1.5px]">
       <Card.Grid hoverable={false} className="!p-2" style={gridStyle}>
-        <div className="flex flex-row items-center gap-1">
+        <div className="flex flex-row items-center gap-1 flex-wrap">
           <div>
             <Avatar size="large" src={script.avatar} />
           </div>
@@ -190,42 +190,39 @@ const SearchItem: React.FC<{
             {action ? (
               <Space>
                 <Dropdown
-                  overlay={
-                    <Menu
-                      selectedKeys={[watch?.toString() || '0']}
-                      items={[
-                        {
-                          key: '0',
-                          label: t('not_follow'),
-                        },
-                        {
-                          key: '1',
-                          label: t('version_update'),
-                        },
-                        {
-                          key: '2',
-                          label: t('create_issue'),
-                        },
-                        {
-                          key: '3',
-                          label: t('any'),
-                        },
-                      ]}
-                      onClick={(item) => {
-                        let resp;
-                        resp = WatchScript(script.id, parseInt(item.key));
-                        resp.then((resp) => {
-                          if (resp.code !== 0) {
-                            message.error(resp.msg);
-                          } else {
-                            onWatch &&
-                              onWatch(parseInt(item.key) as WatchLevel);
-                          }
-                        });
-                      }}
-                    ></Menu>
-                  }
-                  trigger={['click']}
+                  menu={{
+                    selectedKeys: [watch?.toString() || '0'],
+                    items: [
+                      {
+                        key: '0',
+                        label: t('not_follow'),
+                      },
+                      {
+                        key: '1',
+                        label: t('version_update'),
+                      },
+                      {
+                        key: '2',
+                        label: t('create_issue'),
+                      },
+                      {
+                        key: '3',
+                        label: t('any'),
+                      },
+                    ],
+                    onClick(item) {
+                      let resp;
+                      resp = WatchScript(script.id, parseInt(item.key));
+                      resp.then((resp) => {
+                        if (resp.code !== 0) {
+                          message.error(resp.msg);
+                        } else {
+                          onWatch &&
+                            onWatch(parseInt(item.key) as WatchLevel);
+                        }
+                      });
+                    }
+                  }}
                 >
                   <Button size="small">
                     <Space className="anticon-middle">
