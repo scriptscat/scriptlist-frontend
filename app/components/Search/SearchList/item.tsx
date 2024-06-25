@@ -39,10 +39,23 @@ import {
 import type { Script, WatchLevel } from '~/services/scripts/types';
 import ActionMenu from '~/components/ActionMenu';
 import { DeleteScript, WatchScript } from '~/services/scripts/api';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import GoogleAd from '~/components/GoogleAd';
 import { useLocale } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
+
+const licenseMap: { [key: string]: string } = {
+  MIT: 'https://opensource.org/licenses/mit',
+  'APACHE-2.0': 'https://www.apache.org/licenses/LICENSE-2.0',
+  'BSD-2': 'https://opensource.org/license/BSD-2-Clause',
+  'BSD-3': 'https://opensource.org/licenses/BSD-3-Clause',
+  'MPL-2.0': 'http://opensource.org/licenses/MPL-2.0',
+  'GPL-2.0': 'http://opensource.org/licenses/GPL-2.0',
+  'GPL-3.0': 'http://opensource.org/licenses/GPL-3.0',
+  'AGPL-3.0': 'http://opensource.org/licenses/AGPL-3.0',
+  'LGPL-3.0': 'http://opensource.org/licenses/LGPL-3.0',
+  'LGPL-2.1': 'http://opensource.org/licenses/LGPL-2.1',
+};
 
 function genRequire(scriptId: number, name: string, version: string) {
   return (
@@ -163,6 +176,63 @@ const SearchItem: React.FC<{
       }
     }
   });
+  const tag: ReactNode[] = [];
+  if (action) {
+    if (script.script.meta_json['license']) {
+      tag.push(
+        <Tooltip
+          title={
+            <>
+              {t('script_license')}:{' '}
+              {licenseMap[script.script.meta_json['license'][0]] ? (
+                <a
+                  href={
+                    licenseMap[
+                      script.script.meta_json['license'][0].toUpperCase()
+                    ]
+                  }
+                  target="_blank"
+                >
+                  {script.script.meta_json['license'][0]}
+                </a>
+              ) : (
+                script.script.meta_json['license'][0]
+              )}
+            </>
+          }
+          color="pink"
+          placement="bottom"
+          key={script.script.meta_json['license'][0]}
+        >
+          <Tag color="pink">{script.script.meta_json['license'][0]}</Tag>
+        </Tooltip>
+      );
+    }
+    if (script.script.meta_json['antifeature']) {
+      script.script.meta_json['antifeature'].forEach((item) => {
+        const antifeature = item.split(' ');
+        if (antifeatures[antifeature[0]]) {
+          tag.push(
+            <Tooltip
+              title={
+                antifeatures[antifeature[0]].description +
+                (antifeature.length > 1
+                  ? ': ' + antifeature.slice(1).join(' ')
+                  : '')
+              }
+              color={antifeatures[antifeature[0]].color}
+              placement="bottom"
+              key={antifeature[0]}
+            >
+              <Tag color={antifeatures[antifeature[0]].color}>
+                {antifeatures[antifeature[0]].title}
+              </Tag>
+            </Tooltip>
+          );
+        }
+      });
+    }
+  }
   return (
     <Card className="overflow-hidden border-[1.5px]">
       <Card.Grid hoverable={false} className="!p-2" style={gridStyle}>
@@ -508,45 +578,27 @@ const SearchItem: React.FC<{
               </Tag>
             </Tooltip>
             {script.category?.map((category) => (
-              <Tooltip
-                title={t('script_category', { category: category.name })}
-                color="green"
-                placement="bottom"
-                key={category.id}
-              >
-                <Tag color="green">{category.name}</Tag>
-              </Tooltip>
-            ))}
-            {script.type === 3 && (
-              <Tooltip
-                title={t('library_script')}
-                color="blue"
-                placement="bottom"
-              >
-                <Tag color="blue">@require库</Tag>
-              </Tooltip>
-            )}
-            {action &&
-              script.script.meta_json['antifeature'] &&
-              script.script.meta_json['antifeature'].map((item) => {
-                const antifeature = item.split(' ')[0];
-                return antifeatures[antifeature] ? (
-                  <Tooltip
-                    title={antifeatures[antifeature].description}
-                    color={antifeatures[antifeature].color}
-                    placement="bottom"
-                    key={antifeature}
-                  >
-                    <Tag color={antifeatures[antifeature].color}>
-                      {antifeatures[antifeature].title}
-                    </Tag>
-                  </Tooltip>
-                ) : (
-                  <></>
-                );
-              })}
+                <Tooltip
+                  title={t('script_category', { category: category.name })}
+                  color="green"
+                  placement="bottom"
+                  key={category.id}
+                >
+                  <Tag color="green">{category.name}</Tag>
+                </Tooltip>
+              ))}
+              {script.type === 3 && (
+                <Tooltip
+                  title={t('library_script')}
+                  color="blue"
+                  placement="bottom"
+                >
+                  <Tag color="blue">@require库</Tag>
+                </Tooltip>
+              )}
+              {tag.map((item) => item)}
+            </div>
           </div>
-        </div>
       </Card.Grid>
     </Card>
   );

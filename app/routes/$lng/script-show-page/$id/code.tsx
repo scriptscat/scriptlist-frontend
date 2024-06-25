@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   let t = await i18next.getFixedT(lng);
   const script = await getScript(parseInt(params.id as string), request, true);
   if (script.data.code != 0) {
-    throw new Response(t('script_not_exist'), {
+    throw new Response(script.data.msg, {
       status: 404,
       statusText: 'Not Found',
     });

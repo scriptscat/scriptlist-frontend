@@ -25,19 +25,25 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   if (!version1 || !version2) {
     return redirect('/script-show-page/' + id);
   }
-  const script1 = await getScriptByVersion(id, version1, true, request);
+  let script1 = await getScriptByVersion(id, version1, true, request);
   if (!script1) {
     throw new Response(t('script_version_not_found'), {
       status: 404,
       statusText: 'Not Found',
     });
   }
-  const script2 = await getScriptByVersion(id, version2, true, request);
+  let script2 = await getScriptByVersion(id, version2, true, request);
   if (!script2) {
     throw new Response(t('script_version_not_found'), {
       status: 404,
       statusText: 'Not Found',
     });
+  }
+  // 如果脚本1大于脚本2，则交换两个脚本
+  if (script1.script.id > script2.script.id) {
+    const temp = script1;
+    script1 = script2;
+    script2 = temp;
   }
   return json({ script1, script2 } as LoaderData);
 };
