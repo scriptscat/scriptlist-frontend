@@ -88,64 +88,61 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
     <div>
       {contextHolder}
       <Dropdown
-        overlay={
-          <Menu
-            items={items}
-            onClick={(value) => {
-              if (value.key === 'report') {
-                window.open(
-                  'https://bbs.tampermonkey.net.cn/forum-75-1.html',
-                  '_blank'
-                );
-              } else if (value.key === 'punish') {
-                modal.confirm({
-                  title: t('confirm_punish'),
-                  content: (
-                    <Space
-                      direction="vertical"
-                      style={{
-                        width: '100%',
-                      }}
-                    >
-                      <span>{t('select_punish_option')}</span>
-                      <Select defaultValue="lucy" style={{ width: '100%' }}>
-                        <Option value="jack">Jack</Option>
-                        <Option value="lucy">Lucy</Option>
-                        <Option value="disabled" disabled>
-                          Disabled
-                        </Option>
-                        <Option value="Yiminghe">yiminghe</Option>
-                      </Select>
-                      <span>{t('punish_reason')}</span>
-                      <TextArea
-                        rows={2}
-                        style={{ width: '100%', border: '1px solid #444' }}
-                      />
-                    </Space>
-                  ),
-                  icon: <ExclamationCircleOutlined />,
-                  okText: t('confirm'),
-                  cancelText: t('cancel'),
-                  onOk: () => {
-                    onDeleteClick();
-                  },
-                });
-              } else {
-                modal.confirm({
-                  title: t('confirm_delete'),
-                  content: t('delete_warning'),
-                  icon: <ExclamationCircleOutlined />,
-                  okText: t('confirm'),
-                  cancelText: t('cancel'),
-                  onOk: () => {
-                    onDeleteClick();
-                  },
-                });
-              }
-            }}
-          ></Menu>
-        }
-        trigger={['click']}
+        menu={{
+          items: items,
+          onClick: (value) => {
+            if (value.key === 'report') {
+              window.open(
+                'https://bbs.tampermonkey.net.cn/forum-75-1.html',
+                '_blank'
+              );
+            } else if (value.key === 'punish') {
+              modal.confirm({
+                title: t('confirm_punish'),
+                content: (
+                  <Space
+                    direction="vertical"
+                    style={{
+                      width: '100%',
+                    }}
+                  >
+                    <span>{t('select_punish_option')}</span>
+                    <Select defaultValue="lucy" style={{ width: '100%' }}>
+                      <Option value="jack">Jack</Option>
+                      <Option value="lucy">Lucy</Option>
+                      <Option value="disabled" disabled>
+                        Disabled
+                      </Option>
+                      <Option value="Yiminghe">yiminghe</Option>
+                    </Select>
+                    <span>{t('punish_reason')}</span>
+                    <TextArea
+                      rows={2}
+                      style={{ width: '100%', border: '1px solid #444' }}
+                    />
+                  </Space>
+                ),
+                icon: <ExclamationCircleOutlined />,
+                okText: t('confirm'),
+                cancelText: t('cancel'),
+                onOk: () => {
+                  onDeleteClick();
+                },
+              });
+            } else {
+              modal.confirm({
+                title: t('confirm_delete'),
+                content: t('delete_warning'),
+                icon: <ExclamationCircleOutlined />,
+                okText: t('confirm'),
+                cancelText: t('cancel'),
+                onOk: () => {
+                  onDeleteClick();
+                },
+              });
+            }
+          }
+        }}
       >
         {children}
       </Dropdown>

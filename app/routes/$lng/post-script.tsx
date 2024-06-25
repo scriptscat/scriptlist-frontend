@@ -17,7 +17,10 @@ export const meta: V2_MetaFunction = ({
 }: {
   data: { title: string; description: string };
 }) => {
-  return [{ title: data.title }, { description: data.description }];
+  return [{ title: data.title }, { description: data.description }, {
+    name: "viewport",
+    content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  },];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {

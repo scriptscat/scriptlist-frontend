@@ -22,7 +22,7 @@ const Search: React.FC<{ className?: string }> = ({ className }) => {
       <Input
         placeholder={t('search_scripts_placeholder')}
         size="large"
-        bordered={false}
+        variant="borderless"
         defaultValue={keyword}
         onChange={(e) => setKeyword(e.target.value)}
         onPressEnter={(event) => {

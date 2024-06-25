@@ -1,7 +1,7 @@
 import type { LinksFunction } from '@remix-run/node';
 import { useTranslation } from 'react-i18next';
 
-import pageStylesHref from './page.css';
+import pageStylesHref from '~/styles/invite-confirm.css';
 import { Badge, Button, Card, Divider, message } from 'antd';
 import { json, redirect } from '@remix-run/node';
 import type { LoaderFunction } from '@remix-run/node';

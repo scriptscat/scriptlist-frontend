@@ -19,7 +19,10 @@ export type LoaderData = {
 };
 
 export const meta: V2_MetaFunction = ({ data }: { data: LoaderData }) => {
-  return [{ title: data?.title ?? 'Unknow - ScriptCat' }];
+  return [{ title: data?.title ?? 'Unknown - ScriptCat' }, {
+    name: "viewport",
+    content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  },];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {

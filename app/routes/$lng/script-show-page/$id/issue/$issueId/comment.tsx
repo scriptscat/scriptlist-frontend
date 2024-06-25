@@ -69,7 +69,10 @@ type LoaderData = {
 
 export const meta: V2_MetaFunction = ({ data, matches }) => {
   if (!data) {
-    return [{ title: ' - ScriptCat' }, { description: 'Not Found' }];
+    return [{ title: ' - ScriptCat' }, { description: 'Not Found' }, {
+      name: "viewport",
+      content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    },];
   }
   return [
     {
@@ -82,6 +85,9 @@ export const meta: V2_MetaFunction = ({ data, matches }) => {
         ' · ' +
         (matches[2].data as any).script.name +
         ' - ScriptCat',
+    }, {
+      name: "viewport",
+      content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     },
   ];
 };
@@ -398,35 +404,35 @@ export default function Comment() {
                 {(user.user.user_id == data.issue.user_id ||
                   user.user.is_admin >= 1 ||
                   script.script?.user_id == user.user.user_id) && (
-                  <Button
-                    loading={loading}
-                    onClick={async () => {
-                      setLoading(true);
-                      let resp: APIResponse;
-                      if (status == 1) {
-                        resp = await CloseIssue(
-                          script.script!.id,
-                          data.issue.id
-                        );
-                      } else {
-                        resp = await OpenIssue(
-                          script.script!.id,
-                          data.issue.id
-                        );
-                      }
-                      setLoading(false);
-                      if (resp.code == 0) {
-                        setStatus(status == 1 ? 3 : 1);
-                        setList([...list, resp.data]);
-                      } else {
-                        message.error(resp.msg);
-                      }
-                      return 1;
-                    }}
-                  >
-                    {status == 1 ? t('close_feedback') : t('open_feedback')}
-                  </Button>
-                )}
+                    <Button
+                      loading={loading}
+                      onClick={async () => {
+                        setLoading(true);
+                        let resp: APIResponse;
+                        if (status == 1) {
+                          resp = await CloseIssue(
+                            script.script!.id,
+                            data.issue.id
+                          );
+                        } else {
+                          resp = await OpenIssue(
+                            script.script!.id,
+                            data.issue.id
+                          );
+                        }
+                        setLoading(false);
+                        if (resp.code == 0) {
+                          setStatus(status == 1 ? 3 : 1);
+                          setList([...list, resp.data]);
+                        } else {
+                          message.error(resp.msg);
+                        }
+                        return 1;
+                      }}
+                    >
+                      {status == 1 ? t('close_feedback') : t('open_feedback')}
+                    </Button>
+                  )}
                 <Button
                   type="primary"
                   loading={loading}

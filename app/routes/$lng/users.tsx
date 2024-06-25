@@ -1,7 +1,7 @@
 import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import type { V2_MetaFunction } from '@remix-run/react';
-import { Outlet, useCatch, useLoaderData } from '@remix-run/react';
+import { Outlet, useRouteError, useLoaderData, isRouteErrorResponse } from '@remix-run/react';
 import { Avatar, Button, Card, Tag } from 'antd';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,15 +18,17 @@ type LoaderData = {
 };
 
 export const meta: V2_MetaFunction = ({ data }) => {
-  if (!data || !data.user) {
-    return [{ title: 'Unkonw - ScriptCat' }, { description: 'Not Found' }];
-  }
-  return [{ title: data.user.username + ' - ScriptCat' }];
+  const ret = [{ title: 'Unknown - ScriptCat' }, { description: 'Not Found' }, {
+    name: "viewport",
+    content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  }];
+  if (data && data.user) ret[0] = { title: data.user.username + ' - ScriptCat' };
+  return ret;
 };
 
-export function CatchBoundary() {
-  const caught = useCatch();
-  return <span className="text-2xl">{caught.data}</span>;
+export function ErrorBoundary() {
+  const caught = useRouteError();
+  return <span className="text-2xl">{isRouteErrorResponse(caught) ? caught.data : 'Unknown Error'}</span>;
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {
@@ -75,7 +77,7 @@ export default function Users() {
         )}
         <Card className="!mb-3">
           <div className="flex flex-col items-center">
-            <div className="flex flex-row">
+            <div className="flex flex-row flex-wrap justify-center">
               <Avatar size={36} src={user.avatar} />
               <Button
                 type="link"

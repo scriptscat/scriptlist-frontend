@@ -33,6 +33,7 @@ if (typeof document !== 'undefined') {
           language: "javascript",
           readOnly: readOnly,
           theme: dark ? "vs-dark" : "vs",
+          automaticLayout: true,
         });
         resolve(editor);
       }else{
