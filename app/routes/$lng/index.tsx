@@ -7,7 +7,7 @@ import UAParser from 'ua-parser-js';
 import Search from '~/components/Search';
 
 export default function Index() {
-  const [installUrl] = useState('https://docs.scriptcat.org/use');
+  const [installUrl] = useState('https://docs.scriptcat.org/docs/use/use');
   const { t } = useTranslation();
   const [browser, setBrowser] = useState(t("browser"));
 
