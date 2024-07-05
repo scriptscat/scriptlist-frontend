@@ -79,7 +79,6 @@ export const meta: V2_MetaFunction = ({ data, matches }) => {
       },
     ];
   }
-  console.log('123123', matches);
   return [
     {
       title:
