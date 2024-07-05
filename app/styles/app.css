@@ -72,3 +72,23 @@ h6 {
 .dark .ant-input-data-count {
   color: rgba(255, 255, 255, 0.45) !important;
 }
+
+.card-title {
+  min-width: 180px;
+  align-content: center;
+}
+
+/* 宽度大于768px */
+@media (min-width: 768px) {
+  .ant-layout {
+    --ant-layout-header-height: 48px !important;
+    --ant-layout-footer-padding: 24px 50px !important;
+  }
+  .ant-menu-css-var {
+    --ant-menu-item-padding-inline: 16px !important;
+    --ant-menu-icon-margin-inline-end: 10px !important;
+  }
+  .right-banner {
+    padding-right: 16px;
+  }
+}

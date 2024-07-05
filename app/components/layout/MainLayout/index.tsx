@@ -161,12 +161,9 @@ const MainLayout: React.FC<{
       }}
     >
       <Header
-        className="flex flex-row"
+        className="flex flex-row lg:!px-[50px]"
         style={{
-          background: token.colorBgContainer,
-          height: '48px',
-          padding: '0 50px',
-          lineHeight: '48px',
+          background: token.colorBgContainer
         }}
       >
         <div className="items-center flex flex-row justify-start basis-3/4">
@@ -185,7 +182,7 @@ const MainLayout: React.FC<{
               selectedKeys={[current]}
               mode="horizontal"
               items={items}
-              className="header-menu !ml-4 max-w-xs lg:max-w-none w-full"
+              className="header-menu lg:max-w-none w-full"
               style={{
                 border: 0,
               }}
@@ -201,22 +198,17 @@ const MainLayout: React.FC<{
             </div>
           )}
         </div>
-        <div className="flex items-center justify-end basis-1/4">
+        <div className="flex items-center justify-end basis-1/4 right-banner">
           <Space className="!gap-3">
-            <Button
+          {user.user && (<Button
               type="primary"
               size="small"
               onClick={() => {
-                if (!user.user) {
-                  message.info(t('please_login'));
-                  return false;
-                } else {
                   window.open(uLocale + '/post-script', '_self');
-                }
               }}
             >
               {t('publish_script')}
-            </Button>
+            </Button>)}
             <Dropdown
               menu={{
                 className: '!rounded-md border-inherit border-1 w-32 !mt-4',
@@ -272,15 +264,11 @@ const MainLayout: React.FC<{
             >
               <GlobalOutlined style={{ display: 'block' }} />
             </Dropdown>
-            <div style={{ display: 'none' }}>
-              {localeList.map((v) => {
-                return <Fragment key={v.key}>{v.label}</Fragment>;
-              })}
-            </div>
             {user.user ? (
               <Dropdown
                 menu={{
-                  className: '!rounded-md border-inherit border-1 w-32 !mt-4',
+                  style: { marginTop: '5px' },
+                  className: '!rounded-md border-inherit border-1 w-32',
                   items: [
                     {
                       label: (
@@ -314,7 +302,7 @@ const MainLayout: React.FC<{
           </Space>
         </div>
       </Header>
-      <Content className="w-4/5 m-auto p-4">{children}</Content>
+      <Content className="w-full min-[900px]:w-4/5 m-auto p-4">{children}</Content>
       <Footer
         className="flex flex-col items-center"
         style={{

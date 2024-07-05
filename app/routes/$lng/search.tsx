@@ -109,7 +109,7 @@ export default function Search() {
   return (
     <>
       <div className="flex flex-row gap-3">
-        <div className="flex flex-col !gap-3 basis-full md:basis-3/4">
+        <div className="flex flex-col !gap-3 basis-full min-[900px]:basis-3/4">
           <Card>
             <div className="flex flex-col !gap-3">
               <div>
@@ -172,7 +172,7 @@ export default function Search() {
           </Card>
           <Outlet />
         </div>
-        <div className="flex-col gap-3 hidden basis-1/4 md:flex overflow-hidden">
+        <div className="flex-col gap-3 hidden basis-1/4 min-[900px]:flex overflow-hidden">
           <Card>
             <Card.Meta
               title={

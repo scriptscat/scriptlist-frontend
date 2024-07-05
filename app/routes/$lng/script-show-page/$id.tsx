@@ -2,7 +2,8 @@ import type { V2_MetaFunction } from '@remix-run/react';
 import {
   Link,
   Outlet,
-  useCatch,
+  useRouteError,
+  isRouteErrorResponse,
   useLoaderData,
   useLocation,
 } from '@remix-run/react';
@@ -32,15 +33,21 @@ export type LoaderData = {
 
 export const meta: V2_MetaFunction = ({ data, location }) => {
   if (!data) {
-    return [{ title: 'Not Found - ScriptCat' }, { description: 'Not Found' }];
+    return [{ title: 'Not Found - ScriptCat' }, { description: 'Not Found' }, {
+      name: "viewport",
+      content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    },];
   }
 
-  return [{ title: data.title }, { description: data.script.description }];
+  return [{ title: data.title }, { description: data.script.description }, {
+    name: "viewport",
+    content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  },];
 };
 
-export function CatchBoundary() {
-  const caught = useCatch();
-  return <span className="text-2xl dark:text-white">{caught.data}</span>;
+export function ErrorBoundary() {
+  const caught = useRouteError();
+  return <span className="text-2xl dark:text-white">{isRouteErrorResponse(caught) ? caught.data : 'Unknown Error'}</span>;
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {
@@ -179,7 +186,7 @@ export default function ScriptShowPage() {
       !(
         users.user &&
         (users.user.user_id === data.script.user_id ||
-          users.user.is_admin === 1||
+          users.user.is_admin === 1 ||
           data.script.role === 'manager')
       ) &&
       ['update', 'statistic', 'manage'].indexOf(current) !== -1
