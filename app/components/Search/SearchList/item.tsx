@@ -130,7 +130,16 @@ const SearchItem: React.FC<{
       description: t('tracking_description'),
     },
   };
-
+  const labels = [
+    { label: 'today_install', icon: DownloadOutlined, value: splitNumber(script.today_install.toString()) },
+    { label: 'total_install', icon: DownloadOutlined, value: splitNumber(script.total_install.toString()) },
+    { label: 'create_date', icon: CalendarOutlined, value: formatDate(script.createtime) },
+    { label: 'update_date', icon: CarryOutOutlined, value: formatDate(script.updatetime) },
+    {
+      label: 'user_rating', icon: StarOutlined, value: script.score
+        ? (((script.score / script.score_num) * 2) / 10).toFixed(1)
+        : t('no_rating')
+    }]
   useEffect(() => {
     if (action) {
       const api =
@@ -138,18 +147,18 @@ const SearchItem: React.FC<{
         window.external &&
         (((window.external as any).Scriptcat ||
           (window.external as any).Tampermonkey) as {
-          isInstalled: (
-            name: string,
-            namespace: string,
-            callback: (res: any, rej: any) => void
-          ) => void;
-        });
+            isInstalled: (
+              name: string,
+              namespace: string,
+              callback: (res: any, rej: any) => void
+            ) => void;
+          });
       if (api) {
         api.isInstalled(
           script.name,
           (script.script.meta_json['namespace'] &&
             script.script.meta_json['namespace'][0]) ||
-            '',
+          '',
           (res: { installed: boolean; version: string }) => {
             if (res.installed === true) {
               if (res.version == script.script.version) {
@@ -225,107 +234,74 @@ const SearchItem: React.FC<{
     }
   }
   return (
-    <>
-      <Card
-        bodyStyle={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Card.Grid hoverable={false} className="!p-2" style={gridStyle}>
-          <div className="flex flex-row items-center gap-1">
-            <div>
-              <Avatar size="large" src={script.avatar} />
-            </div>
-            <div className="flex flex-col flex-auto">
-              <Link
-                className="text-sm"
-                to={locale + '/users/' + script.user_id}
-                target="_blank"
-              >
-                {script.username}
-              </Link>
-              <Link
-                className="text-lg !text-black dark:!text-white dark:hover:!text-[#1677ff] hover:!text-[#1677ff]"
-                to={locale + '/script-show-page/' + script.id}
-                target="_blank"
-              >
-                {scriptName(script)}
-              </Link>
-            </div>
-            <div>
-              {action ? (
-                <Space>
-                  <Dropdown
-                    overlay={
-                      <Menu
-                        selectedKeys={[watch?.toString() || '0']}
-                        items={[
-                          {
-                            key: '0',
-                            label: t('not_follow'),
-                          },
-                          {
-                            key: '1',
-                            label: t('version_update'),
-                          },
-                          {
-                            key: '2',
-                            label: t('create_issue'),
-                          },
-                          {
-                            key: '3',
-                            label: t('any'),
-                          },
-                        ]}
-                        onClick={(item) => {
-                          let resp;
-                          resp = WatchScript(script.id, parseInt(item.key));
-                          resp.then((resp) => {
-                            if (resp.code !== 0) {
-                              message.error(resp.msg);
-                            } else {
-                              onWatch &&
-                                onWatch(parseInt(item.key) as WatchLevel);
-                            }
-                          });
-                        }}
-                      ></Menu>
+    <Card className="overflow-hidden border-[1.5px]">
+      <Card.Grid hoverable={false} className="!p-2" style={gridStyle}>
+        <div className="flex flex-row items-center gap-1">
+          <div>
+            <Avatar size="large" src={script.avatar} />
+          </div>
+          <div className="flex flex-col flex-auto">
+            <Link
+              className="text-sm"
+              to={locale + '/users/' + script.user_id}
+              target="_blank"
+            >
+              {script.username}
+            </Link>
+            <Link
+              className="text-lg !text-black dark:!text-white dark:hover:!text-[#1677ff] hover:!text-[#1677ff]"
+              to={locale + '/script-show-page/' + script.id}
+              target="_blank"
+            >
+              {scriptName(script)}
+            </Link>
+          </div>
+          <div>
+            {action ? (
+              <Space>
+                <Dropdown
+                  menu={{
+                    selectedKeys: [watch?.toString() || '0'],
+                    items: [
+                      {
+                        key: '0',
+                        label: t('not_follow'),
+                      },
+                      {
+                        key: '1',
+                        label: t('version_update'),
+                      },
+                      {
+                        key: '2',
+                        label: t('create_issue'),
+                      },
+                      {
+                        key: '3',
+                        label: t('any'),
+                      },
+                    ],
+                    onClick(item) {
+                      let resp;
+                      resp = WatchScript(script.id, parseInt(item.key));
+                      resp.then((resp) => {
+                        if (resp.code !== 0) {
+                          message.error(resp.msg);
+                        } else {
+                          onWatch &&
+                            onWatch(parseInt(item.key) as WatchLevel);
+                        }
+                      });
                     }
-                    trigger={['click']}
-                  >
-                    <Button size="small">
-                      <Space className="anticon-middle">
-                        <EyeFilled />
-                        {WatchLevelMap[watch || 0]}
-                        <DownOutlined />
-                      </Space>
-                    </Button>
-                  </Dropdown>
-                  <ActionMenu
-                    uid={script.user_id}
-                    deleteLevel="super_moderator"
-                    allowSelfDelete
-                    punish
-                    onDeleteClick={async () => {
-                      const resp = await DeleteScript(script.id);
-                      if (resp.code == 0) {
-                        message.success(t('delete_success'));
-                        navigate('/');
-                      } else {
-                        message.error(resp.msg);
-                      }
-                    }}
-                  >
-                    <Button
-                      type="default"
-                      size="small"
-                      className="!p-0"
-                      icon={<EllipsisOutlined />}
-                    ></Button>
-                  </ActionMenu>
-                </Space>
-              ) : (
+                  }}
+                >
+                  <Button size="small">
+                    <Space className="anticon-middle">
+                      <EyeFilled />
+                      {WatchLevelMap[watch || 0]}
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
                 <ActionMenu
                   uid={script.user_id}
                   deleteLevel="super_moderator"
@@ -335,282 +311,273 @@ const SearchItem: React.FC<{
                     const resp = await DeleteScript(script.id);
                     if (resp.code == 0) {
                       message.success(t('delete_success'));
-                      onDelete && onDelete();
+                      navigate('/');
                     } else {
                       message.error(resp.msg);
                     }
                   }}
                 >
-                  <Button type="link" className="!p-0">
-                    {t('action')}
-                  </Button>
+                  <Button
+                    type="default"
+                    size="small"
+                    className="!p-0"
+                    icon={<EllipsisOutlined />}
+                  ></Button>
                 </ActionMenu>
-              )}
-            </div>
+              </Space>
+            ) : (
+              <ActionMenu
+                uid={script.user_id}
+                deleteLevel="super_moderator"
+                allowSelfDelete
+                punish
+                onDeleteClick={async () => {
+                  const resp = await DeleteScript(script.id);
+                  if (resp.code == 0) {
+                    message.success(t('delete_success'));
+                    onDelete && onDelete();
+                  } else {
+                    message.error(resp.msg);
+                  }
+                }}
+              >
+                <Button type="link" className="!p-0">
+                  {t('action')}
+                </Button>
+              </ActionMenu>
+            )}
           </div>
-        </Card.Grid>
-        <Card.Grid hoverable={false} className="!py-2 !px-3" style={gridStyle}>
-          {scriptDescription(script)}
-        </Card.Grid>
-        <Card.Grid hoverable={false} style={gridStyle}>
-          <div className="flex flex-row gap-4 py-2">
-            <div className="flex flex-col text-center px-5">
+        </div>
+      </Card.Grid>
+      <Card.Grid hoverable={false} className="!py-2 !px-3" style={gridStyle}>
+        {scriptDescription(script)}
+      </Card.Grid>
+      <Card.Grid hoverable={false} style={gridStyle}>
+        <div className="flex flex-col sm:flex-row gap-4 py-2 justify-evenly">
+          {labels.map(info =>
+            <div className="flex flex-col text-center px-5" key={JSON.stringify(info)}>
               <span className="text-gray-500 text-sm">
-                {t('today_install')}
+                {t(info.label)}
               </span>
               <div className="text-xs font-semibold">
-                <DownloadOutlined style={iconStyle} />
-                <span>{splitNumber(script.today_install.toString())}</span>
+                <info.icon style={iconStyle} className="pr-1" />
+                <span>{info.value}</span>
               </div>
-            </div>
-            <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">
-                {t('total_install')}
-              </span>
-              <div className="text-xs font-semibold">
-                <DownloadOutlined style={iconStyle} />
-                <span>{splitNumber(script.total_install.toString())}</span>
-              </div>
-            </div>
-            <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">{t('create_date')}</span>
-              <div className="text-xs font-semibold">
-                <CalendarOutlined style={iconStyle} />
-                <span>{formatDate(script.createtime)}</span>
-              </div>
-            </div>
-            <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">{t('update_date')}</span>
-              <div className="text-xs font-semibold">
-                <CarryOutOutlined style={iconStyle} />
-                <span>{formatDate(script.updatetime)}</span>
-              </div>
-            </div>
-            <div className="flex flex-col text-center px-5">
-              <span className="text-gray-500 text-sm">{t('user_rating')}</span>
-              <div className="text-xs font-semibold">
-                <StarOutlined style={iconStyle} />
-                <span>
-                  {script.score
-                    ? (((script.score / script.score_num) * 2) / 10).toFixed(1)
-                    : t('no_rating')}
-                </span>
-              </div>
-            </div>
-          </div>
-        </Card.Grid>
-        {action && (
-          <>
-            <Card.Grid hoverable={false} style={gridStyle}>
-              <div className="flex flex-row script-info-item px-2 py-1 gap-2">
-                {(script.type == 1 || script.type == 2) && (
-                  <Button.Group>
+            </div>)}
+        </div>
+      </Card.Grid>
+      {action && (
+        <>
+          <Card.Grid hoverable={false} style={gridStyle}>
+            <div className="flex flex-row script-info-item px-2 py-1 gap-2">
+              {(script.type == 1 || script.type == 2) && (
+                <Button.Group>
+                  <Button
+                    className="!rounded-none"
+                    type="primary"
+                    href={
+                      '/scripts/code/' +
+                      script.id +
+                      '/' +
+                      encodeURIComponent(script.name) +
+                      '.user.js'
+                    }
+                    icon={<DownloadOutlined />}
+                  >
+                    {installTitle}
+                  </Button>
+                  <Tooltip placement="bottom" title={t('how_to_install')}>
                     <Button
                       className="!rounded-none"
                       type="primary"
-                      href={
-                        '/scripts/code/' +
-                        script.id +
-                        '/' +
-                        encodeURIComponent(script.name) +
-                        '.user.js'
-                      }
-                      icon={<DownloadOutlined />}
+                      href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
+                      target="_blank"
+                      icon={<QuestionCircleOutlined />}
+                      color="#3874cb"
+                    ></Button>
+                  </Tooltip>
+                  {script.enable_pre_release === 1 && (
+                    <Tooltip
+                      placement="bottom"
+                      title={t('install_pre_release_version')}
+                      color="orange"
                     >
-                      {installTitle}
-                    </Button>
+                      <Button
+                        className="!rounded-none"
+                        type="primary"
+                        href={
+                          '/scripts/pre/' +
+                          script.id +
+                          '/' +
+                          encodeURIComponent(script.name) +
+                          '.user.js'
+                        }
+                        icon={<ExperimentOutlined />}
+                        style={{
+                          background: '#f98116',
+                          borderColor: '#f98116',
+                        }}
+                      ></Button>
+                    </Tooltip>
+                  )}
+                </Button.Group>
+              )}
+              {script.type == 3 && (
+                <>
+                  <Input.Group compact className="!w-auto">
+                    <Select
+                      style={{
+                        width: '500px',
+                      }}
+                      className="border-start-radius-0"
+                      value={requireSelect}
+                      onChange={(value) => {
+                        setRequireSelect(value);
+                      }}
+                    >
+                      <Select.Option value={1}>
+                        {genRequire(
+                          script.id,
+                          script.name,
+                          script.script.version
+                        )}
+                      </Select.Option>
+                      <Select.Option value={2}>
+                        {genRequire(
+                          script.id,
+                          script.name,
+                          '^' + script.script.version
+                        ) + ' (latest compatible version)'}
+                      </Select.Option>
+                      <Select.Option value={3}>
+                        {genRequire(
+                          script.id,
+                          script.name,
+                          '~' + script.script.version
+                        ) + ' (latest bugfix version)'}
+                      </Select.Option>
+                    </Select>
+                    <Tooltip placement="bottom" title={t('copy_link')}>
+                      <Button
+                        type="default"
+                        icon={<CopyOutlined />}
+                        className="copy-require-link"
+                        require-link={
+                          requireSelect == 1
+                            ? genRequire(
+                              script.id,
+                              script.name,
+                              script.script.version
+                            )
+                            : requireSelect == 2
+                              ? genRequire(
+                                script.id,
+                                script.name,
+                                '%5E' + script.script.version
+                              )
+                              : genRequire(
+                                script.id,
+                                script.name,
+                                '~' + script.script.version
+                              )
+                        }
+                      ></Button>
+                    </Tooltip>
                     <Tooltip placement="bottom" title={t('how_to_install')}>
                       <Button
                         className="!rounded-none"
                         type="primary"
-                        href="https://bbs.tampermonkey.net.cn/thread-57-1-1.html"
+                        href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
                         target="_blank"
                         icon={<QuestionCircleOutlined />}
                         color="#3874cb"
                       ></Button>
                     </Tooltip>
-                    {script.enable_pre_release === 1 && (
-                      <Tooltip
-                        placement="bottom"
-                        title={t('install_pre_release_version')}
-                        color="orange"
-                      >
-                        <Button
-                          className="!rounded-none"
-                          type="primary"
-                          href={
-                            '/scripts/pre/' +
-                            script.id +
-                            '/' +
-                            encodeURIComponent(script.name) +
-                            '.user.js'
-                          }
-                          icon={<ExperimentOutlined />}
-                          style={{
-                            background: '#f98116',
-                            borderColor: '#f98116',
-                          }}
-                        ></Button>
-                      </Tooltip>
-                    )}
-                  </Button.Group>
-                )}
-                {script.type == 3 && (
-                  <>
-                    <Input.Group compact className="!w-auto">
-                      <Select
-                        style={{
-                          width: '500px',
-                        }}
-                        className="border-start-radius-0"
-                        value={requireSelect}
-                        onChange={(value) => {
-                          setRequireSelect(value);
-                        }}
-                      >
-                        <Select.Option value={1}>
-                          {genRequire(
-                            script.id,
-                            script.name,
-                            script.script.version
-                          )}
-                        </Select.Option>
-                        <Select.Option value={2}>
-                          {genRequire(
-                            script.id,
-                            script.name,
-                            '^' + script.script.version
-                          ) + ' (latest compatible version)'}
-                        </Select.Option>
-                        <Select.Option value={3}>
-                          {genRequire(
-                            script.id,
-                            script.name,
-                            '~' + script.script.version
-                          ) + ' (latest bugfix version)'}
-                        </Select.Option>
-                      </Select>
-                      <Tooltip placement="bottom" title={t('copy_link')}>
-                        <Button
-                          type="default"
-                          icon={<CopyOutlined />}
-                          className="copy-require-link"
-                          require-link={
-                            requireSelect == 1
-                              ? genRequire(
-                                  script.id,
-                                  script.name,
-                                  script.script.version
-                                )
-                              : requireSelect == 2
-                              ? genRequire(
-                                  script.id,
-                                  script.name,
-                                  '%5E' + script.script.version
-                                )
-                              : genRequire(
-                                  script.id,
-                                  script.name,
-                                  '~' + script.script.version
-                                )
-                          }
-                        ></Button>
-                      </Tooltip>
-                      <Tooltip placement="bottom" title={t('how_to_install')}>
-                        <Button
-                          className="!rounded-none"
-                          type="primary"
-                          href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
-                          target="_blank"
-                          icon={<QuestionCircleOutlined />}
-                          color="#3874cb"
-                        ></Button>
-                      </Tooltip>
-                    </Input.Group>
-                  </>
-                )}
-                {(script.post_id !== 0 ||
-                  script.script.meta_json['contributionurl']) && (
+                  </Input.Group>
+                </>
+              )}
+              {(script.post_id !== 0 ||
+                script.script.meta_json['contributionurl']) && (
                   <Divider type="vertical" className="!h-auto" />
                 )}
-                {script.script.meta_json['contributionurl'] && (
-                  <Button
-                    className="!rounded-none !bg-transparent !border-orange-400 !text-orange-400"
-                    href={script.script.meta_json['contributionurl'][0]}
-                    target="_blank"
-                    icon={<MoneyCollectOutlined />}
-                  >
-                    {t('donate_script')}
-                  </Button>
-                )}
-                {script.post_id !== 0 && (
-                  <Button
-                    className="!rounded-none !bg-transparent !border-blue-400 !text-blue-400"
-                    icon={
-                      <RiMessage2Line className="!inline-block !m-0 !mr-2" />
-                    }
-                    href={`https://bbs.tampermonkey.net.cn/thread-${script.post_id}-1-1.html`}
-                    target="_blank"
-                  >
-                    {t('forum_post')}
-                  </Button>
-                )}
-              </div>
-            </Card.Grid>
-            <GoogleAd width="970px" height="100px" />
-          </>
-        )}
-        <Card.Grid hoverable={false} style={gridStyle}>
-          <div className="flex flex-row justify-between py-[2px]">
-            <div className="flex flex-row items-center text-sm">
-              <Tooltip title={t('rating')} placement="bottom">
+              {script.script.meta_json['contributionurl'] && (
                 <Button
-                  icon={<StarFilled className="!text-yellow-300" />}
-                  type="text"
-                  size="small"
-                  className="anticon-middle"
-                  href={locale + '/script-show-page/' + script.id + '/comment'}
-                  target={action ? '_self' : '_blank'}
-                ></Button>
-              </Tooltip>
-              <Divider type="vertical" />
-              <Tooltip title={t('report_issue')} placement="bottom">
+                  className="!rounded-none !bg-transparent !border-orange-400 !text-orange-400"
+                  href={script.script.meta_json['contributionurl'][0]}
+                  target="_blank"
+                  icon={<MoneyCollectOutlined />}
+                >
+                  {t('donate_script')}
+                </Button>
+              )}
+              {script.post_id !== 0 && (
                 <Button
+                  className="!rounded-none !bg-transparent !border-blue-400 !text-blue-400"
                   icon={
-                    <ExclamationCircleOutlined className="!text-cyan-500" />
+                    <RiMessage2Line className="!inline-block !m-0 !mr-2" />
                   }
-                  type="text"
-                  size="small"
-                  className="anticon-middle"
-                  href={locale + '/script-show-page/' + script.id + '/issue'}
-                  target={action ? '_self' : '_blank'}
-                ></Button>
-              </Tooltip>
-              <Divider type="vertical" />
-              <Tooltip title={t('share_link')} placement="bottom">
-                <Button
-                  icon={<ShareAltOutlined className="!text-blue-500" />}
-                  type="text"
-                  size="small"
-                  className="anticon-middle copy-script-link"
-                  script-name={script.name}
-                  script-id={script.id}
-                ></Button>
-              </Tooltip>
+                  href={`https://bbs.tampermonkey.net.cn/thread-${script.post_id}-1-1.html`}
+                  target="_blank"
+                >
+                  {t('forum_post')}
+                </Button>
+              )}
             </div>
-            <div className="flex flex-row items-center">
-              <Tooltip
-                title={t('latest_script_version', {
-                  version: script.script.version,
-                })}
-                color="red"
-                placement="bottom"
-              >
-                <Tag color="red">
-                  {t('v', { version: script.script.version })}
-                </Tag>
-              </Tooltip>
-              {script.category?.map((category) => (
+          </Card.Grid>
+          <GoogleAd width="970px" height="100px" />
+        </>
+      )}
+      <Card.Grid hoverable={false} style={gridStyle}>
+        <div className="flex flex-row justify-between py-0.5">
+          <div className="flex flex-row items-center text-sm">
+            <Tooltip title={t('rating')} placement="bottom">
+              <Button
+                icon={<StarFilled className="!text-yellow-300" />}
+                type="text"
+                size="small"
+                className="anticon-middle"
+                href={locale + '/script-show-page/' + script.id + '/comment'}
+                target={action ? '_self' : '_blank'}
+              ></Button>
+            </Tooltip>
+            <Divider type="vertical" />
+            <Tooltip title={t('report_issue')} placement="bottom">
+              <Button
+                icon={
+                  <ExclamationCircleOutlined className="!text-cyan-500" />
+                }
+                type="text"
+                size="small"
+                className="anticon-middle"
+                href={locale + '/script-show-page/' + script.id + '/issue'}
+                target={action ? '_self' : '_blank'}
+              ></Button>
+            </Tooltip>
+            <Divider type="vertical" />
+            <Tooltip title={t('share_link')} placement="bottom">
+              <Button
+                icon={<ShareAltOutlined className="!text-blue-500" />}
+                type="text"
+                size="small"
+                className="anticon-middle copy-script-link"
+                script-name={script.name}
+                script-id={script.id}
+              ></Button>
+            </Tooltip>
+          </div>
+          <div className="flex flex-row items-center">
+            <Tooltip
+              title={t('latest_script_version', {
+                version: script.script.version,
+              })}
+              color="red"
+              placement="bottom"
+            >
+              <Tag color="red">
+                {t('v', { version: script.script.version })}
+              </Tag>
+            </Tooltip>
+            {script.category?.map((category) => (
                 <Tooltip
                   title={t('script_category', { category: category.name })}
                   color="green"
@@ -632,9 +599,8 @@ const SearchItem: React.FC<{
               {tag.map((item) => item)}
             </div>
           </div>
-        </Card.Grid>
-      </Card>
-    </>
+      </Card.Grid>
+    </Card>
   );
 };
 export default SearchItem;

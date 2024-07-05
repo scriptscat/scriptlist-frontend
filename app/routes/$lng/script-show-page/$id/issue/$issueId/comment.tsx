@@ -69,7 +69,15 @@ type LoaderData = {
 
 export const meta: V2_MetaFunction = ({ data, matches }) => {
   if (!data) {
-    return [{ title: ' - ScriptCat' }, { description: 'Not Found' }];
+    return [
+      { title: ' - ScriptCat' },
+      { description: 'Not Found' },
+      {
+        name: 'viewport',
+        content:
+          'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
+      },
+    ];
   }
   return [
     {
@@ -80,8 +88,13 @@ export const meta: V2_MetaFunction = ({ data, matches }) => {
         ' #' +
         data.issue.id +
         ' · ' +
-        (matches[2].data as any).script.name +
+        (matches[1].data as any).script.name +
         ' - ScriptCat',
+    },
+    {
+      name: 'viewport',
+      content:
+        'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
     },
   ];
 };

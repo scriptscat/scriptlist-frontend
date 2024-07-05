@@ -4,7 +4,7 @@ import { TextAreaRef } from 'antd/es/input/TextArea';
 import AntdTextArea, { TextAreaProps } from 'antd/lib/input/TextArea';
 
 const TextArea: React.ForwardRefRenderFunction<TextAreaRef, TextAreaProps> = (
-  props
+  props, _ref
 ) => {
   const { token } = theme.useToken();
   const ref = useRef<TextAreaRef>(null);
