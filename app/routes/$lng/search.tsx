@@ -80,6 +80,9 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
                 shape="square"
                 size="small"
                 src={item.script.meta_json['icon'][0]}
+                style={{
+                  maxWidth: '30px',
+                }}
               />
             ) : (
               <Tag
