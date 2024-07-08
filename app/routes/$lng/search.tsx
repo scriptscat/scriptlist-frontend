@@ -75,14 +75,14 @@ const RankList: React.FC<{ list: Script[] }> = ({ list }) => {
             className="text-sm !block !truncate !text-black dark:!text-white"
           >
             {item.script.meta_json['icon'] ? (
-              <Avatar
-                className="min-w-[24px]"
-                shape="square"
-                size="small"
-                src={item.script.meta_json['icon'][0]}
+              <img
                 style={{
-                  maxWidth: '30px',
+                  display: 'inline-block',
+                  width: 24,
+                  height: 24,
+                  borderRadius: '2px',
                 }}
+                src={item.script.meta_json['icon'][0]}
               />
             ) : (
               <Tag
