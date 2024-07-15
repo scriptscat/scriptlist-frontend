@@ -11,7 +11,7 @@ env:
   APP_NAME: ${{ github.event.repository.name }}
   NAMESPACE: app
   REGISTRY: ${{ secrets.DOCKER_REGISTRY && secrets.DOCKER_REGISTRY || 'docker.io' }}
-  REGISTRY_MIRROR: ${{ secrets.DOCKER_REGISTRY_MIRROR && secrets.DOCKER_REGISTRY_MIRROR || '' }}
+  REGISTRY_MIRROR: ${{ secrets.DOCKER_REGISTRY_MIRROR && secrets.DOCKER_REGISTRY_MIRROR || 'docker.io' }}
   REPOSITORY: ${{ github.repository }}
   DOMAIN: scriptcat.org
   ENV: ${{ startsWith(github.ref, 'refs/heads/release/') && 'pre' || startsWith(github.ref, 'refs/heads/test/') && 'test' || github.ref=='refs/heads/main' && 'prod' }}

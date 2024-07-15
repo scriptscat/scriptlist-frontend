@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { theme } from 'antd';
-import { TextAreaRef } from 'antd/es/input/TextArea';
-import AntdTextArea, { TextAreaProps } from 'antd/lib/input/TextArea';
+import { theme, Input } from 'antd';
+import { TextAreaProps, TextAreaRef } from 'antd/es/input/TextArea';
 
 const TextArea: React.ForwardRefRenderFunction<TextAreaRef, TextAreaProps> = (
-  props, _ref
+  props,
+  _ref
 ) => {
   const { token } = theme.useToken();
   const ref = useRef<TextAreaRef>(null);
@@ -26,7 +26,7 @@ const TextArea: React.ForwardRefRenderFunction<TextAreaRef, TextAreaProps> = (
     props.style
   );
 
-  return <AntdTextArea {...props} style={style} ref={ref} />;
+  return <Input.TextArea {...props} style={style} ref={ref} />;
 };
 
 export default React.forwardRef(TextArea);

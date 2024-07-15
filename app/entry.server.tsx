@@ -10,7 +10,7 @@ import Backend from 'i18next-fs-backend';
 import i18n from './i18n'; // your i18n configuration file
 import { resolve } from 'node:path';
 import { getLocale } from './utils/i18n';
-import {isbot} from 'isbot';
+import { isbot } from 'isbot';
 
 const ABORT_DELAY = 10 * 1000;
 

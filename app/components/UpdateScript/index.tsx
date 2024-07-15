@@ -6,11 +6,9 @@ import {
   Radio,
   RadioChangeEvent,
   Space,
-  Switch,
   theme,
   Tooltip,
 } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
 import { useRef, useState } from 'react';
 import { ClientOnly } from 'remix-utils';
 import type { CreateScriptParams } from '~/services/scripts/api';
@@ -22,6 +20,7 @@ import MarkdownEditor from '../MarkdownEditor/index.client';
 import { useTranslation } from 'react-i18next';
 import { LinksFunction } from '@remix-run/node';
 import { markdownEditorLinks } from '../MarkdownEditor';
+import TextArea from '../TextArea';
 
 export const links: LinksFunction = () => [...markdownEditorLinks()];
 
@@ -105,11 +104,6 @@ const UpdateScript: React.FC<{
         placeholder={t('current_script_update_content_support_markdown')}
         className="!bg-transparent"
         onChange={(value) => setChangelog(value.target.value)}
-        style={{
-          backgroundColor: token.colorBgContainer,
-          borderColor: token.colorBorder,
-          color: token.colorText,
-        }}
       ></TextArea>
       {script == undefined && (
         <>

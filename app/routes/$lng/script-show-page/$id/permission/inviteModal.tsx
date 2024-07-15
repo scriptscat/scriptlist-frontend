@@ -12,8 +12,8 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { CreateInviteCode, GetInviteList } from '~/services/scripts/api';
 import { CheckCircleTwoTone } from '@ant-design/icons';
-import TextArea from 'antd/lib/input/TextArea';
 import ClipboardJS from 'clipboard';
+import TextArea from '~/components/TextArea';
 
 export const InviteModal: React.FC<{
   status: boolean;
@@ -148,14 +148,9 @@ export const InviteModal: React.FC<{
         <div>
           <div className="mb-3">{t('create_invite_list_as_follows')}:</div>
           <TextArea
-          className="!bg-transparent"
+            className="!bg-transparent"
             value={inviteCodeText}
             autoSize={{ minRows: 5, maxRows: 10 }}
-            style={{
-              backgroundColor: token.colorBgContainer,
-              borderColor: token.colorBorder,
-              color: token.colorText,
-            }}
           />
         </div>
       </Modal>
