@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnsType, TableProps } from 'antd/es/table';
 import { Button, DatePicker, Form, Modal, Select, Table, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import { ReactElement, useEffect, useState } from 'react';
@@ -24,6 +24,8 @@ import { InviteModal } from './inviteModal';
 import { timestampToDateObj } from '~/utils/utils';
 import ClipboardJS from 'clipboard';
 import { Link } from '@remix-run/react';
+import { SorterResult } from 'antd/es/table/interface';
+import { sortItem } from '~/services/scripts/types';
 interface User {
   label: React.ReactNode;
   value: string | number;
@@ -61,9 +63,13 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
   const [list, setList] = useState<Array<any>>([]);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [sort, setSort] = useState<sortItem>({
+    field: '',
+    order: '',
+  });
   const getPageData = () => {
     setListLoading(true);
-    GetInviteList(id, page, groupID)
+    GetInviteList(id, page, groupID, sort)
       .then((res) => {
         if (res.code === 0) {
           setList(res.data.list);
@@ -78,7 +84,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
     if (openInviteModal === false) {
       getPageData();
     }
-  }, [page, openInviteModal]);
+  }, [page, openInviteModal, sort]);
   let clipboard: ClipboardJS | undefined = undefined;
   useEffect(() => {
     clipboard = new ClipboardJS('.copy-text');
@@ -94,7 +100,19 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
     };
   }, []);
   const inviteBaseURL = window.location.origin + '/invite-confirm?code=';
-
+  const handleTableChange: TableProps['onChange'] = (
+    pagination,
+    filters,
+    sorter
+  ) => {
+    const sorterItem = sorter as SorterResult<any>;
+    const field = sorterItem.field as string;
+    const order = sorterItem.order as string;
+    setSort({
+      field,
+      order,
+    });
+  };
   const inviteColumns: ColumnsType<DataType> = [
     {
       title: t('invite_code'),
@@ -117,6 +135,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       dataIndex: 'expiretime',
       key: 'expiretime',
       align: 'center',
+      sorter: true,
       render: (expiretime) => (
         <span>
           {expiretime !== 0
@@ -130,6 +149,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       dataIndex: 'invite_status',
       key: 'invite_status',
       align: 'center',
+      sorter: true,
       render: (invite_status, record) => {
         let status_text: string | ReactElement = '';
         if (invite_status === 1) {
@@ -266,6 +286,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
             pageSize: 20,
             total: total,
           }}
+          onChange={handleTableChange}
         />
       </div>
       {openInviteModal && (
