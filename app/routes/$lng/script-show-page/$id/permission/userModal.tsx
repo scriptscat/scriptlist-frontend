@@ -271,6 +271,7 @@ export const InvitePage: React.FC<{ id: number; groupID?: number }> = ({
       </div>
       <div>
         <Table
+          showSorterTooltip={false}
           rowKey="id"
           loading={listLoading}
           columns={inviteColumns}
