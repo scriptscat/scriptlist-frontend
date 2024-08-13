@@ -18,7 +18,7 @@ export function timestampToDateObj(value: number) {
   return {
     year: date.getFullYear(),
     month: date.getMonth() + 1,
-    day: date.getDay(),
+    day: date.getDate(),
   };
 }
 

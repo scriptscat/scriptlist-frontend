@@ -16,6 +16,7 @@ import type {
   ScriptStateResponse,
   ScriptVersionListResponse,
   SearchResponse,
+  sortItem,
   StatisticsResponse,
   UpdateWhitelistResponse,
   VisitDomainResponse,
@@ -264,7 +265,19 @@ export async function GetGroupAndUserList(
   return [...groupList, ...userList];
 }
 
-export async function GetInviteList(id: number, page: number, gid?: number) {
+export async function GetInviteList(
+  id: number,
+  page: number,
+  gid?: number,
+  sort?: sortItem
+) {
+  const isEmpty = (item: any) => {
+    return item === '' || item === undefined || item === null;
+  };
+  const orderParam =
+    isEmpty(sort?.field) || isEmpty(sort?.order)
+      ? ''
+      : `&sort=${sort?.field}&order=${sort?.order}`;
   const resp = await request<
     APIDataResponse<{
       list: Array<any>;
@@ -273,8 +286,8 @@ export async function GetInviteList(id: number, page: number, gid?: number) {
   >({
     url:
       gid === undefined
-        ? `/scripts/${id}/invite/code?page=${page}`
-        : `/scripts/${id}/invite/group/${gid}/code?page=${page}`,
+        ? `/scripts/${id}/invite/code?page=${page}${orderParam}`
+        : `/scripts/${id}/invite/group/${gid}/code?page=${page}${orderParam}`,
     method: 'GET',
   });
   return resp.data;

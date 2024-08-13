@@ -170,3 +170,22 @@ export interface ScriptGroup {
   member_count: number;
   name: string;
 }
+
+type IsAny<T> = number extends T & number ? true : false;
+
+
+
+
+export interface sortItem<
+  T extends {
+    field: any;
+    order: any;
+  } = {
+    field: any;
+    order: any;
+  }
+> {
+  field: IsAny<T['field']> extends true ? string : T['field'];
+  order: IsAny<T['order']> extends true ? string : T['order'];
+}
+
