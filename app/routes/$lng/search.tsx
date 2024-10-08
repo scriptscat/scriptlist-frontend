@@ -31,21 +31,21 @@ export const unstable_shouldReload = () => false;
 interface loaderResponse {
   rank: {
     score: Script[];
-    update: Script[];
+    // update: Script[];
   };
 }
 
 // 脚本列表使用嵌套路由实现
 export const loader: LoaderFunction = async ({ request }) => {
   const score = await lastScoreScript();
-  const update = await search({
-    sort: 'updatetime',
-    size: 10,
-  });
+  // const update = await search({
+  //   sort: 'updatetime',
+  //   size: 10,
+  // });
   return json({
     rank: {
       score: score.data.list,
-      update: update.data.list,
+      // update: update.data.list,
     },
   });
 };
@@ -215,9 +215,9 @@ export default function Search() {
               defaultActiveKey={['1', '2', '3']}
               className="rank-collapse"
             >
-              <Collapse.Panel header={t('latest_scripts')} key="3">
+              {/* <Collapse.Panel header={t('latest_scripts')} key="3">
                 <RankList list={loader.rank.update} />
-              </Collapse.Panel>
+              </Collapse.Panel> */}
               <Collapse.Panel header={t('latest_ratings')} key="2">
                 <RankList list={loader.rank.score} />
               </Collapse.Panel>
