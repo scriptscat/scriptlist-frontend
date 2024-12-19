@@ -125,6 +125,7 @@ export function ErrorBoundary() {
   const [darkMode, setDarkMode] = useState<'light' | 'dark' | 'auto'>('auto');
   const [locale, setLocale] = useState('en');
   const i18n = useContext(I18nContext);
+  
 
   useEffect(() => {
     fetch('/' + getLocaleByURL(location.href) + '/?_data=root').then((resp) => {
@@ -206,6 +207,7 @@ export function ErrorBoundary() {
 
 export default function App() {
   const config = useLoaderData();
+  const [user,setUser]=useState( config.login.user)
   const [dark, setDark] = useState(config.styleMode === 'dark');
   const [darkMode, setDarkMode] = useState<'light' | 'dark' | 'auto'>(
     config.darkMode || 'auto'
@@ -298,7 +300,8 @@ export default function App() {
             >
               <UserContext.Provider
                 value={{
-                  user: config.login.user,
+                  user:user,
+                  setUser:setUser,
                   dark: dark,
                   darkMode: darkMode,
                   env: config.ENV,
