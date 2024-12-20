@@ -25,10 +25,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: debug
-      run: |
-        echo $ACTIONS_CACHE_URL
-
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:

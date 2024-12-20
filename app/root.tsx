@@ -257,16 +257,6 @@ export default function App() {
   gtag('config', 'G-N2X6MNVRL3');`,
           }}
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `var _hmt = _hmt || [];
-          (function() {
-            var hm = document.createElement("script");
-            hm.src = "https://hm.baidu.com/hm.js?9a2c8c9a94f471c29e7bb97a363d204f";
-            document.querySelector('head').append(hm)
-          })();`,
-          }}
-        />
       </head>
       <body
         className={dark ? 'dark' : 'light'}

@@ -63,15 +63,15 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
         key: 'delete',
       });
       if (punish) {
-        items.push({
-          label: (
-            <Space className="anticon-middle">
-              <ExclamationCircleOutlined />
-              <span>{t('punish')}</span>
-            </Space>
-          ),
-          key: 'punish',
-        });
+        // items.push({
+        //   label: (
+        //     <Space className="anticon-middle">
+        //       <ExclamationCircleOutlined />
+        //       <span>{t('punish')}</span>
+        //     </Space>
+        //   ),
+        //   key: 'punish',
+        // });
       }
     }
   }
