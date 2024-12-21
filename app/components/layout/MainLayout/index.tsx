@@ -39,16 +39,20 @@ const LogOutDialog: React.FC<{
   };
   const handleOk = async () => {
     setLoading(true);
-    const resp = await LogOut();
-    setLoading(false);
-    if (resp.code === 0) {
-      message.success(t('logout_success'));
-      user.setUser?.(undefined);
-      setOpen(false)
-
-    } else {
-      message.error(resp.msg);
-    }
+    LogOut()
+      .then((resp) => {
+        setLoading(false);
+        if (resp.code === 0) {
+          message.success(t('logout_success'));
+          user.setUser?.(undefined);
+          setOpen(false);
+        } else {
+          message.error(resp.msg);
+        }
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
   return (
     <>
