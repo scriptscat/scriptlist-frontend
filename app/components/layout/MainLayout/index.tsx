@@ -1,11 +1,11 @@
 import type { MenuProps } from 'antd';
-import { message, theme } from 'antd';
+import { message, Modal, theme } from 'antd';
 import { Avatar } from 'antd';
 import { Divider } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { Layout, Menu, Button } from 'antd';
-import type { ReactNode } from 'react';
-import { Fragment, useContext } from 'react';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
+import { Fragment, useContext, useState } from 'react';
 import { useEffect } from 'react';
 import Icon, {
   MessageOutlined,
@@ -14,6 +14,7 @@ import Icon, {
   ChromeOutlined,
   UserOutlined,
   GlobalOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import { RiSunLine, RiMoonLine, RiComputerLine } from 'react-icons/ri';
 import { Link, useLocation } from '@remix-run/react';
@@ -22,8 +23,53 @@ import { UserContext } from '~/context-manager';
 import { lngMap } from '~/utils/i18n';
 import { useTranslation } from 'react-i18next';
 import { moonLineIcon, sunLineIcon } from '~/utils/icon';
+import { LogOut } from '~/services/users/api';
 
 const { Header, Footer, Content } = Layout;
+
+const LogOutDialog: React.FC<{
+  isOpen: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}> = ({ isOpen, setOpen }) => {
+  const user = useContext(UserContext);
+  const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
+  const handleCancel = () => {
+    setOpen(false);
+  };
+  const handleOk = async () => {
+    setLoading(true);
+    LogOut()
+      .then((resp) => {
+        setLoading(false);
+        if (resp.code === 0) {
+          message.success(t('logout_success'));
+          user.setUser?.(undefined);
+          setOpen(false);
+        } else {
+          message.error(resp.msg);
+        }
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+  return (
+    <>
+      <Modal
+        title={t('logout')}
+        open={isOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText={t('confirm')}
+        cancelText={t('cancel')}
+        confirmLoading={loading}
+      >
+        <p className="pt-2">{t('confirm_logout')}</p>
+      </Modal>
+    </>
+  );
+};
 
 const MainLayout: React.FC<{
   locale: string;
@@ -125,6 +171,10 @@ const MainLayout: React.FC<{
       '_self'
     );
   };
+  const [isOpenLogOutDialog, setIsOpenLogOutDialog] = useState(false);
+  const logOut = () => {
+    setIsOpenLogOutDialog(true);
+  };
 
   let localeList = [];
   for (const [, lng] of Object.entries(lngMap)) {
@@ -154,191 +204,218 @@ const MainLayout: React.FC<{
   });
 
   return (
-    <Layout
-      className={dark}
-      style={{
-        minHeight: '100%',
-      }}
-    >
-      <Header
-        className="flex flex-row lg:!px-[50px]"
+    <>
+      <Layout
+        className={dark}
         style={{
-          background: token.colorBgContainer
+          minHeight: '100%',
         }}
       >
-        <div className="items-center flex flex-row justify-start basis-3/4">
-          <div className="items-center flex flex-row w-full">
-            <Link to={uLocale + '/'} className="hidden lg:block min-w-max">
-              <img
+        <Header
+          className="flex flex-row lg:!px-[50px]"
+          style={{
+            background: token.colorBgContainer,
+          }}
+        >
+          <div className="items-center flex flex-row justify-start basis-3/4">
+            <div className="items-center flex flex-row w-full">
+              <Link to={uLocale + '/'} className="hidden lg:block min-w-max">
+                <img
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                  }}
+                  src="/assets/logo.png"
+                  alt="logo"
+                />
+              </Link>
+              <Menu
+                selectedKeys={[current]}
+                mode="horizontal"
+                items={items}
+                className="header-menu lg:max-w-none w-full"
                 style={{
-                  width: '32px',
-                  height: '32px',
+                  border: 0,
                 }}
-                src="/assets/logo.png"
-                alt="logo"
               />
-            </Link>
-            <Menu
-              selectedKeys={[current]}
-              mode="horizontal"
-              items={items}
-              className="header-menu lg:max-w-none w-full"
-              style={{
-                border: 0,
-              }}
-            />
-          </div>
-          {location.pathname == uLocale + '/search' && (
-            <div
-              style={{
-                width: '80%',
-              }}
-            >
-              <Search className="h-9 border w-full" />
             </div>
-          )}
-        </div>
-        <div className="flex items-center justify-end basis-1/4 right-banner">
-          <Space className="!gap-3">
-          {user.user && (<Button
-              type="primary"
-              size="small"
-              onClick={() => {
-                  window.open(uLocale + '/post-script', '_self');
-              }}
-            >
-              {t('publish_script')}
-            </Button>)}
-            <Dropdown
-              menu={{
-                className: '!rounded-md border-inherit border-1 w-32 !mt-4',
-                selectedKeys: [mode],
-                onClick: ({ key }) => {
-                  onDarkModeChange(key as any);
-                  document.cookie = 'darkMode=' + key + ';path=/';
-                },
-                items: [
-                  {
-                    label: (
-                      <Space>
-                        <RiSunLine />
-                        <p className="text-sm m-0">{t('light')}</p>
-                      </Space>
-                    ),
-                    key: 'light',
-                  },
-                  {
-                    label: (
-                      <Space>
-                        <RiMoonLine />
-                        <p className="text-sm m-0">{t('dark')}</p>
-                      </Space>
-                    ),
-                    key: 'dark',
-                  },
-                  {
-                    label: (
-                      <Space>
-                        <RiComputerLine />
-                        <p className="text-sm m-0">{t('system')}</p>
-                      </Space>
-                    ),
-                    key: 'auto',
-                  },
-                ],
-              }}
-              trigger={['click']}
-              placement="bottomLeft"
-            >
-              {DropdownIcon}
-            </Dropdown>
-            <Dropdown
-              menu={{
-                className: '!rounded-md border-inherit border-1 w-50 !mt-4',
-                selectedKeys: [uLocale],
-                items: localeList,
-                forceSubMenuRender: true,
-              }}
-              trigger={['click']}
-              placement="bottomLeft"
-            >
-              <GlobalOutlined style={{ display: 'block' }} />
-            </Dropdown>
-            {user.user ? (
+            {location.pathname == uLocale + '/search' && (
+              <div
+                style={{
+                  width: '80%',
+                }}
+              >
+                <Search className="h-9 border w-full" />
+              </div>
+            )}
+          </div>
+          <div className="flex items-center justify-end basis-1/4 right-banner">
+            <Space className="!gap-3">
+              {user.user && (
+                <Button
+                  type="primary"
+                  size="small"
+                  onClick={() => {
+                    window.open(uLocale + '/post-script', '_self');
+                  }}
+                >
+                  {t('publish_script')}
+                </Button>
+              )}
               <Dropdown
                 menu={{
-                  style: { marginTop: '5px' },
-                  className: '!rounded-md border-inherit border-1 w-32',
+                  className: '!rounded-md border-inherit border-1 w-32 !mt-4',
+                  selectedKeys: [mode],
+                  onClick: ({ key }) => {
+                    onDarkModeChange(key as any);
+                    document.cookie = 'darkMode=' + key + ';path=/';
+                  },
                   items: [
                     {
                       label: (
-                        <Link
-                          to={{
-                            pathname: uLocale + '/users/' + user.user?.user_id,
-                          }}
-                        >
-                          <Space className="anticon-middle">
-                            <UserOutlined />
-                            <p className="text-sm m-0">
-                              {t('personal_center')}
-                            </p>
-                          </Space>
-                        </Link>
+                        <Space>
+                          <RiSunLine />
+                          <p className="text-sm m-0">{t('light')}</p>
+                        </Space>
                       ),
-                      key: 'users',
+                      key: 'light',
+                    },
+                    {
+                      label: (
+                        <Space>
+                          <RiMoonLine />
+                          <p className="text-sm m-0">{t('dark')}</p>
+                        </Space>
+                      ),
+                      key: 'dark',
+                    },
+                    {
+                      label: (
+                        <Space>
+                          <RiComputerLine />
+                          <p className="text-sm m-0">{t('system')}</p>
+                        </Space>
+                      ),
+                      key: 'auto',
                     },
                   ],
                 }}
                 trigger={['click']}
-                placement="bottom"
+                placement="bottomLeft"
               >
-                <Avatar src={user.user.avatar}></Avatar>
+                {DropdownIcon}
               </Dropdown>
-            ) : (
-              <Button id="go-to-login" type="primary" ghost onClick={gotoLogin}>
-                {t('login')}
-              </Button>
-            )}
-          </Space>
-        </div>
-      </Header>
-      <Content className="w-full min-[900px]:w-4/5 m-auto p-4">{children}</Content>
-      <Footer
-        className="flex flex-col items-center"
-        style={{
-          background: token.colorBgContainer,
-        }}
-      >
-        <div>
-          <a
-            href="https://bbs.tampermonkey.net.cn/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t('tampermonkey_chinese_website')}
-          </a>
-          <Divider type="vertical" />
-          <a
-            href="https://docs.scriptcat.org/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t('scriptcat')}
-          </a>
-          <Divider type="vertical" />
-          <a href={uLocale + '/sitemap'}>{t('sitemap_title')}</a>
-          <Divider type="vertical" />
-          <a
-            href="https://github.com/scriptscat"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub
-          </a>
-        </div>
-        <p className="m-0 text-sm">{t('all_rights_reserved')}</p>
-      </Footer>
-    </Layout>
+              <Dropdown
+                menu={{
+                  className: '!rounded-md border-inherit border-1 w-50 !mt-4',
+                  selectedKeys: [uLocale],
+                  items: localeList,
+                  forceSubMenuRender: true,
+                }}
+                trigger={['click']}
+                placement="bottomLeft"
+              >
+                <GlobalOutlined style={{ display: 'block' }} />
+              </Dropdown>
+              {user.user ? (
+                <Dropdown
+                  menu={{
+                    style: { marginTop: '5px' },
+                    className: '!rounded-md border-inherit border-1 w-32',
+                    items: [
+                      {
+                        label: (
+                          <Link
+                            to={{
+                              pathname:
+                                uLocale + '/users/' + user.user?.user_id,
+                            }}
+                          >
+                            <Space className="anticon-middle">
+                              <UserOutlined />
+                              <p className="text-sm m-0">
+                                {t('personal_center')}
+                              </p>
+                            </Space>
+                          </Link>
+                        ),
+                        key: 'users',
+                      },
+                      {
+                        label: (
+                          <Space onClick={logOut} className="anticon-middle">
+                            <LogoutOutlined />
+                            <p className="text-sm m-0">{t('logout')}</p>
+                          </Space>
+                        ),
+                        key: 'logout',
+                      },
+                    ],
+                  }}
+                  trigger={['click']}
+                  placement="bottom"
+                >
+                  <Avatar src={user.user.avatar}></Avatar>
+                </Dropdown>
+              ) : (
+                <Button
+                  id="go-to-login"
+                  type="primary"
+                  ghost
+                  onClick={gotoLogin}
+                >
+                  {t('login')}
+                </Button>
+              )}
+            </Space>
+          </div>
+        </Header>
+        <Content className="w-full min-[900px]:w-4/5 m-auto p-4">
+          {children}
+        </Content>
+        <Footer
+          className="flex flex-col items-center"
+          style={{
+            background: token.colorBgContainer,
+          }}
+        >
+          <div>
+            <a
+              href="https://bbs.tampermonkey.net.cn/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t('tampermonkey_chinese_website')}
+            </a>
+            <Divider type="vertical" />
+            <a
+              href="https://docs.scriptcat.org/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t('scriptcat')}
+            </a>
+            <Divider type="vertical" />
+            <a href={uLocale + '/sitemap'}>{t('sitemap_title')}</a>
+            <Divider type="vertical" />
+            <a
+              href="https://github.com/scriptscat"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+          </div>
+          <p className="m-0 text-sm">{t('all_rights_reserved')}</p>
+        </Footer>
+      </Layout>
+      {isOpenLogOutDialog ? (
+        <LogOutDialog
+          isOpen={isOpenLogOutDialog}
+          setOpen={setIsOpenLogOutDialog}
+        />
+      ) : null}
+    </>
   );
 };
 

@@ -61,6 +61,14 @@ export async function RefreshWebhookToken() {
   return resp.data;
 }
 
+export async function LogOut() {
+  const resp = await request<WebhookResponse>({
+    url: '/logout',
+    method: 'GET',
+  });
+  return resp.data;
+}
+
 export async function UserConfig(req: Request) {
   const resp = await request<UserConfigResponse>({
     url: '/users/config',
