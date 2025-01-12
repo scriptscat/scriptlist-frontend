@@ -2,8 +2,9 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context-manager';
 import type { Script } from '~/services/scripts/types';
 import dayjs from 'dayjs';
-import i18next from 'i18next';
+import i18next, { use } from 'i18next';
 import { MediaQueryAllQueryable, useMediaQuery } from 'react-responsive';
+import { User } from '~/services/users/types';
 
 export function formatDate(value: number) {
   // 如果大于一年，显示年月日
@@ -69,4 +70,39 @@ export function useMediaQueryState(settings: MediaQuerySettings) {
     setMediaState(mediaQuery);
   }, [mediaQuery]);
   return mediaState;
+}
+
+type managerLevel = 'super_moderator' | 'moderator';
+
+export function cheakAdminRole(
+  user: User | undefined,
+  level: managerLevel = 'moderator'
+) {
+  if (user) {
+    if (
+      user.is_admin > 0 &&
+      (user.is_admin === 1 ||
+        (level === 'super_moderator' && user.is_admin <= 2) ||
+        (level === 'moderator' && user.is_admin <= 3))
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function checkScriptManageRole(
+  user: User | undefined, //用户信息
+  script: (Script ) | undefined, //脚本信息
+  haveManager: boolean = false //是否包含脚本管理员
+) {
+  if (user && script) {
+    if (user.user_id === script.user_id) {
+      return true;
+    }
+    // if (haveManager && script.role === 'manager') {
+    //   return true;
+    // }
+  }
+  return false;
 }

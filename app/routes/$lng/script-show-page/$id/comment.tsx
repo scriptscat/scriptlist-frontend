@@ -8,6 +8,7 @@ import {
   ConfigProvider,
   Divider,
   Empty,
+  Flex,
   List,
   message,
   Rate,
@@ -16,14 +17,27 @@ import {
   theme,
   Typography,
 } from 'antd';
-import { useContext, useEffect, useRef, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { formatDate, useDark } from '~/utils/utils';
+import {
+  cheakAdminRole,
+  checkScriptManageRole,
+  formatDate,
+  useDark,
+} from '~/utils/utils';
 import MarkdownView, { markdownViewLinks } from '~/components/MarkdownView';
 import {
   DeleteScore,
   GetMyScore,
   ScoreList,
+  submitCommentReply,
   SubmitScore,
 } from '~/services/scripts/api';
 import type { ScoreItem } from '~/services/scripts/types';
@@ -31,6 +45,7 @@ import { ScriptContext, UserContext } from '~/context-manager';
 import ActionMenu from '~/components/ActionMenu';
 import { useTranslation } from 'react-i18next';
 import TextArea from '~/components/TextArea';
+import { CloseOutlined, MessageOutlined } from '@ant-design/icons';
 
 export const links: LinksFunction = () => [...markdownViewLinks()];
 
@@ -53,6 +68,73 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   } as LoaderData);
 };
 
+const AuthorReply: React.FC<{
+  setReplayOpen: (id: number, status: boolean) => void;
+  defaultText: string;
+  id: number;
+  commentID: number;
+  setData: (commentID: number, authorMessage: string) => void;
+}> = function ({ setData, setReplayOpen, defaultText, id, commentID }) {
+  const { t } = useTranslation();
+  const [text, setText] = useState(defaultText);
+  const [loading, setLoading] = useState(false);
+  const submit = () => {
+    setLoading(true);
+    submitCommentReply(id, commentID, text)
+      .then((resp) => {
+        setLoading(false);
+        if (resp.code === 0) {
+          setData(commentID, text);
+          message.success(t('reply_success'));
+          setReplayOpen(commentID, false);
+        } else {
+          message.error(resp.msg);
+        }
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+  return (
+    <>
+      <div className="mt-2">
+        <TextArea
+          maxLength={200}
+          showCount
+          style={{
+            height: 80,
+          }}
+          value={text}
+          onChange={(v) => {
+            setText(v.target.value);
+          }}
+          placeholder={t('write_commene_reply')}
+        />
+      </div>
+      <div className="flex justify-end mt-6">
+        <Space>
+          <Button
+            onClick={() => setReplayOpen(commentID, false)}
+            icon={<CloseOutlined />}
+            size="small"
+          >
+            {t('cancel')}
+          </Button>
+          <Button
+            loading={loading}
+            size="small"
+            onClick={() => submit()}
+            icon={<MessageOutlined />}
+            type="primary"
+          >
+            {t('reply')}
+          </Button>
+        </Space>
+      </div>
+    </>
+  );
+};
+
 export default function Comment() {
   const loaderData = useLoaderData<LoaderData>();
   const [loading, setLoading] = useState(false);
@@ -68,8 +150,42 @@ export default function Comment() {
   const [scoreMessage, setScoreMessage] = useState(
     loaderData.myScore && loaderData.myScore.message
   );
+  const [replyListObj, setReplyListObj] = useState<{
+    [key: number]: boolean;
+  }>({});
+  //换页清空回复选中项
+  useEffect(() => {
+    setReplyListObj({});
+  }, [page]);
+  const setReplyDialog = (id: number, status: boolean) => {
+    setReplyListObj(prevState =>({
+      ...prevState,
+      [id]: status,
+    }));
+  };
   const { t } = useTranslation();
-
+  const replyRole =
+    cheakAdminRole(user.user) ||
+    checkScriptManageRole(user.user, script.script);
+  const setReplyData = (commentID: number, authorMessage: string) => {
+    const item = data.find((item) => item.id == commentID);
+    if (item == undefined) {
+      return;
+    }
+    setData((preData)=>[
+      ...preData.map((item) => {
+        if (item.id != commentID) {
+          return {
+            ...item,
+          };
+        }
+        return {
+          ...item,
+          author_message: authorMessage,
+        };
+      }),
+    ]);
+  };
   const onSubmit = async () => {
     setSubmitLoading(true);
     const resp = await SubmitScore(loaderData.id, scoreMessage, score * 10);
@@ -93,6 +209,7 @@ export default function Comment() {
           score: score * 10,
           message: scoreMessage,
           createtime: new Date().getTime() / 1000,
+          author_message: '',
         },
         ...data,
       ]);
@@ -239,6 +356,35 @@ export default function Comment() {
                         content={item.message}
                       ></MarkdownView>
                     </div>
+                    {replyListObj[item.id] != true &&
+                    (item?.author_message ?? '') !== '' ? (
+                      <div className="ml-4 mt-2">
+                        <span>{t('author_reply')} : </span>
+                        <span>{item.author_message}</span>
+                      </div>
+                    ) : null}
+                    <div className="flex justify-end">
+                      {replyRole && replyListObj[item.id] !== true ? (
+                        <Button
+                          onClick={() => setReplyDialog(item.id, true)}
+                          icon={<MessageOutlined />}
+                          type="link"
+                        >
+                          {t('reply')}
+                        </Button>
+                      ) : null}
+                    </div>
+                    {replyListObj[item.id] ? (
+                      <div>
+                        <AuthorReply
+                          setData={setReplyData}
+                          setReplayOpen={setReplyDialog}
+                          defaultText={item.author_message}
+                          id={loaderData.id}
+                          commentID={item.id}
+                        ></AuthorReply>
+                      </div>
+                    ) : null}
                   </List.Item>
                 )}
               />

@@ -495,6 +495,18 @@ export async function SubmitScore(id: number, message: string, score: number) {
   return resp.data;
 }
 
+export async function submitCommentReply(id: number, commentID: number, message: string) {
+  const resp = await request<APIResponse>({
+    url: '/scripts/' + id + '/commentReply',
+    method: 'PUT',
+    data: {
+      commentID,
+      message,
+    },
+  });
+  return resp.data;
+}
+
 export type UpdateCodeParams = {
   content: string;
   code: string;
