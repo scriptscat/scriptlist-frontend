@@ -202,7 +202,7 @@ export default function Comment() {
       }
       setData([
         {
-          id: 0,
+          id: resp.data.id,
           user_id: user.user!.user_id,
           username: user.user!.username,
           avatar: user.user!.avatar,
