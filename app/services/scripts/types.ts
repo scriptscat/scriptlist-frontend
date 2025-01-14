@@ -118,6 +118,7 @@ export type ScoreItem = {
   score: number;
   message: string;
   createtime: number;
+  author_message:string;
 };
 
 export type ScriptSetting = {
