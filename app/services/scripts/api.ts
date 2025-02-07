@@ -67,10 +67,13 @@ export async function search(
   return resp.data;
 }
 
-export async function lastScoreScript() {
+export async function lastScoreScript(req: Request) {
   const resp = await request<SearchResponse>({
     url: '/scripts/last-score',
     method: 'GET',
+    headers: {
+      Cookie: req?.headers.get('Cookie') || '',
+    },
   });
   return resp.data;
 }
@@ -495,7 +498,11 @@ export async function SubmitScore(id: number, message: string, score: number) {
   return resp.data;
 }
 
-export async function submitCommentReply(id: number, commentID: number, message: string) {
+export async function submitCommentReply(
+  id: number,
+  commentID: number,
+  message: string
+) {
   const resp = await request<APIResponse>({
     url: '/scripts/' + id + '/commentReply',
     method: 'PUT',

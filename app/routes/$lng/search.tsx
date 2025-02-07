@@ -37,11 +37,14 @@ interface loaderResponse {
 
 // 脚本列表使用嵌套路由实现
 export const loader: LoaderFunction = async ({ request }) => {
-  const score = await lastScoreScript();
-  const update = await search({
-    sort: 'createtime',
-    size: 10,
-  });
+  const score = await lastScoreScript(request);
+  const update = await search(
+    {
+      sort: 'createtime',
+      size: 10,
+    },
+    request
+  );
   return json({
     rank: {
       score: score.data.list,
