@@ -131,15 +131,34 @@ const SearchItem: React.FC<{
     },
   };
   const labels = [
-    { label: 'today_install', icon: DownloadOutlined, value: splitNumber(script.today_install.toString()) },
-    { label: 'total_install', icon: DownloadOutlined, value: splitNumber(script.total_install.toString()) },
-    { label: 'create_date', icon: CalendarOutlined, value: formatDate(script.createtime) },
-    { label: 'update_date', icon: CarryOutOutlined, value: formatDate(script.updatetime) },
     {
-      label: 'user_rating', icon: StarOutlined, value: script.score
+      label: 'today_install',
+      icon: DownloadOutlined,
+      value: splitNumber(script.today_install.toString()),
+    },
+    {
+      label: 'total_install',
+      icon: DownloadOutlined,
+      value: splitNumber(script.total_install.toString()),
+    },
+    {
+      label: 'create_date',
+      icon: CalendarOutlined,
+      value: formatDate(script.createtime),
+    },
+    {
+      label: 'update_date',
+      icon: CarryOutOutlined,
+      value: formatDate(script.updatetime),
+    },
+    {
+      label: 'user_rating',
+      icon: StarOutlined,
+      value: script.score
         ? (((script.score / script.score_num) * 2) / 10).toFixed(1)
-        : t('no_rating')
-    }]
+        : t('no_rating'),
+    },
+  ];
   useEffect(() => {
     if (action) {
       const api =
@@ -147,18 +166,18 @@ const SearchItem: React.FC<{
         window.external &&
         (((window.external as any).Scriptcat ||
           (window.external as any).Tampermonkey) as {
-            isInstalled: (
-              name: string,
-              namespace: string,
-              callback: (res: any, rej: any) => void
-            ) => void;
-          });
+          isInstalled: (
+            name: string,
+            namespace: string,
+            callback: (res: any, rej: any) => void
+          ) => void;
+        });
       if (api) {
         api.isInstalled(
           script.name,
           (script.script.meta_json['namespace'] &&
             script.script.meta_json['namespace'][0]) ||
-          '',
+            '',
           (res: { installed: boolean; version: string }) => {
             if (res.installed === true) {
               if (res.version == script.script.version) {
@@ -287,11 +306,10 @@ const SearchItem: React.FC<{
                         if (resp.code !== 0) {
                           message.error(resp.msg);
                         } else {
-                          onWatch &&
-                            onWatch(parseInt(item.key) as WatchLevel);
+                          onWatch && onWatch(parseInt(item.key) as WatchLevel);
                         }
                       });
-                    }
+                    },
                   }}
                 >
                   <Button size="small">
@@ -354,16 +372,18 @@ const SearchItem: React.FC<{
       </Card.Grid>
       <Card.Grid hoverable={false} style={gridStyle}>
         <div className="flex flex-col sm:flex-row gap-4 py-2 justify-evenly">
-          {labels.map(info =>
-            <div className="flex flex-col text-center px-5" key={JSON.stringify(info)}>
-              <span className="text-gray-500 text-sm">
-                {t(info.label)}
-              </span>
+          {labels.map((info) => (
+            <div
+              className="flex flex-col text-center px-5"
+              key={JSON.stringify(info)}
+            >
+              <span className="text-gray-500 text-sm">{t(info.label)}</span>
               <div className="text-xs font-semibold">
                 <info.icon style={iconStyle} className="pr-1" />
                 <span>{info.value}</span>
               </div>
-            </div>)}
+            </div>
+          ))}
         </div>
       </Card.Grid>
       {action && (
@@ -465,17 +485,17 @@ const SearchItem: React.FC<{
                         require-link={
                           requireSelect == 1
                             ? genRequire(
-                              script.id,
-                              script.name,
-                              script.script.version
-                            )
+                                script.id,
+                                script.name,
+                                script.script.version
+                              )
                             : requireSelect == 2
-                              ? genRequire(
+                            ? genRequire(
                                 script.id,
                                 script.name,
                                 '%5E' + script.script.version
                               )
-                              : genRequire(
+                            : genRequire(
                                 script.id,
                                 script.name,
                                 '~' + script.script.version
@@ -498,8 +518,8 @@ const SearchItem: React.FC<{
               )}
               {(script.post_id !== 0 ||
                 script.script.meta_json['contributionurl']) && (
-                  <Divider type="vertical" className="!h-auto" />
-                )}
+                <Divider type="vertical" className="!h-auto" />
+              )}
               {script.script.meta_json['contributionurl'] && (
                 <Button
                   className="!rounded-none !bg-transparent !border-orange-400 !text-orange-400"
@@ -513,9 +533,7 @@ const SearchItem: React.FC<{
               {script.post_id !== 0 && (
                 <Button
                   className="!rounded-none !bg-transparent !border-blue-400 !text-blue-400"
-                  icon={
-                    <RiMessage2Line className="!inline-block !m-0 !mr-2" />
-                  }
+                  icon={<RiMessage2Line className="!inline-block !m-0 !mr-2" />}
                   href={`https://bbs.tampermonkey.net.cn/thread-${script.post_id}-1-1.html`}
                   target="_blank"
                 >
@@ -543,9 +561,7 @@ const SearchItem: React.FC<{
             <Divider type="vertical" />
             <Tooltip title={t('report_issue')} placement="bottom">
               <Button
-                icon={
-                  <ExclamationCircleOutlined className="!text-cyan-500" />
-                }
+                icon={<ExclamationCircleOutlined className="!text-cyan-500" />}
                 type="text"
                 size="small"
                 className="anticon-middle"
@@ -578,27 +594,27 @@ const SearchItem: React.FC<{
               </Tag>
             </Tooltip>
             {script.category?.map((category) => (
-                <Tooltip
-                  title={t('script_category', { category: category.name })}
-                  color="green"
-                  placement="bottom"
-                  key={category.id}
-                >
-                  <Tag color="green">{category.name}</Tag>
-                </Tooltip>
-              ))}
-              {script.type === 3 && (
-                <Tooltip
-                  title={t('library_script')}
-                  color="blue"
-                  placement="bottom"
-                >
-                  <Tag color="blue">@require库</Tag>
-                </Tooltip>
-              )}
-              {tag.map((item) => item)}
-            </div>
+              <Tooltip
+                title={t('script_category', { category: category.name })}
+                color="green"
+                placement="bottom"
+                key={category.id}
+              >
+                <Tag color="green">{category.name}</Tag>
+              </Tooltip>
+            ))}
+            {script.type === 3 && (
+              <Tooltip
+                title={t('library_script')}
+                color="blue"
+                placement="bottom"
+              >
+                <Tag color="blue">@require库</Tag>
+              </Tooltip>
+            )}
+            {tag.map((item) => item)}
           </div>
+        </div>
       </Card.Grid>
     </Card>
   );

@@ -360,5 +360,7 @@
   "home_page_subtitle": "Fuller User Script Hosting Platform",
   "time_format": "YYYY-MM-DD",
   "sitemap_title": "Sitemap",
-  "language_title": "Language List"
+  "language_title": "Language List",
+  "created": "Created",
+  "last_reply_at": "Last Reply At"
 }

@@ -15,6 +15,7 @@ import { UserContext } from '~/context-manager';
 import { replaceSearchParam } from '~/services/utils';
 import IssueLabel from '~/components/IssueLabel';
 import { useTranslation } from 'react-i18next';
+import { useLocale } from 'remix-i18next';
 
 type LoaderData = {
   list: IssueItem[];
@@ -43,6 +44,7 @@ export default function Issue() {
   const data = useLoaderData<LoaderData>();
   const user = useContext(UserContext);
   const location = useLocation();
+  const locale = '/' + useLocale();
   const { t } = useTranslation();
 
   return (
@@ -112,7 +114,21 @@ export default function Issue() {
                   {title}
                 </Link>
                 <span className="text-xs">
-                  {formatDate(record.createtime)} {record.username}
+                  {formatDate(record.createtime)}{' '}
+                  <Link
+                    to={locale + '/users/' + record.user_id}
+                    target="_blank"
+                  >
+                    {record.username}
+                  </Link>{' '}
+                  {t('created') +
+                    ' ' +
+                    (record.updatetime
+                      ? ' ' +
+                        t('last_reply_at') +
+                        ' ' +
+                        formatDate(record.updatetime)
+                      : '')}
                 </span>
               </div>
             );

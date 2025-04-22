@@ -2,6 +2,7 @@ import { LinksFunction, LoaderFunction, json } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 import {
   Avatar,
+  Badge,
   Button,
   Card,
   ConfigProvider,
@@ -70,14 +71,31 @@ export default function Index() {
   }
   return (
     <>
-      <SearchItem
-        script={script.script}
-        action
-        watch={watch}
-        onWatch={(level) => {
-          setWatch(level);
-        }}
-      ></SearchItem>
+      {script.script.public > 1 ? (
+        <Badge.Ribbon
+          text={script.script.public == 2 ? t('unpublic') : t('private')}
+          color="orange"
+          style={{ height: '20px', fontSize: '10px', top: '-4px' }}
+        >
+          <SearchItem
+            script={script.script}
+            action
+            watch={watch}
+            onWatch={(level) => {
+              setWatch(level);
+            }}
+          ></SearchItem>
+        </Badge.Ribbon>
+      ) : (
+        <SearchItem
+          script={script.script}
+          action
+          watch={watch}
+          onWatch={(level) => {
+            setWatch(level);
+          }}
+        ></SearchItem>
+      )}
       <Card>
         <MarkdownView content={script.script.content || ''} id={'readme'} />
       </Card>

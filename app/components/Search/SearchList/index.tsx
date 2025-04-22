@@ -1,5 +1,5 @@
 import { Link, useLocation } from '@remix-run/react';
-import { ConfigProvider, Empty, List, message } from 'antd';
+import { Badge, ConfigProvider, Empty, List, message } from 'antd';
 import { useEffect, useState, isValidElement, cloneElement } from 'react';
 import type { Script } from '~/services/scripts/types';
 import { replaceSearchParam } from '~/services/utils';
@@ -53,15 +53,33 @@ const SearchList: React.FC<{
             dataSource={list}
             renderItem={(script, index) => (
               <div className="mb-3" key={script.id}>
-                <SearchItem
-                  key={script.id}
-                  script={script}
-                  onDelete={() => {
-                    list.splice(index, 1);
-                    setList([...list]);
-                    setTotal((total) => total - 1);
-                  }}
-                />
+                {script.public > 1 ? (
+                  <Badge.Ribbon
+                    key={script.id}
+                    text={script.public == 2 ? t('unpublic') : t('private')}
+                    color="orange"
+                    style={{ height: '20px', fontSize: '10px', top: '-4px' }}
+                  >
+                    <SearchItem
+                      script={script}
+                      onDelete={() => {
+                        list.splice(index, 1);
+                        setList([...list]);
+                        setTotal((total) => total - 1);
+                      }}
+                    />
+                  </Badge.Ribbon>
+                ) : (
+                  <SearchItem
+                    key={script.id}
+                    script={script}
+                    onDelete={() => {
+                      list.splice(index, 1);
+                      setList([...list]);
+                      setTotal((total) => total - 1);
+                    }}
+                  />
+                )}
               </div>
             )}
             pagination={{
@@ -73,12 +91,18 @@ const SearchList: React.FC<{
               total: total,
               itemRender: (current, type, originalElement) => {
                 if (current === 0) return originalElement;
-                if (type.startsWith('jump') && isValidElement(originalElement) && originalElement.type === "a") {
+                if (
+                  type.startsWith('jump') &&
+                  isValidElement(originalElement) &&
+                  originalElement.type === 'a'
+                ) {
                   return cloneElement(originalElement, {
-                    href: location.pathname + replaceSearchParam(location.search, {
-                      page: current,
-                    })
-                  } as React.HTMLProps<HTMLAnchorElement>);;
+                    href:
+                      location.pathname +
+                      replaceSearchParam(location.search, {
+                        page: current,
+                      }),
+                  } as React.HTMLProps<HTMLAnchorElement>);
                 }
                 return (
                   <Link
