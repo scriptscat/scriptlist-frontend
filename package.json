@@ -6,8 +6,8 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rimraf ./public/build",
-    "build": "npm run prebuild && remix build",
-    "dev": "npm run predev && remix dev",
+    "build": "pnpm run prebuild && remix build",
+    "dev": "pnpm run predev && remix dev",
     "start": "remix-serve build",
     "predev": "ts-node --project ./tsconfig.node.json ./scripts/prebuild.tsx",
     "prebuild": "cross-env NODE_ENV=production ts-node --project ./tsconfig.node.json ./scripts/prebuild.tsx",
