@@ -1,9 +1,17 @@
 {
 	"compilerOptions": {
 		"strictNullChecks": true,
-		"module": "NodeNext",
+		"module": "CommonJS",
+		"target": "ES2020",
 		"jsx": "react",
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"types": ["node"],
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true
+	},
+	"ts-node": {
+		"esm": false,
+		"experimentalSpecifierResolution": "node"
 	},
 	"include": [
 		"next-env.d.ts",
