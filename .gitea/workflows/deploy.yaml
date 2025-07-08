@@ -33,9 +33,9 @@ jobs:
 
     - name: Build
       run: |
-        pnpm install --frozen-lockfile
+        pnpm install --frozen-lockfile --shamefully-hoist
         pnpm run build
-
+        
     - name: Set up QEMU
 #      uses: docker/setup-qemu-action@v3
       uses: actions/setup-qemu-action@v3
