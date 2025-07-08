@@ -18,6 +18,7 @@ export const loader: LoaderFunction = async ({ params, request }) => {
   const page = parseInt(url.searchParams.get('page') || '1');
   const resp = await search(
     {
+      keyword: url.searchParams.get('keyword') || '',
       user_id: parseInt(params.id as string),
       sort: 'today_download',
       page: page,

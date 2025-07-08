@@ -152,6 +152,8 @@
   "image_upload_failed": "图片上传失败",
   "autosaved": "已自动保存",
   "search_scripts_placeholder": "搜索脚本，开启新世界",
+  "search": "搜索",
+  "search_user_scripts": "搜索 {{username}} 的脚本",
   "submission_rules": "提交的代码应该严格遵守本站脚本发布的相关规定，否则将会按照规则进行处理。相关规定可前往",
   "script_review_rules": "脚本站审查规则",
   "view": "查看",

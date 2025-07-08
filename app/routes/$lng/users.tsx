@@ -2,9 +2,11 @@ import type { LoaderFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import type { V2_MetaFunction } from '@remix-run/react';
 import { Outlet, useRouteError, useLoaderData, isRouteErrorResponse } from '@remix-run/react';
-import { Avatar, Button, Card, Tag } from 'antd';
-import { useContext } from 'react';
+import { Avatar, Button, Card, Tag, Input } from 'antd';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { SearchOutlined } from '@ant-design/icons';
+import { useNavigate } from '@remix-run/react';
 import { UserContext } from '~/context-manager';
 import i18next from '~/i18next.server';
 import { GetFollow, GetUserInfo } from '~/services/users/api';
@@ -61,6 +63,20 @@ export default function Users() {
   const user = data.user;
   const follow = data.follow;
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  const handleSearch = () => {
+    if (searchKeyword.trim()) {
+      navigate(`?keyword=${encodeURIComponent(searchKeyword)}`);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
   return (
     <>
       <div>
@@ -106,6 +122,24 @@ export default function Users() {
             </span>
           </div>
         </Card>
+        
+        {/* 搜索框 */}
+        <div className="mb-3 flex justify-end">
+          <Input
+            placeholder={t('search_user_scripts', { username: user.username })}
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyDown={handleKeyDown}
+            style={{ width: '200px' }}
+            suffix={
+              <SearchOutlined 
+                className="cursor-pointer text-gray-400 hover:text-blue-500" 
+                onClick={handleSearch}
+              />
+            }
+          />
+        </div>
+        
         <Outlet />
       </div>
     </>

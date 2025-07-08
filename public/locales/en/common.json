@@ -147,6 +147,8 @@
   "image_upload_failed": "Image upload failed",
   "autosaved": "Autosaved",
   "search_scripts_placeholder": "Search scripts, open a new world",
+  "search": "Search",
+  "search_user_scripts": "Search {{username}}'s scripts",
   "submission_rules": "The submitted code should strictly comply with the relevant rules for script submission on this platform. Otherwise, it will be handled according to the rules. For relevant rules, please visit",
   "script_review_rules": "Script Review Rules",
   "view": "View",
