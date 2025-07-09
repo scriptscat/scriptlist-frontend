@@ -34,6 +34,7 @@
     "i18next-fs-backend": "^2.2.0",
     "i18next-http-backend": "^2.2.2",
     "isbot": "^5.1.9",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "marked": "^4.3.0",
     "monaco-editor": "^0.50.0",
@@ -72,6 +73,14 @@
     "ts-node": "^10.9.1",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "d3-interpolate": "^2.0.1",
+      "lodash-es": "npm:lodash@^4.17.21",
+      "@antv/path-util": "^2.0.15",
+      "@antv/g-base": "0.5.11"
+    }
   },
   "engines": {
     "node": ">=18"
