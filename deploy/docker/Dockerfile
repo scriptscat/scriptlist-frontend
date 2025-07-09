@@ -15,11 +15,11 @@ FROM base AS prod
 # 设置工作目录
 WORKDIR /app
 
-# 只复制 pnpm-lock.yaml 用于 fetch
-COPY pnpm-lock.yaml ./
+# 复制 package.json 和 pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
 
-# 使用 pnpm fetch 预先获取依赖
-RUN pnpm fetch
+# 安装所有依赖（包括开发依赖，构建时需要）
+RUN pnpm install --frozen-lockfile
 
 # 复制源代码
 COPY . .
