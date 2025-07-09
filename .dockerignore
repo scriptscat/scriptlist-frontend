@@ -1,9 +1,59 @@
 
-# /.cache
-# /build
+# Node modules
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs (注释掉以便 CI 构建时可以复制)
+# build
 # /public/build
 
-# app/styles/*.css
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
+# IDE files
 /.idea
 /.vscode
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# CI/CD
+.github
+
+# Documentation
+README.md
+*.md
+
+# Logs
+logs
+*.log
+
+# Coverage
+coverage
+
+# Temporary files
+.tmp
+.temp
+/.cache
+
+# CSS files (根据项目需要)
+# app/styles/*.css
+
+# Lock files (keep pnpm-lock.yaml)
+package-lock.json
+yarn.lock
