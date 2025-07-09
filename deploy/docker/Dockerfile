@@ -18,8 +18,8 @@ WORKDIR /app
 # 只复制 pnpm-lock.yaml 用于 fetch
 COPY pnpm-lock.yaml ./
 
-# 使用 pnpm fetch 预先获取生产依赖
-RUN pnpm fetch --prod
+# 使用 pnpm fetch 预先获取依赖
+RUN pnpm fetch
 
 # 复制源代码
 COPY . .
