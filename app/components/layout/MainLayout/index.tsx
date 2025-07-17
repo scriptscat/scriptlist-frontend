@@ -406,6 +406,19 @@ const MainLayout: React.FC<{
               GitHub
             </a>
           </div>
+          <div>
+            <a href={'https://docs.scriptcat.org/docs/use/policy/disclaimer/'}>
+              {t('service_agreement')}
+            </a>
+            <Divider type="vertical" />
+            <a
+              href={
+                'https://docs.scriptcat.org/docs/use/policy/privacy_website/'
+              }
+            >
+              {t('privacy_policy')}
+            </a>
+          </div>
           <p className="m-0 text-sm">{t('all_rights_reserved')}</p>
         </Footer>
       </Layout>
