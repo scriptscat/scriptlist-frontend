@@ -6,13 +6,11 @@ export { default as RatingItem } from './RatingItem';
 export { default as ReplyItem } from './ReplyItem';
 
 // 工具函数导出
-export { formatTime, getRatingText } from './utils';
+export { getRatingText } from './utils';
 
 // 类型导出
 export type {
   SortOption,
-  ScriptReply,
-  ExtendedScoreListItem,
   RatingStats,
   RatingOverviewProps,
   UserRatingFormProps,

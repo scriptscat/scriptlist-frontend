@@ -29,12 +29,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
     order: '',
   });
 
-  const { data, error, isLoading, mutate } = useInviteList(
-    id,
-    page,
-    groupID,
-    sort,
-  );
+  const { data, isLoading, mutate } = useInviteList(id, page, groupID, sort);
 
   // 转换数据格式以添加key属性
   const tableData: DataType[] =
@@ -168,7 +163,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
       key: 'action',
       dataIndex: 'action',
       align: 'center',
-      render: (text, record, index) => (
+      render: (_text, record, _index) => (
         <>
           {record.invite_status === 4 && (
             <Button

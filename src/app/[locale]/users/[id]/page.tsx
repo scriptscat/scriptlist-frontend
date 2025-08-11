@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 
 interface UserPageProps {
   params: Promise<{ locale: string; id: string }>;
-  searchParams: ScriptSearchRequest;
+  searchParams: Promise<ScriptSearchRequest>;
 }
 
 export default async function UserPage({
@@ -13,15 +13,16 @@ export default async function UserPage({
   searchParams,
 }: UserPageProps) {
   const { id } = await params;
+  const resolvedSearchParams = await searchParams;
   const userId = parseInt(id);
 
   // 转换URL参数到API请求参数
   const apiParams: ScriptSearchRequest = {
-    page: searchParams.page || 1,
+    page: resolvedSearchParams.page || 1,
     size: 20,
-    keyword: searchParams.keyword || undefined,
-    sort: searchParams.sort || 'today_download',
-    domain: searchParams.domain || undefined,
+    keyword: resolvedSearchParams.keyword || undefined,
+    sort: resolvedSearchParams.sort || 'today_download',
+    domain: resolvedSearchParams.domain || undefined,
     script_type: 0, // 默认搜索所有类型
     user_id: userId, // 指定用户ID
   };

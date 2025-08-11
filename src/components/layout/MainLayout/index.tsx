@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  Layout,
-  theme,
-  Select,
-  Typography,
-  Menu,
-  Divider,
-  Dropdown,
-} from 'antd';
+import { Layout, theme, Typography, Menu, Divider, Dropdown } from 'antd';
 import { Header, Content, Footer } from 'antd/es/layout/layout';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
@@ -21,6 +13,7 @@ import {
   HomeOutlined,
   MessageOutlined,
 } from '@ant-design/icons';
+import Image from 'next/image';
 
 const { Title } = Typography;
 
@@ -100,7 +93,7 @@ export default function MainLayout({
             style={{ textDecoration: 'none' }}
             className="flex items-center space-x-3"
           >
-            <img
+            <Image
               style={{
                 width: '32px',
                 height: '32px',

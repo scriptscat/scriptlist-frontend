@@ -9,9 +9,13 @@ export default async function ScriptCodePage({
   searchParams,
 }: ScriptDetailPageProps) {
   const { id } = await params;
+  const resolvedSearchParams = await searchParams;
   let script: ScriptInfo;
-  if (searchParams?.version) {
-    script = await scriptService.getVersionCodeCached(id, searchParams.version);
+  if (resolvedSearchParams?.version) {
+    script = await scriptService.getVersionCodeCached(
+      id,
+      resolvedSearchParams.version,
+    );
   } else {
     script = await scriptService.code(id);
   }
@@ -20,7 +24,7 @@ export default async function ScriptCodePage({
 
 export async function generateMetadata(
   { params }: ScriptDetailPageProps,
-  parent: ResolvingMetadata,
+  _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { id } = await params;
   return generateScriptMetadata(id, 'code');

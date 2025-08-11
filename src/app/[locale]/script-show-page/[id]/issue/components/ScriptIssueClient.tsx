@@ -14,7 +14,6 @@ import {
 } from 'antd';
 import { PlusOutlined, MessageOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
 import type { Issue } from '@/lib/api/services/scripts/issue';

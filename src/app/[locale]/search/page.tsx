@@ -5,17 +5,18 @@ import scriptService from '@/lib/api/services/scripts';
 import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
 
 interface SearchPageProps {
-  searchParams: ScriptSearchRequest;
+  searchParams: Promise<ScriptSearchRequest>;
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
+  const resolvedSearchParams = await searchParams;
   // 转换URL参数到API请求参数
   const apiParams: ScriptSearchRequest = {
-    page: searchParams.page ? searchParams.page : 1,
+    page: resolvedSearchParams.page ? resolvedSearchParams.page : 1,
     size: 20,
-    keyword: searchParams.keyword || undefined,
-    sort: searchParams.sort || 'today_download',
-    domain: searchParams.domain || undefined,
+    keyword: resolvedSearchParams.keyword || undefined,
+    sort: resolvedSearchParams.sort || 'today_download',
+    domain: resolvedSearchParams.domain || undefined,
     script_type: 0, // 默认搜索所有类型
   };
 

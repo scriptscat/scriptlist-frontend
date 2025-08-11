@@ -322,7 +322,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                     <Checkbox
                       checked={isPreRelease === 1}
                       indeterminate={isPreRelease === 0 && scriptType === 1}
-                      onChange={(e) => {
+                      onChange={() => {
                         const currentValue = form.getFieldValue('isPreRelease');
                         let newValue: number;
 

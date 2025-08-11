@@ -7,16 +7,10 @@ import {
   Input,
   Avatar,
   message,
-  Popconfirm,
   Space,
   Typography,
 } from 'antd';
-import {
-  StarFilled,
-  UserOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
+import { StarFilled, UserOutlined, EditOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import type { UserRatingFormProps } from './types';
@@ -31,7 +25,6 @@ export default function UserRatingForm({
   submitting,
   existingRating,
   onUpdateRating,
-  onDeleteRating,
 }: UserRatingFormProps) {
   const { user } = useUser();
   const [userRating, setUserRating] = useState<number>(0);
@@ -69,7 +62,7 @@ export default function UserRatingForm({
         setUserRating(0);
         setUserComment('');
       }
-    } catch (error) {
+    } catch {
       // 错误处理由父组件处理
     }
   };
@@ -86,19 +79,6 @@ export default function UserRatingForm({
     } else {
       setUserRating(0);
       setUserComment('');
-    }
-  };
-
-  const handleDelete = async () => {
-    if (existingRating && onDeleteRating) {
-      try {
-        await onDeleteRating(existingRating.id);
-        setUserRating(0);
-        setUserComment('');
-        setIsEditing(false);
-      } catch (error) {
-        // 错误处理由父组件处理
-      }
     }
   };
 

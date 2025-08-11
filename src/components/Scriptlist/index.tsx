@@ -5,6 +5,7 @@ import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
 import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useCategoryList } from '@/lib/api/hooks';
 import ScriptCard from './ScriptCard';
 import type {
   ScriptListItem,
@@ -29,6 +30,8 @@ export default function ScriptList({
   const locale = useLocale();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const { data: categoryData, isLoading: isCategoryLoading } =
+    useCategoryList();
 
   const [filters, setFilters] = useState<ScriptSearchRequest>(
     initialFilters || {
@@ -47,6 +50,7 @@ export default function ScriptList({
 
       if (newFilters.keyword) params.set('keyword', newFilters.keyword);
       if (newFilters.domain) params.set('domain', newFilters.domain);
+      if (newFilters.category) params.set('category', newFilters.category);
       if (newFilters.sort) params.set('sort', newFilters.sort);
       if (page > 1) params.set('page', page.toString());
 
@@ -112,12 +116,13 @@ export default function ScriptList({
               onChange={handleCategoryChange}
               allowClear
               disabled={isPending}
+              loading={isCategoryLoading}
             >
-              <Option value="社交网络">社交网络</Option>
-              <Option value="媒体">媒体</Option>
-              <Option value="工具">工具</Option>
-              <Option value="游戏">游戏</Option>
-              <Option value="购物">购物</Option>
+              {categoryData?.categories?.map((category) => (
+                <Option key={category.id} value={category.name}>
+                  {category.name}
+                </Option>
+              ))}
             </Select>
 
             <Select

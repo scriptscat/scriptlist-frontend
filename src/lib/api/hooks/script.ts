@@ -12,11 +12,6 @@ import type {
   ScoreListParam,
   MyScoreResponse,
 } from '../services/scripts/scripts';
-import {
-  ScriptVersion,
-  VersionListRequest,
-  VersionListResponse,
-} from '../services/scripts/scripts';
 import type { Statistics, Realtime } from '../services/scripts/statistics';
 
 /**

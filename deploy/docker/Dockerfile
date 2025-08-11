@@ -1,6 +1,5 @@
 # 使用 Node.js 20 Alpine 作为基础镜像
 ARG BASEIMAGE=node:20-alpine3.16
-ARG APP_API_PROXY=https://scriptcato.org/api/v2
 
 FROM ${BASEIMAGE} AS base
 
@@ -12,18 +11,30 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 # 构建阶段
-FROM base AS prod
+FROM base AS deps
+
+# 设置工作目录
+WORKDIR /app
+
+# 复制 package.json 和 pnpm-lock.yaml（仅依赖相关文件）
+COPY package.json pnpm-lock.yaml ./
+
+# 安装所有依赖（包括开发依赖，构建时需要）
+RUN pnpm install --frozen-lockfile
+
+# 构建阶段
+FROM base AS builder
+
+ARG APP_API_PROXY=https://scriptcato.org/api/v2
 
 # 设置工作目录
 WORKDIR /app
 
 ENV APP_API_PROXY=${APP_API_PROXY}
 
-# 复制 package.json 和 pnpm-lock.yaml
+# 从 deps 阶段复制 node_modules
+COPY --from=deps /app/node_modules ./node_modules
 COPY package.json pnpm-lock.yaml ./
-
-# 安装所有依赖（包括开发依赖，构建时需要）
-RUN pnpm install --frozen-lockfile
 
 # 复制源代码
 COPY . .
@@ -41,9 +52,9 @@ WORKDIR /app
 COPY package.json ./
 
 # 对于 standalone 输出模式，复制 standalone 文件
-COPY --from=prod /app/.next/standalone ./
-COPY --from=prod /app/.next/static ./.next/static
-COPY --from=prod /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
 # 暴露端口
 EXPOSE 3000

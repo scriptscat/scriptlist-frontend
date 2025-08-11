@@ -117,13 +117,13 @@ export interface ScriptAntiFeature {
 }
 
 export interface ScriptDetailPageProps {
-  params: {
+  params: Promise<{
     locale: string;
     id: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     version?: string;
-  };
+  }>;
 }
 
 export interface ScriptDetailLayoutProps {
@@ -138,6 +138,7 @@ export interface ScriptDetailLayoutProps {
 export interface ScriptSearchRequest extends PageRequest {
   keyword?: string;
   domain?: string;
+  category?: string;
   user_id?: number;
   script_type?: 0 | 1 | 2 | 3 | 4; // 0:全部 1: 脚本 2: 库 3: 后台脚本 4: 定时脚本
   sort?:

@@ -3,7 +3,6 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { UserProvider } from '@/contexts/UserContext';
 import type { ThemeMode } from '@/lib/cookies';
 import { THEME_COOKIE_NAME, THEME_MODE_COOKIE_NAME } from '@/lib/cookies';
-import { Geist, Geist_Mono } from 'next/font/google';
 import NavigationProgress from './NavigationProgress';
 import { DayjsLocaleProvider } from './DayjsLocaleProvider';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
@@ -11,16 +10,6 @@ import { SWRProvider } from '@/lib/swr-config';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { userService } from '@/lib/api';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 // 服务端 cookie 读取函数
 export async function getThemeFromServerCookies(): Promise<ThemeMode> {
@@ -59,8 +48,7 @@ export async function LocalizedServerThemeWrapper({
     <html lang={locale} data-theme={serverTheme.theme}>
       <body
         className={
-          'page-gradient-bg text-app-primary min-h-screen theme-transition' +
-          ` ${geistSans.variable} ${geistMono.variable} antialiased`
+          'page-gradient-bg text-app-primary min-h-screen theme-transition'
         }
       >
         <NavigationProgress />
