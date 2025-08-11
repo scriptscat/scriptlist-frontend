@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* 页面渐变背景 - 现代化背景 */
+.page-gradient-bg {
+  background: linear-gradient(135deg, rgb(var(--bg-primary)) 0%, rgb(var(--bg-secondary)) 100%);
+}
+
+/* 自定义CSS变量 - 浅色模式 (参考 GitHub 设计语言) */
+:root {
+  /* 背景色 - GitHub风格的优雅灰色系，增强层次感 */
+  --bg-primary: 246 248 250;
+  /* #f6f8fa - GitHub风格浅灰背景，温和不刺眼 */
+  --bg-secondary: 240 243 246;
+  /* #f0f3f6 - 更深的二级背景，增强对比 */
+  --bg-tertiary: 233 238 244;
+  /* #e9eef4 - 三级背景，明显区分 */
+  --bg-elevated: 255 255 255;
+  /* #ffffff - 卡片背景，纯白突出内容 */
+
+  /* 文本色 - GitHub风格文本对比度 */
+  --text-primary: 36 41 47;
+  /* #24292f - GitHub主文本色，更柔和的黑色 */
+  --text-secondary: 87 96 106;
+  /* #57606a - GitHub次要文本色 */
+  --text-tertiary: 139 148 158;
+  /* #8b949e - GitHub三级文本色 */
+  --text-inverse: 255 255 255;
+  /* #ffffff */
+
+  /* 边框色 - GitHub风格精致边框 */
+  --border-primary: 208 215 222;
+  /* #d0d7de - GitHub标准边框色 */
+  --border-secondary: 216 222 228;
+  /* #d8dee4 - 轻微边框 */
+  --border-focus: 13 110 253;
+  /* #0d6efd - GitHub焦点蓝色 */
+
+  /* 蓝色主题色 - GitHub风格蓝色调色板 */
+  --primary-50: 235 245 255;
+  /* #ebf5ff - 极浅蓝 */
+  --primary-100: 219 234 254;
+  /* #dbeafe - 很浅蓝 */
+  --primary-500: 13 110 253;
+  /* #0d6efd - GitHub标准蓝（主品牌色） */
+  --primary-600: 11 94 215;
+  /* #0b5ed7 - GitHub深蓝 */
+  --primary-700: 10 82 190;
+  /* #0a52be - 很深蓝 */
+}
+
+/* 深色模式变量 - 参考 GitHub 深色主题 */
+[data-theme="dark"] {
+  /* 背景色 - 现代深色背景，类似 GitHub Dark */
+  --bg-primary: 13 17 23;
+  /* #0d1117 - GitHub 风格主背景 */
+  --bg-secondary: 22 27 34;
+  /* #161b22 - 次要背景 */
+  --bg-tertiary: 33 38 45;
+  /* #21262d - 三级背景 */
+  --bg-elevated: 22 27 34;
+  /* #161b22 - 卡片背景 */
+
+  /* 文本色 - 现代深色文本 */
+  --text-primary: 248 248 242;
+  /* #f8f8f2 - 主文本，略带暖色 */
+  --text-secondary: 139 148 158;
+  /* #8b949e - 次要文本 */
+  --text-tertiary: 110 118 129;
+  /* #6e7681 - 三级文本 */
+  --text-inverse: 13 17 23;
+  /* #0d1117 */
+
+  /* 边框色 - 精致的深色边框 */
+  --border-primary: 48 54 61;
+  /* #30363d - 标准边框 */
+  --border-secondary: 33 38 45;
+  /* #21262d - 轻微边框 */
+  --border-focus: 88 166 255;
+  /* #58a6ff - 深色模式焦点蓝 */
+
+  /* 深色模式下的蓝色主题 - 更亮更醒目 */
+  --primary-50: 219 234 254;
+  /* #dbeafe */
+  --primary-100: 191 219 254;
+  /* #bfdbfe */
+  --primary-500: 88 166 255;
+  /* #58a6ff - 深色模式主蓝色 */
+  --primary-600: 79 149 229;
+  /* #4f95e5 */
+  --primary-700: 65 132 228;
+  /* #4184e4 */
+}
+
+/* 通用样式类 */
+.bg-app-primary {
+  background-color: rgb(var(--bg-primary));
+}
+
+.bg-app-secondary {
+  background-color: rgb(var(--bg-secondary));
+}
+
+.bg-app-tertiary {
+  background-color: rgb(var(--bg-tertiary));
+}
+
+.bg-app-elevated {
+  background-color: rgb(var(--bg-elevated));
+}
+
+.text-app-primary {
+  color: rgb(var(--text-primary));
+}
+
+.text-app-secondary {
+  color: rgb(var(--text-secondary));
+}
+
+.text-app-tertiary {
+  color: rgb(var(--text-tertiary));
+}
+
+.border-app-primary {
+  border-color: rgb(var(--border-primary));
+}
+
+.border-app-secondary {
+  border-color: rgb(var(--border-secondary));
+}
+
+/* 页面渐变背景 */
+.page-gradient-bg {
+  background: linear-gradient(135deg, rgb(var(--bg-primary)) 0%, rgb(var(--bg-secondary)) 100%);
+}
+
+/* 过渡动画 */
+.theme-transition {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.border-start-radius-0,
+.border-start-radius-0 .ant-select-selector {
+  border-start-start-radius: 0 !important;
+  border-end-start-radius: 0 !important;
+}

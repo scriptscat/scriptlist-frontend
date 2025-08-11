@@ -1,0 +1,24 @@
+/* 基础 markdown 样式 */
+.markdown-body {
+    background-color: unset !important;
+}
+
+.markdown-body ul {
+    list-style: disc;
+}
+
+.markdown-body ol {
+    list-style: decimal;
+}
+
+.markdown-body img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+    display: inline;
+    vertical-align: baseline;
+}
