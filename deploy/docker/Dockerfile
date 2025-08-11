@@ -25,12 +25,18 @@ RUN pnpm install --frozen-lockfile
 # 构建阶段
 FROM base AS builder
 
-ARG APP_API_PROXY=https://scriptcato.org/api/v2
+ARG NEXT_PUBLIC_APP_URL=https://scriptcat.org
+ARG APP_API_PROXY=https://scriptcat.org/api/v2
+ARG APP_API_URL=https://scriptcat.org/api/v2
+ARG APP_BBS_OAUTH_CLIENT=80mfto0y3b8v
 
 # 设置工作目录
 WORKDIR /app
 
-ENV APP_API_PROXY=${APP_API_PROXY}
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL} \
+    APP_API_URL=${APP_API_URL} \
+    APP_API_PROXY=${APP_API_PROXY} \
+    NEXT_PUBLIC_APP_BBS_OAUTH_CLIENT=${APP_BBS_OAUTH_CLIENT}
 
 # 从 deps 阶段复制 node_modules
 COPY --from=deps /app/node_modules ./node_modules

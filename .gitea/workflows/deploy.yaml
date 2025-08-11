@@ -52,6 +52,8 @@ jobs:
       uses: actions/build-push-action@v6
       env:
         INNER_DOMAIN: ${{ env.ENV=='prod' && 'scriptlist-cago' || format('scriptlist-{0}-cago', env.ENV) }}
+        APP_BBS_OAUTH_CLIENT: ${{ env.ENV=='prod' && '80mfto0y3b8v' || env.ENV=='pre' && '5uk70yummcoe' || 'sxIv1i8H1ZwnSAH' }}
+        DOMAIN: ${{ env.ENV=='prod' && env.DOMAIN || format('{0}.{1}', env.ENV, env.DOMAIN) }}
       with:
         push: true
         file: deploy/docker/Dockerfile
@@ -61,7 +63,10 @@ jobs:
         cache-to: type=gha,mode=max
         build-args: |
           BASEIMAGE=${{ env.BASEIMAGE }}/node:20-alpine3.16
-          APP_API_PROXY=http://$INNER_DOMAIN.app.svc.cluster.local/api/v2
+          NEXT_PUBLIC_APP_URL=https://${{ env.DOMAIN }}
+          APP_API_URL=http://${{ env.INNER_DOMAIN }}.app.svc.cluster.local/api/v2
+          APP_API_PROXY=http://${{ env.INNER_DOMAIN }}.app.svc.cluster.local/api/v2
+          APP_BBS_OAUTH_CLIENT=${{ env.APP_BBS_OAUTH_CLIENT }}
 
     - name: Set up kubeconfig
 #      uses: azure/k8s-set-context@v4
