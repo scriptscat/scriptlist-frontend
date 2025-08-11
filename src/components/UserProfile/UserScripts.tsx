@@ -1,29 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import {
-  Button,
-  Empty,
-  Statistic,
-  Row,
-  Col,
-  Typography,
-  Divider,
-  Card,
-} from 'antd';
-import {
-  DownloadOutlined,
-  StarOutlined,
-  CodeOutlined,
-  FireOutlined,
-} from '@ant-design/icons';
-import { useTranslations } from 'next-intl';
-import ScriptCard from '@/components/Scriptlist/ScriptCard';
-import { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
-import { useSemDateTime } from '@/lib/utils/semdate';
+import { Button, Empty, Typography } from 'antd';
+import { CodeOutlined } from '@ant-design/icons';
+import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
 import ScriptList from '../Scriptlist';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 interface UserScriptsProps {
   userId: number;

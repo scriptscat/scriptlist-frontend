@@ -33,16 +33,16 @@ FROM base
 # 设置工作目录
 WORKDIR /app
 
-# 复制必要文件
-COPY . .
+# 复制package.json（为了运行时信息）
+COPY package.json ./
 
-# 从构建阶段复制 node_modules 和构建产物
-COPY --from=prod /app/node_modules ./node_modules
-COPY --from=prod /app/build ./build
+# 对于 standalone 输出模式，复制 standalone 文件
+COPY --from=prod /app/.next/standalone ./
+COPY --from=prod /app/.next/static ./.next/static
 COPY --from=prod /app/public ./public
 
 # 暴露端口
 EXPOSE 3000
 
-# 启动应用
-CMD ["pnpm", "start"]
+# 启动应用（standalone 模式使用 server.js）
+CMD ["node", "server.js"]

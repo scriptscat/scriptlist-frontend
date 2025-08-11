@@ -1,7 +1,8 @@
 'use client';
 
-import { createContext, useContext, ReactNode } from 'react';
-import { ScriptSetting } from '@/app/[locale]/script-show-page/[id]/types';
+import type { ReactNode } from 'react';
+import { createContext, useContext } from 'react';
+import type { ScriptSetting } from '@/app/[locale]/script-show-page/[id]/types';
 
 interface ScriptSettingContextType {
   scriptSetting: ScriptSetting;

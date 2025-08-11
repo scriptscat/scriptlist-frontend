@@ -7,41 +7,19 @@ import {
   Input,
   Empty,
   Pagination,
-  Tooltip,
   Card,
   Avatar,
   Space,
   theme,
 } from 'antd';
-import {
-  CheckCircleTwoTone,
-  InfoCircleTwoTone,
-  PlusOutlined,
-  BugOutlined,
-  QuestionCircleOutlined,
-  ExclamationCircleOutlined,
-  BulbOutlined,
-  CommentOutlined,
-  FireOutlined,
-  ClockCircleOutlined,
-  EyeOutlined,
-  MessageOutlined,
-} from '@ant-design/icons';
+import { PlusOutlined, MessageOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
-import type { Issue, IssueStatusType } from '@/lib/api/services/scripts/issue';
+import type { Issue } from '@/lib/api/services/scripts/issue';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import IssueLabel from './IssueLabel';
-
-const { Text, Title } = Typography;
-const { Search } = Input;
-
-// Issue标签类型定义
-interface IssueLabelProps {
-  label: string;
-}
 
 interface ScriptIssueClientProps {
   issues: Issue[];
@@ -55,14 +33,11 @@ export default function ScriptIssueClient({
   issues,
   totalCount,
   scriptId,
-  initialPage,
-  initialStatus,
 }: ScriptIssueClientProps) {
   const { token } = theme.useToken();
   const router = useRouter();
   const searchParams = useSearchParams();
   const semDateTime = useSemDateTime();
-  const t = useTranslations();
 
   // 从 URL 参数获取当前状态
   const currentKeyword = searchParams.get('keyword') || '';

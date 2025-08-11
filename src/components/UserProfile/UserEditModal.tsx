@@ -21,7 +21,8 @@ import {
   EditOutlined,
   MailOutlined,
 } from '@ant-design/icons';
-import { userService, GetUserDetailResponse } from '@/lib/api/services/user';
+import type { GetUserDetailResponse } from '@/lib/api/services/user';
+import { userService } from '@/lib/api/services/user';
 
 const { TextArea } = Input;
 const { Text } = Typography;

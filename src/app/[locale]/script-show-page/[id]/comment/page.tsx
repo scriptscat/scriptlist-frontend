@@ -1,13 +1,11 @@
-import { Metadata, ResolvingMetadata } from 'next';
-import { ScriptDetailPageProps } from '../types';
+import type { Metadata, ResolvingMetadata } from 'next';
+import type { ScriptDetailPageProps } from '../types';
 import ScriptRatingClient from './components/ScriptRatingClient';
 import { generateScriptMetadata } from '../metadata';
 import { scriptService } from '@/lib/api/services/scripts';
 import { ListData } from '@/types/api';
-import {
-  ScoreListItem,
-  ScoreStateResponse,
-} from '@/lib/api/services/scripts/scripts';
+import type { ScoreStateResponse } from '@/lib/api/services/scripts/scripts';
+import { ScoreListItem } from '@/lib/api/services/scripts/scripts';
 
 interface RatingStats {
   averageRating: number;
@@ -29,7 +27,7 @@ function calculateRatingStats(
 
   const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
   let totalScore = 0;
-  let totalRatings = scoreState.score_user_count;
+  const totalRatings = scoreState.score_user_count;
 
   // 填充分布数据
   Object.entries(scoreState.score_group).forEach(([score, count]) => {

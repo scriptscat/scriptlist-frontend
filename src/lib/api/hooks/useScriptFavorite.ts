@@ -1,13 +1,12 @@
-import { useState, useCallback } from 'react';
-import useSWR, { mutate } from 'swr';
+import { useState, useCallback, useMemo } from 'react';
+import useSWR from 'swr';
 import { message } from 'antd';
 import { scriptFavoriteService } from '../services/scripts';
 import type {
   FavoriteFolderItem,
-  FavoriteFolderListRequest,
   CreateFolderRequest,
 } from '../services/scripts/favorites';
-import { APIError, ListData } from '@/types/api';
+import type { APIError, ListData } from '@/types/api';
 
 /**
  * 脚本收藏功能Hook
@@ -34,7 +33,7 @@ export function useScriptFavorite(
     },
   );
 
-  const folders = foldersData?.list || [];
+  const folders = useMemo(() => foldersData?.list || [], [foldersData?.list]);
 
   // 收藏脚本到指定收藏夹
   const favoriteScript = useCallback(

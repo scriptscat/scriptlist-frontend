@@ -28,7 +28,7 @@ import {
   CheckCircleOutlined,
 } from '@ant-design/icons';
 import { useParams } from 'next/navigation';
-import { GroupMember, ScriptGroup } from '@/types/api';
+import type { GroupMember, ScriptGroup } from '@/types/api';
 import { useScriptGroupList, useGroupMemberList } from '@/lib/api/hooks';
 import { scriptAccessService } from '@/lib/api/services/scripts';
 import { UserModal } from '@/components/UserModal';
@@ -42,7 +42,6 @@ const ManageModal: React.FC<{
   id: number;
   groupID: number;
 }> = ({ status, onChange, id, groupID }) => {
-  const t = useTranslations();
   const [modal, contextHolder] = Modal.useModal();
   const [openUserDialog, setOpenUserDialog] = useState(false);
   const [page, setPage] = useState(1);
@@ -50,7 +49,6 @@ const ManageModal: React.FC<{
 
   const {
     data,
-    error,
     isLoading,
     mutate: mutateMembers,
   } = useGroupMemberList(id, groupID, page);
@@ -114,8 +112,8 @@ const ManageModal: React.FC<{
           await scriptAccessService.deleteGroupUser(id, groupID, memberId);
           message.success('移除成功');
           mutateMembers();
-        } catch (error) {
-          message.error('移除失败');
+        } catch (error: any) {
+          message.error(error.message || '移除失败');
         } finally {
           setDeleteLoading(null);
         }
@@ -276,7 +274,6 @@ const CreateGroupModal: React.FC<{
   id: number;
   onSuccess: () => void;
 }> = ({ status, onChange, id, onSuccess }) => {
-  const t = useTranslations();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -416,7 +413,7 @@ export default function GroupsPage() {
         <div>
           <p>
             {'确认要删除用户组'}{' '}
-            <span className="font-medium">"{groupName}"</span> {'吗？'}
+            <span className="font-medium">{`"${groupName}"`}</span> {'吗？'}
           </p>
           <p className="text-gray-500 text-sm mt-2">
             {'删除后该用户组的所有成员将失去相关权限，此操作不可恢复'}

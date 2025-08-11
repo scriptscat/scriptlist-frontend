@@ -3,7 +3,6 @@
 import {
   Button,
   Card,
-  Space,
   Badge,
   Typography,
   Modal,
@@ -12,15 +11,11 @@ import {
   Switch,
   message,
   Popconfirm,
-  Tag,
   Divider,
   Empty,
   Spin,
   Pagination,
   Alert,
-  ConfigProvider,
-  Row,
-  Col,
 } from 'antd';
 import {
   EditOutlined,
@@ -30,18 +25,17 @@ import {
   CalendarOutlined,
   TagOutlined,
   HistoryOutlined,
-  FileTextOutlined,
-  BugOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { useScript } from '../../components/ScriptContext';
-import dayjs from '@/lib/utils/dayjs-config';
-import {
+import type {
   ScriptVersion,
-  EnablePreRelease,
-  scriptService,
   VersionListResponse,
   VersionStatResponse,
+} from '@/lib/api/services/scripts/scripts';
+import {
+  EnablePreRelease,
+  scriptService,
 } from '@/lib/api/services/scripts/scripts';
 import { Link } from '@/i18n/routing';
 import MarkdownView from '@/components/MarkdownView';

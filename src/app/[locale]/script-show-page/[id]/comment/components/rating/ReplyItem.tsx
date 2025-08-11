@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import ActionMenu from '@/components/ActionMenu';
 import { useTranslations } from 'next-intl';
-import { ReplyItemProps } from './types';
+import type { ReplyItemProps } from './types';
 import { useSemDateTime } from '@/lib/utils/semdate';
 
 export default function ReplyItem({

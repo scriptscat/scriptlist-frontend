@@ -4,7 +4,8 @@ import { useRef, useState } from 'react';
 import { Button, Card, Input, Select, Space, message } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
-import MarkdownEditor, { MarkdownEditorRef } from '@/components/MarkdownEditor';
+import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
+import MarkdownEditor from '@/components/MarkdownEditor';
 import { useScript } from '../../components/ScriptContext';
 import { scriptIssueService } from '@/lib/api/services/scripts/issue';
 

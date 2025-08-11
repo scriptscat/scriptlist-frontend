@@ -64,7 +64,9 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
       key: 'statistic',
       icon: <BarChartOutlined />,
       label: (
-        <Link href={`/${locale}/script-show-page/${id}/statistic`}>脚本统计</Link>
+        <Link href={`/${locale}/script-show-page/${id}/statistic`}>
+          脚本统计
+        </Link>
       ),
     },
     {

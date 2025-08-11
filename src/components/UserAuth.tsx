@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Button, Avatar, Dropdown, Space, Spin } from 'antd';
+import { Button, Avatar, Dropdown, Space } from 'antd';
 import {
   UserOutlined,
   LoginOutlined,

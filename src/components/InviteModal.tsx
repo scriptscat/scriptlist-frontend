@@ -63,7 +63,7 @@ export const InviteModal: React.FC<{
             setLoading(false);
           });
       })
-      .catch((err) => {});
+      .catch(() => {});
   };
 
   const handleCancel = () => {
@@ -71,7 +71,6 @@ export const InviteModal: React.FC<{
   };
 
   const [form] = Form.useForm();
-  const { token } = theme.useToken();
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { scriptService } from '@/lib/api/services/scripts';
 import { ScriptSettingProvider } from '@/contexts/ScriptSettingContext';
 import ManageClientLayout from './components/ManageClientLayout';

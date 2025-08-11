@@ -1,4 +1,7 @@
-import { Metadata, MetaJson } from '@/app/[locale]/script-show-page/[id]/types';
+import type {
+  Metadata,
+  MetaJson,
+} from '@/app/[locale]/script-show-page/[id]/types';
 
 type Browser = {
   logo: string;

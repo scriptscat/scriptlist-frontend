@@ -1,7 +1,5 @@
 import { notFound } from 'next/navigation';
-import {
-  scriptIssueService,
-} from '@/lib/api/services/scripts/issue';
+import { scriptIssueService } from '@/lib/api/services/scripts/issue';
 import IssueCommentClient from './components/IssueCommentClient';
 
 interface PageProps {

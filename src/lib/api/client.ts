@@ -1,7 +1,7 @@
-import { APIResponse, APIError } from '@/types/api';
+import type { APIResponse } from '@/types/api';
+import { APIError } from '@/types/api';
 import { API_CONFIG } from './config';
 import { isServerEnvironment } from '../utils/utils';
-import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 
 /**
  * 服务端Cookie工具函数
@@ -248,7 +248,7 @@ class APIClient {
       cookies?: Record<string, string>;
     } = {},
   ): Promise<T> {
-    let { cookies } = options;
+    const { cookies } = options;
     if (isServerEnvironment()) {
       // 处理cookie
       let cookieString = '';

@@ -1,8 +1,6 @@
-import { Row, Col } from 'antd';
-import Sidebar from '@/components/Sidebar';
 import UserScriptList from '@/components/UserProfile/UserScriptList';
 import scriptService from '@/lib/api/services/scripts';
-import { ScriptSearchRequest } from '../../script-show-page/[id]/types';
+import type { ScriptSearchRequest } from '../../script-show-page/[id]/types';
 import { Suspense } from 'react';
 
 interface UserPageProps {

@@ -22,17 +22,17 @@ export class ResourceService {
   async uploadImage(
     image: Blob | File,
     comment: string,
-    linkId: number
+    linkId: number,
   ): Promise<ImageUploadResponse> {
     const formData = new FormData();
     formData.append('image', image);
     formData.append('comment', comment);
     formData.append('link_id', linkId.toString());
-    
+
     // 不要手动设置 Content-Type，让浏览器自动设置 multipart/form-data 和边界字符串
     return apiClient.post<ImageUploadResponse>(
       `${this.basePath}/image`,
-      formData
+      formData,
     );
   }
 }

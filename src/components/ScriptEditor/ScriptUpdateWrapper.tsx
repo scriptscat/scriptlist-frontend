@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter } from '@/i18n/routing';
 import ScriptEditor from './index';
-import { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
+import type { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
 import { scriptService } from '@/lib/api/services/scripts';
 
 interface ScriptUpdateWrapperProps {

@@ -1,6 +1,7 @@
 import useSWR from 'swr';
-import { APIError } from '@/types/api';
-import { apiClient, RequestOptions } from '../client';
+import type { APIError } from '@/types/api';
+import type { RequestOptions } from '../client';
+import { apiClient } from '../client';
 
 /**
  * 通用API请求Hook

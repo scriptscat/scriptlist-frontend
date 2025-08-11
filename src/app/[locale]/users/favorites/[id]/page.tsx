@@ -5,7 +5,7 @@ import { userService } from '@/lib/api/services/user';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
 import type { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
-import { ListData } from '@/types/api';
+import type { ListData } from '@/types/api';
 
 interface FolderDetailPageProps {
   params: Promise<{ locale: string; id: string }>;

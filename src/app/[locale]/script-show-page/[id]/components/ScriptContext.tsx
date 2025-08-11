@@ -1,7 +1,8 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
-import { ScriptInfo, ScriptState, WatchLevel } from '../types';
+import type { ScriptInfo, ScriptState } from '../types';
+import { WatchLevel } from '../types';
 
 interface ScriptContextType {
   script: ScriptInfo;
@@ -41,10 +42,12 @@ export function useScriptState() {
   if (context === undefined) {
     throw new Error('useScriptState must be used within a ScriptProvider');
   }
-  return context.scriptState || { 
-    watch: WatchLevel.NONE,
-    favorite_ids: [],
-    watch_count: 0,
-    favorite_count: 0
-  };
+  return (
+    context.scriptState || {
+      watch: WatchLevel.NONE,
+      favorite_ids: [],
+      watch_count: 0,
+      favorite_count: 0,
+    }
+  );
 }

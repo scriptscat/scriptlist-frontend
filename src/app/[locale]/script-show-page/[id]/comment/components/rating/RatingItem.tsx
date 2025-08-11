@@ -13,7 +13,7 @@ import { useUser } from '@/contexts/UserContext';
 import ActionMenu from '@/components/ActionMenu';
 import { useTranslations } from 'next-intl';
 import ReplyItem from './ReplyItem';
-import { RatingItemProps } from './types';
+import type { RatingItemProps } from './types';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useScript } from '../../../components/ScriptContext';
 

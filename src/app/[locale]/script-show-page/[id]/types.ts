@@ -1,4 +1,4 @@
-import { PageRequest } from '@/types/api';
+import type { PageRequest } from '@/types/api';
 
 export interface ScriptListItem {
   script: Script;
@@ -162,6 +162,7 @@ export interface ScriptSetting {
   content_url: string;
   definition_url: string;
   sync_mode: 1 | 2; // 1 自动 2 手动
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   gray_controls: import('./components/GrayControl').GrayControlValue[];
   enable_pre_release: 1 | 2; // 是否开启预发布
 }

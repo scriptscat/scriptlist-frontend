@@ -3,19 +3,14 @@
 import { useState } from 'react';
 import {
   Card,
-  Avatar,
   Tag,
   Space,
   Button,
   Empty,
-  Row,
-  Col,
   Typography,
   Breadcrumb,
   message,
   Pagination,
-  Dropdown,
-  type MenuProps,
 } from 'antd';
 import {
   HomeOutlined,
@@ -25,12 +20,11 @@ import {
   UnlockOutlined,
   UserOutlined,
   EditOutlined,
-  MoreOutlined,
   HeartFilled,
 } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import { Link, useRouter } from '@/i18n/routing';
-import { useSemDateTime, formatNumber } from '@/lib/utils/semdate';
+import { useRouter } from '@/i18n/routing';
+import { formatNumber } from '@/lib/utils/semdate';
 import { useUser } from '@/contexts/UserContext';
 import ScriptCard from '@/components/Scriptlist/ScriptCard';
 import FavoriteEditModal from '@/components/FavoriteEditModal';
@@ -60,14 +54,11 @@ export default function FolderDetailClient({
   currentPage = 1,
   error,
 }: FolderDetailProps) {
-  const t = useTranslations();
   const router = useRouter();
   const { user } = useUser();
-  const [loading, setLoading] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [currentFolder, setCurrentFolder] = useState(folderDetail);
+  const [currentFolder] = useState(folderDetail);
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
-  const semDateTime = useSemDateTime();
 
   // 判断当前用户是否为收藏夹的所有者
   const isOwner =

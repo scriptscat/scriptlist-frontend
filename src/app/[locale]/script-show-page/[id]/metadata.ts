@@ -1,5 +1,5 @@
 import { scriptService } from '@/lib/api/services/scripts';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 /**
  * 页面后缀配置

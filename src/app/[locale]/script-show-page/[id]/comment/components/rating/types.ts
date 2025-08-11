@@ -1,4 +1,4 @@
-import { ScoreListItem } from '@/lib/api/services/scripts/scripts';
+import type { ScoreListItem } from '@/lib/api/services/scripts/scripts';
 
 // 排序选项类型
 export type SortOption =

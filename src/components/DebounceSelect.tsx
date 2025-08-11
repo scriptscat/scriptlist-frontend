@@ -1,10 +1,11 @@
 import { useMemo, useRef, useState } from 'react';
-import { Select, SelectProps, Spin } from 'antd';
+import type { SelectProps } from 'antd';
+import { Select, Spin } from 'antd';
 
 // 简单的防抖实现
 function debounce<T extends (...args: any[]) => any>(
   func: T,
-  delay: number
+  delay: number,
 ): T {
   let timeoutId: NodeJS.Timeout;
   return ((...args: Parameters<T>) => {
@@ -25,7 +26,7 @@ export function DebounceSelect<
     key?: string;
     label: React.ReactNode;
     value: string | number;
-  } = any
+  } = any,
 >({
   fetchOptions,
   debounceTimeout = 800,
@@ -59,7 +60,7 @@ export function DebounceSelect<
 
   const hanldeChange = (
     value: ValueType | ValueType[],
-    option?: ValueType | ValueType[]
+    option?: ValueType | ValueType[],
   ) => {
     if (maxCount !== undefined && value !== undefined && Array.isArray(value)) {
       if (value.length > maxCount) {

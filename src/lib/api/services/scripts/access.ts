@@ -1,6 +1,6 @@
 import { apiClient } from '../../client';
-import { ListData, APIResponse, GroupMember, ScriptGroup } from '@/types/api';
-import {
+import type { ListData, GroupMember, ScriptGroup } from '@/types/api';
+import type {
   InviteListItem,
   AccessRoleItem,
   InviteMessage,
@@ -218,7 +218,9 @@ export class ScriptAccessService {
 
   // 获取邀请信息
   async getInviteMessage(code: string) {
-    return await apiClient.getWithCookie<InviteMessage>(`/scripts/invite/${code}`);
+    return await apiClient.getWithCookie<InviteMessage>(
+      `/scripts/invite/${code}`,
+    );
   }
 
   // 处理邀请接受/拒绝

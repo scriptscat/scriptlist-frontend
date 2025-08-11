@@ -7,7 +7,7 @@ export const routing = defineRouting({
 
   // Used when no locale matches
   defaultLocale: 'en',
-  
+
   // 启用路径前缀策略，确保所有路由都有语言前缀
   localePrefix: 'always',
 });

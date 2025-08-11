@@ -47,7 +47,9 @@ pnpm dev
 
 ```env
 # API 调用地址
-NEXT_PUBLIC_APP_API_URL = 'http://localhost:3000/api/v2'
+NEXT_PUBLIC_APP_URL = 'http://localhost:3000'
+# 服务端 API 调用地址
+APP_API_URL = 'https://scriptcat.org/api/v2'
 # API 代理地址
 APP_API_PROXY = 'https://scriptcat.org/api/v2'
 # OAuth 配置

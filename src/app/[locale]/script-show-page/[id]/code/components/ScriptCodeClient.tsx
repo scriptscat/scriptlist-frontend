@@ -1,17 +1,10 @@
 'use client';
 
-import { Button, Card, Space, Typography, message } from 'antd';
+import { Card, Typography } from 'antd';
 import React from 'react';
-import {
-  CodeOutlined,
-  CopyOutlined,
-  DownloadOutlined,
-} from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import MonacoEditor from '@/components/MonacoEditor';
-import { useScript } from '../../components/ScriptContext';
-import { ScriptInfo } from '../../types';
+import type { ScriptInfo } from '../../types';
 
 const { Title } = Typography;
 

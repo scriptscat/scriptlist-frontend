@@ -46,7 +46,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
     authorMap.set(uid, true);
   }
 
-  let items = [];
+  const items = [];
 
   if (user.user) {
     // 判断用户等级是否为管理员 或者 允许作者删除

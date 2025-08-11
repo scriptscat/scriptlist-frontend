@@ -1,11 +1,13 @@
-import { Metadata, ResolvingMetadata } from 'next';
-import { ScriptDetailPageProps } from '../types';
+import type { Metadata, ResolvingMetadata } from 'next';
+import type { ScriptDetailPageProps } from '../types';
 import ScriptVersionsClient from './components/ScriptVersionsClient';
 import { generateScriptMetadata } from '../metadata';
 import { scriptService } from '@/lib/api/services/scripts';
 import { notFound } from 'next/navigation';
 
-export default async function ScriptVersionsPage({ params }: ScriptDetailPageProps) {
+export default async function ScriptVersionsPage({
+  params,
+}: ScriptDetailPageProps) {
   const { id } = await params;
   const scriptId = parseInt(id);
 
@@ -21,7 +23,7 @@ export default async function ScriptVersionsPage({ params }: ScriptDetailPagePro
     ]);
 
     return (
-      <ScriptVersionsClient 
+      <ScriptVersionsClient
         initialVersionData={versionListData}
         versionStat={versionStatData}
         initialPage={1}

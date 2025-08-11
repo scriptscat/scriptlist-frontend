@@ -8,7 +8,7 @@ import {
   LoadingOutlined,
 } from '@ant-design/icons';
 import RatingItem from './RatingItem';
-import { RatingListProps, SortOption } from './types';
+import type { RatingListProps, SortOption } from './types';
 
 const { Option } = Select;
 

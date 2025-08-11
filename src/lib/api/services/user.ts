@@ -58,9 +58,7 @@ export interface FollowUserRequest {
 }
 
 // 关注用户响应
-export interface FollowUserResponse {
-  // 响应为空
-}
+export type FollowUserResponse = object;
 
 /**
  * 用户API服务

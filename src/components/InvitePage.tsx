@@ -1,12 +1,13 @@
 import { Button, Table, Modal, message } from 'antd';
 import type { ColumnsType, TableProps } from 'antd/es/table';
-import { ReactElement, useState } from 'react';
+import type { ReactElement } from 'react';
+import { useState } from 'react';
 import { CopyOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { scriptAccessService } from '@/lib/api/services/scripts';
 import { InviteModal } from '@/components/InviteModal';
 import { useInviteList } from '@/lib/api/hooks';
-import { InviteListItem } from '@/app/[locale]/script-show-page/[id]/types';
+import type { InviteListItem } from '@/app/[locale]/script-show-page/[id]/types';
 
 interface DataType extends InviteListItem {
   key: string;
@@ -219,9 +220,9 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
                     setDeleteLoading(false);
                     message.success('删除成功');
                     mutate();
-                  } catch (error) {
+                  } catch (error: any) {
                     setDeleteLoading(false);
-                    message.error('删除失败，请稍后重试');
+                    message.error(error.message || '删除失败，请稍后重试');
                   }
                 },
               });

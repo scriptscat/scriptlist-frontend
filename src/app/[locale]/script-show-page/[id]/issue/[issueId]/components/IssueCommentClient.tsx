@@ -32,8 +32,8 @@ import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
 import MarkdownEditor from '@/components/MarkdownEditor';
 import MarkdownView from '@/components/MarkdownView';
 import ActionMenu from '@/components/ActionMenu';
+import type { IssueComment } from '@/lib/api/services/scripts/issue';
 import {
-  IssueComment,
   scriptIssueService,
   type Issue,
 } from '@/lib/api/services/scripts/issue';
@@ -46,7 +46,7 @@ import { useIsWatchIssue } from '@/lib/api/hooks/script';
 import IssueLabel from '../../components/IssueLabel';
 
 const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
-  let json = JSON.parse(content);
+  const json = JSON.parse(content);
 
   return (
     <div>
@@ -252,7 +252,7 @@ export default function IssueCommentClient({
                               icon={<MessageOutlined />}
                               className="!text-gray-400 anticon-middle"
                               onClick={() => {
-                                let lines = item.content.split('\n');
+                                const lines = item.content.split('\n');
                                 for (let i = 0; i < lines.length; i++) {
                                   lines[i] = '> ' + lines[i];
                                 }

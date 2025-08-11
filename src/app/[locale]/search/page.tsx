@@ -2,7 +2,7 @@ import { Row, Col } from 'antd';
 import Sidebar from '@/components/Sidebar';
 import ScriptList from '@/components/Scriptlist';
 import scriptService from '@/lib/api/services/scripts';
-import { ScriptSearchRequest } from '../script-show-page/[id]/types';
+import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
 
 interface SearchPageProps {
   searchParams: ScriptSearchRequest;

@@ -28,8 +28,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
 import { scriptAccessService } from '@/lib/api/services/scripts';
-import { InviteMessage } from '@/app/[locale]/script-show-page/[id]/types';
-import { APIError } from '@/types/api';
+import type { InviteMessage } from '@/app/[locale]/script-show-page/[id]/types';
+import type { APIError } from '@/types/api';
 import { Link } from '@/i18n/routing';
 
 const { Title, Text } = Typography;

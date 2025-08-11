@@ -98,13 +98,12 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
 
       try {
         // 动态导入 Toast UI Editor
-        // @ts-ignore - Toast UI Editor 类型声明问题
+        // @ts-expect-error - Toast UI Editor 类型声明问题
         const { Editor } = await import('@toast-ui/editor');
 
         // 尝试加载代码语法高亮插件
         let plugins: any[] = [];
         try {
-          // @ts-ignore - Toast UI Editor 插件类型声明问题
           const codeSyntaxHighlight = await import(
             '@toast-ui/editor-plugin-code-syntax-highlight'
           );

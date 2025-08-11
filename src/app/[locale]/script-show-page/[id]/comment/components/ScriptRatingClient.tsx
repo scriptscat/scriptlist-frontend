@@ -4,18 +4,15 @@ import { Card, Space, message } from 'antd';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useScript } from '../../components/ScriptContext';
 import { useUser } from '@/contexts/UserContext';
-import {
-  ScoreListItem,
-  scriptService,
-} from '@/lib/api/services/scripts/scripts';
+import type { ScoreListItem } from '@/lib/api/services/scripts/scripts';
+import { scriptService } from '@/lib/api/services/scripts/scripts';
 import { useScoreList, useMyScore } from '@/lib/api/hooks/script';
-import { ListData } from '@/types/api';
+import type { ListData } from '@/types/api';
 import {
   RatingOverview,
   UserRatingForm,
   RatingList,
   type SortOption,
-  type ScriptReply,
   type RatingStats,
 } from './rating';
 
@@ -30,7 +27,6 @@ export default function ScriptRatingClient({
   initialRatingStats,
   scriptId,
 }: ScriptRatingClientProps) {
-  const { script } = useScript();
   const { user } = useUser();
   const [submitting, setSubmitting] = useState(false);
 
@@ -51,7 +47,7 @@ export default function ScriptRatingClient({
 
       const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
       let totalScore = 0;
-      let totalRatings = scoreState.score_user_count;
+      const totalRatings = scoreState.score_user_count;
 
       // 填充分布数据
       Object.entries(scoreState.score_group).forEach(([score, count]) => {

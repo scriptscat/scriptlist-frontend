@@ -77,7 +77,9 @@ export default function Sidebar() {
           dataSource={trendingData}
           renderItem={(item) => (
             <List.Item className="flex items-center justify-between !px-0">
-              <Text className="text-gray-700 dark:text-gray-300">{item.name}</Text>
+              <Text className="text-gray-700 dark:text-gray-300">
+                {item.name}
+              </Text>
               <Text type="secondary">{item.count}</Text>
             </List.Item>
           )}
@@ -100,7 +102,7 @@ export default function Sidebar() {
             <List.Item className="flex items-center space-x-3 !px-0">
               <div
                 className={`w-6 h-6 ${getRankColor(
-                  item.rank
+                  item.rank,
                 )} rounded-full flex items-center justify-center text-white text-xs font-bold`}
               >
                 {item.rank}
@@ -131,7 +133,9 @@ export default function Sidebar() {
           size="small"
           dataSource={recentData}
           renderItem={(item) => (
-            <List.Item className={`border-l-2 border-${item.color}-500 pl-3 !px-0`}>
+            <List.Item
+              className={`border-l-2 border-${item.color}-500 pl-3 !px-0`}
+            >
               <div>
                 <div className="text-sm font-medium text-gray-900 dark:text-white">
                   {item.title}

@@ -40,7 +40,7 @@ export class ScriptStatisticsService {
    */
   async getStatistics(scriptId: number): Promise<Statistics> {
     return apiClient.getWithCookie<Statistics>(
-      `${this.basePath}/${scriptId}/statistics`
+      `${this.basePath}/${scriptId}/statistics`,
     );
   }
 
@@ -49,7 +49,9 @@ export class ScriptStatisticsService {
    * @param scriptId - 脚本ID
    */
   async getRealtime(scriptId: number): Promise<Realtime> {
-    return apiClient.get<Realtime>(`${this.basePath}/${scriptId}/statistics/realtime`);
+    return apiClient.get<Realtime>(
+      `${this.basePath}/${scriptId}/statistics/realtime`,
+    );
   }
 }
 

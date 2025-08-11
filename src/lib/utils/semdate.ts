@@ -1,5 +1,5 @@
-import { getTranslations, getLocale } from 'next-intl/server';
-import { useTranslations, useLocale } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 import dayjs from './dayjs-config';
 
 export async function semDateTime(time: number): Promise<string> {

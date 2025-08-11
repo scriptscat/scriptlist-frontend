@@ -1,5 +1,5 @@
-import { Metadata, ResolvingMetadata } from 'next';
-import { ScriptDetailPageProps, ScriptInfo } from '../types';
+import type { Metadata, ResolvingMetadata } from 'next';
+import type { ScriptDetailPageProps, ScriptInfo } from '../types';
 import ScriptCodeClient from './components/ScriptCodeClient';
 import { generateScriptMetadata } from '../metadata';
 import scriptService from '@/lib/api/services/scripts';

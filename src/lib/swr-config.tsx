@@ -32,7 +32,7 @@ export const swrConfig = {
   },
 
   // 成功回调
-  onSuccess: (data: any, key: string) => {
+  onSuccess: (_data: any, _key: string) => {
     // 可以在这里添加成功后的处理逻辑
     // console.log('SWR Success:', key, data);
   },

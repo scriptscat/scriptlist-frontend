@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { ScriptDetailLayoutProps, ScriptState } from './types';
+import type { ScriptDetailLayoutProps, ScriptState } from './types';
 import ScriptLayoutProvider from './components/ScriptLayoutProvider';
 import scriptService from '@/lib/api/services/scripts';
 

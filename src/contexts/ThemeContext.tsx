@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeClientProvider } from './ThemeClientContext';
-import { ThemeMode } from '@/lib/cookies';
+import type { ThemeMode } from '@/lib/cookies';
 
 interface ThemeProviderProps {
   children: React.ReactNode;

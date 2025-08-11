@@ -2,10 +2,8 @@
 
 import {
   Button,
-  Switch,
   Input,
   Form,
-  Select,
   Space,
   Radio,
   Checkbox,
@@ -17,18 +15,15 @@ import {
 } from 'antd';
 import { ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { useScript } from '../../components/ScriptContext';
 import { scriptService } from '@/lib/api/services/scripts';
 import { APIError } from '@/types/api';
 
 const { TextArea } = Input;
-const { Option } = Select;
 const { Title, Text } = Typography;
 
 export default function SettingsPage() {
-  const t = useTranslations();
   const script = useScript();
   const router = useRouter();
   const [modal, contextHolder] = Modal.useModal();
@@ -65,7 +60,6 @@ export default function SettingsPage() {
   const [archive, setArchive] = useState<1 | 2>(
     (script.script.archive as 1 | 2) || 2,
   ); // 1: 已归档, 2: 正常
-  const [enablePreRelease, setEnablePreRelease] = useState<1 | 2>(2); // 1: 启用, 2: 禁用
 
   const handleSaveBasicInfo = async () => {
     if (!name.trim()) {

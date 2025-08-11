@@ -6,7 +6,7 @@ import type {
   Script,
   ScriptInfo,
 } from '@/app/[locale]/script-show-page/[id]/types';
-import { ListData } from '@/types/api';
+import type { ListData } from '@/types/api';
 
 interface UserFavoritesPageProps {
   params: Promise<{ locale: string; id: string }>;

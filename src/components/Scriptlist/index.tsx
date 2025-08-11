@@ -6,7 +6,7 @@ import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import ScriptCard from './ScriptCard';
-import {
+import type {
   ScriptListItem,
   ScriptSearchRequest,
 } from '@/app/[locale]/script-show-page/[id]/types';

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import type { MenuProps, DescriptionsProps } from 'antd';
 import {
   Avatar,
   Card,
@@ -14,16 +15,9 @@ import {
   Col,
   Badge,
   Tooltip,
-  Timeline,
   Dropdown,
-  MenuProps,
-  Statistic,
-  Progress,
   Divider,
   Descriptions,
-  DescriptionsProps,
-  Empty,
-  Result,
 } from 'antd';
 import {
   UserOutlined,
@@ -35,29 +29,21 @@ import {
   PlusOutlined,
   MessageOutlined,
   ShareAltOutlined,
-  EyeOutlined,
-  DownloadOutlined,
   ClockCircleOutlined,
   ThunderboltOutlined,
   CodeOutlined,
   BulbOutlined,
   MoreOutlined,
-  SettingOutlined,
-  StarOutlined,
   TeamOutlined,
   TrophyOutlined,
-  FireOutlined,
   EnvironmentOutlined,
-  GlobalOutlined,
-  GithubOutlined,
   EditOutlined,
   MailOutlined,
   LinkOutlined,
 } from '@ant-design/icons';
-import { useTranslations } from 'next-intl';
 import { useRouter, usePathname, Link } from '@/i18n/routing';
 import { useUser } from '@/contexts/UserContext';
-import { GetUserDetailResponse } from '@/lib/api/services/user';
+import type { GetUserDetailResponse } from '@/lib/api/services/user';
 import { useFollowUser } from '@/lib/api/hooks/user';
 import UserEditModal from './UserEditModal';
 import { useSemDateTime } from '@/lib/utils/semdate';
@@ -73,7 +59,6 @@ export default function UserProfileLayout({
   user,
   children,
 }: UserProfileLayoutProps) {
-  const t = useTranslations();
   const router = useRouter();
   const pathname = usePathname();
   const { user: currentUser } = useUser();
@@ -102,10 +87,7 @@ export default function UserProfileLayout({
     {
       key: 'scripts',
       label: (
-        <Link
-          href={`/users/${user.user_id}`}
-          style={{ color: 'unset' }}
-        >
+        <Link href={`/users/${user.user_id}`} style={{ color: 'unset' }}>
           <Space>
             <FileTextOutlined />
             <span>我的脚本</span>
@@ -160,7 +142,7 @@ export default function UserProfileLayout({
     setEditModalVisible(true);
   };
 
-  const handleEditSuccess = (updatedUser: GetUserDetailResponse) => {
+  const handleEditSuccess = (_updatedUser: GetUserDetailResponse) => {
     // 在服务端渲染模式下，需要刷新页面来获取最新数据
     // 或者可以实现客户端状态更新逻辑
     window.location.reload();
@@ -174,24 +156,6 @@ export default function UserProfileLayout({
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     message.success('链接已复制到剪贴板');
-  };
-
-  // 获取活动图标
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case 'script':
-        return <CodeOutlined className="text-blue-500" />;
-      case 'update':
-        return <ThunderboltOutlined className="text-orange-500" />;
-      case 'comment':
-        return <MessageOutlined className="text-green-500" />;
-      case 'favorite':
-        return <HeartOutlined className="text-red-500" />;
-      case 'achievement':
-        return <TrophyOutlined className="text-yellow-500" />;
-      default:
-        return <BulbOutlined className="text-purple-500" />;
-    }
   };
 
   // 更多操作菜单

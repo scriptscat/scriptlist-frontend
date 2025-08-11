@@ -1,6 +1,6 @@
 import React from 'react';
 import ScriptUpdateWrapper from '@/components/ScriptEditor/ScriptUpdateWrapper';
-import { ScriptDetailPageProps } from '../types';
+import type { ScriptDetailPageProps } from '../types';
 import { scriptService } from '@/lib/api/services/scripts';
 
 export default async function ScriptUpdatePage({

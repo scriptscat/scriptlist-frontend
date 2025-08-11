@@ -1,6 +1,6 @@
 import { apiClient } from '../../client';
-import { ListData } from '@/types/api';
-import {
+import type { ListData } from '@/types/api';
+import type {
   ScriptInfo,
   ScriptListItem,
   ScriptSearchRequest,
@@ -8,7 +8,6 @@ import {
   ScriptSetting,
   Category,
   ScriptState,
-  Script,
 } from '@/app/[locale]/script-show-page/[id]/types';
 
 // 评分相关类型定义

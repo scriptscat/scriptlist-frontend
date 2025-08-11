@@ -5,7 +5,6 @@ import {
   theme,
   Select,
   Typography,
-  Space,
   Menu,
   Divider,
   Dropdown,
@@ -13,7 +12,6 @@ import {
 import { Header, Content, Footer } from 'antd/es/layout/layout';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
-import { useLocale } from 'next-intl';
 import { ThemeToggle } from './ThemeToggle';
 import UserAuth from '@/components/UserAuth';
 import {
@@ -24,7 +22,6 @@ import {
   MessageOutlined,
 } from '@ant-design/icons';
 
-const { Option } = Select;
 const { Title } = Typography;
 
 export default function MainLayout({
@@ -171,9 +168,9 @@ export default function MainLayout({
           </div>
         </div>
       </Header>
-      <Content 
+      <Content
         className="w-full max-w-7xl mx-auto px-4 py-3"
-        style={{ 
+        style={{
           flex: 1,
           display: 'flex',
           flexDirection: 'column',

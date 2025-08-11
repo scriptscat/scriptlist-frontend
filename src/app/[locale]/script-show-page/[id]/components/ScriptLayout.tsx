@@ -2,7 +2,7 @@
 
 import { Breadcrumb, Col, Row } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
-import { ScriptInfo } from '../types';
+import type { ScriptInfo } from '../types';
 import ScriptNavigation from './ScriptNavigation';
 import { useLocale } from 'next-intl';
 

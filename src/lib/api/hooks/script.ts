@@ -1,21 +1,23 @@
 import useSWR from 'swr';
-import { APIError, ListData, GroupMember, ScriptGroup } from '@/types/api';
-import {
+import type { APIError, ListData, GroupMember, ScriptGroup } from '@/types/api';
+import type {
   InviteListItem,
   AccessRoleItem,
   Category,
 } from '@/app/[locale]/script-show-page/[id]/types';
 import scriptService, { scriptAccessService } from '../services/scripts';
 import { scriptIssueService } from '../services/scripts/issue';
-import {
+import type {
   ScoreListItem,
   ScoreListParam,
   MyScoreResponse,
+} from '../services/scripts/scripts';
+import {
   ScriptVersion,
   VersionListRequest,
   VersionListResponse,
 } from '../services/scripts/scripts';
-import { Statistics, Realtime } from '../services/scripts/statistics';
+import type { Statistics, Realtime } from '../services/scripts/statistics';
 
 /**
  * 脚本评分列表Hook
@@ -199,7 +201,9 @@ export function useScriptStatistics(scriptId: number) {
   return useSWR<Statistics, APIError>(
     key,
     async () => {
-      const { scriptStatisticsService } = await import('../services/scripts/statistics');
+      const { scriptStatisticsService } = await import(
+        '../services/scripts/statistics'
+      );
       return scriptStatisticsService.getStatistics(scriptId);
     },
     {
@@ -222,7 +226,9 @@ export function useScriptRealtime(scriptId: number, enabled: boolean = true) {
   return useSWR<Realtime, APIError>(
     key,
     async () => {
-      const { scriptStatisticsService } = await import('../services/scripts/statistics');
+      const { scriptStatisticsService } = await import(
+        '../services/scripts/statistics'
+      );
       return scriptStatisticsService.getRealtime(scriptId);
     },
     {
@@ -232,4 +238,3 @@ export function useScriptRealtime(scriptId: number, enabled: boolean = true) {
     },
   );
 }
-

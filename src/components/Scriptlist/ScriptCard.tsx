@@ -22,12 +22,12 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from '@/i18n/routing';
 import { formatNumber, useSemDateTime } from '@/lib/utils/semdate';
 import { useLocale, useTranslations } from 'next-intl';
-import { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
+import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
 import { ScriptUtils } from '@/app/[locale]/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 interface ActionButton {
   key: string;
@@ -188,7 +188,11 @@ export default function ScriptCard({ script, actions }: ScriptCardProps) {
                     );
 
                     return action.tooltip ? (
-                      <Tooltip key={action.key} title={action.tooltip} placement="left">
+                      <Tooltip
+                        key={action.key}
+                        title={action.tooltip}
+                        placement="left"
+                      >
                         {buttonElement}
                       </Tooltip>
                     ) : (

@@ -1,6 +1,6 @@
 import { apiClient } from '../../client';
-import { ListData, PageRequest } from '@/types/api';
-import { Script, ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
+import type { ListData, PageRequest } from '@/types/api';
+import type { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
 
 // 收藏夹相关类型定义
 export interface CreateFolderRequest {
@@ -74,10 +74,7 @@ export class ScriptFavoriteService {
    * 更新收藏夹
    */
   async updateFolder(id: number, data: UpdateFolderRequest): Promise<void> {
-    return apiClient.put(
-      `${this.basePath}/folders/${id}`,
-      data,
-    );
+    return apiClient.put(`${this.basePath}/folders/${id}`, data);
   }
 
   /**

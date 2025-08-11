@@ -1,5 +1,5 @@
 import { apiClient } from '../../client';
-import { ListData } from '@/types/api';
+import type { ListData } from '@/types/api';
 
 // Issue类型定义
 export type IssueStatusType = 1 | 3; // 1: 待解决, 3: 已关闭

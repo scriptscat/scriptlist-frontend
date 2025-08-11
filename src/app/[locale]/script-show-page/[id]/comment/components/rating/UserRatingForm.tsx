@@ -19,7 +19,7 @@ import {
 } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { useUser } from '@/contexts/UserContext';
-import { UserRatingFormProps } from './types';
+import type { UserRatingFormProps } from './types';
 import { getRatingText } from './utils';
 import { useSemDateTime } from '@/lib/utils/semdate';
 

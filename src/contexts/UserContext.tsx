@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext } from 'react';
 import { userService } from '@/lib/api';
-import { UserInfo } from '@/lib/api/services/user';
+import type { UserInfo } from '@/lib/api/services/user';
 
 interface UserContextType {
   user: UserInfo | null;

@@ -2,7 +2,7 @@
 
 import { Rate, Progress } from 'antd';
 import { StarFilled } from '@ant-design/icons';
-import { RatingOverviewProps } from './types';
+import type { RatingOverviewProps } from './types';
 
 export default function RatingOverview({ ratingStats }: RatingOverviewProps) {
   return (

@@ -1,11 +1,8 @@
 import { cookies } from 'next/headers';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { UserProvider } from '@/contexts/UserContext';
-import {
-  THEME_COOKIE_NAME,
-  THEME_MODE_COOKIE_NAME,
-  ThemeMode,
-} from '@/lib/cookies';
+import type { ThemeMode } from '@/lib/cookies';
+import { THEME_COOKIE_NAME, THEME_MODE_COOKIE_NAME } from '@/lib/cookies';
 import { Geist, Geist_Mono } from 'next/font/google';
 import NavigationProgress from './NavigationProgress';
 import { DayjsLocaleProvider } from './DayjsLocaleProvider';

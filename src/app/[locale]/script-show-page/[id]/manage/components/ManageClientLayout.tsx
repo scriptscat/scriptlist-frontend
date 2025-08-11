@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Card, Layout, Menu, theme } from 'antd';
 import {
   SettingOutlined,
@@ -23,7 +23,10 @@ interface ManageClientLayoutProps {
   scriptId: string;
 }
 
-export default function ManageClientLayout({ children, scriptId }: ManageClientLayoutProps) {
+export default function ManageClientLayout({
+  children,
+  scriptId,
+}: ManageClientLayoutProps) {
   const pathname = usePathname();
   const { token } = theme.useToken();
 
@@ -42,39 +45,51 @@ export default function ManageClientLayout({ children, scriptId }: ManageClientL
     {
       key: 'manage',
       icon: <SyncOutlined />,
-      label: <Link href={`/script-show-page/${scriptId}/manage`}>源代码同步</Link>,
+      label: (
+        <Link href={`/script-show-page/${scriptId}/manage`}>源代码同步</Link>
+      ),
     },
     {
       key: 'settings',
       icon: <SettingOutlined />,
       label: (
-        <Link href={`/script-show-page/${scriptId}/manage/settings`}>脚本管理</Link>
+        <Link href={`/script-show-page/${scriptId}/manage/settings`}>
+          脚本管理
+        </Link>
       ),
     },
     {
       key: 'publish',
       icon: <CloudUploadOutlined />,
       label: (
-        <Link href={`/script-show-page/${scriptId}/manage/publish`}>脚本发布</Link>
+        <Link href={`/script-show-page/${scriptId}/manage/publish`}>
+          脚本发布
+        </Link>
       ),
     },
     {
       key: 'logs',
       icon: <FileTextOutlined />,
-      label: <Link href={`/script-show-page/${scriptId}/manage/logs`}>管理日志</Link>,
+      label: (
+        <Link href={`/script-show-page/${scriptId}/manage/logs`}>管理日志</Link>
+      ),
     },
     {
       key: 'access',
       icon: <EyeOutlined />,
       label: (
-        <Link href={`/script-show-page/${scriptId}/manage/access`}>访问权限管理</Link>
+        <Link href={`/script-show-page/${scriptId}/manage/access`}>
+          访问权限管理
+        </Link>
       ),
     },
     {
       key: 'groups',
       icon: <TeamOutlined />,
       label: (
-        <Link href={`/script-show-page/${scriptId}/manage/groups`}>用户组管理</Link>
+        <Link href={`/script-show-page/${scriptId}/manage/groups`}>
+          用户组管理
+        </Link>
       ),
     },
   ];

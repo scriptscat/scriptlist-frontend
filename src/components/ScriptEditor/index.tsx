@@ -12,7 +12,6 @@ import {
   Checkbox,
   Alert,
   Tooltip,
-  theme,
   Tag,
   Select,
 } from 'antd';
@@ -24,14 +23,14 @@ import {
   RocketOutlined,
 } from '@ant-design/icons';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
-import MonacoEditor, { MonacoEditorRef } from '@/components/MonacoEditor';
+import type { MonacoEditorRef } from '@/components/MonacoEditor';
+import MonacoEditor from '@/components/MonacoEditor';
 import MarkdownEditor from '@/components/MarkdownEditor';
 import {
   parseMetadata,
   parseTags,
 } from '@/app/[locale]/script-show-page/[id]/utils';
-import { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
+import type { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
 import { useCategoryList } from '@/lib/api/hooks';
 
 const { Text, Link } = Typography;
@@ -42,7 +41,6 @@ export interface ScriptEditorProps {
 }
 
 export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
-  const t = useTranslations();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const parseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
