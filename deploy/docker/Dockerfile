@@ -1,5 +1,7 @@
 # 使用 Node.js 20 Alpine 作为基础镜像
 ARG BASEIMAGE=node:20-alpine3.16
+ARG APP_API_PROXY=https://scriptcato.org/api/v2
+
 FROM ${BASEIMAGE} AS base
 
 # 设置 pnpm 环境变量
@@ -14,6 +16,8 @@ FROM base AS prod
 
 # 设置工作目录
 WORKDIR /app
+
+ENV APP_API_PROXY=${APP_API_PROXY}
 
 # 复制 package.json 和 pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./

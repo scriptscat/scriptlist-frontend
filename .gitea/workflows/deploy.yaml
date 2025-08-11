@@ -50,6 +50,8 @@ jobs:
     - name: Docker build and push
 #      use: docker/build-push-action@v6
       uses: actions/build-push-action@v6
+      env:
+        INNER_DOMAIN: ${{ env.ENV=='prod' && 'scriptlist-cago' || format('scriptlist-{0}-cago', env.ENV) }}
       with:
         push: true
         file: deploy/docker/Dockerfile
@@ -57,6 +59,7 @@ jobs:
         context: .
         build-args: |
           BASEIMAGE=${{ env.BASEIMAGE }}/node:20-alpine3.16
+          APP_API_PROXY=http://$INNER_DOMAIN.app.svc.cluster.local/api/v2
 
     - name: Set up kubeconfig
 #      uses: azure/k8s-set-context@v4
@@ -87,9 +90,10 @@ jobs:
         helm upgrade --install \
         --namespace $NAMESPACE $APP_NAME . -f values.yaml \
         --set image.tag=${{ env.ENV }}.${{ steps.vars.outputs.sha_short }} --set image.repository=$REGISTRY/$REPOSITORY \
-        --set env[0].value=https://$DOMAIN/api/v2 \
+        --set env[0].value=https://$DOMAIN \
         --set env[1].value=http://$INNER_DOMAIN.app.svc.cluster.local/api/v2 \
-        --set env[2].value=$APP_BBS_OAUTH_CLIENT \
+        --set env[2].value=http://$INNER_DOMAIN.app.svc.cluster.local/api/v2 \
+        --set env[3].value=$APP_BBS_OAUTH_CLIENT \
         --set ingress.hosts[0].host=$DOMAIN \
         --set ingress.tls[0].hosts[0]=$DOMAIN \
         --set resources.requests.cpu=$RESOURCE_CPU \
