@@ -34,6 +34,7 @@
     "prismjs": "^1.30.0",
     "react": "19.1.0",
     "react-copy-to-clipboard": "^5.1.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "19.1.0",
     "swr": "^2.3.4",
     "xss": "^1.0.15"

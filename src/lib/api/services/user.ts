@@ -60,6 +60,20 @@ export interface FollowUserRequest {
 // 关注用户响应
 export type FollowUserResponse = object;
 
+// Webhook 响应
+export interface Webhook {
+  token: string;
+}
+
+export type WebhookResponse = Webhook;
+
+// 用户配置
+export interface UserConfig {
+  notify: { [key: string]: boolean };
+}
+
+export type UserConfigResponse = UserConfig;
+
 /**
  * 用户API服务
  */
@@ -167,6 +181,37 @@ export class UserService {
       `${this.basePath}/${uid}/follow`,
       data,
     );
+  }
+
+  /**
+   * 获取 Webhook 信息
+   * 支持服务端和客户端环境
+   */
+  async getWebhook() {
+    return apiClient.getWithCookie<Webhook>(`${this.basePath}/webhook`);
+  }
+
+  /**
+   * 刷新 Webhook Token
+   */
+  async refreshWebhookToken() {
+    return apiClient.put<Webhook>(`${this.basePath}/webhook`);
+  }
+
+  /**
+   * 设置用户通知配置
+   * @param notify 通知配置对象
+   */
+  async setUserNotify(notify: { [key: string]: boolean }) {
+    return apiClient.put(`${this.basePath}/config`, { notify });
+  }
+
+  /**
+   * 获取用户配置
+   * 支持服务端和客户端环境
+   */
+  async getUserConfig() {
+    return apiClient.getWithCookie<UserConfig>(`${this.basePath}/config`);
   }
 }
 

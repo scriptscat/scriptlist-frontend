@@ -1,333 +1,402 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Input,
   Button,
-  Typography,
   Card,
+  Typography,
+  Space,
   Row,
   Col,
-  Space,
-  Tag,
-  Avatar,
-  Badge,
-  Statistic,
+  Divider,
+  MenuProps,
+  Dropdown,
 } from 'antd';
 import {
   SearchOutlined,
-  CodeOutlined,
-  DownloadOutlined,
-  StarOutlined,
-  TrophyOutlined,
-  RocketOutlined,
-  FireOutlined,
-  EyeOutlined,
+  QuestionCircleFilled,
+  CodeFilled,
+  DownOutlined,
 } from '@ant-design/icons';
-import { useRouter } from '@/i18n/routing';
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { browserName } from 'react-device-detect';
+import { Icon } from '@iconify/react';
+import { Link } from '@/i18n/routing';
 
-const { Title, Paragraph, Text } = Typography;
-const { Search } = Input;
+const { Title, Text } = Typography;
 
-// 示例数据
-const featuredScripts = [
-  {
-    id: 1,
-    name: '百度网盘直链下载助手',
-    description: '支持百度网盘文件直链下载，提升下载速度',
-    author: 'scriptcat',
-    avatar: '/assets/logo.png',
-    downloads: 125680,
-    rating: 4.8,
-    tags: ['下载', '网盘', '实用工具'],
-    isHot: true,
+// 常量定义
+const INSTALL_URL = 'https://docs.scriptcat.org/docs/use/installation/';
+const DEVELOPER_GUIDE_URL =
+  'https://bbs.tampermonkey.net.cn/thread-1234-1-1.html';
+
+// 浏览器图标按钮组件属性接口
+interface IconButtonProps {
+  href: string;
+  text: string;
+  icon: string;
+  target?: string;
+}
+
+const IconButton: React.FC<IconButtonProps> = ({
+  href,
+  text,
+  icon,
+  target = '_blank',
+}) => {
+  return (
+    <a
+      target={target}
+      href={href}
+      rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+    >
+      <Space align="center">
+        <div className="flex items-center justify-center w-[22px] h-[22px] p-0.5 bg-white border border-white rounded">
+          <Icon height={16} width={16} icon={icon} />
+        </div>
+        <span className="font-bold">{text}</span>
+      </Space>
+    </a>
+  );
+};
+
+// 浏览器商店配置
+interface BrowserStoreConfig {
+  url: string;
+  icon: string;
+  text: string;
+  target?: string;
+}
+
+const browserStores: Record<string, BrowserStoreConfig> = {
+  edge: {
+    url: 'https://microsoftedge.microsoft.com/addons/detail/scriptcat/liilgpjgabokdklappibcjfablkpcekh',
+    icon: 'logos:microsoft-edge',
+    text: '添加到 Edge 浏览器',
   },
-  {
-    id: 2,
-    name: '知乎增强',
-    description: '为知乎添加更多实用功能，优化浏览体验',
-    author: 'zhuser',
-    avatar: '/assets/logo.png',
-    downloads: 89234,
-    rating: 4.6,
-    tags: ['知乎', '增强', '阅读'],
-    isNew: true,
+  chrome: {
+    url: 'https://chrome.google.com/webstore/detail/scriptcat/ndcooeababalnlpkfedmmbbbgkljhpjf',
+    icon: 'logos:chrome',
+    text: '添加到 Chrome 浏览器',
   },
-  {
-    id: 3,
-    name: '购物比价助手',
-    description: '自动比较各大电商平台商品价格，找到最优惠的购买渠道',
-    author: 'shophelper',
-    avatar: '/assets/logo.png',
-    downloads: 76543,
-    rating: 4.9,
-    tags: ['购物', '比价', '省钱'],
-    isTrending: true,
+  firefox: {
+    url: 'https://addons.mozilla.org/zh-CN/firefox/addon/scriptcat/',
+    icon: 'logos:firefox',
+    text: '添加到 Firefox 浏览器',
   },
-];
+  crx: {
+    url: 'https://github.com/scriptscat/scriptcat/releases',
+    icon: 'noto:package',
+    text: '下载 安装包 文件手动安装',
+  },
+  default: {
+    url: './docs/use/use',
+    icon: 'logos:chrome',
+    text: '安装扩展到浏览器',
+    target: '_self',
+  },
+};
 
-const popularTags = [
-  '去广告',
-  '下载工具',
-  '视频增强',
-  '购物助手',
-  '学习工具',
-  '社交媒体',
-  '开发工具',
-  '游戏辅助',
-];
+// 浏览器商店映射
+interface StoreItem {
+  key: string;
+  label: React.ReactNode;
+  show?: boolean;
+}
 
-const stats = [
-  { title: '脚本总数', value: 12847, icon: <CodeOutlined /> },
-  { title: '总下载量', value: 5683920, icon: <DownloadOutlined /> },
-  { title: '活跃用户', value: 89234, icon: <EyeOutlined /> },
-  { title: '开发者', value: 2341, icon: <TrophyOutlined /> },
-];
+const storeMap: Record<string, StoreItem> = Object.entries(
+  browserStores,
+).reduce(
+  (acc, [key, config]) => {
+    acc[key] = {
+      key,
+      label: (
+        <IconButton
+          href={config.url}
+          icon={config.icon}
+          text={config.text}
+          target={config.target}
+        />
+      ),
+      show: key !== 'default',
+    };
+    return acc;
+  },
+  {} as Record<string, StoreItem>,
+);
+
+// 构建商店列表
+const storeList: MenuProps['items'] = [];
+Object.keys(storeMap).forEach((key) => {
+  if (storeMap[key].show !== false) {
+    storeList.push({
+      key: storeMap[key].key,
+      label: storeMap[key].label,
+    });
+  }
+});
+
+// Hero 部分组件
+interface HeroSectionProps {
+  searchValue: string;
+  onSearchChange: (value: string) => void;
+  onSearch: (value: string) => void;
+}
+
+const HeroSection: React.FC<HeroSectionProps> = ({
+  searchValue,
+  onSearchChange,
+  onSearch,
+}) => {
+  const currentBrowser = browserName.toLowerCase();
+  const browserStore = storeMap[currentBrowser] || storeMap.default;
+
+  return (
+    <div className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r"></div>
+      <div className="relative max-w-6xl mx-auto px-4 pt-10">
+        <div className="text-center">
+          {/* Logo and Title */}
+          <div className="mb-12">
+            <div className="flex items-center justify-center mb-6">
+              <img
+                src="/assets/logo.png"
+                alt="ScriptCat Logo"
+                className="w-16 h-16 mr-4"
+              />
+              <Title
+                level={1}
+                className="!text-6xl !font-bold !mb-0 !bg-gradient-to-r !from-blue-600 !to-purple-600 !bg-clip-text !text-transparent"
+              >
+                ScriptCat
+              </Title>
+            </div>
+            <Typography.Paragraph className="!text-xl !text-gray-600 !mb-0 max-w-2xl mx-auto">
+              发现和分享优质用户脚本，让浏览体验更精彩
+            </Typography.Paragraph>
+          </div>
+
+          {/* Search Box */}
+          <div className="max-w-2xl mx-auto mb-16">
+            <Input.Search
+              size="large"
+              placeholder="搜索脚本，开启新世界"
+              value={searchValue}
+              onChange={(e) => onSearchChange(e.target.value)}
+              onSearch={onSearch}
+              enterButton={
+                <Button
+                  type="primary"
+                  size="large"
+                  icon={<SearchOutlined />}
+                  className="!bg-gradient-to-r !from-blue-500 !to-purple-500 !border-0 hover:!from-blue-600 hover:!to-purple-600"
+                >
+                  搜索脚本
+                </Button>
+              }
+            />
+          </div>
+
+          {/* Install Button */}
+          <div className="flex justify-center space-x-4">
+            <Space direction="horizontal" size="large">
+              <Dropdown.Button
+                size="large"
+                type="primary"
+                icon={<DownOutlined rev={undefined} />}
+                menu={{ items: storeList }}
+                arrow={true}
+                style={{ width: 'auto' }}
+              >
+                {browserStore.label}
+              </Dropdown.Button>
+              <Link href={'/search'}>
+                <Button type="default" icon={<SearchOutlined />} size="large">
+                  浏览所有脚本
+                </Button>
+              </Link>
+            </Space>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function HomePage() {
+  const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
 
   const handleSearch = (value: string) => {
+    // 如果搜索内容为空，跳转到搜索页面浏览所有脚本
     if (value.trim()) {
-      router.push(`/search?q=${encodeURIComponent(value.trim())}`);
+      router.push(`/search?keyword=${encodeURIComponent(value.trim())}`);
+    } else {
+      // 搜索内容为空时，跳转到搜索页面显示所有脚本
+      router.push('/search');
     }
   };
 
-  const handleTagClick = (tag: string) => {
-    router.push(`/search?tag=${encodeURIComponent(tag)}`);
-  };
-
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br">
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center py-16 px-4">
-        {/* Logo and Title */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <Image
-              src="/assets/logo.png"
-              alt="ScriptCat Logo"
-              width={80}
-              height={80}
-              className="mr-4"
-            />
-            <Title level={1} className="!mb-0 !text-6xl font-bold">
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                ScriptCat
-              </span>
-            </Title>
-          </div>
-          <Paragraph className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            发现和分享优质用户脚本，让你的浏览器拥有无限可能
-          </Paragraph>
-        </div>
+      <HeroSection
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        onSearch={handleSearch}
+      />
 
-        {/* Search Bar */}
-        <div className="w-full max-w-2xl mb-8">
-          <Search
-            placeholder="搜索脚本、作者或功能..."
-            allowClear
-            enterButton={
-              <Button type="primary" size="large">
-                <SearchOutlined />
-                搜索
-              </Button>
-            }
-            size="large"
-            onSearch={handleSearch}
-            className="shadow-lg"
-          />
-        </div>
-
-        {/* Popular Tags */}
-        <div className="text-center">
-          <Text className="text-gray-500 mr-3">热门标签：</Text>
-          <Space wrap>
-            {popularTags.map((tag) => (
-              <Tag
-                key={tag}
-                className="cursor-pointer hover:scale-105 transition-transform"
-                color="blue"
-                onClick={() => handleTagClick(tag)}
-              >
-                {tag}
-              </Tag>
-            ))}
-          </Space>
-        </div>
-      </div>
-
-      {/* Stats Section */}
-      <div className="py-8 bg-gray-50 dark:bg-gray-800">
+      {/* Features Section */}
+      <div className="py-10">
         <div className="max-w-6xl mx-auto px-4">
-          <Row gutter={[24, 24]} justify="center">
-            {stats.map((stat, index) => (
-              <Col xs={12} sm={6} key={index}>
-                <Card className="text-center hover:shadow-lg transition-shadow">
-                  <Statistic
-                    title={stat.title}
-                    value={stat.value}
-                    prefix={stat.icon}
-                    valueStyle={{ color: '#1890ff' }}
-                  />
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </div>
-      </div>
-
-      {/* Featured Scripts */}
-      <div className="py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <Title level={2} className="flex items-center justify-center">
-              <FireOutlined className="mr-2 text-orange-500" />
-              精选脚本
+          <div className="text-center mb-16">
+            <Title level={2} className="!text-4xl !font-bold !mb-4">
+              为什么选择 ScriptCat？
             </Title>
-            <Paragraph className="text-lg text-gray-600 dark:text-gray-300">
-              发现最受欢迎和最新推出的优质脚本
-            </Paragraph>
+            <Text type="secondary" className="!text-xl max-w-3xl mx-auto">
+              基于油猴的设计理念，完全兼容油猴脚本，提供更多丰富的API，让脚本能够完成更多强大的功能。
+            </Text>
           </div>
 
-          <Row gutter={[24, 24]}>
-            {featuredScripts.map((script) => (
-              <Col xs={24} md={8} key={script.id}>
-                <Card
-                  hoverable
-                  className="h-full transition-all duration-300 hover:scale-105"
-                  onClick={() => router.push(`/scripts/${script.id}`)}
-                >
-                  <div className="flex flex-col h-full">
-                    {/* Header with badges */}
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex-1">
-                        <Title level={4} className="!mb-2 line-clamp-1">
-                          {script.name}
-                        </Title>
+          <Row gutter={[32, 32]}>
+            {/* ScriptCat 介绍 */}
+            <Col xs={24} lg={8}>
+              <Card
+                className="!h-full !border-0 !shadow-lg !rounded-2xl hover:!shadow-xl transition-all duration-300 hover:!-translate-y-1"
+                bodyStyle={{ padding: '32px' }}
+              >
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <img
+                      src="/assets/logo.png"
+                      alt="ScriptCat"
+                      className="w-10 h-10"
+                    />
+                  </div>
+                  <Title level={3} className="!text-2xl !font-bold !mb-4">
+                    强大的脚本管理器
+                  </Title>
+                  <div className="text-left space-y-4">
+                    <Text type="secondary" className="block">
+                      ScriptCat（脚本猫）完全兼容油猴脚本，同时提供后台脚本运行框架和丰富的API扩展。
+                    </Text>
+                    <div className="space-y-2">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
+                        完全兼容油猴脚本
                       </div>
-                      <div className="flex flex-col gap-1">
-                        {script.isHot && <Badge status="error" text="热门" />}
-                        {script.isNew && <Badge status="success" text="最新" />}
-                        {script.isTrending && (
-                          <Badge status="processing" text="趋势" />
-                        )}
+                      <div className="flex items-center text-sm text-gray-600">
+                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
+                        支持后台脚本运行
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
+                        提供丰富API扩展
                       </div>
                     </div>
-
-                    {/* Description */}
-                    <Paragraph className="text-gray-600 dark:text-gray-300 mb-4 flex-1 line-clamp-2">
-                      {script.description}
-                    </Paragraph>
-
-                    {/* Author */}
-                    <div className="flex items-center mb-3">
-                      <Avatar size="small" src={script.avatar} />
-                      <Text className="ml-2 text-sm">{script.author}</Text>
-                    </div>
-
-                    {/* Stats */}
-                    <div className="flex justify-between items-center mb-3">
-                      <Space size="large">
-                        <span className="flex items-center text-sm text-gray-500">
-                          <DownloadOutlined className="mr-1" />
-                          {script.downloads.toLocaleString()}
-                        </span>
-                        <span className="flex items-center text-sm text-gray-500">
-                          <StarOutlined className="mr-1" />
-                          {script.rating}
-                        </span>
-                      </Space>
-                    </div>
-
-                    {/* Tags */}
-                    <div>
-                      <Space wrap>
-                        {script.tags.map((tag) => (
-                          <Tag
-                            key={tag}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleTagClick(tag);
-                            }}
-                            className="cursor-pointer"
-                          >
-                            {tag}
-                          </Tag>
-                        ))}
-                      </Space>
+                    <div className="pt-2">
+                      <Button
+                        type="link"
+                        href={INSTALL_URL}
+                        target="_blank"
+                        className="!p-0 !h-auto !text-blue-600 hover:!text-blue-700"
+                      >
+                        立即安装 ScriptCat →
+                      </Button>
                     </div>
                   </div>
-                </Card>
-              </Col>
-            ))}
+                </div>
+              </Card>
+            </Col>
+
+            {/* 常见问题 */}
+            <Col xs={24} lg={8}>
+              <Card
+                className="!h-full !border-0 !shadow-lg !rounded-2xl hover:!shadow-xl transition-all duration-300 hover:!-translate-y-1"
+                bodyStyle={{ padding: '32px' }}
+              >
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <QuestionCircleFilled className="text-3xl text-white" />
+                  </div>
+                  <Title level={3} className="!text-2xl !font-bold !mb-4">
+                    常见问题
+                  </Title>
+                  <div className="text-left space-y-4">
+                    <div>
+                      <Text className="font-medium">什么是用户脚本？</Text>
+                      <Text type="secondary" className="block text-sm mt-1">
+                        用户脚本可以增强网页功能、去除广告、提升易用性，让你的浏览体验更出色。
+                      </Text>
+                    </div>
+                    <div>
+                      <Text className="font-medium">为什么选择脚本猫？</Text>
+                      <Text type="secondary" className="block text-sm mt-1">
+                        脚本猫不仅兼容油猴脚本，还支持后台脚本运行，功能更强大，覆盖范围更广。
+                      </Text>
+                    </div>
+                    <div>
+                      <Text className="font-medium">如何开始使用？</Text>
+                      <Text type="secondary" className="block text-sm mt-1">
+                        首先安装脚本管理器，然后在本站寻找适合的脚本一键安装即可。
+                      </Text>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+
+            {/* 成为开发者 */}
+            <Col xs={24} lg={8}>
+              <Card
+                className="!h-full !border-0 !shadow-lg !rounded-2xl hover:!shadow-xl transition-all duration-300 hover:!-translate-y-1"
+                bodyStyle={{ padding: '32px' }}
+              >
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <CodeFilled className="text-3xl text-white" />
+                  </div>
+                  <Title level={3} className="!text-2xl !font-bold !mb-4">
+                    加入开发者
+                  </Title>
+                  <div className="text-left space-y-4">
+                    <Text type="secondary" className="block">
+                      成为脚本开发者，享受专属权益和技术支持。
+                    </Text>
+                    <div className="space-y-2">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></div>
+                        脚本推荐曝光机会
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></div>
+                        论坛开发者权限
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></div>
+                        技术交流群邀请
+                      </div>
+                      <div className="flex items-center text-sm text-gray-600">
+                        <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></div>
+                        专属开发者标识
+                      </div>
+                    </div>
+                    <div className="pt-2">
+                      <Button
+                        type="link"
+                        href={DEVELOPER_GUIDE_URL}
+                        target="_blank"
+                        className="!p-0 !h-auto !text-purple-600 hover:!text-purple-700"
+                      >
+                        查看开发教程 →
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </Col>
           </Row>
-
-          {/* View More Button */}
-          <div className="text-center mt-12">
-            <Button
-              type="primary"
-              size="large"
-              icon={<RocketOutlined />}
-              onClick={() => router.push('/search')}
-            >
-              探索更多脚本
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Start Section */}
-      <div className="py-16 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <Title level={2} className="mb-8">
-            开始使用 ScriptCat
-          </Title>
-          
-          <Row gutter={[24, 24]} className="mb-8">
-            <Col xs={24} md={8}>
-              <Card className="h-full">
-                <div className="text-center">
-                  <div className="text-4xl mb-4">1️⃣</div>
-                  <Title level={4}>安装扩展</Title>
-                  <Paragraph>在浏览器中安装 ScriptCat 扩展程序</Paragraph>
-                </div>
-              </Card>
-            </Col>
-            <Col xs={24} md={8}>
-              <Card className="h-full">
-                <div className="text-center">
-                  <div className="text-4xl mb-4">2️⃣</div>
-                  <Title level={4}>寻找脚本</Title>
-                  <Paragraph>在脚本站中搜索你需要的功能脚本</Paragraph>
-                </div>
-              </Card>
-            </Col>
-            <Col xs={24} md={8}>
-              <Card className="h-full">
-                <div className="text-center">
-                  <div className="text-4xl mb-4">3️⃣</div>
-                  <Title level={4}>享受体验</Title>
-                  <Paragraph>一键安装脚本，享受增强的浏览体验</Paragraph>
-                </div>
-              </Card>
-            </Col>
-          </Row>
-
-          <Space size="large">
-            <Button
-              type="primary"
-              size="large"
-              href="https://docs.scriptcat.org/"
-              target="_blank"
-            >
-              下载扩展
-            </Button>
-            <Button size="large" onClick={() => router.push('/search')}>
-              浏览脚本
-            </Button>
-          </Space>
         </div>
       </div>
     </div>

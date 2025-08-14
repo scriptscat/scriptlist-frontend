@@ -61,7 +61,8 @@ export default function ScriptList({
   };
 
   const handleSearch = (value: string) => {
-    const newFilters = { ...filters, keyword: value };
+    // 允许空搜索，这样用户可以浏览所有脚本
+    const newFilters = { ...filters, keyword: value.trim() || '' };
     setFilters(newFilters);
     setCurrentPage(1);
     updateURL(newFilters, 1);
@@ -104,7 +105,8 @@ export default function ScriptList({
             }
             size="large"
             onSearch={handleSearch}
-            defaultValue={filters.keyword}
+            value={filters.keyword || ''}
+            onChange={(e) => setFilters({ ...filters, keyword: e.target.value })}
             disabled={isPending}
           />
 

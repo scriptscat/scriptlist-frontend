@@ -3,9 +3,35 @@ import Sidebar from '@/components/Sidebar';
 import ScriptList from '@/components/Scriptlist';
 import scriptService from '@/lib/api/services/scripts';
 import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
+import type { Metadata } from 'next';
 
 interface SearchPageProps {
   searchParams: Promise<ScriptSearchRequest>;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: SearchPageProps): Promise<Metadata> {
+  const resolvedSearchParams = await searchParams;
+
+  let title = '脚本搜索';
+
+  // 如果有搜索关键词，使用关键词作为标题
+  if (resolvedSearchParams.keyword) {
+    title = `${resolvedSearchParams.keyword} - 脚本搜索`;
+  }
+
+  // 如果是第2页及以后，添加页码信息
+  if (resolvedSearchParams.page && resolvedSearchParams.page > 1) {
+    title = `${title} - 第${resolvedSearchParams.page}页`;
+  }
+
+  // 添加站点后缀
+  title += ' | 脚本猫';
+
+  return {
+    title,
+  };
 }
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {

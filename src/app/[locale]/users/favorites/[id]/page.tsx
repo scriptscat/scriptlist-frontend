@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import FolderDetailClient from './components/FolderDetailClient';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
 import { userService } from '@/lib/api/services/user';
@@ -10,6 +11,38 @@ import type { ListData } from '@/types/api';
 interface FolderDetailPageProps {
   params: Promise<{ locale: string; id: string }>;
   searchParams: Promise<{ page?: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: FolderDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const folderId = parseInt(id);
+
+  try {
+    const folderDetail: FavoriteFolderItem =
+      await scriptFavoriteService.getFolderDetail(folderId);
+
+    const userDetail: GetUserDetailResponse = await userService.getUserDetail(
+      folderDetail.user_id,
+    );
+
+    const title =
+      `${folderDetail.name} - ${userDetail.username}的收藏夹` + ' | 脚本猫';
+    const description =
+      folderDetail.description ||
+      `${userDetail.username}的收藏夹"${folderDetail.name}"，共收录${folderDetail.count}个脚本`;
+
+    return {
+      title,
+      description,
+    };
+  } catch (error) {
+    return {
+      title: '收藏夹不存在' + ' | 脚本猫',
+      description: '您访问的收藏夹不存在或已被删除',
+    };
+  }
 }
 
 export default async function FolderDetailPage({
@@ -40,7 +73,7 @@ export default async function FolderDetailPage({
       });
 
     return (
-      <div className="min-h-screen">
+      <div>
         <Suspense
           fallback={
             <div className="flex items-center justify-center min-h-screen">
@@ -61,7 +94,7 @@ export default async function FolderDetailPage({
     );
   } catch (error) {
     return (
-      <div className="min-h-screen">
+      <div>
         <Suspense
           fallback={
             <div className="flex items-center justify-center min-h-screen">

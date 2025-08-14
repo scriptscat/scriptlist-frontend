@@ -1,6 +1,17 @@
 import { scriptIssueService } from '@/lib/api/services/scripts/issue';
 import type { IssueListParams } from '@/lib/api/services/scripts/issue';
 import ScriptIssueClient from './components/ScriptIssueClient';
+import { generateScriptMetadata } from '../metadata';
+import { ScriptDetailPageProps } from '../types';
+import { Metadata, ResolvingMetadata } from 'next';
+
+export async function generateMetadata(
+  { params }: ScriptDetailPageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const { id } = await params;
+  return generateScriptMetadata(id, 'issue');
+}
 
 interface PageProps {
   params: Promise<{

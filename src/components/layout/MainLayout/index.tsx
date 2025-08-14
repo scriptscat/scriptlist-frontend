@@ -164,7 +164,7 @@ export default function MainLayout({
         </div>
       </Header>
       <Content
-        className="w-full max-w-7xl mx-auto px-4 py-3"
+        className="w-full max-w-7xl mx-auto px-4 py-10"
         style={{
           flex: 1,
           display: 'flex',

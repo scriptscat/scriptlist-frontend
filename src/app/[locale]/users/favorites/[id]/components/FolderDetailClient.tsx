@@ -67,7 +67,7 @@ export default function FolderDetailClient({
   // 如果有错误或者没有收藏夹详情，显示错误页面
   if (error || !currentFolder) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto">
         <Empty
           description={error || '收藏夹不存在或已被删除'}
           className="py-16"
@@ -117,9 +117,9 @@ export default function FolderDetailClient({
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div>
       {/* 面包屑导航 */}
-      <div className="mb-6">
+      <div className="mb-3">
         <Breadcrumb
           items={[
             {
@@ -160,17 +160,6 @@ export default function FolderDetailClient({
             },
           ]}
         />
-      </div>
-
-      {/* 返回按钮 */}
-      <div className="mb-4">
-        <Button
-          icon={<LeftOutlined />}
-          onClick={() => router.back()}
-          type="text"
-        >
-          返回
-        </Button>
       </div>
 
       {/* 收藏夹信息卡片 */}

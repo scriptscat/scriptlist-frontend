@@ -41,9 +41,9 @@ import {
 import { useRouter, usePathname, Link } from '@/i18n/routing';
 import { useUser } from '@/contexts/UserContext';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
-import { useFollowUser } from '@/lib/api/hooks/user';
 import UserEditModal from './UserEditModal';
 import { useSemDateTime } from '@/lib/utils/semdate';
+import { useFollowUser } from '@/lib/api/hooks/userClient';
 
 const { Title, Text, Paragraph } = Typography;
 

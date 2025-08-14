@@ -7,8 +7,8 @@ import type { Metadata } from 'next';
 export const PAGE_SUFFIXES = {
   detail: { title: '', description: '' },
   code: { title: '代码', description: '查看{name}的源代码' },
-  comment: { title: '反馈', description: '查看{name}的反馈和评分' },
-  stats: { title: '统计数据', description: '查看{name}的安装统计和使用数据' },
+  comment: { title: '评分', description: '查看{name}的评分' },
+  stats: { title: '脚本统计', description: '查看{name}的安装统计和使用数据' },
   version: { title: '版本列表', description: '查看{name}的所有版本历史' },
   issue: { title: '反馈', description: '查看{name}的问题反馈' },
   manage: { title: '脚本管理', description: '管理{name}脚本' },
@@ -41,7 +41,7 @@ export async function generateScriptMetadata(
       : script.description;
 
     return {
-      title,
+      title: title + ' | 脚本猫',
       description,
       openGraph: {
         title,
@@ -58,7 +58,7 @@ export async function generateScriptMetadata(
       : '查看脚本详细信息';
 
     return {
-      title: fallbackTitle,
+      title: fallbackTitle + ' | 脚本猫',
       description: fallbackDescription,
     };
   }
