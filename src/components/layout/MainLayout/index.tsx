@@ -98,6 +98,8 @@ export default function MainLayout({
                 width: '32px',
                 height: '32px',
               }}
+              height={32}
+              width={32}
               src="/assets/logo.png"
               alt="logo"
             />
