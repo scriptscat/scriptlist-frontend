@@ -188,8 +188,6 @@ export default function MainLayout({
             {t('scriptcat')}
           </a>
           <Divider type="vertical" />
-          <Link href="/sitemap">{t('sitemap_title')}</Link>
-          <Divider type="vertical" />
           <a href="https://github.com/scriptscat" target="_blank">
             GitHub
           </a>

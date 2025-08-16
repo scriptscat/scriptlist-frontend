@@ -1,7 +1,7 @@
 import { Row, Col } from 'antd';
 import Sidebar from '@/components/Sidebar';
 import ScriptList from '@/components/Scriptlist';
-import scriptService from '@/lib/api/services/scripts';
+import { scriptService } from '@/lib/api/services/scripts';
 import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
 import type { Metadata } from 'next';
 
@@ -43,11 +43,20 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     keyword: resolvedSearchParams.keyword || undefined,
     sort: resolvedSearchParams.sort || 'today_download',
     domain: resolvedSearchParams.domain || undefined,
-    script_type: 0, // 默认搜索所有类型
+    category: resolvedSearchParams.category || undefined,
+    script_type: resolvedSearchParams.script_type || 0, // 默认搜索所有类型
   };
 
   // 在服务端获取数据
-  const scripts = await scriptService.search(apiParams);
+  const [scripts, recentScripts, ratingScripts] = await Promise.all([
+    scriptService.search(apiParams),
+    scriptService.search({
+      size: 10,
+      page: 1,
+      sort: 'createtime',
+    }),
+    scriptService.lastScoreScript(),
+  ]);
 
   return (
     <Row gutter={[24, 24]}>
@@ -64,7 +73,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
       {/* 侧边栏 */}
       <Col xs={24} lg={6}>
-        <Sidebar />
+        <Sidebar
+          recentScripts={recentScripts.list}
+          ratingScripts={ratingScripts.list}
+        />
       </Col>
     </Row>
   );

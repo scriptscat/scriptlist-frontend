@@ -2,9 +2,9 @@
 
 import { useState, useTransition } from 'react';
 import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
-import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
-import { useLocale } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { SearchOutlined } from '@ant-design/icons';
+import { useLocale, useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 import { useCategoryList } from '@/lib/api/hooks';
 import ScriptCard from './ScriptCard';
 import type {
@@ -27,8 +27,8 @@ export default function ScriptList({
   initialFilters,
   initialPage = 1,
 }: ScriptListProps) {
-  const locale = useLocale();
   const router = useRouter();
+  const t = useTranslations();
   const [isPending, startTransition] = useTransition();
   const { data: categoryData, isLoading: isCategoryLoading } =
     useCategoryList();
@@ -51,11 +51,13 @@ export default function ScriptList({
       if (newFilters.keyword) params.set('keyword', newFilters.keyword);
       if (newFilters.domain) params.set('domain', newFilters.domain);
       if (newFilters.category) params.set('category', newFilters.category);
+      if (newFilters.script_type && newFilters.script_type > 0)
+        params.set('script_type', newFilters.script_type.toString());
       if (newFilters.sort) params.set('sort', newFilters.sort);
       if (page > 1) params.set('page', page.toString());
 
       const paramString = params.toString();
-      const newURL = `/${locale}/search${paramString ? `?${paramString}` : ''}`;
+      const newURL = `/search${paramString ? `?${paramString}` : ''}`;
       router.push(newURL);
     });
   };
@@ -77,6 +79,15 @@ export default function ScriptList({
 
   const handleSortChange = (value: ScriptSearchRequest['sort']) => {
     const newFilters = { ...filters, sort: value };
+    setFilters(newFilters);
+    setCurrentPage(1);
+    updateURL(newFilters, 1);
+  };
+
+  const handleScriptTypeChange = (
+    value: ScriptSearchRequest['script_type'],
+  ) => {
+    const newFilters = { ...filters, script_type: value };
     setFilters(newFilters);
     setCurrentPage(1);
     updateURL(newFilters, 1);
@@ -106,7 +117,9 @@ export default function ScriptList({
             size="large"
             onSearch={handleSearch}
             value={filters.keyword || ''}
-            onChange={(e) => setFilters({ ...filters, keyword: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, keyword: e.target.value })
+            }
             disabled={isPending}
           />
 
@@ -121,10 +134,24 @@ export default function ScriptList({
               loading={isCategoryLoading}
             >
               {categoryData?.categories?.map((category) => (
-                <Option key={category.id} value={category.name}>
+                <Option key={category.id} value={category.id.toString()}>
                   {category.name}
                 </Option>
               ))}
+            </Select>
+
+            <Select
+              placeholder="所有类型"
+              style={{ width: 150 }}
+              value={filters.script_type || undefined}
+              onChange={handleScriptTypeChange}
+              allowClear
+              disabled={isPending}
+            >
+              <Option value="1">脚本</Option>
+              <Option value="2">{t('library')}</Option>
+              <Option value="3">{t('background_script')}</Option>
+              <Option value="4">{t('scheduled_script')}</Option>
             </Select>
 
             <Select
@@ -139,10 +166,6 @@ export default function ScriptList({
               <Option value="score">评分最高</Option>
               <Option value="total_download">下载最多</Option>
             </Select>
-
-            <Button icon={<FilterOutlined />} disabled={isPending}>
-              高级筛选
-            </Button>
           </Space>
         </Space>
       </Card>

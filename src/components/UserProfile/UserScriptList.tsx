@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from 'react';
 import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
-import { SearchOutlined, FilterOutlined } from '@ant-design/icons';
-import { useLocale } from 'next-intl';
+import { SearchOutlined } from '@ant-design/icons';
+import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import ScriptCard from '../Scriptlist/ScriptCard';
 import type {
@@ -30,6 +30,7 @@ export default function UserScriptList({
 }: UserScriptListProps) {
   const locale = useLocale();
   const router = useRouter();
+  const t = useTranslations();
   const [isPending, startTransition] = useTransition();
 
   const [filters, setFilters] = useState<ScriptSearchRequest>(
@@ -50,7 +51,11 @@ export default function UserScriptList({
 
       if (newFilters.keyword) params.set('keyword', newFilters.keyword);
       if (newFilters.domain) params.set('domain', newFilters.domain);
+      if (newFilters.script_type) {
+        params.set('script_type', newFilters.script_type.toString());
+      }
       if (newFilters.sort) params.set('sort', newFilters.sort);
+      if (newFilters.category) params.set('category', newFilters.category);
       if (page > 1) params.set('page', page.toString());
 
       const paramString = params.toString();
@@ -68,6 +73,15 @@ export default function UserScriptList({
 
   const handleSortChange = (value: ScriptSearchRequest['sort']) => {
     const newFilters = { ...filters, sort: value };
+    setFilters(newFilters);
+    setCurrentPage(1);
+    updateURL(newFilters, 1);
+  };
+
+  const handleScriptTypeChange = (
+    value: ScriptSearchRequest['script_type'],
+  ) => {
+    const newFilters = { ...filters, script_type: value };
     setFilters(newFilters);
     setCurrentPage(1);
     updateURL(newFilters, 1);
@@ -102,6 +116,21 @@ export default function UserScriptList({
 
           <Space wrap>
             <Select
+              placeholder="所有类型"
+              style={{ width: 150 }}
+              value={filters.script_type || undefined}
+              onChange={handleScriptTypeChange}
+              allowClear
+              disabled={isPending}
+            >
+              <Option value={0}>全部</Option>
+              <Option value={1}>脚本</Option>
+              <Option value={2}>{t('library')}</Option>
+              <Option value={3}>{t('background_script')}</Option>
+              <Option value={4}>{t('scheduled_script')}</Option>
+            </Select>
+
+            <Select
               value={filters.sort}
               style={{ width: 150 }}
               onChange={handleSortChange}
@@ -113,10 +142,6 @@ export default function UserScriptList({
               <Option value="score">评分最高</Option>
               <Option value="total_download">下载最多</Option>
             </Select>
-
-            <Button icon={<FilterOutlined />} disabled={isPending}>
-              高级筛选
-            </Button>
           </Space>
         </Space>
       </Card>

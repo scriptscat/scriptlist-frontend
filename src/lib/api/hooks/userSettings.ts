@@ -1,3 +1,5 @@
+'use client';
+
 import useSWR from 'swr';
 import { useState } from 'react';
 import { userService } from '../services/user';
@@ -8,16 +10,12 @@ import type { APIError } from '@/types/api';
  * 获取Webhook信息的hook
  */
 export function useWebhook() {
-  return useSWR<Webhook, APIError>(
-    'webhook',
-    () => userService.getWebhook(),
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      // 缓存时间5分钟
-      dedupingInterval: 5 * 60 * 1000,
-    }
-  );
+  return useSWR<Webhook, APIError>('webhook', () => userService.getWebhook(), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    // 缓存时间5分钟
+    dedupingInterval: 5 * 60 * 1000,
+  });
 }
 
 /**
@@ -25,7 +23,7 @@ export function useWebhook() {
  */
 export function useRefreshWebhookToken() {
   const [loading, setLoading] = useState(false);
-  
+
   const refreshToken = async () => {
     setLoading(true);
     try {
@@ -56,7 +54,7 @@ export function useUserConfig() {
       revalidateOnReconnect: false,
       // 缓存时间5分钟
       dedupingInterval: 5 * 60 * 1000,
-    }
+    },
   );
 }
 
@@ -65,7 +63,7 @@ export function useUserConfig() {
  */
 export function useUpdateUserNotify() {
   const [loading, setLoading] = useState(false);
-  
+
   const updateNotify = async (notify: { [key: string]: boolean }) => {
     setLoading(true);
     try {

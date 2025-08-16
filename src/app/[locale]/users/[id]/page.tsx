@@ -23,7 +23,8 @@ export default async function UserPage({
     keyword: resolvedSearchParams.keyword || undefined,
     sort: resolvedSearchParams.sort || 'today_download',
     domain: resolvedSearchParams.domain || undefined,
-    script_type: 0, // 默认搜索所有类型
+    category: resolvedSearchParams.category || undefined,
+    script_type: resolvedSearchParams.script_type || undefined, // 默认搜索所有类型
     user_id: userId, // 指定用户ID
   };
 

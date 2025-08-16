@@ -27,7 +27,7 @@ import { Link } from '@/i18n/routing';
 const { Title, Text } = Typography;
 
 // 常量定义
-const INSTALL_URL = 'https://docs.scriptcat.org/docs/use/installation/';
+const INSTALL_URL = 'https://docs.scriptcat.org/docs/use/use/';
 const DEVELOPER_GUIDE_URL =
   'https://bbs.tampermonkey.net.cn/thread-1234-1-1.html';
 

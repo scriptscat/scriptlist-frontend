@@ -491,6 +491,15 @@ export class ScriptService {
       `${this.basePath}/${scriptId}/code/${versionId}`,
     );
   }
+
+  /**
+   * 获取最新评分脚本
+   */
+  async lastScoreScript() {
+    return apiClient.getWithCookie<ListData<ScriptListItem>>(
+      `${this.basePath}/last-score`
+    );
+  }
 }
 
 // 导出单例实例

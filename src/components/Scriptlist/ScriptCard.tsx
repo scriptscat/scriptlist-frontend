@@ -26,8 +26,35 @@ import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types'
 import { ScriptUtils } from '@/app/[locale]/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
 import type { ReactNode } from 'react';
+import { useState } from 'react';
 
 const { Text } = Typography;
+
+interface ScriptIconProps {
+  script: ScriptListItem;
+  size?: number;
+}
+
+function ScriptIcon({ script, size = 20 }: ScriptIconProps) {
+  const [hasError, setHasError] = useState(false);
+  const iconUrl = ScriptUtils.icon(script.script.meta_json);
+
+  if (!iconUrl || hasError) {
+    return null;
+  }
+
+  return (
+    <img
+      src={iconUrl}
+      alt={`${script.name} icon`}
+      width={size}
+      height={size}
+      className="flex-shrink-0 rounded"
+      onError={() => setHasError(true)}
+      onLoad={() => setHasError(false)}
+    />
+  );
+}
 
 interface ActionButton {
   key: string;
@@ -85,6 +112,7 @@ export default function ScriptCard({ script, actions }: ScriptCardProps) {
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
+              <ScriptIcon script={script} size={20} />
               <Link
                 href={'/script-show-page/' + script.id}
                 className="text-lg !text-black dark:!text-white hover:!text-[#1677ff] line-clamp-2 leading-tight"
@@ -253,6 +281,11 @@ export default function ScriptCard({ script, actions }: ScriptCardProps) {
                 </Tag>
               </Tooltip>
             ))}
+            {script.type === 3 && (
+              <Tooltip title="这是一个脚本使用的库" color="blue">
+                <Tag color="blue">@require库</Tag>
+              </Tooltip>
+            )}
           </div>
         </div>
       </Card>
