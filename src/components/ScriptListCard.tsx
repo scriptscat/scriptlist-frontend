@@ -5,33 +5,24 @@ import { Link } from '@/i18n/routing';
 import { ScriptUtils } from '@/app/[locale]/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
 import { ReactNode } from 'react';
-import type { ScriptItem } from '@/types/script';
 import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
 
 const { Text } = Typography;
 
 interface ScriptListCardProps {
   title: ReactNode;
-  data: ScriptItem[] | ScriptListItem[];
+  data: ScriptListItem[];
   maxItems?: number;
   icon?: ReactNode;
   className?: string;
 }
 
-// 类型守卫函数
-function isScriptListItem(item: ScriptItem | ScriptListItem): item is ScriptListItem {
-  return 'script' in item && 'name' in item;
-}
-
 export default function ScriptListCard({
   title,
   data,
-  maxItems = 5,
   icon,
   className = '',
 }: ScriptListCardProps) {
-  const displayData = data.slice(0, maxItems);
-
   return (
     <Card
       size="small"
@@ -45,27 +36,17 @@ export default function ScriptListCard({
       bodyStyle={{ padding: '8px 12px' }}
     >
       <List
-        dataSource={displayData as any[]}
+        dataSource={data}
         renderItem={(item, index) => {
           let scriptIcon: string | null = null;
           let itemTitle: string;
           let itemId: number;
 
-          if (isScriptListItem(item)) {
-            // ScriptListItem 类型
-            scriptIcon = item.script?.meta_json
-              ? ScriptUtils.icon(item.script.meta_json)
-              : null;
-            itemTitle = item.name;
-            itemId = item.id;
-          } else {
-            // ScriptItem 类型
-            scriptIcon = item.meta_json
-              ? ScriptUtils.icon(item.meta_json)
-              : null;
-            itemTitle = item.title;
-            itemId = item.id;
-          }
+          scriptIcon = item.script?.meta_json
+            ? ScriptUtils.icon(item.script.meta_json)
+            : null;
+          itemTitle = item.name;
+          itemId = item.id;
 
           return (
             <List.Item className="!px-0 !py-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200">

@@ -22,16 +22,50 @@ interface SidebarProps {
   ratingScripts?: ScriptListItem[];
 }
 
-export default function Sidebar({ recentScripts = [], ratingScripts = [] }: SidebarProps) {
+export default function Sidebar({
+  recentScripts = [],
+  ratingScripts = [],
+}: SidebarProps) {
   const { user } = useUser();
 
   return (
     <div className="w-full lg:w-80 flex flex-col gap-6">
+      <Card size="small">
+        <Card.Meta
+          title={
+            <div className="flex flex-row justify-between items-center">
+              <span>学油猴脚本</span>
+              <span className="text-xs">
+                <a
+                  href="https://bbs.tampermonkey.net.cn/forum-75-1.html"
+                  className="text-gray-400"
+                  target="_blank"
+                >
+                  建议/投诉/举报
+                </a>
+              </span>
+            </div>
+          }
+          description={
+            <span
+              className="text-gray-400"
+              dangerouslySetInnerHTML={{
+                __html:
+                  "就来 <a href='https://bbs.tampermonkey.net.cn/'>油猴中文网</a>",
+              }}
+            ></span>
+          }
+        ></Card.Meta>
+        {/* 公告 */}
+        <div className="text-gray-400 mt-2">
+          脚本站大重构！新增脚本分类、收藏等重磅功能！
+        </div>
+      </Card>
+
       {/* 最新脚本 */}
       <ScriptListCard
         title="最新脚本"
         data={recentScripts}
-        maxItems={5}
         icon={<FireOutlined className="text-orange-500" />}
       />
 
@@ -39,7 +73,6 @@ export default function Sidebar({ recentScripts = [], ratingScripts = [] }: Side
       <ScriptListCard
         title="最新评分"
         data={ratingScripts}
-        maxItems={4}
         icon={<StarOutlined className="text-yellow-500" />}
       />
 
