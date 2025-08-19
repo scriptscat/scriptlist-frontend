@@ -61,7 +61,12 @@ import ActionMenu from '@/components/ActionMenu';
 const { Title, Text, Paragraph } = Typography;
 
 // 生成@require链接的函数
-function genRequire(scriptId: number, name: string, version: string) {
+function genRequire(
+  scriptId: number,
+  name: string,
+  version: string,
+  sri?: string,
+) {
   return (
     '// @require https://scriptcat.org/lib/' +
     scriptId +
@@ -69,7 +74,8 @@ function genRequire(scriptId: number, name: string, version: string) {
     version +
     '/' +
     encodeURIComponent(name) +
-    '.js'
+    '.js' +
+    (sri ? '?' + sri : '')
   );
 }
 
@@ -490,9 +496,15 @@ export default function ScriptDetailClient() {
                             </Text>
                           </Space>
                         </Link>
+                        <Text type="secondary" className="my-2">
+                          ·
+                        </Text>
                         <Text type="secondary">
                           <CalendarOutlined className="mr-1" />
                           创建于 {semDateTime(script.createtime)}
+                        </Text>
+                        <Text type="secondary" className="my-2">
+                          ·
                         </Text>
                         <Text type="secondary">
                           <CalendarOutlined className="mr-1" />
@@ -597,10 +609,9 @@ export default function ScriptDetailClient() {
                   // 库模式 - 显示@require组件
                   <Space.Compact className="flex w-full">
                     <Select
-                      className="flex-1 border-start-radius-0"
+                      className="flex-1"
                       style={{
                         overflow: 'hidden',
-                        borderRadius: 0,
                       }}
                       value={requireSelect}
                       onChange={(value) => {
@@ -612,10 +623,11 @@ export default function ScriptDetailClient() {
                           script.id,
                           script.name,
                           script.script.version,
+                          script.sri,
                         )}
                       </Select.Option>
                       <Select.Option value={2}>
-                        {'(latest compatible version) ' +
+                        {'(兼容版本) ' +
                           genRequire(
                             script.id,
                             script.name,
@@ -623,7 +635,7 @@ export default function ScriptDetailClient() {
                           )}
                       </Select.Option>
                       <Select.Option value={3}>
-                        {'(latest bugfix version) ' +
+                        {'(补丁版本) ' +
                           genRequire(
                             script.id,
                             script.name,
@@ -642,6 +654,7 @@ export default function ScriptDetailClient() {
                                   script.id,
                                   script.name,
                                   script.script.version,
+                                  script.sri,
                                 )
                               : requireSelect == 2
                                 ? genRequire(
@@ -664,7 +677,6 @@ export default function ScriptDetailClient() {
                         href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
                         target="_blank"
                         icon={<QuestionCircleOutlined />}
-                        style={{ borderRadius: 0 }}
                       ></Button>
                     </Tooltip>
                   </Space.Compact>
@@ -918,7 +930,6 @@ export default function ScriptDetailClient() {
                         script.script.meta_json.crontab) && (
                         <div className="flex justify-between items-start">
                           <Text className="text-gray-600 font-medium">
-                            <PlayCircleOutlined className="mr-1" />
                             后台脚本
                           </Text>
                           <div className="text-right max-w-[200px] min-w-[120px]">
@@ -930,7 +941,6 @@ export default function ScriptDetailClient() {
                       {script.script.meta_json.crontab && (
                         <div className="flex justify-between items-start">
                           <Text className="text-gray-600 font-medium">
-                            <ClockCircleOutlined className="mr-1" />
                             定时脚本
                           </Text>
                           <div className="text-right max-w-[200px] min-w-[120px]">

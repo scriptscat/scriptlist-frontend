@@ -54,6 +54,7 @@ export interface ScriptInfo {
   updatetime: number;
   content: string;
   role: string;
+  sri?: string; //库才有
 }
 
 export interface Category {

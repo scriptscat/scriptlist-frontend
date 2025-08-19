@@ -1,11 +1,8 @@
 import type {
   Metadata,
   MetaJson,
-  Script,
-  ScriptInfo,
   ScriptListItem,
 } from '@/app/[locale]/script-show-page/[id]/types';
-import { getLocale } from 'next-intl/server';
 
 type Browser = {
   logo: string;

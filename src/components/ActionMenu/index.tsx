@@ -92,7 +92,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   });
 
   return (
-    <div>
+    <div onClick={(e) => e.stopPropagation()}>
       {contextHolder}
       <Dropdown
         menu={{

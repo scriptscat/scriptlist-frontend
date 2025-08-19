@@ -2,10 +2,7 @@ import { Suspense } from 'react';
 import UserFavorites from '@/components/UserProfile/UserFavorites';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
-import type {
-  Script,
-  ScriptInfo,
-} from '@/app/[locale]/script-show-page/[id]/types';
+import type { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
 import type { ListData } from '@/types/api';
 
 interface UserFavoritesPageProps {

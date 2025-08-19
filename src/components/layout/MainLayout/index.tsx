@@ -104,7 +104,7 @@ export default function MainLayout({
         className="glass dark:glass-dark sticky top-0 z-50 px-4 py-3"
       >
         <div
-          className="max-w-7xl mx-auto flex items-center justify-between"
+          className="max-w-9/12 mx-auto flex items-center justify-between"
           style={{
             height: 64,
           }}
@@ -190,7 +190,7 @@ export default function MainLayout({
         </div>
       </Header>
       <Content
-        className="w-full max-w-7xl mx-auto px-4 py-10"
+        className="w-full max-w-9/12 mx-auto px-4 py-4"
         style={{
           flex: 1,
           display: 'flex',
