@@ -31,11 +31,17 @@ export function useRouter() {
 
   return {
     push: (href: string, options?: any) => {
-      let pushHref = getPathname({
+      const pushHref = getPathname({
         href: href,
         locale,
       });
       toploaderRouter.push(pushHref, options);
+    },
+    back: () => {
+      toploaderRouter.back();
+    },
+    refresh: () => {
+      toploaderRouter.refresh();
     },
   };
 }

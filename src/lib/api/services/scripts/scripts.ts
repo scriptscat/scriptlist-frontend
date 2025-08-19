@@ -497,7 +497,7 @@ export class ScriptService {
    */
   async lastScoreScript() {
     return apiClient.getWithCookie<ListData<ScriptListItem>>(
-      `${this.basePath}/last-score`
+      `${this.basePath}/last-score`,
     );
   }
 }

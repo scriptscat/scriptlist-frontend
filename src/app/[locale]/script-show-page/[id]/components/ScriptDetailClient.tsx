@@ -51,6 +51,7 @@ import { Link, useRouter } from '@/i18n/routing';
 import MarkdownView from '@/components/MarkdownView';
 import { ScriptUtils } from '../utils';
 import { copyToClipboard, hashColor } from '@/lib/utils/utils';
+import { checkScriptInstalled } from '@/lib/utils/script-manager';
 import { useScriptWatch, useScriptFavorite } from '@/lib/api/hooks';
 import { WatchLevel } from '../types';
 import { scriptService } from '@/lib/api/services/scripts';
@@ -118,7 +119,7 @@ function parseCrontabDescription(cron: string): string {
   const parts = cron.trim().split(/\s+/);
   if (parts.length < 5) return cron;
 
-  const [minute, hour, day, month, weekday] = parts;
+  const [minute, hour] = parts;
 
   // 简单的crontab解析
   if (cron === '* * * * *') return '每分钟执行';
@@ -150,7 +151,7 @@ function parseCrontabDescription(cron: string): string {
 export default function ScriptDetailClient() {
   const { script } = useScript();
   const scriptState = useScriptState();
-  const { user } = useUser();
+  const { user: _user } = useUser();
   const [showAllSites, setShowAllSites] = useState(false);
   const [requireSelect, setRequireSelect] = useState<number>(1); // 库模式的选择状态
   const [installTitle, setInstallTitle] = useState('安装脚本'); // 安装按钮文案
@@ -165,7 +166,6 @@ export default function ScriptDetailClient() {
     isWatched,
     loading: watchLoading,
     updateWatch,
-    toggleWatch,
   } = useScriptWatch(script.id, scriptState.watch as WatchLevel);
 
   // 使用收藏功能Hook
@@ -173,7 +173,6 @@ export default function ScriptDetailClient() {
     folders,
     favoriteIds,
     loading: favoriteLoading,
-    favoriteCount,
     updateFavorites,
     createFolder,
     quickFavorite,
@@ -192,35 +191,24 @@ export default function ScriptDetailClient() {
     // 只检测脚本模式，库模式不需要检测
     if (script.type === 3) return;
 
-    const api =
-      window &&
-      window.external &&
-      (((window.external as any).Scriptcat ||
-        (window.external as any).Tampermonkey) as {
-        isInstalled: (
-          name: string,
-          namespace: string,
-          callback: (res: any, rej: any) => void,
-        ) => void;
-      });
+    const namespace =
+      (script.script.meta_json['namespace'] &&
+        script.script.meta_json['namespace'][0]) ||
+      '';
 
-    if (api) {
-      api.isInstalled(
-        script.name,
-        (script.script.meta_json['namespace'] &&
-          script.script.meta_json['namespace'][0]) ||
-          '',
-        (res: { installed: boolean; version: string }) => {
-          if (res.installed === true) {
-            if (res.version == script.script.version) {
-              setInstallTitle(`重新安装脚本 v${res.version}`);
-            } else {
-              setInstallTitle(`更新脚本至 v${script.script.version}`);
-            }
+    checkScriptInstalled(script.name, namespace)
+      .then((status) => {
+        if (status.installed) {
+          if (status.version === script.script.version) {
+            setInstallTitle(`重新安装脚本 v${status.version}`);
+          } else {
+            setInstallTitle(`更新脚本至 v${script.script.version}`);
           }
-        },
-      );
-    }
+        }
+      })
+      .catch((error) => {
+        console.warn('检测脚本安装状态失败:', error);
+      });
   }, [script]);
 
   // AntiFeatures 配置
@@ -347,7 +335,7 @@ export default function ScriptDetailClient() {
     try {
       copyToClipboard(requireLink);
       message.success('已复制到剪贴板！');
-    } catch (error) {
+    } catch (_error) {
       message.error('复制失败，请重试。');
     }
   };

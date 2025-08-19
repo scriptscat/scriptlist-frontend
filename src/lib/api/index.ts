@@ -8,10 +8,6 @@ export { API_CONFIG } from './config';
 export { userService } from './services/user';
 export { resourceService } from './services/resource';
 
-// 导出hooks
-export * from './hooks/user';
-export * from './hooks/userSettings';
-
 // 导出所有API相关类型
 export * from '@/types/api';
 

@@ -7,7 +7,11 @@ import scriptService from '@/lib/api/services/scripts';
 export default async function ScriptCodePage({
   params,
   searchParams,
-}: ScriptDetailPageProps) {
+}: ScriptDetailPageProps & {
+  searchParams: Promise<{
+    version?: string;
+  }>;
+}) {
   const { id } = await params;
   const resolvedSearchParams = await searchParams;
   let script: ScriptInfo;

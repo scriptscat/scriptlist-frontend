@@ -1,6 +1,6 @@
-import { ResolvingMetadata, Metadata } from 'next';
+import type { ResolvingMetadata, Metadata } from 'next';
 import { generateScriptMetadata } from '../../metadata';
-import { ScriptDetailPageProps } from '../../types';
+import type { ScriptDetailPageProps } from '../../types';
 import CreateIssueClient from './CreateIssueClient';
 
 export async function generateMetadata(

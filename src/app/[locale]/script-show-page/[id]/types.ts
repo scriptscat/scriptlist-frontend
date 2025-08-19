@@ -121,9 +121,6 @@ export interface ScriptDetailPageProps {
     locale: string;
     id: string;
   }>;
-  searchParams: Promise<{
-    version?: string;
-  }>;
 }
 
 export interface ScriptDetailLayoutProps {

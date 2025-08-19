@@ -1,14 +1,7 @@
 'use client';
 
-import {
-  ApiOutlined,
-  BellOutlined,
-} from '@ant-design/icons';
-import {
-  Card,
-  Tabs,
-  Typography,
-} from 'antd';
+import { ApiOutlined, BellOutlined } from '@ant-design/icons';
+import { Card, Tabs, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import WebhookSettings from './WebhookSettings';
 import NotificationSettings from './NotificationSettings';
@@ -22,9 +15,9 @@ interface SettingsClientProps {
   };
 }
 
-export default function SettingsClient({ 
-  initialWebhookToken, 
-  initialNotificationConfig 
+export default function SettingsClient({
+  initialWebhookToken,
+  initialNotificationConfig,
 }: SettingsClientProps) {
   const t = useTranslations();
 
@@ -47,7 +40,9 @@ export default function SettingsClient({
           <span>通知设置</span>
         </div>
       ),
-      children: <NotificationSettings initialConfig={initialNotificationConfig} />,
+      children: (
+        <NotificationSettings initialConfig={initialNotificationConfig} />
+      ),
     },
   ];
 

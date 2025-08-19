@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { useCategoryList } from '@/lib/api/hooks';
 import ScriptCard from './ScriptCard';

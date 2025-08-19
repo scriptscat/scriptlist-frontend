@@ -56,10 +56,6 @@ export default function Sidebar({
             ></span>
           }
         ></Card.Meta>
-        {/* 公告 */}
-        <div className="text-gray-400 mt-2">
-          脚本站大重构！新增脚本分类、收藏等重磅功能！
-        </div>
       </Card>
 
       {/* 最新脚本 */}

@@ -3,18 +3,17 @@ import { scriptService } from '@/lib/api/services/scripts';
 import { ScriptSettingProvider } from '@/contexts/ScriptSettingContext';
 import ManageClientLayout from './components/ManageClientLayout';
 import { generateScriptMetadata } from '../metadata';
-import { ResolvingMetadata, Metadata } from 'next';
-import { ScriptDetailPageProps } from '../types';
+import type { Metadata } from 'next';
+import type { ScriptDetailPageProps } from '../types';
 
 interface ManageLayoutProps {
   children: ReactNode;
   params: Promise<{ id: string; locale: string }>;
 }
 
-export async function generateMetadata(
-  { params }: ScriptDetailPageProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ScriptDetailPageProps): Promise<Metadata> {
   const { id } = await params;
   return generateScriptMetadata(id, 'manage');
 }

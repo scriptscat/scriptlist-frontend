@@ -11,24 +11,25 @@ import {
   Breadcrumb,
   message,
   Pagination,
+  Modal,
 } from 'antd';
 import {
   HomeOutlined,
   FolderOutlined,
-  LeftOutlined,
   LockOutlined,
   UnlockOutlined,
   UserOutlined,
   EditOutlined,
   HeartFilled,
+  LinkOutlined,
 } from '@ant-design/icons';
-import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { formatNumber } from '@/lib/utils/semdate';
 import { useUser } from '@/contexts/UserContext';
 import ScriptCard from '@/components/Scriptlist/ScriptCard';
 import FavoriteEditModal from '@/components/FavoriteEditModal';
 import { scriptFavoriteService } from '@/lib/api/services/scripts/favorites';
+import { getScriptManagerAPI } from '@/lib/utils/script-manager';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
 import type { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
@@ -116,6 +117,31 @@ export default function FolderDetailClient({
     setEditModalVisible(false);
   };
 
+  // 处理订阅链接点击
+  const handleSubscribeClick = () => {
+    const subscribeUrl = `${window.location.origin}/scripts/subscribe/${folderId}/${encodeURIComponent(currentFolder.name)}.user.sub.js`;
+
+    // 检查是否安装了脚本管理器
+    const scriptManager = getScriptManagerAPI();
+
+    if (!scriptManager) {
+      // 没有安装脚本管理器，显示二次确认提示
+      Modal.confirm({
+        title: '未检测到脚本管理器',
+        content:
+          '未检测到浏览器中安装的脚本管理器（如 Tampermonkey、Violentmonkey 等），确认要打开订阅链接吗？',
+        okText: '确认打开',
+        cancelText: '取消',
+        onOk: () => {
+          window.open(subscribeUrl, '_blank');
+        },
+      });
+    } else {
+      // 有脚本管理器，直接打开链接
+      window.open(subscribeUrl, '_blank');
+    }
+  };
+
   return (
     <div>
       {/* 面包屑导航 */}
@@ -198,15 +224,24 @@ export default function FolderDetailClient({
             </Space>
           </div>
 
-          {/* 当用户为收藏夹所有者时显示编辑按钮 */}
-          {isOwner && (
+          <Space>
+            {/* 当用户为收藏夹所有者时显示编辑按钮 */}
+            {isOwner && (
+              <Button
+                onClick={() => setEditModalVisible(true)}
+                icon={<EditOutlined />}
+              >
+                编辑收藏夹
+              </Button>
+            )}
             <Button
-              onClick={() => setEditModalVisible(true)}
-              icon={<EditOutlined />}
+              type="primary"
+              icon={<LinkOutlined />}
+              onClick={handleSubscribeClick}
             >
-              编辑收藏夹
+              订阅链接
             </Button>
-          )}
+          </Space>
         </div>
       </Card>
 

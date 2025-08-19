@@ -5,18 +5,13 @@ import {
   ApiOutlined,
   BellOutlined,
 } from '@ant-design/icons';
-import {
-  Card,
-  message,
-  Typography,
-  Alert,
-  Badge,
-  List,
-  Switch,
-} from 'antd';
+import { Card, message, Typography, Alert, Badge, List, Switch } from 'antd';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useUserConfig, useUpdateUserNotify } from '@/lib/api/hooks/userSettings';
+import {
+  useUserConfig,
+  useUpdateUserNotify,
+} from '@/lib/api/hooks/userSettings';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -26,12 +21,18 @@ interface NotificationSettingsProps {
   };
 }
 
-export default function NotificationSettings({ initialConfig }: NotificationSettingsProps) {
+export default function NotificationSettings({
+  initialConfig,
+}: NotificationSettingsProps) {
   const [savingKey, setSavingKey] = useState<string>('');
   const t = useTranslations();
 
   // 使用hooks获取用户配置
-  const { data: userConfig, error: configError, mutate: mutateConfig } = useUserConfig();
+  const {
+    data: userConfig,
+    error: configError,
+    mutate: mutateConfig,
+  } = useUserConfig();
   const { updateNotify } = useUpdateUserNotify();
 
   // 优先使用服务端传入的配置，其次使用hook获取的数据

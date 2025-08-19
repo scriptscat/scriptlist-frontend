@@ -4,7 +4,7 @@ import { Card, List, Avatar, Tag, Typography, Space } from 'antd';
 import { Link } from '@/i18n/routing';
 import { ScriptUtils } from '@/app/[locale]/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
 
 const { Text } = Typography;
@@ -38,18 +38,14 @@ export default function ScriptListCard({
       <List
         dataSource={data}
         renderItem={(item, index) => {
-          let scriptIcon: string | null = null;
-          let itemTitle: string;
-          let itemId: number;
-
-          scriptIcon = item.script?.meta_json
+          const scriptIcon = item.script?.meta_json
             ? ScriptUtils.icon(item.script.meta_json)
             : null;
-          itemTitle = item.name;
-          itemId = item.id;
+          const itemTitle = item.name;
+          const itemId = item.id;
 
           return (
-            <List.Item className="!px-0 !py-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200">
+            <List.Item className="!px-0 !py-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200 overflow-hidden">
               <Link href={`/script-show-page/${itemId}`}>
                 <div className="flex items-center gap-3 w-full px-2">
                   {scriptIcon ? (

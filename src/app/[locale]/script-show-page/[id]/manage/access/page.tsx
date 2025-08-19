@@ -20,7 +20,6 @@ import {
   DeleteOutlined,
   ClockCircleOutlined,
   CheckCircleOutlined,
-  ExclamationCircleOutlined as WarningIcon,
   UserOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
@@ -30,7 +29,6 @@ import { Link } from '@/i18n/routing';
 import { useAccessRoleList } from '@/lib/api/hooks';
 import { UserModal } from '../../../../../../components/UserModal';
 import { scriptAccessService } from '@/lib/api/services/scripts';
-import dayjs from 'dayjs';
 import { useSemDateTime } from '@/lib/utils/semdate';
 
 const { Title, Text } = Typography;
@@ -81,8 +79,8 @@ export default function AccessPage() {
       } else {
         message.error(result.msg);
       }
-    } catch (error) {
-      message.error('更新失败，请稍后重试');
+    } catch (error: any) {
+      message.error(error.message || '更新失败，请稍后重试');
     } finally {
       setUpdateLoading(null);
     }
@@ -109,8 +107,8 @@ export default function AccessPage() {
           await scriptAccessService.deleteAccess(id, itemId);
           message.success('删除成功');
           mutate();
-        } catch (error) {
-          message.error('删除失败，请稍后重试');
+        } catch (error: any) {
+          message.error(error.message || '删除失败，请稍后重试');
         } finally {
           setDeleteLoading(null);
         }
@@ -224,7 +222,7 @@ export default function AccessPage() {
       title: '过期时间',
       dataIndex: 'expiretime',
       key: 'expiretime',
-      render: (expiretime: number, record: any) => (
+      render: (expiretime: number) => (
         <div className="flex items-center space-x-2">
           <ClockCircleOutlined className="text-gray-400" />
           <span

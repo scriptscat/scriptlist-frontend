@@ -90,11 +90,15 @@ export default function UserEditModal({
       const res = await userService.uploadAvatar(file as File);
       setAvatarUrl(res.url);
       message.success('头像上传成功！');
-      onSuccess && onSuccess(res);
+      if (onSuccess) {
+        onSuccess(res);
+      }
     } catch (e) {
       console.error('头像上传失败:', e);
       message.error('头像上传失败！');
-      onError && onError(e);
+      if (onError) {
+        onError(e);
+      }
     }
   };
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import type { MenuProps } from 'antd';
 import {
   Input,
   Button,
@@ -9,8 +10,6 @@ import {
   Space,
   Row,
   Col,
-  Divider,
-  MenuProps,
   Dropdown,
 } from 'antd';
 import {
@@ -23,6 +22,7 @@ import { useRouter } from 'next/navigation';
 import { browserName } from 'react-device-detect';
 import { Icon } from '@iconify/react';
 import { Link } from '@/i18n/routing';
+import Image from 'next/image';
 
 const { Title, Text } = Typography;
 
@@ -160,7 +160,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Logo and Title */}
           <div className="mb-12">
             <div className="flex items-center justify-center mb-6">
-              <img
+              <Image
                 src="/assets/logo.png"
                 alt="ScriptCat Logo"
                 className="w-16 h-16 mr-4"
@@ -268,7 +268,7 @@ export default function HomePage() {
               >
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <img
+                    <Image
                       src="/assets/logo.png"
                       alt="ScriptCat"
                       className="w-10 h-10"

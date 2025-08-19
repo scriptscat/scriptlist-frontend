@@ -36,10 +36,9 @@ export default async function ScriptVersionsPage({
   }
 }
 
-export async function generateMetadata(
-  { params }: ScriptDetailPageProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ScriptDetailPageProps): Promise<Metadata> {
   const { id } = await params;
   return generateScriptMetadata(id, 'version');
 }

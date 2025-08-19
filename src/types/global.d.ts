@@ -36,6 +36,26 @@ declare global {
       };
     };
   }
+
+  // 脚本管理器扩展 API 类型定义
+  interface Window {
+    external?: {
+      Scriptcat?: {
+        isInstalled: (
+          name: string,
+          namespace: string,
+          callback: (res: { installed: boolean; version: string }) => void,
+        ) => void;
+      };
+      Tampermonkey?: {
+        isInstalled: (
+          name: string,
+          namespace: string,
+          callback: (res: { installed: boolean; version: string }) => void,
+        ) => void;
+      };
+    };
+  }
 }
 
 export {};

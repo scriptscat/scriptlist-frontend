@@ -21,7 +21,7 @@ import {
   Input,
   Tooltip,
 } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
 import {
@@ -135,7 +135,7 @@ export default function WebhookSettings({
             title="配置 Webhook"
             description={
               <div className="mt-2">
-                <Text>点击 "Add webhook"</Text>
+                <Text>点击 &quot;Add webhook&quot;</Text>
                 <div className="mt-2">
                   <Text type="secondary">
                     在你的代码仓库中配置下面的 Webhook 地址和密钥

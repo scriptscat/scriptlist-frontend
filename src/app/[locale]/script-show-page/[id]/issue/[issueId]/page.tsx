@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { scriptIssueService } from '@/lib/api/services/scripts/issue';
 import IssueCommentClient from './components/IssueCommentClient';
 import { scriptService } from '@/lib/api/services/scripts';
-import { ResolvingMetadata, Metadata } from 'next';
+import type { ResolvingMetadata, Metadata } from 'next';
 import { ScriptDetailPageProps } from '../../types';
 
 interface PageProps {
@@ -14,12 +14,12 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { id, issueId } = await params;
-  
+
   try {
     // 并行获取脚本信息和issue详情
     const [script, issue] = await Promise.all([
       scriptService.infoCached(id),
-      scriptIssueService.getIssueDetail(parseInt(id), parseInt(issueId))
+      scriptIssueService.getIssueDetail(parseInt(id), parseInt(issueId)),
     ]);
 
     if (!script || !issue) {
