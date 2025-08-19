@@ -60,6 +60,7 @@ export default function FolderDetailClient({
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentFolder] = useState(folderDetail);
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
+  const [modal, contextHolder] = Modal.useModal();
 
   // 判断当前用户是否为收藏夹的所有者
   const isOwner =
@@ -126,10 +127,10 @@ export default function FolderDetailClient({
 
     if (!scriptManager) {
       // 没有安装脚本管理器，显示二次确认提示
-      Modal.confirm({
+      modal.confirm({
         title: '未检测到脚本管理器',
         content:
-          '未检测到浏览器中安装的脚本管理器（如 Tampermonkey、Violentmonkey 等），确认要打开订阅链接吗？',
+          '未检测到浏览器中安装了 ScriptCat 扩展，确认要打开订阅链接吗？',
         okText: '确认打开',
         cancelText: '取消',
         onOk: () => {
@@ -144,6 +145,7 @@ export default function FolderDetailClient({
 
   return (
     <div>
+      {contextHolder}
       {/* 面包屑导航 */}
       <div className="mb-3">
         <Breadcrumb

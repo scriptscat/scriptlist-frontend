@@ -200,24 +200,22 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Install Button */}
-          <div className="flex justify-center space-x-4">
-            <Space direction="horizontal" size="large">
-              <Dropdown.Button
-                size="large"
-                type="primary"
-                icon={<DownOutlined rev={undefined} />}
-                menu={{ items: storeList }}
-                arrow={true}
-                style={{ width: 'auto' }}
-              >
-                {browserStore.label}
-              </Dropdown.Button>
-              <Link href={'/search'}>
-                <Button type="default" icon={<SearchOutlined />} size="large">
-                  浏览所有脚本
-                </Button>
-              </Link>
-            </Space>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <Dropdown.Button
+              size="large"
+              type="primary"
+              icon={<DownOutlined rev={undefined} />}
+              menu={{ items: storeList }}
+              arrow={true}
+              style={{ width: 'auto' }}
+            >
+              {browserStore.label}
+            </Dropdown.Button>
+            <Link href={'/search'}>
+              <Button type="default" icon={<SearchOutlined />} size="large">
+                浏览所有脚本
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

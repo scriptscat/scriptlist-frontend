@@ -21,6 +21,7 @@ export default function UserAuth() {
     return (
       <Button
         type="primary"
+        ghost
         icon={<LoginOutlined />}
         onClick={login}
         size="small"

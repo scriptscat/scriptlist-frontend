@@ -11,6 +11,7 @@ import {
 import { useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import ActionMenu from '@/components/ActionMenu';
+import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import ReplyItem from './ReplyItem';
 import type { RatingItemProps } from './types';
@@ -55,18 +56,26 @@ export default function RatingItem({
         {/* 评价头部 */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-start gap-4">
-            <Avatar
-              src={rating.avatar}
-              size="large"
-              className="ring-2 ring-gray-100 dark:ring-gray-700"
-            >
-              <UserOutlined />
-            </Avatar>
+            <Link href={`/users/${rating.user_id}`} target="_blank">
+              <Avatar
+                src={rating.avatar}
+                size="large"
+                className="ring-2 ring-gray-100 dark:ring-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
+              >
+                <UserOutlined />
+              </Avatar>
+            </Link>
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100">
-                  {rating.username}
-                </h4>
+                <Link
+                  href={`/users/${rating.user_id}`}
+                  className="hover:opacity-80 transition-opacity"
+                  target="_blank"
+                >
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    {rating.username}
+                  </h4>
+                </Link>
                 <Rate
                   disabled
                   value={rating.score}

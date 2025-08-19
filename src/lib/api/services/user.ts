@@ -129,7 +129,7 @@ export class UserService {
    * 登出
    */
   async logout() {
-    return apiClient.post<void>(`${this.basePath}/logout`);
+    return apiClient.get<void>(`${this.basePath}/logout`);
   }
 
   /**

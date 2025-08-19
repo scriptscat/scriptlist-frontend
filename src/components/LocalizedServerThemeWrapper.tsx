@@ -46,6 +46,17 @@ export async function LocalizedServerThemeWrapper({
 
   return (
     <html lang={locale} data-theme={serverTheme.theme}>
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="theme-color"
+          content={serverTheme.theme === 'dark' ? '#0d1117' : '#f6f8fa'}
+        />
+        {serverTheme.theme === 'dark' && (
+          <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        )}
+      </head>
       <body
         className={
           'page-gradient-bg text-app-primary min-h-screen theme-transition'

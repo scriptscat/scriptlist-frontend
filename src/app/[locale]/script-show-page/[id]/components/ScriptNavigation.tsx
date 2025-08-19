@@ -14,6 +14,9 @@ import {
   SettingOutlined,
   BugOutlined,
 } from '@ant-design/icons';
+import useToken from 'antd/es/theme/useToken';
+import { useUser } from '@/contexts/UserContext';
+import { useScript } from './ScriptContext';
 
 interface ScriptNavigationProps {
   activeKey: string;
@@ -21,6 +24,9 @@ interface ScriptNavigationProps {
 
 export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
   const params = useParams();
+  const user = useUser();
+  const script = useScript();
+  const [_, token] = useToken();
   const { locale, id } = params;
 
   const menuItems = [
@@ -53,37 +59,54 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
         <Link href={`/${locale}/script-show-page/${id}/version`}>版本列表</Link>
       ),
     },
-    {
-      key: 'update',
-      icon: <EditOutlined />,
-      label: (
-        <Link href={`/${locale}/script-show-page/${id}/update`}>更新脚本</Link>
-      ),
-    },
-    {
-      key: 'statistic',
-      icon: <BarChartOutlined />,
-      label: (
-        <Link href={`/${locale}/script-show-page/${id}/statistic`}>
-          脚本统计
-        </Link>
-      ),
-    },
-    {
-      key: 'manage',
-      icon: <SettingOutlined />,
-      label: (
-        <Link href={`/${locale}/script-show-page/${id}/manage`}>脚本管理</Link>
-      ),
-    },
   ];
+
+  if (
+    user.user &&
+    (user.user.user_id === script.script.user_id ||
+      user.user.is_admin === 1 ||
+      script.script.role === 'manager')
+  ) {
+    menuItems.push(
+      ...[
+        {
+          key: 'update',
+          icon: <EditOutlined />,
+          label: (
+            <Link href={`/${locale}/script-show-page/${id}/update`}>
+              更新脚本
+            </Link>
+          ),
+        },
+        {
+          key: 'statistic',
+          icon: <BarChartOutlined />,
+          label: (
+            <Link href={`/${locale}/script-show-page/${id}/statistic`}>
+              脚本统计
+            </Link>
+          ),
+        },
+        {
+          key: 'manage',
+          icon: <SettingOutlined />,
+          label: (
+            <Link href={`/${locale}/script-show-page/${id}/manage`}>
+              脚本管理
+            </Link>
+          ),
+        },
+      ],
+    );
+  }
 
   return (
     <Menu
       mode="horizontal"
       selectedKeys={[activeKey]}
       items={menuItems}
-      className="w-full"
+      className="w-full shadow-sm"
+      style={{ borderRadius: '12px', border: '1px solid ' + token.colorBorder }}
     />
   );
 }

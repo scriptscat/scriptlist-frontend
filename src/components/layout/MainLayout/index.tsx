@@ -1,17 +1,28 @@
 'use client';
 
-import { Layout, theme, Typography, Menu, Divider, Dropdown } from 'antd';
+import {
+  Layout,
+  theme,
+  Typography,
+  Menu,
+  Divider,
+  Dropdown,
+  Button,
+  message,
+} from 'antd';
 import { Header, Content, Footer } from 'antd/es/layout/layout';
 import { useTranslations } from 'next-intl';
-import { Link, usePathname } from '@/i18n/routing';
+import { Link, usePathname, useRouter } from '@/i18n/routing';
 import { ThemeToggle } from './ThemeToggle';
 import UserAuth from '@/components/UserAuth';
+import { useUser } from '@/contexts/UserContext';
 import {
   ChromeOutlined,
   CodeOutlined,
   GlobalOutlined,
   HomeOutlined,
   MessageOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 import Image from 'next/image';
 
@@ -25,6 +36,17 @@ export default function MainLayout({
   const t = useTranslations('layout');
   const { token } = theme.useToken();
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useUser();
+
+  const handlePublishScript = () => {
+    if (!user) {
+      message.warning(t('login_required'));
+      return;
+    }
+    // 跳转到发布脚本页面
+    router.push('/scripts/create');
+  };
 
   type NavItem = {
     href: string;
@@ -123,6 +145,18 @@ export default function MainLayout({
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
+            {/* Publish Script Button */}
+            {user && (
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={handlePublishScript}
+                size="small"
+              >
+                {t('publish_script')}
+              </Button>
+            )}
+
             {/* Theme Toggle */}
             <ThemeToggle />
 

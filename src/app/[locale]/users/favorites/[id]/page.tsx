@@ -20,9 +20,11 @@ export async function generateMetadata({
   const folderId = parseInt(id);
 
   try {
+    // 获取收藏夹详情
     const folderDetail: FavoriteFolderItem =
       await scriptFavoriteService.getFolderDetail(folderId);
 
+    // 获取用户信息
     const userDetail: GetUserDetailResponse = await userService.getUserDetail(
       folderDetail.user_id,
     );
@@ -55,22 +57,23 @@ export default async function FolderDetailPage({
   const currentPage = parseInt(page);
 
   try {
-    // 获取收藏夹详情
+    // 首先获取收藏夹详情
     const folderDetail: FavoriteFolderItem =
       await scriptFavoriteService.getFolderDetail(folderId);
 
-    // 获取用户信息
-    const userDetail: GetUserDetailResponse = await userService.getUserDetail(
-      folderDetail.user_id,
-    );
-
-    // 获取收藏夹中的脚本列表
-    const scriptsData: ListData<ScriptInfo> =
-      await scriptFavoriteService.getFavoriteScriptList({
+    // 并行获取用户信息和脚本列表
+    const [userDetail, scriptsData]: [
+      GetUserDetailResponse,
+      ListData<ScriptInfo>,
+    ] = await Promise.all([
+      userService.getUserDetail(folderDetail.user_id),
+      scriptFavoriteService.getFavoriteScriptList({
+        user_id: folderDetail.user_id,
         folder_id: folderId,
         page: currentPage,
         size: 20,
-      });
+      }),
+    ]);
 
     return (
       <div>

@@ -27,6 +27,8 @@ export function UserProvider({
   const logout = async () => {
     try {
       await userService.logout();
+      // 刷新页面
+      window.location.reload();
     } catch (err: any) {
       console.error('登出失败:', err);
     }

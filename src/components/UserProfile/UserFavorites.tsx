@@ -168,7 +168,7 @@ export default function UserFavorites({
           <div className="text-center">
             <Text type="secondary">该用户还没有收藏任何脚本</Text>
             <div className="mt-4">
-              <Link href="/scripts">
+              <Link href="/search">
                 <Button type="primary" icon={<StarOutlined />}>
                   去发现脚本
                 </Button>

@@ -12,7 +12,9 @@
     "all_rights_reserved": "© 2022-至今 ScriptCat. All rights reserved.",
     "login": "登录",
     "logout": "退出登录",
-    "user_profile": "个人资料"
+    "user_profile": "个人资料",
+    "publish_script": "发布脚本",
+    "login_required": "请先登录后再发布脚本"
   },
   "utils": {
     "time_format": "YYYY年MM月DD日"
