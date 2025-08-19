@@ -148,6 +148,7 @@ export default function MainLayout({
             {/* Publish Script Button */}
             {user && (
               <Button
+                className="!hidden sm:!inline-flex"
                 type="primary"
                 icon={<PlusOutlined />}
                 onClick={handlePublishScript}

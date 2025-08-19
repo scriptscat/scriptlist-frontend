@@ -168,7 +168,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               />
               <Title
                 level={1}
-                className="!text-6xl !font-bold !mb-0 !bg-gradient-to-r !from-blue-600 !to-purple-600 !bg-clip-text !text-transparent"
+                className="!text-4xl sm:!text-6xl !font-bold !mb-0 !bg-gradient-to-r !from-blue-600 !to-purple-600 !bg-clip-text !text-transparent"
               >
                 ScriptCat
               </Title>
