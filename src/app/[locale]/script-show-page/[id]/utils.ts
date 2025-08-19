@@ -1,7 +1,10 @@
 import type {
   Metadata,
   MetaJson,
+  Script,
+  ScriptInfo,
 } from '@/app/[locale]/script-show-page/[id]/types';
+import { getLocale } from 'next-intl/server';
 
 type Browser = {
   logo: string;
@@ -73,9 +76,30 @@ export class ScriptUtils {
   }
 
   static getRibbonText(publicStatus: number): string | null {
-    if (publicStatus === 2) return '不公开';
-    if (publicStatus === 3) return '私有';
-    return null;
+    switch (publicStatus) {
+      case 1:
+        return '公开';
+      case 2:
+        return '不公开';
+      case 3:
+        return '私有';
+      default:
+        return null;
+    }
+  }
+
+  static i18nName(script: ScriptInfo, locale: string): string {
+    if (script.script.meta_json['name:' + locale]) {
+      return script.script.meta_json['name:' + locale][0];
+    }
+    return script.name;
+  }
+
+  static i18nDescription(script: ScriptInfo, locale: string): string {
+    if (script.script.meta_json['description:' + locale]) {
+      return script.script.meta_json['description:' + locale][0];
+    }
+    return script.description;
   }
 }
 

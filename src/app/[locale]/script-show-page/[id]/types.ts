@@ -95,7 +95,7 @@ export interface Script {
   username: string;
   avatar: string;
   is_admin: number;
-  meta_json: MetaJson;
+  meta_json: Metadata;
   script_id: number;
   version: string;
   changelog: string;
