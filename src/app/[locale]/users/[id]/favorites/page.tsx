@@ -10,7 +10,7 @@ import type { ListData } from '@/types/api';
 
 interface UserFavoritesPageProps {
   params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<{ page?: string; folder_id?: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 export default async function UserFavoritesPage({
@@ -18,7 +18,7 @@ export default async function UserFavoritesPage({
   searchParams,
 }: UserFavoritesPageProps) {
   const { id } = await params;
-  const { page = '1', folder_id } = await searchParams;
+  const { page = '1' } = await searchParams;
   const userId = parseInt(id);
   const currentPage = parseInt(page);
 

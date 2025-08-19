@@ -1,6 +1,7 @@
 import { apiClient } from '../client';
 import { isServerEnvironment } from '@/lib/utils/utils';
 import { APIError } from '@/types/api';
+import { cache } from 'react';
 
 // 用户基础信息响应
 export interface UserInfo {
@@ -169,6 +170,10 @@ export class UserService {
       `${this.basePath}/${uid}/detail`,
     );
   }
+
+  getUserDetailCache = cache((uid: number) => {
+    return this.getUserDetail(uid);
+  });
 
   /**
    * 关注或取消关注用户

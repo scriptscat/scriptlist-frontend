@@ -14,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const user = await userService.getUserDetail(parseInt(id));
+  const user = await userService.getUserDetailCache(parseInt(id));
 
   if (!user) {
     return {
@@ -32,7 +32,7 @@ export default async function RootLayout({
   params,
 }: RootLayoutProps) {
   const { id } = await params;
-  const user = await userService.getUserDetail(parseInt(id));
+  const user = await userService.getUserDetailCache(parseInt(id));
 
   if (!user) {
     notFound();

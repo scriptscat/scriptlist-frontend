@@ -15,7 +15,7 @@ import { Link } from '@/i18n/routing';
 import ScriptListCard from './ScriptListCard';
 import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 interface SidebarProps {
   recentScripts?: ScriptListItem[];
