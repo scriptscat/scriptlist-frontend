@@ -17,6 +17,7 @@ import {
   UserOutlined,
   StarOutlined,
   ShareAltOutlined,
+  MoreOutlined,
 } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from '@/i18n/routing';
@@ -27,6 +28,9 @@ import { ScriptUtils } from '@/app/[locale]/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
+import ActionMenu from '@/components/ActionMenu';
+import { scriptService } from '@/lib/api/services/scripts';
+import { useUser } from '@/contexts/UserContext';
 
 const { Text } = Typography;
 
@@ -46,7 +50,6 @@ function ScriptIcon({ script, size = 20 }: ScriptIconProps) {
   return (
     <img
       src={iconUrl}
-      alt={`${script.name} icon`}
       width={size}
       height={size}
       className="flex-shrink-0 rounded"
@@ -70,13 +73,22 @@ interface ActionButton {
 interface ScriptCardProps {
   script: ScriptListItem;
   actions?: ActionButton[];
+  onDelete?: (script: ScriptListItem) => void;
 }
 
-export default function ScriptCard({ script, actions }: ScriptCardProps) {
+export default function ScriptCard({
+  script,
+  actions,
+  onDelete,
+}: ScriptCardProps) {
   const t = useTranslations();
   const semDataTime = useSemDateTime();
   const locale = useLocale();
   const [messageApi, contextHolder] = message.useMessage();
+  const user = useUser();
+
+  const scriptName = ScriptUtils.i18nName(script, locale);
+  const scriptDescription = ScriptUtils.i18nDescription(script, locale);
 
   const score = ScriptUtils.score(script.score, script.score_num);
 
@@ -84,6 +96,17 @@ export default function ScriptCard({ script, actions }: ScriptCardProps) {
 
   const handleCopySuccess = () => {
     messageApi.success(t('copy_success'));
+  };
+
+  const handleDeleteScript = async () => {
+    try {
+      await scriptService.deleteScript(script.id);
+      messageApi.success(t('删除成功'));
+      onDelete?.(script);
+    } catch (error) {
+      messageApi.error('删除失败，请稍后重试');
+      console.error('Delete script error:', error);
+    }
   };
 
   return (
@@ -105,69 +128,93 @@ export default function ScriptCard({ script, actions }: ScriptCardProps) {
           window.open(url, '_blank');
         }}
         styles={{
-          body: { padding: '24px' },
+          body: { padding: '20px' },
         }}
+        className="transition-all duration-200 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-500 group cursor-pointer"
       >
         {contextHolder}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <ScriptIcon script={script} size={20} />
-              <Link
-                href={'/script-show-page/' + script.id}
-                className="text-lg !text-black dark:!text-white hover:!text-[#1677ff] line-clamp-2 leading-tight"
-                target="_blank"
-                title={script.name}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {script.name}
-              </Link>
-              <Tooltip
-                title={t('latest_script_version', {
-                  version: script.script.version,
-                })}
-                color="red"
-                placement="bottom"
-              >
-                <Tag color="red" className="text-xs" bordered={false}>
-                  v{script.script.version}
-                </Tag>
-              </Tooltip>
-            </div>
+            {/* 主标题区域 - 脚本图标 + 标题 + 版本 */}
+            <div className="flex items-start gap-3 mb-3">
+              <div className="flex-shrink-0 mt-1">
+                <ScriptIcon script={script} size={40} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <Link
+                    href={'/script-show-page/' + script.id}
+                    className="text-lg font-semibold !text-gray-900 dark:!text-white hover:!text-[#1677ff] line-clamp-1 leading-tight"
+                    target="_blank"
+                    title={scriptName}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {scriptName}
+                  </Link>
+                  <Tooltip
+                    title={t('latest_script_version', {
+                      version: script.script.version,
+                    })}
+                    color="red"
+                    placement="bottom"
+                  >
+                    <Tag
+                      color="red"
+                      bordered={false}
+                      className="text-xs px-1 py-0"
+                    >
+                      v{script.script.version}
+                    </Tag>
+                  </Tooltip>
+                </div>
 
-            <div className="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm mb-2">
-              <Link
-                href={`/users/${script.user_id}`}
-                target="_blank"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Space size="small">
-                  <Avatar
-                    size={20}
-                    src={script.avatar}
-                    icon={<UserOutlined />}
-                    className="flex-shrink-0"
-                  />
-                  <Text type="secondary" className="hover:!text-[#1677ff]">
-                    {script.username}
-                  </Text>
-                </Space>
-              </Link>
-              {script.category && (
-                <Tooltip title={script.category.name} placement="bottom">
-                  <Tag color={hashColor(script.category.name)} bordered>
-                    {script.category.name}
-                  </Tag>
-                </Tooltip>
-              )}
-              <span className="text-green-600 dark:text-green-400 font-medium">
-                今日 +{script.today_install}
-              </span>
+                {/* 作者信息区域 - 更紧凑的布局 */}
+                <div className="flex items-center gap-3 text-sm">
+                  <Link
+                    href={`/users/${script.user_id}`}
+                    target="_blank"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center gap-1.5 hover:text-[#1677ff] transition-colors"
+                  >
+                    <Avatar
+                      size={16}
+                      src={script.avatar}
+                      icon={<UserOutlined />}
+                      className="flex-shrink-0"
+                    />
+                    <Text
+                      type="secondary"
+                      className="hover:!text-[#1677ff] text-xs"
+                    >
+                      {script.username}
+                    </Text>
+                  </Link>
+
+                  {script.category && (
+                    <Tooltip title={script.category.name} placement="bottom">
+                      <Tag
+                        color={hashColor(script.category.name)}
+                        bordered
+                        className="text-xs px-1 py-0"
+                      >
+                        {script.category.name}
+                      </Tag>
+                    </Tooltip>
+                  )}
+
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span className="text-green-600 dark:text-green-400 font-medium text-xs">
+                      今日 +{script.today_install}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div
               className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed line-clamp-4 overflow-hidden"
-              title={script.description}
+              title={scriptDescription}
               style={{
                 display: '-webkit-box',
                 WebkitLineClamp: 4,
@@ -175,16 +222,32 @@ export default function ScriptCard({ script, actions }: ScriptCardProps) {
                 overflow: 'hidden',
               }}
             >
-              {script.description}
+              {scriptDescription}
             </div>
           </div>
 
           <div className="ml-6 flex flex-col items-end gap-2">
-            <div className="flex items-center gap-1">
-              <StarOutlined />
-              <Text className="text-sm font-medium !text-yellow-500">
-                {score || '-'}
-              </Text>
+            <div className="flex items-center w-full justify-end gap-2">
+              <div className="flex items-center gap-1">
+                <StarOutlined />
+                <Text className="text-sm font-medium !text-yellow-500">
+                  {score || '-'}
+                </Text>
+              </div>
+              <ActionMenu
+                uid={script.user_id}
+                deleteLevel="admin"
+                allowSelfDelete={true}
+                onDeleteClick={handleDeleteScript}
+              >
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<MoreOutlined />}
+                  className="!text-gray-500 hover:!text-gray-700 dark:!text-gray-400 dark:hover:!text-gray-200"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </ActionMenu>
             </div>
             <div className="flex flex-col gap-2">
               <Link
@@ -233,57 +296,76 @@ export default function ScriptCard({ script, actions }: ScriptCardProps) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-600">
-          <div className="flex items-center space-x-6 text-sm text-gray-600 dark:text-gray-400">
-            <Space size="small">
-              <DownloadOutlined />
-              <Text type="secondary">
-                {formatNumber(script.total_install)} 下载
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+          {/* 统计信息 */}
+          <div className="flex items-center space-x-4 text-sm">
+            <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
+              <DownloadOutlined className="text-blue-500" />
+              <Text type="secondary" className="font-medium">
+                {formatNumber(script.total_install)}
               </Text>
-            </Space>
-            <Space size="small">
-              <CalendarOutlined />
-              <Text type="secondary">
-                更新于 {semDataTime(script.updatetime)}
+              <Text type="secondary" className="text-xs">
+                下载
               </Text>
-            </Space>
-            <Space size="small">
-              <Tooltip title={t('share_link')} placement="bottom">
-                <CopyToClipboard
-                  text={script.name + '\n' + shareUrl}
-                  onCopy={handleCopySuccess}
-                >
-                  <Button
-                    icon={
-                      <Text type="secondary">
-                        <ShareAltOutlined />
-                      </Text>
-                    }
-                    type="text"
-                    size="small"
-                    className="anticon-middle copy-script-link"
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </CopyToClipboard>
-              </Tooltip>
-            </Space>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
+              <CalendarOutlined className="text-green-500" />
+              <Text type="secondary" className="text-xs">
+                {semDataTime(script.updatetime)}
+              </Text>
+            </div>
+
+            <Tooltip title={t('share_link')} placement="bottom">
+              <CopyToClipboard
+                text={scriptName + '\n' + shareUrl}
+                onCopy={handleCopySuccess}
+              >
+                <Button
+                  icon={<ShareAltOutlined />}
+                  type="text"
+                  size="small"
+                  className="!text-gray-500 hover:!text-blue-500 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </CopyToClipboard>
+            </Tooltip>
           </div>
 
-          <div className="flex items-center space-x-2">
-            {script.tags.map((tag) => (
+          {/* 标签区域 */}
+          <div className="flex items-center gap-1.5 flex-wrap max-w-[40%]">
+            {script.type === 3 && (
+              <Tooltip title="这是一个脚本使用的库" color="blue">
+                <Tag color="blue" className="text-xs px-1 py-0 border-blue-300">
+                  @require库
+                </Tag>
+              </Tooltip>
+            )}
+            {script.tags.slice(0, 2).map((tag) => (
               <Tooltip
                 title={'标签：' + tag.name}
                 placement="bottom"
                 key={tag.id}
               >
-                <Tag key={tag.id} color={hashColor(tag.name)}>
+                <Tag
+                  color={hashColor(tag.name)}
+                  className="text-xs px-1 py-0 max-w-[80px] truncate"
+                >
                   #{tag.name}
                 </Tag>
               </Tooltip>
             ))}
-            {script.type === 3 && (
-              <Tooltip title="这是一个脚本使用的库" color="blue">
-                <Tag color="blue">@require库</Tag>
+            {script.tags.length > 2 && (
+              <Tooltip
+                title={`还有 ${script.tags.length - 2} 个标签: ${script.tags
+                  .slice(2)
+                  .map((t) => t.name)
+                  .join(', ')}`}
+                placement="bottom"
+              >
+                <Tag className="text-xs px-1 py-0 !bg-gray-100 !text-gray-600 border-dashed">
+                  +{script.tags.length - 2}
+                </Tag>
               </Tooltip>
             )}
           </div>

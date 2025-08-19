@@ -1,5 +1,6 @@
 import { scriptService } from '@/lib/api/services/scripts';
 import type { Metadata } from 'next';
+import { ScriptUtils } from './utils';
 
 /**
  * 页面后缀配置
@@ -25,20 +26,21 @@ export type PageType = keyof typeof PAGE_SUFFIXES;
  */
 export async function generateScriptMetadata(
   scriptId: string,
-  pageType: PageType = 'detail',
+  pageType: PageType,
+  locale: string,
 ): Promise<Metadata> {
   try {
     // 获取脚本信息 - 使用缓存版本避免重复请求
     const script = await scriptService.infoCached(scriptId);
     const suffix = PAGE_SUFFIXES[pageType];
+    const scriptName = ScriptUtils.i18nName(script, locale);
+    const scriptDescription = ScriptUtils.i18nDescription(script, locale);
 
     // 构建标题和描述
-    const title = suffix.title
-      ? `${script.name} - ${suffix.title}`
-      : script.name;
+    const title = suffix.title ? `${scriptName} - ${suffix.title}` : scriptName;
     const description = suffix.description
-      ? suffix.description.replace('{name}', script.name)
-      : script.description;
+      ? suffix.description.replace('{name}', scriptName)
+      : scriptDescription;
 
     return {
       title: title + ' | ScriptCat',

@@ -160,6 +160,9 @@ export default function ScriptDetailClient() {
   const t = useTranslations();
   const router = useRouter();
 
+  const scriptName = ScriptUtils.i18nName(script, router.locale);
+  const scriptDescription = ScriptUtils.i18nDescription(script, router.locale);
+
   // 使用关注功能Hook
   const {
     watchLevel,
@@ -342,8 +345,10 @@ export default function ScriptDetailClient() {
 
   // 分享脚本 - 复制脚本名称和链接
   const handleShare = () => {
-    const currentUrl = window.location.href;
-    const shareText = `${script.name}\n${currentUrl}`;
+    const currentUrl =
+      process.env.NEXT_PUBLIC_APP_URL +
+      `/${router.locale}/script-show-page/${script.id}`;
+    const shareText = `${scriptName}\n${currentUrl}`;
     return shareText;
   };
 
@@ -462,7 +467,7 @@ export default function ScriptDetailClient() {
                     />
                     <div className="flex-1 ml-2">
                       <Title level={2} className="mb-2">
-                        {script.name}
+                        {scriptName}
                       </Title>
                       <Space wrap className="mb-3">
                         <Link
@@ -495,7 +500,7 @@ export default function ScriptDetailClient() {
                         </Text>
                       </Space>
                       <Paragraph className="text-gray-600 mb-3">
-                        {script.description}
+                        {scriptDescription}
                       </Paragraph>
                       <Space wrap>
                         {script.category && (

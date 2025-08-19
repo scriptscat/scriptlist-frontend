@@ -8,8 +8,8 @@ import { generateScriptMetadata } from '../metadata';
 export async function generateMetadata({
   params,
 }: ScriptDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
-  return generateScriptMetadata(id, 'update');
+  const { id, locale } = await params;
+  return generateScriptMetadata(id, 'update', locale);
 }
 
 export default async function ScriptUpdatePage({

@@ -43,5 +43,6 @@ export function useRouter() {
     refresh: () => {
       toploaderRouter.refresh();
     },
+    locale,
   };
 }

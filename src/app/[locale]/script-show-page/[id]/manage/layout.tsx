@@ -14,8 +14,8 @@ interface ManageLayoutProps {
 export async function generateMetadata({
   params,
 }: ScriptDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
-  return generateScriptMetadata(id, 'manage');
+  const { id, locale } = await params;
+  return generateScriptMetadata(id, 'manage', locale);
 }
 
 export default async function ManageLayout({

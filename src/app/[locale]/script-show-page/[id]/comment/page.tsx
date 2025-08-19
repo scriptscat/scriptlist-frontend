@@ -80,6 +80,6 @@ export async function generateMetadata(
   { params }: ScriptDetailPageProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { id } = await params;
-  return generateScriptMetadata(id, 'comment');
+  const { id, locale } = await params;
+  return generateScriptMetadata(id, 'comment', locale);
 }

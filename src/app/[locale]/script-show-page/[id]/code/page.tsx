@@ -30,6 +30,6 @@ export async function generateMetadata(
   { params }: ScriptDetailPageProps,
   _parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { id } = await params;
-  return generateScriptMetadata(id, 'code');
+  const { id, locale } = await params;
+  return generateScriptMetadata(id, 'code', locale);
 }

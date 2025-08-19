@@ -7,6 +7,10 @@
   background: linear-gradient(135deg, rgb(var(--bg-primary)) 0%, rgb(var(--bg-secondary)) 100%);
 }
 
+html[data-theme='dark'] {
+  background: #0d1117;
+}
+
 /* 自定义CSS变量 - 浅色模式 (参考 GitHub 设计语言) */
 :root {
   /* 背景色 - GitHub风格的优雅灰色系，增强层次感 */

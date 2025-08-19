@@ -3,6 +3,7 @@ import type {
   MetaJson,
   Script,
   ScriptInfo,
+  ScriptListItem,
 } from '@/app/[locale]/script-show-page/[id]/types';
 import { getLocale } from 'next-intl/server';
 
@@ -88,14 +89,16 @@ export class ScriptUtils {
     }
   }
 
-  static i18nName(script: ScriptInfo, locale: string): string {
+  static i18nName(script: ScriptListItem, locale: string): string {
+    locale = locale.toLowerCase();
     if (script.script.meta_json['name:' + locale]) {
       return script.script.meta_json['name:' + locale][0];
     }
     return script.name;
   }
 
-  static i18nDescription(script: ScriptInfo, locale: string): string {
+  static i18nDescription(script: ScriptListItem, locale: string): string {
+    locale = locale.toLowerCase();
     if (script.script.meta_json['description:' + locale]) {
       return script.script.meta_json['description:' + locale][0];
     }

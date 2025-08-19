@@ -4,16 +4,17 @@ import IssueCommentClient from './components/IssueCommentClient';
 import { scriptService } from '@/lib/api/services/scripts';
 import type { ResolvingMetadata, Metadata } from 'next';
 import { ScriptDetailPageProps } from '../../types';
+import { ScriptUtils } from '../../utils';
 
 interface PageProps {
-  params: Promise<{ id: string; issueId: string }>;
+  params: Promise<{ id: string; issueId: string; locale: string }>;
 }
 
 export async function generateMetadata(
   { params }: PageProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { id, issueId } = await params;
+  const { id, issueId, locale } = await params;
 
   try {
     // 并行获取脚本信息和issue详情
@@ -28,8 +29,10 @@ export async function generateMetadata(
       };
     }
 
-    const title = `${issue.title} · 反馈 #${issue.id} - ${script.name}`;
-    const description = `${script.name}的问题反馈：${issue.title}`;
+    const scriptName = ScriptUtils.i18nName(script, locale);
+
+    const title = `${issue.title} · 反馈 #${issue.id} - ${scriptName}`;
+    const description = `${scriptName}的问题反馈：${issue.title}`;
 
     return {
       title: title + ' | ScriptCat',
