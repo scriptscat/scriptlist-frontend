@@ -41,7 +41,7 @@ export async function generateScriptMetadata(
       : script.description;
 
     return {
-      title: title + ' | 脚本猫',
+      title: title + ' | ScriptCat',
       description,
       openGraph: {
         title,
@@ -58,7 +58,7 @@ export async function generateScriptMetadata(
       : '查看脚本详细信息';
 
     return {
-      title: fallbackTitle + ' | 脚本猫',
+      title: fallbackTitle + ' | ScriptCat',
       description: fallbackDescription,
     };
   }

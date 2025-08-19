@@ -18,12 +18,12 @@ export async function generateMetadata({
 
   if (!user) {
     return {
-      title: '用户不存在' + ' | 脚本猫',
+      title: '用户不存在' + ' | ScriptCat',
     };
   }
 
   return {
-    title: `${user.username} - 用户主页` + ' | 脚本猫',
+    title: `${user.username} - 用户主页` + ' | ScriptCat',
   };
 }
 

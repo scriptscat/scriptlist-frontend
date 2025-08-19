@@ -93,16 +93,7 @@ export default function MainLayout({
             style={{ textDecoration: 'none' }}
             className="flex items-center space-x-3"
           >
-            <Image
-              style={{
-                width: '32px',
-                height: '32px',
-              }}
-              height={32}
-              width={32}
-              src="/assets/logo.png"
-              alt="logo"
-            />
+            <Image height={32} width={32} src="/assets/logo.png" alt="logo" />
             <Title
               level={3}
               style={{

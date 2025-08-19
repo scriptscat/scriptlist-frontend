@@ -25,7 +25,6 @@ export default function ScriptListCard({
 }: ScriptListCardProps) {
   return (
     <Card
-      size="small"
       title={
         <Space>
           {icon}

@@ -30,7 +30,7 @@ export default function Sidebar({
 
   return (
     <div className="w-full lg:w-80 flex flex-col gap-6">
-      <Card size="small">
+      <Card>
         <Card.Meta
           title={
             <div className="flex flex-row justify-between items-center">

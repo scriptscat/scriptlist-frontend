@@ -27,7 +27,7 @@ export async function generateMetadata({
   }
 
   // 添加站点后缀
-  title += ' | 脚本猫';
+  title += ' | ScriptCat';
 
   return {
     title,

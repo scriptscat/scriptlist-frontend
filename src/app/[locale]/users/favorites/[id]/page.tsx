@@ -28,7 +28,7 @@ export async function generateMetadata({
     );
 
     const title =
-      `${folderDetail.name} - ${userDetail.username}的收藏夹` + ' | 脚本猫';
+      `${folderDetail.name} - ${userDetail.username}的收藏夹` + ' | ScriptCat';
     const description =
       folderDetail.description ||
       `${userDetail.username}的收藏夹"${folderDetail.name}"，共收录${folderDetail.count}个脚本`;
@@ -39,7 +39,7 @@ export async function generateMetadata({
     };
   } catch (error) {
     return {
-      title: '收藏夹不存在' + ' | 脚本猫',
+      title: '收藏夹不存在' + ' | ScriptCat',
       description: '您访问的收藏夹不存在或已被删除',
     };
   }

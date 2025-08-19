@@ -24,7 +24,7 @@ export async function generateMetadata(
 
     if (!script || !issue) {
       return {
-        title: '页面未找到 | 脚本猫',
+        title: '页面未找到 | ScriptCat',
       };
     }
 
@@ -32,7 +32,7 @@ export async function generateMetadata(
     const description = `${script.name}的问题反馈：${issue.title}`;
 
     return {
-      title: title + ' | 脚本猫',
+      title: title + ' | ScriptCat',
       description,
       openGraph: {
         title,
@@ -42,7 +42,7 @@ export async function generateMetadata(
     };
   } catch (error) {
     return {
-      title: '问题反馈 | 脚本猫',
+      title: '问题反馈 | ScriptCat',
     };
   }
 }

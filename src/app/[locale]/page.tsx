@@ -18,10 +18,9 @@ import {
   CodeFilled,
   DownOutlined,
 } from '@ant-design/icons';
-import { useRouter } from 'next/navigation';
 import { browserName } from 'react-device-detect';
 import { Icon } from '@iconify/react';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import Image from 'next/image';
 
 const { Title, Text } = Typography;
@@ -161,9 +160,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="mb-12">
             <div className="flex items-center justify-center mb-6">
               <Image
+                height={64}
+                width={64}
                 src="/assets/logo.png"
                 alt="ScriptCat Logo"
-                className="w-16 h-16 mr-4"
+                className="mr-4"
               />
               <Title
                 level={1}
@@ -269,9 +270,10 @@ export default function HomePage() {
                 <div className="text-center">
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <Image
+                      height={40}
+                      width={40}
                       src="/assets/logo.png"
                       alt="ScriptCat"
-                      className="w-10 h-10"
                     />
                   </div>
                   <Title level={3} className="!text-2xl !font-bold !mb-4">
