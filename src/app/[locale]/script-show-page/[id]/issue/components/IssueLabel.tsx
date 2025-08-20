@@ -3,7 +3,7 @@ import { Tag } from 'antd';
 import { useTranslations } from 'next-intl';
 
 const IssueLabel: React.FC<TagProps & { label: string }> = (props) => {
-  const t = useTranslations();
+  const t = useTranslations('script.issue.labels');
 
   const IssueTagMap: { [key: string]: string[] } = {
     feature: [t('feature'), 'geekblue'],

@@ -21,7 +21,7 @@ import scriptService from '@/lib/api/services/scripts';
 const { Title, Text } = Typography;
 
 export default function ManagePage() {
-  const t = useTranslations();
+  const t = useTranslations('script.manage.sync');
   const params = useParams();
   const scriptId = params.id as string;
   const { scriptSetting } = useScriptSetting();
@@ -32,7 +32,7 @@ export default function ManagePage() {
 
   const handleSync = async () => {
     if (!syncUrl.trim()) {
-      message.error('请输入同步地址');
+      message.error(t('sync_url_required'));
       return;
     }
 
@@ -44,10 +44,10 @@ export default function ManagePage() {
         sync_url: syncUrl,
         definition_url: undefined, // 如果需要可以添加字段
       });
-      message.success('同步配置保存并同步成功');
+      message.success(t('sync_success'));
     } catch (error) {
       console.error('Sync failed:', error);
-      message.error('同步失败，请检查网络连接或地址是否正确');
+      message.error(t('sync_failed'));
     } finally {
       setLoading(false);
     }
@@ -59,46 +59,45 @@ export default function ManagePage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <Title level={3} className="!mb-1">
-            源代码同步
+            {t('title')}
           </Title>
           <Text type="secondary">
-            配置脚本的源代码同步，支持从 GitHub、GitLab
-            等代码托管平台自动或手动同步脚本内容。
+            {t('description')}
           </Text>
         </div>
       </div>
       <div className="space-y-4">
         <Form layout="vertical">
-          <Form.Item label="同步地址" required>
+          <Form.Item label={t('sync_url_label')} required>
             <Input
-              placeholder="https://raw.githubusercontent.com/username/repo/main/script.js"
+              placeholder={t('sync_url_placeholder')}
               value={syncUrl}
               onChange={(e) => setSyncUrl(e.target.value)}
             />
           </Form.Item>
 
-          <Form.Item label="同步方式">
+          <Form.Item label={t('sync_mode_label')}>
             <Radio.Group
               value={syncMode}
               onChange={(e) => setSyncMode(e.target.value)}
             >
               <Space direction="vertical">
                 <Radio value={1}>
-                  自动同步 - 定期检查更新并自动同步，你也可以设置Webhook触发更新
+                  {t('sync_mode_auto')}
                 </Radio>
-                <Radio value={2}>手动同步 - 仅在手动点击时同步</Radio>
+                <Radio value={2}>{t('sync_mode_manual')}</Radio>
               </Space>
             </Radio.Group>
           </Form.Item>
 
           <Divider />
 
-          <Form.Item label="脚本说明同步地址">
+          <Form.Item label={t('content_url_label')}>
             <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-              可选：同步脚本的 README 或说明文档，支持 Markdown 格式
+              {t('content_url_description')}
             </div>
             <Input
-              placeholder="https://raw.githubusercontent.com/username/repo/main/README.md"
+              placeholder={t('content_url_placeholder')}
               value={contentUrl}
               onChange={(e) => setContentUrl(e.target.value)}
             />
@@ -112,7 +111,7 @@ export default function ManagePage() {
                 loading={loading}
                 onClick={handleSync}
               >
-                保存并同步一次
+                {t('save_and_sync_button')}
               </Button>
             </Space>
           </Form.Item>

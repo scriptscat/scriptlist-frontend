@@ -3,9 +3,7 @@ import type { ScriptDetailPageProps } from '../types';
 import ScriptRatingClient from './components/ScriptRatingClient';
 import { generateScriptMetadata } from '../metadata';
 import { scriptService } from '@/lib/api/services/scripts';
-import { ListData } from '@/types/api';
 import type { ScoreStateResponse } from '@/lib/api/services/scripts/scripts';
-import { ScoreListItem } from '@/lib/api/services/scripts/scripts';
 
 interface RatingStats {
   averageRating: number;

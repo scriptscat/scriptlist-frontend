@@ -21,6 +21,7 @@ import {
 import { browserName } from 'react-device-detect';
 import { Icon } from '@iconify/react';
 import { Link, useRouter } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 const { Title, Text } = Typography;
@@ -64,38 +65,38 @@ const IconButton: React.FC<IconButtonProps> = ({
 interface BrowserStoreConfig {
   url: string;
   icon: string;
-  text: string;
+  textKey: string;
   target?: string;
 }
 
-const browserStores: Record<string, BrowserStoreConfig> = {
+const getBrowserStores = (t: any): Record<string, BrowserStoreConfig> => ({
   edge: {
     url: 'https://microsoftedge.microsoft.com/addons/detail/scriptcat/liilgpjgabokdklappibcjfablkpcekh',
     icon: 'logos:microsoft-edge',
-    text: '添加到 Edge 浏览器',
+    textKey: 'home.browser_stores.add_to_edge',
   },
   chrome: {
     url: 'https://chrome.google.com/webstore/detail/scriptcat/ndcooeababalnlpkfedmmbbbgkljhpjf',
     icon: 'logos:chrome',
-    text: '添加到 Chrome 浏览器',
+    textKey: 'home.browser_stores.add_to_chrome',
   },
   firefox: {
     url: 'https://addons.mozilla.org/zh-CN/firefox/addon/scriptcat/',
     icon: 'logos:firefox',
-    text: '添加到 Firefox 浏览器',
+    textKey: 'home.browser_stores.add_to_firefox',
   },
   crx: {
     url: 'https://github.com/scriptscat/scriptcat/releases',
     icon: 'noto:package',
-    text: '下载 安装包 文件手动安装',
+    textKey: 'home.browser_stores.download_crx_install',
   },
   default: {
     url: './docs/use/use',
     icon: 'logos:chrome',
-    text: '安装扩展到浏览器',
+    textKey: 'home.browser_stores.install_extension',
     target: '_self',
   },
-};
+});
 
 // 浏览器商店映射
 interface StoreItem {
@@ -104,37 +105,27 @@ interface StoreItem {
   show?: boolean;
 }
 
-const storeMap: Record<string, StoreItem> = Object.entries(
-  browserStores,
-).reduce(
-  (acc, [key, config]) => {
-    acc[key] = {
-      key,
-      label: (
-        <IconButton
-          href={config.url}
-          icon={config.icon}
-          text={config.text}
-          target={config.target}
-        />
-      ),
-      show: key !== 'default',
-    };
-    return acc;
-  },
-  {} as Record<string, StoreItem>,
-);
-
-// 构建商店列表
-const storeList: MenuProps['items'] = [];
-Object.keys(storeMap).forEach((key) => {
-  if (storeMap[key].show !== false) {
-    storeList.push({
-      key: storeMap[key].key,
-      label: storeMap[key].label,
-    });
-  }
-});
+const getStoreMap = (t: any): Record<string, StoreItem> => {
+  const browserStores = getBrowserStores(t);
+  return Object.entries(browserStores).reduce(
+    (acc, [key, config]) => {
+      acc[key] = {
+        key,
+        label: (
+          <IconButton
+            href={config.url}
+            icon={config.icon}
+            text={t(config.textKey)}
+            target={config.target}
+          />
+        ),
+        show: key !== 'default',
+      };
+      return acc;
+    },
+    {} as Record<string, StoreItem>,
+  );
+};
 
 // Hero 部分组件
 interface HeroSectionProps {
@@ -148,8 +139,21 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   onSearchChange,
   onSearch,
 }) => {
+  const t = useTranslations();
   const currentBrowser = browserName.toLowerCase();
+  const storeMap = getStoreMap(t);
   const browserStore = storeMap[currentBrowser] || storeMap.default;
+
+  // 构建商店列表
+  const storeList: MenuProps['items'] = [];
+  Object.keys(storeMap).forEach((key) => {
+    if (storeMap[key].show !== false) {
+      storeList.push({
+        key: storeMap[key].key,
+        label: storeMap[key].label,
+      });
+    }
+  });
 
   return (
     <div className="relative overflow-hidden">
@@ -174,7 +178,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               </Title>
             </div>
             <Typography.Paragraph className="!text-xl !text-gray-600 !mb-0 max-w-2xl mx-auto">
-              发现和分享优质用户脚本，让浏览体验更精彩
+              {t('home.hero.tagline')}
             </Typography.Paragraph>
           </div>
 
@@ -182,7 +186,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="max-w-2xl mx-auto mb-16">
             <Input.Search
               size="large"
-              placeholder="搜索脚本，开启新世界"
+              placeholder={t('home.hero.search_placeholder')}
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
               onSearch={onSearch}
@@ -193,7 +197,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   icon={<SearchOutlined />}
                   className="!bg-gradient-to-r !from-blue-500 !to-purple-500 !border-0 hover:!from-blue-600 hover:!to-purple-600"
                 >
-                  搜索脚本
+                  {t('home.hero.search_button')}
                 </Button>
               }
             />
@@ -213,7 +217,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             </Dropdown.Button>
             <Link href={'/search'}>
               <Button type="default" icon={<SearchOutlined />} size="large">
-                浏览所有脚本
+                {t('home.hero.browse_all_scripts')}
               </Button>
             </Link>
           </div>
@@ -226,6 +230,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 export default function HomePage() {
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
+  const t = useTranslations();
 
   const handleSearch = (value: string) => {
     // 如果搜索内容为空，跳转到搜索页面浏览所有脚本
@@ -251,10 +256,10 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <Title level={2} className="!text-4xl !font-bold !mb-4">
-              为什么选择 ScriptCat？
+              {t('home.features.why_choose_title')}
             </Title>
             <Text type="secondary" className="!text-xl max-w-3xl mx-auto">
-              基于油猴的设计理念，完全兼容油猴脚本，提供更多丰富的API，让脚本能够完成更多强大的功能。
+              {t('home.features.why_choose_subtitle')}
             </Text>
           </div>
 
@@ -275,24 +280,24 @@ export default function HomePage() {
                     />
                   </div>
                   <Title level={3} className="!text-2xl !font-bold !mb-4">
-                    强大的脚本管理器
+                    {t('home.features.scriptcat.title')}
                   </Title>
                   <div className="text-left space-y-4">
                     <Text type="secondary" className="block">
-                      ScriptCat（脚本猫）完全兼容油猴脚本，同时提供后台脚本运行框架和丰富的API扩展。
+                      {t('home.features.scriptcat.description')}
                     </Text>
                     <div className="space-y-2">
                       <div className="flex items-center text-sm text-gray-600">
                         <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
-                        完全兼容油猴脚本
+                        {t('home.features.scriptcat.features.compatible')}
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
-                        支持后台脚本运行
+                        {t('home.features.scriptcat.features.background')}
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
-                        提供丰富API扩展
+                        {t('home.features.scriptcat.features.rich_api')}
                       </div>
                     </div>
                     <div className="pt-2">
@@ -302,7 +307,7 @@ export default function HomePage() {
                         target="_blank"
                         className="!p-0 !h-auto !text-blue-600 hover:!text-blue-700"
                       >
-                        立即安装 ScriptCat →
+                        {t('home.features.scriptcat.install_link')}
                       </Button>
                     </div>
                   </div>
@@ -321,25 +326,31 @@ export default function HomePage() {
                     <QuestionCircleFilled className="text-3xl text-white" />
                   </div>
                   <Title level={3} className="!text-2xl !font-bold !mb-4">
-                    常见问题
+                    {t('home.features.faq.title')}
                   </Title>
                   <div className="text-left space-y-4">
                     <div>
-                      <Text className="font-medium">什么是用户脚本？</Text>
+                      <Text className="font-medium">
+                        {t('home.features.faq.what_is_userscript.question')}
+                      </Text>
                       <Text type="secondary" className="block text-sm mt-1">
-                        用户脚本可以增强网页功能、去除广告、提升易用性，让你的浏览体验更出色。
+                        {t('home.features.faq.what_is_userscript.answer')}
                       </Text>
                     </div>
                     <div>
-                      <Text className="font-medium">为什么选择脚本猫？</Text>
+                      <Text className="font-medium">
+                        {t('home.features.faq.why_scriptcat.question')}
+                      </Text>
                       <Text type="secondary" className="block text-sm mt-1">
-                        脚本猫不仅兼容油猴脚本，还支持后台脚本运行，功能更强大，覆盖范围更广。
+                        {t('home.features.faq.why_scriptcat.answer')}
                       </Text>
                     </div>
                     <div>
-                      <Text className="font-medium">如何开始使用？</Text>
+                      <Text className="font-medium">
+                        {t('home.features.faq.how_to_start.question')}
+                      </Text>
                       <Text type="secondary" className="block text-sm mt-1">
-                        首先安装脚本管理器，然后在本站寻找适合的脚本一键安装即可。
+                        {t('home.features.faq.how_to_start.answer')}
                       </Text>
                     </div>
                   </div>
@@ -358,28 +369,28 @@ export default function HomePage() {
                     <CodeFilled className="text-3xl text-white" />
                   </div>
                   <Title level={3} className="!text-2xl !font-bold !mb-4">
-                    加入开发者
+                    {t('home.features.developer.title')}
                   </Title>
                   <div className="text-left space-y-4">
                     <Text type="secondary" className="block">
-                      成为脚本开发者，享受专属权益和技术支持。
+                      {t('home.features.developer.description')}
                     </Text>
                     <div className="space-y-2">
                       <div className="flex items-center text-sm text-gray-600">
                         <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></div>
-                        脚本推荐曝光机会
+                        {t('home.features.developer.benefits.exposure')}
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></div>
-                        论坛开发者权限
+                        {t('home.features.developer.benefits.forum_permission')}
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></div>
-                        技术交流群邀请
+                        {t('home.features.developer.benefits.tech_group')}
                       </div>
                       <div className="flex items-center text-sm text-gray-600">
                         <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mr-2"></div>
-                        专属开发者标识
+                        {t('home.features.developer.benefits.badge')}
                       </div>
                     </div>
                     <div className="pt-2">
@@ -389,7 +400,7 @@ export default function HomePage() {
                         target="_blank"
                         className="!p-0 !h-auto !text-purple-600 hover:!text-purple-700"
                       >
-                        查看开发教程 →
+                        {t('home.features.developer.guide_link')}
                       </Button>
                     </div>
                   </div>

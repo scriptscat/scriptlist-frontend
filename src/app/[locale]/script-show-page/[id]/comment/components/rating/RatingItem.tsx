@@ -100,7 +100,7 @@ export default function RatingItem({
                 onClick={() => setShowReplyBox(!showReplyBox)}
                 className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
               >
-                回复
+                {t('script.rating.reply')}
               </Button>
             )}
             <ActionMenu
@@ -164,7 +164,7 @@ export default function RatingItem({
               <TextArea
                 value={replyContent}
                 onChange={(e) => setReplyContent(e.target.value)}
-                placeholder="写下您的回复..."
+                placeholder={t('script.rating.reply_placeholder')}
                 rows={3}
                 className="mb-3 resize-none"
                 maxLength={300}
@@ -177,14 +177,14 @@ export default function RatingItem({
                   disabled={!replyContent?.trim()}
                   className="rounded-md"
                 >
-                  发送回复
+                  {t('script.rating.send_reply')}
                 </Button>
                 <Button
                   size="small"
                   onClick={() => setShowReplyBox(false)}
                   className="rounded-md"
                 >
-                  取消
+                  {t('script.rating.cancel')}
                 </Button>
               </div>
             </div>

@@ -1,17 +1,6 @@
 'use client';
 
-import {
-  Button,
-  Input,
-  Select,
-  Alert,
-  Switch,
-  Card,
-  Divider,
-  Typography,
-  message,
-  Collapse,
-} from 'antd';
+import { Button, Switch, Card, Divider, Typography, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';

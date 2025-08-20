@@ -27,9 +27,15 @@ export default async function ScriptCodePage({
 }
 
 export async function generateMetadata(
-  { params }: ScriptDetailPageProps,
+  {
+    params,
+    searchParams,
+  }: ScriptDetailPageProps & { searchParams: Promise<{ version?: string }> },
   _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { id, locale } = await params;
-  return generateScriptMetadata(id, 'code', locale);
+  const { version } = await searchParams;
+  return generateScriptMetadata(id, 'code', locale, {
+    version,
+  });
 }

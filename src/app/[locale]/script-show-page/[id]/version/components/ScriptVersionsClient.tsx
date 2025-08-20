@@ -40,6 +40,7 @@ import {
 import { Link } from '@/i18n/routing';
 import MarkdownView from '@/components/MarkdownView';
 import { useSemDateTime } from '@/lib/utils/semdate';
+import { useTranslations } from 'next-intl';
 
 const { Text, Title, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -63,6 +64,7 @@ export default function ScriptVersionsClient({
   initialPageSize = 10,
 }: ScriptVersionsClientProps) {
   const { script } = useScript();
+  const t = useTranslations('script.version');
   const [editingVersion, setEditingVersion] = useState<ScriptVersion | null>(
     null,
   );
@@ -150,7 +152,7 @@ export default function ScriptVersionsClient({
           : EnablePreRelease.DisablePreReleaseScript,
       });
 
-      message.success('版本信息更新成功');
+      message.success(t('update_success'));
       setIsEditModalVisible(false);
       setEditingVersion(null);
       form.resetFields();
@@ -158,8 +160,8 @@ export default function ScriptVersionsClient({
       // 刷新数据
       mutate();
     } catch (error) {
-      console.error('更新版本失败:', error);
-      message.error('更新失败，请重试');
+      console.error(t('update_version_failed'), error);
+      message.error(t('update_failed'));
     } finally {
       setLoading(false);
     }
@@ -170,13 +172,13 @@ export default function ScriptVersionsClient({
       // 调用 API 删除版本
       await scriptService.deleteVersion(script.id, version.id);
 
-      message.success('版本删除成功');
+      message.success(t('delete_success'));
 
       // 刷新数据
       mutate();
     } catch (error) {
-      console.error('删除版本失败:', error);
-      message.error('删除失败，请重试');
+      console.error(t('delete_version_failed'), error);
+      message.error(t('delete_failed'));
     }
   };
 
@@ -184,13 +186,7 @@ export default function ScriptVersionsClient({
     // TODO: 处理安装逻辑，可能需要跳转到安装页面或下载文件
     const installUrl = `/scripts/${script.id}/install?version=${version.version}`;
     window.open(installUrl, '_blank');
-    message.success(`开始安装 ${version.version}`);
-  };
-
-  const handleViewCode = (version: ScriptVersion) => {
-    // TODO: 跳转到代码查看页面
-    const codeUrl = `/scripts/${script.id}/code?version=${version.version}`;
-    window.open(codeUrl, '_blank');
+    message.success(t('install_success', { version: version.version }));
   };
 
   const getVersionBadge = (version: ScriptVersion, index: number) => {
@@ -198,10 +194,10 @@ export default function ScriptVersionsClient({
       index === 0 &&
       version.is_pre_release === EnablePreRelease.DisablePreReleaseScript
     ) {
-      return <Badge status="success" text="最新版本" />;
+      return <Badge status="success" text={t('latest_version_badge')} />;
     }
     if (version.is_pre_release === EnablePreRelease.EnablePreReleaseScript) {
-      return <Badge status="warning" text="预发布版本" />;
+      return <Badge status="warning" text={t('prerelease_badge')} />;
     }
     return null;
   };
@@ -222,15 +218,15 @@ export default function ScriptVersionsClient({
     return (
       <Card className="shadow-sm !mb-4">
         <Alert
-          message="加载失败"
+          message={t('load_failed')}
           description={
-            error.message || '获取版本列表时发生错误，请刷新页面重试'
+            error.message || t('load_failed_description')
           }
           type="error"
           showIcon
           action={
             <Button size="small" onClick={() => mutate()}>
-              重试
+              {t('retry')}
             </Button>
           }
         />
@@ -245,10 +241,10 @@ export default function ScriptVersionsClient({
         {/* 页面标题 */}
         <div className="mb-6">
           <Title level={2} className="!mb-2">
-            版本历史
+            {t('history_title')}
           </Title>
           <Paragraph className="text-gray-600 dark:text-gray-400">
-            查看所有已发布的版本，包括正式版本和预发布版本。您可以安装任何版本或查看其源代码。
+            {t('history_description')}
           </Paragraph>
         </div>
 
@@ -260,10 +256,10 @@ export default function ScriptVersionsClient({
             description={
               <div>
                 <p className="text-gray-500 dark:text-gray-400 text-base mb-2">
-                  暂无版本历史
+                  {t('no_history_title')}
                 </p>
                 <p className="text-gray-400 dark:text-gray-500 text-sm">
-                  该脚本还没有发布任何版本
+                  {t('no_history_description')}
                 </p>
               </div>
             }
@@ -278,10 +274,10 @@ export default function ScriptVersionsClient({
       <div className="space-y-6">
         {/* 页面标题 */}
         <Title level={2} className="!mb-2">
-          版本历史
+          {t('history_title')}
         </Title>
         <Paragraph className="text-gray-600 dark:text-gray-400">
-          查看所有已发布的版本，包括正式版本和预发布版本。您可以安装任何版本或查看其源代码。
+          {t('history_description')}
         </Paragraph>
 
         {/* 版本统计信息 */}
@@ -291,27 +287,29 @@ export default function ScriptVersionsClient({
               <div className="text-2xl font-bold text-blue-600">
                 {totalVersions}
               </div>
-              <div className="text-sm text-gray-500">总版本数</div>
+              <div className="text-sm text-gray-500">{t('total_versions')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
                 {versionStat.release_num}
               </div>
-              <div className="text-sm text-gray-500">正式版本</div>
+              <div className="text-sm text-gray-500">{t('release_versions')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
                 {versionStat.pre_release_num}
               </div>
-              <div className="text-sm text-gray-500">预发布版本</div>
+              <div className="text-sm text-gray-500">{t('prerelease_versions')}</div>
             </div>
           </div>
 
           <div className="text-right">
             <div className="text-sm text-gray-500">
-              显示第 {(currentPage - 1) * pageSize + 1}-
-              {Math.min(currentPage * pageSize, totalVersions)} 项，共{' '}
-              {totalVersions} 项
+              {t('pagination_info', {
+                start: (currentPage - 1) * pageSize + 1,
+                end: Math.min(currentPage * pageSize, totalVersions),
+                total: totalVersions
+              })}
             </div>
           </div>
         </div>
@@ -345,14 +343,14 @@ export default function ScriptVersionsClient({
                       onClick={() => handleEdit(version)}
                       className="flex items-center"
                     >
-                      <span className="hidden sm:inline">编辑</span>
+                      <span className="hidden sm:inline">{t('edit_button')}</span>
                     </Button>
                     <Popconfirm
-                      title="确认删除"
-                      description="确定要删除这个版本吗？此操作不可撤销。"
+                      title={t('confirm_delete_title')}
+                      description={t('confirm_delete_description')}
                       onConfirm={() => handleDelete(version)}
-                      okText="删除"
-                      cancelText="取消"
+                      okText={t('confirm_delete_ok')}
+                      cancelText={t('confirm_delete_cancel')}
                       okType="danger"
                     >
                       <Button
@@ -361,7 +359,7 @@ export default function ScriptVersionsClient({
                         danger
                         className="flex items-center"
                       >
-                        <span className="hidden sm:inline">删除</span>
+                        <span className="hidden sm:inline">{t('delete_button')}</span>
                       </Button>
                     </Popconfirm>
                   </div>
@@ -397,7 +395,7 @@ export default function ScriptVersionsClient({
                       onClick={() => handleInstall(version)}
                       className="w-full sm:w-auto"
                     >
-                      安装此版本
+                      {t('install_button')}
                     </Button>
                     <Link
                       href={`/script-show-page/${script.id}/code?version=${version.version}`}
@@ -407,7 +405,7 @@ export default function ScriptVersionsClient({
                         icon={<CodeOutlined />}
                         className="w-full sm:w-auto"
                       >
-                        查看代码
+                        {t('view_code_button')}
                       </Button>
                     </Link>
                   </div>
@@ -429,7 +427,11 @@ export default function ScriptVersionsClient({
               showSizeChanger
               showQuickJumper
               showTotal={(total, range) =>
-                `第 ${range[0]}-${range[1]} 项，共 ${total} 个版本`
+                t('pagination_total', {
+                  start: range[0],
+                  end: range[1],
+                  total: total
+                })
               }
               pageSizeOptions={['5', '10', '20', '50']}
               className="!mb-0"
@@ -442,7 +444,7 @@ export default function ScriptVersionsClient({
           title={
             <div className="flex items-center space-x-2">
               <EditOutlined />
-              <span>编辑版本 {editingVersion?.version}</span>
+              <span>{t('edit_modal_title', { version: editingVersion?.version || '' })}</span>
             </div>
           }
           open={isEditModalVisible}
@@ -466,16 +468,16 @@ export default function ScriptVersionsClient({
                 name="changelog"
                 label={
                   <div className="flex items-center space-x-1">
-                    <span>更新说明</span>
+                    <span>{t('changelog_label')}</span>
                     <Text type="secondary" className="text-xs">
-                      (支持Markdown语法)
+                      {t('changelog_subtitle')}
                     </Text>
                   </div>
                 }
               >
                 <TextArea
                   rows={8}
-                  placeholder="例如：&#10;✨ 新增功能：添加了用户界面优化&#10;🐛 修复问题：解决了浏览器兼容性问题&#10;⚡ 性能提升：优化了脚本执行速度&#10;📦 依赖更新：升级到最新版本"
+                  placeholder={t('changelog_placeholder')}
                   showCount
                   maxLength={2000}
                 />
@@ -484,8 +486,8 @@ export default function ScriptVersionsClient({
               <Form.Item
                 name="is_pre_release"
                 valuePropName="checked"
-                label="版本类型"
-                extra="预发布版本通常用于测试新功能，可能不够稳定"
+                label={t('version_type_label')}
+                extra={t('version_type_extra')}
               >
                 <Switch
                   className={
@@ -493,8 +495,8 @@ export default function ScriptVersionsClient({
                       ? '[&_>.ant-switch-inner]:bg-[#f97316]'
                       : '[&_>.ant-switch-inner]:bg-[#10b981]'
                   }
-                  checkedChildren="预发布版本"
-                  unCheckedChildren="正式版本"
+                  checkedChildren={t('prerelease_checked')}
+                  unCheckedChildren={t('prerelease_unchecked')}
                 />
               </Form.Item>
 
@@ -508,10 +510,10 @@ export default function ScriptVersionsClient({
                     }}
                     disabled={loading}
                   >
-                    取消
+                    {t('confirm_delete_cancel')}
                   </Button>
                   <Button type="primary" htmlType="submit" loading={loading}>
-                    保存更改
+                    {t('save_changes')}
                   </Button>
                 </div>
               </Form.Item>

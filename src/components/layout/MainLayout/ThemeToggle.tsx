@@ -8,7 +8,7 @@ import { useTheme } from '@/contexts/ThemeClientContext';
 
 export const ThemeToggle: React.FC = () => {
   const { themeMode, setThemeMode } = useTheme();
-  const t = useTranslations();
+  const t = useTranslations('layout');
 
   const getIcon = () => {
     switch (themeMode.mode) {

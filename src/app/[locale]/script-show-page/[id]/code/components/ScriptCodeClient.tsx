@@ -1,12 +1,10 @@
 'use client';
 
-import { Card, Typography } from 'antd';
+import { Card } from 'antd';
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import MonacoEditor from '@/components/MonacoEditor';
 import type { ScriptInfo } from '../../types';
-
-const { Title } = Typography;
 
 type ScriptCodeClientProps = {
   script: ScriptInfo;

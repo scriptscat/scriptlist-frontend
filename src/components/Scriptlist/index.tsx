@@ -28,7 +28,7 @@ export default function ScriptList({
   initialPage = 1,
 }: ScriptListProps) {
   const router = useRouter();
-  const t = useTranslations();
+  const t = useTranslations('script');
   const [isPending, startTransition] = useTransition();
   const { data: categoryData, isLoading: isCategoryLoading } =
     useCategoryList();
@@ -104,14 +104,14 @@ export default function ScriptList({
       <Card className="!mb-6" style={{ borderRadius: '16px' }}>
         <Space direction="vertical" size="large" className="w-full mb-6">
           <Input.Search
-            placeholder="搜索脚本，开启新世界"
+            placeholder={t('search.placeholder')}
             enterButton={
               <Button
                 type="primary"
                 icon={<SearchOutlined />}
                 loading={isPending}
               >
-                搜索
+                {t('search.button')}
               </Button>
             }
             size="large"
@@ -125,7 +125,7 @@ export default function ScriptList({
 
           <Space wrap>
             <Select
-              placeholder="所有分类"
+              placeholder={t('search.all_categories')}
               style={{ width: 150 }}
               value={filters.category || undefined}
               onChange={handleCategoryChange}
@@ -141,17 +141,17 @@ export default function ScriptList({
             </Select>
 
             <Select
-              placeholder="所有类型"
+              placeholder={t('search.all_types')}
               style={{ width: 150 }}
               value={filters.script_type || undefined}
               onChange={handleScriptTypeChange}
               allowClear
               disabled={isPending}
             >
-              <Option value="1">脚本</Option>
-              <Option value="2">{t('library')}</Option>
-              <Option value="3">{t('background_script')}</Option>
-              <Option value="4">{t('scheduled_script')}</Option>
+              <Option value="1">{t('types.script')}</Option>
+              <Option value="2">{t('types.library')}</Option>
+              <Option value="3">{t('types.background_script')}</Option>
+              <Option value="4">{t('types.scheduled_script')}</Option>
             </Select>
 
             <Select
@@ -160,18 +160,22 @@ export default function ScriptList({
               onChange={handleSortChange}
               disabled={isPending}
             >
-              <Option value="today_download">热度排序</Option>
-              <Option value="createtime">最新发布</Option>
-              <Option value="updatetime">最近更新</Option>
-              <Option value="score">评分最高</Option>
-              <Option value="total_download">下载最多</Option>
+              <Option value="today_download">
+                {t('search.sort.today_download')}
+              </Option>
+              <Option value="createtime">{t('search.sort.createtime')}</Option>
+              <Option value="updatetime">{t('search.sort.updatetime')}</Option>
+              <Option value="score">{t('search.sort.score')}</Option>
+              <Option value="total_download">
+                {t('search.sort.total_download')}
+              </Option>
             </Select>
           </Space>
         </Space>
       </Card>
 
       {/* 脚本列表 */}
-      <Spin spinning={isPending} tip="加载中...">
+      <Spin spinning={isPending} tip={t('search.loading')}>
         <Space direction="vertical" size="large" className="w-full">
           {scripts.map((script) => (
             <ScriptCard key={script.id} script={script} />
@@ -189,7 +193,11 @@ export default function ScriptList({
           showSizeChanger={false}
           showQuickJumper
           showTotal={(total, range) =>
-            `${range[0]}-${range[1]} / 共 ${total} 个脚本`
+            t('search.pagination', {
+              start: range[0],
+              end: range[1],
+              total: total,
+            })
           }
           disabled={isPending}
         />

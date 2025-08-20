@@ -11,6 +11,7 @@ import {
   EyeOutlined,
 } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import type { MenuProps } from 'antd';
 
@@ -29,16 +30,17 @@ export default function ManageClientLayout({
 }: ManageClientLayoutProps) {
   const pathname = usePathname();
   const { token } = theme.useToken();
+  const t = useTranslations('script.manage.navigation');
 
-  // 从 pathname 中提取当前选中的菜单项
+  // Extract current selected menu item from pathname
   const getSelectedKey = () => {
     if (pathname.includes('/manage/settings')) return 'settings';
     if (pathname.includes('/manage/publish')) return 'publish';
     if (pathname.includes('/manage/logs')) return 'logs';
     if (pathname.includes('/manage/access')) return 'access';
     if (pathname.includes('/manage/groups')) return 'groups';
-    if (pathname.endsWith('/manage')) return 'manage'; // 管理页面本身（原sync内容）
-    return 'manage'; // 默认选中管理页面
+    if (pathname.endsWith('/manage')) return 'manage'; // Manage page itself (original sync content)
+    return 'manage'; // Default selected manage page
   };
 
   const menuItems: MenuItem[] = [
@@ -46,7 +48,7 @@ export default function ManageClientLayout({
       key: 'manage',
       icon: <SyncOutlined />,
       label: (
-        <Link href={`/script-show-page/${scriptId}/manage`}>源代码同步</Link>
+        <Link href={`/script-show-page/${scriptId}/manage`}>{t('source_sync')}</Link>
       ),
     },
     {
@@ -54,7 +56,7 @@ export default function ManageClientLayout({
       icon: <SettingOutlined />,
       label: (
         <Link href={`/script-show-page/${scriptId}/manage/settings`}>
-          脚本管理
+          {t('script_settings')}
         </Link>
       ),
     },
@@ -63,7 +65,7 @@ export default function ManageClientLayout({
       icon: <CloudUploadOutlined />,
       label: (
         <Link href={`/script-show-page/${scriptId}/manage/publish`}>
-          脚本发布
+          {t('script_publish')}
         </Link>
       ),
     },
@@ -71,7 +73,7 @@ export default function ManageClientLayout({
       key: 'logs',
       icon: <FileTextOutlined />,
       label: (
-        <Link href={`/script-show-page/${scriptId}/manage/logs`}>管理日志</Link>
+        <Link href={`/script-show-page/${scriptId}/manage/logs`}>{t('manage_logs')}</Link>
       ),
     },
     {
@@ -79,7 +81,7 @@ export default function ManageClientLayout({
       icon: <EyeOutlined />,
       label: (
         <Link href={`/script-show-page/${scriptId}/manage/access`}>
-          访问权限管理
+          {t('access_control')}
         </Link>
       ),
     },
@@ -88,7 +90,7 @@ export default function ManageClientLayout({
       icon: <TeamOutlined />,
       label: (
         <Link href={`/script-show-page/${scriptId}/manage/groups`}>
-          用户组管理
+          {t('group_management')}
         </Link>
       ),
     },

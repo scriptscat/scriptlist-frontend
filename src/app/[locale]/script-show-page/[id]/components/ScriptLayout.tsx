@@ -18,7 +18,7 @@ export default function ScriptLayout({
   children,
 }: ScriptLayoutProps) {
   const locale = useLocale();
-  const t = useTranslations();
+  const t = useTranslations('script');
   return (
     <div>
       {/* 面包屑导航 */}
@@ -26,17 +26,15 @@ export default function ScriptLayout({
         className="!mb-3"
         items={[
           { href: '/', title: <HomeOutlined /> },
-          { href: '/' + locale + '/search', title: '脚本市场' },
+          { href: '/' + locale + '/search', title: t('navigation.market') },
           { title: script.name },
         ]}
       ></Breadcrumb>
 
       {script.archive == 1 && (
         <Alert
-          message={'脚本已归档'}
-          description={
-            '该脚本已经被作者归档，脚本可能失效并且作者不再维护，你无法再进行问题反馈。'
-          }
+          message={t('alerts.archived_title')}
+          description={t('alerts.archived_description')}
           type="warning"
           className="!mb-3"
           showIcon
@@ -46,8 +44,8 @@ export default function ScriptLayout({
 
       {script.danger == 1 && (
         <Alert
-          message={'脚本代码经过了不可读处理'}
-          description={t('script_code_obfuscated_description')}
+          message={t('alerts.obfuscated_title')}
+          description={t('alerts.obfuscated_description')}
           type="error"
           showIcon
           closable

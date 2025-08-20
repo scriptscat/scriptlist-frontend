@@ -23,6 +23,7 @@ import {
   RocketOutlined,
 } from '@ant-design/icons';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import type { MonacoEditorRef } from '@/components/MonacoEditor';
 import MonacoEditor from '@/components/MonacoEditor';
 import MarkdownEditor from '@/components/MarkdownEditor';
@@ -41,6 +42,7 @@ export interface ScriptEditorProps {
 }
 
 export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
+  const t = useTranslations('script.editor');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const parseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -89,10 +91,10 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
               form.setFieldValue('version', metadata.version[0]);
             }
             form.setFieldValue('tags', parseTags(metadata));
-            message.success('脚本元数据解析成功');
+            message.success(t('messages.metadata_parse_success'));
           }
         } catch (error) {
-          console.error('解析脚本元数据时出错:', error);
+          console.error('Parse script metadata error:', error);
         }
       }, 2000);
     },
@@ -136,7 +138,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
         debouncedParseMetadata(content);
       }
 
-      message.success('文件上传成功！');
+      message.success(t('messages.file_upload_success'));
     };
     reader.readAsText(file);
     return false;
@@ -149,11 +151,11 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
     try {
       setLoading(true);
       await onSubmit(values);
-      message.success(script ? '脚本更新成功！' : '脚本创建成功！');
+      message.success(script ? t('messages.script_update_success') : t('messages.script_create_success'));
     } catch (error: any) {
-      console.error('提交失败:', error);
+      console.error('Submit failed:', error);
       message.error(
-        error.message + ': ' + (script ? '脚本更新失败！' : '脚本创建失败！'),
+        t('messages.submit_failed') + ' ' + (script ? t('messages.script_update_failed') : t('messages.script_create_failed')),
       );
     } finally {
       setLoading(false);
@@ -166,15 +168,15 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
       <Alert
         description={
           <div>
-            请仔细阅读并遵守
+            {t('alerts.review_rules_text')}
             <Link
               href="https://bbs.tampermonkey.net.cn/thread-3036-1-1.html"
               target="_blank"
               className="mx-1"
             >
-              脚本审核规则
+              {t('alerts.review_rules_link')}
             </Link>
-            ，确保代码质量和安全性。违规脚本将被下架或删除。
+            {t('alerts.review_rules_description')}
           </div>
         }
         type="info"
@@ -192,8 +194,8 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
               title={
                 <Space>
                   <CodeOutlined />
-                  <span>脚本代码</span>
-                  <Tag color="blue">JavaScript</Tag>
+                  <span>{t('code_section.title')}</span>
+                  <Tag color="blue">{t('code_section.tag')}</Tag>
                 </Space>
               }
               className="shadow-sm"
@@ -206,11 +208,11 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                     showUploadList={false}
                   >
                     <Button icon={<UploadOutlined />} size="small">
-                      上传本地文件
+                      {t('code_section.upload_button')}
                     </Button>
                   </Upload>
                   <Text type="secondary" className="flex items-center">
-                    支持 .js 和 .user.js 文件
+                    {t('code_section.file_support')}
                   </Text>
                 </div>
 
@@ -235,8 +237,8 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
               title={
                 <Space>
                   <FileTextOutlined />
-                  <span>详细说明</span>
-                  <Tag color="green">Markdown</Tag>
+                  <span>{t('description_section.title')}</span>
+                  <Tag color="green">{t('description_section.tag')}</Tag>
                 </Space>
               }
               className="shadow-sm"
@@ -245,7 +247,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                 <Form.Item name="detailedDescription" noStyle>
                   <MarkdownEditor
                     value={detailedDescription}
-                    placeholder="请详细描述脚本的功能、使用方法等信息，支持 Markdown 格式..."
+                    placeholder={t('description_section.placeholder')}
                     rows={12}
                     comment={script ? 'update-script' : 'create-script'}
                     linkId={script?.id}
@@ -261,7 +263,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                   loading={loading}
                   className="float-end"
                 >
-                  {script ? '发布更新' : '创建脚本'}
+                  {script ? t('description_section.update_button') : t('description_section.create_button')}
                 </Button>
               </Space>
             </Card>
@@ -270,26 +272,26 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
           {/* 侧边栏信息 */}
           <div className="flex flex-col gap-3 space-y-6">
             {/* 脚本类型和版本信息 */}
-            <Card title="脚本信息" size="small" className="shadow-sm">
+            <Card title={t('info_section.title')} size="small" className="shadow-sm">
               <div className="space-y-4">
                 <Form.Item
                   name="type"
-                  label="脚本类型"
-                  rules={[{ required: true, message: '请选择脚本类型' }]}
+                  label={t('info_section.script_type_label')}
+                  rules={[{ required: true, message: t('info_section.script_type_required') }]}
                   style={{
                     display: script ? 'none' : 'block',
                   }}
                 >
-                  <Select placeholder="请选择脚本类型">
-                    <Select.Option value={1}>用户脚本</Select.Option>
-                    <Select.Option value={2}>订阅脚本</Select.Option>
-                    <Select.Option value={3}>库</Select.Option>
+                  <Select placeholder={t('info_section.script_type_placeholder')}>
+                    <Select.Option value={1}>{t('script_types.user_script')}</Select.Option>
+                    <Select.Option value={2}>{t('script_types.subscribe_script')}</Select.Option>
+                    <Select.Option value={3}>{t('script_types.library')}</Select.Option>
                   </Select>
                 </Form.Item>
 
-                <Form.Item name="category_id" label="脚本分类">
+                <Form.Item name="category_id" label={t('info_section.script_category_label')}>
                   <Select
-                    placeholder="请选择脚本分类"
+                    placeholder={t('info_section.script_category_placeholder')}
                     loading={isCategoryLoading}
                     allowClear
                     options={category?.categories.map((item) => ({
@@ -303,16 +305,16 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                   name="version"
                   label={
                     <Space size="small">
-                      <span>版本号</span>
-                      <Tooltip title="建议用语义化版本号，如：1.0.0, 2.1.5">
+                      <span>{t('info_section.version_label')}</span>
+                      <Tooltip title={t('info_section.version_tooltip')}>
                         <InfoCircleOutlined className="text-gray-400" />
                       </Tooltip>
                     </Space>
                   }
-                  rules={[{ required: true, message: '请输入版本号' }]}
+                  rules={[{ required: true, message: t('info_section.version_required') }]}
                 >
                   <Input
-                    placeholder="例如: 1.0.0"
+                    placeholder={t('info_section.version_placeholder')}
                     disabled={scriptType !== 3}
                   />
                 </Form.Item>
@@ -341,8 +343,8 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                       }}
                     >
                       <Space size="small">
-                        <span>预发布版本</span>
-                        <Tooltip title="设置为预发布版本，正式版本不会更新至此版本，可在脚本管理页开启脚本预发布安装链接">
+                        <span>{t('info_section.prerelease_label')}</span>
+                        <Tooltip title={t('info_section.prerelease_tooltip')}>
                           <InfoCircleOutlined className="text-gray-400" />
                         </Tooltip>
                       </Space>
@@ -354,10 +356,10 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                   name="tags"
                   label={
                     <Space size="small">
-                      <span>标签</span>
+                      <span>{t('info_section.tags_label')}</span>
                       <Tooltip
                         title={
-                          scriptType === 3 ? '请输入标签' : '使用@tag添加标签'
+                          scriptType === 3 ? t('info_section.tags_tooltip_library') : t('info_section.tags_tooltip_script')
                         }
                       >
                         <InfoCircleOutlined className="text-gray-400" />
@@ -368,7 +370,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                   <Select
                     mode="tags"
                     placeholder={
-                      scriptType === 3 ? '请输入标签' : '使用@tag添加标签'
+                      scriptType === 3 ? t('info_section.tags_placeholder_library') : t('info_section.tags_placeholder_script')
                     }
                     disabled={scriptType !== 3}
                     style={{ width: '100%' }}
@@ -379,23 +381,23 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
 
             {/* 库描述信息 - 仅当脚本类型为库时显示 */}
             {scriptType === 3 && !script && (
-              <Card title="库描述信息" size="small" className="shadow-sm">
+              <Card title={t('library_section.title')} size="small" className="shadow-sm">
                 <div>
                   <Form.Item
                     name="libraryName"
-                    label="库名称"
-                    rules={[{ required: true, message: '请输入库名称' }]}
+                    label={t('library_section.name_label')}
+                    rules={[{ required: true, message: t('library_section.name_required') }]}
                   >
-                    <Input placeholder="例如: MyLibrary" />
+                    <Input placeholder={t('library_section.name_placeholder')} />
                   </Form.Item>
 
                   <Form.Item
                     name="libraryDescription"
-                    label="库描述"
-                    rules={[{ required: true, message: '请输入库描述' }]}
+                    label={t('library_section.description_label')}
+                    rules={[{ required: true, message: t('library_section.description_required') }]}
                   >
                     <Input.TextArea
-                      placeholder="请描述这个库的用途和功能..."
+                      placeholder={t('library_section.description_placeholder')}
                       rows={3}
                       showCount
                       maxLength={200}
@@ -409,8 +411,8 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
             <Card
               title={
                 <Space>
-                  <span>{'更新日志'}</span>
-                  <Tag color="green">Markdown</Tag>
+                  <span>{t('changelog_section.title')}</span>
+                  <Tag color="green">{t('changelog_section.tag')}</Tag>
                 </Space>
               }
               size="small"
@@ -418,11 +420,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
             >
               <Form.Item name="changelog">
                 <Input.TextArea
-                  placeholder={`例如：
-• 修复了某个已知问题
-• 新增了某项功能  
-• 优化了性能表现
-• 更新了依赖库`}
+                  placeholder={t('changelog_section.placeholder')}
                   rows={8}
                   showCount
                   maxLength={500}

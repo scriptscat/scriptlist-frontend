@@ -10,6 +10,7 @@ import {
   Typography,
 } from 'antd';
 import React from 'react';
+import { useTranslations } from 'next-intl';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -43,13 +44,15 @@ const GrayControl: React.FC<GrayControlProps> = ({
   onChange,
   value,
 }) => {
+  const t = useTranslations('script.gray_control');
+  
   return (
     <Card
       size="small"
       style={{
         minWidth: '200px',
       }}
-      title={`策略 ${index + 1}`}
+      title={t('strategy_title', { index: index + 1 })}
       extra={
         <Button
           type="text"
@@ -87,8 +90,8 @@ const GrayControl: React.FC<GrayControlProps> = ({
                 }}
                 className="w-full"
               >
-                <Option value="weight">权重</Option>
-                <Option value="pre-release">预发布用户</Option>
+                <Option value="weight">{t('weight')}</Option>
+                <Option value="pre-release">{t('pre_release_users')}</Option>
               </Select>
 
               {control.type === 'weight' && (
@@ -111,11 +114,11 @@ const GrayControl: React.FC<GrayControlProps> = ({
                     }}
                     tooltip={{
                       formatter: (val?: number) =>
-                        `将会推送${val || 0}%的流量到目标版本`,
+                        t('traffic_tooltip', { percent: val || 0 }),
                     }}
                   />
                   <Tooltip
-                    title={`在${control.params.weight_day}天内，逐渐将流量更新至目标值。如果期望最终完全更新至指定版本，可设置100%，0天为直接更新指定流量至此版本`}
+                    title={t('weight_day_tooltip', { days: control.params.weight_day || 0 })}
                   >
                     <Input
                       value={control.params.weight_day}
@@ -133,7 +136,7 @@ const GrayControl: React.FC<GrayControlProps> = ({
                           controls: updatedControls,
                         });
                       }}
-                      addonAfter="天"
+                      addonAfter={t('days_suffix')}
                     />
                   </Tooltip>
                 </>
@@ -141,7 +144,7 @@ const GrayControl: React.FC<GrayControlProps> = ({
 
               {control.type === 'cookie' && (
                 <Input
-                  placeholder="Cookie正则表达式"
+                  placeholder={t('cookie_regex_placeholder')}
                   value={control.params.cookie_regex}
                   onChange={(val) => {
                     const updatedControls = [...value.controls];
@@ -194,7 +197,7 @@ const GrayControl: React.FC<GrayControlProps> = ({
           )}
         </div>
 
-        <Text strong>目标版本</Text>
+        <Text strong>{t('target_version')}</Text>
         <Select
           value={value.target_version}
           onChange={(newValue) => {
@@ -205,9 +208,9 @@ const GrayControl: React.FC<GrayControlProps> = ({
           }}
           className="w-full"
         >
-          <Option value="latest">最新版本</Option>
-          <Option value="latest^1">上一版本</Option>
-          <Option value="all-latest">所有最新版本</Option>
+          <Option value="latest">{t('latest_version')}</Option>
+          <Option value="latest^1">{t('previous_version')}</Option>
+          <Option value="all-latest">{t('all_latest_versions')}</Option>
         </Select>
       </div>
     </Card>

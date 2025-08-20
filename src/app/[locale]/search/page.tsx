@@ -4,6 +4,7 @@ import ScriptList from '@/components/Scriptlist';
 import { scriptService } from '@/lib/api/services/scripts';
 import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
 interface SearchPageProps {
   searchParams: Promise<ScriptSearchRequest>;
@@ -12,18 +13,19 @@ interface SearchPageProps {
 export async function generateMetadata({
   searchParams,
 }: SearchPageProps): Promise<Metadata> {
+  const t = await getTranslations('script.metadata');
   const resolvedSearchParams = await searchParams;
 
-  let title = '脚本搜索';
+  let title = t('search.title');
 
   // 如果有搜索关键词，使用关键词作为标题
   if (resolvedSearchParams.keyword) {
-    title = `${resolvedSearchParams.keyword} - 脚本搜索`;
+    title = `${resolvedSearchParams.keyword} - ${t('search.title')}`;
   }
 
   // 如果是第2页及以后，添加页码信息
   if (resolvedSearchParams.page && resolvedSearchParams.page > 1) {
-    title = `${title} - 第${resolvedSearchParams.page}页`;
+    title = `${title} - ${t('search.page_number', { page: resolvedSearchParams.page })}`;
   }
 
   // 添加站点后缀

@@ -81,10 +81,10 @@ export default function ScriptCard({
   actions,
   onDelete,
 }: ScriptCardProps) {
-  const t = useTranslations();
+  const t = useTranslations('script.card');
+  const tCommon = useTranslations('common');
   const semDataTime = useSemDateTime();
   const locale = useLocale();
-  const [messageApi, contextHolder] = message.useMessage();
   const user = useUser();
 
   const scriptName = ScriptUtils.i18nName(script, locale);
@@ -95,16 +95,16 @@ export default function ScriptCard({
   const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/script-show-page/${script.id}`;
 
   const handleCopySuccess = () => {
-    messageApi.success(t('copy_success'));
+    message.success(tCommon('copy_success'));
   };
 
   const handleDeleteScript = async () => {
     try {
       await scriptService.deleteScript(script.id);
-      messageApi.success(t('删除成功'));
+      message.success(tCommon('delete_success'));
       onDelete?.(script);
     } catch (error) {
-      messageApi.error('删除失败，请稍后重试');
+      message.error(tCommon('delete_failed'));
       console.error('Delete script error:', error);
     }
   };
@@ -132,7 +132,6 @@ export default function ScriptCard({
         }}
         className="transition-all duration-200 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-500 group cursor-pointer"
       >
-        {contextHolder}
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             {/* 主标题区域 - 脚本图标 + 标题 + 版本 */}
@@ -205,7 +204,9 @@ export default function ScriptCard({
                   <div className="flex items-center gap-1">
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                     <span className="text-green-600 dark:text-green-400 font-medium text-xs">
-                      今日 +{script.today_install}
+                      {t('today_installs', {
+                        count: script.today_install,
+                      })}
                     </span>
                   </div>
                 </div>
@@ -250,13 +251,6 @@ export default function ScriptCard({
               </ActionMenu>
             </div>
             <div className="flex flex-col gap-2">
-              <Link
-                href={`/script-show-page/${script.id}`}
-                target="_blank"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Button type="primary">查看详情</Button>
-              </Link>
               {actions && actions.length > 0 && (
                 <div className="flex flex-col gap-1">
                   {actions.map((action) => {
@@ -305,7 +299,7 @@ export default function ScriptCard({
                 {formatNumber(script.total_install)}
               </Text>
               <Text type="secondary" className="text-xs">
-                下载
+                {t('downloads')}
               </Text>
             </div>
 
@@ -335,15 +329,15 @@ export default function ScriptCard({
           {/* 标签区域 */}
           <div className="flex items-center gap-1.5 flex-wrap max-w-[40%]">
             {script.type === 3 && (
-              <Tooltip title="这是一个脚本使用的库" color="blue">
+              <Tooltip title={t('library_tooltip')} color="blue">
                 <Tag color="blue" className="text-xs px-1 py-0 border-blue-300">
-                  @require库
+                  {t('library_tag')}
                 </Tag>
               </Tooltip>
             )}
-            {script.tags.slice(0, 2).map((tag) => (
+            {script.tags.map((tag) => (
               <Tooltip
-                title={'标签：' + tag.name}
+                title={t('tag_label', { name: tag.name })}
                 placement="bottom"
                 key={tag.id}
               >
@@ -355,19 +349,6 @@ export default function ScriptCard({
                 </Tag>
               </Tooltip>
             ))}
-            {script.tags.length > 2 && (
-              <Tooltip
-                title={`还有 ${script.tags.length - 2} 个标签: ${script.tags
-                  .slice(2)
-                  .map((t) => t.name)
-                  .join(', ')}`}
-                placement="bottom"
-              >
-                <Tag className="text-xs px-1 py-0 !bg-gray-100 !text-gray-600 border-dashed">
-                  +{script.tags.length - 2}
-                </Tag>
-              </Tooltip>
-            )}
           </div>
         </div>
       </Card>

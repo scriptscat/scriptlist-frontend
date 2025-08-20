@@ -5,6 +5,7 @@ import { scriptService } from '@/lib/api/services/scripts';
 import type { ResolvingMetadata, Metadata } from 'next';
 import { ScriptDetailPageProps } from '../../types';
 import { ScriptUtils } from '../../utils';
+import { getTranslations } from 'next-intl/server';
 
 interface PageProps {
   params: Promise<{ id: string; issueId: string; locale: string }>;
@@ -15,6 +16,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { id, issueId, locale } = await params;
+  const t = await getTranslations('script.issue.detail');
 
   try {
     // 并行获取脚本信息和issue详情
@@ -25,14 +27,21 @@ export async function generateMetadata(
 
     if (!script || !issue) {
       return {
-        title: '页面未找到 | ScriptCat',
+        title: t('page_not_found_title'),
       };
     }
 
     const scriptName = ScriptUtils.i18nName(script, locale);
 
-    const title = `${issue.title} · 反馈 #${issue.id} - ${scriptName}`;
-    const description = `${scriptName}的问题反馈：${issue.title}`;
+    const title = t('issue_title_with_script', { 
+      title: issue.title, 
+      id: issue.id, 
+      scriptName 
+    });
+    const description = t('issue_description', { 
+      scriptName, 
+      title: issue.title 
+    });
 
     return {
       title: title + ' | ScriptCat',
@@ -45,7 +54,7 @@ export async function generateMetadata(
     };
   } catch (error) {
     return {
-      title: '问题反馈 | ScriptCat',
+      title: t('issue_feedback_title'),
     };
   }
 }

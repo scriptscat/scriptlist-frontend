@@ -92,79 +92,80 @@ const licenseMap: { [key: string]: string } = {
   'LGPL-2.1': 'http://opensource.org/licenses/LGPL-2.1',
 };
 
-// 解析crontab表达式为更友好的描述
-function parseCrontabDescription(cron: string): string {
-  let oncePos = 0;
-  if (cron.includes('once')) {
-    const vals = cron.split(' ');
-    vals.forEach((val, index) => {
-      if (val === 'once') {
-        oncePos = index;
-      }
-    });
-    if (vals.length === 5) {
-      oncePos++;
-    }
-  }
-  if (oncePos) {
-    switch (oncePos) {
-      case 1: // 每分钟
-        return '每分钟运行一次';
-      case 2: // 每小时
-        return '每小时运行一次';
-      case 3: // 每天
-        return '每天运行一次';
-      case 4: // 每月
-        return '每月运行一次';
-      case 5: // 每星期
-        return '每星期运行一次';
-    }
-    throw new Error('错误表达式');
-  }
-
-  const parts = cron.trim().split(/\s+/);
-  if (parts.length < 5) return cron;
-
-  const [minute, hour] = parts;
-
-  // 简单的crontab解析
-  if (cron === '* * * * *') return '每分钟执行';
-  if (cron === '0 * * * *') return '每小时执行';
-  if (cron === '0 0 * * *') return '每天0点执行';
-  if (cron === '0 0 * * 0') return '每周日0点执行';
-  if (cron === '0 0 1 * *') return '每月1号0点执行';
-
-  // 常见模式
-  if (minute === '0' && hour !== '*') {
-    if (hour.includes('/')) {
-      const interval = hour.split('/')[1];
-      return `每${interval}小时执行`;
-    }
-    if (hour.includes(',')) {
-      return `每天${hour.replace(/,/g, '、')}点执行`;
-    }
-    return `每天${hour}点执行`;
-  }
-
-  if (minute.includes('/')) {
-    const interval = minute.split('/')[1];
-    return `每${interval}分钟执行`;
-  }
-
-  return cron; // 返回原始表达式
-}
-
 export default function ScriptDetailClient() {
   const { script } = useScript();
   const scriptState = useScriptState();
   const { user: _user } = useUser();
   const [showAllSites, setShowAllSites] = useState(false);
   const [requireSelect, setRequireSelect] = useState<number>(1); // 库模式的选择状态
-  const [installTitle, setInstallTitle] = useState('安装脚本'); // 安装按钮文案
   const semDateTime = useSemDateTime();
   const [modal, contextHolder] = Modal.useModal();
-  const t = useTranslations();
+  const t = useTranslations('script.detail');
   const router = useRouter();
+
+  const [installTitle, setInstallTitle] = useState(t('install.install_script')); // 安装按钮文案
+
+  // 解析crontab表达式为更友好的描述
+  const parseCrontabDescription = (cron: string): string => {
+    let oncePos = 0;
+    if (cron.includes('once')) {
+      const vals = cron.split(' ');
+      vals.forEach((val, index) => {
+        if (val === 'once') {
+          oncePos = index;
+        }
+      });
+      if (vals.length === 5) {
+        oncePos++;
+      }
+    }
+    if (oncePos) {
+      switch (oncePos) {
+        case 1: // 每分钟
+          return t('crontab.every_minute');
+        case 2: // 每小时
+          return t('crontab.every_hour');
+        case 3: // 每天
+          return t('crontab.every_day');
+        case 4: // 每月
+          return t('crontab.every_month');
+        case 5: // 每星期
+          return t('crontab.every_week');
+      }
+      throw new Error(t('crontab.error_expression'));
+    }
+
+    const parts = cron.trim().split(/\s+/);
+    if (parts.length < 5) return cron;
+
+    const [minute, hour] = parts;
+
+    // 简单的crontab解析
+    if (cron === '* * * * *') return t('crontab.every_minute_execute');
+    if (cron === '0 * * * *') return t('crontab.every_hour_execute');
+    if (cron === '0 0 * * *') return t('crontab.daily_at_midnight');
+    if (cron === '0 0 * * 0') return t('crontab.weekly_sunday_midnight');
+    if (cron === '0 0 1 * *') return t('crontab.monthly_first_midnight');
+
+    // 常见模式
+    if (minute === '0' && hour !== '*') {
+      if (hour.includes('/')) {
+        const interval = hour.split('/')[1];
+        return t('crontab.every_n_hours', { interval });
+      }
+      if (hour.includes(',')) {
+        return t('crontab.daily_at_hours', { hours: hour.replace(/,/g, '、') });
+      }
+      return t('crontab.daily_at_hours', { hours: hour });
+    }
+
+    if (minute.includes('/')) {
+      const interval = minute.split('/')[1];
+      return t('crontab.every_n_minutes', { interval });
+    }
+
+    return cron; // 返回原始表达式
+  };
 
   const scriptName = ScriptUtils.i18nName(script, router.locale);
   const scriptDescription = ScriptUtils.i18nDescription(script, router.locale);
@@ -209,14 +210,18 @@ export default function ScriptDetailClient() {
       .then((status) => {
         if (status.installed) {
           if (status.version === script.script.version) {
-            setInstallTitle(`重新安装脚本 v${status.version}`);
+            setInstallTitle(
+              t('install.reinstall_script', { version: status.version }),
+            );
           } else {
-            setInstallTitle(`更新脚本至 v${script.script.version}`);
+            setInstallTitle(
+              t('install.update_script', { version: script.script.version }),
+            );
           }
         }
       })
       .catch((error) => {
-        console.warn('检测脚本安装状态失败:', error);
+        console.warn(t('install.install_check_failed'), error);
       });
   }, [script]);
 
@@ -226,33 +231,33 @@ export default function ScriptDetailClient() {
   } = {
     'referral-link': {
       color: '#9254de',
-      title: '推荐链接',
-      description: '脚本包含推荐链接',
+      title: t('antifeatures.referral_link.title'),
+      description: t('antifeatures.referral_link.description'),
     },
     ads: {
       color: '#faad14',
-      title: '广告',
-      description: '脚本包含广告展示功能',
+      title: t('antifeatures.ads.title'),
+      description: t('antifeatures.ads.description'),
     },
     payment: {
       color: '#eb2f96',
-      title: '付费功能',
-      description: '脚本包含付费功能',
+      title: t('antifeatures.payment.title'),
+      description: t('antifeatures.payment.description'),
     },
     miner: {
       color: '#fa541c',
-      title: '挖矿',
-      description: '脚本包含挖矿功能',
+      title: t('antifeatures.miner.title'),
+      description: t('antifeatures.miner.description'),
     },
     membership: {
       color: '#1890ff',
-      title: '会员功能',
-      description: '脚本包含会员专属功能',
+      title: t('antifeatures.membership.title'),
+      description: t('antifeatures.membership.description'),
     },
     tracking: {
       color: '#722ed1',
-      title: '数据追踪',
-      description: '脚本会收集用户数据',
+      title: t('antifeatures.tracking.title'),
+      description: t('antifeatures.tracking.description'),
     },
   };
 
@@ -317,7 +322,7 @@ export default function ScriptDetailClient() {
                   onClick={() => setShowAllSites(true)}
                   className="ml-1 transition-colors cursor-pointer bg-transparent border-none p-0"
                 >
-                  +{supportSites.length - maxDisplay} 更多
+                  {t('sites.more', { count: supportSites.length - maxDisplay })}
                 </a>
               </li>
             )}
@@ -331,7 +336,7 @@ export default function ScriptDetailClient() {
               onClick={() => setShowAllSites(false)}
               className="!p-0 !h-auto text-xs text-gray-500 hover:text-blue-600"
             >
-              收起
+              {t('sites.collapse')}
             </Button>
           </div>
         )}
@@ -343,9 +348,9 @@ export default function ScriptDetailClient() {
   const handleCopyRequire = async (requireLink: string) => {
     try {
       copyToClipboard(requireLink);
-      message.success('已复制到剪贴板！');
+      message.success(t('copy.copied_to_clipboard'));
     } catch (_error) {
-      message.error('复制失败，请重试。');
+      message.error(t('copy.copy_failed'));
     }
   };
 
@@ -379,24 +384,24 @@ export default function ScriptDetailClient() {
       await updateFavorites(numberIds);
     } catch (error) {
       // updateFavorites 中已经处理了错误消息
-      console.error('更新收藏失败:', error);
+      console.error(t('folders.favorite_update_failed'), error);
     }
   };
 
   // 添加新收藏夹
   const handleAddFolder = async () => {
     modal.confirm({
-      title: '创建新收藏夹',
+      title: t('folders.create_new_folder'),
       maskClosable: true,
       content: (
         <Space direction="vertical" className="w-full">
           <Input
-            placeholder="请输入收藏夹名称"
+            placeholder={t('folders.folder_name_placeholder')}
             id="folder-name-input"
             autoFocus
           />
           <Input.TextArea
-            placeholder="描述（可选）"
+            placeholder={t('folders.folder_desc_placeholder')}
             className="mt-2"
             rows={2}
             id="folder-desc-input"
@@ -415,7 +420,7 @@ export default function ScriptDetailClient() {
         const description = descInput?.value?.trim();
 
         if (!name) {
-          message.error('请输入收藏夹名称');
+          message.error(t('folders.folder_name_required'));
           return Promise.reject();
         }
 
@@ -437,7 +442,7 @@ export default function ScriptDetailClient() {
     try {
       await quickFavorite();
     } catch (error) {
-      console.error('快速收藏失败:', error);
+      console.error(t('folders.quick_favorite_failed'), error);
     }
   };
 
@@ -501,14 +506,18 @@ export default function ScriptDetailClient() {
                         </Text>
                         <Text type="secondary">
                           <CalendarOutlined className="mr-1" />
-                          创建于 {semDateTime(script.createtime)}
+                          {t('info.created_at', {
+                            time: semDateTime(script.createtime),
+                          })}
                         </Text>
                         <Text type="secondary" className="my-2">
                           ·
                         </Text>
                         <Text type="secondary">
                           <CalendarOutlined className="mr-1" />
-                          更新于 {semDateTime(script.updatetime)}
+                          {t('info.updated_at', {
+                            time: semDateTime(script.updatetime),
+                          })}
                         </Text>
                       </Space>
                       <Paragraph className="text-gray-600 mb-3">
@@ -530,7 +539,7 @@ export default function ScriptDetailClient() {
                         )}
                         {script.tags.map((tag) => (
                           <Tooltip
-                            title={'标签：' + tag.name}
+                            title={t('info.tag_label', { name: tag.name })}
                             placement="bottom"
                             key={tag.id}
                           >
@@ -554,7 +563,7 @@ export default function ScriptDetailClient() {
                     <Col xs={12} sm={6}>
                       <Card size="small" className="text-center">
                         <Statistic
-                          title="总安装量"
+                          title={t('stats.total_installs')}
                           value={script.total_install}
                           valueStyle={{ color: '#1890ff' }}
                         />
@@ -563,7 +572,7 @@ export default function ScriptDetailClient() {
                     <Col xs={12} sm={6}>
                       <Card size="small" className="text-center">
                         <Statistic
-                          title="今日新增"
+                          title={t('stats.today_installs')}
                           value={script.today_install}
                           valueStyle={{ color: '#52c41a' }}
                           prefix="+"
@@ -573,7 +582,7 @@ export default function ScriptDetailClient() {
                     <Col xs={12} sm={6}>
                       <Card size="small" className="text-center">
                         <Statistic
-                          title="用户评分"
+                          title={t('stats.user_rating')}
                           value={
                             ScriptUtils.score(script.score, script.score_num) ||
                             '-'
@@ -591,7 +600,7 @@ export default function ScriptDetailClient() {
                     <Col xs={12} sm={6}>
                       <Card size="small" className="text-center">
                         <Statistic
-                          title="当前版本"
+                          title={t('stats.current_version')}
                           value={script.script.version}
                           valueStyle={{ color: '#722ed1' }}
                         />
@@ -627,7 +636,7 @@ export default function ScriptDetailClient() {
                         )}
                       </Select.Option>
                       <Select.Option value={2}>
-                        {'(兼容版本) ' +
+                        {t('require.compatible_version') +
                           genRequire(
                             script.id,
                             script.name,
@@ -635,7 +644,7 @@ export default function ScriptDetailClient() {
                           )}
                       </Select.Option>
                       <Select.Option value={3}>
-                        {'(补丁版本) ' +
+                        {t('require.patch_version') +
                           genRequire(
                             script.id,
                             script.name,
@@ -643,7 +652,10 @@ export default function ScriptDetailClient() {
                           )}
                       </Select.Option>
                     </Select>
-                    <Tooltip placement="bottom" title="复制引用代码">
+                    <Tooltip
+                      placement="bottom"
+                      title={t('require.copy_tooltip')}
+                    >
                       <Button
                         type="default"
                         icon={<CopyOutlined />}
@@ -671,7 +683,10 @@ export default function ScriptDetailClient() {
                         }}
                       ></Button>
                     </Tooltip>
-                    <Tooltip placement="bottom" title="使用指南">
+                    <Tooltip
+                      placement="bottom"
+                      title={t('require.usage_guide')}
+                    >
                       <Button
                         type="primary"
                         href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
@@ -698,7 +713,7 @@ export default function ScriptDetailClient() {
                     >
                       {installTitle}
                     </Button>
-                    <Tooltip title="如何安装？">
+                    <Tooltip title={t('actions.install_guide')}>
                       <Button
                         type="primary"
                         size="large"
@@ -714,7 +729,7 @@ export default function ScriptDetailClient() {
                     </Tooltip>
                     {script.enable_pre_release === 1 && (
                       <Tooltip
-                        title={'安装预发布版本，体验更新的内容'}
+                        title={t('actions.prerelease_tooltip')}
                         color="orange"
                       >
                         <Button
@@ -742,10 +757,12 @@ export default function ScriptDetailClient() {
                 <div className="flex flex-wrap gap-2 justify-end">
                   <CopyToClipboard
                     text={handleShare()}
-                    onCopy={() => message.success('分享内容已复制到剪贴板！')}
+                    onCopy={() => message.success(t('copy.share_copied'))}
                   >
                     <Button icon={<ShareAltOutlined />} size="small">
-                      <span className="hidden sm:inline">分享</span>
+                      <span className="hidden sm:inline">
+                        {t('actions.share')}
+                      </span>
                     </Button>
                   </CopyToClipboard>
 
@@ -755,10 +772,16 @@ export default function ScriptDetailClient() {
                     placement="bottomRight"
                     menu={{
                       items: [
-                        { key: 'none', label: '不关注' },
-                        { key: 'version', label: '版本更新' },
-                        { key: 'feedback', label: '新建反馈' },
-                        { key: 'all', label: '任何动态' },
+                        { key: 'none', label: t('actions.watch_options.none') },
+                        {
+                          key: 'version',
+                          label: t('actions.watch_options.version'),
+                        },
+                        {
+                          key: 'feedback',
+                          label: t('actions.watch_options.feedback'),
+                        },
+                        { key: 'all', label: t('actions.watch_options.all') },
                       ],
                       onClick: ({ key }) => handleFollowChange(key),
                       selectedKeys: [
@@ -780,7 +803,9 @@ export default function ScriptDetailClient() {
                       size="small"
                       loading={watchLoading}
                     >
-                      <span className="hidden sm:inline">关注</span>
+                      <span className="hidden sm:inline">
+                        {t('actions.watch')}
+                      </span>
                       <span className="ml-1">
                         {scriptState.watch_count || 0}
                       </span>
@@ -797,7 +822,9 @@ export default function ScriptDetailClient() {
                       size="small"
                       loading={favoriteLoading}
                     >
-                      <span className="hidden sm:inline">收藏</span>
+                      <span className="hidden sm:inline">
+                        {t('actions.favorite')}
+                      </span>
                       <span className="ml-1">
                         {scriptState.favorite_count || 0}
                       </span>
@@ -812,7 +839,7 @@ export default function ScriptDetailClient() {
                           title={
                             <div className="flex items-center space-x-2">
                               <FolderOutlined />
-                              <span>选择收藏夹</span>
+                              <span>{t('folders.select_folders')}</span>
                             </div>
                           }
                         >
@@ -851,7 +878,7 @@ export default function ScriptDetailClient() {
                               onClick={handleAddFolder}
                               className="w-full"
                             >
-                              新建收藏夹
+                              {t('folders.new_folder')}
                             </Button>
                           </div>
                         </Card>
@@ -875,11 +902,11 @@ export default function ScriptDetailClient() {
                       await scriptService
                         .deleteScript(script.id)
                         .then(() => {
-                          message.success(t('删除成功'));
+                          message.success(t('delete.success'));
                           router.push('/');
                         })
                         .catch((e) => {
-                          message.error(e.message || t('删除失败，请重试'));
+                          message.error(e.message || t('delete.failed'));
                         });
                     }}
                   >
@@ -898,7 +925,11 @@ export default function ScriptDetailClient() {
                     size="small"
                     title={
                       <div className="flex items-center space-x-2">
-                        <span>{script.type === 3 ? '库详情' : '脚本详情'}</span>
+                        <span>
+                          {script.type === 3
+                            ? t('info.library_details')
+                            : t('info.script_details')}
+                        </span>
                       </div>
                     }
                   >
@@ -907,9 +938,7 @@ export default function ScriptDetailClient() {
                       {script.type === 3 && (
                         <>
                           <div className="flex justify-between items-center">
-                            <span>
-                              这是一个用户脚本使用的库，你可以在你的脚本中直接引用它。
-                            </span>
+                            <span>{t('info.library_description')}</span>
                           </div>
                         </>
                       )}
@@ -918,7 +947,7 @@ export default function ScriptDetailClient() {
                       {supportSites.length > 0 && (
                         <div className="flex justify-between items-start">
                           <Text className="text-gray-600 font-medium">
-                            适用网站
+                            {t('info.applicable_sites')}
                           </Text>
                           <div className="text-right max-w-[200px] min-w-[120px]">
                             {renderSupportSites()}
@@ -930,10 +959,10 @@ export default function ScriptDetailClient() {
                         script.script.meta_json.crontab) && (
                         <div className="flex justify-between items-start">
                           <Text className="text-gray-600 font-medium">
-                            后台脚本
+                            {t('info.background_script')}
                           </Text>
                           <div className="text-right max-w-[200px] min-w-[120px]">
-                            它会在浏览器后台运行
+                            {t('info.background_script_desc')}
                           </div>
                         </div>
                       )}
@@ -941,14 +970,13 @@ export default function ScriptDetailClient() {
                       {script.script.meta_json.crontab && (
                         <div className="flex justify-between items-start">
                           <Text className="text-gray-600 font-medium">
-                            定时脚本
+                            {t('info.scheduled_script')}
                           </Text>
                           <div className="text-right max-w-[200px] min-w-[120px]">
                             <Tooltip
-                              title={
-                                '此脚本支持定时执行，会按照设定的时间间隔自动运行：' +
-                                script.script.meta_json.crontab[0]
-                              }
+                              title={t('info.scheduled_script_tooltip', {
+                                cron: script.script.meta_json.crontab[0],
+                              })}
                             >
                               <Tag
                                 color="blue"
@@ -967,7 +995,7 @@ export default function ScriptDetailClient() {
                       {script.script.meta_json.license && (
                         <div className="flex justify-between items-start">
                           <Text className="text-gray-600 font-medium">
-                            许可协议
+                            {t('info.license')}
                           </Text>
                           <Button
                             type="link"
@@ -985,7 +1013,7 @@ export default function ScriptDetailClient() {
                       {script.script.meta_json.compatible && (
                         <div className="flex justify-between items-start">
                           <Text className="text-gray-600 font-medium">
-                            浏览器兼容性
+                            {t('info.browser_compatibility')}
                           </Text>
                           <div className="flex space-x-2">
                             {ScriptUtils.browserCompatible(
@@ -993,7 +1021,9 @@ export default function ScriptDetailClient() {
                             ).map((browser) => (
                               <Tooltip
                                 key={browser.name}
-                                title={'支持 ' + browser.name}
+                                title={t('info.browser_support', {
+                                  browser: browser.name,
+                                })}
                               >
                                 <Icon
                                   icon={`logos:${browser.logo}`}
@@ -1008,7 +1038,7 @@ export default function ScriptDetailClient() {
                       {script.script.meta_json.antifeature && (
                         <div className="flex justify-between items-start">
                           <Text className="text-gray-600 font-medium">
-                            功能提醒
+                            {t('info.feature_notice')}
                           </Text>
                           <div className="flex flex-wrap gap-1 max-w-[200px] justify-end">
                             {ScriptUtils.antiFeatures(
@@ -1048,7 +1078,9 @@ export default function ScriptDetailClient() {
                             target="_blank"
                             className="!p-0 !h-auto flex items-center"
                           >
-                            <span className="text-xs">论坛帖子</span>
+                            <span className="text-xs">
+                              {t('info.forum_post')}
+                            </span>
                           </Button>
                         </div>
                       )}

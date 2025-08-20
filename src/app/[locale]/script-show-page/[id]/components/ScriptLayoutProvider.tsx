@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 import type { ScriptInfo, ScriptState } from '../types';
-import { Script } from '../types';
 import ScriptLayout from './ScriptLayout';
 import { ScriptProvider } from './ScriptContext';
 

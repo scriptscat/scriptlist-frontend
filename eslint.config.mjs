@@ -26,6 +26,7 @@ const eslintConfig = [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+      'react/jsx-no-literals': 'warn',
     },
   }),
 ];

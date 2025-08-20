@@ -26,6 +26,7 @@ import {
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Link } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import { useAccessRoleList } from '@/lib/api/hooks';
 import { UserModal } from '../../../../../../components/UserModal';
 import { scriptAccessService } from '@/lib/api/services/scripts';
@@ -36,6 +37,7 @@ const { Title, Text } = Typography;
 export default function AccessPage() {
   const params = useParams();
   const id = Number(params.id);
+  const t = useTranslations('script.manage.access');
 
   const [openUserDialog, setOpenUserDialog] = useState(false);
   const [modal, contextHolder] = Modal.useModal();
@@ -75,12 +77,12 @@ export default function AccessPage() {
       );
       if (result.code === 0) {
         mutate();
-        message.success('更新成功');
+        message.success(t('update_success'));
       } else {
         message.error(result.msg);
       }
     } catch (error: any) {
-      message.error(error.message || '更新失败，请稍后重试');
+      message.error(error.message || t('update_failed'));
     } finally {
       setUpdateLoading(null);
     }
@@ -92,23 +94,23 @@ export default function AccessPage() {
     itemName: string,
     itemType: number,
   ) => {
-    const entityType = itemType === 1 ? '用户' : '用户组';
+    const entityType = itemType === 1 ? t('entity_types.user') : t('entity_types.group');
     modal.confirm({
-      title: '确认删除访问权限',
-      content: `确认删除${entityType} "${itemName}" 的访问权限吗？此操作不可撤销。`,
+      title: t('delete_confirm_title'),
+      content: t('delete_confirm_content', { entityType, itemName }),
       maskClosable: true,
       icon: <ExclamationCircleOutlined />,
-      okText: '确认删除',
-      cancelText: '取消',
+      okText: t('delete_confirm_ok'),
+      cancelText: t('delete_confirm_cancel'),
       okButtonProps: { danger: true },
       onOk: async () => {
         setDeleteLoading(itemId);
         try {
           await scriptAccessService.deleteAccess(id, itemId);
-          message.success('删除成功');
+          message.success(t('delete_success'));
           mutate();
         } catch (error: any) {
-          message.error(error.message || '删除失败，请稍后重试');
+          message.error(error.message || t('delete_failed'));
         } finally {
           setDeleteLoading(null);
         }
@@ -122,19 +124,19 @@ export default function AccessPage() {
       case 1:
         return (
           <Tag icon={<CheckCircleOutlined />} color="success">
-            已接受
+            {t('status.accepted')}
           </Tag>
         );
       case 2:
         return (
           <Tag icon={<ExclamationCircleOutlined />} color="error">
-            已拒绝
+            {t('status.rejected')}
           </Tag>
         );
       case 3:
         return (
           <Tag icon={<ClockCircleOutlined />} color="warning">
-            等待确认
+            {t('status.pending')}
           </Tag>
         );
       default:
@@ -145,7 +147,7 @@ export default function AccessPage() {
   // 表格列定义
   const columns = [
     {
-      title: '用户/用户组',
+      title: t('table.user_group_column'),
       dataIndex: 'user',
       key: 'user',
       render: (_: any, record: any) => (
@@ -183,24 +185,24 @@ export default function AccessPage() {
                 {record.name}
               </Link>
               <Tag color={record.type === 1 ? 'blue' : 'green'}>
-                {record.type === 1 ? '用户' : '用户组'}
+                {record.type === 1 ? t('entity_types.user') : t('entity_types.group')}
               </Tag>
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              添加时间：{semDateTime(record.createtime)}
+              {t('time.add_time')}{semDateTime(record.createtime)}
             </div>
           </div>
         </Space>
       ),
     },
     {
-      title: '状态',
+      title: t('table.status_column'),
       dataIndex: 'invite_status',
       key: 'status',
       render: (status: number) => renderStatusTag(status),
     },
     {
-      title: '权限角色',
+      title: t('table.role_column'),
       dataIndex: 'role',
       key: 'role',
       render: (role: string, record: any) => (
@@ -212,14 +214,14 @@ export default function AccessPage() {
             handleRoleUpdate(record.id, newRole, record.expiretime)
           }
           options={[
-            { value: 'guest', label: '访客' },
-            { value: 'manager', label: '管理员' },
+            { value: 'guest', label: t('roles.visitor') },
+            { value: 'manager', label: t('roles.admin') },
           ]}
         />
       ),
     },
     {
-      title: '过期时间',
+      title: t('table.expire_column'),
       dataIndex: 'expiretime',
       key: 'expiretime',
       render: (expiretime: number) => (
@@ -232,19 +234,19 @@ export default function AccessPage() {
                 : 'text-gray-700'
             }
           >
-            {expiretime === 0 ? '永不过期' : semDateTime(expiretime)}
+            {expiretime === 0 ? t('time.never_expire') : semDateTime(expiretime)}
             {expiretime !== 0 && expiretime * 1000 < Date.now() && (
-              <span className="ml-1 text-xs">(已过期)</span>
+              <span className="ml-1 text-xs">{t('time.expired')}</span>
             )}
           </span>
         </div>
       ),
     },
     {
-      title: '操作',
+      title: t('table.action_column'),
       key: 'action',
       render: (_: any, record: any) => (
-        <Tooltip title="删除访问权限">
+        <Tooltip title={t('table.delete_tooltip')}>
           <Button
             type="text"
             danger
@@ -252,7 +254,7 @@ export default function AccessPage() {
             loading={deleteLoading === record.id}
             onClick={() => handleDelete(record.id, record.name, record.type)}
           >
-            删除
+            {t('table.delete_button')}
           </Button>
         </Tooltip>
       ),
@@ -265,10 +267,10 @@ export default function AccessPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <Title level={3} className="!mb-1">
-            访问权限管理
+            {t('title')}
           </Title>
           <Text type="secondary">
-            管理用户和用户组对此脚本的访问权限，包括角色分配和权限期限设置
+            {t('description')}
           </Text>
         </div>
         <Button
@@ -277,7 +279,7 @@ export default function AccessPage() {
           onClick={() => setOpenUserDialog(true)}
           size="large"
         >
-          添加用户/用户组
+          {t('add_user_group_button')}
         </Button>
       </div>
 
@@ -286,29 +288,29 @@ export default function AccessPage() {
         <div className="mb-4 p-4 rounded-lg">
           <Space size="large">
             <div>
-              <Text strong>总数：</Text>
+              <Text strong>{t('stats.total')}</Text>
               <Text className="text-blue-600 font-medium">{total}</Text>
             </div>
             <div>
-              <Text strong>用户：</Text>
+              <Text strong>{t('stats.users')}</Text>
               <Text className="text-blue-600 font-medium">
                 {list.filter((item) => item.type === 1).length}
               </Text>
             </div>
             <div>
-              <Text strong>用户组：</Text>
+              <Text strong>{t('stats.groups')}</Text>
               <Text className="text-green-600 font-medium">
                 {list.filter((item) => item.type === 2).length}
               </Text>
             </div>
             <div>
-              <Text strong>等待确认：</Text>
+              <Text strong>{t('stats.pending')}</Text>
               <Text className="text-orange-600 font-medium">
                 {list.filter((item) => item.invite_status === 3).length}
               </Text>
             </div>
             <div>
-              <Text strong>已过期：</Text>
+              <Text strong>{t('stats.expired')}</Text>
               <Text className="text-red-600 font-medium">
                 {
                   list.filter(
@@ -335,7 +337,7 @@ export default function AccessPage() {
           showSizeChanger: false,
           showQuickJumper: true,
           showTotal: (total, range) =>
-            `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
+            t('pagination.total', { start: range[0], end: range[1], total }),
         }}
         locale={{
           emptyText: (
@@ -343,13 +345,13 @@ export default function AccessPage() {
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               description={
                 <div>
-                  <p>暂无访问权限的用户或用户组</p>
+                  <p>{t('empty.title')}</p>
                   <Button
                     type="primary"
                     icon={<UserAddOutlined />}
                     onClick={() => setOpenUserDialog(true)}
                   >
-                    添加第一个用户/用户组
+                    {t('empty.button')}
                   </Button>
                 </div>
               }

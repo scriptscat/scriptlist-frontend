@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons';
 import { Dropdown, Modal, Select, Space, Input } from 'antd';
 import { useUser } from '@/contexts/UserContext';
+import { useTranslations } from 'next-intl';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -36,6 +37,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   onPunishClick,
 }) => {
   const user = useUser();
+  const t = useTranslations('common');
   const authorMap = new Map<number, boolean>();
 
   const [modal, contextHolder] = Modal.useModal();
@@ -61,7 +63,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
         label: (
           <Space className="anticon-middle">
             <DeleteOutlined />
-            <span>删除</span>
+            <span>{t('delete')}</span>
           </Space>
         ),
         key: 'delete',
@@ -72,7 +74,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
         //   label: (
         //     <Space className="anticon-middle">
         //       <ExclamationCircleOutlined />
-        //       <span>处罚</span>
+        //       <span>{t('punish')}</span>
         //     </Space>
         //   ),
         //   key: 'punish',
@@ -85,7 +87,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
     label: (
       <Space className="anticon-middle">
         <FileExclamationOutlined />
-        <span>举报</span>
+        <span>{t('report')}</span>
       </Space>
     ),
     key: 'report',
@@ -105,7 +107,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
               );
             } else if (value.key === 'punish') {
               modal.confirm({
-                title: '确认处罚',
+                title: t('confirm_punish'),
                 content: (
                   <Space
                     direction="vertical"
@@ -113,7 +115,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                       width: '100%',
                     }}
                   >
-                    <span>选择处罚选项</span>
+                    <span>{t('select_punish_option')}</span>
                     <Select defaultValue="lucy" style={{ width: '100%' }}>
                       <Option value="jack">Jack</Option>
                       <Option value="lucy">Lucy</Option>
@@ -122,7 +124,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                       </Option>
                       <Option value="Yiminghe">yiminghe</Option>
                     </Select>
-                    <span>处罚原因</span>
+                    <span>{t('punish_reason')}</span>
                     <TextArea
                       rows={2}
                       style={{ width: '100%', border: '1px solid #444' }}
@@ -130,8 +132,8 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                   </Space>
                 ),
                 icon: <ExclamationCircleOutlined />,
-                okText: '确认',
-                cancelText: '取消',
+                okText: t('confirm'),
+                cancelText: t('cancel'),
                 maskClosable: true,
                 onOk: () => {
                   onPunishClick?.();
@@ -139,11 +141,11 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
               });
             } else {
               modal.confirm({
-                title: '确认删除',
-                content: '删除后无法恢复，确认删除吗？',
+                title: t('confirm_delete'),
+                content: t('delete_warning'),
                 icon: <ExclamationCircleOutlined />,
-                okText: '确认',
-                cancelText: '取消',
+                okText: t('confirm'),
+                cancelText: t('cancel'),
                 maskClosable: true,
                 onOk: () => {
                   onDeleteClick();

@@ -8,95 +8,7 @@ import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
 import MarkdownEditor from '@/components/MarkdownEditor';
 import { useScript } from '../../components/ScriptContext';
 import { scriptIssueService } from '@/lib/api/services/scripts/issue';
-
-// Issue标签组件
-interface IssueLabelProps {
-  label: string;
-  className?: string;
-  onMouseDown?: (event: any) => void;
-  closable?: boolean;
-  onClose?: () => void;
-  style?: React.CSSProperties;
-}
-
-const IssueLabel: React.FC<IssueLabelProps> = ({
-  label,
-  className,
-  onMouseDown,
-  closable,
-  onClose,
-  style,
-}) => {
-  const getLabelConfig = (label: string) => {
-    switch (label.toLowerCase()) {
-      case 'bug':
-        return { color: 'red' };
-      case 'question':
-        return { color: 'blue' };
-      case 'feature':
-      case 'enhancement':
-        return { color: 'green' };
-      default:
-        return { color: 'default' };
-    }
-  };
-
-  const config = getLabelConfig(label);
-
-  return (
-    <span
-      className={className}
-      onMouseDown={onMouseDown}
-      style={{
-        display: 'inline-block',
-        padding: '2px 8px',
-        borderRadius: '4px',
-        fontSize: '12px',
-        backgroundColor:
-          config.color === 'red'
-            ? '#fff2f0'
-            : config.color === 'blue'
-              ? '#f0f5ff'
-              : config.color === 'green'
-                ? '#f6ffed'
-                : '#f5f5f5',
-        color:
-          config.color === 'red'
-            ? '#a8071a'
-            : config.color === 'blue'
-              ? '#0958d9'
-              : config.color === 'green'
-                ? '#389e0d'
-                : '#666',
-        border: `1px solid ${
-          config.color === 'red'
-            ? '#ffccc7'
-            : config.color === 'blue'
-              ? '#adc6ff'
-              : config.color === 'green'
-                ? '#b7eb8f'
-                : '#d9d9d9'
-        }`,
-        marginRight: '3px',
-        ...style,
-      }}
-    >
-      {label}
-      {closable && (
-        <span
-          onClick={onClose}
-          style={{
-            marginLeft: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-          }}
-        >
-          ×
-        </span>
-      )}
-    </span>
-  );
-};
+import IssueLabel from '../components/IssueLabel';
 
 export default function CreateIssueClient() {
   const { script } = useScript();
@@ -104,7 +16,8 @@ export default function CreateIssueClient() {
   const titleRef = useRef<any>(null);
   const [labels, setLabels] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const t = useTranslations();
+  const t = useTranslations('script.issue.create');
+  const tIssue = useTranslations('script.issue');
   const router = useRouter();
 
   const onSubmit = async () => {
@@ -112,12 +25,12 @@ export default function CreateIssueClient() {
     const content = editorRef.current?.getValue()?.trim();
 
     if (!title) {
-      message.error('请输入标题');
+      message.error(t('title_required'));
       return;
     }
 
     if (!content) {
-      message.error('请输入内容');
+      message.error(t('content_required'));
       return;
     }
 
@@ -135,10 +48,10 @@ export default function CreateIssueClient() {
       }
       setLabels([]);
 
-      message.success('提交成功');
+      message.success(t('submit_success'));
       router.push(`/script-show-page/${script.id}/issue/${resp.id}`);
     } catch (error: any) {
-      message.error(error.message || '提交失败');
+      message.error(error.message || t('submit_failed'));
     } finally {
       setLoading(false);
     }
@@ -148,26 +61,26 @@ export default function CreateIssueClient() {
     <Card>
       <div className="flex flex-row gap-3">
         <div className="flex flex-col basis-3/4 gap-2">
-          <Input placeholder="请简要描述您要反馈的问题" ref={titleRef} />
+          <Input placeholder={t('title_placeholder')} ref={titleRef} />
           <MarkdownEditor
             ref={editorRef}
             height="400px"
-            placeholder="请详细描述问题，包括复现步骤、期望结果等..."
+            placeholder={t('content_placeholder')}
             comment="create-issue"
             linkId={script.id}
           />
           <Space className="justify-end">
             <Button type="primary" onClick={onSubmit} loading={loading}>
-              提交反馈
+              {t('submit_button')}
             </Button>
           </Space>
         </div>
         <div className="flex flex-col basis-1/4">
           <Space direction="vertical">
-            <span className="text-lg font-bold">标签</span>
+            <span className="text-lg font-bold">{tIssue('labels_title')}</span>
             <Select
               mode="multiple"
-              showArrow
+              suffixIcon
               tagRender={({ value, closable, onClose }) => {
                 const onPreventMouseDown = (event: any) => {
                   event.preventDefault();
@@ -186,9 +99,9 @@ export default function CreateIssueClient() {
               }}
               style={{ width: '100%' }}
               options={[
-                { label: '功能请求', value: 'feature' },
-                { label: '问题', value: 'question' },
-                { label: 'Bug', value: 'bug' },
+                { label: tIssue('labels.feature'), value: 'feature' },
+                { label: tIssue('labels.question'), value: 'question' },
+                { label: tIssue('labels.bug'), value: 'bug' },
               ]}
               loading={loading}
               onChange={(value) => setLabels(value)}

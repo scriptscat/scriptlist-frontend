@@ -2,7 +2,7 @@
 
 import { Card, Space, message } from 'antd';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useScript } from '../../components/ScriptContext';
+import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
 import type { ScoreListItem } from '@/lib/api/services/scripts/scripts';
 import { scriptService } from '@/lib/api/services/scripts/scripts';
@@ -28,6 +28,7 @@ export default function ScriptRatingClient({
   scriptId,
 }: ScriptRatingClientProps) {
   const { user } = useUser();
+  const t = useTranslations('script.rating');
   const [submitting, setSubmitting] = useState(false);
 
   // 排序和分页相关状态
@@ -66,7 +67,7 @@ export default function ScriptRatingClient({
         distribution,
       });
     } catch (error) {
-      console.error('更新评分统计失败:', error);
+      console.error(t('error_update_stats'), error);
     }
   }, [scriptId]);
 
@@ -159,7 +160,7 @@ export default function ScriptRatingClient({
     userComment: string,
   ) => {
     if (!user) {
-      message.warning('请先登录');
+      message.warning(t('login_required'));
       return;
     }
 
@@ -195,10 +196,10 @@ export default function ScriptRatingClient({
       mutate();
       mutateMyScore(); // 刷新用户评分数据
 
-      message.success('评分提交成功！');
+      message.success(t('submit_success'));
     } catch (error: any) {
-      console.error('提交评分失败:', error);
-      message.error(error.message || '提交失败，请重试');
+      console.error(t('submit_error'), error);
+      message.error(error.message || t('submit_failed'));
       throw error;
     } finally {
       setSubmitting(false);
@@ -211,7 +212,7 @@ export default function ScriptRatingClient({
     userComment: string,
   ) => {
     if (!user) {
-      message.warning('请先登录');
+      message.warning(t('login_required'));
       return;
     }
 
@@ -243,10 +244,10 @@ export default function ScriptRatingClient({
       mutate();
       mutateMyScore(); // 刷新用户评分数据
 
-      message.success('评分更新成功！');
+      message.success(t('update_success'));
     } catch (error: any) {
-      console.error('更新评分失败:', error);
-      message.error(error.message || '更新失败，请重试');
+      console.error(t('update_error'), error);
+      message.error(error.message || t('update_failed'));
       throw error;
     } finally {
       setSubmitting(false);
@@ -266,17 +267,17 @@ export default function ScriptRatingClient({
       mutate();
       mutateMyScore(); // 刷新用户评分数据
 
-      message.success('删除成功！');
+      message.success(t('delete_success'));
     } catch (error: any) {
-      console.error('删除评分失败:', error);
-      message.error(error.message || '删除失败，请重试');
+      console.error(t('delete_error'), error);
+      message.error(error.message || t('delete_failed'));
       throw error;
     }
   };
 
   const handleReply = async (ratingId: number, content: string) => {
     if (!user) {
-      message.warning('请先登录');
+      message.warning(t('login_required'));
       return;
     }
 
@@ -295,10 +296,10 @@ export default function ScriptRatingClient({
         ),
       );
 
-      message.success('回复成功！');
+      message.success(t('reply_success'));
     } catch (error: any) {
-      console.error('回复失败:', error);
-      message.error(error.message || '回复失败，请重试');
+      console.error(t('reply_error'), error);
+      message.error(error.message || t('reply_failed'));
       throw error;
     }
   };
@@ -315,10 +316,10 @@ export default function ScriptRatingClient({
       // 刷新数据
       mutate();
 
-      message.success('删除成功！');
+      message.success(t('delete_success'));
     } catch (error: any) {
-      console.error('删除评分失败:', error);
-      message.error(error.message || '删除失败，请重试');
+      console.error(t('delete_error'), error);
+      message.error(error.message || t('delete_failed'));
       throw error;
     }
   };
@@ -336,16 +337,16 @@ export default function ScriptRatingClient({
             : rating,
         ),
       );
-      message.success('删除成功！');
+      message.success(t('delete_success'));
     } catch (error) {
-      message.error('删除失败，请重试');
+      message.error(t('delete_failed'));
       throw error;
     }
   };
 
   // 处理错误
   if (error) {
-    console.error('获取评分数据失败:', error);
+    console.error(t('fetch_error'), error);
   }
 
   return (

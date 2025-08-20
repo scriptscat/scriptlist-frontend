@@ -7,6 +7,7 @@ import {
   SortAscendingOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
+import { useTranslations } from 'next-intl';
 import RatingItem from './RatingItem';
 import type { RatingListProps, SortOption } from './types';
 
@@ -23,25 +24,27 @@ export default function RatingList({
   onDeleteRating,
   onDeleteReply,
 }: RatingListProps) {
+  const t = useTranslations('script.rating.list');
+
   // 排序选项
   const sortOptions = [
-    { value: 'newest', label: '最新优先', icon: <ClockCircleOutlined /> },
-    { value: 'oldest', label: '最早优先', icon: <ClockCircleOutlined /> },
-    { value: 'rating_high', label: '评分最高', icon: <StarFilled /> },
-    { value: 'rating_low', label: '评分最低', icon: <StarFilled /> },
+    { value: 'newest', label: t('sort_options.newest'), icon: <ClockCircleOutlined /> },
+    { value: 'oldest', label: t('sort_options.oldest'), icon: <ClockCircleOutlined /> },
+    { value: 'rating_high', label: t('sort_options.rating_high'), icon: <StarFilled /> },
+    { value: 'rating_low', label: t('sort_options.rating_low'), icon: <StarFilled /> },
   ];
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-          用户评价 ({ratings.length})
+          {t('title_with_count', { count: ratings.length })}
         </h2>
 
         {/* 排序选择器 */}
         <div className="flex items-center gap-3">
           <span className="text-sm text-gray-600 dark:text-gray-400">
-            排序方式:
+            {t('sort_label')}
           </span>
           <Select
             value={sortBy}
@@ -69,10 +72,10 @@ export default function RatingList({
             description={
               <div className="text-center py-8">
                 <p className="text-lg text-gray-500 dark:text-gray-400 mb-2">
-                  暂无评价
+                  {t('empty_title')}
                 </p>
                 <p className="text-sm text-gray-400 dark:text-gray-500">
-                  成为第一个评价这个脚本的用户吧！
+                  {t('empty_description')}
                 </p>
               </div>
             }
@@ -97,7 +100,7 @@ export default function RatingList({
                 <Spin
                   indicator={<LoadingOutlined style={{ fontSize: 16 }} spin />}
                 />
-                <span>加载中...</span>
+                <span>{t('loading')}</span>
               </div>
             )}
 
@@ -108,13 +111,13 @@ export default function RatingList({
                 onClick={onLoadMore}
                 className="px-8 rounded-lg shadow-sm border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500"
               >
-                加载更多评价
+                {t('load_more')}
               </Button>
             )}
 
             {!loading && !hasMore && ratings.length > 0 && (
               <div className="text-center text-sm text-gray-500 dark:text-gray-400 py-4">
-                已显示全部 {ratings.length} 条评价
+                {t('all_loaded', { count: ratings.length })}
               </div>
             )}
           </div>

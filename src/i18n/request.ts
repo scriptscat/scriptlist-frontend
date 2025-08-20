@@ -23,7 +23,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale: finalLocale,
     messages: (
       await import(
-        `../../public/locales/${localeMapping[finalLocale]}/common.json`
+        `../../public/locales/${localeMapping[finalLocale]}/translations.json`
       )
     ).default,
   };

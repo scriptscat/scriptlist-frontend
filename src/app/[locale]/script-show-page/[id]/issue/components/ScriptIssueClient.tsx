@@ -16,6 +16,7 @@ import { PlusOutlined, MessageOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { Link, useRouter } from '@/i18n/routing';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import type { Issue } from '@/lib/api/services/scripts/issue';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import IssueLabel from './IssueLabel';
@@ -37,6 +38,7 @@ export default function ScriptIssueClient({
   const router = useRouter();
   const searchParams = useSearchParams();
   const semDateTime = useSemDateTime();
+  const t = useTranslations('script.issue');
 
   // 从 URL 参数获取当前状态
   const currentKeyword = searchParams.get('keyword') || '';
@@ -130,7 +132,7 @@ export default function ScriptIssueClient({
           {/* 紧凑的搜索筛选栏 */}
           <div className="flex gap-3">
             <Input.Search
-              placeholder="搜索问题..."
+              placeholder={t('search_placeholder')}
               value={searchValue}
               onChange={handleSearchInputChange}
               onSearch={handleSearch}
@@ -143,26 +145,26 @@ export default function ScriptIssueClient({
                 onClick={() => handleStatusFilter('all')}
                 size="middle"
               >
-                全部
+                {t('filter_all')}
               </Button>
               <Button
                 type={currentStatus === 'pending' ? 'primary' : 'default'}
                 onClick={() => handleStatusFilter('pending')}
                 size="middle"
               >
-                待解决
+                {t('filter_pending')}
               </Button>
               <Button
                 type={currentStatus === 'resolved' ? 'primary' : 'default'}
                 onClick={() => handleStatusFilter('resolved')}
                 size="middle"
               >
-                已解决
+                {t('filter_resolved')}
               </Button>
             </Space.Compact>
             <Link href={`/script-show-page/${scriptId}/issue/create`}>
               <Button type="primary" icon={<PlusOutlined />} size="middle">
-                新建问题
+                {t('create_issue')}
               </Button>
             </Link>
           </div>
@@ -181,7 +183,7 @@ export default function ScriptIssueClient({
               <Empty
                 description={
                   <span style={{ color: token.colorTextSecondary }}>
-                    {currentKeyword ? '没有找到匹配的问题' : '还没有问题'}
+                    {currentKeyword ? t('no_issues_found') : t('no_issues')}
                   </span>
                 }
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -249,7 +251,7 @@ export default function ScriptIssueClient({
                                 }
                                 className="text-xs"
                               >
-                                {issue.status === 1 ? '待解决' : '已解决'}
+                                {issue.status === 1 ? t('status_pending') : t('status_resolved')}
                               </Tag>
                             </div>
                           </Link>
@@ -279,7 +281,7 @@ export default function ScriptIssueClient({
                           {issue.updatetime > 0 &&
                             issue.updatetime !== issue.createtime && (
                               <span>
-                                • 更新于 {semDateTime(issue.updatetime)}
+                                • {t('updated_at', { time: semDateTime(issue.updatetime) })}
                               </span>
                             )}
                         </div>
@@ -334,7 +336,7 @@ export default function ScriptIssueClient({
                   className="text-sm"
                   style={{ color: token.colorTextSecondary }}
                 >
-                  {range[0]}-{range[1]} / {total}
+                  {t('pagination_total', { start: range[0], end: range[1], total })}
                 </span>
               )}
             />

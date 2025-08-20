@@ -20,7 +20,7 @@ src/
 
 ## 国际化
 
-主要使用语言为zh-CN，使用`next-i18next`进行国际化处理。语言文件存放在`public/locales/`目录下，只需要设置`public/locales/zh-CN/common.json`文件即可，其它语言文件另外设置。
+主要使用语言为zh-CN，使用`next-i18next`进行国际化处理。语言文件存放在`public/locales/`目录下，只需要设置`public/locales/zh-CN/translations.json`文件即可，其它语言文件另外设置。
 
 # 主题
 

@@ -42,7 +42,7 @@ export default function UserAuth() {
     },
     {
       key: 'settings',
-      label: '用户设置',
+      label: t("user_setting"),
       icon: <SettingOutlined />,
       onClick: () => {
         router.push('/users/settings');

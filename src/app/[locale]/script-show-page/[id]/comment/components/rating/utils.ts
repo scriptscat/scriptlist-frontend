@@ -1,20 +1,21 @@
 /**
  * 获取评分对应的文本描述
  * @param rating 评分数值
+ * @param t 翻译函数
  * @returns 评分描述文本
  */
-export function getRatingText(rating: number): string {
+export function getRatingText(rating: number, t: (key: string) => string): string {
   switch (rating) {
     case 5:
-      return '太棒了！';
+      return t('excellent');
     case 4:
-      return '很好';
+      return t('good');
     case 3:
-      return '还不错';
+      return t('average');
     case 2:
-      return '一般';
+      return t('fair');
     case 1:
-      return '需要改进';
+      return t('poor');
     default:
       return '';
   }

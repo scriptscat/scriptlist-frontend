@@ -6,7 +6,6 @@ import { Menu } from 'antd';
 import {
   BookOutlined,
   CodeOutlined,
-  MessageOutlined,
   StarOutlined,
   HistoryOutlined,
   EditOutlined,
@@ -15,6 +14,7 @@ import {
   BugOutlined,
 } from '@ant-design/icons';
 import useToken from 'antd/es/theme/useToken';
+import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
 import { useScript } from './ScriptContext';
 
@@ -27,36 +27,37 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
   const user = useUser();
   const script = useScript();
   const [_, token] = useToken();
+  const t = useTranslations('script.navigation');
   const { locale, id } = params;
 
   const menuItems = [
     {
       key: 'overview',
       icon: <BookOutlined />,
-      label: <Link href={`/${locale}/script-show-page/${id}`}>首页</Link>,
+      label: <Link href={`/${locale}/script-show-page/${id}`}>{t('overview')}</Link>,
     },
     {
       key: 'code',
       icon: <CodeOutlined />,
-      label: <Link href={`/${locale}/script-show-page/${id}/code`}>代码</Link>,
+      label: <Link href={`/${locale}/script-show-page/${id}/code`}>{t('code')}</Link>,
     },
     {
       key: 'issue',
       icon: <BugOutlined />,
-      label: <Link href={`/${locale}/script-show-page/${id}/issue`}>反馈</Link>,
+      label: <Link href={`/${locale}/script-show-page/${id}/issue`}>{t('issue')}</Link>,
     },
     {
       key: 'comment',
       icon: <StarOutlined />,
       label: (
-        <Link href={`/${locale}/script-show-page/${id}/comment`}>评分</Link>
+        <Link href={`/${locale}/script-show-page/${id}/comment`}>{t('comment')}</Link>
       ),
     },
     {
       key: 'version',
       icon: <HistoryOutlined />,
       label: (
-        <Link href={`/${locale}/script-show-page/${id}/version`}>版本列表</Link>
+        <Link href={`/${locale}/script-show-page/${id}/version`}>{t('version')}</Link>
       ),
     },
   ];
@@ -74,7 +75,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
           icon: <EditOutlined />,
           label: (
             <Link href={`/${locale}/script-show-page/${id}/update`}>
-              更新脚本
+              {t('update')}
             </Link>
           ),
         },
@@ -83,7 +84,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
           icon: <BarChartOutlined />,
           label: (
             <Link href={`/${locale}/script-show-page/${id}/statistic`}>
-              脚本统计
+              {t('statistic')}
             </Link>
           ),
         },
@@ -92,7 +93,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
           icon: <SettingOutlined />,
           label: (
             <Link href={`/${locale}/script-show-page/${id}/manage`}>
-              脚本管理
+              {t('manage')}
             </Link>
           ),
         },

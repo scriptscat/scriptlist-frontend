@@ -99,19 +99,20 @@ const RealtimeColumn: React.FC<{
   download: { x: string[]; y: number[] };
   update: { x: string[]; y: number[] };
   isRealtime: boolean;
-}> = ({ download, update, isRealtime }) => {
+  t: (key: string) => string;
+}> = ({ download, update, isRealtime, t }) => {
   const { themeMode } = useTheme();
 
   const data = [];
   for (let i = 0; i < download.x.length; i++) {
     data.push(
       {
-        name: '安装',
+        name: t('install'),
         time: download.x[i],
         num: download.y[i],
       },
       {
-        name: '更新',
+        name: t('update'),
         time: update.x[i],
         num: update.y[i],
       },
@@ -140,11 +141,11 @@ const RealtimeColumn: React.FC<{
     <div className="w-full">
       <div className="flex items-center justify-between mb-4">
         <Text strong className="text-lg">
-          实时更新下载
+          {t('realtime_downloads')}
         </Text>
         <Badge
           status={isRealtime ? 'processing' : 'default'}
-          text={isRealtime ? '实时更新中' : '已暂停'}
+          text={isRealtime ? t('realtime_updating') : t('realtime_paused')}
         />
       </div>
       <Line {...config} />
@@ -165,7 +166,8 @@ const StatsCard: React.FC<{
   yesterday: number;
   week: number;
   color: string;
-}> = ({ title, icon, today, yesterday, week, color }) => {
+  t: (key: string) => string;
+}> = ({ title, icon, today, yesterday, week, color, t }) => {
   const growth =
     yesterday > 0 ? (((today - yesterday) / yesterday) * 100).toFixed(1) : '0';
   const isPositive = parseFloat(growth) >= 0;
@@ -181,7 +183,7 @@ const StatsCard: React.FC<{
             </Text>
           </div>
           <Tooltip
-            title={`较昨日${isPositive ? '增长' : '下降'}${Math.abs(parseFloat(growth))}%`}
+            title={`${t('growth_tooltip').replace('{type}', isPositive ? t('growth_increase') : t('growth_decrease')).replace('{value}', Math.abs(parseFloat(growth)).toString())}`}
           >
             <Tag
               color={isPositive ? 'green' : 'red'}
@@ -195,7 +197,7 @@ const StatsCard: React.FC<{
         <div className="space-y-3">
           <div>
             <Text type="secondary" className="text-sm">
-              今日
+              {t('today')}
             </Text>
             <div className="mt-1">
               <Statistic
@@ -212,7 +214,7 @@ const StatsCard: React.FC<{
           <div className="grid grid-cols-2 gap-4 pt-2 border-t">
             <div>
               <Text type="secondary" className="text-xs">
-                昨日
+                {t('yesterday')}
               </Text>
               <div className="text-gray-600 font-semibold">
                 {splitNumber(yesterday.toString())}
@@ -220,7 +222,7 @@ const StatsCard: React.FC<{
             </div>
             <div>
               <Text type="secondary" className="text-xs">
-                本周
+                {t('week')}
               </Text>
               <div className="text-gray-600 font-semibold">
                 {splitNumber(week.toString())}
@@ -235,6 +237,7 @@ const StatsCard: React.FC<{
 
 export default function ScriptStatsClient() {
   const { script } = useScript();
+  const t = useTranslations('script.statistics');
   const [isRealtime, setIsRealtime] = useState(true);
   const [chartType, setChartType] = useState<'line' | 'column'>('line');
   const [activeTab, setActiveTab] = useState('overview');
@@ -259,8 +262,8 @@ export default function ScriptStatsClient() {
     return (
       <Card>
         <Alert
-          message="加载失败"
-          description="获取统计数据失败，请稍后重试。"
+          message={t('loading_failed')}
+          description={t('loading_failed_description')}
           type="error"
           showIcon
           action={
@@ -272,7 +275,7 @@ export default function ScriptStatsClient() {
                 refreshStatistics();
               }}
             >
-              重试
+              {t('retry')}
             </Button>
           }
         />
@@ -285,7 +288,7 @@ export default function ScriptStatsClient() {
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <Text type="secondary">加载统计数据中...</Text>
+          <Text type="secondary">{t('loading_data')}</Text>
         </div>
       </div>
     );
@@ -296,8 +299,8 @@ export default function ScriptStatsClient() {
       <Space direction="vertical" size={20} className="w-full">
         {/* 页面底部说明 */}
         <Alert
-          message="数据说明"
-          description="以下数据仅为参考，若有出入请以实际为准。UV表示独立访客数，PV表示访问量。"
+          message={t('data_notice')}
+          description={t('data_notice_description')}
           type="info"
           showIcon
           closable
@@ -305,36 +308,40 @@ export default function ScriptStatsClient() {
         {/* 核心统计指标 */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           <StatsCard
-            title="页面浏览量"
+            title={t('page_views')}
             icon={<EyeOutlined />}
             today={statisticsData.page_pv.today}
             yesterday={statisticsData.page_pv.yesterday}
             week={statisticsData.page_pv.week}
             color="blue"
+            t={t}
           />
           <StatsCard
-            title="访客数"
+            title={t('visitors')}
             icon={<EyeOutlined />}
             today={statisticsData.page_uv.today}
             yesterday={statisticsData.page_uv.yesterday}
             week={statisticsData.page_uv.week}
             color="green"
+            t={t}
           />
           <StatsCard
-            title="安装数"
+            title={t('installs')}
             icon={<DownloadOutlined />}
             today={statisticsData.download_uv.today}
             yesterday={statisticsData.download_uv.yesterday}
             week={statisticsData.download_uv.week}
             color="orange"
+            t={t}
           />
           <StatsCard
-            title="更新数"
+            title={t('updates')}
             icon={<RiseOutlined />}
             today={statisticsData.update_uv.today}
             yesterday={statisticsData.update_uv.yesterday}
             week={statisticsData.update_uv.week}
             color="purple"
+            t={t}
           />
         </div>
 
@@ -348,7 +355,7 @@ export default function ScriptStatsClient() {
               label: (
                 <span>
                   <LineChartOutlined />
-                  趋势概览
+                  {t('trend_overview')}
                 </span>
               ),
               children: (
@@ -359,22 +366,22 @@ export default function ScriptStatsClient() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <FireOutlined className="text-red-500" />
-                          <span>实时数据监控</span>
+                          <span>{t('realtime_monitoring')}</span>
                           <Badge
                             status={isRealtime ? 'processing' : 'default'}
-                            text={isRealtime ? '实时更新中' : '已暂停'}
+                            text={isRealtime ? t('realtime_updating') : t('realtime_paused')}
                           />
                         </div>
                         <div className="flex items-center space-x-4">
                           <Text className="text-sm text-gray-500">
-                            实时更新
+                            {t('realtime_update')}
                           </Text>
                           <Switch
                             checked={isRealtime}
                             onChange={setIsRealtime}
                             size="small"
-                            checkedChildren="开"
-                            unCheckedChildren="关"
+                            checkedChildren={t('on')}
+                            unCheckedChildren={t('off')}
                           />
                         </div>
                       </div>
@@ -386,6 +393,7 @@ export default function ScriptStatsClient() {
                       download={realtimeData?.download || { x: [], y: [] }}
                       update={realtimeData?.update || { x: [], y: [] }}
                       isRealtime={isRealtime}
+                      t={t}
                     />
                   </Card>
 
@@ -395,7 +403,7 @@ export default function ScriptStatsClient() {
                       <Card
                         title={
                           <div className="flex items-center justify-between">
-                            <span>30天安装量趋势</span>
+                            <span>{t('30_day_install_trend')}</span>
                             <Select
                               value={chartType}
                               onChange={setChartType}
@@ -404,11 +412,11 @@ export default function ScriptStatsClient() {
                             >
                               <Option value="line">
                                 <LineChartOutlined className="mr-1" />
-                                折线图
+                                {t('line_chart')}
                               </Option>
                               <Option value="column">
                                 <BarChartOutlined className="mr-1" />
-                                柱状图
+                                {t('column_chart')}
                               </Option>
                             </Select>
                           </div>
@@ -426,7 +434,7 @@ export default function ScriptStatsClient() {
                     </Col>
                     <Col xs={24} xl={12}>
                       <Card
-                        title="30天更新量趋势"
+                        title={t('30_day_update_trend')}
                         className="shadow-sm h-full"
                         bordered={false}
                       >

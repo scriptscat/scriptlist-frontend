@@ -42,6 +42,7 @@ const ManageModal: React.FC<{
   id: number;
   groupID: number;
 }> = ({ status, onChange, id, groupID }) => {
+  const t = useTranslations('script.manage.groups');
   const [modal, contextHolder] = Modal.useModal();
   const [openUserDialog, setOpenUserDialog] = useState(false);
   const [page, setPage] = useState(1);
@@ -61,27 +62,27 @@ const ManageModal: React.FC<{
     if (member.invite_status === 3) {
       return (
         <Tag icon={<ClockCircleOutlined />} color="warning">
-          {'等待确认'}
+          {t('status.waiting_confirm')}
         </Tag>
       );
     }
     return (
       <Tag icon={<CheckCircleOutlined />} color="success">
-        {'已加入'}
+        {t('status.joined')}
       </Tag>
     );
   };
 
   const getExpiryText = (expiretime: number) => {
     if (expiretime === 0) {
-      return '永不过期';
+      return t('time.never_expire');
     }
     const expiryDate = new Date(expiretime * 1000);
     const isExpired = expiryDate.getTime() < Date.now();
     return (
       <span className={isExpired ? 'text-red-500' : 'text-gray-600'}>
-        {expiryDate.toLocaleDateString()} {'到期'}
-        {isExpired && <span className="ml-1 text-xs">({'已过期'})</span>}
+        {expiryDate.toLocaleDateString()} {t('time.expire_on')}
+        {isExpired && <span className="ml-1 text-xs">({t('time.expired')})</span>}
       </span>
     );
   };
@@ -89,31 +90,30 @@ const ManageModal: React.FC<{
   // 处理删除成员
   const handleDeleteMember = async (memberId: number, memberName: string) => {
     modal.confirm({
-      title: '确认移除',
+      title: t('remove_member_confirm_title'),
       content: (
         <div>
           <p>
-            {'确认要移除用户'} <span className="font-medium">{memberName}</span>{' '}
-            {'吗？'}
+            {t('remove_member_confirm_content', { userName: memberName })}
           </p>
           <p className="text-gray-500 text-sm mt-2">
-            {'移除后该用户将失去访问权限'}
+            {t('remove_member_confirm_description')}
           </p>
         </div>
       ),
       icon: <ExclamationCircleOutlined />,
       maskClosable: true,
-      okText: '确认',
-      cancelText: '取消',
+      okText: t('confirm_button'),
+      cancelText: t('cancel_button'),
       okButtonProps: { danger: true },
       onOk: async () => {
         setDeleteLoading(memberId);
         try {
           await scriptAccessService.deleteGroupUser(id, groupID, memberId);
-          message.success('移除成功');
+          message.success(t('remove_success'));
           mutateMembers();
         } catch (error: any) {
-          message.error(error.message || '移除失败');
+          message.error(error.message || t('remove_failed'));
         } finally {
           setDeleteLoading(null);
         }
@@ -124,7 +124,7 @@ const ManageModal: React.FC<{
   // 表格列定义
   const columns = [
     {
-      title: '用户',
+      title: t('table.user_column'),
       dataIndex: 'username',
       key: 'username',
       render: (_: any, record: GroupMember) => (
@@ -138,14 +138,14 @@ const ManageModal: React.FC<{
       ),
     },
     {
-      title: '状态',
+      title: t('table.status_column'),
       dataIndex: 'invite_status',
       key: 'status',
       render: (status: number) =>
         getStatusTag({ invite_status: status } as GroupMember),
     },
     {
-      title: '过期时间',
+      title: t('table.expire_time_column'),
       dataIndex: 'expiretime',
       key: 'expiretime',
       render: (expiretime: number) => (
@@ -156,10 +156,10 @@ const ManageModal: React.FC<{
       ),
     },
     {
-      title: '操作',
+      title: t('table.action_column'),
       key: 'action',
       render: (_: any, record: GroupMember) => (
-        <Tooltip title={'移除成员'}>
+        <Tooltip title={t('table.remove_member_tooltip')}>
           <Button
             type="text"
             danger
@@ -167,7 +167,7 @@ const ManageModal: React.FC<{
             loading={deleteLoading === record.id}
             onClick={() => handleDeleteMember(record.id, record.username)}
           >
-            {'移除'}
+            {t('remove_member_button')}
           </Button>
         </Tooltip>
       ),
@@ -180,14 +180,14 @@ const ManageModal: React.FC<{
         title={
           <Space>
             <TeamOutlined />
-            {'用户组成员管理'}
+            {t('manage_members_title')}
           </Space>
         }
         open={status}
         onCancel={handleCancel}
         footer={[
           <Button key="back" onClick={handleCancel}>
-            {'关闭'}
+            {t('close_button')}
           </Button>,
         ]}
         width={900}
@@ -196,13 +196,9 @@ const ManageModal: React.FC<{
           {/* 头部操作栏 */}
           <div className="flex justify-between items-center">
             <div>
-              <Text strong>{'成员管理'}</Text>
+              <Text strong>{t('member_management_title')}</Text>
               <div className="text-sm text-gray-500 mt-1">
-                {'当前共有'}{' '}
-                <Text className="text-blue-600 font-medium">
-                  {data?.total || 0}
-                </Text>{' '}
-                {'名成员'}
+                {t('stats.current_member_count', { count: data?.total || 0 })}
               </div>
             </div>
             <Button
@@ -210,7 +206,7 @@ const ManageModal: React.FC<{
               icon={<PlusOutlined />}
               onClick={() => setOpenUserDialog(true)}
             >
-              {'邀请用户'}
+              {t('invite_user_button')}
             </Button>
           </div>
 
@@ -227,13 +223,17 @@ const ManageModal: React.FC<{
               showSizeChanger: false,
               showQuickJumper: true,
               showTotal: (total, range) =>
-                `${'第'} ${range[0]}-${range[1]} ${'条，共'} ${total} ${'条'}`,
+                t('pagination.total', { 
+                  start: range[0], 
+                  end: range[1], 
+                  total 
+                }),
               onChange: (page) => setPage(page),
             }}
             locale={{
               emptyText: (
                 <Empty
-                  description="暂无成员"
+                  description={t('empty.no_members')}
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                 >
                   <Button
@@ -241,7 +241,7 @@ const ManageModal: React.FC<{
                     icon={<PlusOutlined />}
                     onClick={() => setOpenUserDialog(true)}
                   >
-                    邀请第一个用户
+                    {t('invite_first_user_button')}
                   </Button>
                 </Empty>
               ),
@@ -274,6 +274,7 @@ const CreateGroupModal: React.FC<{
   id: number;
   onSuccess: () => void;
 }> = ({ status, onChange, id, onSuccess }) => {
+  const t = useTranslations('script.manage.groups');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -292,11 +293,11 @@ const CreateGroupModal: React.FC<{
             name: values.name,
             description: values.description,
           });
-          message.success('创建成功');
+          message.success(t('create_success'));
           onSuccess();
           handleCancel();
         } catch (error: any) {
-          message.error(error.message || '创建失败');
+          message.error(error.message || t('create_failed'));
         } finally {
           setLoading(false);
         }
@@ -309,42 +310,42 @@ const CreateGroupModal: React.FC<{
       title={
         <Space>
           <PlusOutlined />
-          {'创建用户组'}
+          {t('create_group_title')}
         </Space>
       }
       open={status}
       onOk={handleOk}
       onCancel={handleCancel}
-      cancelText={'取消'}
-      okText={'创建'}
+      cancelText={t('cancel_button')}
+      okText={t('create_button')}
       confirmLoading={loading}
       width={500}
     >
       <Form layout="vertical" form={form} className="mt-4">
         <Form.Item
           rules={[
-            { required: true, message: '请输入组名' },
-            { max: 50, message: '组名不能超过50个字符' },
+            { required: true, message: t('group_name_required') },
+            { max: 50, message: t('group_name_max_length') },
           ]}
-          label={'组名'}
+          label={t('group_name_label')}
           name="name"
         >
           <Input
-            placeholder={'请输入用户组名称'}
+            placeholder={t('group_name_placeholder')}
             prefix={<TeamOutlined className="text-gray-400" />}
           />
         </Form.Item>
         <Form.Item
           rules={[
-            { required: true, message: '请输入组描述' },
-            { max: 200, message: '描述不能超过200个字符' },
+            { required: true, message: t('group_description_required') },
+            { max: 200, message: t('group_description_max_length') },
           ]}
-          label={'组描述'}
+          label={t('group_description_label')}
           name="description"
         >
           <Input.TextArea
             rows={3}
-            placeholder={'请详细描述该用户组的用途和权限范围'}
+            placeholder={t('group_description_placeholder')}
             showCount
             maxLength={200}
           />
@@ -357,7 +358,7 @@ const CreateGroupModal: React.FC<{
 export default function GroupsPage() {
   const params = useParams();
   const id = Number(params.id);
-  const t = useTranslations();
+  const t = useTranslations('script.manage.groups');
   const [openManageDialog, setOpenManageDialog] = useState(false);
   const [manageGroupID, setManageGroupID] = useState(0);
   const [openCreateGroupDialog, setOpenCreateGroupDialog] = useState(false);
@@ -408,31 +409,30 @@ export default function GroupsPage() {
   // 处理删除用户组
   const handleDelete = async (groupId: number, groupName: string) => {
     modal.confirm({
-      title: '确认删除',
+      title: t('delete_confirm_title'),
       content: (
         <div>
           <p>
-            {'确认要删除用户组'}{' '}
-            <span className="font-medium">{`"${groupName}"`}</span> {'吗？'}
+            {t('delete_confirm_content', { groupName })}
           </p>
           <p className="text-gray-500 text-sm mt-2">
-            {'删除后该用户组的所有成员将失去相关权限，此操作不可恢复'}
+            {t('delete_confirm_description')}
           </p>
         </div>
       ),
       icon: <ExclamationCircleOutlined />,
       maskClosable: true,
-      okText: '确认删除',
-      cancelText: '取消',
+      okText: t('delete_confirm_button'),
+      cancelText: t('cancel_button'),
       okButtonProps: { danger: true },
       onOk: async () => {
         setDeleteLoading(groupId);
         try {
           await scriptAccessService.deleteScriptGroup(id, groupId);
-          message.success('删除成功');
+          message.success(t('delete_success'));
           mutateGroups();
         } catch (error) {
-          message.error('删除失败');
+          message.error(t('delete_failed'));
         } finally {
           setDeleteLoading(null);
         }
@@ -443,7 +443,7 @@ export default function GroupsPage() {
   // 表格列定义
   const columns = [
     {
-      title: '用户组',
+      title: t('table.group_column'),
       dataIndex: 'name',
       key: 'name',
       render: (_: any, record: ScriptGroup) => (
@@ -461,24 +461,24 @@ export default function GroupsPage() {
       ),
     },
     {
-      title: '成员',
+      title: t('table.member_column'),
       dataIndex: 'member',
       key: 'member',
       render: (members: GroupMember[]) => (
         <Space size="small">
           {renderMemberAvatars(members)}
           <span className="text-sm text-gray-600">
-            {members.length} {'名成员'}
+            {t('stats.member_count', { count: members.length })}
           </span>
         </Space>
       ),
     },
     {
-      title: '操作',
+      title: t('table.action_column'),
       key: 'action',
       render: (_: any, record: ScriptGroup) => (
         <Space size="small">
-          <Tooltip title={'管理成员'}>
+          <Tooltip title={t('table.manage_members_tooltip')}>
             <Button
               type="text"
               icon={<SettingOutlined />}
@@ -487,10 +487,10 @@ export default function GroupsPage() {
                 setManageGroupID(record.id);
               }}
             >
-              {'管理'}
+              {t('manage_button')}
             </Button>
           </Tooltip>
-          <Tooltip title={'删除用户组'}>
+          <Tooltip title={t('table.delete_group_tooltip')}>
             <Button
               type="text"
               danger
@@ -498,7 +498,7 @@ export default function GroupsPage() {
               loading={deleteLoading === record.id}
               onClick={() => handleDelete(record.id, record.name)}
             >
-              {'删除'}
+              {t('delete_button')}
             </Button>
           </Tooltip>
         </Space>
@@ -513,10 +513,10 @@ export default function GroupsPage() {
         <div>
           <Title level={3} className="!mb-1">
             <TeamOutlined className="mr-2" />
-            {'用户组管理'}
+            {t('title')}
           </Title>
           <Text type="secondary">
-            {'管理脚本的用户组权限，控制不同用户的访问级别'}
+            {t('description')}
           </Text>
         </div>
         <Button
@@ -525,7 +525,7 @@ export default function GroupsPage() {
           icon={<PlusOutlined />}
           onClick={() => setOpenCreateGroupDialog(true)}
         >
-          {'新建用户组'}
+          {t('create_group_button')}
         </Button>
       </div>
 
@@ -534,17 +534,17 @@ export default function GroupsPage() {
         <div className="mb-4 p-4 rounded-lg">
           <Space size="large">
             <div>
-              <Text strong>{'总数'}：</Text>
+              <Text strong>{t('stats.total_label')}：</Text>
               <Text className="text-blue-600 font-medium">{total}</Text>
             </div>
             <div>
-              <Text strong>{'成员总数'}：</Text>
+              <Text strong>{t('stats.member_total_label')}：</Text>
               <Text className="text-green-600 font-medium">
                 {list.reduce((sum, group) => sum + group.member.length, 0)}
               </Text>
             </div>
             <div>
-              <Text strong>{'活跃用户组'}：</Text>
+              <Text strong>{t('stats.active_groups_label')}：</Text>
               <Text className="text-orange-600 font-medium">
                 {list.filter((group) => group.member.length > 0).length}
               </Text>
@@ -566,7 +566,11 @@ export default function GroupsPage() {
           showSizeChanger: false,
           showQuickJumper: true,
           showTotal: (total, range) =>
-            `${'第'} ${range[0]}-${range[1]} ${'条，共'} ${total} ${'条'}`,
+            t('pagination.total', { 
+              start: range[0], 
+              end: range[1], 
+              total 
+            }),
           onChange: (page) => setPage(page),
         }}
         locale={{
@@ -575,13 +579,13 @@ export default function GroupsPage() {
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               description={
                 <div>
-                  <p>{'暂无用户组'}</p>
+                  <p>{t('empty.no_groups')}</p>
                   <Button
                     type="primary"
                     icon={<PlusOutlined />}
                     onClick={() => setOpenCreateGroupDialog(true)}
                   >
-                    {'创建第一个用户组'}
+                    {t('create_first_group_button')}
                   </Button>
                 </div>
               }

@@ -16,6 +16,7 @@ import { useUser } from '@/contexts/UserContext';
 import type { UserRatingFormProps } from './types';
 import { getRatingText } from './utils';
 import { useSemDateTime } from '@/lib/utils/semdate';
+import { useTranslations } from 'next-intl';
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -27,6 +28,9 @@ export default function UserRatingForm({
   onUpdateRating,
 }: UserRatingFormProps) {
   const { user } = useUser();
+  const t = useTranslations('script.rating.user_form');
+  const tRating = useTranslations('script.rating');
+  const tRatingText = useTranslations('script.rating.text');
   const [userRating, setUserRating] = useState<number>(0);
   const [userComment, setUserComment] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -42,12 +46,12 @@ export default function UserRatingForm({
 
   const handleSubmit = async () => {
     if (!user) {
-      message.warning('请先登录');
+      message.warning(tRating('login_required'));
       return;
     }
 
     if (userRating === 0) {
-      message.warning('请选择评分');
+      message.warning(t('please_select_rating'));
       return;
     }
 
@@ -83,7 +87,7 @@ export default function UserRatingForm({
   };
 
   const getRatingDescription = (rating: number) => {
-    return getRatingText(rating);
+    return getRatingText(rating, tRatingText);
   };
 
   // 如果用户未登录，显示登录提示
@@ -95,20 +99,20 @@ export default function UserRatingForm({
             <UserOutlined className="text-2xl text-blue-600 dark:text-blue-400" />
           </div>
           <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            登录后评价脚本
+            {t('login_prompt_title')}
           </h3>
           <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
-            登录后您可以对脚本进行评分和评价，帮助其他用户做出选择
+            {t('login_prompt_description')}
           </p>
           <Button
             type="primary"
             size="large"
             className="px-8 rounded-lg"
             onClick={() => {
-              message.info('请前往登录页面进行登录');
+              message.info(t('login_redirect_message'));
             }}
           >
-            立即登录
+            {t('login_prompt_button')}
           </Button>
         </div>
       </Card>
@@ -131,10 +135,12 @@ export default function UserRatingForm({
               </Avatar>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  您的评价
+                  {t('your_review_title')}
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  发布于 {semDateTime(existingRating.createtime)}
+                  {t('published_at', {
+                    time: semDateTime(existingRating.createtime),
+                  })}
                 </p>
               </div>
             </div>
@@ -145,7 +151,7 @@ export default function UserRatingForm({
                 onClick={handleEdit}
                 className="text-blue-600 hover:text-blue-700"
               >
-                编辑
+                {t('edit_button')}
               </Button>
             </Space>
           </div>
@@ -153,7 +159,7 @@ export default function UserRatingForm({
           <div className="space-y-4">
             <div>
               <Text strong className="text-gray-700 dark:text-gray-300">
-                评分：
+                {t('rating_label')}
               </Text>
               <div className="mt-2">
                 <Rate
@@ -171,7 +177,7 @@ export default function UserRatingForm({
             {existingRating.message && (
               <div>
                 <Text strong className="text-gray-700 dark:text-gray-300">
-                  评价内容：
+                  {t('review_content_label')}
                 </Text>
                 <div className="mt-2 p-4 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                   <Text className="text-gray-800 dark:text-gray-200">
@@ -200,10 +206,10 @@ export default function UserRatingForm({
           </Avatar>
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              {existingRating ? '编辑评价' : '分享您的体验'}
+              {existingRating ? t('edit_review_title') : t('new_review_title')}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              您的评价将帮助其他用户
+              {t('review_help_text')}
             </p>
           </div>
         </div>
@@ -211,7 +217,7 @@ export default function UserRatingForm({
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-              您的评分
+              {t('rating_field_label')}
             </label>
             <Rate
               value={userRating}
@@ -228,12 +234,12 @@ export default function UserRatingForm({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-              评价内容（可选）
+              {t('review_field_label')}
             </label>
             <TextArea
               value={userComment}
               onChange={(e) => setUserComment(e.target.value)}
-              placeholder="分享您的使用体验，帮助其他用户了解这个脚本..."
+              placeholder={t('review_placeholder')}
               rows={4}
               maxLength={500}
               showCount
@@ -250,10 +256,10 @@ export default function UserRatingForm({
               disabled={userRating === 0}
               className="px-8 rounded-lg"
             >
-              {existingRating ? '更新评价' : '发布评价'}
+              {existingRating ? t('update_button') : t('submit_button')}
             </Button>
             <Button size="large" onClick={handleCancel} className="rounded-lg">
-              {existingRating ? '取消' : '重置'}
+              {existingRating ? t('cancel_button') : t('reset_button')}
             </Button>
           </div>
         </div>

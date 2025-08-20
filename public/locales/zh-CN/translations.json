@@ -1,0 +1,767 @@
+{
+  "common": {
+    "copy_success": "复制成功",
+    "delete_success": "删除成功",
+    "delete_failed": "删除失败，请稍后重试",
+    "delete": "删除",
+    "punish": "处罚",
+    "report": "举报",
+    "confirm_punish": "确认处罚",
+    "select_punish_option": "选择处罚选项",
+    "punish_reason": "处罚原因",
+    "confirm": "确认",
+    "cancel": "取消",
+    "confirm_delete": "确认删除",
+    "delete_warning": "删除后无法恢复，确认删除吗？"
+  },
+  "layout": {
+    "home": "首页",
+    "community": "社区",
+    "script_list": "脚本列表",
+    "developer": "开发者",
+    "browser_extension": "浏览器扩展",
+    "tampermonkey_chinese_website": "油猴中文网",
+    "scriptcat": "脚本猫",
+    "service_agreement": "服务协议",
+    "privacy_policy": "隐私政策",
+    "all_rights_reserved": "© 2022-至今 ScriptCat. All rights reserved.",
+    "login": "登录",
+    "logout": "退出登录",
+    "user_profile": "个人资料",
+    "publish_script": "发布脚本",
+    "login_required": "请先登录后再发布脚本",
+    "light": "明亮",
+    "dark": "黑暗",
+    "system": "系统",
+    "user_setting": "用户设置"
+  },
+  "home": {
+    "metadata": {
+      "title": "ScriptCat - 分享你的用户脚本",
+      "description": "脚本猫脚本站,在这里你可以与全世界分享你的用户脚本",
+      "keywords": "ScriptCat,UserScript,Tampermonkey,Greasemonkey,Violentmonkey,用户脚本,脚本猫,油猴,油猴脚本"
+    },
+    "browser_stores": {
+      "add_to_edge": "添加到 Edge 浏览器",
+      "add_to_chrome": "添加到 Chrome 浏览器",
+      "add_to_firefox": "添加到 Firefox 浏览器",
+      "download_crx_install": "下载 安装包 文件手动安装",
+      "install_extension": "安装扩展到浏览器"
+    },
+    "hero": {
+      "tagline": "发现和分享优质用户脚本，让浏览体验更精彩",
+      "search_placeholder": "搜索脚本，开启新世界",
+      "search_button": "搜索脚本",
+      "browse_all_scripts": "浏览所有脚本"
+    },
+    "features": {
+      "why_choose_title": "为什么选择 ScriptCat？",
+      "why_choose_subtitle": "基于油猴的设计理念，完全兼容油猴脚本，提供更多丰富的API，让脚本能够完成更多强大的功能。",
+      "scriptcat": {
+        "title": "强大的脚本管理器",
+        "description": "ScriptCat（脚本猫）完全兼容油猴脚本，同时提供后台脚本运行框架和丰富的API扩展。",
+        "features": {
+          "compatible": "完全兼容油猴脚本",
+          "background": "支持后台脚本运行",
+          "rich_api": "提供丰富API扩展"
+        },
+        "install_link": "立即安装 ScriptCat →"
+      },
+      "faq": {
+        "title": "常见问题",
+        "what_is_userscript": {
+          "question": "什么是用户脚本？",
+          "answer": "用户脚本可以增强网页功能、去除广告、提升易用性，让你的浏览体验更出色。"
+        },
+        "why_scriptcat": {
+          "question": "为什么选择脚本猫？",
+          "answer": "脚本猫不仅兼容油猴脚本，还支持后台脚本运行，功能更强大，覆盖范围更广。"
+        },
+        "how_to_start": {
+          "question": "如何开始使用？",
+          "answer": "首先安装脚本管理器，然后在本站寻找适合的脚本一键安装即可。"
+        }
+      },
+      "developer": {
+        "title": "加入开发者",
+        "description": "成为脚本开发者，享受专属权益和技术支持。",
+        "benefits": {
+          "exposure": "脚本推荐曝光机会",
+          "forum_permission": "论坛开发者权限",
+          "tech_group": "技术交流群邀请",
+          "badge": "专属开发者标识"
+        },
+        "guide_link": "查看开发教程 →"
+      }
+    }
+  },
+  "script": {
+    "metadata": {
+      "search": {
+        "title": "脚本搜索",
+        "page_number": "第 {page} 页"
+      },
+      "page_suffixes": {
+        "code": {
+          "title": "代码",
+          "description": "查看{name}的源代码"
+        },
+        "comment": {
+          "title": "评分",
+          "description": "查看{name}的评分"
+        },
+        "stats": {
+          "title": "脚本统计",
+          "description": "查看{name}的安装统计和使用数据"
+        },
+        "version": {
+          "title": "版本列表",
+          "description": "查看{name}的所有版本历史"
+        },
+        "issue": {
+          "title": "反馈",
+          "description": "查看{name}的问题反馈"
+        },
+        "manage": {
+          "title": "脚本管理",
+          "description": "管理{name}脚本"
+        },
+        "update": {
+          "title": "更新脚本",
+          "description": "更新{name}脚本"
+        }
+      },
+      "fallback": {
+        "title": "脚本详情",
+        "description_with_suffix": "查看脚本{suffix}",
+        "description_default": "查看脚本详细信息"
+      }
+    },
+    "navigation": {
+      "market": "脚本市场",
+      "overview": "首页",
+      "code": "代码",
+      "issue": "反馈",
+      "comment": "评分",
+      "version": "版本列表",
+      "update": "更新脚本",
+      "statistic": "脚本统计",
+      "manage": "脚本管理"
+    },
+    "alerts": {
+      "archived_title": "脚本已归档",
+      "archived_description": "该脚本已经被作者归档，脚本可能失效并且作者不再维护，你无法再进行问题反馈。",
+      "obfuscated_title": "脚本代码经过了不可读处理",
+      "obfuscated_description": "该脚本已经被作者经过了不可读处理，虽然脚本站已经经过了一层审查，但还是请注意危险权限的授予。"
+    },
+    "search": {
+      "placeholder": "搜索脚本，开启新世界",
+      "button": "搜索",
+      "all_categories": "所有分类",
+      "all_types": "所有类型",
+      "sort": {
+        "today_download": "热度排序",
+        "createtime": "最新发布",
+        "updatetime": "最近更新",
+        "score": "评分最高",
+        "total_download": "下载最多"
+      },
+      "loading": "加载中...",
+      "pagination": "{start}-{end} / 共 {total} 个脚本",
+      "sidebar": {
+        "learn_userscript": "学油猴脚本",
+        "feedback_report": "建议/投诉/举报",
+        "visit_community": "就来 <a href='https://bbs.tampermonkey.net.cn/'>油猴中文网</a>",
+        "latest_scripts": "最新脚本",
+        "latest_ratings": "最新评分",
+        "quick_actions": "快速操作",
+        "upload_script": "上传脚本",
+        "my_favorites": "我的收藏",
+        "my_scripts": "我的脚本",
+        "settings": "设置"
+      }
+    },
+    "types": {
+      "script": "用户脚本",
+      "library": "脚本库",
+      "background_script": "后台脚本",
+      "scheduled_script": "定时脚本"
+    },
+    "card": {
+      "today_installs": "今日 +{count}",
+      "downloads": "下载",
+      "library_tooltip": "这是一个脚本使用的库",
+      "library_tag": "@require库",
+      "tag_label": "标签：{name}"
+    },
+    "detail": {
+      "crontab": {
+        "every_minute": "每分钟运行一次",
+        "every_hour": "每小时运行一次",
+        "every_day": "每天运行一次",
+        "every_month": "每月运行一次",
+        "every_week": "每星期运行一次",
+        "error_expression": "错误表达式",
+        "every_minute_execute": "每分钟执行",
+        "every_hour_execute": "每小时执行",
+        "daily_at_midnight": "每天0点执行",
+        "weekly_sunday_midnight": "每周日0点执行",
+        "monthly_first_midnight": "每月1号0点执行",
+        "every_n_hours": "每{interval}小时执行",
+        "daily_at_hours": "每天{hours}点执行",
+        "every_n_minutes": "每{interval}分钟执行"
+      },
+      "install": {
+        "install_script": "安装脚本",
+        "reinstall_script": "重新安装脚本 v{version}",
+        "update_script": "更新脚本至 v{version}",
+        "install_check_failed": "检测脚本安装状态失败"
+      },
+      "antifeatures": {
+        "referral_link": {
+          "title": "推荐链接",
+          "description": "脚本包含推荐链接"
+        },
+        "ads": {
+          "title": "广告",
+          "description": "脚本包含广告展示功能"
+        },
+        "payment": {
+          "title": "付费功能",
+          "description": "脚本包含付费功能"
+        },
+        "miner": {
+          "title": "挖矿",
+          "description": "脚本包含挖矿功能"
+        },
+        "membership": {
+          "title": "会员功能",
+          "description": "脚本包含会员专属功能"
+        },
+        "tracking": {
+          "title": "数据追踪",
+          "description": "脚本会收集用户数据"
+        }
+      },
+      "sites": {
+        "more": "+{count} 更多",
+        "collapse": "收起"
+      },
+      "copy": {
+        "copied_to_clipboard": "已复制到剪贴板！",
+        "copy_failed": "复制失败，请重试。",
+        "share_copied": "分享内容已复制到剪贴板！"
+      },
+      "require": {
+        "copy_tooltip": "复制引用代码",
+        "usage_guide": "使用指南",
+        "compatible_version": "(兼容版本) ",
+        "patch_version": "(补丁版本) "
+      },
+      "actions": {
+        "install_guide": "如何安装？",
+        "prerelease_tooltip": "安装预发布版本，体验更新的内容",
+        "share": "分享",
+        "watch": "关注",
+        "favorite": "收藏",
+        "watch_options": {
+          "none": "不关注",
+          "version": "版本更新",
+          "feedback": "新建反馈",
+          "all": "任何动态"
+        }
+      },
+      "stats": {
+        "total_installs": "总安装量",
+        "today_installs": "今日新增",
+        "user_rating": "用户评分",
+        "current_version": "当前版本"
+      },
+      "folders": {
+        "select_folders": "选择收藏夹",
+        "create_new_folder": "创建新收藏夹",
+        "folder_name_placeholder": "请输入收藏夹名称",
+        "folder_desc_placeholder": "描述（可选）",
+        "folder_name_required": "请输入收藏夹名称",
+        "new_folder": "新建收藏夹",
+        "favorite_update_failed": "更新收藏失败",
+        "quick_favorite_failed": "快速收藏失败"
+      },
+      "info": {
+        "library_details": "库详情",
+        "script_details": "脚本详情",
+        "library_description": "这是一个用户脚本使用的库，你可以在你的脚本中直接引用它。",
+        "created_at": "创建于 {time}",
+        "updated_at": "更新于 {time}",
+        "tag_label": "标签：{name}",
+        "applicable_sites": "适用网站",
+        "background_script": "后台脚本",
+        "background_script_desc": "它会在浏览器后台运行",
+        "scheduled_script": "定时脚本",
+        "scheduled_script_tooltip": "此脚本支持定时执行，会按照设定的时间间隔自动运行：{cron}",
+        "license": "许可协议",
+        "browser_compatibility": "浏览器兼容性",
+        "browser_support": "支持 {browser}",
+        "feature_notice": "功能提醒",
+        "forum_post": "论坛帖子"
+      },
+      "delete": {
+        "success": "删除成功",
+        "failed": "删除失败，请重试"
+      },
+      "gray_control": {
+        "strategy_title": "策略 {index}",
+        "weight": "权重",
+        "pre_release_users": "预发布用户",
+        "traffic_tooltip": "将会推送{percent}%的流量到目标版本",
+        "weight_day_tooltip": "在{days}天内，逐渐将流量更新至目标值。如果期望最终完全更新至指定版本，可设置100%，0天为直接更新指定流量至此版本",
+        "days_suffix": "天",
+        "cookie_regex_placeholder": "Cookie正则表达式",
+        "target_version": "目标版本",
+        "latest_version": "最新版本",
+        "previous_version": "上一版本",
+        "all_latest_versions": "所有最新版本"
+      }
+    },
+    "rating": {
+      "error_update_stats": "更新评分统计失败:",
+      "login_required": "请先登录",
+      "submit_success": "评分提交成功！",
+      "submit_error": "提交评分失败:",
+      "submit_failed": "提交失败，请重试",
+      "update_success": "评分更新成功！",
+      "update_error": "更新评分失败:",
+      "reply": "回复",
+      "reply_placeholder": "写下您的回复...",
+      "send_reply": "发送回复",
+      "cancel": "取消",
+      "update_failed": "更新失败，请重试",
+      "delete_success": "删除成功！",
+      "delete_error": "删除评分失败:",
+      "delete_failed": "删除失败，请重试",
+      "reply_success": "回复成功！",
+      "reply_error": "回复失败:",
+      "reply_failed": "回复失败，请重试",
+      "fetch_error": "获取评分数据失败:",
+      "overview": {
+        "based_on_ratings": "基于 {totalRatings} 条用户评价"
+      },
+      "text": {
+        "excellent": "太棒了！",
+        "good": "很好",
+        "average": "还不错",
+        "fair": "一般",
+        "poor": "需要改进"
+      },
+      "user_form": {
+        "login_prompt_title": "登录后评价脚本",
+        "login_prompt_description": "登录后您可以对脚本进行评分和评价，帮助其他用户做出选择",
+        "login_prompt_button": "立即登录",
+        "login_redirect_message": "请前往登录页面进行登录",
+        "please_select_rating": "请选择评分",
+        "your_review_title": "您的评价",
+        "published_at": "发布于 {time}",
+        "edit_button": "编辑",
+        "rating_label": "评分：",
+        "review_content_label": "评价内容：",
+        "new_review_title": "分享您的体验",
+        "edit_review_title": "编辑评价",
+        "review_help_text": "您的评价将帮助其他用户",
+        "rating_field_label": "您的评分",
+        "review_field_label": "评价内容（可选）",
+        "review_placeholder": "分享您的使用体验，帮助其他用户了解这个脚本...",
+        "submit_button": "发布评价",
+        "update_button": "更新评价",
+        "cancel_button": "取消",
+        "reset_button": "重置"
+      },
+      "list": {
+        "title": "用户评价",
+        "title_with_count": "用户评价 ({count})",
+        "sort_label": "排序方式:",
+        "sort_options": {
+          "newest": "最新优先",
+          "oldest": "最早优先",
+          "rating_high": "评分最高",
+          "rating_low": "评分最低"
+        },
+        "empty_title": "暂无评价",
+        "empty_description": "成为第一个评价这个脚本的用户吧！",
+        "loading": "加载中...",
+        "load_more": "加载更多评价",
+        "all_loaded": "已显示全部 {count} 条评价"
+      },
+      "author_tag": "作者",
+      "admin_tag": "管理员"
+    },
+    "issue": {
+      "search_placeholder": "搜索问题...",
+      "filter_all": "全部",
+      "filter_pending": "待解决",
+      "filter_resolved": "已解决",
+      "create_issue": "新建问题",
+      "no_issues_found": "没有找到匹配的问题",
+      "no_issues": "还没有问题",
+      "status_pending": "待解决",
+      "status_resolved": "已解决",
+      "updated_at": "更新于 {time}",
+      "pagination_total": "{start}-{end} / {total}",
+      "labels_title": "标签",
+      "labels": {
+        "feature": "新功能",
+        "question": "问题",
+        "bug": "BUG"
+      },
+      "create": {
+        "title_required": "请输入标题",
+        "content_required": "请输入内容",
+        "submit_success": "提交成功",
+        "submit_failed": "提交失败",
+        "title_placeholder": "请简要描述您要反馈的问题",
+        "content_placeholder": "请详细描述问题，包括复现步骤、期望结果等...",
+        "submit_button": "提交反馈"
+      },
+      "detail": {
+        "page_not_found_title": "页面未找到 | ScriptCat",
+        "issue_feedback_title": "问题反馈 | ScriptCat",
+        "issue_title_with_script": "{title} · 反馈 #{id} - {scriptName}",
+        "issue_description": "{scriptName}的问题反馈：{title}"
+      },
+      "comment": {
+        "labels_added": "添加标签:",
+        "labels_removed": "删除标签:",
+        "delete_success": "删除成功",
+        "delete_failed": "删除失败",
+        "status_pending": "待处理",
+        "status_resolved": "已解决",
+        "copy_success": "复制成功",
+        "copy_link": "复制链接",
+        "created_at": "创建于 {time}",
+        "no_replies": "暂无回复",
+        "reply": "回复",
+        "link": "链接",
+        "reopened_feedback": "重新开启了反馈",
+        "closed_feedback": "关闭了反馈",
+        "comment_placeholder": "请输入评论内容...",
+        "close_feedback": "关闭反馈",
+        "reopen_feedback": "重新开启反馈",
+        "feedback_closed": "反馈已关闭",
+        "feedback_reopened": "反馈已重新开启",
+        "operation_failed": "操作失败",
+        "system_error": "系统错误",
+        "comment_content_required": "请输入评论内容",
+        "reply_success": "回复成功",
+        "comment_failed": "发表评论失败",
+        "comment_button": "评论",
+        "login_to_comment": "登录后评论",
+        "login": "登录",
+        "labels_update_success": "标签更新成功",
+        "update_failed": "更新失败",
+        "watch_title": "关注",
+        "watch_tooltip": "关注此反馈以接收更新通知",
+        "unwatch_success": "已取消关注",
+        "watch_success": "已关注",
+        "watch_button": "关注",
+        "watched_button": "已关注",
+        "participants_title": "参与者"
+      }
+    },
+    "statistics": {
+      "loading_failed": "加载失败",
+      "loading_failed_description": "获取统计数据失败，请稍后重试。",
+      "retry": "重试",
+      "loading_data": "加载统计数据中...",
+      "data_notice": "数据说明",
+      "data_notice_description": "以下数据仅为参考，若有出入请以实际为准。UV表示独立访客数，PV表示访问量。",
+      "page_views": "页面浏览量",
+      "visitors": "访客数",
+      "installs": "安装数",
+      "install": "安装",
+      "updates": "更新数",
+      "update": "更新",
+      "today": "今日",
+      "yesterday": "昨日",
+      "week": "本周",
+      "growth_tooltip": "较昨日{type}{value}%",
+      "growth_increase": "增长",
+      "growth_decrease": "下降",
+      "realtime_downloads": "实时更新下载",
+      "realtime_monitoring": "实时数据监控",
+      "realtime_updating": "实时更新中",
+      "realtime_paused": "已暂停",
+      "realtime_update": "实时更新",
+      "on": "开",
+      "off": "关",
+      "trend_overview": "趋势概览",
+      "30_day_install_trend": "30天安装量趋势",
+      "30_day_update_trend": "30天更新量趋势",
+      "line_chart": "折线图",
+      "column_chart": "柱状图"
+    },
+    "editor": {
+      "messages": {
+        "metadata_parse_success": "脚本元数据解析成功",
+        "file_upload_success": "文件上传成功！",
+        "script_update_success": "脚本更新成功！",
+        "script_create_success": "脚本创建成功！",
+        "script_update_failed": "脚本更新失败！",
+        "script_create_failed": "脚本创建失败！",
+        "submit_failed": "提交失败:"
+      },
+      "alerts": {
+        "review_rules_text": "请仔细阅读并遵守",
+        "review_rules_link": "脚本审核规则",
+        "review_rules_description": "，确保代码质量和安全性。违规脚本将被下架或删除。"
+      },
+      "code_section": {
+        "title": "脚本代码",
+        "tag": "JavaScript",
+        "upload_button": "上传本地文件",
+        "file_support": "支持 .js 和 .user.js 文件"
+      },
+      "description_section": {
+        "title": "详细说明",
+        "tag": "Markdown",
+        "placeholder": "请详细描述脚本的功能、使用方法等信息，支持 Markdown 格式...",
+        "create_button": "创建脚本",
+        "update_button": "发布更新"
+      },
+      "info_section": {
+        "title": "脚本信息",
+        "script_type_label": "脚本类型",
+        "script_type_placeholder": "请选择脚本类型",
+        "script_type_required": "请选择脚本类型",
+        "script_category_label": "脚本分类",
+        "script_category_placeholder": "请选择脚本分类",
+        "version_label": "版本号",
+        "version_placeholder": "例如: 1.0.0",
+        "version_required": "请输入版本号",
+        "version_tooltip": "建议用语义化版本号，如：1.0.0, 2.1.5",
+        "prerelease_label": "预发布版本",
+        "prerelease_tooltip": "设置为预发布版本，正式版本不会更新至此版本，可在脚本管理页开启脚本预发布安装链接",
+        "tags_label": "标签",
+        "tags_placeholder_library": "请输入标签",
+        "tags_placeholder_script": "使用@tag添加标签",
+        "tags_tooltip_library": "请输入标签",
+        "tags_tooltip_script": "使用@tag添加标签"
+      },
+      "library_section": {
+        "title": "库描述信息",
+        "name_label": "库名称",
+        "name_placeholder": "例如: MyLibrary",
+        "name_required": "请输入库名称",
+        "description_label": "库描述",
+        "description_placeholder": "请描述这个库的用途和功能...",
+        "description_required": "请输入库描述"
+      },
+      "changelog_section": {
+        "title": "更新日志",
+        "tag": "Markdown",
+        "placeholder": "例如：\n• 修复了某个已知问题\n• 新增了某项功能  \n• 优化了性能表现\n• 更新了依赖库"
+      },
+      "script_types": {
+        "user_script": "用户脚本",
+        "subscribe_script": "订阅脚本",
+        "library": "库"
+      }
+    },
+    "version": {
+      "update_success": "版本信息更新成功",
+      "update_failed": "更新失败，请重试",
+      "update_version_failed": "更新版本失败:",
+      "delete_success": "版本删除成功",
+      "delete_failed": "删除失败，请重试",
+      "delete_version_failed": "删除版本失败:",
+      "install_success": "开始安装 {version}",
+      "load_failed": "加载失败",
+      "load_failed_description": "获取版本列表时发生错误，请刷新页面重试",
+      "retry": "重试",
+      "latest_version_badge": "最新版本",
+      "prerelease_badge": "预发布版本",
+      "history_title": "版本历史",
+      "history_description": "查看所有已发布的版本，包括正式版本和预发布版本。您可以安装任何版本或查看其源代码。",
+      "no_history_title": "暂无版本历史",
+      "no_history_description": "该脚本还没有发布任何版本",
+      "total_versions": "总版本数",
+      "release_versions": "正式版本",
+      "prerelease_versions": "预发布版本",
+      "pagination_info": "显示第 {start}-{end} 项，共 {total} 项",
+      "edit_button": "编辑",
+      "delete_button": "删除",
+      "install_button": "安装此版本",
+      "view_code_button": "查看代码",
+      "confirm_delete_title": "确认删除",
+      "confirm_delete_description": "确定要删除这个版本吗？此操作不可撤销。",
+      "confirm_delete_ok": "删除",
+      "confirm_delete_cancel": "取消",
+      "pagination_total": "第 {start}-{end} 项，共 {total} 个版本",
+      "edit_modal_title": "编辑版本 {version}",
+      "changelog_label": "更新说明",
+      "changelog_subtitle": "(支持Markdown语法)",
+      "changelog_placeholder": "例如：\n✨ 新增功能：添加了用户界面优化\n🐛 修复问题：解决了浏览器兼容性问题\n⚡ 性能提升：优化了脚本执行速度\n📦 依赖更新：升级到最新版本",
+      "version_type_label": "版本类型",
+      "version_type_extra": "预发布版本通常用于测试新功能，可能不够稳定",
+      "prerelease_checked": "预发布版本",
+      "prerelease_unchecked": "正式版本",
+      "save_changes": "保存更改"
+    },
+    "manage": {
+      "navigation": {
+        "source_sync": "源代码同步",
+        "script_settings": "脚本管理",
+        "script_publish": "脚本发布", 
+        "manage_logs": "管理日志",
+        "access_control": "访问权限管理",
+        "group_management": "用户组管理"
+      },
+      "sync": {
+        "title": "源代码同步",
+        "description": "配置脚本的源代码同步，支持从 GitHub、GitLab 等代码托管平台自动或手动同步脚本内容。",
+        "sync_url_label": "同步地址",
+        "sync_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/script.js",
+        "sync_url_required": "请输入同步地址",
+        "sync_mode_label": "同步方式",
+        "sync_mode_auto": "自动同步 - 定期检查更新并自动同步，你也可以设置Webhook触发更新",
+        "sync_mode_manual": "手动同步 - 仅在手动点击时同步",
+        "content_url_label": "脚本说明同步地址",
+        "content_url_description": "可选：同步脚本的 README 或说明文档，支持 Markdown 格式",
+        "content_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/README.md",
+        "save_and_sync_button": "保存并同步一次",
+        "sync_success": "同步配置保存并同步成功",
+        "sync_failed": "同步失败，请检查网络连接或地址是否正确"
+      },
+      "access": {
+        "title": "访问权限管理",
+        "description": "管理用户和用户组对此脚本的访问权限，包括角色分配和权限期限设置",
+        "add_user_group_button": "添加用户/用户组",
+        "update_success": "更新成功",
+        "update_failed": "更新失败，请稍后重试",
+        "delete_confirm_title": "确认删除访问权限",
+        "delete_confirm_content": "确认删除{entityType} \"{itemName}\" 的访问权限吗？此操作不可撤销。",
+        "delete_confirm_ok": "确认删除",
+        "delete_confirm_cancel": "取消",
+        "delete_success": "删除成功",
+        "delete_failed": "删除失败，请稍后重试",
+        "status": {
+          "accepted": "已接受",
+          "rejected": "已拒绝",
+          "pending": "等待确认"
+        },
+        "table": {
+          "user_group_column": "用户/用户组",
+          "status_column": "状态",
+          "role_column": "权限角色",
+          "expire_column": "过期时间",
+          "action_column": "操作",
+          "delete_tooltip": "删除访问权限",
+          "delete_button": "删除"
+        },
+        "entity_types": {
+          "user": "用户",
+          "group": "用户组"
+        },
+        "roles": {
+          "visitor": "访客",
+          "admin": "管理员"
+        },
+        "time": {
+          "add_time": "添加时间：",
+          "never_expire": "永不过期",
+          "expired": "(已过期)"
+        },
+        "stats": {
+          "total": "总数：",
+          "users": "用户：",
+          "groups": "用户组：",
+          "pending": "等待确认：",
+          "expired": "已过期："
+        },
+        "pagination": {
+          "total": "第 {start}-{end} 条，共 {total} 条"
+        },
+        "empty": {
+          "title": "暂无访问权限的用户或用户组",
+          "button": "添加第一个用户/用户组"
+        }
+      },
+      "logs": {
+        "title": "管理日志",
+        "under_construction": "功能建设中",
+        "description": "日志管理功能正在开发中，敬请期待。"
+      },
+      "groups": {
+        "title": "用户组管理",
+        "description": "管理脚本的用户组权限，控制不同用户的访问级别",
+        "create_group_button": "新建用户组",
+        "create_group_title": "创建用户组",
+        "manage_members_title": "用户组成员管理",
+        "member_management_title": "成员管理",
+        "invite_user_button": "邀请用户",
+        "invite_first_user_button": "邀请第一个用户",
+        "create_first_group_button": "创建第一个用户组",
+        "group_name_label": "组名",
+        "group_description_label": "组描述",
+        "group_name_placeholder": "请输入用户组名称",
+        "group_description_placeholder": "请详细描述该用户组的用途和权限范围",
+        "group_name_required": "请输入组名",
+        "group_description_required": "请输入组描述",
+        "group_name_max_length": "组名不能超过50个字符",
+        "group_description_max_length": "描述不能超过200个字符",
+        "create_button": "创建",
+        "close_button": "关闭",
+        "cancel_button": "取消",
+        "create_success": "创建成功",
+        "create_failed": "创建失败",
+        "delete_confirm_title": "确认删除",
+        "delete_confirm_content": "确认要删除用户组 \"{groupName}\" 吗？",
+        "delete_confirm_description": "删除后该用户组的所有成员将失去相关权限，此操作不可恢复",
+        "delete_confirm_button": "确认删除",
+        "delete_success": "删除成功",
+        "delete_failed": "删除失败",
+        "remove_member_confirm_title": "确认移除",
+        "remove_member_confirm_content": "确认要移除用户 {userName} 吗？",
+        "remove_member_confirm_description": "移除后该用户将失去访问权限",
+        "remove_member_button": "移除",
+        "remove_success": "移除成功",
+        "remove_failed": "移除失败",
+        "manage_button": "管理",
+        "delete_button": "删除",
+        "confirm_button": "确认",
+        "status": {
+          "waiting_confirm": "等待确认",
+          "joined": "已加入"
+        },
+        "time": {
+          "never_expire": "永不过期",
+          "expire_on": "到期",
+          "expired": "已过期"
+        },
+        "table": {
+          "user_column": "用户",
+          "group_column": "用户组",
+          "status_column": "状态",
+          "expire_time_column": "过期时间",
+          "member_column": "成员",
+          "action_column": "操作",
+          "manage_members_tooltip": "管理成员",
+          "delete_group_tooltip": "删除用户组",
+          "remove_member_tooltip": "移除成员"
+        },
+        "stats": {
+          "total_label": "总数",
+          "member_total_label": "成员总数",
+          "active_groups_label": "活跃用户组",
+          "member_count": "{count} 名成员",
+          "current_member_count": "当前共有 {count} 名成员"
+        },
+        "pagination": {
+          "total": "第 {start}-{end} 条，共 {total} 条"
+        },
+        "empty": {
+          "no_groups": "暂无用户组",
+          "no_members": "暂无成员"
+        }
+      }
+    }
+  }
+}

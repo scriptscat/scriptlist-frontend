@@ -40,19 +40,20 @@ import {
 import { useRef, useState } from 'react';
 import { useScript } from '../../../components/ScriptContext';
 import { useUser } from '@/contexts/UserContext';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { useIsWatchIssue } from '@/lib/api/hooks/script';
 import IssueLabel from '../../components/IssueLabel';
 
 const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
   const json = JSON.parse(content);
+  const t = useTranslations('script.issue.comment');
 
   return (
     <div>
       {json['add'].length > 0 && (
         <span>
-          添加标签:{' '}
+          {t('labels_added')}{' '}
           {json['add'].map((label: string) => (
             <IssueLabel key={label} label={label} />
           ))}
@@ -60,7 +61,7 @@ const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
       )}
       {json['del'].length > 0 && (
         <span>
-          删除标签:{' '}
+          {t('labels_removed')}{' '}
           {json['del'].map((label: string) => (
             <IssueLabel key={label} label={label} />
           ))}
@@ -93,6 +94,8 @@ export default function IssueCommentClient({
   const [labels, setLabels] = useState(issue.labels || []);
   const locale = useLocale();
   const formatDate = useSemDateTime();
+  const t = useTranslations('script.issue.comment');
+  const tIssue = useTranslations('script.issue');
 
   // 使用 hook 获取关注状态
   const { data: isWatch, mutate: mutateIsWatch } = useIsWatchIssue(
@@ -123,12 +126,12 @@ export default function IssueCommentClient({
                     script.script!.id,
                     issue.id,
                   );
-                  message.success('删除成功');
+                  message.success(t('delete_success'));
                   router.push(
                     `/${locale}/script-show-page/${script.script!.id}/issue`,
                   );
                 } catch (error: any) {
-                  message.error(error.message || '删除失败');
+                  message.error(error.message || t('delete_failed'));
                 }
               }}
             >
@@ -143,21 +146,21 @@ export default function IssueCommentClient({
           <div className="flex flex-row items-center">
             {status === 1 ? (
               <Tag icon={<InfoCircleTwoTone />} color="blue">
-                待处理
+                {t('status_pending')}
               </Tag>
             ) : (
               <Tag
                 icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
                 color="green"
               >
-                已解决
+                {t('status_resolved')}
               </Tag>
             )}
             <CopyToClipboard
               text={`${location.origin}${location.pathname}#issue-${issue.id}`}
-              onCopy={() => message.success('复制成功')}
+              onCopy={() => message.success(t('copy_success'))}
             >
-              <Tooltip title="复制链接">
+              <Tooltip title={t('copy_link')}>
                 <Tag className="cursor-pointer">#{issue.id}</Tag>
               </Tooltip>
             </CopyToClipboard>
@@ -170,12 +173,14 @@ export default function IssueCommentClient({
               {issue.username}
             </Link>
             <span className="text-sm text-gray-400">
-              创建于 {formatDate(issue.createtime)}
+              {t('created_at', { time: formatDate(issue.createtime) })}
             </span>
           </div>
           <MarkdownView id="issue" content={issue.content}></MarkdownView>
 
-          <ConfigProvider renderEmpty={() => <Empty description="暂无回复" />}>
+          <ConfigProvider
+            renderEmpty={() => <Empty description={t('no_replies')} />}
+          >
             <List
               itemLayout="vertical"
               size="large"
@@ -226,10 +231,12 @@ export default function IssueCommentClient({
                                     issueId,
                                     item.id,
                                   );
-                                  message.success('删除成功');
+                                  message.success(t('delete_success'));
                                   setList(list.filter((i) => i.id !== item.id));
                                 } catch (error: any) {
-                                  message.error(error.message || '删除失败');
+                                  message.error(
+                                    error.message || t('delete_failed'),
+                                  );
                                 }
                               }}
                             >
@@ -261,11 +268,11 @@ export default function IssueCommentClient({
                                 );
                               }}
                             >
-                              回复
+                              {t('reply')}
                             </Button>
                             <CopyToClipboard
                               text={`${location.origin}${location.pathname}#comment-${item.id}`}
-                              onCopy={() => message.success('复制成功')}
+                              onCopy={() => message.success(t('copy_success'))}
                             >
                               <Button
                                 size="small"
@@ -273,7 +280,7 @@ export default function IssueCommentClient({
                                 icon={<LinkOutlined />}
                                 className="!text-gray-400 anticon-middle cursor-pointer"
                               >
-                                链接
+                                {t('link')}
                               </Button>
                             </CopyToClipboard>
                           </div>
@@ -317,8 +324,8 @@ export default function IssueCommentClient({
                               {item.type == 3 && (
                                 <LabelsStatus content={item.content} />
                               )}
-                              {item.type == 4 && '重新开启了反馈'}
-                              {item.type == 5 && '关闭了反馈'}
+                              {item.type == 4 && t('reopened_feedback')}
+                              {item.type == 5 && t('closed_feedback')}
                             </span>
                           </div>
                         </div>
@@ -332,7 +339,7 @@ export default function IssueCommentClient({
           {user.user ? (
             <div className="flex flex-col gap-2">
               <MarkdownEditor
-                placeholder="请输入评论内容..."
+                placeholder={t('comment_placeholder')}
                 ref={editor}
                 comment="comment"
                 linkId={issueId}
@@ -368,15 +375,17 @@ export default function IssueCommentClient({
                         };
                         setList([...list, mockComment]);
                         message.success(
-                          newStatus === 3 ? '反馈已关闭' : '反馈已重新开启',
+                          newStatus === 3
+                            ? t('feedback_closed')
+                            : t('feedback_reopened'),
                         );
                       } catch (error: any) {
-                        message.error(error.message || '操作失败');
+                        message.error(error.message || t('operation_failed'));
                       }
                       setLoading(false);
                     }}
                   >
-                    {status == 1 ? '关闭反馈' : '重新开启反馈'}
+                    {status == 1 ? t('close_feedback') : t('reopen_feedback')}
                   </Button>
                 )}
                 <Button
@@ -384,14 +393,14 @@ export default function IssueCommentClient({
                   loading={loading}
                   onClick={async () => {
                     if (!editor.current) {
-                      message.error('系统错误');
+                      message.error(t('system_error'));
                       return;
                     }
                     setLoading(true);
 
                     const content = editor.current.getValue();
                     if (!content.trim()) {
-                      message.error('请输入评论内容');
+                      message.error(t('comment_content_required'));
                       setLoading(false);
                       return;
                     }
@@ -415,21 +424,21 @@ export default function IssueCommentClient({
                         createtime: Date.now() / 1000,
                       };
 
-                      message.success('回复成功');
+                      message.success(t('reply_success'));
                       editor.current.setValue('');
                       setList([...list, newComment]);
                     } catch (error: any) {
-                      message.error(error.message || '发表评论失败');
+                      message.error(error.message || t('comment_failed'));
                     }
                     setLoading(false);
                   }}
                 >
-                  评论
+                  {t('comment_button')}
                 </Button>
               </Space>
             </div>
           ) : (
-            <Empty className="border-t" description="登录后评论">
+            <Empty className="border-t" description={t('login_to_comment')}>
               <Button
                 type="primary"
                 onClick={() => {
@@ -439,14 +448,14 @@ export default function IssueCommentClient({
                   btn.click();
                 }}
               >
-                登录
+                {t('login')}
               </Button>
             </Empty>
           )}
         </div>
         <div className="flex flex-col basis-1/4">
           <Space direction="vertical">
-            <span className="text-lg font-bold">标签</span>
+            <span className="text-lg font-bold">{tIssue('labels_title')}</span>
             <Select
               mode="multiple"
               showArrow
@@ -469,9 +478,9 @@ export default function IssueCommentClient({
               }}
               style={{ width: '100%' }}
               options={[
-                { label: '功能', value: 'feature' },
-                { label: '问题', value: 'question' },
-                { label: '错误', value: 'bug' },
+                { label: tIssue('labels.feature'), value: 'feature' },
+                { label: tIssue('labels.question'), value: 'question' },
+                { label: tIssue('labels.bug'), value: 'bug' },
               ]}
               value={labels}
               loading={loading}
@@ -512,9 +521,9 @@ export default function IssueCommentClient({
 
                   // 更新issue的labels
                   issue.labels = labels;
-                  message.success('标签更新成功');
+                  message.success(t('labels_update_success'));
                 } catch (error: any) {
-                  message.error(error.message || '更新失败');
+                  message.error(error.message || t('update_failed'));
                 }
                 setLoading(false);
               }}
@@ -522,9 +531,9 @@ export default function IssueCommentClient({
           </Space>
           <Divider />
           <Space direction="vertical">
-            <span className="text-lg font-bold">关注</span>
+            <span className="text-lg font-bold">{t('watch_title')}</span>
             <div className="flex justify-center">
-              <Tooltip title="关注此反馈以接收更新通知">
+              <Tooltip title={t('watch_tooltip')}>
                 <Button
                   type="primary"
                   size="small"
@@ -542,21 +551,23 @@ export default function IssueCommentClient({
                       }
                       // 更新本地状态
                       mutateIsWatch(!isWatch);
-                      message.success(isWatch ? '已取消关注' : '已关注');
+                      message.success(
+                        isWatch ? t('unwatch_success') : t('watch_success'),
+                      );
                     } catch (error: any) {
-                      message.error(error.message || '操作失败');
+                      message.error(error.message || t('operation_failed'));
                     }
                     setLoading(false);
                   }}
                 >
-                  {isWatch ? '已关注' : '关注'}
+                  {isWatch ? t('watched_button') : t('watch_button')}
                 </Button>
               </Tooltip>
             </div>
           </Space>
           <Divider />
           <Space direction="vertical">
-            <span className="text-lg font-bold">参与者</span>
+            <span className="text-lg font-bold">{t('participants_title')}</span>
             <Space>
               {Object.keys(joinMember).map((key) => (
                 <Link
