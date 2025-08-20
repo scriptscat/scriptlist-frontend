@@ -136,5 +136,27 @@
     "accepted": "已接受",
     "rejected": "已拒绝",
     "un_used": "未使用"
+  },
+  "error": {
+    "500_title": "服务器内部错误",
+    "500_subtitle": "抱歉，服务器遇到了一些问题",
+    "500_description": "我们的服务器暂时无法处理您的请求。我们已经收到错误报告，正在努力修复这个问题。",
+    "error_code": "错误代码",
+    "error_time": "错误时间",
+    "feedback_title": "遇到问题了？",
+    "feedback_description": "如果问题持续存在，请通过以下方式向我们反馈：",
+    "feedback_forum": "前往社区反馈",
+    "feedback_github": "GitHub Issues",
+    "contact_admin": "联系管理员",
+    "back_to_home": "返回首页",
+    "refresh_page": "刷新页面",
+    "what_happened": "发生了什么？",
+    "server_error_details": "服务器在处理您的请求时遇到了内部错误。这可能是由于服务器负载过高、数据库连接问题或其他技术故障导致的。",
+    "what_can_do": "您可以尝试：",
+    "try_refresh": "刷新当前页面",
+    "try_later": "稍后再试",
+    "check_network": "检查网络连接",
+    "contact_us": "联系我们",
+    "error_id": "错误ID"
   }
 }

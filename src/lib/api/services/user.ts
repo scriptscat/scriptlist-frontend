@@ -98,14 +98,9 @@ export class UserService {
     if (!c.has('token')) {
       return null;
     }
-    return apiClient
-      .getWithCookie<UserInfo>(`${this.basePath}`)
-      .catch((error) => {
-        if (error instanceof APIError && error.statusCode === 401) {
-          return null;
-        }
-        throw error;
-      });
+    return apiClient.getWithCookie<UserInfo>(`${this.basePath}`).catch(() => {
+      return null;
+    });
   }
 
   /**

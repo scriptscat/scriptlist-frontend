@@ -1,10 +1,10 @@
 'use client';
 
-import { Breadcrumb, Col, Row } from 'antd';
+import { Alert, Breadcrumb, Col, Row } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import type { ScriptInfo } from '../types';
 import ScriptNavigation from './ScriptNavigation';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface ScriptLayoutProps {
   script: ScriptInfo;
@@ -18,6 +18,7 @@ export default function ScriptLayout({
   children,
 }: ScriptLayoutProps) {
   const locale = useLocale();
+  const t = useTranslations();
   return (
     <div>
       {/* 面包屑导航 */}
@@ -30,8 +31,31 @@ export default function ScriptLayout({
         ]}
       ></Breadcrumb>
 
+      {script.archive == 1 && (
+        <Alert
+          message={'脚本已归档'}
+          description={
+            '该脚本已经被作者归档，脚本可能失效并且作者不再维护，你无法再进行问题反馈。'
+          }
+          type="warning"
+          className="!mb-3"
+          showIcon
+          closable
+        />
+      )}
+
+      {script.danger == 1 && (
+        <Alert
+          message={'脚本代码经过了不可读处理'}
+          description={t('script_code_obfuscated_description')}
+          type="error"
+          showIcon
+          closable
+        />
+      )}
+
       {/* 脚本导航 */}
-      <div className="mb-2">
+      <div className="mb-3">
         <ScriptNavigation activeKey={activeTab} />
       </div>
 

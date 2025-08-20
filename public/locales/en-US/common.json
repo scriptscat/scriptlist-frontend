@@ -400,5 +400,27 @@
     "join_you_will_have_following_role_list": "加入后你将有以下权限",
     "agree": "同意",
     "reject": "拒绝"
+  },
+  "error": {
+    "500_title": "Internal Server Error",
+    "500_subtitle": "Sorry, the server encountered some problems",
+    "500_description": "Our server is temporarily unable to process your request. We have received an error report and are working to fix this issue.",
+    "error_code": "Error Code",
+    "error_time": "Error Time",
+    "feedback_title": "Encountered a problem?",
+    "feedback_description": "If the problem persists, please provide feedback to us through the following methods:",
+    "feedback_forum": "Feedback in Community",
+    "feedback_github": "GitHub Issues",
+    "contact_admin": "Contact Admin",
+    "back_to_home": "Back to Home",
+    "refresh_page": "Refresh Page",
+    "what_happened": "What happened?",
+    "server_error_details": "The server encountered an internal error while processing your request. This may be due to high server load, database connection issues, or other technical failures.",
+    "what_can_do": "You can try:",
+    "try_refresh": "Refresh the current page",
+    "try_later": "Try again later",
+    "check_network": "Check network connection",
+    "contact_us": "Contact us",
+    "error_id": "Error ID"
   }
 }
