@@ -230,14 +230,8 @@ export default function AccessPage() {
       key: 'expiretime',
       render: (expiretime: number) => (
         <div className="flex items-center space-x-2">
-          <ClockCircleOutlined className="text-gray-400" />
-          <span
-            className={
-              expiretime !== 0 && expiretime * 1000 < Date.now()
-                ? 'text-red-500'
-                : 'text-gray-700'
-            }
-          >
+          <ClockCircleOutlined />
+          <span>
             {expiretime === 0
               ? t('time.never_expire')
               : semDateTime(expiretime)}

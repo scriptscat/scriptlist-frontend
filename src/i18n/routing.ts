@@ -3,9 +3,45 @@ import { useRouter as useToploaderRouter } from 'nextjs-toploader/app';
 import { createNavigation } from 'next-intl/navigation';
 import { useLocale } from 'next-intl';
 
+export const languageMap: {
+  [key: string]: {
+    label: string;
+    locale: string;
+  };
+} = {
+  en: {
+    label: 'English',
+    locale: 'en-US',
+  },
+  'zh-CN': {
+    label: '简体中文',
+    locale: 'zh-CN',
+  },
+  'zh-TW': {
+    label: '繁體中文',
+    locale: 'zh-TW',
+  },
+  ru: {
+    label: 'Русский',
+    locale: 'ru-RU',
+  },
+  ja: {
+    label: '日本語',
+    locale: 'ja-JP',
+  },
+  de: {
+    label: 'Deutsch',
+    locale: 'de-DE',
+  },
+  // {
+  //   key: 'ach-UG',
+  //   label: 'Acholi',
+  // },
+};
+
 export const routing = defineRouting({
   // A list of all locales that are supported
-  locales: ['en', 'zh-CN', 'zh-TW', 'ach-UG'],
+  locales: Object.keys(languageMap),
 
   // Used when no locale matches
   defaultLocale: 'en',

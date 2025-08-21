@@ -1,0 +1,1174 @@
+{
+  "common": {
+    "copy_success": "コピーが完了しました",
+    "delete_success": "削除が完了しました",
+    "delete_failed": "削除に失敗しました、しばらくしてから再試行してください",
+    "delete": "削除",
+    "punish": "処罰",
+    "report": "報告",
+    "confirm_punish": "処罰を確認",
+    "select_punish_option": "処罰オプションを選択",
+    "punish_reason": "処罰理由",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "confirm_delete": "削除を確認",
+    "delete_warning": "削除後は復元できません。削除してもよろしいですか？"
+  },
+  "layout": {
+    "home": "ホーム",
+    "community": "コミュニティ",
+    "script_list": "スクリプトリスト",
+    "developer": "開発者",
+    "browser_extension": "ブラウザ拡張機能",
+    "tampermonkey_chinese_website": "Tampermonkey中国サイト",
+    "scriptcat": "ScriptCat",
+    "service_agreement": "サービス利用規約",
+    "privacy_policy": "プライバシーポリシー",
+    "all_rights_reserved": "© 2022-現在 ScriptCat. All rights reserved.",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "user_profile": "プロフィール",
+    "publish_script": "スクリプトを公開",
+    "login_required": "スクリプトを公開するには、まずログインしてください",
+    "light": "ライト",
+    "dark": "ダーク",
+    "system": "システム",
+    "user_setting": "ユーザー設定"
+  },
+  "home": {
+    "metadata": {
+      "title": "ScriptCat - ユーザースクリプトを共有しよう",
+      "description": "ScriptCatスクリプトサイト、ここで世界中の人々とあなたのユーザースクリプトを共有できます",
+      "keywords": "ScriptCat,UserScript,Tampermonkey,Greasemonkey,Violentmonkey,ユーザースクリプト,ScriptCat,Tampermonkey,Tampermonkeyスクリプト"
+    },
+    "browser_stores": {
+      "add_to_edge": "Edgeブラウザに追加",
+      "add_to_chrome": "Chromeブラウザに追加",
+      "add_to_firefox": "Firefoxブラウザに追加",
+      "download_crx_install": "インストールパッケージファイルをダウンロードして手動インストール",
+      "install_extension": "ブラウザに拡張機能をインストール"
+    },
+    "hero": {
+      "tagline": "高品質なユーザースクリプトを発見・共有して、ブラウジング体験をより豊かに",
+      "search_placeholder": "スクリプトを検索して、新しい世界を開こう",
+      "search_button": "スクリプトを検索",
+      "browse_all_scripts": "すべてのスクリプトを閲覧"
+    },
+    "features": {
+      "why_choose_title": "なぜScriptCatを選ぶのか？",
+      "why_choose_subtitle": "Tampermonkeyの設計理念に基づき、Tampermonkeyスクリプトと完全に互換性があり、より豊富なAPIを提供することで、スクリプトがより強力な機能を実現できます。",
+      "scriptcat": {
+        "title": "強力なスクリプトマネージャー",
+        "description": "ScriptCat（スクリプト猫）はTampermonkeyスクリプトと完全に互換性があり、同時にバックグラウンドスクリプト実行フレームワークと豊富なAPI拡張を提供します。",
+        "features": {
+          "compatible": "Tampermonkeyスクリプトと完全に互換",
+          "background": "バックグラウンドスクリプト実行をサポート",
+          "rich_api": "豊富なAPI拡張を提供"
+        },
+        "install_link": "ScriptCatを今すぐインストール →"
+      },
+      "faq": {
+        "title": "よくある質問",
+        "what_is_userscript": {
+          "question": "ユーザースクリプトとは何ですか？",
+          "answer": "ユーザースクリプトはWebページの機能を拡張し、広告を削除し、使いやすさを向上させて、ブラウジング体験をより優れたものにします。"
+        },
+        "why_scriptcat": {
+          "question": "なぜScriptCatを選ぶのですか？",
+          "answer": "ScriptCatはTampermonkeyスクリプトと互換性があるだけでなく、バックグラウンドスクリプトの実行もサポートしており、より強力で幅広い機能を提供します。"
+        },
+        "how_to_start": {
+          "question": "使い始めるにはどうすればよいですか？",
+          "answer": "まずスクリプトマネージャーをインストールし、次にこのサイトで適切なスクリプトを見つけてワンクリックでインストールできます。"
+        }
+      },
+      "developer": {
+        "title": "開発者になる",
+        "description": "スクリプト開発者になって、専用の特典と技術サポートを享受しましょう。",
+        "benefits": {
+          "exposure": "スクリプト推薦表示の機会",
+          "forum_permission": "フォーラム開発者権限",
+          "tech_group": "技術交流グループへの招待",
+          "badge": "専用開発者バッジ"
+        },
+        "guide_link": "開発チュートリアルを見る →"
+      }
+    }
+  },
+  "script": {
+    "metadata": {
+      "search": {
+        "title": "スクリプト検索",
+        "page_number": "{page} ページ目"
+      },
+      "page_suffixes": {
+        "code": {
+          "title": "コード",
+          "description": "{name}のソースコードを表示"
+        },
+        "comment": {
+          "title": "評価",
+          "description": "{name}の評価を表示"
+        },
+        "stats": {
+          "title": "スクリプト統計",
+          "description": "{name}のインストール統計と使用データを表示"
+        },
+        "version": {
+          "title": "バージョン一覧",
+          "description": "{name}のすべてのバージョン履歴を表示"
+        },
+        "issue": {
+          "title": "フィードバック",
+          "description": "{name}の問題フィードバックを表示"
+        },
+        "manage": {
+          "title": "スクリプト管理",
+          "description": "{name}スクリプトを管理"
+        },
+        "update": {
+          "title": "スクリプト更新",
+          "description": "{name}スクリプトを更新"
+        }
+      },
+      "fallback": {
+        "title": "スクリプト詳細",
+        "description_with_suffix": "スクリプト{suffix}を表示",
+        "description_default": "スクリプトの詳細情報を表示"
+      }
+    },
+    "navigation": {
+      "market": "スクリプトマーケット",
+      "overview": "ホーム",
+      "code": "コード",
+      "issue": "フィードバック",
+      "comment": "評価",
+      "version": "バージョン一覧",
+      "update": "スクリプト更新",
+      "statistic": "スクリプト統計",
+      "manage": "スクリプト管理"
+    },
+    "alerts": {
+      "archived_title": "スクリプトはアーカイブされました",
+      "archived_description": "このスクリプトは作者によってアーカイブされており、スクリプトが無効になり、作者がメンテナンスを行わなくなった可能性があります。問題のフィードバックはできません。",
+      "obfuscated_title": "スクリプトコードは読み取り不可能な処理が施されています",
+      "obfuscated_description": "このスクリプトは作者によって読み取り不可能な処理が施されています。スクリプトサイトで審査は行っていますが、危険な権限の付与には注意してください。"
+    },
+    "search": {
+      "placeholder": "スクリプトを検索して、新しい世界を開こう",
+      "button": "検索",
+      "all_categories": "すべてのカテゴリ",
+      "all_types": "すべてのタイプ",
+      "sort": {
+        "today_download": "人気順",
+        "createtime": "最新公開",
+        "updatetime": "最近更新",
+        "score": "評価順",
+        "total_download": "ダウンロード数順"
+      },
+      "loading": "読み込み中...",
+      "pagination": "{start}-{end} / 全 {total} スクリプト",
+      "sidebar": {
+        "learn_userscript": "Tampermonkeyスクリプトを学ぶ",
+        "feedback_report": "提案/苦情/報告",
+        "visit_community": "<a href='https://bbs.tampermonkey.net.cn/'>Tampermonkey中国サイト</a>へ",
+        "latest_scripts": "最新スクリプト",
+        "latest_ratings": "最新評価",
+        "quick_actions": "クイックアクション",
+        "upload_script": "スクリプトをアップロード",
+        "my_favorites": "お気に入り",
+        "my_scripts": "マイスクリプト",
+        "settings": "設定"
+      }
+    },
+    "types": {
+      "script": "ユーザースクリプト",
+      "library": "スクリプトライブラリ",
+      "background_script": "バックグラウンドスクリプト",
+      "scheduled_script": "スケジュールスクリプト"
+    },
+    "card": {
+      "today_installs": "今日 +{count}",
+      "downloads": "ダウンロード",
+      "library_tooltip": "これはスクリプトが使用するライブラリです",
+      "library_tag": "@requireライブラリ",
+      "tag_label": "タグ：{name}",
+      "share_link": "共有リンク"
+    },
+    "detail": {
+      "crontab": {
+        "every_minute": "毎分実行",
+        "every_hour": "毎時間実行",
+        "every_day": "毎日実行",
+        "every_month": "毎月実行",
+        "every_week": "毎週実行",
+        "error_expression": "エラー式",
+        "every_minute_execute": "毎分実行",
+        "every_hour_execute": "毎時間実行",
+        "daily_at_midnight": "毎日0時に実行",
+        "weekly_sunday_midnight": "毎週日曜日0時に実行",
+        "monthly_first_midnight": "毎月1日0時に実行",
+        "every_n_hours": "{interval}時間毎に実行",
+        "daily_at_hours": "毎日{hours}時に実行",
+        "every_n_minutes": "{interval}分毎に実行"
+      },
+      "install": {
+        "install_script": "スクリプトをインストール",
+        "reinstall_script": "スクリプト v{version} を再インストール",
+        "update_script": "スクリプトを v{version} に更新",
+        "install_check_failed": "スクリプトインストール状態の検出に失敗しました"
+      },
+      "antifeatures": {
+        "referral_link": {
+          "title": "紹介リンク",
+          "description": "スクリプトには紹介リンクが含まれています"
+        },
+        "ads": {
+          "title": "広告",
+          "description": "スクリプトには広告表示機能が含まれています"
+        },
+        "payment": {
+          "title": "有料機能",
+          "description": "スクリプトには有料機能が含まれています"
+        },
+        "miner": {
+          "title": "マイニング",
+          "description": "スクリプトにはマイニング機能が含まれています"
+        },
+        "membership": {
+          "title": "メンバー機能",
+          "description": "スクリプトにはメンバー専用機能が含まれています"
+        },
+        "tracking": {
+          "title": "データ追跡",
+          "description": "スクリプトはユーザーデータを収集します"
+        }
+      },
+      "sites": {
+        "more": "+{count} その他",
+        "collapse": "折りたたむ"
+      },
+      "copy": {
+        "copied_to_clipboard": "クリップボードにコピーしました！",
+        "copy_failed": "コピーに失敗しました。再試行してください。",
+        "share_copied": "共有内容をクリップボードにコピーしました！"
+      },
+      "require": {
+        "copy_tooltip": "参照コードをコピー",
+        "usage_guide": "使用ガイド",
+        "compatible_version": "（互換バージョン）",
+        "patch_version": "（パッチバージョン）"
+      },
+      "actions": {
+        "install_guide": "インストール方法は？",
+        "prerelease_tooltip": "プレリリース版をインストールして、新しいコンテンツを体験する",
+        "share": "共有",
+        "watch": "フォロー",
+        "favorite": "お気に入り",
+        "watch_options": {
+          "none": "フォローしない",
+          "version": "バージョン更新",
+          "feedback": "新しいフィードバック",
+          "all": "すべての動向"
+        }
+      },
+      "stats": {
+        "total_installs": "総インストール数",
+        "today_installs": "今日の新規",
+        "user_rating": "ユーザー評価",
+        "current_version": "現在のバージョン"
+      },
+      "folders": {
+        "select_folders": "お気に入りフォルダを選択",
+        "create_new_folder": "新しいお気に入りフォルダを作成",
+        "folder_name_placeholder": "お気に入りフォルダ名を入力してください",
+        "folder_desc_placeholder": "説明（任意）",
+        "folder_name_required": "お気に入りフォルダ名を入力してください",
+        "new_folder": "新しいお気に入りフォルダ",
+        "favorite_update_failed": "お気に入りの更新に失敗しました",
+        "quick_favorite_failed": "クイックお気に入りに失敗しました"
+      },
+      "info": {
+        "library_details": "ライブラリ詳細",
+        "script_details": "スクリプト詳細",
+        "library_description": "これはユーザースクリプトが使用するライブラリです。スクリプト内で直接参照できます。",
+        "created_at": "{time} に作成",
+        "updated_at": "{time} に更新",
+        "tag_label": "タグ：{name}",
+        "applicable_sites": "適用サイト",
+        "background_script": "バックグラウンドスクリプト",
+        "background_script_desc": "ブラウザのバックグラウンドで実行されます",
+        "scheduled_script": "スケジュールスクリプト",
+        "scheduled_script_tooltip": "このスクリプトはスケジュール実行をサポートし、設定された時間間隔で自動実行されます：{cron}",
+        "license": "ライセンス",
+        "browser_compatibility": "ブラウザ互換性",
+        "browser_support": "{browser} をサポート",
+        "feature_notice": "機能通知",
+        "forum_post": "フォーラム投稿"
+      },
+      "delete": {
+        "success": "削除が完了しました",
+        "failed": "削除に失敗しました。再試行してください"
+      }
+    },
+    "gray_control": {
+      "strategy_title": "戦略 {index}",
+      "weight": "重み",
+      "pre_release_users": "プレリリースユーザー",
+      "traffic_tooltip": "トラフィックの{percent}%をターゲットバージョンにプッシュします",
+      "weight_day_tooltip": "{days}日間でトラフィックを段階的にターゲット値に更新します。最終的に指定されたバージョンに完全に更新したい場合は、100%、0日に設定すると、指定されたトラフィックを直接このバージョンに更新します",
+      "days_suffix": "日",
+      "cookie_regex_placeholder": "Cookie正規表現",
+      "target_version": "ターゲットバージョン",
+      "latest_version": "最新バージョン",
+      "previous_version": "前のバージョン",
+      "all_latest_versions": "すべての最新バージョン"
+    },
+    "rating": {
+      "error_update_stats": "評価統計の更新に失敗しました:",
+      "login_required": "まずログインしてください",
+      "submit_success": "評価が送信されました！",
+      "submit_error": "評価の送信に失敗しました:",
+      "submit_failed": "送信に失敗しました。再試行してください",
+      "update_success": "評価が更新されました！",
+      "update_error": "評価の更新に失敗しました:",
+      "reply": "返信",
+      "reply_placeholder": "返信を書いてください...",
+      "send_reply": "返信を送信",
+      "cancel": "キャンセル",
+      "update_failed": "更新に失敗しました。再試行してください",
+      "delete_success": "削除が完了しました！",
+      "delete_error": "評価の削除に失敗しました:",
+      "delete_failed": "削除に失敗しました。再試行してください",
+      "reply_success": "返信が完了しました！",
+      "reply_error": "返信に失敗しました:",
+      "reply_failed": "返信に失敗しました。再試行してください",
+      "fetch_error": "評価データの取得に失敗しました:",
+      "overview": {
+        "based_on_ratings": "{totalRatings} 件のユーザー評価に基づく"
+      },
+      "text": {
+        "excellent": "素晴らしい！",
+        "good": "良い",
+        "average": "まあまあ",
+        "fair": "普通",
+        "poor": "改善が必要"
+      },
+      "user_form": {
+        "login_prompt_title": "ログイン後にスクリプトを評価",
+        "login_prompt_description": "ログイン後、スクリプトの評価とレビューができ、他のユーザーの選択に役立ちます",
+        "login_prompt_button": "今すぐログイン",
+        "login_redirect_message": "ログインページに移動してログインしてください",
+        "please_select_rating": "評価を選択してください",
+        "your_review_title": "あなたの評価",
+        "published_at": "{time} に投稿",
+        "edit_button": "編集",
+        "rating_label": "評価：",
+        "review_content_label": "レビュー内容：",
+        "new_review_title": "体験を共有",
+        "edit_review_title": "レビューを編集",
+        "review_help_text": "あなたのレビューは他のユーザーの役に立ちます",
+        "rating_field_label": "あなたの評価",
+        "review_field_label": "レビュー内容（任意）",
+        "review_placeholder": "使用体験を共有して、他のユーザーがこのスクリプトを理解するのを助けてください...",
+        "submit_button": "レビューを投稿",
+        "update_button": "レビューを更新",
+        "cancel_button": "キャンセル",
+        "reset_button": "リセット"
+      },
+      "list": {
+        "title": "ユーザーレビュー",
+        "title_with_count": "ユーザーレビュー（{count}）",
+        "sort_label": "並び順:",
+        "sort_options": {
+          "newest": "最新順",
+          "oldest": "古い順",
+          "rating_high": "評価の高い順",
+          "rating_low": "評価の低い順"
+        },
+        "empty_title": "レビューがありません",
+        "empty_description": "このスクリプトの最初のレビュアーになりましょう！",
+        "loading": "読み込み中...",
+        "load_more": "さらにレビューを読み込む",
+        "all_loaded": "全 {count} 件のレビューを表示しました"
+      },
+      "author_tag": "作者",
+      "admin_tag": "管理者"
+    },
+    "issue": {
+      "search_placeholder": "問題を検索...",
+      "filter_all": "すべて",
+      "filter_pending": "未解決",
+      "filter_resolved": "解決済み",
+      "create_issue": "新しい問題",
+      "no_issues_found": "一致する問題が見つかりません",
+      "no_issues": "まだ問題がありません",
+      "status_pending": "未解決",
+      "status_resolved": "解決済み",
+      "updated_at": "{time} に更新",
+      "pagination_total": "{start}-{end} / {total}",
+      "labels_title": "ラベル",
+      "labels": {
+        "feature": "新機能",
+        "question": "質問",
+        "bug": "バグ"
+      },
+      "create": {
+        "title_required": "タイトルを入力してください",
+        "content_required": "内容を入力してください",
+        "submit_success": "送信が完了しました",
+        "submit_failed": "送信に失敗しました",
+        "title_placeholder": "フィードバックしたい問題を簡潔に説明してください",
+        "content_placeholder": "再現手順、期待する結果などを含めて問題を詳しく説明してください...",
+        "submit_button": "フィードバックを送信"
+      },
+      "detail": {
+        "page_not_found_title": "ページが見つかりません | ScriptCat",
+        "issue_feedback_title": "問題フィードバック | ScriptCat",
+        "issue_title_with_script": "{title} • フィードバック #{id} - {scriptName}",
+        "issue_description": "{scriptName}の問題フィードバック：{title}"
+      },
+      "comment": {
+        "labels_added": "ラベルを追加:",
+        "labels_removed": "ラベルを削除:",
+        "delete_success": "削除が完了しました",
+        "delete_failed": "削除に失敗しました",
+        "status_pending": "処理待ち",
+        "status_resolved": "解決済み",
+        "copy_success": "コピーが完了しました",
+        "copy_link": "リンクをコピー",
+        "created_at": "{time} に作成",
+        "no_replies": "まだ返信がありません",
+        "reply": "返信",
+        "link": "リンク",
+        "reopened_feedback": "フィードバックを再開しました",
+        "closed_feedback": "フィードバックを閉じました",
+        "comment_placeholder": "コメント内容を入力してください...",
+        "close_feedback": "フィードバックを閉じる",
+        "reopen_feedback": "フィードバックを再開",
+        "feedback_closed": "フィードバックが閉じられました",
+        "feedback_reopened": "フィードバックが再開されました",
+        "operation_failed": "操作に失敗しました",
+        "system_error": "システムエラー",
+        "comment_content_required": "コメント内容を入力してください",
+        "reply_success": "返信が完了しました",
+        "comment_failed": "コメントの投稿に失敗しました",
+        "comment_button": "コメント",
+        "login_to_comment": "ログイン後にコメント",
+        "login": "ログイン",
+        "labels_update_success": "ラベルの更新が完了しました",
+        "update_failed": "更新に失敗しました",
+        "watch_title": "フォロー",
+        "watch_tooltip": "このフィードバックをフォローして更新通知を受け取る",
+        "unwatch_success": "フォローを解除しました",
+        "watch_success": "フォローしました",
+        "watch_button": "フォロー",
+        "watched_button": "フォロー中",
+        "participants_title": "参加者"
+      }
+    },
+    "statistics": {
+      "loading_failed": "読み込みに失敗しました",
+      "loading_failed_description": "統計データの取得に失敗しました。しばらくしてから再試行してください。",
+      "retry": "再試行",
+      "loading_data": "統計データを読み込み中...",
+      "data_notice": "データに関する注意事項",
+      "data_notice_description": "以下のデータは参考用です。相違がある場合は実際のデータを基準としてください。UVはユニークビジター数、PVはページビュー数を表します。",
+      "page_views": "ページビュー数",
+      "visitors": "訪問者数",
+      "installs": "インストール数",
+      "install": "インストール",
+      "updates": "更新数",
+      "update": "更新",
+      "today": "今日",
+      "yesterday": "昨日",
+      "week": "今週",
+      "growth_tooltip": "昨日比{type}{value}%",
+      "growth_increase": "増加",
+      "growth_decrease": "減少",
+      "realtime_downloads": "リアルタイム更新ダウンロード",
+      "realtime_monitoring": "リアルタイムデータ監視",
+      "realtime_updating": "リアルタイム更新中",
+      "realtime_paused": "一時停止中",
+      "realtime_update": "リアルタイム更新",
+      "on": "オン",
+      "off": "オフ",
+      "trend_overview": "トレンド概要",
+      "30_day_install_trend": "30日間インストール数トレンド",
+      "30_day_update_trend": "30日間更新数トレンド",
+      "line_chart": "折れ線グラフ",
+      "column_chart": "棒グラフ"
+    },
+    "editor": {
+      "messages": {
+        "metadata_parse_success": "スクリプトメタデータの解析が完了しました",
+        "file_upload_success": "ファイルのアップロードが完了しました！",
+        "script_update_success": "スクリプトの更新が完了しました！",
+        "script_create_success": "スクリプトの作成が完了しました！",
+        "script_update_failed": "スクリプトの更新に失敗しました！",
+        "script_create_failed": "スクリプトの作成に失敗しました！",
+        "submit_failed": "送信に失敗しました:"
+      },
+      "alerts": {
+        "review_rules_text": "必ずお読みください：",
+        "review_rules_link": "スクリプト審査ルール",
+        "review_rules_description": " を遵守し、コードの品質と安全性を確保してください。違反したスクリプトは削除される場合があります。"
+      },
+      "code_section": {
+        "title": "スクリプトコード",
+        "tag": "JavaScript",
+        "upload_button": "ローカルファイルをアップロード",
+        "file_support": ".js および .user.js ファイルをサポート"
+      },
+      "description_section": {
+        "title": "詳細説明",
+        "tag": "Markdown",
+        "placeholder": "スクリプトの機能、使用方法などの情報を詳しく記述してください。Markdown形式をサポートしています...",
+        "create_button": "スクリプトを作成",
+        "update_button": "更新を公開"
+      },
+      "info_section": {
+        "title": "スクリプト情報",
+        "script_type_label": "スクリプトタイプ",
+        "script_type_placeholder": "スクリプトタイプを選択してください",
+        "script_type_required": "スクリプトタイプを選択してください",
+        "script_category_label": "スクリプトカテゴリ",
+        "script_category_placeholder": "スクリプトカテゴリを選択してください",
+        "version_label": "バージョン番号",
+        "version_placeholder": "例: 1.0.0",
+        "version_required": "バージョン番号を入力してください",
+        "version_tooltip": "セマンティックバージョニングを推奨します（例：1.0.0, 2.1.5）",
+        "prerelease_label": "プレリリース版",
+        "prerelease_tooltip": "プレリリース版として設定すると、正式版はこのバージョンに更新されません。スクリプト管理ページでプレリリースインストールリンクを有効にできます",
+        "tags_label": "タグ",
+        "tags_placeholder_library": "タグを入力してください",
+        "tags_placeholder_script": "@tagを使用してタグを追加",
+        "tags_tooltip_library": "タグを入力してください",
+        "tags_tooltip_script": "@tagを使用してタグを追加"
+      },
+      "library_section": {
+        "title": "ライブラリ説明情報",
+        "name_label": "ライブラリ名",
+        "name_placeholder": "例: MyLibrary",
+        "name_required": "ライブラリ名を入力してください",
+        "description_label": "ライブラリ説明",
+        "description_placeholder": "このライブラリの用途と機能を説明してください...",
+        "description_required": "ライブラリ説明を入力してください"
+      },
+      "changelog_section": {
+        "title": "更新ログ",
+        "tag": "Markdown",
+        "placeholder": "例：\n• 既知の問題を修正\n• 新機能を追加\n• パフォーマンスを最適化\n• 依存ライブラリを更新"
+      },
+      "script_types": {
+        "user_script": "ユーザースクリプト",
+        "subscribe_script": "購読スクリプト",
+        "library": "ライブラリ"
+      }
+    },
+    "version": {
+      "update_success": "バージョン情報の更新が完了しました",
+      "update_failed": "更新に失敗しました。再試行してください",
+      "update_version_failed": "バージョンの更新に失敗しました:",
+      "delete_success": "バージョンの削除が完了しました",
+      "delete_failed": "削除に失敗しました。再試行してください",
+      "delete_version_failed": "バージョンの削除に失敗しました:",
+      "install_success": "{version} のインストールを開始",
+      "load_failed": "読み込みに失敗しました",
+      "load_failed_description": "バージョン一覧の取得中にエラーが発生しました。ページを更新して再試行してください",
+      "retry": "再試行",
+      "latest_version_badge": "最新バージョン",
+      "prerelease_badge": "プレリリース版",
+      "history_title": "バージョン履歴",
+      "history_description": "公開されたすべてのバージョン（正式版とプレリリース版）を表示します。任意のバージョンをインストールしたり、ソースコードを表示できます。",
+      "no_history_title": "バージョン履歴がありません",
+      "no_history_description": "このスクリプトはまだバージョンが公開されていません",
+      "total_versions": "総バージョン数",
+      "release_versions": "正式版",
+      "prerelease_versions": "プレリリース版",
+      "pagination_info": "{start}-{end} 項目を表示、全 {total} 項目",
+      "edit_button": "編集",
+      "delete_button": "削除",
+      "install_button": "このバージョンをインストール",
+      "view_code_button": "コードを表示",
+      "confirm_delete_title": "削除の確認",
+      "confirm_delete_description": "このバージョンを削除してもよろしいですか？この操作は取り消せません。",
+      "confirm_delete_ok": "削除",
+      "confirm_delete_cancel": "キャンセル",
+      "pagination_total": "{start}-{end} 項目、全 {total} バージョン",
+      "edit_modal_title": "バージョン {version} を編集",
+      "changelog_label": "更新説明",
+      "changelog_subtitle": "（Markdown構文をサポート）",
+      "changelog_placeholder": "例：\n✨ 新機能：ユーザーインターフェースの最適化を追加\n🐛 問題修正：ブラウザ互換性の問題を解決\n⚡ パフォーマンス向上：スクリプト実行速度を最適化\n📦 依存関係更新：最新バージョンにアップグレード",
+      "version_type_label": "バージョンタイプ",
+      "version_type_extra": "プレリリース版は通常新機能のテストに使用され、不安定な場合があります",
+      "prerelease_checked": "プレリリース版",
+      "prerelease_unchecked": "正式版",
+      "save_changes": "変更を保存"
+    },
+    "manage": {
+      "navigation": {
+        "source_sync": "ソースコード同期",
+        "script_settings": "スクリプト管理",
+        "script_publish": "スクリプト公開",
+        "manage_logs": "管理ログ",
+        "access_control": "アクセス権限管理",
+        "group_management": "ユーザーグループ管理"
+      },
+      "sync": {
+        "title": "ソースコード同期",
+        "description": "スクリプトのソースコード同期を設定し、GitHub、GitLabなどのコードホスティングプラットフォームから自動または手動でスクリプトコンテンツを同期します。",
+        "sync_url_label": "同期アドレス",
+        "sync_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/script.js",
+        "sync_url_required": "同期アドレスを入力してください",
+        "sync_mode_label": "同期方式",
+        "sync_mode_auto": "自動同期 - 定期的に更新をチェックして自動同期、Webhookトリガー更新も設定可能",
+        "sync_mode_manual": "手動同期 - 手動クリック時のみ同期",
+        "content_url_label": "スクリプト説明同期アドレス",
+        "content_url_description": "オプション：スクリプトのREADMEまたは説明ドキュメントを同期、Markdown形式をサポート",
+        "content_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/README.md",
+        "save_and_sync_button": "保存して一度同期",
+        "sync_success": "同期設定の保存と同期が完了しました",
+        "sync_failed": "同期に失敗しました。ネットワーク接続またはアドレスが正しいか確認してください"
+      },
+      "access": {
+        "title": "アクセス権限管理",
+        "description": "このスクリプトに対するユーザーとユーザーグループのアクセス権限を管理し、ロールの割り当てと権限期限の設定を含みます",
+        "add_user_group_button": "ユーザー/ユーザーグループを追加",
+        "update_success": "更新が完了しました",
+        "update_failed": "更新に失敗しました。しばらくしてから再試行してください",
+        "delete_confirm_title": "アクセス権限の削除を確認",
+        "delete_confirm_content": "{entityType} \"{itemName}\" のアクセス権限を削除してもよろしいですか？この操作は取り消せません。",
+        "delete_confirm_ok": "削除を確認",
+        "delete_confirm_cancel": "キャンセル",
+        "delete_success": "削除が完了しました",
+        "delete_failed": "削除に失敗しました。しばらくしてから再試行してください",
+        "status": {
+          "accepted": "受け入れ済み",
+          "rejected": "拒否済み",
+          "pending": "確認待ち"
+        },
+        "table": {
+          "user_group_column": "ユーザー/ユーザーグループ",
+          "status_column": "ステータス",
+          "role_column": "権限ロール",
+          "expire_column": "有効期限",
+          "action_column": "アクション",
+          "delete_tooltip": "アクセス権限を削除",
+          "delete_button": "削除"
+        },
+        "entity_types": {
+          "user": "ユーザー",
+          "group": "ユーザーグループ"
+        },
+        "roles": {
+          "visitor": "ビジター",
+          "admin": "管理者"
+        },
+        "time": {
+          "add_time": "追加時間：",
+          "never_expire": "無期限",
+          "expired": "（期限切れ）"
+        },
+        "stats": {
+          "total": "合計：",
+          "users": "ユーザー：",
+          "groups": "ユーザーグループ：",
+          "pending": "確認待ち：",
+          "expired": "期限切れ："
+        },
+        "pagination": {
+          "total": "{start}-{end} 件目、全 {total} 件"
+        },
+        "empty": {
+          "title": "アクセス権限を持つユーザーまたはユーザーグループがありません",
+          "button": "最初のユーザー/ユーザーグループを追加"
+        }
+      },
+      "logs": {
+        "title": "管理ログ",
+        "under_construction": "機能構築中",
+        "description": "ログ管理機能は開発中です。ご期待ください。"
+      },
+      "groups": {
+        "title": "ユーザーグループ管理",
+        "description": "スクリプトのユーザーグループ権限を管理し、異なるユーザーのアクセスレベルを制御します",
+        "create_group_button": "新しいユーザーグループ",
+        "create_group_title": "ユーザーグループを作成",
+        "manage_members_title": "ユーザーグループメンバー管理",
+        "member_management_title": "メンバー管理",
+        "invite_user_button": "ユーザーを招待",
+        "invite_first_user_button": "最初のユーザーを招待",
+        "create_first_group_button": "最初のユーザーグループを作成",
+        "group_name_label": "グループ名",
+        "group_description_label": "グループ説明",
+        "group_name_placeholder": "ユーザーグループ名を入力してください",
+        "group_description_placeholder": "このユーザーグループの用途と権限範囲を詳しく説明してください",
+        "group_name_required": "グループ名を入力してください",
+        "group_description_required": "グループ説明を入力してください",
+        "group_name_max_length": "グループ名は50文字以内で入力してください",
+        "group_description_max_length": "説明は200文字以内で入力してください",
+        "create_button": "作成",
+        "close_button": "閉じる",
+        "cancel_button": "キャンセル",
+        "create_success": "作成が完了しました",
+        "create_failed": "作成に失敗しました",
+        "delete_confirm_title": "削除の確認",
+        "delete_confirm_content": "ユーザーグループ \"{groupName}\" を削除してもよろしいですか？",
+        "delete_confirm_description": "削除後、このユーザーグループのすべてのメンバーは関連権限を失い、この操作は復元できません",
+        "delete_confirm_button": "削除を確認",
+        "delete_success": "削除が完了しました",
+        "delete_failed": "削除に失敗しました",
+        "remove_member_confirm_title": "削除の確認",
+        "remove_member_confirm_content": "ユーザー {userName} を削除してもよろしいですか？",
+        "remove_member_confirm_description": "削除後、このユーザーはアクセス権限を失います",
+        "remove_member_button": "削除",
+        "remove_success": "削除が完了しました",
+        "remove_failed": "削除に失敗しました",
+        "manage_button": "管理",
+        "delete_button": "削除",
+        "confirm_button": "確認",
+        "status": {
+          "waiting_confirm": "確認待ち",
+          "joined": "参加済み"
+        },
+        "time": {
+          "never_expire": "無期限",
+          "expire_on": "期限",
+          "expired": "期限切れ"
+        },
+        "table": {
+          "user_column": "ユーザー",
+          "group_column": "ユーザーグループ",
+          "status_column": "ステータス",
+          "expire_time_column": "有効期限",
+          "member_column": "メンバー",
+          "action_column": "アクション",
+          "manage_members_tooltip": "メンバーを管理",
+          "delete_group_tooltip": "ユーザーグループを削除",
+          "remove_member_tooltip": "メンバーを削除"
+        },
+        "stats": {
+          "total_label": "合計",
+          "member_total_label": "メンバー合計",
+          "active_groups_label": "アクティブユーザーグループ",
+          "member_count": "{count} 名のメンバー",
+          "current_member_count": "現在合計 {count} 名のメンバー"
+        },
+        "pagination": {
+          "total": "{start}-{end} 件目、全 {total} 件"
+        },
+        "empty": {
+          "no_groups": "ユーザーグループがありません",
+          "no_members": "メンバーがいません"
+        }
+      },
+      "settings": {
+        "library_info": {
+          "title": "ライブラリ情報設定",
+          "description": "スクリプトライブラリの基本情報（名前、説明など）を設定します。",
+          "name_label": "ライブラリ名",
+          "name_placeholder": "ライブラリ名を入力してください",
+          "name_required": "スクリプト名は空にできません",
+          "description_label": "ライブラリ説明",
+          "description_placeholder": "ライブラリの説明情報を入力してください",
+          "save_button": "ライブラリ情報を保存",
+          "save_success": "ライブラリ情報の保存が完了しました",
+          "save_failed": "保存に失敗しました"
+        },
+        "public_settings": {
+          "title": "スクリプト公開設定",
+          "description": "スクリプトの公開状態を設定し、スクリプトの可視性とアクセス権限を決定します。",
+          "visibility_title": "スクリプトの可視性",
+          "visibility_private": "スクリプトは非公開状態で、あなただけが見ることができます",
+          "visibility_unlisted": "スクリプトは未公開で、直接リンクからのみアクセス可能",
+          "visibility_public": "スクリプトは公開されており、すべてのユーザーが表示・インストール可能",
+          "public_option": "公開",
+          "unlisted_option": "未公開",
+          "private_option": "非公開",
+          "public_update_success": "公開状態の更新が完了しました",
+          "update_failed": "更新に失敗しました",
+          "content_marking_title": "コンテンツマーキング",
+          "unwell_checkbox": "不適切なコンテンツが含まれる可能性があるとしてマーク",
+          "unwell_description": "このウェブサイトには、頻繁な赤青の点滅、視覚や精神に害を与えるコンテンツなど、不快なコンテンツが含まれる可能性があります。",
+          "unwell_update_success": "不適切なコンテンツマークの更新が完了しました"
+        },
+        "script_management": {
+          "title": "スクリプト管理",
+          "description": "スクリプトの状態管理と削除",
+          "status_management_title": "スクリプト状態管理",
+          "archive_button": "スクリプトをアーカイブ",
+          "unarchive_button": "アーカイブを解除",
+          "archive_description": "アーカイブ後、スクリプトは更新をサポートしなくなり、ユーザーはフィードバックできませんが、引き続き使用可能です",
+          "unarchive_description": "スクリプトはアーカイブされています。クリックしてアーカイブ状態を解除できます",
+          "dangerous_operations_title": "危険な操作",
+          "delete_button": "スクリプトを削除",
+          "delete_warning": "スクリプトを削除すると、すべてのデータが復元できなくなります。慎重に操作してください！"
+        },
+        "confirmations": {
+          "archive_confirm_title": "スクリプトのアーカイブを確認しますか？",
+          "unarchive_confirm_title": "アーカイブの解除を確認しますか？",
+          "archive_confirm_content": "アーカイブ後、スクリプトは更新をサポートしなくなり、ユーザーはフィードバックできませんが、引き続き使用可能です。",
+          "unarchive_confirm_content": "アーカイブを解除すると、スクリプトはユーザーフィードバックなどの情報を受け取れるようになります。",
+          "delete_confirm_title": "スクリプトの削除を確認しますか？",
+          "delete_confirm_content": "スクリプトを削除すると、すべてのデータが復元できなくなります。慎重に操作してください！",
+          "confirm_button": "確認",
+          "confirm_delete_button": "削除を確認",
+          "cancel_button": "キャンセル"
+        },
+        "messages": {
+          "archive_success": "スクリプトがアーカイブされました",
+          "unarchive_success": "スクリプトのアーカイブが解除されました",
+          "archive_failed": "アーカイブ操作に失敗しました",
+          "operation_failed": "操作に失敗しました",
+          "delete_success": "スクリプトが削除されました",
+          "delete_failed": "削除に失敗しました"
+        }
+      }
+    },
+    "invite": {
+      "create_invite_code": "招待コードを作成",
+      "cancel": "キャンセル",
+      "create": "作成",
+      "create_count": "作成数",
+      "expire_time": "有効期限",
+      "days": "日",
+      "no_limit": "無制限",
+      "admin_audit": "管理者審査",
+      "create_success": "作成が完了しました",
+      "copy_success": "コピーが完了しました",
+      "copy_failed": "コピーに失敗しました",
+      "copy_link": "リンクをコピー",
+      "close": "閉じる",
+      "invite_list_description": "作成された招待リストは以下の通りです:",
+      "submit_success": "送信が完了しました",
+      "create_failed": "作成に失敗しました",
+      "never_expire": "無期限",
+      "expire_suffix": " 期限切れ",
+      "status_unused": "未使用",
+      "status_used": "使用済み",
+      "status_expired": "期限切れ",
+      "status_pending_review": "審査待ち",
+      "status_rejected": "拒否済み",
+      "status_unknown": "不明な状態",
+      "invite_code": "招待コード",
+      "status": "状態",
+      "action": "アクション",
+      "invite_confirmation": "招待コード確認",
+      "confirm_allow_invite": "この招待を許可することを確認しますか？",
+      "confirm": "確認",
+      "allow": "許可",
+      "confirm_delete": "削除を確認",
+      "confirm_delete_invite": "この招待コードを削除してもよろしいですか？",
+      "delete_success": "削除が完了しました",
+      "delete_failed": "削除に失敗しました。しばらくしてから再試行してください",
+      "delete": "削除",
+      "operation_success": "操作が完了しました",
+      "get_invite_info_failed": "招待情報の取得に失敗しました",
+      "check_invite_link": "招待リンクが正しいか確認してください",
+      "back_to_home": "ホームに戻る",
+      "loading_invite_info": "招待情報を読み込み中...",
+      "operation_failed_retry": "操作に失敗しました。しばらくしてから再試行してください",
+      "status_pending": "処理待ち",
+      "status_accepted": "受け入れ済み",
+      "status_waiting": "待機中",
+      "permission_read": "読み取り可能",
+      "permission_write": "書き込み可能",
+      "invite_you": "あなたを招待",
+      "join": "参加",
+      "organization": "組織",
+      "permission_description": "権限説明",
+      "permission_after_join": "参加後、以下の権限を取得します：",
+      "agree": "同意",
+      "reject": "拒否",
+      "invite_accepted": "招待が受け入れられました",
+      "code_used": "{code} 使用済み",
+      "invite_expired": "招待が期限切れです",
+      "code_expired": "{code} 期限切れ",
+      "waiting_process": "処理待ち",
+      "code_waiting": "{code} 処理待ち中",
+      "invite_rejected": "招待が拒否されました",
+      "code_rejected": "{code} 拒否済み",
+      "unknown_status": "不明な状態",
+      "invite_confirm": "招待確認",
+      "organization_invite": "組織招待",
+      "script_collaboration_invite": "スクリプト協力招待",
+      "view_script_details": "スクリプト詳細を表示",
+      "invite_you_join_group": "{inviter} があなたを {holder} の {property} に招待しています",
+      "invite_you_join": "{inviter} があなたを {holder} に招待しています"
+    },
+    "user_modal": {
+      "submit_success": "送信が完了しました",
+      "submit_failed": "送信に失敗しました",
+      "form_validation_failed": "フォーム検証に失敗しました:",
+      "please_select_user": "ユーザーを選択してください",
+      "username": "ユーザー名",
+      "grant_permission": "権限を付与",
+      "guest": "ゲスト",
+      "admin": "管理者",
+      "expire_time": "有効期限",
+      "please_select_expire_time": "有効期限を選択してください",
+      "user_group": "ユーザーグループ",
+      "please_select_user_group": "ユーザーグループを選択してください",
+      "invite_by_username": "ユーザー名で招待",
+      "invite_by_user_group": "ユーザーグループで招待",
+      "invite_by_code": "招待コードで招待",
+      "select_user_or_group": "ユーザーまたはユーザーグループを選択してください",
+      "cancel": "キャンセル",
+      "add": "追加"
+    },
+    "publish": {
+      "prerelease_and_gray_release": "プレリリースとグレースケールリリース",
+      "manage_prerelease_and_gray_strategy": "スクリプトのプレリリースとグレースケールリリース戦略を管理",
+      "enable_prerelease": "プレリリースを有効にする",
+      "prerelease_description_part1": "プレリリーススイッチをオンにすると、バージョンが",
+      "semantic_version": "セマンティックバージョン",
+      "prerelease_description_part2": "に適合する場合、スクリプト更新は自動的にプレリリース版としてマークされ、スクリプトのホームページでプレリリース版のインストールボタンが提供されます。",
+      "prerelease_first_enable_tip": "（初回有効化時に3つの戦略を自動追加：プレリリースユーザーは全ての最新版に更新、正式版は重みに基づいて10日間で最新正式版に段階的更新、その他のユーザーは前の正式版に更新）",
+      "enable": "有効",
+      "disable": "無効",
+      "gray_release": "グレースケールリリース",
+      "add_strategy": "戦略を追加",
+      "gray_strategy_description": "特定の戦略（戦略には順序性があります）を設定して、スクリプトユーザーが指定されたバージョンに更新されるようにできます",
+      "gray_strategy_saved": "グレースケールリリース戦略が保存されました",
+      "load_gray_config_failed": "グレースケールリリース設定の読み込みに失敗しました:",
+      "save_gray_strategy_failed": "グレースケールリリース戦略の保存に失敗しました:",
+      "save_failed": "保存に失敗しました",
+      "save_and_apply_strategy": "戦略を保存して適用"
+    }
+  },
+  "error": {
+    "500_title": "サーバー内部エラー",
+    "500_subtitle": "申し訳ございません。サーバーに問題が発生しました",
+    "500_description": "私たちのサーバーは一時的にあなたのリクエストを処理できません。エラーレポートを受信しており、この問題の修正に努めています。",
+    "404_title": "ページが見つかりません",
+    "404_subtitle": "申し訳ございません。アクセスしたページは存在しません",
+    "404_description": "URLアドレスが正しいか確認するか、ホームページから再度ブラウジングを開始してください。",
+    "403_title": "アクセスが拒否されました",
+    "403_subtitle": "申し訳ございません。このページへのアクセス権限がありません",
+    "403_description": "管理者にアクセス権限を依頼するか、ログイン状態を確認してください。",
+    "feedback_notice": "フィードバック時に上記のエラーIDとエラーコードを提供してください。これにより、問題の特定と解決をより迅速に行うことができます。",
+    "error_code": "エラーコード",
+    "error_time": "エラー時間",
+    "feedback_title": "問題が発生しましたか？",
+    "feedback_description": "問題が継続する場合は、以下の方法でフィードバックをお送りください：",
+    "feedback_forum": "コミュニティフィードバックへ",
+    "feedback_github": "GitHub Issues",
+    "contact_admin": "管理者に連絡",
+    "back_to_home": "ホームに戻る",
+    "refresh_page": "ページを更新",
+    "what_happened": "何が起こったのですか？",
+    "server_error_details": "サーバーがあなたのリクエストを処理中に内部エラーが発生しました。これは、サーバーの負荷過多、データベース接続の問題、またはその他の技術的な障害が原因の可能性があります。",
+    "what_can_do": "以下をお試しください：",
+    "try_refresh": "現在のページを更新",
+    "try_later": "しばらくしてから再試行",
+    "check_network": "ネットワーク接続を確認",
+    "contact_us": "お問い合わせ",
+    "error_id": "エラーID"
+  },
+  "components": {
+    "markdown_editor": {
+      "placeholder": "内容を入力してください...",
+      "loading_editor": "エディターを読み込み中...",
+      "uploading_image": "画像をアップロード中...",
+      "image_upload_failed": "画像のアップロードに失敗しました"
+    }
+  },
+  "user": {
+    "user_not_found": "ユーザーが存在しません",
+    "user_homepage": "ユーザーホームページ",
+    "update_success": "ユーザー情報の更新が完了しました！",
+    "update_failed": "更新に失敗しました。再試行してください",
+    "avatar_upload_success": "アバターのアップロードが完了しました！",
+    "avatar_upload_failed": "アバターのアップロードに失敗しました！",
+    "avatar_format_error": "JPG/PNG形式の画像のみアップロードできます！",
+    "avatar_size_error": "画像サイズは1MBを超えることはできません！",
+    "edit_profile_title": "プロフィールを編集",
+    "avatar": "アバター",
+    "change_avatar": "アバターを変更",
+    "avatar_help_text": "JPG、PNG形式をサポート、ファイルサイズは1MB以下",
+    "username": "ユーザー名",
+    "username_placeholder": "ユーザー名を入力してください",
+    "description": "自己紹介",
+    "description_max_length": "自己紹介は200文字以内で入力してください",
+    "description_placeholder": "自己紹介をしてください...",
+    "email_validation": "有効なメールアドレスを入力してください",
+    "email_max_length": "メールアドレスは50文字以内で入力してください",
+    "email_placeholder": "連絡先メールアドレス",
+    "location": "所在地",
+    "location_max_length": "所在地は50文字以内で入力してください",
+    "location_placeholder": "例：東京都渋谷区",
+    "website": "個人ウェブサイト",
+    "website_validation": "有効なURLを入力してください",
+    "website_max_length": "URLは100文字以内で入力してください",
+    "website_placeholder": "https://example.com",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "profile": {
+      "my_scripts": "マイスクリプト",
+      "my_favorites": "お気に入り",
+      "login_required": "まずログインしてください",
+      "follow_success": "フォローが完了しました",
+      "unfollow_success": "フォローを解除しました",
+      "operation_failed": "操作に失敗しました。再試行してください",
+      "message_feature_developing": "メッセージ送信機能は開発中です...",
+      "link_copied": "リンクがクリップボードにコピーされました",
+      "report": "報告",
+      "administrator": "管理者",
+      "verified": "認証済み",
+      "edit_profile": "プロフィールを編集",
+      "followed": "フォロー中",
+      "follow": "フォロー",
+      "private_message": "プライベートメッセージ",
+      "join_time": "参加時間",
+      "last_active": "最終アクティブ",
+      "email": "メールアドレス",
+      "location": "場所",
+      "personal_website": "個人ウェブサイト",
+      "follow_section": "フォロー",
+      "followers_following": "{followers} フォロワー • {following} フォロー中",
+      "achievement_badges": "実績バッジ",
+      "profile_update_success": "プロフィールの更新が完了しました！"
+    },
+    "favorites": {
+      "unfavorite_success": "お気に入りを解除しました",
+      "unfavorite_failed": "お気に入りの解除に失敗しました。再試行してください",
+      "create_folder_coming_soon": "お気に入りフォルダ作成機能は開発中です",
+      "no_description": "説明がありません",
+      "script_count": "{count} スクリプト",
+      "unfavoriting": "解除中...",
+      "unfavorite": "お気に入りを解除",
+      "unfavorite_tooltip": "このスクリプトのお気に入りを解除",
+      "no_favorites": "このユーザーはまだスクリプトをお気に入りに追加していません",
+      "discover_scripts": "スクリプトを発見しに行く",
+      "my_folders": "マイお気に入りフォルダ",
+      "create_folder": "お気に入りフォルダを作成",
+      "favorite_scripts": "お気に入りスクリプト",
+      "no_scripts_in_category": "このカテゴリにはお気に入りのスクリプトがありません",
+      "pagination_total": "{start}-{end} 件目、全 {total} 件",
+      "folder_title": "{folderName} - {username}のお気に入りフォルダ",
+      "folder_description": "{username}のお気に入りフォルダ\"{folderName}\"、{count}個のスクリプトを収録",
+      "folder_not_found": "お気に入りフォルダが存在しません",
+      "folder_not_found_description": "アクセスしたお気に入りフォルダは存在しないか削除されています",
+      "folder_error": "お気に入りフォルダが存在しないか削除されています",
+      "go_back": "前のページに戻る",
+      "home": "ホーム",
+      "favorites_breadcrumb": "お気に入りフォルダ",
+      "script_count_text": "スクリプト数:",
+      "edit_folder": "お気に入りフォルダを編集",
+      "subscription_link": "購読リンク",
+      "favorite_scripts_title": "お気に入りスクリプト（{total}）",
+      "cancel_favorite_error": "お気に入り解除に失敗しました:",
+      "no_script_manager_title": "スクリプトマネージャーが検出されませんでした",
+      "no_script_manager_content": "ブラウザにScriptCat拡張機能がインストールされていることが検出されませんでした。購読リンクを開きますか？",
+      "confirm_open": "開くことを確認",
+      "cancel": "キャンセル",
+      "status_public": "公開",
+      "status_private": "非公開",
+      "pagination_items": "{start}-{end} 項目、全 {total} 項目",
+      "no_scripts_in_folder": "このお気に入りフォルダにはスクリプトがありません",
+      "edit_modal": {
+        "title": "お気に入りフォルダを編集",
+        "update_success": "お気に入りフォルダの更新が完了しました！",
+        "update_failed_prefix": "お気に入りフォルダの更新に失敗しました:",
+        "update_failed_generic": "更新に失敗しました。再試行してください",
+        "name_label": "お気に入りフォルダ名",
+        "name_placeholder": "お気に入りフォルダ名を入力してください",
+        "name_required": "お気に入りフォルダ名を入力してください",
+        "name_length_error": "お気に入りフォルダ名は1-50文字で入力してください",
+        "description_label": "説明",
+        "description_placeholder": "お気に入りフォルダの説明を入力してください（任意）",
+        "description_length_error": "説明は500文字以内で入力してください",
+        "private_label": "非公開お気に入りフォルダ",
+        "private_help_text": "有効にすると、あなただけがこのお気に入りフォルダを見ることができます",
+        "cancel_button": "キャンセル",
+        "save_button": "保存"
+      }
+    },
+    "script_list": {
+      "search_placeholder": "このユーザーのスクリプトを検索",
+      "search_button": "検索",
+      "all_types_placeholder": "すべてのタイプ",
+      "type_all": "すべて",
+      "type_script": "スクリプト",
+      "sort_by_hot": "人気順",
+      "sort_by_latest": "最新公開",
+      "sort_by_updated": "最近更新",
+      "sort_by_score": "評価順",
+      "sort_by_downloads": "ダウンロード数順",
+      "loading": "読み込み中...",
+      "pagination_total": "{start}-{end} / 全 {total} スクリプト"
+    },
+    "settings": {
+      "user_settings": "ユーザー設定",
+      "settings_description": "Webhook設定や通知オプションなど、アカウントの設定を管理します",
+      "webhook_settings": "Webhook設定",
+      "notification_settings": "通知設定"
+    },
+    "webhook": {
+      "copy_success": "コピーが完了しました",
+      "copy_failed": "コピーに失敗しました",
+      "settings_title": "Webhook設定",
+      "settings_description": "Webhookを使用してGithubなどからのメッセージを受信できます。スクリプトページのスクリプト管理で更新URLを設定することで、自動的かつ即座にスクリプトを更新することができます。",
+      "config_steps": "設定手順",
+      "config_tip_title": "設定のヒント",
+      "config_tip_description": "以下の手順に従ってWebhook設定を完了し、スクリプトがコードリポジトリと正しく同期できることを確認してください。",
+      "step_bind_repo": "コードリポジトリをバインド",
+      "step_bind_repo_desc": "Githubリポジトリにアクセスし、Settingsに入る",
+      "step_config_webhook": "Webhookを設定",
+      "step_config_webhook_desc": "\"Add webhook\"をクリック",
+      "step_config_webhook_detail": "コードリポジトリで以下のWebhookアドレスと秘密鍵を設定",
+      "step_select_events": "トリガーイベントを選択",
+      "step_select_events_desc": "監視するイベントタイプを選択：",
+      "event_push": "Pushイベント",
+      "event_push_desc": "コードプッシュ時に同期をトリガー",
+      "event_release": "Releaseイベント",
+      "event_release_desc": "新バージョンリリース時に同期をトリガー",
+      "event_tag": "Tagイベント",
+      "event_tag_desc": "タグ作成時に同期をトリガー",
+      "config_info_title": "Webhook設定情報",
+      "copy_url_tooltip": "URLをコピー",
+      "copy_content_type_tooltip": "Content-Typeをコピー",
+      "copy_secret_tooltip": "Secretをコピー",
+      "refresh_secret": "秘密鍵を更新",
+      "confirm_refresh_title": "秘密鍵の更新を確認しますか？",
+      "confirm_refresh_content": "更新後、古い秘密鍵は無効になります。Webhook設定を速やかに更新してください",
+      "confirm_refresh": "更新を確認",
+      "cancel": "キャンセル",
+      "refresh_success": "秘密鍵の更新が完了しました",
+      "refresh_failed": "更新に失敗しました",
+      "security_tip_title": "セキュリティのヒント",
+      "security_tip_content": "Secret秘密鍵を適切に管理し、他人に漏らさないでください。秘密鍵が漏洩した疑いがある場合は、すぐに更新してください。"
+    },
+    "notification_settings": {
+      "settings_saved": "設定が保存されました",
+      "save_failed": "保存に失敗しました",
+      "notification_settings_title": "通知設定",
+      "notification_settings_description": "メール通知の設定をカスタマイズして、スクリプトに関する重要な動向や交流情報をタイムリーに把握できます。",
+      "interaction_notifications": "交流通知",
+      "mention_notification_title": "@付きの通知を送信",
+      "mention_notification_description": "ユーザーがコメントやフィードバックで@付きの場合にメール通知を送信",
+      "score_notification_title": "スクリプト評価通知",
+      "score_notification_description": "マイスクリプトが新しい評価を受け取った時に通知を送信",
+      "script_management": "スクリプト管理",
+      "create_script_notification_title": "スクリプト作成通知",
+      "create_script_notification_description": "フォローしているユーザーがスクリプトを作成した時に通知を送信",
+      "script_update_notification_title": "フォロー中のスクリプト更新",
+      "script_update_notification_description": "フォローしているスクリプトの新バージョン更新時に通知を送信",
+      "feedback_interaction": "フィードバック交流",
+      "script_issue_notification_title": "新しいフィードバック通知",
+      "script_issue_notification_description": "フォローしているスクリプトが新しい問題フィードバックを受け取った時に通知を送信",
+      "script_issue_comment_notification_title": "フィードバック返信通知",
+      "script_issue_comment_notification_description": "フォローしているフィードバックに新しい返信があった時に通知を送信",
+      "admin_badge": "管理者",
+      "email_notification_info_title": "メール通知について",
+      "email_notification_info_item_1": "すべての通知は登録メールアドレスに送信されます",
+      "email_notification_info_item_2": "これらの通知設定はいつでも変更できます",
+      "email_notification_info_item_3": "重要なシステム通知（セキュリティ関連など）は無効にできません",
+      "email_notification_info_item_4": "通知メールはスパムメールに分類される可能性がありますので、ご注意ください"
+    }
+  },
+  "utils": {
+    "time_format": "YYYY年MM月DD日"
+  }
+}

@@ -311,7 +311,7 @@ export default function IssueCommentClient({
                               <CheckCircleFilled className="text-xl !text-green-500" />
                             )}
                             <Link
-                              href={`/${locale}/users/${item.user_id}`}
+                              href={`/users/${item.user_id}`}
                               target="_blank"
                             >
                               <Space>
@@ -458,7 +458,7 @@ export default function IssueCommentClient({
             <span className="text-lg font-bold">{tIssue('labels_title')}</span>
             <Select
               mode="multiple"
-              showArrow
+              suffixIcon
               tagRender={(args) => {
                 const { value, closable, onClose } = args;
                 const onPreventMouseDown = (event: any) => {
@@ -472,7 +472,7 @@ export default function IssueCommentClient({
                     onMouseDown={onPreventMouseDown}
                     closable={closable}
                     onClose={onClose}
-                    style={{ marginRight: 3 }}
+                    style={{ marginRight: 6 }}
                   />
                 );
               }}
@@ -570,11 +570,7 @@ export default function IssueCommentClient({
             <span className="text-lg font-bold">{t('participants_title')}</span>
             <Space>
               {Object.keys(joinMember).map((key) => (
-                <Link
-                  key={key}
-                  href={`/${locale}/users/${key}`}
-                  target="_blank"
-                >
+                <Link key={key} href={`/users/${key}`} target="_blank">
                   <Avatar src={joinMember[key as unknown as number]} />
                 </Link>
               ))}

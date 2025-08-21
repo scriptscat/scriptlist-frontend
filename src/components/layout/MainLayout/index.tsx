@@ -12,7 +12,7 @@ import {
 } from 'antd';
 import { Header, Content, Footer } from 'antd/es/layout/layout';
 import { useTranslations } from 'next-intl';
-import { Link, usePathname, useRouter } from '@/i18n/routing';
+import { languageMap, Link, usePathname, useRouter } from '@/i18n/routing';
 import { ThemeToggle } from './ThemeToggle';
 import UserAuth from '@/components/UserAuth';
 import { useUser } from '@/contexts/UserContext';
@@ -164,18 +164,11 @@ export default function MainLayout({
             {/* Language Switcher */}
             <Dropdown
               menu={{
-                items: [
-                  {
-                    key: 'en',
-                    label: 'English',
-                    onClick: () => switchLocale('en'),
-                  },
-                  {
-                    key: 'zh-CN',
-                    label: '简体中文',
-                    onClick: () => switchLocale('zh-CN'),
-                  },
-                ],
+                items: Object.keys(languageMap).map((key) => ({
+                  key: key,
+                  label: `${languageMap[key].label} (${key})`,
+                  onClick: () => switchLocale(key),
+                })),
                 forceSubMenuRender: true,
               }}
               trigger={['click']}

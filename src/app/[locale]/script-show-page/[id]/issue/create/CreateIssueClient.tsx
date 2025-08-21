@@ -93,7 +93,7 @@ export default function CreateIssueClient() {
                     onMouseDown={onPreventMouseDown}
                     closable={closable}
                     onClose={onClose}
-                    style={{ marginRight: 3 }}
+                    style={{ marginRight: 6 }}
                   />
                 );
               }}

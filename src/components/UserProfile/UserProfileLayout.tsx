@@ -191,13 +191,16 @@ export default function UserProfileLayout({
 
               <div className="flex items-center justify-center gap-2 mb-3">
                 <Title level={3} className="!mb-0">
-                  {currentUserData.username}
+                  <Link
+                    href={
+                      'https://bbs.tampermonkey.net.cn/?' +
+                      currentUserData.user_id
+                    }
+                    target="_blank"
+                  >
+                    {currentUserData.username}
+                  </Link>
                 </Title>
-                {currentUserData.is_admin === 1 && (
-                  <Tag color="gold" icon={<CrownOutlined />}>
-                    {t('administrator')}
-                  </Tag>
-                )}
               </div>
               {/* 用户描述 */}
               {currentUserData.description && (
@@ -209,6 +212,11 @@ export default function UserProfileLayout({
               )}
 
               <div className="flex justify-center gap-2 mb-4">
+                {currentUserData.is_admin === 1 && (
+                  <Tag color="gold" icon={<CrownOutlined />}>
+                    {t('administrator')}
+                  </Tag>
+                )}
                 {currentUserData.email_status === 1 && (
                   <Tag color="green" icon={<CheckCircleOutlined />}>
                     {t('verified')}

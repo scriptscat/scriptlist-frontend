@@ -1,5 +1,5 @@
 import { getRequestConfig } from 'next-intl/server';
-import { routing } from '@/i18n/routing';
+import { languageMap, routing } from '@/i18n/routing';
 
 // 检查语言是否支持
 function isSupportedLocale(locale: string): boolean {
@@ -23,16 +23,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale: finalLocale,
     messages: (
       await import(
-        `../../public/locales/${localeMapping[finalLocale]}/translations.json`
+        `../../public/locales/${languageMap[finalLocale].locale}/translations.json`
       )
     ).default,
   };
 });
-
-// 映射到语言文件
-export const localeMapping: Record<(typeof routing.locales)[number], string> = {
-  'zh-CN': 'zh-CN',
-  en: 'en-US',
-  'zh-TW': 'zh-TW',
-  'ach-UG': 'ach-UG',
-};

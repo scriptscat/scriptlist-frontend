@@ -1,0 +1,1174 @@
+{
+  "common": {
+    "copy_success": "Erfolgreich kopiert",
+    "delete_success": "Erfolgreich gelöscht",
+    "delete_failed": "Löschen fehlgeschlagen, bitte versuchen Sie es später erneut",
+    "delete": "Löschen",
+    "punish": "Bestrafen",
+    "report": "Melden",
+    "confirm_punish": "Bestrafung bestätigen",
+    "select_punish_option": "Bestrafungsoption auswählen",
+    "punish_reason": "Grund für Bestrafung",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "confirm_delete": "Löschen bestätigen",
+    "delete_warning": "Nach dem Löschen kann nicht wiederhergestellt werden. Löschen bestätigen?"
+  },
+  "layout": {
+    "home": "Startseite",
+    "community": "Community",
+    "script_list": "Skriptliste",
+    "developer": "Entwickler",
+    "browser_extension": "Browser-Erweiterung",
+    "tampermonkey_chinese_website": "Tampermonkey Chinese Website",
+    "scriptcat": "ScriptCat",
+    "service_agreement": "Nutzungsbedingungen",
+    "privacy_policy": "Datenschutzrichtlinie",
+    "all_rights_reserved": "© 2022-heute ScriptCat. Alle Rechte vorbehalten.",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "user_profile": "Benutzerprofil",
+    "publish_script": "Skript veröffentlichen",
+    "login_required": "Bitte melden Sie sich an, bevor Sie ein Skript veröffentlichen",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System",
+    "user_setting": "Benutzereinstellungen"
+  },
+  "home": {
+    "metadata": {
+      "title": "ScriptCat - Teilen Sie Ihre Benutzerskripte",
+      "description": "ScriptCat-Skriptseite, hier können Sie Ihre Benutzerskripte mit der ganzen Welt teilen",
+      "keywords": "ScriptCat,UserScript,Tampermonkey,Greasemonkey,Violentmonkey,Benutzerskript,Skriptkatze,Ölaffee,Ölaffeskript"
+    },
+    "browser_stores": {
+      "add_to_edge": "Zu Edge-Browser hinzufügen",
+      "add_to_chrome": "Zu Chrome-Browser hinzufügen",
+      "add_to_firefox": "Zu Firefox-Browser hinzufügen",
+      "download_crx_install": "Installationspaket herunterladen und manuell installieren",
+      "install_extension": "Erweiterung im Browser installieren"
+    },
+    "hero": {
+      "tagline": "Entdecken und teilen Sie hochwertige Benutzerskripte für ein besseres Browsererlebnis",
+      "search_placeholder": "Skripte suchen, neue Welten entdecken",
+      "search_button": "Skripte suchen",
+      "browse_all_scripts": "Alle Skripte durchsuchen"
+    },
+    "features": {
+      "why_choose_title": "Warum ScriptCat wählen?",
+      "why_choose_subtitle": "Basierend auf dem Designkonzept von Tampermonkey, vollständig kompatibel mit Tampermonkey-Skripten, bietet mehr reichhaltige APIs, damit Skripte leistungsfähigere Funktionen ausführen können.",
+      "scriptcat": {
+        "title": "Leistungsstarker Skript-Manager",
+        "description": "ScriptCat ist vollständig kompatibel mit Tampermonkey-Skripten und bietet gleichzeitig ein Hintergrundskript-Ausführungsframework und umfangreiche API-Erweiterungen.",
+        "features": {
+          "compatible": "Vollständig kompatibel mit Tampermonkey-Skripten",
+          "background": "Unterstützt Hintergrundskript-Ausführung",
+          "rich_api": "Bietet umfangreiche API-Erweiterungen"
+        },
+        "install_link": "ScriptCat jetzt installieren →"
+      },
+      "faq": {
+        "title": "Häufig gestellte Fragen",
+        "what_is_userscript": {
+          "question": "Was sind Benutzerskripte?",
+          "answer": "Benutzerskripte können Webseiten-Funktionen erweitern, Werbung entfernen, die Benutzerfreundlichkeit verbessern und Ihr Browsererlebnis verbessern."
+        },
+        "why_scriptcat": {
+          "question": "Warum ScriptCat wählen?",
+          "answer": "ScriptCat ist nicht nur kompatibel mit Tampermonkey-Skripten, sondern unterstützt auch die Ausführung von Hintergrundskripten mit leistungsfähigeren Funktionen und breiterer Abdeckung."
+        },
+        "how_to_start": {
+          "question": "Wie fange ich an?",
+          "answer": "Installieren Sie zuerst den Skript-Manager, suchen Sie dann auf dieser Website nach geeigneten Skripten und installieren Sie sie mit einem Klick."
+        }
+      },
+      "developer": {
+        "title": "Entwickler werden",
+        "description": "Werden Sie Skriptentwickler und genießen Sie exklusive Vorteile und technischen Support.",
+        "benefits": {
+          "exposure": "Skript-Empfehlungs- und Exposure-Möglichkeiten",
+          "forum_permission": "Forum-Entwicklerberechtigungen",
+          "tech_group": "Einladung zur technischen Austauschgruppe",
+          "badge": "Exklusive Entwicklerkennung"
+        },
+        "guide_link": "Entwicklungsanleitung ansehen →"
+      }
+    }
+  },
+  "script": {
+    "metadata": {
+      "search": {
+        "title": "Skriptsuche",
+        "page_number": "Seite {page}"
+      },
+      "page_suffixes": {
+        "code": {
+          "title": "Code",
+          "description": "Quellcode von {name} anzeigen"
+        },
+        "comment": {
+          "title": "Bewertung",
+          "description": "Bewertung von {name} anzeigen"
+        },
+        "stats": {
+          "title": "Skriptstatistiken",
+          "description": "Installationsstatistiken und Nutzungsdaten von {name} anzeigen"
+        },
+        "version": {
+          "title": "Versionsliste",
+          "description": "Alle Versionshistorie von {name} anzeigen"
+        },
+        "issue": {
+          "title": "Feedback",
+          "description": "Problemfeedback zu {name} anzeigen"
+        },
+        "manage": {
+          "title": "Skriptverwaltung",
+          "description": "{name}-Skript verwalten"
+        },
+        "update": {
+          "title": "Skript aktualisieren",
+          "description": "{name}-Skript aktualisieren"
+        }
+      },
+      "fallback": {
+        "title": "Skriptdetails",
+        "description_with_suffix": "Skript {suffix} anzeigen",
+        "description_default": "Detaillierte Skriptinformationen anzeigen"
+      }
+    },
+    "navigation": {
+      "market": "Skriptmarkt",
+      "overview": "Startseite",
+      "code": "Code",
+      "issue": "Feedback",
+      "comment": "Bewertung",
+      "version": "Versionsliste",
+      "update": "Skript aktualisieren",
+      "statistic": "Skriptstatistiken",
+      "manage": "Skriptverwaltung"
+    },
+    "alerts": {
+      "archived_title": "Skript wurde archiviert",
+      "archived_description": "Dieses Skript wurde vom Autor archiviert. Das Skript funktioniert möglicherweise nicht mehr und der Autor wartet es nicht mehr. Sie können kein Feedback mehr abgeben.",
+      "obfuscated_title": "Skriptcode wurde verschleiert",
+      "obfuscated_description": "Dieses Skript wurde vom Autor verschleiert. Obwohl die Skriptseite bereits eine Überprüfung durchgeführt hat, seien Sie dennoch vorsichtig bei der Gewährung gefährlicher Berechtigungen."
+    },
+    "search": {
+      "placeholder": "Skripte suchen, neue Welten entdecken",
+      "button": "Suchen",
+      "all_categories": "Alle Kategorien",
+      "all_types": "Alle Typen",
+      "sort": {
+        "today_download": "Nach Popularität sortieren",
+        "createtime": "Neueste Veröffentlichung",
+        "updatetime": "Kürzlich aktualisiert",
+        "score": "Höchste Bewertung",
+        "total_download": "Meist heruntergeladen"
+      },
+      "loading": "Wird geladen...",
+      "pagination": "{start}-{end} / insgesamt {total} Skripte",
+      "sidebar": {
+        "learn_userscript": "Benutzerskripte lernen",
+        "feedback_report": "Vorschläge/Beschwerden/Meldungen",
+        "visit_community": "Besuchen Sie <a href='https://bbs.tampermonkey.net.cn/'>Tampermonkey Chinese Website</a>",
+        "latest_scripts": "Neueste Skripte",
+        "latest_ratings": "Neueste Bewertungen",
+        "quick_actions": "Schnellaktionen",
+        "upload_script": "Skript hochladen",
+        "my_favorites": "Meine Favoriten",
+        "my_scripts": "Meine Skripte",
+        "settings": "Einstellungen"
+      }
+    },
+    "types": {
+      "script": "Benutzerskript",
+      "library": "Skriptbibliothek",
+      "background_script": "Hintergrundskript",
+      "scheduled_script": "Geplantes Skript"
+    },
+    "card": {
+      "today_installs": "Heute +{count}",
+      "downloads": "Downloads",
+      "library_tooltip": "Dies ist eine Bibliothek, die von Skripten verwendet wird",
+      "library_tag": "@require-Bibliothek",
+      "tag_label": "Tag: {name}",
+      "share_link": "Link teilen"
+    },
+    "detail": {
+      "crontab": {
+        "every_minute": "Jede Minute ausführen",
+        "every_hour": "Jede Stunde ausführen",
+        "every_day": "Jeden Tag ausführen",
+        "every_month": "Jeden Monat ausführen",
+        "every_week": "Jede Woche ausführen",
+        "error_expression": "Fehlerhafter Ausdruck",
+        "every_minute_execute": "Jede Minute ausführen",
+        "every_hour_execute": "Jede Stunde ausführen",
+        "daily_at_midnight": "Täglich um 0 Uhr ausführen",
+        "weekly_sunday_midnight": "Jeden Sonntag um 0 Uhr ausführen",
+        "monthly_first_midnight": "Am 1. jeden Monats um 0 Uhr ausführen",
+        "every_n_hours": "Alle {interval} Stunden ausführen",
+        "daily_at_hours": "Täglich um {hours} Uhr ausführen",
+        "every_n_minutes": "Alle {interval} Minuten ausführen"
+      },
+      "install": {
+        "install_script": "Skript installieren",
+        "reinstall_script": "Skript v{version} neu installieren",
+        "update_script": "Skript auf v{version} aktualisieren",
+        "install_check_failed": "Überprüfung des Skriptinstallationsstatus fehlgeschlagen"
+      },
+      "antifeatures": {
+        "referral_link": {
+          "title": "Empfehlungslink",
+          "description": "Skript enthält Empfehlungslinks"
+        },
+        "ads": {
+          "title": "Werbung",
+          "description": "Skript enthält Werbeanzeigen"
+        },
+        "payment": {
+          "title": "Kostenpflichtige Funktionen",
+          "description": "Skript enthält kostenpflichtige Funktionen"
+        },
+        "miner": {
+          "title": "Mining",
+          "description": "Skript enthält Mining-Funktionen"
+        },
+        "membership": {
+          "title": "Mitgliedschaftsfunktionen",
+          "description": "Skript enthält exklusive Mitgliedschaftsfunktionen"
+        },
+        "tracking": {
+          "title": "Datentracking",
+          "description": "Skript sammelt Benutzerdaten"
+        }
+      },
+      "sites": {
+        "more": "+{count} mehr",
+        "collapse": "Einklappen"
+      },
+      "copy": {
+        "copied_to_clipboard": "In die Zwischenablage kopiert!",
+        "copy_failed": "Kopieren fehlgeschlagen, bitte versuchen Sie es erneut.",
+        "share_copied": "Inhalt zum Teilen wurde in die Zwischenablage kopiert!"
+      },
+      "require": {
+        "copy_tooltip": "Referenzcode kopieren",
+        "usage_guide": "Verwendungsanleitung",
+        "compatible_version": "(Kompatible Version) ",
+        "patch_version": "(Patch-Version) "
+      },
+      "actions": {
+        "install_guide": "Wie installiere ich?",
+        "prerelease_tooltip": "Vorveröffentlichungsversion installieren, neuere Inhalte erleben",
+        "share": "Teilen",
+        "watch": "Folgen",
+        "favorite": "Favorisieren",
+        "watch_options": {
+          "none": "Nicht folgen",
+          "version": "Versionsupdates",
+          "feedback": "Neues Feedback",
+          "all": "Alle Aktivitäten"
+        }
+      },
+      "stats": {
+        "total_installs": "Gesamtinstallationen",
+        "today_installs": "Heute neu",
+        "user_rating": "Benutzerbewertung",
+        "current_version": "Aktuelle Version"
+      },
+      "folders": {
+        "select_folders": "Favoritenordner auswählen",
+        "create_new_folder": "Neuen Favoritenordner erstellen",
+        "folder_name_placeholder": "Bitte Ordnername eingeben",
+        "folder_desc_placeholder": "Beschreibung (optional)",
+        "folder_name_required": "Bitte Ordnername eingeben",
+        "new_folder": "Neuer Ordner",
+        "favorite_update_failed": "Aktualisierung der Favoriten fehlgeschlagen",
+        "quick_favorite_failed": "Schnelles Favorisieren fehlgeschlagen"
+      },
+      "info": {
+        "library_details": "Bibliotheksdetails",
+        "script_details": "Skriptdetails",
+        "library_description": "Dies ist eine Bibliothek, die von Benutzerskripten verwendet wird. Sie können sie direkt in Ihren Skripten referenzieren.",
+        "created_at": "Erstellt am {time}",
+        "updated_at": "Aktualisiert am {time}",
+        "tag_label": "Tag: {name}",
+        "applicable_sites": "Anwendbare Websites",
+        "background_script": "Hintergrundskript",
+        "background_script_desc": "Es läuft im Browser-Hintergrund",
+        "scheduled_script": "Geplantes Skript",
+        "scheduled_script_tooltip": "Dieses Skript unterstützt geplante Ausführung und läuft automatisch zu festgelegten Zeitintervallen: {cron}",
+        "license": "Lizenzvereinbarung",
+        "browser_compatibility": "Browser-Kompatibilität",
+        "browser_support": "Unterstützt {browser}",
+        "feature_notice": "Funktionshinweis",
+        "forum_post": "Forumsbeitrag"
+      },
+      "delete": {
+        "success": "Erfolgreich gelöscht",
+        "failed": "Löschen fehlgeschlagen, bitte versuchen Sie es erneut"
+      }
+    },
+    "gray_control": {
+      "strategy_title": "Strategie {index}",
+      "weight": "Gewichtung",
+      "pre_release_users": "Vorveröffentlichungsbenutzer",
+      "traffic_tooltip": "{percent}% des Traffics wird zur Zielversion geleitet",
+      "weight_day_tooltip": "Innerhalb von {days} Tagen wird der Traffic schrittweise auf den Zielwert aktualisiert. Wenn Sie möchten, dass schließlich vollständig auf die angegebene Version aktualisiert wird, können Sie 100% setzen. 0 Tage bedeutet direktes Update des angegebenen Traffics zu dieser Version",
+      "days_suffix": "Tage",
+      "cookie_regex_placeholder": "Cookie-Regex",
+      "target_version": "Zielversion",
+      "latest_version": "Neueste Version",
+      "previous_version": "Vorherige Version",
+      "all_latest_versions": "Alle neuesten Versionen"
+    },
+    "rating": {
+      "error_update_stats": "Fehler beim Aktualisieren der Bewertungsstatistiken:",
+      "login_required": "Bitte melden Sie sich zuerst an",
+      "submit_success": "Bewertung erfolgreich eingereicht!",
+      "submit_error": "Fehler beim Einreichen der Bewertung:",
+      "submit_failed": "Einreichung fehlgeschlagen, bitte versuchen Sie es erneut",
+      "update_success": "Bewertung erfolgreich aktualisiert!",
+      "update_error": "Fehler beim Aktualisieren der Bewertung:",
+      "reply": "Antworten",
+      "reply_placeholder": "Schreiben Sie Ihre Antwort...",
+      "send_reply": "Antwort senden",
+      "cancel": "Abbrechen",
+      "update_failed": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es erneut",
+      "delete_success": "Erfolgreich gelöscht!",
+      "delete_error": "Fehler beim Löschen der Bewertung:",
+      "delete_failed": "Löschen fehlgeschlagen, bitte versuchen Sie es erneut",
+      "reply_success": "Antwort erfolgreich!",
+      "reply_error": "Antwort fehlgeschlagen:",
+      "reply_failed": "Antwort fehlgeschlagen, bitte versuchen Sie es erneut",
+      "fetch_error": "Fehler beim Abrufen der Bewertungsdaten:",
+      "overview": {
+        "based_on_ratings": "Basierend auf {totalRatings} Benutzerbewertungen"
+      },
+      "text": {
+        "excellent": "Ausgezeichnet!",
+        "good": "Sehr gut",
+        "average": "Nicht schlecht",
+        "fair": "Durchschnittlich",
+        "poor": "Verbesserungsbedürftig"
+      },
+      "user_form": {
+        "login_prompt_title": "Nach Anmeldung Skript bewerten",
+        "login_prompt_description": "Nach der Anmeldung können Sie Skripte bewerten und bewerten, um anderen Benutzern bei der Auswahl zu helfen",
+        "login_prompt_button": "Jetzt anmelden",
+        "login_redirect_message": "Bitte gehen Sie zur Anmeldeseite",
+        "please_select_rating": "Bitte Bewertung auswählen",
+        "your_review_title": "Ihre Bewertung",
+        "published_at": "Veröffentlicht am {time}",
+        "edit_button": "Bearbeiten",
+        "rating_label": "Bewertung:",
+        "review_content_label": "Bewertungsinhalt:",
+        "new_review_title": "Teilen Sie Ihre Erfahrung",
+        "edit_review_title": "Bewertung bearbeiten",
+        "review_help_text": "Ihre Bewertung hilft anderen Benutzern",
+        "rating_field_label": "Ihre Bewertung",
+        "review_field_label": "Bewertungsinhalt (optional)",
+        "review_placeholder": "Teilen Sie Ihre Nutzungserfahrung mit, helfen Sie anderen Benutzern, dieses Skript zu verstehen...",
+        "submit_button": "Bewertung veröffentlichen",
+        "update_button": "Bewertung aktualisieren",
+        "cancel_button": "Abbrechen",
+        "reset_button": "Zurücksetzen"
+      },
+      "list": {
+        "title": "Benutzerbewertungen",
+        "title_with_count": "Benutzerbewertungen ({count})",
+        "sort_label": "Sortierung:",
+        "sort_options": {
+          "newest": "Neueste zuerst",
+          "oldest": "Älteste zuerst",
+          "rating_high": "Höchste Bewertung",
+          "rating_low": "Niedrigste Bewertung"
+        },
+        "empty_title": "Noch keine Bewertungen",
+        "empty_description": "Seien Sie der erste Benutzer, der dieses Skript bewertet!",
+        "loading": "Wird geladen...",
+        "load_more": "Mehr Bewertungen laden",
+        "all_loaded": "Alle {count} Bewertungen angezeigt"
+      },
+      "author_tag": "Autor",
+      "admin_tag": "Administrator"
+    },
+    "issue": {
+      "search_placeholder": "Probleme suchen...",
+      "filter_all": "Alle",
+      "filter_pending": "Ausstehend",
+      "filter_resolved": "Gelöst",
+      "create_issue": "Neues Problem",
+      "no_issues_found": "Keine passenden Probleme gefunden",
+      "no_issues": "Noch keine Probleme",
+      "status_pending": "Ausstehend",
+      "status_resolved": "Gelöst",
+      "updated_at": "Aktualisiert am {time}",
+      "pagination_total": "{start}-{end} / {total}",
+      "labels_title": "Bezeichnungen",
+      "labels": {
+        "feature": "Neue Funktion",
+        "question": "Frage",
+        "bug": "BUG"
+      },
+      "create": {
+        "title_required": "Bitte Titel eingeben",
+        "content_required": "Bitte Inhalt eingeben",
+        "submit_success": "Erfolgreich eingereicht",
+        "submit_failed": "Einreichung fehlgeschlagen",
+        "title_placeholder": "Bitte beschreiben Sie kurz das Problem, das Sie melden möchten",
+        "content_placeholder": "Bitte beschreiben Sie das Problem detailliert, einschließlich Reproduktionsschritte, erwartete Ergebnisse usw...",
+        "submit_button": "Feedback einreichen"
+      },
+      "detail": {
+        "page_not_found_title": "Seite nicht gefunden | ScriptCat",
+        "issue_feedback_title": "Problemfeedback | ScriptCat",
+        "issue_title_with_script": "{title} • Feedback #{id} - {scriptName}",
+        "issue_description": "Problemfeedback für {scriptName}: {title}"
+      },
+      "comment": {
+        "labels_added": "Bezeichnungen hinzugefügt:",
+        "labels_removed": "Bezeichnungen entfernt:",
+        "delete_success": "Erfolgreich gelöscht",
+        "delete_failed": "Löschen fehlgeschlagen",
+        "status_pending": "In Bearbeitung",
+        "status_resolved": "Gelöst",
+        "copy_success": "Erfolgreich kopiert",
+        "copy_link": "Link kopieren",
+        "created_at": "Erstellt am {time}",
+        "no_replies": "Noch keine Antworten",
+        "reply": "Antworten",
+        "link": "Link",
+        "reopened_feedback": "Feedback wieder geöffnet",
+        "closed_feedback": "Feedback geschlossen",
+        "comment_placeholder": "Bitte Kommentarinhalt eingeben...",
+        "close_feedback": "Feedback schließen",
+        "reopen_feedback": "Feedback wieder öffnen",
+        "feedback_closed": "Feedback wurde geschlossen",
+        "feedback_reopened": "Feedback wurde wieder geöffnet",
+        "operation_failed": "Operation fehlgeschlagen",
+        "system_error": "Systemfehler",
+        "comment_content_required": "Bitte Kommentarinhalt eingeben",
+        "reply_success": "Antwort erfolgreich",
+        "comment_failed": "Kommentar veröffentlichen fehlgeschlagen",
+        "comment_button": "Kommentieren",
+        "login_to_comment": "Nach Anmeldung kommentieren",
+        "login": "Anmelden",
+        "labels_update_success": "Bezeichnungen erfolgreich aktualisiert",
+        "update_failed": "Aktualisierung fehlgeschlagen",
+        "watch_title": "Folgen",
+        "watch_tooltip": "Diesem Feedback folgen, um Update-Benachrichtigungen zu erhalten",
+        "unwatch_success": "Nicht mehr gefolgt",
+        "watch_success": "Gefolgt",
+        "watch_button": "Folgen",
+        "watched_button": "Gefolgt",
+        "participants_title": "Teilnehmer"
+      }
+    },
+    "statistics": {
+      "loading_failed": "Laden fehlgeschlagen",
+      "loading_failed_description": "Abrufen der Statistikdaten fehlgeschlagen, bitte versuchen Sie es später erneut.",
+      "retry": "Erneut versuchen",
+      "loading_data": "Statistikdaten werden geladen...",
+      "data_notice": "Datenhinweis",
+      "data_notice_description": "Die folgenden Daten dienen nur als Referenz. Bei Abweichungen gilt die tatsächliche Situation. UV steht für eindeutige Besucher, PV für Seitenaufrufe.",
+      "page_views": "Seitenaufrufe",
+      "visitors": "Besucher",
+      "installs": "Installationen",
+      "install": "Installation",
+      "updates": "Updates",
+      "update": "Update",
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "week": "Diese Woche",
+      "growth_tooltip": "Im Vergleich zu gestern {type} {value}%",
+      "growth_increase": "Anstieg",
+      "growth_decrease": "Rückgang",
+      "realtime_downloads": "Echtzeit-Downloads aktualisieren",
+      "realtime_monitoring": "Echtzeit-Datenüberwachung",
+      "realtime_updating": "Echtzeit-Update läuft",
+      "realtime_paused": "Pausiert",
+      "realtime_update": "Echtzeit-Update",
+      "on": "Ein",
+      "off": "Aus",
+      "trend_overview": "Trendübersicht",
+      "30_day_install_trend": "30-Tage-Installationstrend",
+      "30_day_update_trend": "30-Tage-Update-Trend",
+      "line_chart": "Liniendiagramm",
+      "column_chart": "Säulendiagramm"
+    },
+    "editor": {
+      "messages": {
+        "metadata_parse_success": "Skript-Metadaten erfolgreich geparst",
+        "file_upload_success": "Datei erfolgreich hochgeladen!",
+        "script_update_success": "Skript erfolgreich aktualisiert!",
+        "script_create_success": "Skript erfolgreich erstellt!",
+        "script_update_failed": "Skript-Update fehlgeschlagen!",
+        "script_create_failed": "Skript-Erstellung fehlgeschlagen!",
+        "submit_failed": "Einreichung fehlgeschlagen:"
+      },
+      "alerts": {
+        "review_rules_text": "Bitte lesen und befolgen Sie sorgfältig die",
+        "review_rules_link": "Skript-Überprüfungsregeln",
+        "review_rules_description": "um Codequalität und Sicherheit zu gewährleisten. Skripte, die gegen die Regeln verstoßen, werden entfernt oder gelöscht."
+      },
+      "code_section": {
+        "title": "Skriptcode",
+        "tag": "JavaScript",
+        "upload_button": "Lokale Datei hochladen",
+        "file_support": "Unterstützt .js und .user.js Dateien"
+      },
+      "description_section": {
+        "title": "Detaillierte Beschreibung",
+        "tag": "Markdown",
+        "placeholder": "Bitte beschreiben Sie detailliert die Funktionen, Verwendungsmethoden und andere Informationen des Skripts. Markdown-Format wird unterstützt...",
+        "create_button": "Skript erstellen",
+        "update_button": "Update veröffentlichen"
+      },
+      "info_section": {
+        "title": "Skriptinformationen",
+        "script_type_label": "Skripttyp",
+        "script_type_placeholder": "Bitte Skripttyp auswählen",
+        "script_type_required": "Bitte Skripttyp auswählen",
+        "script_category_label": "Skriptkategorie",
+        "script_category_placeholder": "Bitte Skriptkategorie auswählen",
+        "version_label": "Versionsnummer",
+        "version_placeholder": "z.B.: 1.0.0",
+        "version_required": "Bitte Versionsnummer eingeben",
+        "version_tooltip": "Semantische Versionsnummer wird empfohlen, z.B.: 1.0.0, 2.1.5",
+        "prerelease_label": "Vorveröffentlichungsversion",
+        "prerelease_tooltip": "Als Vorveröffentlichungsversion festlegen. Die Vollversion wird nicht auf diese Version aktualisiert. Sie können den Vorveröffentlichungs-Installationslink auf der Skriptverwaltungsseite aktivieren",
+        "tags_label": "Tags",
+        "tags_placeholder_library": "Bitte Tags eingeben",
+        "tags_placeholder_script": "Verwenden Sie @tag zum Hinzufügen von Tags",
+        "tags_tooltip_library": "Bitte Tags eingeben",
+        "tags_tooltip_script": "Verwenden Sie @tag zum Hinzufügen von Tags"
+      },
+      "library_section": {
+        "title": "Bibliotheksbeschreibungsinformationen",
+        "name_label": "Bibliotheksname",
+        "name_placeholder": "z.B.: MyLibrary",
+        "name_required": "Bitte Bibliotheksname eingeben",
+        "description_label": "Bibliotheksbeschreibung",
+        "description_placeholder": "Bitte beschreiben Sie den Zweck und die Funktionen dieser Bibliothek...",
+        "description_required": "Bitte Bibliotheksbeschreibung eingeben"
+      },
+      "changelog_section": {
+        "title": "Änderungsprotokoll",
+        "tag": "Markdown",
+        "placeholder": "z.B.:\n• Ein bekanntes Problem behoben\n• Eine neue Funktion hinzugefügt\n• Leistung optimiert\n• Abhängigkeitsbibliotheken aktualisiert"
+      },
+      "script_types": {
+        "user_script": "Benutzerskript",
+        "subscribe_script": "Abonnement-Skript",
+        "library": "Bibliothek"
+      }
+    },
+    "version": {
+      "update_success": "Versionsinformationen erfolgreich aktualisiert",
+      "update_failed": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es erneut",
+      "update_version_failed": "Version-Update fehlgeschlagen:",
+      "delete_success": "Version erfolgreich gelöscht",
+      "delete_failed": "Löschen fehlgeschlagen, bitte versuchen Sie es erneut",
+      "delete_version_failed": "Versionslöschung fehlgeschlagen:",
+      "install_success": "Installation von {version} beginnt",
+      "load_failed": "Laden fehlgeschlagen",
+      "load_failed_description": "Fehler beim Abrufen der Versionsliste, bitte Seite aktualisieren und erneut versuchen",
+      "retry": "Erneut versuchen",
+      "latest_version_badge": "Neueste Version",
+      "prerelease_badge": "Vorveröffentlichungsversion",
+      "history_title": "Versionshistorie",
+      "history_description": "Alle veröffentlichten Versionen anzeigen, einschließlich Vollversionen und Vorveröffentlichungsversionen. Sie können jede Version installieren oder ihren Quellcode anzeigen.",
+      "no_history_title": "Noch keine Versionshistorie",
+      "no_history_description": "Dieses Skript hat noch keine Versionen veröffentlicht",
+      "total_versions": "Gesamtanzahl Versionen",
+      "release_versions": "Vollversionen",
+      "prerelease_versions": "Vorveröffentlichungsversionen",
+      "pagination_info": "Zeigt Element {start}-{end} von insgesamt {total}",
+      "edit_button": "Bearbeiten",
+      "delete_button": "Löschen",
+      "install_button": "Diese Version installieren",
+      "view_code_button": "Code anzeigen",
+      "confirm_delete_title": "Löschen bestätigen",
+      "confirm_delete_description": "Möchten Sie diese Version wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "confirm_delete_ok": "Löschen",
+      "confirm_delete_cancel": "Abbrechen",
+      "pagination_total": "Element {start}-{end} von insgesamt {total} Versionen",
+      "edit_modal_title": "Version {version} bearbeiten",
+      "changelog_label": "Update-Beschreibung",
+      "changelog_subtitle": "(Unterstützt Markdown-Syntax)",
+      "changelog_placeholder": "z.B.:\n✨ Neue Funktion: Benutzeroberflächen-Optimierung hinzugefügt\n🐛 Problem behoben: Browser-Kompatibilitätsproblem gelöst\n⚡ Leistungsverbesserung: Skript-Ausführungsgeschwindigkeit optimiert\n📦 Abhängigkeits-Update: Auf neueste Version aktualisiert",
+      "version_type_label": "Versionstyp",
+      "version_type_extra": "Vorveröffentlichungsversionen werden normalerweise zum Testen neuer Funktionen verwendet und sind möglicherweise nicht stabil",
+      "prerelease_checked": "Vorveröffentlichungsversion",
+      "prerelease_unchecked": "Vollversion",
+      "save_changes": "Änderungen speichern"
+    },
+    "manage": {
+      "navigation": {
+        "source_sync": "Quellcode-Synchronisation",
+        "script_settings": "Skriptverwaltung",
+        "script_publish": "Skriptveröffentlichung",
+        "manage_logs": "Verwaltungsprotokolle",
+        "access_control": "Zugriffsberechtigung verwalten",
+        "group_management": "Benutzergruppenverwaltung"
+      },
+      "sync": {
+        "title": "Quellcode-Synchronisation",
+        "description": "Konfigurieren Sie die Quellcode-Synchronisation des Skripts, unterstützt automatische oder manuelle Synchronisation von Skriptinhalten von GitHub, GitLab und anderen Code-Hosting-Plattformen.",
+        "sync_url_label": "Synchronisationsadresse",
+        "sync_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/script.js",
+        "sync_url_required": "Bitte Synchronisationsadresse eingeben",
+        "sync_mode_label": "Synchronisationsmodus",
+        "sync_mode_auto": "Automatische Synchronisation - Regelmäßige Überprüfung auf Updates und automatische Synchronisation, Sie können auch Webhook für Updates einrichten",
+        "sync_mode_manual": "Manuelle Synchronisation - Nur bei manuellem Klick synchronisieren",
+        "content_url_label": "Skriptbeschreibung Synchronisationsadresse",
+        "content_url_description": "Optional: Synchronisieren Sie die README oder Dokumentation des Skripts, unterstützt Markdown-Format",
+        "content_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/README.md",
+        "save_and_sync_button": "Speichern und einmal synchronisieren",
+        "sync_success": "Synchronisationskonfiguration gespeichert und erfolgreich synchronisiert",
+        "sync_failed": "Synchronisation fehlgeschlagen, bitte überprüfen Sie die Netzwerkverbindung oder ob die Adresse korrekt ist"
+      },
+      "access": {
+        "title": "Zugriffsberechtigung verwalten",
+        "description": "Verwalten Sie Benutzer- und Benutzergruppenberechtigungen für dieses Skript, einschließlich Rollenzuweisung und Berechtigungslaufzeiten",
+        "add_user_group_button": "Benutzer/Benutzergruppe hinzufügen",
+        "update_success": "Erfolgreich aktualisiert",
+        "update_failed": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es später erneut",
+        "delete_confirm_title": "Löschen der Zugriffsberechtigung bestätigen",
+        "delete_confirm_content": "Zugriffsberechtigung für {entityType} \"{itemName}\" löschen bestätigen? Diese Aktion kann nicht rückgängig gemacht werden.",
+        "delete_confirm_ok": "Löschen bestätigen",
+        "delete_confirm_cancel": "Abbrechen",
+        "delete_success": "Erfolgreich gelöscht",
+        "delete_failed": "Löschen fehlgeschlagen, bitte versuchen Sie es später erneut",
+        "status": {
+          "accepted": "Akzeptiert",
+          "rejected": "Abgelehnt",
+          "pending": "Wartend auf Bestätigung"
+        },
+        "table": {
+          "user_group_column": "Benutzer/Benutzergruppe",
+          "status_column": "Status",
+          "role_column": "Berechtigungsrolle",
+          "expire_column": "Ablaufzeit",
+          "action_column": "Aktion",
+          "delete_tooltip": "Zugriffsberechtigung löschen",
+          "delete_button": "Löschen"
+        },
+        "entity_types": {
+          "user": "Benutzer",
+          "group": "Benutzergruppe"
+        },
+        "roles": {
+          "visitor": "Besucher",
+          "admin": "Administrator"
+        },
+        "time": {
+          "add_time": "Hinzufügungszeit:",
+          "never_expire": "Läuft nie ab",
+          "expired": "(Abgelaufen)"
+        },
+        "stats": {
+          "total": "Gesamt:",
+          "users": "Benutzer:",
+          "groups": "Benutzergruppen:",
+          "pending": "Wartend auf Bestätigung:",
+          "expired": "Abgelaufen:"
+        },
+        "pagination": {
+          "total": "Element {start}-{end} von insgesamt {total}"
+        },
+        "empty": {
+          "title": "Noch keine Benutzer oder Benutzergruppen mit Zugriffsberechtigung",
+          "button": "Ersten Benutzer/Benutzergruppe hinzufügen"
+        }
+      },
+      "logs": {
+        "title": "Verwaltungsprotokolle",
+        "under_construction": "Funktion wird entwickelt",
+        "description": "Die Protokollverwaltungsfunktion wird entwickelt, bitte haben Sie Geduld."
+      },
+      "groups": {
+        "title": "Benutzergruppenverwaltung",
+        "description": "Verwalten Sie Benutzergruppenberechtigungen für Skripte und kontrollieren Sie Zugriffslevel verschiedener Benutzer",
+        "create_group_button": "Neue Benutzergruppe erstellen",
+        "create_group_title": "Benutzergruppe erstellen",
+        "manage_members_title": "Benutzergruppenmitglieder verwalten",
+        "member_management_title": "Mitgliederverwaltung",
+        "invite_user_button": "Benutzer einladen",
+        "invite_first_user_button": "Ersten Benutzer einladen",
+        "create_first_group_button": "Erste Benutzergruppe erstellen",
+        "group_name_label": "Gruppenname",
+        "group_description_label": "Gruppenbeschreibung",
+        "group_name_placeholder": "Bitte Benutzergruppennamen eingeben",
+        "group_description_placeholder": "Bitte beschreiben Sie detailliert den Zweck und Berechtigungsbereich dieser Benutzergruppe",
+        "group_name_required": "Bitte Gruppennamen eingeben",
+        "group_description_required": "Bitte Gruppenbeschreibung eingeben",
+        "group_name_max_length": "Gruppenname darf 50 Zeichen nicht überschreiten",
+        "group_description_max_length": "Beschreibung darf 200 Zeichen nicht überschreiten",
+        "create_button": "Erstellen",
+        "close_button": "Schließen",
+        "cancel_button": "Abbrechen",
+        "create_success": "Erfolgreich erstellt",
+        "create_failed": "Erstellung fehlgeschlagen",
+        "delete_confirm_title": "Löschen bestätigen",
+        "delete_confirm_content": "Benutzergruppe \"{groupName}\" löschen bestätigen?",
+        "delete_confirm_description": "Nach dem Löschen verlieren alle Mitglieder dieser Benutzergruppe die entsprechenden Berechtigungen. Diese Aktion kann nicht rückgängig gemacht werden",
+        "delete_confirm_button": "Löschen bestätigen",
+        "delete_success": "Erfolgreich gelöscht",
+        "delete_failed": "Löschen fehlgeschlagen",
+        "remove_member_confirm_title": "Entfernen bestätigen",
+        "remove_member_confirm_content": "Benutzer {userName} entfernen bestätigen?",
+        "remove_member_confirm_description": "Nach dem Entfernen verliert dieser Benutzer die Zugriffsberechtigung",
+        "remove_member_button": "Entfernen",
+        "remove_success": "Erfolgreich entfernt",
+        "remove_failed": "Entfernen fehlgeschlagen",
+        "manage_button": "Verwalten",
+        "delete_button": "Löschen",
+        "confirm_button": "Bestätigen",
+        "status": {
+          "waiting_confirm": "Wartend auf Bestätigung",
+          "joined": "Beigetreten"
+        },
+        "time": {
+          "never_expire": "Läuft nie ab",
+          "expire_on": "Läuft ab",
+          "expired": "Abgelaufen"
+        },
+        "table": {
+          "user_column": "Benutzer",
+          "group_column": "Benutzergruppe",
+          "status_column": "Status",
+          "expire_time_column": "Ablaufzeit",
+          "member_column": "Mitglied",
+          "action_column": "Aktion",
+          "manage_members_tooltip": "Mitglieder verwalten",
+          "delete_group_tooltip": "Benutzergruppe löschen",
+          "remove_member_tooltip": "Mitglied entfernen"
+        },
+        "stats": {
+          "total_label": "Gesamt",
+          "member_total_label": "Mitglieder gesamt",
+          "active_groups_label": "Aktive Benutzergruppen",
+          "member_count": "{count} Mitglieder",
+          "current_member_count": "Derzeit insgesamt {count} Mitglieder"
+        },
+        "pagination": {
+          "total": "Element {start}-{end} von insgesamt {total}"
+        },
+        "empty": {
+          "no_groups": "Noch keine Benutzergruppen",
+          "no_members": "Noch keine Mitglieder"
+        }
+      },
+      "settings": {
+        "library_info": {
+          "title": "Bibliotheksinformationen einstellen",
+          "description": "Konfigurieren Sie grundlegende Informationen der Skriptbibliothek, einschließlich Name, Beschreibung usw.",
+          "name_label": "Bibliotheksname",
+          "name_placeholder": "Bitte Bibliotheksname eingeben",
+          "name_required": "Skriptname darf nicht leer sein",
+          "description_label": "Bibliotheksbeschreibung",
+          "description_placeholder": "Bitte Bibliotheksbeschreibung eingeben",
+          "save_button": "Bibliotheksinformationen speichern",
+          "save_success": "Bibliotheksinformationen erfolgreich gespeichert",
+          "save_failed": "Speichern fehlgeschlagen"
+        },
+        "public_settings": {
+          "title": "Skript-Öffentlichkeitseinstellungen",
+          "description": "Konfigurieren Sie den öffentlichen Status des Skripts und bestimmen Sie die Sichtbarkeit und Zugriffsberechtigungen des Skripts.",
+          "visibility_title": "Skriptsichtbarkeit",
+          "visibility_private": "Skript ist privat, nur für Sie sichtbar",
+          "visibility_unlisted": "Skript ist nicht öffentlich, nur über direkten Link zugänglich",
+          "visibility_public": "Skript ist öffentlich, alle Benutzer können es anzeigen und installieren",
+          "public_option": "Öffentlich",
+          "unlisted_option": "Nicht öffentlich",
+          "private_option": "Privat",
+          "public_update_success": "Öffentlichkeitsstatus erfolgreich aktualisiert",
+          "update_failed": "Aktualisierung fehlgeschlagen",
+          "content_marking_title": "Inhaltsmarkierung",
+          "unwell_checkbox": "Als möglicherweise unangemessenen Inhalt markieren",
+          "unwell_description": "Diese Website kann störende Inhalte enthalten, einschließlich aber nicht beschränkt auf häufiges Blinken von rot-blauen Lichtern, Inhalte, die visuell oder geistig schädlich sind.",
+          "unwell_update_success": "Unangemessene Inhaltsmarkierung erfolgreich aktualisiert"
+        },
+        "script_management": {
+          "title": "Skriptverwaltung",
+          "description": "Verwalten Sie Skriptstatus und Löschung",
+          "status_management_title": "Skriptstatus-Verwaltung",
+          "archive_button": "Skript archivieren",
+          "unarchive_button": "Archivierung aufheben",
+          "archive_description": "Nach der Archivierung unterstützt das Skript keine Updates mehr und Benutzer können kein Feedback geben, aber es kann weiterhin verwendet werden",
+          "unarchive_description": "Skript ist archiviert, klicken Sie um Archivierungsstatus aufzuheben",
+          "dangerous_operations_title": "Gefährliche Operationen",
+          "delete_button": "Skript löschen",
+          "delete_warning": "Nach dem Löschen des Skripts können alle Daten nicht wiederhergestellt werden, bitte seien Sie vorsichtig!"
+        },
+        "confirmations": {
+          "archive_confirm_title": "Skriptarchivierung bestätigen?",
+          "unarchive_confirm_title": "Archivierung aufheben bestätigen?",
+          "archive_confirm_content": "Nach der Archivierung unterstützt das Skript keine Updates mehr und Benutzer können kein Feedback geben, aber es kann weiterhin verwendet werden.",
+          "unarchive_confirm_content": "Nach Aufhebung der Archivierung kann das Skript Benutzerfeedback und andere Informationen erhalten.",
+          "delete_confirm_title": "Skriptlöschung bestätigen?",
+          "delete_confirm_content": "Nach dem Löschen des Skripts können alle Daten nicht wiederhergestellt werden, bitte seien Sie vorsichtig!",
+          "confirm_button": "Bestätigen",
+          "confirm_delete_button": "Löschen bestätigen",
+          "cancel_button": "Abbrechen"
+        },
+        "messages": {
+          "archive_success": "Skript wurde archiviert",
+          "unarchive_success": "Skriptarchivierung wurde aufgehoben",
+          "archive_failed": "Archivierungsoperation fehlgeschlagen",
+          "operation_failed": "Operation fehlgeschlagen",
+          "delete_success": "Skript wurde gelöscht",
+          "delete_failed": "Löschen fehlgeschlagen"
+        }
+      }
+    },
+    "invite": {
+      "create_invite_code": "Einladungscode erstellen",
+      "cancel": "Abbrechen",
+      "create": "Erstellen",
+      "create_count": "Erstellungsanzahl",
+      "expire_time": "Ablaufzeit",
+      "days": "Tage",
+      "no_limit": "Unbegrenzt",
+      "admin_audit": "Administrator-Überprüfung",
+      "create_success": "Erfolgreich erstellt",
+      "copy_success": "Erfolgreich kopiert",
+      "copy_failed": "Kopieren fehlgeschlagen",
+      "copy_link": "Link kopieren",
+      "close": "Schließen",
+      "invite_list_description": "Die erstellte Einladungsliste ist wie folgt:",
+      "submit_success": "Erfolgreich eingereicht",
+      "create_failed": "Erstellung fehlgeschlagen",
+      "never_expire": "Läuft nie ab",
+      "expire_suffix": " abgelaufen",
+      "status_unused": "Nicht verwendet",
+      "status_used": "Verwendet",
+      "status_expired": "Abgelaufen",
+      "status_pending_review": "Überprüfung ausstehend",
+      "status_rejected": "Abgelehnt",
+      "status_unknown": "Unbekannter Status",
+      "invite_code": "Einladungscode",
+      "status": "Status",
+      "action": "Aktion",
+      "invite_confirmation": "Einladungscode-Bestätigung",
+      "confirm_allow_invite": "Diese Einladung zulassen bestätigen?",
+      "confirm": "Bestätigen",
+      "allow": "Zulassen",
+      "confirm_delete": "Löschen bestätigen",
+      "confirm_delete_invite": "Diesen Einladungscode wirklich löschen?",
+      "delete_success": "Erfolgreich gelöscht",
+      "delete_failed": "Löschen fehlgeschlagen, bitte versuchen Sie es später erneut",
+      "delete": "Löschen",
+      "operation_success": "Operation erfolgreich",
+      "get_invite_info_failed": "Abrufen der Einladungsinformationen fehlgeschlagen",
+      "check_invite_link": "Bitte überprüfen Sie, ob der Einladungslink korrekt ist",
+      "back_to_home": "Zur Startseite zurückkehren",
+      "loading_invite_info": "Einladungsinformationen werden geladen...",
+      "operation_failed_retry": "Operation fehlgeschlagen, bitte versuchen Sie es später erneut",
+      "status_pending": "In Bearbeitung",
+      "status_accepted": "Akzeptiert",
+      "status_waiting": "Wartend",
+      "permission_read": "Leserecht",
+      "permission_write": "Schreibrecht",
+      "invite_you": "lädt Sie ein",
+      "join": "Beitreten",
+      "organization": "Organisation",
+      "permission_description": "Berechtigungsbeschreibung",
+      "permission_after_join": "Nach dem Beitritt erhalten Sie folgende Berechtigungen:",
+      "agree": "Zustimmen",
+      "reject": "Ablehnen",
+      "invite_accepted": "Einladung wurde akzeptiert",
+      "code_used": "{code} wurde verwendet",
+      "invite_expired": "Einladung ist abgelaufen",
+      "code_expired": "{code} ist abgelaufen",
+      "waiting_process": "Wartend auf Bearbeitung",
+      "code_waiting": "{code} wird bearbeitet",
+      "invite_rejected": "Einladung wurde abgelehnt",
+      "code_rejected": "{code} wurde abgelehnt",
+      "unknown_status": "Unbekannter Status",
+      "invite_confirm": "Einladung bestätigen",
+      "organization_invite": "Organisationseinladung",
+      "script_collaboration_invite": "Skript-Kollaborationseinladung",
+      "view_script_details": "Skriptdetails anzeigen",
+      "invite_you_join_group": "{inviter} lädt Sie ein, {holder}s {property} beizutreten",
+      "invite_you_join": "{inviter} lädt Sie ein, {holder} beizutreten"
+    },
+    "user_modal": {
+      "submit_success": "Erfolgreich eingereicht",
+      "submit_failed": "Einreichung fehlgeschlagen",
+      "form_validation_failed": "Formularvalidierung fehlgeschlagen:",
+      "please_select_user": "Bitte Benutzer auswählen",
+      "username": "Benutzername",
+      "grant_permission": "Berechtigung gewähren",
+      "guest": "Gast",
+      "admin": "Administrator",
+      "expire_time": "Ablaufzeit",
+      "please_select_expire_time": "Bitte Ablaufzeit auswählen",
+      "user_group": "Benutzergruppe",
+      "please_select_user_group": "Bitte Benutzergruppe auswählen",
+      "invite_by_username": "Über Benutzername einladen",
+      "invite_by_user_group": "Über Benutzergruppe einladen",
+      "invite_by_code": "Über Einladungscode einladen",
+      "select_user_or_group": "Bitte Benutzer oder Benutzergruppe auswählen",
+      "cancel": "Abbrechen",
+      "add": "Hinzufügen"
+    },
+    "publish": {
+      "prerelease_and_gray_release": "Vorveröffentlichung und Graustufenveröffentlichung",
+      "manage_prerelease_and_gray_strategy": "Vorveröffentlichungs- und Graustufenveröffentlichungsstrategie des Skripts verwalten",
+      "enable_prerelease": "Vorveröffentlichung aktivieren",
+      "prerelease_description_part1": "Wenn der Vorveröffentlichungsschalter aktiviert ist und die Version der",
+      "semantic_version": "semantischen Versionierung",
+      "prerelease_description_part2": "entspricht, wird das Skript-Update automatisch als Vorveröffentlichungsversion markiert und ein Installationsbutton für die Vorveröffentlichungsversion wird auf der Skript-Startseite bereitgestellt.",
+      "prerelease_first_enable_tip": "(Beim ersten Aktivieren werden drei Strategien hinzugefügt: Vorveröffentlichungsbenutzer aktualisieren zu allen neuesten Versionen, Vollversionen werden gewichtet über 10 Tage schrittweise auf die neueste Vollversion aktualisiert, andere Benutzer aktualisieren zur vorherigen Vollversion)",
+      "enable": "Aktivieren",
+      "disable": "Deaktivieren",
+      "gray_release": "Graustufenveröffentlichung",
+      "add_strategy": "Strategie hinzufügen",
+      "gray_strategy_description": "Sie können bestimmte Strategien konfigurieren (Strategien haben Reihenfolge), damit Ihre Skriptbenutzer auf angegebene Versionen aktualisieren",
+      "gray_strategy_saved": "Graustufenveröffentlichungsstrategie wurde gespeichert",
+      "load_gray_config_failed": "Laden der Graustufenveröffentlichungskonfiguration fehlgeschlagen:",
+      "save_gray_strategy_failed": "Speichern der Graustufenveröffentlichungsstrategie fehlgeschlagen:",
+      "save_failed": "Speichern fehlgeschlagen",
+      "save_and_apply_strategy": "Strategie speichern und anwenden"
+    }
+  },
+  "error": {
+    "500_title": "Interner Serverfehler",
+    "500_subtitle": "Entschuldigung, unser Server hat einige Probleme",
+    "500_description": "Unser Server kann Ihre Anfrage vorübergehend nicht bearbeiten. Wir haben den Fehlerbericht erhalten und arbeiten daran, dieses Problem zu beheben.",
+    "404_title": "Seite nicht gefunden",
+    "404_subtitle": "Entschuldigung, die von Ihnen aufgerufene Seite existiert nicht",
+    "404_description": "Bitte überprüfen Sie, ob die URL-Adresse korrekt ist, oder beginnen Sie von der Startseite aus erneut zu browsen.",
+    "403_title": "Zugriff verweigert",
+    "403_subtitle": "Entschuldigung, Sie haben keine Berechtigung, auf diese Seite zuzugreifen",
+    "403_description": "Bitte wenden Sie sich an den Administrator, um Zugriffsberechtigung zu erhalten, oder überprüfen Sie Ihren Anmeldestatus.",
+    "feedback_notice": "Bitte geben Sie bei Feedback die oben genannte Fehler-ID und den Fehlercode an, dies hilft uns, das Problem schneller zu lokalisieren und zu lösen.",
+    "error_code": "Fehlercode",
+    "error_time": "Fehlerzeit",
+    "feedback_title": "Probleme aufgetreten?",
+    "feedback_description": "Wenn das Problem weiterhin besteht, kontaktieren Sie uns bitte über folgende Wege:",
+    "feedback_forum": "Zur Community-Feedback gehen",
+    "feedback_github": "GitHub Issues",
+    "contact_admin": "Administrator kontaktieren",
+    "back_to_home": "Zur Startseite zurückkehren",
+    "refresh_page": "Seite aktualisieren",
+    "what_happened": "Was ist passiert?",
+    "server_error_details": "Der Server ist beim Verarbeiten Ihrer Anfrage auf einen internen Fehler gestoßen. Dies könnte durch hohe Serverlast, Datenbankverbindungsprobleme oder andere technische Störungen verursacht werden.",
+    "what_can_do": "Sie können versuchen:",
+    "try_refresh": "Aktuelle Seite aktualisieren",
+    "try_later": "Später erneut versuchen",
+    "check_network": "Netzwerkverbindung überprüfen",
+    "contact_us": "Uns kontaktieren",
+    "error_id": "Fehler-ID"
+  },
+  "components": {
+    "markdown_editor": {
+      "placeholder": "Bitte Inhalt eingeben...",
+      "loading_editor": "Editor wird geladen...",
+      "uploading_image": "Bild wird hochgeladen...",
+      "image_upload_failed": "Bild-Upload fehlgeschlagen"
+    }
+  },
+  "user": {
+    "user_not_found": "Benutzer existiert nicht",
+    "user_homepage": "Benutzer-Homepage",
+    "update_success": "Benutzerinformationen erfolgreich aktualisiert!",
+    "update_failed": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es erneut",
+    "avatar_upload_success": "Avatar erfolgreich hochgeladen!",
+    "avatar_upload_failed": "Avatar-Upload fehlgeschlagen!",
+    "avatar_format_error": "Nur JPG/PNG-Bilder können hochgeladen werden!",
+    "avatar_size_error": "Bildgröße darf 1MB nicht überschreiten!",
+    "edit_profile_title": "Persönliche Informationen bearbeiten",
+    "avatar": "Avatar",
+    "change_avatar": "Avatar ändern",
+    "avatar_help_text": "Unterstützt JPG, PNG-Format, Dateigröße nicht mehr als 1MB",
+    "username": "Benutzername",
+    "username_placeholder": "Bitte Benutzername eingeben",
+    "description": "Persönliche Beschreibung",
+    "description_max_length": "Persönliche Beschreibung darf 200 Zeichen nicht überschreiten",
+    "description_placeholder": "Erzählen Sie etwas über sich...",
+    "email_validation": "Bitte gültige E-Mail-Adresse eingeben",
+    "email_max_length": "E-Mail-Adresse darf 50 Zeichen nicht überschreiten",
+    "email_placeholder": "Kontakt-E-Mail",
+    "location": "Standort",
+    "location_max_length": "Standort darf 50 Zeichen nicht überschreiten",
+    "location_placeholder": "z.B.: Berlin, Deutschland",
+    "website": "Persönliche Website",
+    "website_validation": "Bitte gültige URL eingeben",
+    "website_max_length": "URL darf 100 Zeichen nicht überschreiten",
+    "website_placeholder": "https://example.com",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "profile": {
+      "my_scripts": "Meine Skripte",
+      "my_favorites": "Meine Favoriten",
+      "login_required": "Bitte melden Sie sich zuerst an",
+      "follow_success": "Erfolgreich gefolgt",
+      "unfollow_success": "Nicht mehr gefolgt",
+      "operation_failed": "Operation fehlgeschlagen, bitte versuchen Sie es erneut",
+      "message_feature_developing": "Nachrichtenfunktion wird entwickelt...",
+      "link_copied": "Link wurde in die Zwischenablage kopiert",
+      "report": "Melden",
+      "administrator": "Administrator",
+      "verified": "Verifiziert",
+      "edit_profile": "Persönliche Informationen bearbeiten",
+      "followed": "Gefolgt",
+      "follow": "Folgen",
+      "private_message": "Private Nachricht",
+      "join_time": "Beitrittsdatum",
+      "last_active": "Zuletzt aktiv",
+      "email": "E-Mail",
+      "location": "Standort",
+      "personal_website": "Persönliche Website",
+      "follow_section": "Folgen",
+      "followers_following": "{followers} Follower • {following} folgt",
+      "achievement_badges": "Auszeichnungen",
+      "profile_update_success": "Persönliche Informationen erfolgreich aktualisiert!"
+    },
+    "favorites": {
+      "unfavorite_success": "Favorit entfernt",
+      "unfavorite_failed": "Entfernen des Favoriten fehlgeschlagen, bitte versuchen Sie es erneut",
+      "create_folder_coming_soon": "Favoritenordner-Erstellungsfunktion wird entwickelt",
+      "no_description": "Noch keine Beschreibung",
+      "script_count": "{count} Skripte",
+      "unfavoriting": "Entfernen...",
+      "unfavorite": "Favorit entfernen",
+      "unfavorite_tooltip": "Dieses Skript aus Favoriten entfernen",
+      "no_favorites": "Dieser Benutzer hat noch keine Skripte favorisiert",
+      "discover_scripts": "Skripte entdecken",
+      "my_folders": "Meine Favoritenordner",
+      "create_folder": "Favoritenordner erstellen",
+      "favorite_scripts": "Favorisierte Skripte",
+      "no_scripts_in_category": "Keine favorisierten Skripte in dieser Kategorie",
+      "pagination_total": "Element {start}-{end} von insgesamt {total}",
+      "folder_title": "{folderName} - {username}s Favoritenordner",
+      "folder_description": "{username}s Favoritenordner \"{folderName}\", enthält insgesamt {count} Skripte",
+      "folder_not_found": "Favoritenordner existiert nicht",
+      "folder_not_found_description": "Der von Ihnen aufgerufene Favoritenordner existiert nicht oder wurde gelöscht",
+      "folder_error": "Favoritenordner existiert nicht oder wurde gelöscht",
+      "go_back": "Zurück",
+      "home": "Startseite",
+      "favorites_breadcrumb": "Favoritenordner",
+      "script_count_text": "Anzahl Skripte:",
+      "edit_folder": "Favoritenordner bearbeiten",
+      "subscription_link": "Abonnement-Link",
+      "favorite_scripts_title": "Favorisierte Skripte ({total})",
+      "cancel_favorite_error": "Entfernen des Favoriten fehlgeschlagen:",
+      "no_script_manager_title": "Kein Skript-Manager erkannt",
+      "no_script_manager_content": "Es wurde keine ScriptCat-Erweiterung im Browser erkannt. Möchten Sie den Abonnement-Link trotzdem öffnen?",
+      "confirm_open": "Bestätigen und öffnen",
+      "cancel": "Abbrechen",
+      "status_public": "Öffentlich",
+      "status_private": "Privat",
+      "pagination_items": "Element {start}-{end} von insgesamt {total}",
+      "no_scripts_in_folder": "Dieser Favoritenordner enthält noch keine Skripte",
+      "edit_modal": {
+        "title": "Favoritenordner bearbeiten",
+        "update_success": "Favoritenordner erfolgreich aktualisiert!",
+        "update_failed_prefix": "Aktualisierung des Favoritenordners fehlgeschlagen:",
+        "update_failed_generic": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es erneut",
+        "name_label": "Name des Favoritenordners",
+        "name_placeholder": "Bitte Namen des Favoritenordners eingeben",
+        "name_required": "Bitte Namen des Favoritenordners eingeben",
+        "name_length_error": "Name des Favoritenordners sollte zwischen 1-50 Zeichen lang sein",
+        "description_label": "Beschreibung",
+        "description_placeholder": "Bitte Beschreibung des Favoritenordners eingeben (optional)",
+        "description_length_error": "Beschreibung darf 500 Zeichen nicht überschreiten",
+        "private_label": "Privater Favoritenordner",
+        "private_help_text": "Nach Aktivierung können nur Sie diesen Favoritenordner sehen",
+        "cancel_button": "Abbrechen",
+        "save_button": "Speichern"
+      }
+    },
+    "script_list": {
+      "search_placeholder": "Skripte dieses Benutzers suchen",
+      "search_button": "Suchen",
+      "all_types_placeholder": "Alle Typen",
+      "type_all": "Alle",
+      "type_script": "Skript",
+      "sort_by_hot": "Nach Popularität sortieren",
+      "sort_by_latest": "Neueste Veröffentlichung",
+      "sort_by_updated": "Kürzlich aktualisiert",
+      "sort_by_score": "Höchste Bewertung",
+      "sort_by_downloads": "Meist heruntergeladen",
+      "loading": "Wird geladen...",
+      "pagination_total": "{start}-{end} / insgesamt {total} Skripte"
+    },
+    "settings": {
+      "user_settings": "Benutzereinstellungen",
+      "settings_description": "Verwalten Sie Ihre Kontopräferenzen, einschließlich Webhook-Konfiguration und Benachrichtigungsoptionen",
+      "webhook_settings": "Webhook-Einstellungen",
+      "notification_settings": "Benachrichtigungseinstellungen"
+    },
+    "webhook": {
+      "copy_success": "Erfolgreich kopiert",
+      "copy_failed": "Kopieren fehlgeschlagen",
+      "settings_title": "Webhook-Einstellungen",
+      "settings_description": "Mit Webhook können Sie Nachrichten von Github und anderen Orten empfangen. Konfigurieren Sie die Update-URL in der Skriptverwaltung auf der Skriptseite, um automatische und sofortige Skript-Updates zu ermöglichen.",
+      "config_steps": "Konfigurationsschritte",
+      "config_tip_title": "Konfigurationstipp",
+      "config_tip_description": "Folgen Sie bitte den nachstehenden Schritten, um die Webhook-Konfiguration abzuschließen und sicherzustellen, dass Skripte korrekt mit Ihrem Code-Repository synchronisiert werden können.",
+      "step_bind_repo": "Code-Repository verknüpfen",
+      "step_bind_repo_desc": "Besuchen Sie das Github-Repository und gehen Sie zu Einstellungen",
+      "step_config_webhook": "Webhook konfigurieren",
+      "step_config_webhook_desc": "Klicken Sie auf \"Add webhook\"",
+      "step_config_webhook_detail": "Konfigurieren Sie die folgende Webhook-Adresse und den Schlüssel in Ihrem Code-Repository",
+      "step_select_events": "Trigger-Events auswählen",
+      "step_select_events_desc": "Wählen Sie die zu überwachenden Event-Typen:",
+      "event_push": "Push-Event",
+      "event_push_desc": "Synchronisation beim Code-Push auslösen",
+      "event_release": "Release-Event",
+      "event_release_desc": "Synchronisation bei neuer Veröffentlichung auslösen",
+      "event_tag": "Tag-Event",
+      "event_tag_desc": "Synchronisation bei Tag-Erstellung auslösen",
+      "config_info_title": "Webhook-Konfigurationsinformationen",
+      "copy_url_tooltip": "URL kopieren",
+      "copy_content_type_tooltip": "Content-Type kopieren",
+      "copy_secret_tooltip": "Secret kopieren",
+      "refresh_secret": "Schlüssel aktualisieren",
+      "confirm_refresh_title": "Schlüssel aktualisieren bestätigen?",
+      "confirm_refresh_content": "Nach der Aktualisierung wird der alte Schlüssel ungültig. Bitte aktualisieren Sie rechtzeitig Ihre Webhook-Konfiguration",
+      "confirm_refresh": "Aktualisierung bestätigen",
+      "cancel": "Abbrechen",
+      "refresh_success": "Schlüssel erfolgreich aktualisiert",
+      "refresh_failed": "Aktualisierung fehlgeschlagen",
+      "security_tip_title": "Sicherheitshinweis",
+      "security_tip_content": "Bitte bewahren Sie Ihren Secret-Schlüssel sicher auf und geben Sie ihn nicht an andere weiter. Wenn Sie vermuten, dass der Schlüssel kompromittiert wurde, aktualisieren Sie ihn sofort."
+    },
+    "notification_settings": {
+      "settings_saved": "Einstellungen gespeichert",
+      "save_failed": "Speichern fehlgeschlagen",
+      "notification_settings_title": "Benachrichtigungseinstellungen",
+      "notification_settings_description": "Passen Sie Ihre E-Mail-Benachrichtigungspräferenzen an, um rechtzeitig über wichtige Skript-bezogene Dynamiken und Interaktionsinformationen informiert zu werden.",
+      "interaction_notifications": "Interaktionsbenachrichtigungen",
+      "mention_notification_title": "Benachrichtigung senden, wenn ich erwähnt werde",
+      "mention_notification_description": "E-Mail-Benachrichtigung senden, wenn Benutzer mich in Kommentaren oder Feedback erwähnen",
+      "score_notification_title": "Skript-Bewertungsbenachrichtigung",
+      "score_notification_description": "Benachrichtigung senden, wenn meine Skripte neue Bewertungen erhalten",
+      "script_management": "Skriptverwaltung",
+      "create_script_notification_title": "Skript-Erstellungsbenachrichtigung",
+      "create_script_notification_description": "Benachrichtigung senden, wenn gefolgte Benutzer Skripte erstellen",
+      "script_update_notification_title": "Gefolgte Skript-Updates",
+      "script_update_notification_description": "Benachrichtigung senden, wenn gefolgte Skripte neue Versionen haben",
+      "feedback_interaction": "Feedback-Interaktion",
+      "script_issue_notification_title": "Neue Feedback-Benachrichtigung",
+      "script_issue_notification_description": "Benachrichtigung senden, wenn gefolgte Skripte neue Problemfeedbacks erhalten",
+      "script_issue_comment_notification_title": "Feedback-Antwortbenachrichtigung",
+      "script_issue_comment_notification_description": "Benachrichtigung senden, wenn gefolgte Feedbacks neue Antworten haben",
+      "admin_badge": "Administrator",
+      "email_notification_info_title": "E-Mail-Benachrichtigungsinformationen",
+      "email_notification_info_item_1": "Alle Benachrichtigungen werden an Ihre registrierte E-Mail gesendet",
+      "email_notification_info_item_2": "Sie können diese Benachrichtigungseinstellungen jederzeit ändern",
+      "email_notification_info_item_3": "Wichtige Systembenachrichtigungen (wie sicherheitsbezogene) können nicht deaktiviert werden",
+      "email_notification_info_item_4": "Benachrichtigungs-E-Mails können als Spam klassifiziert werden, bitte überprüfen Sie diese"
+    }
+  },
+  "utils": {
+    "time_format": "DD.MM.YYYY"
+  }
+}

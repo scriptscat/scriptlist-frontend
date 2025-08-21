@@ -1,3 +1,1174 @@
 {
-
+    "common": {
+        "copy_success": "Copied successfully",
+        "delete_success": "Deleted successfully",
+        "delete_failed": "Delete failed, please try again later",
+        "delete": "Delete",
+        "punish": "Punish",
+        "report": "Report",
+        "confirm_punish": "Confirm punishment",
+        "select_punish_option": "Select punishment option",
+        "punish_reason": "Punishment reason",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "confirm_delete": "Confirm delete",
+        "delete_warning": "Cannot be recovered after deletion, confirm delete?"
+    },
+    "layout": {
+        "home": "Home",
+        "community": "Community",
+        "script_list": "Script List",
+        "developer": "Developer",
+        "browser_extension": "Browser Extension",
+        "tampermonkey_chinese_website": "Tampermonkey Chinese Website",
+        "scriptcat": "ScriptCat",
+        "service_agreement": "Service Agreement",
+        "privacy_policy": "Privacy Policy",
+        "all_rights_reserved": "© 2022-Present ScriptCat. All rights reserved.",
+        "login": "Login",
+        "logout": "Logout",
+        "user_profile": "User Profile",
+        "publish_script": "Publish Script",
+        "login_required": "Please login before publishing scripts",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
+        "user_setting": "User Settings"
+    },
+    "home": {
+        "metadata": {
+            "title": "ScriptCat - Share Your Userscripts",
+            "description": "ScriptCat script site, where you can share your userscripts with the world",
+            "keywords": "ScriptCat,UserScript,Tampermonkey,Greasemonkey,Violentmonkey,userscripts,ScriptCat,Tampermonkey,Tampermonkey scripts"
+        },
+        "browser_stores": {
+            "add_to_edge": "Add to Edge Browser",
+            "add_to_chrome": "Add to Chrome Browser",
+            "add_to_firefox": "Add to Firefox Browser",
+            "download_crx_install": "Download installer file for manual installation",
+            "install_extension": "Install extension to browser"
+        },
+        "hero": {
+            "tagline": "Discover and share quality userscripts to make browsing more exciting",
+            "search_placeholder": "Search scripts, discover new possibilities",
+            "search_button": "Search Scripts",
+            "browse_all_scripts": "Browse All Scripts"
+        },
+        "features": {
+            "why_choose_title": "Why Choose ScriptCat?",
+            "why_choose_subtitle": "Based on Tampermonkey's design philosophy, fully compatible with Tampermonkey scripts, providing more rich APIs to enable scripts to accomplish more powerful functions.",
+            "scriptcat": {
+                "title": "Powerful Script Manager",
+                "description": "ScriptCat is fully compatible with Tampermonkey scripts while providing background script runtime framework and rich API extensions.",
+                "features": {
+                    "compatible": "Fully compatible with Tampermonkey scripts",
+                    "background": "Supports background script execution",
+                    "rich_api": "Provides rich API extensions"
+                },
+                "install_link": "Install ScriptCat Now →"
+            },
+            "faq": {
+                "title": "Frequently Asked Questions",
+                "what_is_userscript": {
+                    "question": "What are userscripts?",
+                    "answer": "Userscripts can enhance webpage functionality, remove ads, improve usability, making your browsing experience better."
+                },
+                "why_scriptcat": {
+                    "question": "Why choose ScriptCat?",
+                    "answer": "ScriptCat is not only compatible with Tampermonkey scripts, but also supports background script execution, making it more powerful with broader coverage."
+                },
+                "how_to_start": {
+                    "question": "How to get started?",
+                    "answer": "First install a script manager, then find suitable scripts on this site and install them with one click."
+                }
+            },
+            "developer": {
+                "title": "Join Developers",
+                "description": "Become a script developer and enjoy exclusive benefits and technical support.",
+                "benefits": {
+                    "exposure": "Script recommendation exposure opportunities",
+                    "forum_permission": "Forum developer permissions",
+                    "tech_group": "Technical discussion group invitation",
+                    "badge": "Exclusive developer badge"
+                },
+                "guide_link": "View Development Tutorial →"
+            }
+        }
+    },
+    "script": {
+        "metadata": {
+            "search": {
+                "title": "Script Search",
+                "page_number": "Page {page}"
+            },
+            "page_suffixes": {
+                "code": {
+                    "title": "Code",
+                    "description": "View source code of {name}"
+                },
+                "comment": {
+                    "title": "Ratings",
+                    "description": "View ratings of {name}"
+                },
+                "stats": {
+                    "title": "Script Statistics",
+                    "description": "View installation statistics and usage data of {name}"
+                },
+                "version": {
+                    "title": "Version List",
+                    "description": "View all version history of {name}"
+                },
+                "issue": {
+                    "title": "Feedback",
+                    "description": "View issue feedback of {name}"
+                },
+                "manage": {
+                    "title": "Script Management",
+                    "description": "Manage {name} script"
+                },
+                "update": {
+                    "title": "Update Script",
+                    "description": "Update {name} script"
+                }
+            },
+            "fallback": {
+                "title": "Script Details",
+                "description_with_suffix": "View script {suffix}",
+                "description_default": "View script details"
+            }
+        },
+        "navigation": {
+            "market": "Script Market",
+            "overview": "Overview",
+            "code": "Code",
+            "issue": "Feedback",
+            "comment": "Ratings",
+            "version": "Version List",
+            "update": "Update Script",
+            "statistic": "Script Statistics",
+            "manage": "Script Management"
+        },
+        "alerts": {
+            "archived_title": "Script archived",
+            "archived_description": "This script has been archived by the author. The script may malfunction and the author is no longer maintaining it, so you cannot provide feedback.",
+            "obfuscated_title": "Script code has been obfuscated",
+            "obfuscated_description": "This script has been obfuscated by the author. Although the script site has conducted a review, please be careful when granting dangerous permissions."
+        },
+        "search": {
+            "placeholder": "Search scripts, discover new possibilities",
+            "button": "Search",
+            "all_categories": "All Categories",
+            "all_types": "All Types",
+            "sort": {
+                "today_download": "Trending",
+                "createtime": "Latest",
+                "updatetime": "Recently Updated",
+                "score": "Highest Rated",
+                "total_download": "Most Downloaded"
+            },
+            "loading": "Loading...",
+            "pagination": "{start}-{end} / Total {total} scripts",
+            "sidebar": {
+                "learn_userscript": "Learn Userscripts",
+                "feedback_report": "Feedback",
+                "visit_community": "Visit <a href='https://bbs.tampermonkey.net.cn/'>Community</a>",
+                "latest_scripts": "Latest Scripts",
+                "latest_ratings": "Latest Ratings",
+                "quick_actions": "Quick Actions",
+                "upload_script": "Upload Script",
+                "my_favorites": "My Favorites",
+                "my_scripts": "My Scripts",
+                "settings": "Settings"
+            }
+        },
+        "types": {
+            "script": "Userscript",
+            "library": "Script Library",
+            "background_script": "Background Script",
+            "scheduled_script": "Scheduled Script"
+        },
+        "card": {
+            "today_installs": "Today +{count}",
+            "downloads": "Downloads",
+            "library_tooltip": "This is a library used by scripts",
+            "library_tag": "@require Library",
+            "tag_label": "Tag: {name}",
+            "share_link": "Share Link"
+        },
+        "detail": {
+            "crontab": {
+                "every_minute": "Run every minute",
+                "every_hour": "Run every hour",
+                "every_day": "Run every day",
+                "every_month": "Run every month",
+                "every_week": "Run every week",
+                "error_expression": "Invalid expression",
+                "every_minute_execute": "Execute every minute",
+                "every_hour_execute": "Execute every hour",
+                "daily_at_midnight": "Execute daily at midnight",
+                "weekly_sunday_midnight": "Execute every Sunday at midnight",
+                "monthly_first_midnight": "Execute on the 1st of every month at midnight",
+                "every_n_hours": "Execute every {interval} hours",
+                "daily_at_hours": "Execute daily at {hours} o'clock",
+                "every_n_minutes": "Execute every {interval} minutes"
+            },
+            "install": {
+                "install_script": "Install Script",
+                "reinstall_script": "Reinstall Script v{version}",
+                "update_script": "Update Script to v{version}",
+                "install_check_failed": "Failed to check script installation status"
+            },
+            "antifeatures": {
+                "referral_link": {
+                    "title": "Referral Links",
+                    "description": "Script contains referral links"
+                },
+                "ads": {
+                    "title": "Advertisements",
+                    "description": "Script contains ad display functionality"
+                },
+                "payment": {
+                    "title": "Paid Features",
+                    "description": "Script contains paid features"
+                },
+                "miner": {
+                    "title": "Mining",
+                    "description": "Script contains mining functionality"
+                },
+                "membership": {
+                    "title": "Membership Features",
+                    "description": "Script contains member-exclusive features"
+                },
+                "tracking": {
+                    "title": "Data Tracking",
+                    "description": "Script collects user data"
+                }
+            },
+            "sites": {
+                "more": "+{count} more",
+                "collapse": "Collapse"
+            },
+            "copy": {
+                "copied_to_clipboard": "Copied to clipboard!",
+                "copy_failed": "Copy failed, please try again.",
+                "share_copied": "Share content copied to clipboard!"
+            },
+            "require": {
+                "copy_tooltip": "Copy reference code",
+                "usage_guide": "Usage Guide",
+                "compatible_version": "(Compatible Version) ",
+                "patch_version": "(Patch Version) "
+            },
+            "actions": {
+                "install_guide": "How to install?",
+                "prerelease_tooltip": "Install prerelease version to experience new content",
+                "share": "Share",
+                "watch": "Watch",
+                "favorite": "Favorite",
+                "watch_options": {
+                    "none": "Don't watch",
+                    "version": "Version updates",
+                    "feedback": "New feedback",
+                    "all": "All activities"
+                }
+            },
+            "stats": {
+                "total_installs": "Total Installs",
+                "today_installs": "Today's New",
+                "user_rating": "User Rating",
+                "current_version": "Current Version"
+            },
+            "folders": {
+                "select_folders": "Select Folders",
+                "create_new_folder": "Create New Folder",
+                "folder_name_placeholder": "Please enter folder name",
+                "folder_desc_placeholder": "Description (optional)",
+                "folder_name_required": "Please enter folder name",
+                "new_folder": "New Folder",
+                "favorite_update_failed": "Failed to update favorite",
+                "quick_favorite_failed": "Quick favorite failed"
+            },
+            "info": {
+                "library_details": "Library Details",
+                "script_details": "Script Details",
+                "library_description": "This is a library used by userscripts, you can reference it directly in your scripts.",
+                "created_at": "Created at {time}",
+                "updated_at": "Updated at {time}",
+                "tag_label": "Tag: {name}",
+                "applicable_sites": "Applicable Sites",
+                "background_script": "Background Script",
+                "background_script_desc": "It runs in the browser background",
+                "scheduled_script": "Scheduled Script",
+                "scheduled_script_tooltip": "This script supports scheduled execution and will run automatically at set intervals: {cron}",
+                "license": "License",
+                "browser_compatibility": "Browser Compatibility",
+                "browser_support": "Supports {browser}",
+                "feature_notice": "Feature Notice",
+                "forum_post": "Forum Post"
+            },
+            "delete": {
+                "success": "Deleted successfully",
+                "failed": "Delete failed, please try again"
+            }
+        },
+        "gray_control": {
+            "strategy_title": "Strategy {index}",
+            "weight": "Weight",
+            "pre_release_users": "Prerelease Users",
+            "traffic_tooltip": "Will push {percent}% of traffic to target version",
+            "weight_day_tooltip": "Gradually update traffic to target value within {days} days. If you want to fully update to the specified version, set 100%, 0 days for direct update to this version",
+            "days_suffix": "days",
+            "cookie_regex_placeholder": "Cookie regex expression",
+            "target_version": "Target Version",
+            "latest_version": "Latest Version",
+            "previous_version": "Previous Version",
+            "all_latest_versions": "All Latest Versions"
+        },
+        "rating": {
+            "error_update_stats": "Failed to update rating statistics:",
+            "login_required": "Please login first",
+            "submit_success": "Rating submitted successfully!",
+            "submit_error": "Failed to submit rating:",
+            "submit_failed": "Submit failed, please try again",
+            "update_success": "Rating updated successfully!",
+            "update_error": "Failed to update rating:",
+            "reply": "Reply",
+            "reply_placeholder": "Write your reply...",
+            "send_reply": "Send Reply",
+            "cancel": "Cancel",
+            "update_failed": "Update failed, please try again",
+            "delete_success": "Deleted successfully!",
+            "delete_error": "Failed to delete rating:",
+            "delete_failed": "Delete failed, please try again",
+            "reply_success": "Reply successful!",
+            "reply_error": "Reply failed:",
+            "reply_failed": "Reply failed, please try again",
+            "fetch_error": "Failed to fetch rating data:",
+            "overview": {
+                "based_on_ratings": "Based on {totalRatings} user reviews"
+            },
+            "text": {
+                "excellent": "Excellent!",
+                "good": "Good",
+                "average": "Not bad",
+                "fair": "Fair",
+                "poor": "Needs improvement"
+            },
+            "user_form": {
+                "login_prompt_title": "Login to rate script",
+                "login_prompt_description": "After logging in, you can rate and review scripts to help other users make choices",
+                "login_prompt_button": "Login Now",
+                "login_redirect_message": "Please go to the login page to log in",
+                "please_select_rating": "Please select a rating",
+                "your_review_title": "Your Review",
+                "published_at": "Published at {time}",
+                "edit_button": "Edit",
+                "rating_label": "Rating:",
+                "review_content_label": "Review Content:",
+                "new_review_title": "Share Your Experience",
+                "edit_review_title": "Edit Review",
+                "review_help_text": "Your review will help other users",
+                "rating_field_label": "Your Rating",
+                "review_field_label": "Review Content (Optional)",
+                "review_placeholder": "Share your experience to help other users understand this script...",
+                "submit_button": "Submit Review",
+                "update_button": "Update Review",
+                "cancel_button": "Cancel",
+                "reset_button": "Reset"
+            },
+            "list": {
+                "title": "User Reviews",
+                "title_with_count": "User Reviews ({count})",
+                "sort_label": "Sort by:",
+                "sort_options": {
+                    "newest": "Newest first",
+                    "oldest": "Oldest first",
+                    "rating_high": "Highest rating",
+                    "rating_low": "Lowest rating"
+                },
+                "empty_title": "No reviews yet",
+                "empty_description": "Be the first to review this script!",
+                "loading": "Loading...",
+                "load_more": "Load more reviews",
+                "all_loaded": "Showing all {count} reviews"
+            },
+            "author_tag": "Author",
+            "admin_tag": "Administrator"
+        },
+        "issue": {
+            "search_placeholder": "Search issues...",
+            "filter_all": "All",
+            "filter_pending": "Pending",
+            "filter_resolved": "Resolved",
+            "create_issue": "Create Issue",
+            "no_issues_found": "No matching issues found",
+            "no_issues": "No issues yet",
+            "status_pending": "Pending",
+            "status_resolved": "Resolved",
+            "updated_at": "Updated at {time}",
+            "pagination_total": "{start}-{end} / {total}",
+            "labels_title": "Labels",
+            "labels": {
+                "feature": "Feature",
+                "question": "Question",
+                "bug": "Bug"
+            },
+            "create": {
+                "title_required": "Please enter title",
+                "content_required": "Please enter content",
+                "submit_success": "Submitted successfully",
+                "submit_failed": "Submit failed",
+                "title_placeholder": "Please briefly describe the issue you want to report",
+                "content_placeholder": "Please describe the issue in detail, including reproduction steps, expected results, etc...",
+                "submit_button": "Submit Feedback"
+            },
+            "detail": {
+                "page_not_found_title": "Page Not Found | ScriptCat",
+                "issue_feedback_title": "Issue Feedback | ScriptCat",
+                "issue_title_with_script": "{title} • Feedback #{id} - {scriptName}",
+                "issue_description": "Issue feedback for {scriptName}: {title}"
+            },
+            "comment": {
+                "labels_added": "Added labels:",
+                "labels_removed": "Removed labels:",
+                "delete_success": "Deleted successfully",
+                "delete_failed": "Delete failed",
+                "status_pending": "Pending",
+                "status_resolved": "Resolved",
+                "copy_success": "Copied successfully",
+                "copy_link": "Copy Link",
+                "created_at": "Created at {time}",
+                "no_replies": "No replies yet",
+                "reply": "Reply",
+                "link": "Link",
+                "reopened_feedback": "reopened the feedback",
+                "closed_feedback": "closed the feedback",
+                "comment_placeholder": "Please enter comment content...",
+                "close_feedback": "Close Feedback",
+                "reopen_feedback": "Reopen Feedback",
+                "feedback_closed": "Feedback closed",
+                "feedback_reopened": "Feedback reopened",
+                "operation_failed": "Operation failed",
+                "system_error": "System error",
+                "comment_content_required": "Please enter comment content",
+                "reply_success": "Reply successful",
+                "comment_failed": "Failed to post comment",
+                "comment_button": "Comment",
+                "login_to_comment": "Login to comment",
+                "login": "Login",
+                "labels_update_success": "Labels updated successfully",
+                "update_failed": "Update failed",
+                "watch_title": "Watch",
+                "watch_tooltip": "Watch this feedback to receive update notifications",
+                "unwatch_success": "Unwatched",
+                "watch_success": "Watching",
+                "watch_button": "Watch",
+                "watched_button": "Watching",
+                "participants_title": "Participants"
+            }
+        },
+        "statistics": {
+            "loading_failed": "Loading failed",
+            "loading_failed_description": "Failed to fetch statistics data, please try again later.",
+            "retry": "Retry",
+            "loading_data": "Loading statistics data...",
+            "data_notice": "Data Notice",
+            "data_notice_description": "The following data is for reference only, actual results may vary. UV represents unique visitors, PV represents page views.",
+            "page_views": "Page Views",
+            "visitors": "Visitors",
+            "installs": "Installs",
+            "install": "Install",
+            "updates": "Updates",
+            "update": "Update",
+            "today": "Today",
+            "yesterday": "Yesterday",
+            "week": "This Week",
+            "growth_tooltip": "{type} {value}% compared to yesterday",
+            "growth_increase": "increase",
+            "growth_decrease": "decrease",
+            "realtime_downloads": "Real-time Download Updates",
+            "realtime_monitoring": "Real-time Data Monitoring",
+            "realtime_updating": "Real-time updating",
+            "realtime_paused": "Paused",
+            "realtime_update": "Real-time Update",
+            "on": "On",
+            "off": "Off",
+            "trend_overview": "Trend Overview",
+            "30_day_install_trend": "30-day Install Trend",
+            "30_day_update_trend": "30-day Update Trend",
+            "line_chart": "Line Chart",
+            "column_chart": "Column Chart"
+        },
+        "editor": {
+            "messages": {
+                "metadata_parse_success": "Script metadata parsed successfully",
+                "file_upload_success": "File uploaded successfully!",
+                "script_update_success": "Script updated successfully!",
+                "script_create_success": "Script created successfully!",
+                "script_update_failed": "Script update failed!",
+                "script_create_failed": "Script creation failed!",
+                "submit_failed": "Submit failed:"
+            },
+            "alerts": {
+                "review_rules_text": "Please carefully read and follow",
+                "review_rules_link": "Script Review Rules",
+                "review_rules_description": "to ensure code quality and security. Non-compliant scripts will be removed or deleted."
+            },
+            "code_section": {
+                "title": "Script Code",
+                "tag": "JavaScript",
+                "upload_button": "Upload Local File",
+                "file_support": "Supports .js and .user.js files"
+            },
+            "description_section": {
+                "title": "Detailed Description",
+                "tag": "Markdown",
+                "placeholder": "Please describe the script's functionality, usage instructions, etc. in detail. Markdown format is supported...",
+                "create_button": "Create Script",
+                "update_button": "Publish Update"
+            },
+            "info_section": {
+                "title": "Script Information",
+                "script_type_label": "Script Type",
+                "script_type_placeholder": "Please select script type",
+                "script_type_required": "Please select script type",
+                "script_category_label": "Script Category",
+                "script_category_placeholder": "Please select script category",
+                "version_label": "Version Number",
+                "version_placeholder": "e.g.: 1.0.0",
+                "version_required": "Please enter version number",
+                "version_tooltip": "Recommend semantic versioning, e.g.: 1.0.0, 2.1.5",
+                "prerelease_label": "Prerelease Version",
+                "prerelease_tooltip": "Set as prerelease version, stable version will not update to this version. You can enable prerelease installation link in script management page",
+                "tags_label": "Tags",
+                "tags_placeholder_library": "Please enter tags",
+                "tags_placeholder_script": "Use @tag to add tags",
+                "tags_tooltip_library": "Please enter tags",
+                "tags_tooltip_script": "Use @tag to add tags"
+            },
+            "library_section": {
+                "title": "Library Description",
+                "name_label": "Library Name",
+                "name_placeholder": "e.g.: MyLibrary",
+                "name_required": "Please enter library name",
+                "description_label": "Library Description",
+                "description_placeholder": "Please describe the purpose and functionality of this library...",
+                "description_required": "Please enter library description"
+            },
+            "changelog_section": {
+                "title": "Changelog",
+                "tag": "Markdown",
+                "placeholder": "e.g.:\n• Fixed a known issue\n• Added a new feature\n• Optimized performance\n• Updated dependencies"
+            },
+            "script_types": {
+                "user_script": "Userscript",
+                "subscribe_script": "Subscribe Script",
+                "library": "Library"
+            }
+        },
+        "version": {
+            "update_success": "Version information updated successfully",
+            "update_failed": "Update failed, please try again",
+            "update_version_failed": "Update version failed:",
+            "delete_success": "Version deleted successfully",
+            "delete_failed": "Delete failed, please try again",
+            "delete_version_failed": "Delete version failed:",
+            "install_success": "Starting installation {version}",
+            "load_failed": "Loading failed",
+            "load_failed_description": "Error occurred while fetching version list, please refresh and try again",
+            "retry": "Retry",
+            "latest_version_badge": "Latest Version",
+            "prerelease_badge": "Prerelease Version",
+            "history_title": "Version History",
+            "history_description": "View all published versions, including stable and prerelease versions. You can install any version or view its source code.",
+            "no_history_title": "No Version History",
+            "no_history_description": "This script has not published any versions yet",
+            "total_versions": "Total Versions",
+            "release_versions": "Stable Versions",
+            "prerelease_versions": "Prerelease Versions",
+            "pagination_info": "Showing {start}-{end}, total {total}",
+            "edit_button": "Edit",
+            "delete_button": "Delete",
+            "install_button": "Install This Version",
+            "view_code_button": "View Code",
+            "confirm_delete_title": "Confirm Delete",
+            "confirm_delete_description": "Are you sure you want to delete this version? This action cannot be undone.",
+            "confirm_delete_ok": "Delete",
+            "confirm_delete_cancel": "Cancel",
+            "pagination_total": "{start}-{end}, total {total} versions",
+            "edit_modal_title": "Edit Version {version}",
+            "changelog_label": "Update Notes",
+            "changelog_subtitle": "(Supports Markdown syntax)",
+            "changelog_placeholder": "e.g.:\n✨ New Feature: Added UI optimization\n🐛 Bug Fix: Resolved browser compatibility issues\n⚡ Performance: Optimized script execution speed\n📦 Dependencies: Updated to latest version",
+            "version_type_label": "Version Type",
+            "version_type_extra": "Prerelease versions are usually for testing new features and may not be stable",
+            "prerelease_checked": "Prerelease Version",
+            "prerelease_unchecked": "Stable Version",
+            "save_changes": "Save Changes"
+        },
+        "manage": {
+            "navigation": {
+                "source_sync": "Source Code Sync",
+                "script_settings": "Script Management",
+                "script_publish": "Script Publishing",
+                "manage_logs": "Management Logs",
+                "access_control": "Access Control",
+                "group_management": "Group Management"
+            },
+            "sync": {
+                "title": "Source Code Sync",
+                "description": "Configure script source code synchronization, supporting automatic or manual sync from code hosting platforms like GitHub, GitLab, etc.",
+                "sync_url_label": "Sync URL",
+                "sync_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/script.js",
+                "sync_url_required": "Please enter sync URL",
+                "sync_mode_label": "Sync Mode",
+                "sync_mode_auto": "Auto Sync - Periodically check for updates and sync automatically, you can also set up Webhook triggers",
+                "sync_mode_manual": "Manual Sync - Only sync when manually clicked",
+                "content_url_label": "Script Description Sync URL",
+                "content_url_description": "Optional: Sync script README or documentation, supports Markdown format",
+                "content_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/README.md",
+                "save_and_sync_button": "Save and Sync Once",
+                "sync_success": "Sync configuration saved and synced successfully",
+                "sync_failed": "Sync failed, please check network connection or URL correctness"
+            },
+            "access": {
+                "title": "Access Control",
+                "description": "Manage user and user group access permissions for this script, including role assignment and permission expiration settings",
+                "add_user_group_button": "Add User/User Group",
+                "update_success": "Updated successfully",
+                "update_failed": "Update failed, please try again later",
+                "delete_confirm_title": "Confirm Delete Access Permission",
+                "delete_confirm_content": "Confirm to delete access permission for {entityType} \"{itemName}\"? This action cannot be undone.",
+                "delete_confirm_ok": "Confirm Delete",
+                "delete_confirm_cancel": "Cancel",
+                "delete_success": "Deleted successfully",
+                "delete_failed": "Delete failed, please try again later",
+                "status": {
+                    "accepted": "Accepted",
+                    "rejected": "Rejected",
+                    "pending": "Pending confirmation"
+                },
+                "table": {
+                    "user_group_column": "User/User Group",
+                    "status_column": "Status",
+                    "role_column": "Permission Role",
+                    "expire_column": "Expiration Time",
+                    "action_column": "Action",
+                    "delete_tooltip": "Delete access permission",
+                    "delete_button": "Delete"
+                },
+                "entity_types": {
+                    "user": "User",
+                    "group": "User Group"
+                },
+                "roles": {
+                    "visitor": "Visitor",
+                    "admin": "Administrator"
+                },
+                "time": {
+                    "add_time": "Added:",
+                    "never_expire": "Never expires",
+                    "expired": "(Expired)"
+                },
+                "stats": {
+                    "total": "Total:",
+                    "users": "Users:",
+                    "groups": "Groups:",
+                    "pending": "Pending:",
+                    "expired": "Expired:"
+                },
+                "pagination": {
+                    "total": "{start}-{end}, total {total}"
+                },
+                "empty": {
+                    "title": "No users or user groups with access permissions",
+                    "button": "Add first user/user group"
+                }
+            },
+            "logs": {
+                "title": "Management Logs",
+                "under_construction": "Under construction",
+                "description": "Log management feature is under development, stay tuned."
+            },
+            "groups": {
+                "title": "Group Management",
+                "description": "Manage script user group permissions, control access levels for different users",
+                "create_group_button": "Create Group",
+                "create_group_title": "Create User Group",
+                "manage_members_title": "User Group Member Management",
+                "member_management_title": "Member Management",
+                "invite_user_button": "Invite User",
+                "invite_first_user_button": "Invite First User",
+                "create_first_group_button": "Create First Group",
+                "group_name_label": "Group Name",
+                "group_description_label": "Group Description",
+                "group_name_placeholder": "Please enter user group name",
+                "group_description_placeholder": "Please describe the purpose and permission scope of this user group in detail",
+                "group_name_required": "Please enter group name",
+                "group_description_required": "Please enter group description",
+                "group_name_max_length": "Group name cannot exceed 50 characters",
+                "group_description_max_length": "Description cannot exceed 200 characters",
+                "create_button": "Create",
+                "close_button": "Close",
+                "cancel_button": "Cancel",
+                "create_success": "Created successfully",
+                "create_failed": "Creation failed",
+                "delete_confirm_title": "Confirm Delete",
+                "delete_confirm_content": "Confirm to delete user group \"{groupName}\"?",
+                "delete_confirm_description": "After deletion, all members of this user group will lose related permissions. This action cannot be recovered",
+                "delete_confirm_button": "Confirm Delete",
+                "delete_success": "Deleted successfully",
+                "delete_failed": "Delete failed",
+                "remove_member_confirm_title": "Confirm Remove",
+                "remove_member_confirm_content": "Confirm to remove user {userName}?",
+                "remove_member_confirm_description": "After removal, this user will lose access permissions",
+                "remove_member_button": "Remove",
+                "remove_success": "Removed successfully",
+                "remove_failed": "Remove failed",
+                "manage_button": "Manage",
+                "delete_button": "Delete",
+                "confirm_button": "Confirm",
+                "status": {
+                    "waiting_confirm": "Awaiting confirmation",
+                    "joined": "Joined"
+                },
+                "time": {
+                    "never_expire": "Never expires",
+                    "expire_on": "Expires",
+                    "expired": "Expired"
+                },
+                "table": {
+                    "user_column": "User",
+                    "group_column": "User Group",
+                    "status_column": "Status",
+                    "expire_time_column": "Expiration Time",
+                    "member_column": "Member",
+                    "action_column": "Action",
+                    "manage_members_tooltip": "Manage members",
+                    "delete_group_tooltip": "Delete user group",
+                    "remove_member_tooltip": "Remove member"
+                },
+                "stats": {
+                    "total_label": "Total",
+                    "member_total_label": "Total Members",
+                    "active_groups_label": "Active Groups",
+                    "member_count": "{count} members",
+                    "current_member_count": "Currently {count} members"
+                },
+                "pagination": {
+                    "total": "{start}-{end}, total {total}"
+                },
+                "empty": {
+                    "no_groups": "No user groups",
+                    "no_members": "No members"
+                }
+            },
+            "settings": {
+                "library_info": {
+                    "title": "Library Information Settings",
+                    "description": "Configure basic information for the script library, including name, description, etc.",
+                    "name_label": "Library Name",
+                    "name_placeholder": "Please enter library name",
+                    "name_required": "Script name cannot be empty",
+                    "description_label": "Library Description",
+                    "description_placeholder": "Please enter library description information",
+                    "save_button": "Save Library Information",
+                    "save_success": "Library information saved successfully",
+                    "save_failed": "Save failed"
+                },
+                "public_settings": {
+                    "title": "Script Visibility Settings",
+                    "description": "Configure script visibility status, determining script visibility and access permissions.",
+                    "visibility_title": "Script Visibility",
+                    "visibility_private": "Script is private, only visible to you",
+                    "visibility_unlisted": "Script is unlisted, accessible only via direct link",
+                    "visibility_public": "Script is public, all users can view and install",
+                    "public_option": "Public",
+                    "unlisted_option": "Unlisted",
+                    "private_option": "Private",
+                    "public_update_success": "Visibility status updated successfully",
+                    "update_failed": "Update failed",
+                    "content_marking_title": "Content Marking",
+                    "unwell_checkbox": "Mark as potentially containing inappropriate content",
+                    "unwell_description": "This website may contain disturbing content, including but not limited to frequent red-blue flashing lights, content harmful to vision or mental health.",
+                    "unwell_update_success": "Inappropriate content marking updated successfully"
+                },
+                "script_management": {
+                    "title": "Script Management",
+                    "description": "Manage script status and deletion",
+                    "status_management_title": "Script Status Management",
+                    "archive_button": "Archive Script",
+                    "unarchive_button": "Unarchive",
+                    "archive_description": "After archiving, the script will no longer support updates and users cannot provide feedback, but it can still be used",
+                    "unarchive_description": "Script is archived, click to unarchive",
+                    "dangerous_operations_title": "Dangerous Operations",
+                    "delete_button": "Delete Script",
+                    "delete_warning": "All data will be unrecoverable after deleting the script, please operate with caution!"
+                },
+                "confirmations": {
+                    "archive_confirm_title": "Confirm Archive Script?",
+                    "unarchive_confirm_title": "Confirm Unarchive?",
+                    "archive_confirm_content": "After archiving, the script will no longer support updates and users cannot provide feedback, but it can still be used.",
+                    "unarchive_confirm_content": "After unarchiving, the script can receive user feedback and other information.",
+                    "delete_confirm_title": "Confirm Delete Script?",
+                    "delete_confirm_content": "All data will be unrecoverable after deleting the script, please operate with caution!",
+                    "confirm_button": "Confirm",
+                    "confirm_delete_button": "Confirm Delete",
+                    "cancel_button": "Cancel"
+                },
+                "messages": {
+                    "archive_success": "Script archived",
+                    "unarchive_success": "Script unarchived",
+                    "archive_failed": "Archive operation failed",
+                    "operation_failed": "Operation failed",
+                    "delete_success": "Script deleted",
+                    "delete_failed": "Delete failed"
+                }
+            }
+        },
+        "invite": {
+            "create_invite_code": "Create Invite Code",
+            "cancel": "Cancel",
+            "create": "Create",
+            "create_count": "Create Count",
+            "expire_time": "Expiration Time",
+            "days": "days",
+            "no_limit": "No limit",
+            "admin_audit": "Admin audit",
+            "create_success": "Created successfully",
+            "copy_success": "Copied successfully",
+            "copy_failed": "Copy failed",
+            "copy_link": "Copy Link",
+            "close": "Close",
+            "invite_list_description": "Created invite list as follows:",
+            "submit_success": "Submitted successfully",
+            "create_failed": "Creation failed",
+            "never_expire": "Never expires",
+            "expire_suffix": " expires",
+            "status_unused": "Unused",
+            "status_used": "Used",
+            "status_expired": "Expired",
+            "status_pending_review": "Pending review",
+            "status_rejected": "Rejected",
+            "status_unknown": "Unknown status",
+            "invite_code": "Invite Code",
+            "status": "Status",
+            "action": "Action",
+            "invite_confirmation": "Invite Code Confirmation",
+            "confirm_allow_invite": "Confirm to allow this invitation?",
+            "confirm": "Confirm",
+            "allow": "Allow",
+            "confirm_delete": "Confirm Delete",
+            "confirm_delete_invite": "Are you sure you want to delete this invite code?",
+            "delete_success": "Deleted successfully",
+            "delete_failed": "Delete failed, please try again later",
+            "delete": "Delete",
+            "operation_success": "Operation successful",
+            "get_invite_info_failed": "Failed to get invite information",
+            "check_invite_link": "Please check if the invite link is correct",
+            "back_to_home": "Back to Home",
+            "loading_invite_info": "Loading invite information...",
+            "operation_failed_retry": "Operation failed, please try again later",
+            "status_pending": "Pending",
+            "status_accepted": "Accepted",
+            "status_waiting": "Waiting",
+            "permission_read": "Read",
+            "permission_write": "Write",
+            "invite_you": "invites you",
+            "join": "Join",
+            "organization": "organization",
+            "permission_description": "Permission Description",
+            "permission_after_join": "After joining, you will have the following permissions:",
+            "agree": "Agree",
+            "reject": "Reject",
+            "invite_accepted": "Invitation accepted",
+            "code_used": "{code} used",
+            "invite_expired": "Invitation expired",
+            "code_expired": "{code} expired",
+            "waiting_process": "Waiting for processing",
+            "code_waiting": "{code} waiting for processing",
+            "invite_rejected": "Invitation rejected",
+            "code_rejected": "{code} rejected",
+            "unknown_status": "Unknown status",
+            "invite_confirm": "Invitation Confirmation",
+            "organization_invite": "Organization Invitation",
+            "script_collaboration_invite": "Script Collaboration Invitation",
+            "view_script_details": "View Script Details",
+            "invite_you_join_group": "{inviter} invites you to join {holder}'s {property}",
+            "invite_you_join": "{inviter} invites you to join {holder}"
+        },
+        "user_modal": {
+            "submit_success": "Submitted successfully",
+            "submit_failed": "Submit failed",
+            "form_validation_failed": "Form validation failed:",
+            "please_select_user": "Please select user",
+            "username": "Username",
+            "grant_permission": "Grant Permission",
+            "guest": "Guest",
+            "admin": "Administrator",
+            "expire_time": "Expiration Time",
+            "please_select_expire_time": "Please select expiration time",
+            "user_group": "User Group",
+            "please_select_user_group": "Please select user group",
+            "invite_by_username": "Invite by Username",
+            "invite_by_user_group": "Invite by User Group",
+            "invite_by_code": "Invite by Code",
+            "select_user_or_group": "Please select user or group",
+            "cancel": "Cancel",
+            "add": "Add"
+        },
+        "publish": {
+            "prerelease_and_gray_release": "Prerelease and Gray Release",
+            "manage_prerelease_and_gray_strategy": "Manage script prerelease and gray release strategies",
+            "enable_prerelease": "Enable Prerelease",
+            "prerelease_description_part1": "When prerelease is enabled, versions that comply with",
+            "semantic_version": "semantic versioning",
+            "prerelease_description_part2": "will be automatically marked as prerelease versions when updating scripts, and prerelease version install buttons will be provided on the script homepage.",
+            "prerelease_first_enable_tip": "(First time enabling will add three strategies: prerelease users update to all latest, stable releases gradually update to latest stable version by weight over 10 days, other users update to previous stable version)",
+            "enable": "Enable",
+            "disable": "Disable",
+            "gray_release": "Gray Release",
+            "add_strategy": "Add Strategy",
+            "gray_strategy_description": "Configure certain strategies (strategies have priority order) to make your script users update to specified versions",
+            "gray_strategy_saved": "Gray release strategy saved",
+            "load_gray_config_failed": "Failed to load gray release configuration:",
+            "save_gray_strategy_failed": "Failed to save gray release strategy:",
+            "save_failed": "Save failed",
+            "save_and_apply_strategy": "Save and Apply Strategy"
+        }
+    },
+    "error": {
+        "500_title": "Internal Server Error",
+        "500_subtitle": "Sorry, our server encountered some problems",
+        "500_description": "Our server is temporarily unable to process your request. We have received the error report and are working hard to fix this issue.",
+        "404_title": "Page Not Found",
+        "404_subtitle": "Sorry, the page you are looking for does not exist",
+        "404_description": "Please check if the URL is correct, or start browsing from the homepage.",
+        "403_title": "Access Denied",
+        "403_subtitle": "Sorry, you do not have permission to access this page",
+        "403_description": "Please contact the administrator for access permission, or check your login status.",
+        "feedback_notice": "Please provide the above error ID and error code when providing feedback, this will help us locate and resolve the issue faster.",
+        "error_code": "Error Code",
+        "error_time": "Error Time",
+        "feedback_title": "Encountered a problem?",
+        "feedback_description": "If the problem persists, please provide feedback through the following methods:",
+        "feedback_forum": "Go to Community Feedback",
+        "feedback_github": "GitHub Issues",
+        "contact_admin": "Contact Administrator",
+        "back_to_home": "Back to Home",
+        "refresh_page": "Refresh Page",
+        "what_happened": "What happened?",
+        "server_error_details": "The server encountered an internal error while processing your request. This may be due to high server load, database connection issues, or other technical failures.",
+        "what_can_do": "You can try:",
+        "try_refresh": "Refresh the current page",
+        "try_later": "Try again later",
+        "check_network": "Check network connection",
+        "contact_us": "Contact us",
+        "error_id": "Error ID"
+    },
+    "components": {
+        "markdown_editor": {
+            "placeholder": "Please enter content...",
+            "loading_editor": "Loading editor...",
+            "uploading_image": "Uploading image...",
+            "image_upload_failed": "Image upload failed"
+        }
+    },
+    "user": {
+        "user_not_found": "User not found",
+        "user_homepage": "User Homepage",
+        "update_success": "User information updated successfully!",
+        "update_failed": "Update failed, please try again",
+        "avatar_upload_success": "Avatar uploaded successfully!",
+        "avatar_upload_failed": "Avatar upload failed!",
+        "avatar_format_error": "Only JPG/PNG format images are supported!",
+        "avatar_size_error": "Image size cannot exceed 1MB!",
+        "edit_profile_title": "Edit Profile",
+        "avatar": "Avatar",
+        "change_avatar": "Change Avatar",
+        "avatar_help_text": "Supports JPG, PNG formats, file size no more than 1MB",
+        "username": "Username",
+        "username_placeholder": "Please enter username",
+        "description": "Personal Description",
+        "description_max_length": "Personal description cannot exceed 200 characters",
+        "description_placeholder": "Introduce yourself...",
+        "email_validation": "Please enter a valid email address",
+        "email_max_length": "Email address cannot exceed 50 characters",
+        "email_placeholder": "Contact email",
+        "location": "Location",
+        "location_max_length": "Location cannot exceed 50 characters",
+        "location_placeholder": "e.g.: Beijing, Haidian District",
+        "website": "Personal Website",
+        "website_validation": "Please enter a valid URL",
+        "website_max_length": "URL cannot exceed 100 characters",
+        "website_placeholder": "https://example.com",
+        "cancel": "Cancel",
+        "save": "Save",
+        "profile": {
+            "my_scripts": "My Scripts",
+            "my_favorites": "My Favorites",
+            "login_required": "Please login first",
+            "follow_success": "Followed successfully",
+            "unfollow_success": "Unfollowed",
+            "operation_failed": "Operation failed, please try again",
+            "message_feature_developing": "Messaging feature under development...",
+            "link_copied": "Link copied to clipboard",
+            "report": "Report",
+            "administrator": "Administrator",
+            "verified": "Verified",
+            "edit_profile": "Edit Profile",
+            "followed": "Followed",
+            "follow": "Follow",
+            "private_message": "Private Message",
+            "join_time": "Join Time",
+            "last_active": "Last Active",
+            "email": "Email",
+            "location": "Location",
+            "personal_website": "Personal Website",
+            "follow_section": "Follow",
+            "followers_following": "{followers} followers • {following} following",
+            "achievement_badges": "Achievement Badges",
+            "profile_update_success": "Profile updated successfully!"
+        },
+        "favorites": {
+            "unfavorite_success": "Unfavorited",
+            "unfavorite_failed": "Unfavorite failed, please try again",
+            "create_folder_coming_soon": "Create folder feature coming soon",
+            "no_description": "No description",
+            "script_count": "{count} scripts",
+            "unfavoriting": "Unfavoriting...",
+            "unfavorite": "Unfavorite",
+            "unfavorite_tooltip": "Unfavorite this script",
+            "no_favorites": "This user hasn't favorited any scripts yet",
+            "discover_scripts": "Discover Scripts",
+            "my_folders": "My Folders",
+            "create_folder": "Create Folder",
+            "favorite_scripts": "Favorite Scripts",
+            "no_scripts_in_category": "No favorite scripts in this category",
+            "pagination_total": "{start}-{end}, total {total}",
+            "folder_title": "{folderName} - {username}'s Folder",
+            "folder_description": "{username}'s folder \"{folderName}\", containing {count} scripts",
+            "folder_not_found": "Folder not found",
+            "folder_not_found_description": "The folder you are looking for does not exist or has been deleted",
+            "folder_error": "Folder does not exist or has been deleted",
+            "go_back": "Go Back",
+            "home": "Home",
+            "favorites_breadcrumb": "Favorites",
+            "script_count_text": "Script count:",
+            "edit_folder": "Edit Folder",
+            "subscription_link": "Subscription Link",
+            "favorite_scripts_title": "Favorite Scripts ({total})",
+            "cancel_favorite_error": "Unfavorite failed:",
+            "no_script_manager_title": "No script manager detected",
+            "no_script_manager_content": "ScriptCat extension is not detected in your browser, confirm to open subscription link?",
+            "confirm_open": "Confirm Open",
+            "cancel": "Cancel",
+            "status_public": "Public",
+            "status_private": "Private",
+            "pagination_items": "{start}-{end}, total {total}",
+            "no_scripts_in_folder": "No scripts in this folder",
+            "edit_modal": {
+                "title": "Edit Folder",
+                "update_success": "Folder updated successfully!",
+                "update_failed_prefix": "Folder update failed:",
+                "update_failed_generic": "Update failed, please try again",
+                "name_label": "Folder Name",
+                "name_placeholder": "Please enter folder name",
+                "name_required": "Please enter folder name",
+                "name_length_error": "Folder name should be 1-50 characters long",
+                "description_label": "Description",
+                "description_placeholder": "Please enter folder description (optional)",
+                "description_length_error": "Description cannot exceed 500 characters",
+                "private_label": "Private Folder",
+                "private_help_text": "When enabled, only you can see this folder",
+                "cancel_button": "Cancel",
+                "save_button": "Save"
+            }
+        },
+        "script_list": {
+            "search_placeholder": "Search this user's scripts",
+            "search_button": "Search",
+            "all_types_placeholder": "All Types",
+            "type_all": "All",
+            "type_script": "Scripts",
+            "sort_by_hot": "Trending",
+            "sort_by_latest": "Latest",
+            "sort_by_updated": "Recently Updated",
+            "sort_by_score": "Highest Rated",
+            "sort_by_downloads": "Most Downloaded",
+            "loading": "Loading...",
+            "pagination_total": "{start}-{end} / Total {total} scripts"
+        },
+        "settings": {
+            "user_settings": "User Settings",
+            "settings_description": "Manage your account preferences, including Webhook configuration and notification options",
+            "webhook_settings": "Webhook Settings",
+            "notification_settings": "Notification Settings"
+        },
+        "webhook": {
+            "copy_success": "Copied successfully",
+            "copy_failed": "Copy failed",
+            "settings_title": "Webhook Settings",
+            "settings_description": "Use Webhook to receive messages from Github and other places. Configure update URL in script management on the script page to achieve automatic and instant script updates.",
+            "config_steps": "Configuration Steps",
+            "config_tip_title": "Configuration Tips",
+            "config_tip_description": "Please follow the steps below to complete Webhook configuration to ensure scripts can sync correctly with your code repository.",
+            "step_bind_repo": "Bind Code Repository",
+            "step_bind_repo_desc": "Visit Github repository and go to Settings",
+            "step_config_webhook": "Configure Webhook",
+            "step_config_webhook_desc": "Click \"Add webhook\"",
+            "step_config_webhook_detail": "Configure the following Webhook address and secret in your code repository",
+            "step_select_events": "Select Trigger Events",
+            "step_select_events_desc": "Select the event types to listen for:",
+            "event_push": "Push Events",
+            "event_push_desc": "Trigger sync when code is pushed",
+            "event_release": "Release Events",
+            "event_release_desc": "Trigger sync when new version is released",
+            "event_tag": "Tag Events",
+            "event_tag_desc": "Trigger sync when tags are created",
+            "config_info_title": "Webhook Configuration Information",
+            "copy_url_tooltip": "Copy URL",
+            "copy_content_type_tooltip": "Copy Content-Type",
+            "copy_secret_tooltip": "Copy Secret",
+            "refresh_secret": "Refresh Secret",
+            "confirm_refresh_title": "Confirm Refresh Secret?",
+            "confirm_refresh_content": "After refreshing, the old secret will become invalid, please update your Webhook configuration promptly",
+            "confirm_refresh": "Confirm Refresh",
+            "cancel": "Cancel",
+            "refresh_success": "Secret refreshed successfully",
+            "refresh_failed": "Refresh failed",
+            "security_tip_title": "Security Tip",
+            "security_tip_content": "Please keep your Secret key safe and do not leak it to others. If you suspect the key has been compromised, please refresh it immediately."
+        },
+        "notification_settings": {
+            "settings_saved": "Settings saved",
+            "save_failed": "Save failed",
+            "notification_settings_title": "Notification Settings",
+            "notification_settings_description": "Customize your email notification preferences to stay informed about important script-related activities and interactions.",
+            "interaction_notifications": "Interaction Notifications",
+            "mention_notification_title": "Send notification when mentioned",
+            "mention_notification_description": "Send email notification when users mention me in comments or feedback",
+            "score_notification_title": "Script rating notification",
+            "score_notification_description": "Send notification when my scripts receive new ratings",
+            "script_management": "Script Management",
+            "create_script_notification_title": "Script creation notification",
+            "create_script_notification_description": "Send notification when followed users create scripts",
+            "script_update_notification_title": "Followed script updates",
+            "script_update_notification_description": "Send notification when scripts I follow have new version updates",
+            "feedback_interaction": "Feedback Interaction",
+            "script_issue_notification_title": "New feedback notification",
+            "script_issue_notification_description": "Send notification when scripts I follow receive new issue feedback",
+            "script_issue_comment_notification_title": "Feedback reply notification",
+            "script_issue_comment_notification_description": "Send notification when feedback I follow has new replies",
+            "admin_badge": "Administrator",
+            "email_notification_info_title": "Email Notification Information",
+            "email_notification_info_item_1": "All notifications will be sent to your registered email",
+            "email_notification_info_item_2": "You can modify these notification settings at any time",
+            "email_notification_info_item_3": "Important system notifications (such as security-related) cannot be disabled",
+            "email_notification_info_item_4": "Notification emails may be classified as spam, please check carefully"
+        }
+    },
+    "utils": {
+        "time_format": "YYYY-MM-DD"
+    }
 }

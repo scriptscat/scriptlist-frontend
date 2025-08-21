@@ -1,23 +1,1174 @@
 {
+  "common": {
+    "copy_success": "複製成功",
+    "delete_success": "刪除成功",
+    "delete_failed": "刪除失敗，請稍後重試",
+    "delete": "刪除",
+    "punish": "處罰",
+    "report": "舉報",
+    "confirm_punish": "確認處罰",
+    "select_punish_option": "選擇處罰選項",
+    "punish_reason": "處罰原因",
+    "confirm": "確認",
+    "cancel": "取消",
+    "confirm_delete": "確認刪除",
+    "delete_warning": "刪除後無法恢復，確認刪除嗎？"
+  },
+  "layout": {
+    "home": "首頁",
+    "community": "社群",
+    "script_list": "腳本列表",
+    "developer": "開發者",
+    "browser_extension": "瀏覽器擴充功能",
+    "tampermonkey_chinese_website": "油猴中文網",
+    "scriptcat": "腳本貓",
+    "service_agreement": "服務協議",
+    "privacy_policy": "隱私政策",
+    "all_rights_reserved": "© 2022-至今 ScriptCat. All rights reserved.",
+    "login": "登入",
+    "logout": "登出",
+    "user_profile": "個人資料",
+    "publish_script": "發布腳本",
+    "login_required": "請先登入後再發布腳本",
+    "light": "浅色模式",
+    "dark": "深色模式",
+    "system": "跟随系统",
+    "user_setting": "使用者設定"
+  },
+  "home": {
+    "metadata": {
+      "title": "ScriptCat - 分享你的使用者腳本",
+      "description": "腳本貓腳本站，在這裡你可以與全世界分享你的使用者腳本",
+      "keywords": "ScriptCat,UserScript,Tampermonkey,Greasemonkey,Violentmonkey,使用者腳本,腳本貓,油猴,油猴腳本"
+    },
+    "browser_stores": {
+      "add_to_edge": "新增到 Edge 瀏覽器",
+      "add_to_chrome": "新增到 Chrome 瀏覽器",
+      "add_to_firefox": "新增到 Firefox 瀏覽器",
+      "download_crx_install": "下載 安裝包 檔案手動安裝",
+      "install_extension": "安裝擴充功能到瀏覽器"
+    },
+    "hero": {
+      "tagline": "發現和分享優質使用者腳本，讓瀏覽體驗更精彩",
+      "search_placeholder": "搜尋腳本，開啟新世界",
+      "search_button": "搜尋腳本",
+      "browse_all_scripts": "瀏覽所有腳本"
+    },
+    "features": {
+      "why_choose_title": "為什麼選擇 ScriptCat？",
+      "why_choose_subtitle": "基於油猴的設計理念，完全相容油猴腳本，提供更多豐富的API，讓腳本能夠完成更多強大的功能。",
+      "scriptcat": {
+        "title": "強大的腳本管理器",
+        "description": "ScriptCat（腳本貓）完全相容油猴腳本，同時提供背景腳本執行框架和豐富的API擴充。",
+        "features": {
+          "compatible": "完全相容油猴腳本",
+          "background": "支援背景腳本執行",
+          "rich_api": "提供豐富API擴充"
+        },
+        "install_link": "立即安裝 ScriptCat →"
+      },
+      "faq": {
+        "title": "常見問題",
+        "what_is_userscript": {
+          "question": "什麼是使用者腳本？",
+          "answer": "使用者腳本可以增強網頁功能、去除廣告、提升易用性，讓你的瀏覽體驗更出色。"
+        },
+        "why_scriptcat": {
+          "question": "為什麼選擇腳本貓？",
+          "answer": "腳本貓不僅相容油猴腳本，還支援背景腳本執行，功能更強大，覆蓋範圍更廣。"
+        },
+        "how_to_start": {
+          "question": "如何開始使用？",
+          "answer": "首先安裝腳本管理器，然後在本站尋找適合的腳本一鍵安裝即可。"
+        }
+      },
+      "developer": {
+        "title": "加入開發者",
+        "description": "成為腳本開發者，享受專屬權益和技術支援。",
+        "benefits": {
+          "exposure": "腳本推薦曝光機會",
+          "forum_permission": "論壇開發者權限",
+          "tech_group": "技術交流群邀請",
+          "badge": "專屬開發者標識"
+        },
+        "guide_link": "查看開發教學 →"
+      }
+    }
+  },
+  "script": {
+    "metadata": {
+      "search": {
+        "title": "腳本搜尋",
+        "page_number": "第 {page} 頁"
+      },
+      "page_suffixes": {
+        "code": {
+          "title": "程式碼",
+          "description": "查看{name}的原始碼"
+        },
+        "comment": {
+          "title": "評分",
+          "description": "查看{name}的評分"
+        },
+        "stats": {
+          "title": "腳本統計",
+          "description": "查看{name}的安裝統計和使用資料"
+        },
+        "version": {
+          "title": "版本列表",
+          "description": "查看{name}的所有版本歷史"
+        },
+        "issue": {
+          "title": "回饋",
+          "description": "查看{name}的問題回饋"
+        },
+        "manage": {
+          "title": "腳本管理",
+          "description": "管理{name}腳本"
+        },
+        "update": {
+          "title": "更新腳本",
+          "description": "更新{name}腳本"
+        }
+      },
+      "fallback": {
+        "title": "腳本詳情",
+        "description_with_suffix": "查看腳本{suffix}",
+        "description_default": "查看腳本詳細資訊"
+      }
+    },
+    "navigation": {
+      "market": "腳本市場",
+      "overview": "首頁",
+      "code": "程式碼",
+      "issue": "回饋",
+      "comment": "評分",
+      "version": "版本列表",
+      "update": "更新腳本",
+      "statistic": "腳本統計",
+      "manage": "腳本管理"
+    },
+    "alerts": {
+      "archived_title": "腳本已歸檔",
+      "archived_description": "該腳本已經被作者歸檔，腳本可能失效並且作者不再維護，你無法再進行問題回饋。",
+      "obfuscated_title": "腳本程式碼經過了不可讀處理",
+      "obfuscated_description": "該腳本已經被作者經過了不可讀處理，雖然腳本站已經經過了一層審查，但還是請注意危險權限的授予。"
+    },
+    "search": {
+      "placeholder": "搜尋腳本，開啟新世界",
+      "button": "搜尋",
+      "all_categories": "所有分類",
+      "all_types": "所有類型",
+      "sort": {
+        "today_download": "熱度排序",
+        "createtime": "最新發布",
+        "updatetime": "最近更新",
+        "score": "評分最高",
+        "total_download": "下載最多"
+      },
+      "loading": "載入中...",
+      "pagination": "{start}-{end} / 共 {total} 個腳本",
+      "sidebar": {
+        "learn_userscript": "學油猴腳本",
+        "feedback_report": "建議/投訴/舉報",
+        "visit_community": "就來 <a href='https://bbs.tampermonkey.net.cn/'>油猴中文網</a>",
+        "latest_scripts": "最新腳本",
+        "latest_ratings": "最新評分",
+        "quick_actions": "快速操作",
+        "upload_script": "上傳腳本",
+        "my_favorites": "我的收藏",
+        "my_scripts": "我的腳本",
+        "settings": "設定"
+      }
+    },
+    "types": {
+      "script": "使用者腳本",
+      "library": "腳本庫",
+      "background_script": "背景腳本",
+      "scheduled_script": "定時腳本"
+    },
+    "card": {
+      "today_installs": "今日 +{count}",
+      "downloads": "下載",
+      "library_tooltip": "這是一個腳本使用的庫",
+      "library_tag": "@require庫",
+      "tag_label": "標籤：{name}",
+      "share_link": "分享連結"
+    },
+    "detail": {
+      "crontab": {
+        "every_minute": "每分鐘執行一次",
+        "every_hour": "每小時執行一次",
+        "every_day": "每天執行一次",
+        "every_month": "每月執行一次",
+        "every_week": "每星期執行一次",
+        "error_expression": "錯誤表達式",
+        "every_minute_execute": "每分鐘執行",
+        "every_hour_execute": "每小時執行",
+        "daily_at_midnight": "每天0點執行",
+        "weekly_sunday_midnight": "每週日0點執行",
+        "monthly_first_midnight": "每月1號0點執行",
+        "every_n_hours": "每{interval}小時執行",
+        "daily_at_hours": "每天{hours}點執行",
+        "every_n_minutes": "每{interval}分鐘執行"
+      },
+      "install": {
+        "install_script": "安裝腳本",
+        "reinstall_script": "重新安裝腳本 v{version}",
+        "update_script": "更新腳本至 v{version}",
+        "install_check_failed": "檢測腳本安裝狀態失敗"
+      },
+      "antifeatures": {
+        "referral_link": {
+          "title": "推薦連結",
+          "description": "腳本包含推薦連結"
+        },
+        "ads": {
+          "title": "廣告",
+          "description": "腳本包含廣告展示功能"
+        },
+        "payment": {
+          "title": "付費功能",
+          "description": "腳本包含付費功能"
+        },
+        "miner": {
+          "title": "挖礦",
+          "description": "腳本包含挖礦功能"
+        },
+        "membership": {
+          "title": "會員功能",
+          "description": "腳本包含會員專屬功能"
+        },
+        "tracking": {
+          "title": "資料追蹤",
+          "description": "腳本會收集使用者資料"
+        }
+      },
+      "sites": {
+        "more": "+{count} 更多",
+        "collapse": "收起"
+      },
+      "copy": {
+        "copied_to_clipboard": "已複製到剪貼板！",
+        "copy_failed": "複製失敗，請重試。",
+        "share_copied": "分享內容已複製到剪貼板！"
+      },
+      "require": {
+        "copy_tooltip": "複製引用程式碼",
+        "usage_guide": "使用指南",
+        "compatible_version": "(相容版本) ",
+        "patch_version": "(修補版本) "
+      },
+      "actions": {
+        "install_guide": "如何安裝？",
+        "prerelease_tooltip": "安裝預發布版本，體驗更新的內容",
+        "share": "分享",
+        "watch": "關注",
+        "favorite": "收藏",
+        "watch_options": {
+          "none": "不關注",
+          "version": "版本更新",
+          "feedback": "新建回饋",
+          "all": "任何動態"
+        }
+      },
+      "stats": {
+        "total_installs": "總安裝量",
+        "today_installs": "今日新增",
+        "user_rating": "使用者評分",
+        "current_version": "目前版本"
+      },
+      "folders": {
+        "select_folders": "選擇收藏夾",
+        "create_new_folder": "建立新收藏夾",
+        "folder_name_placeholder": "請輸入收藏夾名稱",
+        "folder_desc_placeholder": "描述（可選）",
+        "folder_name_required": "請輸入收藏夾名稱",
+        "new_folder": "新建收藏夾",
+        "favorite_update_failed": "更新收藏失敗",
+        "quick_favorite_failed": "快速收藏失敗"
+      },
+      "info": {
+        "library_details": "庫詳情",
+        "script_details": "腳本詳情",
+        "library_description": "這是一個使用者腳本使用的庫，你可以在你的腳本中直接引用它。",
+        "created_at": "建立於 {time}",
+        "updated_at": "更新於 {time}",
+        "tag_label": "標籤：{name}",
+        "applicable_sites": "適用網站",
+        "background_script": "背景腳本",
+        "background_script_desc": "它會在瀏覽器背景執行",
+        "scheduled_script": "定時腳本",
+        "scheduled_script_tooltip": "此腳本支援定時執行，會按照設定的時間間隔自動執行：{cron}",
+        "license": "授權協議",
+        "browser_compatibility": "瀏覽器相容性",
+        "browser_support": "支援 {browser}",
+        "feature_notice": "功能提醒",
+        "forum_post": "論壇文章"
+      },
+      "delete": {
+        "success": "刪除成功",
+        "failed": "刪除失敗，請重試"
+      }
+    },
+    "gray_control": {
+      "strategy_title": "策略 {index}",
+      "weight": "權重",
+      "pre_release_users": "預發布使用者",
+      "traffic_tooltip": "將會推送{percent}%的流量到目標版本",
+      "weight_day_tooltip": "在{days}天內，逐漸將流量更新至目標值。如果期望最終完全更新至指定版本，可設定100%，0天為直接更新指定流量至此版本",
+      "days_suffix": "天",
+      "cookie_regex_placeholder": "Cookie正規表達式",
+      "target_version": "目標版本",
+      "latest_version": "最新版本",
+      "previous_version": "上一版本",
+      "all_latest_versions": "所有最新版本"
+    },
+    "rating": {
+      "error_update_stats": "更新評分統計失敗:",
+      "login_required": "請先登入",
+      "submit_success": "評分提交成功！",
+      "submit_error": "提交評分失敗:",
+      "submit_failed": "提交失敗，請重試",
+      "update_success": "評分更新成功！",
+      "update_error": "更新評分失敗:",
+      "reply": "回覆",
+      "reply_placeholder": "寫下您的回覆...",
+      "send_reply": "傳送回覆",
+      "cancel": "取消",
+      "update_failed": "更新失敗，請重試",
+      "delete_success": "刪除成功！",
+      "delete_error": "刪除評分失敗:",
+      "delete_failed": "刪除失敗，請重試",
+      "reply_success": "回覆成功！",
+      "reply_error": "回覆失敗:",
+      "reply_failed": "回覆失敗，請重試",
+      "fetch_error": "取得評分資料失敗:",
+      "overview": {
+        "based_on_ratings": "基於 {totalRatings} 條使用者評價"
+      },
+      "text": {
+        "excellent": "太棒了！",
+        "good": "很好",
+        "average": "還不錯",
+        "fair": "一般",
+        "poor": "需要改進"
+      },
+      "user_form": {
+        "login_prompt_title": "登入後評價腳本",
+        "login_prompt_description": "登入後您可以對腳本進行評分和評價，幫助其他使用者做出選擇",
+        "login_prompt_button": "立即登入",
+        "login_redirect_message": "請前往登入頁面進行登入",
+        "please_select_rating": "請選擇評分",
+        "your_review_title": "您的評價",
+        "published_at": "發布於 {time}",
+        "edit_button": "編輯",
+        "rating_label": "評分：",
+        "review_content_label": "評價內容：",
+        "new_review_title": "分享您的體驗",
+        "edit_review_title": "編輯評價",
+        "review_help_text": "您的評價將幫助其他使用者",
+        "rating_field_label": "您的評分",
+        "review_field_label": "評價內容（可選）",
+        "review_placeholder": "分享您的使用體驗，幫助其他使用者了解這個腳本...",
+        "submit_button": "發布評價",
+        "update_button": "更新評價",
+        "cancel_button": "取消",
+        "reset_button": "重設"
+      },
+      "list": {
+        "title": "使用者評價",
+        "title_with_count": "使用者評價 ({count})",
+        "sort_label": "排序方式:",
+        "sort_options": {
+          "newest": "最新優先",
+          "oldest": "最早優先",
+          "rating_high": "評分最高",
+          "rating_low": "評分最低"
+        },
+        "empty_title": "暫無評價",
+        "empty_description": "成為第一個評價這個腳本的使用者吧！",
+        "loading": "載入中...",
+        "load_more": "載入更多評價",
+        "all_loaded": "已顯示全部 {count} 條評價"
+      },
+      "author_tag": "作者",
+      "admin_tag": "管理員"
+    },
+    "issue": {
+      "search_placeholder": "搜尋問題...",
+      "filter_all": "全部",
+      "filter_pending": "待解決",
+      "filter_resolved": "已解決",
+      "create_issue": "新建問題",
+      "no_issues_found": "沒有找到符合的問題",
+      "no_issues": "還沒有問題",
+      "status_pending": "待解決",
+      "status_resolved": "已解決",
+      "updated_at": "更新於 {time}",
+      "pagination_total": "{start}-{end} / {total}",
+      "labels_title": "標籤",
+      "labels": {
+        "feature": "新功能",
+        "question": "問題",
+        "bug": "BUG"
+      },
+      "create": {
+        "title_required": "請輸入標題",
+        "content_required": "請輸入內容",
+        "submit_success": "提交成功",
+        "submit_failed": "提交失敗",
+        "title_placeholder": "請簡要描述您要回饋的問題",
+        "content_placeholder": "請詳細描述問題，包括重現步驟、期望結果等...",
+        "submit_button": "提交回饋"
+      },
+      "detail": {
+        "page_not_found_title": "頁面未找到 | ScriptCat",
+        "issue_feedback_title": "問題回饋 | ScriptCat",
+        "issue_title_with_script": "{title} • 回饋 #{id} - {scriptName}",
+        "issue_description": "{scriptName}的問題回饋：{title}"
+      },
+      "comment": {
+        "labels_added": "新增標籤:",
+        "labels_removed": "刪除標籤:",
+        "delete_success": "刪除成功",
+        "delete_failed": "刪除失敗",
+        "status_pending": "待處理",
+        "status_resolved": "已解決",
+        "copy_success": "複製成功",
+        "copy_link": "複製連結",
+        "created_at": "建立於 {time}",
+        "no_replies": "暫無回覆",
+        "reply": "回覆",
+        "link": "連結",
+        "reopened_feedback": "重新開啟了回饋",
+        "closed_feedback": "關閉了回饋",
+        "comment_placeholder": "請輸入評論內容...",
+        "close_feedback": "關閉回饋",
+        "reopen_feedback": "重新開啟回饋",
+        "feedback_closed": "回饋已關閉",
+        "feedback_reopened": "回饋已重新開啟",
+        "operation_failed": "操作失敗",
+        "system_error": "系統錯誤",
+        "comment_content_required": "請輸入評論內容",
+        "reply_success": "回覆成功",
+        "comment_failed": "發表評論失敗",
+        "comment_button": "評論",
+        "login_to_comment": "登入後評論",
+        "login": "登入",
+        "labels_update_success": "標籤更新成功",
+        "update_failed": "更新失敗",
+        "watch_title": "關注",
+        "watch_tooltip": "關注此回饋以接收更新通知",
+        "unwatch_success": "已取消關注",
+        "watch_success": "已關注",
+        "watch_button": "關注",
+        "watched_button": "已關注",
+        "participants_title": "參與者"
+      }
+    },
+    "statistics": {
+      "loading_failed": "載入失敗",
+      "loading_failed_description": "取得統計資料失敗，請稍後重試。",
+      "retry": "重試",
+      "loading_data": "載入統計資料中...",
+      "data_notice": "資料說明",
+      "data_notice_description": "以下資料僅為參考，若有出入請以實際為準。UV表示獨立訪客數，PV表示訪問量。",
+      "page_views": "頁面瀏覽量",
+      "visitors": "訪客數",
+      "installs": "安裝數",
+      "install": "安裝",
+      "updates": "更新數",
+      "update": "更新",
+      "today": "今日",
+      "yesterday": "昨日",
+      "week": "本週",
+      "growth_tooltip": "較昨日{type}{value}%",
+      "growth_increase": "增長",
+      "growth_decrease": "下降",
+      "realtime_downloads": "即時更新下載",
+      "realtime_monitoring": "即時資料監控",
+      "realtime_updating": "即時更新中",
+      "realtime_paused": "已暫停",
+      "realtime_update": "即時更新",
+      "on": "開",
+      "off": "關",
+      "trend_overview": "趨勢概覽",
+      "30_day_install_trend": "30天安裝量趨勢",
+      "30_day_update_trend": "30天更新量趨勢",
+      "line_chart": "折線圖",
+      "column_chart": "長條圖"
+    },
+    "editor": {
+      "messages": {
+        "metadata_parse_success": "腳本元資料解析成功",
+        "file_upload_success": "檔案上傳成功！",
+        "script_update_success": "腳本更新成功！",
+        "script_create_success": "腳本建立成功！",
+        "script_update_failed": "腳本更新失敗！",
+        "script_create_failed": "腳本建立失敗！",
+        "submit_failed": "提交失敗:"
+      },
+      "alerts": {
+        "review_rules_text": "請仔細閱讀並遵守",
+        "review_rules_link": "腳本審核規則",
+        "review_rules_description": "，確保程式碼品質和安全性。違規腳本將被下架或刪除。"
+      },
+      "code_section": {
+        "title": "腳本程式碼",
+        "tag": "JavaScript",
+        "upload_button": "上傳本機檔案",
+        "file_support": "支援 .js 和 .user.js 檔案"
+      },
+      "description_section": {
+        "title": "詳細說明",
+        "tag": "Markdown",
+        "placeholder": "請詳細描述腳本的功能、使用方法等資訊，支援 Markdown 格式...",
+        "create_button": "建立腳本",
+        "update_button": "發布更新"
+      },
+      "info_section": {
+        "title": "腳本資訊",
+        "script_type_label": "腳本類型",
+        "script_type_placeholder": "請選擇腳本類型",
+        "script_type_required": "請選擇腳本類型",
+        "script_category_label": "腳本分類",
+        "script_category_placeholder": "請選擇腳本分類",
+        "version_label": "版本號",
+        "version_placeholder": "例如: 1.0.0",
+        "version_required": "請輸入版本號",
+        "version_tooltip": "建議用語義化版本號，如：1.0.0, 2.1.5",
+        "prerelease_label": "預發布版本",
+        "prerelease_tooltip": "設定為預發布版本，正式版本不會更新至此版本，可在腳本管理頁開啟腳本預發布安裝連結",
+        "tags_label": "標籤",
+        "tags_placeholder_library": "請輸入標籤",
+        "tags_placeholder_script": "使用@tag新增標籤",
+        "tags_tooltip_library": "請輸入標籤",
+        "tags_tooltip_script": "使用@tag新增標籤"
+      },
+      "library_section": {
+        "title": "庫描述資訊",
+        "name_label": "庫名稱",
+        "name_placeholder": "例如: MyLibrary",
+        "name_required": "請輸入庫名稱",
+        "description_label": "庫描述",
+        "description_placeholder": "請描述這個庫的用途和功能...",
+        "description_required": "請輸入庫描述"
+      },
+      "changelog_section": {
+        "title": "更新日誌",
+        "tag": "Markdown",
+        "placeholder": "例如：\n• 修復了某個已知問題\n• 新增了某項功能  \n• 最佳化了效能表現\n• 更新了相依函式庫"
+      },
+      "script_types": {
+        "user_script": "使用者腳本",
+        "subscribe_script": "訂閱腳本",
+        "library": "庫"
+      }
+    },
+    "version": {
+      "update_success": "版本資訊更新成功",
+      "update_failed": "更新失敗，請重試",
+      "update_version_failed": "更新版本失敗:",
+      "delete_success": "版本刪除成功",
+      "delete_failed": "刪除失敗，請重試",
+      "delete_version_failed": "刪除版本失敗:",
+      "install_success": "開始安裝 {version}",
+      "load_failed": "載入失敗",
+      "load_failed_description": "取得版本列表時發生錯誤，請重新整理頁面重試",
+      "retry": "重試",
+      "latest_version_badge": "最新版本",
+      "prerelease_badge": "預發布版本",
+      "history_title": "版本歷史",
+      "history_description": "查看所有已發布的版本，包括正式版本和預發布版本。您可以安裝任何版本或查看其原始碼。",
+      "no_history_title": "暫無版本歷史",
+      "no_history_description": "該腳本還沒有發布任何版本",
+      "total_versions": "總版本數",
+      "release_versions": "正式版本",
+      "prerelease_versions": "預發布版本",
+      "pagination_info": "顯示第 {start}-{end} 項，共 {total} 項",
+      "edit_button": "編輯",
+      "delete_button": "刪除",
+      "install_button": "安裝此版本",
+      "view_code_button": "查看程式碼",
+      "confirm_delete_title": "確認刪除",
+      "confirm_delete_description": "確定要刪除這個版本嗎？此操作不可撤銷。",
+      "confirm_delete_ok": "刪除",
+      "confirm_delete_cancel": "取消",
+      "pagination_total": "第 {start}-{end} 項，共 {total} 個版本",
+      "edit_modal_title": "編輯版本 {version}",
+      "changelog_label": "更新說明",
+      "changelog_subtitle": "(支援Markdown語法)",
+      "changelog_placeholder": "例如：\n✨ 新增功能：新增了使用者介面最佳化\n🐛 修復問題：解決了瀏覽器相容性問題\n⚡ 效能提升：最佳化了腳本執行速度\n📦 相依性更新：升級到最新版本",
+      "version_type_label": "版本類型",
+      "version_type_extra": "預發布版本通常用於測試新功能，可能不夠穩定",
+      "prerelease_checked": "預發布版本",
+      "prerelease_unchecked": "正式版本",
+      "save_changes": "儲存變更"
+    },
+    "manage": {
+      "navigation": {
+        "source_sync": "原始碼同步",
+        "script_settings": "腳本管理",
+        "script_publish": "腳本發布",
+        "manage_logs": "管理日誌",
+        "access_control": "存取權限管理",
+        "group_management": "使用者群組管理"
+      },
+      "sync": {
+        "title": "原始碼同步",
+        "description": "設定腳本的原始碼同步，支援從 GitHub、GitLab 等程式碼託管平台自動或手動同步腳本內容。",
+        "sync_url_label": "同步位址",
+        "sync_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/script.js",
+        "sync_url_required": "請輸入同步位址",
+        "sync_mode_label": "同步方式",
+        "sync_mode_auto": "自動同步 - 定期檢查更新並自動同步，你也可以設定Webhook觸發更新",
+        "sync_mode_manual": "手動同步 - 僅在手動點擊時同步",
+        "content_url_label": "腳本說明同步位址",
+        "content_url_description": "可選：同步腳本的 README 或說明文件，支援 Markdown 格式",
+        "content_url_placeholder": "https://raw.githubusercontent.com/username/repo/main/README.md",
+        "save_and_sync_button": "儲存並同步一次",
+        "sync_success": "同步設定儲存並同步成功",
+        "sync_failed": "同步失敗，請檢查網路連線或位址是否正確"
+      },
+      "access": {
+        "title": "存取權限管理",
+        "description": "管理使用者和使用者群組對此腳本的存取權限，包括角色分配和權限期限設定",
+        "add_user_group_button": "新增使用者/使用者群組",
+        "update_success": "更新成功",
+        "update_failed": "更新失敗，請稍後重試",
+        "delete_confirm_title": "確認刪除存取權限",
+        "delete_confirm_content": "確認刪除{entityType} \"{itemName}\" 的存取權限嗎？此操作不可撤銷。",
+        "delete_confirm_ok": "確認刪除",
+        "delete_confirm_cancel": "取消",
+        "delete_success": "刪除成功",
+        "delete_failed": "刪除失敗，請稍後重試",
+        "status": {
+          "accepted": "已接受",
+          "rejected": "已拒絕",
+          "pending": "等待確認"
+        },
+        "table": {
+          "user_group_column": "使用者/使用者群組",
+          "status_column": "狀態",
+          "role_column": "權限角色",
+          "expire_column": "過期時間",
+          "action_column": "操作",
+          "delete_tooltip": "刪除存取權限",
+          "delete_button": "刪除"
+        },
+        "entity_types": {
+          "user": "使用者",
+          "group": "使用者群組"
+        },
+        "roles": {
+          "visitor": "訪客",
+          "admin": "管理員"
+        },
+        "time": {
+          "add_time": "新增時間：",
+          "never_expire": "永不過期",
+          "expired": "(已過期)"
+        },
+        "stats": {
+          "total": "總數：",
+          "users": "使用者：",
+          "groups": "使用者群組：",
+          "pending": "等待確認：",
+          "expired": "已過期："
+        },
+        "pagination": {
+          "total": "第 {start}-{end} 條，共 {total} 條"
+        },
+        "empty": {
+          "title": "暫無存取權限的使用者或使用者群組",
+          "button": "新增第一個使用者/使用者群組"
+        }
+      },
+      "logs": {
+        "title": "管理日誌",
+        "under_construction": "功能建設中",
+        "description": "日誌管理功能正在開發中，敬請期待。"
+      },
+      "groups": {
+        "title": "使用者群組管理",
+        "description": "管理腳本的使用者群組權限，控制不同使用者的存取層級",
+        "create_group_button": "新建使用者群組",
+        "create_group_title": "建立使用者群組",
+        "manage_members_title": "使用者群組成員管理",
+        "member_management_title": "成員管理",
+        "invite_user_button": "邀請使用者",
+        "invite_first_user_button": "邀請第一個使用者",
+        "create_first_group_button": "建立第一個使用者群組",
+        "group_name_label": "群組名",
+        "group_description_label": "群組描述",
+        "group_name_placeholder": "請輸入使用者群組名稱",
+        "group_description_placeholder": "請詳細描述該使用者群組的用途和權限範圍",
+        "group_name_required": "請輸入群組名",
+        "group_description_required": "請輸入群組描述",
+        "group_name_max_length": "群組名不能超過50個字元",
+        "group_description_max_length": "描述不能超過200個字元",
+        "create_button": "建立",
+        "close_button": "關閉",
+        "cancel_button": "取消",
+        "create_success": "建立成功",
+        "create_failed": "建立失敗",
+        "delete_confirm_title": "確認刪除",
+        "delete_confirm_content": "確認要刪除使用者群組 \"{groupName}\" 嗎？",
+        "delete_confirm_description": "刪除後該使用者群組的所有成員將失去相關權限，此操作不可恢復",
+        "delete_confirm_button": "確認刪除",
+        "delete_success": "刪除成功",
+        "delete_failed": "刪除失敗",
+        "remove_member_confirm_title": "確認移除",
+        "remove_member_confirm_content": "確認要移除使用者 {userName} 嗎？",
+        "remove_member_confirm_description": "移除後該使用者將失去存取權限",
+        "remove_member_button": "移除",
+        "remove_success": "移除成功",
+        "remove_failed": "移除失敗",
+        "manage_button": "管理",
+        "delete_button": "刪除",
+        "confirm_button": "確認",
+        "status": {
+          "waiting_confirm": "等待確認",
+          "joined": "已加入"
+        },
+        "time": {
+          "never_expire": "永不過期",
+          "expire_on": "到期",
+          "expired": "已過期"
+        },
+        "table": {
+          "user_column": "使用者",
+          "group_column": "使用者群組",
+          "status_column": "狀態",
+          "expire_time_column": "過期時間",
+          "member_column": "成員",
+          "action_column": "操作",
+          "manage_members_tooltip": "管理成員",
+          "delete_group_tooltip": "刪除使用者群組",
+          "remove_member_tooltip": "移除成員"
+        },
+        "stats": {
+          "total_label": "總數",
+          "member_total_label": "成員總數",
+          "active_groups_label": "活躍使用者群組",
+          "member_count": "{count} 名成員",
+          "current_member_count": "目前共有 {count} 名成員"
+        },
+        "pagination": {
+          "total": "第 {start}-{end} 條，共 {total} 條"
+        },
+        "empty": {
+          "no_groups": "暫無使用者群組",
+          "no_members": "暫無成員"
+        }
+      },
+      "settings": {
+        "library_info": {
+          "title": "庫資訊設定",
+          "description": "設定腳本庫的基本資訊，包括名稱、描述等。",
+          "name_label": "庫名稱",
+          "name_placeholder": "請輸入庫名稱",
+          "name_required": "腳本名稱不能為空",
+          "description_label": "庫描述",
+          "description_placeholder": "請輸入庫描述資訊",
+          "save_button": "儲存庫資訊",
+          "save_success": "庫資訊儲存成功",
+          "save_failed": "儲存失敗"
+        },
+        "public_settings": {
+          "title": "腳本公開設定",
+          "description": "設定腳本的公開狀態，決定腳本的可見性和存取權限。",
+          "visibility_title": "腳本可見性",
+          "visibility_private": "腳本為私有狀態，僅您自己可見",
+          "visibility_unlisted": "腳本未公開，僅透過直接連結存取",
+          "visibility_public": "腳本已公開，所有使用者都可以查看和安裝",
+          "public_option": "公開",
+          "unlisted_option": "未公開",
+          "private_option": "私有",
+          "public_update_success": "公開狀態更新成功",
+          "update_failed": "更新失敗",
+          "content_marking_title": "內容標記",
+          "unwell_checkbox": "標記為可能包含不當內容",
+          "unwell_description": "該網站可能存在令人不適內容，包括但不限於紅藍閃光頻繁閃爍、對視覺、精神有侵害的內容。",
+          "unwell_update_success": "不當內容標記更新成功"
+        },
+        "script_management": {
+          "title": "腳本管理",
+          "description": "管理腳本的狀態和刪除",
+          "status_management_title": "腳本狀態管理",
+          "archive_button": "歸檔腳本",
+          "unarchive_button": "取消歸檔",
+          "archive_description": "歸檔後，腳本將不再支援更新，使用者無法回饋，但是仍然可以使用",
+          "unarchive_description": "腳本已歸檔，點擊可取消歸檔狀態",
+          "dangerous_operations_title": "危險操作",
+          "delete_button": "刪除腳本",
+          "delete_warning": "刪除腳本後所有資料將無法恢復，請謹慎操作！"
+        },
+        "confirmations": {
+          "archive_confirm_title": "確認歸檔腳本？",
+          "unarchive_confirm_title": "確認取消歸檔？",
+          "archive_confirm_content": "歸檔後，腳本將不再支援更新，使用者無法回饋，但是仍然可以使用。",
+          "unarchive_confirm_content": "取消歸檔後腳本可以收到使用者回饋等資訊。",
+          "delete_confirm_title": "確認刪除腳本？",
+          "delete_confirm_content": "刪除腳本後所有資料將無法恢復，請謹慎操作！",
+          "confirm_button": "確認",
+          "confirm_delete_button": "確認刪除",
+          "cancel_button": "取消"
+        },
+        "messages": {
+          "archive_success": "腳本已歸檔",
+          "unarchive_success": "腳本已取消歸檔",
+          "archive_failed": "歸檔操作失敗",
+          "operation_failed": "操作失敗",
+          "delete_success": "腳本已刪除",
+          "delete_failed": "刪除失敗"
+        }
+      }
+    },
+    "invite": {
+      "create_invite_code": "建立邀請碼",
+      "cancel": "取消",
+      "create": "建立",
+      "create_count": "建立數量",
+      "expire_time": "到期時間",
+      "days": "天",
+      "no_limit": "無限制",
+      "admin_audit": "管理員審核",
+      "create_success": "建立成功",
+      "copy_success": "複製成功",
+      "copy_failed": "複製失敗",
+      "copy_link": "複製連結",
+      "close": "關閉",
+      "invite_list_description": "建立的邀請列表如下:",
+      "submit_success": "提交成功",
+      "create_failed": "建立失敗",
+      "never_expire": "永不過期",
+      "expire_suffix": " 過期",
+      "status_unused": "未使用",
+      "status_used": "已使用",
+      "status_expired": "已過期",
+      "status_pending_review": "待審核",
+      "status_rejected": "已拒絕",
+      "status_unknown": "未知狀態",
+      "invite_code": "邀請碼",
+      "status": "狀態",
+      "action": "操作",
+      "invite_confirmation": "邀請碼確認",
+      "confirm_allow_invite": "確認允許此邀請？",
+      "confirm": "確認",
+      "allow": "允許",
+      "confirm_delete": "確認刪除",
+      "confirm_delete_invite": "確定要刪除此邀請碼嗎？",
+      "delete_success": "刪除成功",
+      "delete_failed": "刪除失敗，請稍後重試",
+      "delete": "刪除",
+      "operation_success": "操作成功",
+      "get_invite_info_failed": "取得邀請資訊失敗",
+      "check_invite_link": "請檢查邀請連結是否正確",
+      "back_to_home": "返回首頁",
+      "loading_invite_info": "載入邀請資訊中...",
+      "operation_failed_retry": "操作失敗，請稍後重試",
+      "status_pending": "待處理",
+      "status_accepted": "已接受",
+      "status_waiting": "等待中",
+      "permission_read": "可讀",
+      "permission_write": "可寫",
+      "invite_you": "邀請您",
+      "join": "加入",
+      "organization": "組織",
+      "permission_description": "權限說明",
+      "permission_after_join": "加入後您將取得以下權限：",
+      "agree": "同意",
+      "reject": "拒絕",
+      "invite_accepted": "邀請已接受",
+      "code_used": "{code} 已使用",
+      "invite_expired": "邀請已過期",
+      "code_expired": "{code} 已過期",
+      "waiting_process": "等待處理",
+      "code_waiting": "{code} 等待處理中",
+      "invite_rejected": "邀請已拒絕",
+      "code_rejected": "{code} 已被拒絕",
+      "unknown_status": "未知狀態",
+      "invite_confirm": "邀請確認",
+      "organization_invite": "組織邀請",
+      "script_collaboration_invite": "腳本協作邀請",
+      "view_script_details": "查看腳本詳情",
+      "invite_you_join_group": "{inviter} 邀請您加入 {holder} 的 {property}",
+      "invite_you_join": "{inviter} 邀請您加入 {holder}"
+    },
+    "user_modal": {
+      "submit_success": "提交成功",
+      "submit_failed": "提交失敗",
+      "form_validation_failed": "表單驗證失敗:",
+      "please_select_user": "請選擇使用者",
+      "username": "使用者名稱",
+      "grant_permission": "授予權限",
+      "guest": "訪客",
+      "admin": "管理員",
+      "expire_time": "過期時間",
+      "please_select_expire_time": "請選擇過期時間",
+      "user_group": "使用者群組",
+      "please_select_user_group": "請選擇使用者群組",
+      "invite_by_username": "透過使用者名稱邀請",
+      "invite_by_user_group": "透過使用者群組邀請",
+      "invite_by_code": "透過邀請碼邀請",
+      "select_user_or_group": "請選擇使用者或使用者群組",
+      "cancel": "取消",
+      "add": "新增"
+    },
+    "publish": {
+      "prerelease_and_gray_release": "預發布和灰度發布",
+      "manage_prerelease_and_gray_strategy": "管理腳本的預發布和灰度發布策略",
+      "enable_prerelease": "啟用預發布",
+      "prerelease_description_part1": "開啟預發布開關時，當版本符合",
+      "semantic_version": "語義化版本",
+      "prerelease_description_part2": "時更新腳本將會自動標記為預發布版本，並且會在腳本首頁提供預發布版本的安裝按鈕。",
+      "prerelease_first_enable_tip": "(首次開啟會幫你新增三條策略：預發布使用者更新到全部最新，正式版按權重在10天內逐步更新至最新正式版本，其它使用者更新到上一正式版本)",
+      "enable": "開啟",
+      "disable": "關閉",
+      "gray_release": "灰度發布",
+      "add_strategy": "新增策略",
+      "gray_strategy_description": "可設定一定的策略(策略有順序性)，使你的腳本使用者更新到指定版本",
+      "gray_strategy_saved": "灰度發布策略已儲存",
+      "load_gray_config_failed": "載入灰度發布設定失敗:",
+      "save_gray_strategy_failed": "儲存灰度發布策略失敗:",
+      "save_failed": "儲存失敗",
+      "save_and_apply_strategy": "儲存並應用策略"
+    }
+  },
+  "error": {
+    "500_title": "伺服器內部錯誤",
+    "500_subtitle": "抱歉，伺服器遇到了一些問題",
+    "500_description": "我們的伺服器暫時無法處理您的請求。我們已經收到錯誤報告，正在努力修復這個問題。",
+    "404_title": "頁面未找到",
+    "404_subtitle": "抱歉，您存取的頁面不存在",
+    "404_description": "請檢查URL位址是否正確，或者從首頁重新開始瀏覽。",
+    "403_title": "存取被拒絕",
+    "403_subtitle": "抱歉，您沒有存取此頁面的權限",
+    "403_description": "請聯絡管理員取得存取權限，或者檢查您的登入狀態。",
+    "feedback_notice": "請在回饋時提供上述錯誤ID和錯誤代碼，這將幫助我們更快地定位和解決問題。",
+    "error_code": "錯誤代碼",
+    "error_time": "錯誤時間",
+    "feedback_title": "遇到問題了？",
+    "feedback_description": "如果問題持續存在，請透過以下方式向我們回饋：",
+    "feedback_forum": "前往社群回饋",
+    "feedback_github": "GitHub Issues",
+    "contact_admin": "聯絡管理員",
+    "back_to_home": "返回首頁",
+    "refresh_page": "重新整理頁面",
+    "what_happened": "發生了什麼？",
+    "server_error_details": "伺服器在處理您的請求時遇到了內部錯誤。這可能是由於伺服器負載過高、資料庫連線問題或其他技術故障導致的。",
+    "what_can_do": "您可以嘗試：",
+    "try_refresh": "重新整理目前頁面",
+    "try_later": "稍後再試",
+    "check_network": "檢查網路連線",
+    "contact_us": "聯絡我們",
+    "error_id": "錯誤ID"
+  },
+  "components": {
+    "markdown_editor": {
+      "placeholder": "請輸入內容...",
+      "loading_editor": "載入編輯器中...",
+      "uploading_image": "圖片上傳中...",
+      "image_upload_failed": "圖片上傳失敗"
+    }
+  },
+  "user": {
+    "user_not_found": "使用者不存在",
+    "user_homepage": "使用者首頁",
+    "update_success": "使用者資訊更新成功！",
+    "update_failed": "更新失敗，請重試",
+    "avatar_upload_success": "頭像上傳成功！",
+    "avatar_upload_failed": "頭像上傳失敗！",
+    "avatar_format_error": "只能上傳 JPG/PNG 格式的圖片！",
+    "avatar_size_error": "圖片大小不能超過 1MB！",
+    "edit_profile_title": "編輯個人資訊",
+    "avatar": "頭像",
+    "change_avatar": "更換頭像",
+    "avatar_help_text": "支援 JPG、PNG 格式，檔案大小不超過 1MB",
+    "username": "使用者名稱",
+    "username_placeholder": "請輸入使用者名稱",
+    "description": "個人簡介",
+    "description_max_length": "個人簡介不能超過200個字元",
+    "description_placeholder": "介紹一下自己吧...",
+    "email_validation": "請輸入有效的信箱位址",
+    "email_max_length": "信箱位址不能超過50個字元",
+    "email_placeholder": "聯絡信箱",
+    "location": "所在地",
+    "location_max_length": "所在地不能超過50個字元",
+    "location_placeholder": "如：臺北市大安區",
+    "website": "個人網站",
+    "website_validation": "請輸入有效的網址",
+    "website_max_length": "網址不能超過100個字元",
+    "website_placeholder": "https://example.com",
+    "cancel": "取消",
+    "save": "儲存",
+    "profile": {
+      "my_scripts": "我的腳本",
+      "my_favorites": "我的收藏",
+      "login_required": "請先登入",
+      "follow_success": "關注成功",
+      "unfollow_success": "已取消關注",
+      "operation_failed": "操作失敗，請重試",
+      "message_feature_developing": "發送訊息功能開發中...",
+      "link_copied": "連結已複製到剪貼板",
+      "report": "舉報",
+      "administrator": "管理員",
+      "verified": "已驗證",
+      "edit_profile": "編輯個人資訊",
+      "followed": "已關注",
+      "follow": "關注",
+      "private_message": "私訊",
+      "join_time": "加入時間",
+      "last_active": "最後活躍",
+      "email": "信箱",
+      "location": "位置",
+      "personal_website": "個人網站",
+      "follow_section": "關注",
+      "followers_following": "{followers} 關注者 • {following} 正在關注",
+      "achievement_badges": "成就徽章",
+      "profile_update_success": "個人資訊更新成功！"
+    },
+    "favorites": {
+      "unfavorite_success": "已取消收藏",
+      "unfavorite_failed": "取消收藏失敗，請重試",
+      "create_folder_coming_soon": "建立收藏夾功能正在開發中",
+      "no_description": "暫無描述",
+      "script_count": "{count} 腳本",
+      "unfavoriting": "取消中...",
+      "unfavorite": "取消收藏",
+      "unfavorite_tooltip": "取消收藏此腳本",
+      "no_favorites": "該使用者還沒有收藏任何腳本",
+      "discover_scripts": "去發現腳本",
+      "my_folders": "我的收藏夾",
+      "create_folder": "建立收藏夾",
+      "favorite_scripts": "收藏的腳本",
+      "no_scripts_in_category": "該分類下暫無收藏的腳本",
+      "pagination_total": "第 {start}-{end} 條，共 {total} 條",
+      "folder_title": "{folderName} - {username}的收藏夾",
+      "folder_description": "{username}的收藏夾\"{folderName}\"，共收錄{count}個腳本",
+      "folder_not_found": "收藏夾不存在",
+      "folder_not_found_description": "您存取的收藏夾不存在或已被刪除",
+      "folder_error": "收藏夾不存在或已被刪除",
+      "go_back": "返回上一頁",
+      "home": "首頁",
+      "favorites_breadcrumb": "收藏夾",
+      "script_count_text": "腳本數量:",
+      "edit_folder": "編輯收藏夾",
+      "subscription_link": "訂閱連結",
+      "favorite_scripts_title": "收藏的腳本 ({total})",
+      "cancel_favorite_error": "取消收藏失敗:",
+      "no_script_manager_title": "未檢測到腳本管理器",
+      "no_script_manager_content": "未檢測到瀏覽器中安裝了 ScriptCat 擴充功能，確認要開啟訂閱連結嗎？",
+      "confirm_open": "確認開啟",
+      "cancel": "取消",
+      "status_public": "公開",
+      "status_private": "私有",
+      "pagination_items": "第 {start}-{end} 項，共 {total} 項",
+      "no_scripts_in_folder": "該收藏夾暫無腳本",
+      "edit_modal": {
+        "title": "編輯收藏夾",
+        "update_success": "收藏夾更新成功！",
+        "update_failed_prefix": "更新收藏夾失敗:",
+        "update_failed_generic": "更新失敗，請重試",
+        "name_label": "收藏夾名稱",
+        "name_placeholder": "請輸入收藏夾名稱",
+        "name_required": "請輸入收藏夾名稱",
+        "name_length_error": "收藏夾名稱長度應在1-50個字元之間",
+        "description_label": "描述",
+        "description_placeholder": "請輸入收藏夾描述（可選）",
+        "description_length_error": "描述不能超過500個字元",
+        "private_label": "私有收藏夾",
+        "private_help_text": "開啟後，只有您可以看到此收藏夾",
+        "cancel_button": "取消",
+        "save_button": "儲存"
+      }
+    },
+    "script_list": {
+      "search_placeholder": "搜尋該使用者的腳本",
+      "search_button": "搜尋",
+      "all_types_placeholder": "所有類型",
+      "type_all": "全部",
+      "type_script": "腳本",
+      "sort_by_hot": "熱度排序",
+      "sort_by_latest": "最新發布",
+      "sort_by_updated": "最近更新",
+      "sort_by_score": "評分最高",
+      "sort_by_downloads": "下載最多",
+      "loading": "載入中...",
+      "pagination_total": "{start}-{end} / 共 {total} 個腳本"
+    },
+    "settings": {
+      "user_settings": "使用者設定",
+      "settings_description": "管理你的帳戶偏好設定，包括 Webhook 設定和通知選項",
+      "webhook_settings": "Webhook 設定",
+      "notification_settings": "通知設定"
+    },
+    "webhook": {
+      "copy_success": "複製成功",
+      "copy_failed": "複製失敗",
+      "settings_title": "Webhook 設定",
+      "settings_description": "使用Webhook可以接受來自Github等地方等訊息，在腳本頁面的腳本管理中設定更新URL，可以實現自動的即時的腳本更新。",
+      "config_steps": "設定步驟",
+      "config_tip_title": "設定提示",
+      "config_tip_description": "請按照以下步驟完成 Webhook 設定，確保腳本能夠正確同步到你的程式碼倉庫。",
+      "step_bind_repo": "綁定程式碼倉庫",
+      "step_bind_repo_desc": "存取 Github 倉庫進入 Settings",
+      "step_config_webhook": "設定 Webhook",
+      "step_config_webhook_desc": "點擊 \"Add webhook\"",
+      "step_config_webhook_detail": "在你的程式碼倉庫中設定下面的 Webhook 位址和密鑰",
+      "step_select_events": "選擇觸發事件",
+      "step_select_events_desc": "選擇要監聽的事件類型：",
+      "event_push": "Push 事件",
+      "event_push_desc": "程式碼推送時觸發同步",
+      "event_release": "Release 事件",
+      "event_release_desc": "發布新版本時觸發同步",
+      "event_tag": "Tag 事件",
+      "event_tag_desc": "建立標籤時觸發同步",
+      "config_info_title": "Webhook 設定資訊",
+      "copy_url_tooltip": "複製 URL",
+      "copy_content_type_tooltip": "複製 Content-Type",
+      "copy_secret_tooltip": "複製 Secret",
+      "refresh_secret": "重新整理密鑰",
+      "confirm_refresh_title": "確認重新整理密鑰？",
+      "confirm_refresh_content": "重新整理後舊的密鑰將失效，請及時更新你的 Webhook 設定",
+      "confirm_refresh": "確認重新整理",
+      "cancel": "取消",
+      "refresh_success": "密鑰重新整理成功",
+      "refresh_failed": "重新整理失敗",
+      "security_tip_title": "安全提示",
+      "security_tip_content": "請妥善保管你的 Secret 密鑰，不要將其洩露給他人。如果懷疑密鑰已洩露，請立即重新整理。"
+    },
+    "notification_settings": {
+      "settings_saved": "設定已儲存",
+      "save_failed": "儲存失敗",
+      "notification_settings_title": "通知設定",
+      "notification_settings_description": "自訂你的郵件通知偏好，及時了解腳本相關的重要動態和互動資訊。",
+      "interaction_notifications": "互動通知",
+      "mention_notification_title": "@我時發送通知",
+      "mention_notification_description": "當有使用者在評論或回饋中@我時發送郵件通知",
+      "score_notification_title": "腳本被評分通知",
+      "score_notification_description": "當我的腳本收到新的評分時發送通知",
+      "script_management": "腳本管理",
+      "create_script_notification_title": "腳本建立通知",
+      "create_script_notification_description": "當有關注的使用者建立腳本時發送通知",
+      "script_update_notification_title": "關注腳本更新",
+      "script_update_notification_description": "當我關注的腳本有新版本更新時發送通知",
+      "feedback_interaction": "回饋互動",
+      "script_issue_notification_title": "新回饋通知",
+      "script_issue_notification_description": "當我關注的腳本收到新的問題回饋時發送通知",
+      "script_issue_comment_notification_title": "回饋回覆通知",
+      "script_issue_comment_notification_description": "當我關注的回饋有新回覆時發送通知",
+      "admin_badge": "管理員",
+      "email_notification_info_title": "郵件通知說明",
+      "email_notification_info_item_1": "所有通知將發送到你的註冊信箱",
+      "email_notification_info_item_2": "你可以隨時修改這些通知設定",
+      "email_notification_info_item_3": "重要的系統通知（如安全相關）無法關閉",
+      "email_notification_info_item_4": "通知郵件可能會被歸類到垃圾郵件，請注意查看"
+    }
+  },
   "utils": {
     "time_format": "YYYY年MM月DD日"
-  },
-  "share_link": "分享链接",
-  "invite": {
-    "create_invite_list_as_follows": "创建的邀请列表如下",
-    "user_group": "用户组",
-    "grant_permission": "授予权限",
-    "expire_time": "过期时间",
-    "please_select_date": "请选择时间",
-    "invite_confirm": "邀请确认",
-    "invite_you_join_group": "{inviter} 邀请你加入 {holder} 的 {property} 用户组",
-    "invite_you_join": "{inviter} 邀请你加入 {holder}",
-    "join_you_will_have_following_role_list": "加入后你将有以下权限",
-    "agree": "同意",
-    "reject": "拒绝",
-    "used": "已使用",
-    "accepted": "已接受",
-    "rejected": "已拒绝",
-    "un_used": "未使用"
   }
 }

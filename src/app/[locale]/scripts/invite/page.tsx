@@ -190,7 +190,7 @@ export default function InviteConfirm() {
       return (
         <div className="space-y-6">
           {/* 邀请信息卡片 */}
-          <Card size="small" className="bg-blue-50 border-blue-200">
+          <Card size="small">
             <Space direction="vertical" className="w-full">
               <div className="flex items-center space-x-3">
                 <Avatar icon={<UserOutlined />} />
@@ -302,7 +302,7 @@ export default function InviteConfirm() {
 
     return (
       <div className="text-center">
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+        <div className="mb-6 p-4 rounded-lg">
           <Space direction="vertical" className="w-full">
             <div className="flex items-center justify-center space-x-2">
               {statusConfig.icon}

@@ -58,7 +58,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
     }
   };
 
-  const formatExpireTime = (expiretime: number) => {
+  const formatExpireTime = (expiretime: number): string => {
     if (expiretime === 0) {
       return t('never_expire');
     }

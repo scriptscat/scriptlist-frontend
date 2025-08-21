@@ -30,9 +30,9 @@
     "user_profile": "个人资料",
     "publish_script": "发布脚本",
     "login_required": "请先登录后再发布脚本",
-    "light": "明亮",
-    "dark": "黑暗",
-    "system": "系统",
+    "light": "浅色模式",
+    "dark": "深色模式",
+    "system": "跟随系统",
     "user_setting": "用户设置"
   },
   "home": {
@@ -192,7 +192,8 @@
       "downloads": "下载",
       "library_tooltip": "这是一个脚本使用的库",
       "library_tag": "@require库",
-      "tag_label": "标签：{name}"
+      "tag_label": "标签：{name}",
+      "share_link": "分享链接"
     },
     "detail": {
       "crontab": {
@@ -308,20 +309,20 @@
       "delete": {
         "success": "删除成功",
         "failed": "删除失败，请重试"
-      },
-      "gray_control": {
-        "strategy_title": "策略 {index}",
-        "weight": "权重",
-        "pre_release_users": "预发布用户",
-        "traffic_tooltip": "将会推送{percent}%的流量到目标版本",
-        "weight_day_tooltip": "在{days}天内，逐渐将流量更新至目标值。如果期望最终完全更新至指定版本，可设置100%，0天为直接更新指定流量至此版本",
-        "days_suffix": "天",
-        "cookie_regex_placeholder": "Cookie正则表达式",
-        "target_version": "目标版本",
-        "latest_version": "最新版本",
-        "previous_version": "上一版本",
-        "all_latest_versions": "所有最新版本"
       }
+    },
+    "gray_control": {
+      "strategy_title": "策略 {index}",
+      "weight": "权重",
+      "pre_release_users": "预发布用户",
+      "traffic_tooltip": "将会推送{percent}%的流量到目标版本",
+      "weight_day_tooltip": "在{days}天内，逐渐将流量更新至目标值。如果期望最终完全更新至指定版本，可设置100%，0天为直接更新指定流量至此版本",
+      "days_suffix": "天",
+      "cookie_regex_placeholder": "Cookie正则表达式",
+      "target_version": "目标版本",
+      "latest_version": "最新版本",
+      "previous_version": "上一版本",
+      "all_latest_versions": "所有最新版本"
     },
     "rating": {
       "error_update_stats": "更新评分统计失败:",
@@ -823,42 +824,6 @@
           "delete_success": "脚本已删除",
           "delete_failed": "删除失败"
         }
-      },
-      "invite": {
-        "get_invite_info_failed": "获取邀请信息失败",
-        "check_invite_link": "请检查邀请链接是否正确",
-        "back_to_home": "返回首页",
-        "loading_invite_info": "加载邀请信息中...",
-        "operation_failed_retry": "操作失败，请稍后重试",
-        "status_pending": "待处理",
-        "status_accepted": "已接受",
-        "status_expired": "已过期",
-        "status_waiting": "等待中",
-        "status_rejected": "已拒绝",
-        "permission_read": "可读",
-        "permission_write": "可写",
-        "invite_you": "邀请您",
-        "join": "加入",
-        "organization": "组织",
-        "permission_description": "权限说明",
-        "permission_after_join": "加入后您将获得以下权限：",
-        "agree": "同意",
-        "reject": "拒绝",
-        "invite_accepted": "邀请已接受",
-        "code_used": "{code} 已使用",
-        "invite_expired": "邀请已过期",
-        "code_expired": "{code} 已过期",
-        "waiting_process": "等待处理",
-        "code_waiting": "{code} 等待处理中",
-        "invite_rejected": "邀请已拒绝",
-        "code_rejected": "{code} 已被拒绝",
-        "unknown_status": "未知状态",
-        "invite_confirm": "邀请确认",
-        "organization_invite": "组织邀请",
-        "script_collaboration_invite": "脚本协作邀请",
-        "view_script_details": "查看脚本详情",
-        "invite_you_join_group": "{inviter} 邀请您加入 {holder} 的 {property}",
-        "invite_you_join": "{inviter} 邀请您加入 {holder}"
       }
     },
     "invite": {
@@ -898,7 +863,39 @@
       "delete_success": "删除成功",
       "delete_failed": "删除失败，请稍后重试",
       "delete": "删除",
-      "operation_success": "操作成功"
+      "operation_success": "操作成功",
+      "get_invite_info_failed": "获取邀请信息失败",
+      "check_invite_link": "请检查邀请链接是否正确",
+      "back_to_home": "返回首页",
+      "loading_invite_info": "加载邀请信息中...",
+      "operation_failed_retry": "操作失败，请稍后重试",
+      "status_pending": "待处理",
+      "status_accepted": "已接受",
+      "status_waiting": "等待中",
+      "permission_read": "可读",
+      "permission_write": "可写",
+      "invite_you": "邀请您",
+      "join": "加入",
+      "organization": "组织",
+      "permission_description": "权限说明",
+      "permission_after_join": "加入后您将获得以下权限：",
+      "agree": "同意",
+      "reject": "拒绝",
+      "invite_accepted": "邀请已接受",
+      "code_used": "{code} 已使用",
+      "invite_expired": "邀请已过期",
+      "code_expired": "{code} 已过期",
+      "waiting_process": "等待处理",
+      "code_waiting": "{code} 等待处理中",
+      "invite_rejected": "邀请已拒绝",
+      "code_rejected": "{code} 已被拒绝",
+      "unknown_status": "未知状态",
+      "invite_confirm": "邀请确认",
+      "organization_invite": "组织邀请",
+      "script_collaboration_invite": "脚本协作邀请",
+      "view_script_details": "查看脚本详情",
+      "invite_you_join_group": "{inviter} 邀请您加入 {holder} 的 {property}",
+      "invite_you_join": "{inviter} 邀请您加入 {holder}"
     },
     "user_modal": {
       "submit_success": "提交成功",

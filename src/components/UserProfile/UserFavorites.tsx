@@ -101,7 +101,7 @@ export default function UserFavorites({
         hoverable
         size="small"
       >
-        <Link href={`/users/favorites/${folder.id}`}>
+        <Link href={`/users/favorites/${folder.id}`} target="_blank">
           <div className="space-y-3">
             {/* 标题和状态 */}
             <div className="flex items-start justify-between">

@@ -149,8 +149,8 @@ const ManageModal: React.FC<{
       dataIndex: 'expiretime',
       key: 'expiretime',
       render: (expiretime: number) => (
-        <div className="flex items-center space-x-2">
-          <ClockCircleOutlined className="text-gray-400" />
+        <div className="flex flex-row gap-2 items-center">
+          <ClockCircleOutlined />
           {getExpiryText(expiretime)}
         </div>
       ),

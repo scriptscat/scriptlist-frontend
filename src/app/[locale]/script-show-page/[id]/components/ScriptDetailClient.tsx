@@ -56,6 +56,7 @@ import { WatchLevel } from '../types';
 import { scriptService } from '@/lib/api/services/scripts';
 import { useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
+import GoogleAd from '@/components/GoogleAd';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -555,6 +556,8 @@ export default function ScriptDetailClient() {
                     </div>
                   </div>
                 </div>
+
+                <GoogleAd width="970px" height="100px" />
 
                 {/* 统计数据 - 移动到底部 */}
                 <div className="mt-auto">
