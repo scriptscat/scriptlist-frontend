@@ -4,7 +4,10 @@
  * @param t 翻译函数
  * @returns 评分描述文本
  */
-export function getRatingText(rating: number, t: (key: string) => string): string {
+export function getRatingText(
+  rating: number,
+  t: (key: string) => string,
+): string {
   switch (rating) {
     case 5:
       return t('excellent');

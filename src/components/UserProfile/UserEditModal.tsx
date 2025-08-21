@@ -21,6 +21,7 @@ import {
   EditOutlined,
   MailOutlined,
 } from '@ant-design/icons';
+import { useTranslations } from 'next-intl';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
 import { userService } from '@/lib/api/services/user';
 
@@ -40,6 +41,7 @@ export default function UserEditModal({
   onCancel,
   onSuccess,
 }: UserEditModalProps) {
+  const t = useTranslations('user');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(user.avatar || '');
@@ -72,12 +74,12 @@ export default function UserEditModal({
       // 更新成功后拉取最新详情
       const freshUser = await userService.getUserDetail((user as any).user_id);
 
-      message.success('用户信息更新成功！');
+      message.success(t('update_success'));
       onSuccess(freshUser as GetUserDetailResponse);
       onCancel();
     } catch (error) {
       console.error('更新用户信息失败:', error);
-      message.error('更新失败，请重试');
+      message.error(t('update_failed'));
     } finally {
       setLoading(false);
     }
@@ -89,13 +91,13 @@ export default function UserEditModal({
     try {
       const res = await userService.uploadAvatar(file as File);
       setAvatarUrl(res.url);
-      message.success('头像上传成功！');
+      message.success(t('avatar_upload_success'));
       if (onSuccess) {
         onSuccess(res);
       }
     } catch (e) {
       console.error('头像上传失败:', e);
-      message.error('头像上传失败！');
+      message.error(t('avatar_upload_failed'));
       if (onError) {
         onError(e);
       }
@@ -105,12 +107,12 @@ export default function UserEditModal({
   const beforeUpload = (file: File) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
-      message.error('只能上传 JPG/PNG 格式的图片！');
+      message.error(t('avatar_format_error'));
       return false;
     }
     const isLt1M = file.size / 1024 / 1024 < 1;
     if (!isLt1M) {
-      message.error('图片大小不能超过 1MB！');
+      message.error(t('avatar_size_error'));
       return false;
     }
     return true;
@@ -121,7 +123,7 @@ export default function UserEditModal({
       title={
         <Space>
           <EditOutlined />
-          编辑个人信息
+          {t('edit_profile_title')}
         </Space>
       }
       open={visible}
@@ -137,7 +139,7 @@ export default function UserEditModal({
         className="mt-4"
       >
         {/* 头像上传 */}
-        <Form.Item label="头像">
+        <Form.Item label={t('avatar')}>
           <div className="flex items-center gap-4">
             <Avatar
               size={80}
@@ -153,33 +155,33 @@ export default function UserEditModal({
               customRequest={customUpload}
               accept=".jpg,.jpeg,.png"
             >
-              <Button icon={<UploadOutlined />}>更换头像</Button>
+              <Button icon={<UploadOutlined />}>{t('change_avatar')}</Button>
             </Upload>
           </div>
           <Text type="secondary" className="text-xs">
-            支持 JPG、PNG 格式，文件大小不超过 1MB
+            {t('avatar_help_text')}
           </Text>
         </Form.Item>
 
         <Divider />
 
         {/* 基本信息 */}
-        <Form.Item label="用户名" name="username">
+        <Form.Item label={t('username')} name="username">
           <Input
             disabled
             prefix={<UserOutlined />}
-            placeholder="请输入用户名"
+            placeholder={t('username_placeholder')}
             maxLength={20}
           />
         </Form.Item>
 
         <Form.Item
-          label="个人简介"
+          label={t('description')}
           name="description"
-          rules={[{ max: 200, message: '个人简介不能超过200个字符' }]}
+          rules={[{ max: 200, message: t('description_max_length') }]}
         >
           <TextArea
-            placeholder="介绍一下自己吧..."
+            placeholder={t('description_placeholder')}
             rows={3}
             maxLength={200}
             showCount
@@ -190,40 +192,40 @@ export default function UserEditModal({
           label="Email"
           name="email"
           rules={[
-            { type: 'email', message: '请输入有效的邮箱地址' },
-            { max: 50, message: '邮箱地址不能超过50个字符' },
+            { type: 'email', message: t('email_validation') },
+            { max: 50, message: t('email_max_length') },
           ]}
         >
           <Input
             prefix={<MailOutlined />}
-            placeholder="联系邮箱"
+            placeholder={t('email_placeholder')}
             maxLength={50}
           />
         </Form.Item>
 
         <Form.Item
-          label="所在地"
+          label={t('location')}
           name="location"
-          rules={[{ max: 50, message: '所在地不能超过50个字符' }]}
+          rules={[{ max: 50, message: t('location_max_length') }]}
         >
           <Input
             prefix={<EnvironmentOutlined />}
-            placeholder="如：北京市海淀区"
+            placeholder={t('location_placeholder')}
             maxLength={50}
           />
         </Form.Item>
 
         <Form.Item
-          label="个人网站"
+          label={t('website')}
           name="website"
           rules={[
-            { type: 'url', message: '请输入有效的网址' },
-            { max: 100, message: '网址不能超过100个字符' },
+            { type: 'url', message: t('website_validation') },
+            { max: 100, message: t('website_max_length') },
           ]}
         >
           <Input
             prefix={<GlobalOutlined />}
-            placeholder="https://example.com"
+            placeholder={t('website_placeholder')}
             maxLength={100}
           />
         </Form.Item>
@@ -233,9 +235,9 @@ export default function UserEditModal({
         {/* 操作按钮 */}
         <Form.Item className="mb-0">
           <Space className="w-full justify-end">
-            <Button onClick={onCancel}>取消</Button>
+            <Button onClick={onCancel}>{t('cancel')}</Button>
             <Button type="primary" htmlType="submit" loading={loading}>
-              保存
+              {t('save')}
             </Button>
           </Space>
         </Form.Item>

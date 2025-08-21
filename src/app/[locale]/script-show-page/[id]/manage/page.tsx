@@ -61,9 +61,7 @@ export default function ManagePage() {
           <Title level={3} className="!mb-1">
             {t('title')}
           </Title>
-          <Text type="secondary">
-            {t('description')}
-          </Text>
+          <Text type="secondary">{t('description')}</Text>
         </div>
       </div>
       <div className="space-y-4">
@@ -82,9 +80,7 @@ export default function ManagePage() {
               onChange={(e) => setSyncMode(e.target.value)}
             >
               <Space direction="vertical">
-                <Radio value={1}>
-                  {t('sync_mode_auto')}
-                </Radio>
+                <Radio value={1}>{t('sync_mode_auto')}</Radio>
                 <Radio value={2}>{t('sync_mode_manual')}</Radio>
               </Space>
             </Radio.Group>

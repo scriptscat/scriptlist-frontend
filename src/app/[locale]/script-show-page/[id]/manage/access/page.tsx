@@ -28,9 +28,9 @@ import { useParams } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { useAccessRoleList } from '@/lib/api/hooks';
-import { UserModal } from '../../../../../../components/UserModal';
 import { scriptAccessService } from '@/lib/api/services/scripts';
 import { useSemDateTime } from '@/lib/utils/semdate';
+import { UserModal } from '@/components/ScriptInvite/UserModal';
 
 const { Title, Text } = Typography;
 
@@ -94,7 +94,8 @@ export default function AccessPage() {
     itemName: string,
     itemType: number,
   ) => {
-    const entityType = itemType === 1 ? t('entity_types.user') : t('entity_types.group');
+    const entityType =
+      itemType === 1 ? t('entity_types.user') : t('entity_types.group');
     modal.confirm({
       title: t('delete_confirm_title'),
       content: t('delete_confirm_content', { entityType, itemName }),
@@ -185,11 +186,14 @@ export default function AccessPage() {
                 {record.name}
               </Link>
               <Tag color={record.type === 1 ? 'blue' : 'green'}>
-                {record.type === 1 ? t('entity_types.user') : t('entity_types.group')}
+                {record.type === 1
+                  ? t('entity_types.user')
+                  : t('entity_types.group')}
               </Tag>
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              {t('time.add_time')}{semDateTime(record.createtime)}
+              {t('time.add_time')}
+              {semDateTime(record.createtime)}
             </div>
           </div>
         </Space>
@@ -234,7 +238,9 @@ export default function AccessPage() {
                 : 'text-gray-700'
             }
           >
-            {expiretime === 0 ? t('time.never_expire') : semDateTime(expiretime)}
+            {expiretime === 0
+              ? t('time.never_expire')
+              : semDateTime(expiretime)}
             {expiretime !== 0 && expiretime * 1000 < Date.now() && (
               <span className="ml-1 text-xs">{t('time.expired')}</span>
             )}
@@ -269,9 +275,7 @@ export default function AccessPage() {
           <Title level={3} className="!mb-1">
             {t('title')}
           </Title>
-          <Text type="secondary">
-            {t('description')}
-          </Text>
+          <Text type="secondary">{t('description')}</Text>
         </div>
         <Button
           type="primary"

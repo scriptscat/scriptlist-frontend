@@ -16,6 +16,7 @@ import {
 import { ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { useRouter } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import { useScript } from '../../components/ScriptContext';
 import { scriptService } from '@/lib/api/services/scripts';
 import { APIError } from '@/types/api';
@@ -28,6 +29,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const [modal, contextHolder] = Modal.useModal();
   const [loading, setLoading] = useState(false);
+  const t = useTranslations('script.manage.settings');
 
   // 脚本基本信息状态
   const [name, setName] = useState(script.script.name || '');
@@ -63,7 +65,7 @@ export default function SettingsPage() {
 
   const handleSaveBasicInfo = async () => {
     if (!name.trim()) {
-      message.error('脚本名称不能为空');
+      message.error(t('library_info.name_required'));
       return;
     }
 
@@ -73,13 +75,13 @@ export default function SettingsPage() {
         name: name.trim(),
         description: description.trim(),
       });
-      message.success('库信息保存成功');
+      message.success(t('library_info.save_success'));
     } catch (error) {
-      console.error('保存库信息失败:', error);
+      console.error('Save library info failed:', error);
       if (error instanceof APIError) {
-        message.error(error.msg || '保存失败');
+        message.error(error.msg || t('library_info.save_failed'));
       } else {
-        message.error('保存失败');
+        message.error(t('library_info.save_failed'));
       }
     } finally {
       setLoading(false);
@@ -91,13 +93,13 @@ export default function SettingsPage() {
     try {
       await scriptService.updatePublic(script.script.id, value);
       setIsPublic(value);
-      message.success('公开状态更新成功');
+      message.success(t('public_settings.public_update_success'));
     } catch (error) {
-      console.error('更新公开状态失败:', error);
+      console.error('Update public status failed:', error);
       if (error instanceof APIError) {
-        message.error(error.msg || '更新失败');
+        message.error(error.msg || t('public_settings.update_failed'));
       } else {
-        message.error('更新失败');
+        message.error(t('public_settings.update_failed'));
       }
     } finally {
       setLoading(false);
@@ -110,13 +112,13 @@ export default function SettingsPage() {
       const unwellValue = checked ? 1 : 2;
       await scriptService.updateUnwell(script.script.id, unwellValue);
       setUnwell(unwellValue);
-      message.success('不当内容标记更新成功');
+      message.success(t('public_settings.unwell_update_success'));
     } catch (error) {
-      console.error('更新不当内容标记失败:', error);
+      console.error('Update unwell status failed:', error);
       if (error instanceof APIError) {
-        message.error(error.msg || '更新失败');
+        message.error(error.msg || t('public_settings.update_failed'));
       } else {
-        message.error('更新失败');
+        message.error(t('public_settings.update_failed'));
       }
     } finally {
       setLoading(false);
@@ -126,26 +128,32 @@ export default function SettingsPage() {
   const handleArchive = () => {
     const isArchiving = archive === 2;
     modal.confirm({
-      title: isArchiving ? '确认归档脚本？' : '确认取消归档？',
+      title: isArchiving
+        ? t('confirmations.archive_confirm_title')
+        : t('confirmations.unarchive_confirm_title'),
       content: isArchiving
-        ? '归档后，脚本将不再支持更新，用户无法反馈，但是仍然可以使用。'
-        : '取消归档后脚本可以收到用户反馈等信息。',
+        ? t('confirmations.archive_confirm_content')
+        : t('confirmations.unarchive_confirm_content'),
       icon: <ExclamationCircleOutlined />,
-      okText: '确认',
-      cancelText: '取消',
+      okText: t('confirmations.confirm_button'),
+      cancelText: t('confirmations.cancel_button'),
       maskClosable: true,
       onOk: async () => {
         setLoading(true);
         try {
           await scriptService.archiveScript(script.script.id, isArchiving);
           setArchive(isArchiving ? 1 : 2);
-          message.success(isArchiving ? '脚本已归档' : '脚本已取消归档');
+          message.success(
+            isArchiving
+              ? t('messages.archive_success')
+              : t('messages.unarchive_success'),
+          );
         } catch (error) {
-          console.error('归档操作失败:', error);
+          console.error('Archive operation failed:', error);
           if (error instanceof APIError) {
-            message.error(error.msg || '操作失败');
+            message.error(error.msg || t('messages.operation_failed'));
           } else {
-            message.error('操作失败');
+            message.error(t('messages.operation_failed'));
           }
         } finally {
           setLoading(false);
@@ -156,26 +164,26 @@ export default function SettingsPage() {
 
   const handleDelete = () => {
     modal.confirm({
-      title: '确认删除脚本？',
-      content: '删除脚本后所有数据将无法恢复，请谨慎操作！',
+      title: t('confirmations.delete_confirm_title'),
+      content: t('confirmations.delete_confirm_content'),
       icon: <ExclamationCircleOutlined />,
-      okText: '确认删除',
-      cancelText: '取消',
+      okText: t('confirmations.confirm_delete_button'),
+      cancelText: t('confirmations.cancel_button'),
       okType: 'danger',
       maskClosable: true,
       onOk: async () => {
         setLoading(true);
         try {
           await scriptService.deleteScript(script.script.id);
-          message.success('脚本已删除');
+          message.success(t('messages.delete_success'));
           // 删除成功后跳转到首页或脚本列表
           router.push('/');
         } catch (error) {
-          console.error('删除脚本失败:', error);
+          console.error('Delete script failed:', error);
           if (error instanceof APIError) {
-            message.error(error.msg || '删除失败');
+            message.error(error.msg || t('messages.delete_failed'));
           } else {
-            message.error('删除失败');
+            message.error(t('messages.delete_failed'));
           }
         } finally {
           setLoading(false);
@@ -194,27 +202,25 @@ export default function SettingsPage() {
           <div className="flex justify-between items-center mb-6">
             <div>
               <Title level={3} className="!mb-1">
-                库信息设置
+                {t('library_info.title')}
               </Title>
-              <Text type="secondary">
-                配置脚本库的基本信息，包括名称、描述等。
-              </Text>
+              <Text type="secondary">{t('library_info.description')}</Text>
             </div>
           </div>
           <Form layout="vertical">
-            <Form.Item label="库名称" required>
+            <Form.Item label={t('library_info.name_label')} required>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="请输入库名称"
+                placeholder={t('library_info.name_placeholder')}
               />
             </Form.Item>
-            <Form.Item label="库描述">
+            <Form.Item label={t('library_info.description_label')}>
               <TextArea
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="请输入库描述信息"
+                placeholder={t('library_info.description_placeholder')}
               />
             </Form.Item>
             <Form.Item>
@@ -223,7 +229,7 @@ export default function SettingsPage() {
                 loading={loading}
                 onClick={handleSaveBasicInfo}
               >
-                保存库信息
+                {t('library_info.save_button')}
               </Button>
             </Form.Item>
           </Form>
@@ -235,30 +241,28 @@ export default function SettingsPage() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <Title level={3} className="!mb-1">
-              脚本公开设置
+              {t('public_settings.title')}
             </Title>
-            <Text type="secondary">
-              配置脚本的公开状态，决定脚本的可见性和访问权限。
-            </Text>
+            <Text type="secondary">{t('public_settings.description')}</Text>
           </div>
         </div>
         <div className="space-y-4">
           <div>
-            <Title level={5}>脚本可见性</Title>
+            <Title level={5}>{t('public_settings.visibility_title')}</Title>
             <Text type="secondary" className="block mb-3">
               {isPublic === 3
-                ? '脚本为私有状态，仅您自己可见'
+                ? t('public_settings.visibility_private')
                 : isPublic === 2
-                  ? '脚本未公开，仅通过直接链接访问'
-                  : '脚本已公开，所有用户都可以查看和安装'}
+                  ? t('public_settings.visibility_unlisted')
+                  : t('public_settings.visibility_public')}
             </Text>
             <Radio.Group
               value={isPublic}
               onChange={(e) => handlePublicChange(e.target.value)}
               options={[
-                { value: 1, label: '公开' },
-                { value: 2, label: '未公开' },
-                { value: 3, label: '私有' },
+                { value: 1, label: t('public_settings.public_option') },
+                { value: 2, label: t('public_settings.unlisted_option') },
+                { value: 3, label: t('public_settings.private_option') },
               ]}
               optionType="button"
               buttonStyle="solid"
@@ -268,15 +272,17 @@ export default function SettingsPage() {
           <Divider />
 
           <div>
-            <Title level={5}>内容标记</Title>
+            <Title level={5}>
+              {t('public_settings.content_marking_title')}
+            </Title>
             <Checkbox
               checked={unwell === 1}
               onChange={(e) => handleUnwellChange(e.target.checked)}
             >
-              标记为可能包含不当内容
+              {t('public_settings.unwell_checkbox')}
             </Checkbox>
             <Text type="secondary" className="block mt-2">
-              该网站可能存在令人不适内容，包括但不限于红蓝闪光频繁闪烁、对视觉、精神有侵害的内容。
+              {t('public_settings.unwell_description')}
             </Text>
           </div>
         </div>
@@ -287,14 +293,16 @@ export default function SettingsPage() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <Title level={3} className="!mb-1">
-              脚本管理
+              {t('script_management.title')}
             </Title>
-            <Text type="secondary">管理脚本的状态和删除</Text>
+            <Text type="secondary">{t('script_management.description')}</Text>
           </div>
         </div>
         <div className="space-y-4">
           <div>
-            <Title level={5}>脚本状态管理</Title>
+            <Title level={5}>
+              {t('script_management.status_management_title')}
+            </Title>
             <Space className="w-full" direction="vertical">
               <Button
                 type={archive === 2 ? 'default' : 'primary'}
@@ -307,12 +315,14 @@ export default function SettingsPage() {
                 onClick={handleArchive}
                 size="large"
               >
-                {archive === 2 ? '归档脚本' : '取消归档'}
+                {archive === 2
+                  ? t('script_management.archive_button')
+                  : t('script_management.unarchive_button')}
               </Button>
               <Text type="secondary">
                 {archive === 2
-                  ? '归档后，脚本将不再支持更新，用户无法反馈，但是仍然可以使用'
-                  : '脚本已归档，点击可取消归档状态'}
+                  ? t('script_management.archive_description')
+                  : t('script_management.unarchive_description')}
               </Text>
             </Space>
           </div>
@@ -321,7 +331,7 @@ export default function SettingsPage() {
 
           <div>
             <Title level={5} type="danger">
-              危险操作
+              {t('script_management.dangerous_operations_title')}
             </Title>
             <Button
               type="primary"
@@ -331,10 +341,10 @@ export default function SettingsPage() {
               onClick={handleDelete}
               size="large"
             >
-              删除脚本
+              {t('script_management.delete_button')}
             </Button>
             <Text type="danger" className="block mt-2">
-              删除脚本后所有数据将无法恢复，请谨慎操作！
+              {t('script_management.delete_warning')}
             </Text>
           </div>
         </div>

@@ -4,8 +4,9 @@ import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { CopyOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useTranslations } from 'next-intl';
 import { scriptAccessService } from '@/lib/api/services/scripts';
-import { InviteModal } from '@/components/InviteModal';
+import { InviteModal } from '@/components/ScriptInvite/InviteModal';
 import { useInviteList } from '@/lib/api/hooks';
 import type { InviteListItem } from '@/app/[locale]/script-show-page/[id]/types';
 
@@ -19,6 +20,7 @@ interface InvitePageProps {
 }
 
 export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
+  const t = useTranslations('script.invite');
   const [modal, contextHolder] = Modal.useModal();
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [allowLoading, setAllowLoading] = useState(false);
@@ -50,18 +52,18 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
   // 复制成功回调
   const onCopySuccess = (text: string, result: boolean) => {
     if (result) {
-      message.success('复制成功');
+      message.success(t('copy_success'));
     } else {
-      message.warning('复制失败');
+      message.warning(t('copy_failed'));
     }
   };
 
   const formatExpireTime = (expiretime: number) => {
     if (expiretime === 0) {
-      return '永不过期';
+      return t('never_expire');
     }
     const date = new Date(expiretime * 1000);
-    return date.toLocaleString('zh-CN') + ' 过期';
+    return date.toLocaleString('zh-CN') + t('expire_suffix');
   };
 
   const getStatusText = (
@@ -70,7 +72,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
   ): string | ReactElement => {
     switch (invite_status) {
       case 1:
-        return '未使用';
+        return t('status_unused');
       case 2:
         return (
           <>
@@ -80,13 +82,13 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              [{record.username}]
+              {`[${record.username}]`}
             </a>
-            <span>已使用</span>
+            <span>{t('status_used')}</span>
           </>
         );
       case 3:
-        return '已过期';
+        return t('status_expired');
       case 4:
         return (
           <>
@@ -96,15 +98,15 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              [{record.username}]
+              {`[${record.username}]`}
             </a>
-            <span>待审核</span>
+            <span>{t('status_pending_review')}</span>
           </>
         );
       case 5:
-        return '已拒绝';
+        return t('status_rejected');
       default:
-        return '未知状态';
+        return t('status_unknown');
     }
   };
 
@@ -124,7 +126,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
 
   const inviteColumns: ColumnsType<DataType> = [
     {
-      title: '邀请码',
+      title: t('invite_code'),
       dataIndex: 'code',
       key: 'code',
       align: 'center',
@@ -143,7 +145,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
       },
     },
     {
-      title: '过期时间',
+      title: t('expire_time'),
       dataIndex: 'expiretime',
       key: 'expiretime',
       align: 'center',
@@ -151,7 +153,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
       render: (expiretime) => formatExpireTime(expiretime),
     },
     {
-      title: '状态',
+      title: t('status'),
       dataIndex: 'invite_status',
       key: 'invite_status',
       align: 'center',
@@ -159,7 +161,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
       render: (invite_status, record) => getStatusText(invite_status, record),
     },
     {
-      title: '操作',
+      title: t('action'),
       key: 'action',
       dataIndex: 'action',
       align: 'center',
@@ -170,12 +172,12 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
               loading={allowLoading}
               onClick={async () => {
                 modal.confirm({
-                  title: '邀请码确认',
-                  content: '确认允许此邀请？',
+                  title: t('invite_confirmation'),
+                  content: t('confirm_allow_invite'),
                   icon: <ExclamationCircleOutlined />,
                   maskClosable: true,
-                  okText: '确认',
-                  cancelText: '取消',
+                  okText: t('confirm'),
+                  cancelText: t('cancel'),
                   onOk: async () => {
                     setAllowLoading(true);
                     const result = await scriptAccessService.allowInviteCode(
@@ -185,7 +187,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
                     );
                     setAllowLoading(false);
                     if (result.code === 0) {
-                      message.success('操作成功');
+                      message.success(t('operation_success'));
                       mutate();
                     } else {
                       message.error(result.msg);
@@ -196,28 +198,28 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
               size="small"
               type="link"
             >
-              允许
+              {t('allow')}
             </Button>
           )}
           <Button
             onClick={async () => {
               modal.confirm({
-                title: '确认删除',
-                content: '确定要删除此邀请码吗？',
+                title: t('confirm_delete'),
+                content: t('confirm_delete_invite'),
                 icon: <ExclamationCircleOutlined />,
-                okText: '确认',
-                cancelText: '取消',
+                okText: t('confirm'),
+                cancelText: t('cancel'),
                 maskClosable: true,
                 onOk: async () => {
                   setDeleteLoading(true);
                   try {
                     await scriptAccessService.deleteInvite(id, record.id);
                     setDeleteLoading(false);
-                    message.success('删除成功');
+                    message.success(t('delete_success'));
                     mutate();
                   } catch (error: any) {
                     setDeleteLoading(false);
-                    message.error(error.message || '删除失败，请稍后重试');
+                    message.error(error.message || t('delete_failed'));
                   }
                 },
               });
@@ -227,7 +229,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
             type="link"
             danger
           >
-            删除
+            {t('delete')}
           </Button>
         </>
       ),
@@ -238,7 +240,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
     <div>
       <div className="flex justify-end mb-4">
         <Button type="primary" onClick={() => setOpenInviteModal(true)}>
-          创建邀请码
+          {t('create_invite_code')}
         </Button>
       </div>
 

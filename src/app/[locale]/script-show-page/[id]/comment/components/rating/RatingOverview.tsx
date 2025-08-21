@@ -17,7 +17,7 @@ export default function RatingOverview({ ratingStats }: RatingOverviewProps) {
               {ratingStats.averageRating}
             </span>
             <span className="text-lg text-gray-500 dark:text-gray-400">
-              / 5.0
+              {'/ 5.0'}
             </span>
           </div>
 
@@ -30,7 +30,11 @@ export default function RatingOverview({ ratingStats }: RatingOverviewProps) {
 
           <div className="flex items-center justify-center lg:justify-start gap-2 text-gray-600 dark:text-gray-400">
             <StarFilled className="text-amber-500" />
-            <span>{t('rating.overview.based_on_ratings', { totalRatings: ratingStats.totalRatings })}</span>
+            <span>
+              {t('rating.overview.based_on_ratings', {
+                totalRatings: ratingStats.totalRatings,
+              })}
+            </span>
           </div>
         </div>
 

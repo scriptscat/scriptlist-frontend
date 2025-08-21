@@ -42,7 +42,7 @@ export default function RatingItem({
       await onReply(rating.id, replyContent.trim());
       setReplyContent('');
       setShowReplyBox(false);
-    } catch (error) {
+    } catch {
       // 错误处理由父组件处理
     }
   };

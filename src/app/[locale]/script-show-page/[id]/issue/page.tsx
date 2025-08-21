@@ -3,12 +3,11 @@ import type { IssueListParams } from '@/lib/api/services/scripts/issue';
 import ScriptIssueClient from './components/ScriptIssueClient';
 import { generateScriptMetadata } from '../metadata';
 import type { ScriptDetailPageProps } from '../types';
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 
-export async function generateMetadata(
-  { params }: ScriptDetailPageProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ScriptDetailPageProps): Promise<Metadata> {
   const { id, locale } = await params;
   return generateScriptMetadata(id, 'issue', locale);
 }

@@ -2,8 +2,7 @@ import { notFound } from 'next/navigation';
 import { scriptIssueService } from '@/lib/api/services/scripts/issue';
 import IssueCommentClient from './components/IssueCommentClient';
 import { scriptService } from '@/lib/api/services/scripts';
-import type { ResolvingMetadata, Metadata } from 'next';
-import { ScriptDetailPageProps } from '../../types';
+import type { Metadata } from 'next';
 import { ScriptUtils } from '../../utils';
 import { getTranslations } from 'next-intl/server';
 
@@ -11,10 +10,9 @@ interface PageProps {
   params: Promise<{ id: string; issueId: string; locale: string }>;
 }
 
-export async function generateMetadata(
-  { params }: PageProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { id, issueId, locale } = await params;
   const t = await getTranslations('script.issue.detail');
 
@@ -33,14 +31,14 @@ export async function generateMetadata(
 
     const scriptName = ScriptUtils.i18nName(script, locale);
 
-    const title = t('issue_title_with_script', { 
-      title: issue.title, 
-      id: issue.id, 
-      scriptName 
+    const title = t('issue_title_with_script', {
+      title: issue.title,
+      id: issue.id,
+      scriptName,
     });
-    const description = t('issue_description', { 
-      scriptName, 
-      title: issue.title 
+    const description = t('issue_description', {
+      scriptName,
+      title: issue.title,
     });
 
     return {
@@ -52,7 +50,7 @@ export async function generateMetadata(
         type: 'website',
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: t('issue_feedback_title'),
     };

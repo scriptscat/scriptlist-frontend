@@ -1,14 +1,5 @@
 import { DeleteOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Card,
-  Input,
-  InputNumber,
-  Select,
-  Slider,
-  Tooltip,
-  Typography,
-} from 'antd';
+import { Button, Card, Input, Select, Slider, Tooltip, Typography } from 'antd';
 import React from 'react';
 import { useTranslations } from 'next-intl';
 
@@ -45,7 +36,7 @@ const GrayControl: React.FC<GrayControlProps> = ({
   value,
 }) => {
   const t = useTranslations('script.gray_control');
-  
+
   return (
     <Card
       size="small"
@@ -118,7 +109,9 @@ const GrayControl: React.FC<GrayControlProps> = ({
                     }}
                   />
                   <Tooltip
-                    title={t('weight_day_tooltip', { days: control.params.weight_day || 0 })}
+                    title={t('weight_day_tooltip', {
+                      days: control.params.weight_day || 0,
+                    })}
                   >
                     <Input
                       value={control.params.weight_day}

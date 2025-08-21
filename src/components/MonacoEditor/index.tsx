@@ -57,7 +57,7 @@ const MonacoEditor = forwardRef<MonacoEditorRef, MonacoEditorProps>(
             wordWrap: 'on',
             automaticLayout: true,
           }}
-          beforeMount={(monaco) => {
+          beforeMount={() => {
             // Configure Monaco Editor to use local assets
             (self as any).MonacoEnvironment = {
               getWorkerUrl: function (moduleId: string, label: string) {

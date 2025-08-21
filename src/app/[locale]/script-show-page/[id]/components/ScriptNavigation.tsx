@@ -34,30 +34,42 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
     {
       key: 'overview',
       icon: <BookOutlined />,
-      label: <Link href={`/${locale}/script-show-page/${id}`}>{t('overview')}</Link>,
+      label: (
+        <Link href={`/${locale}/script-show-page/${id}`}>{t('overview')}</Link>
+      ),
     },
     {
       key: 'code',
       icon: <CodeOutlined />,
-      label: <Link href={`/${locale}/script-show-page/${id}/code`}>{t('code')}</Link>,
+      label: (
+        <Link href={`/${locale}/script-show-page/${id}/code`}>{t('code')}</Link>
+      ),
     },
     {
       key: 'issue',
       icon: <BugOutlined />,
-      label: <Link href={`/${locale}/script-show-page/${id}/issue`}>{t('issue')}</Link>,
+      label: (
+        <Link href={`/${locale}/script-show-page/${id}/issue`}>
+          {t('issue')}
+        </Link>
+      ),
     },
     {
       key: 'comment',
       icon: <StarOutlined />,
       label: (
-        <Link href={`/${locale}/script-show-page/${id}/comment`}>{t('comment')}</Link>
+        <Link href={`/${locale}/script-show-page/${id}/comment`}>
+          {t('comment')}
+        </Link>
       ),
     },
     {
       key: 'version',
       icon: <HistoryOutlined />,
       label: (
-        <Link href={`/${locale}/script-show-page/${id}/version`}>{t('version')}</Link>
+        <Link href={`/${locale}/script-show-page/${id}/version`}>
+          {t('version')}
+        </Link>
       ),
     },
   ];

@@ -10,6 +10,7 @@ import { SWRProvider } from '@/lib/swr-config';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { userService } from '@/lib/api';
+import Head from 'next/head';
 
 // 服务端 cookie 读取函数
 export async function getThemeFromServerCookies(): Promise<ThemeMode> {
@@ -46,7 +47,7 @@ export async function LocalizedServerThemeWrapper({
 
   return (
     <html lang={locale} data-theme={serverTheme.theme}>
-      <head>
+      <Head>
         <meta
           name="theme-color"
           content={serverTheme.theme === 'dark' ? '#0d1117' : '#f6f8fa'}
@@ -54,7 +55,7 @@ export async function LocalizedServerThemeWrapper({
         {serverTheme.theme === 'dark' && (
           <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         )}
-      </head>
+      </Head>
       <body
         className={
           'page-gradient-bg text-app-primary min-h-screen theme-transition'

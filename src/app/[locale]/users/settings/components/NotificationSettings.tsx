@@ -25,7 +25,7 @@ export default function NotificationSettings({
   initialConfig,
 }: NotificationSettingsProps) {
   const [savingKey, setSavingKey] = useState<string>('');
-  const t = useTranslations();
+  const t = useTranslations('user.notification_settings');
 
   // 使用hooks获取用户配置
   const {
@@ -41,55 +41,55 @@ export default function NotificationSettings({
 
   const notifyCategories = [
     {
-      title: '互动通知',
+      title: t('interaction_notifications'),
       icon: <BellOutlined className="text-blue-500" />,
       items: [
         {
           key: 'at',
-          title: '@我时发送通知',
-          description: '当有用户在评论或反馈中@我时发送邮件通知',
+          title: t('mention_notification_title'),
+          description: t('mention_notification_description'),
           type: 'primary',
         },
         {
           key: 'score',
-          title: '脚本被评分通知',
-          description: '当我的脚本收到新的评分时发送通知',
+          title: t('score_notification_title'),
+          description: t('score_notification_description'),
           type: 'primary',
         },
       ],
     },
     {
-      title: '脚本管理',
+      title: t('script_management'),
       icon: <ApiOutlined className="text-green-500" />,
       items: [
         {
           key: 'create_script',
-          title: '脚本创建通知',
-          description: '当有关注的用户创建脚本时发送通知',
+          title: t('create_script_notification_title'),
+          description: t('create_script_notification_description'),
           type: 'secondary',
         },
         {
           key: 'script_update',
-          title: '关注脚本更新',
-          description: '当我关注的脚本有新版本更新时发送通知',
+          title: t('script_update_notification_title'),
+          description: t('script_update_notification_description'),
           type: 'primary',
         },
       ],
     },
     {
-      title: '反馈互动',
+      title: t('feedback_interaction'),
       icon: <ExclamationCircleOutlined className="text-orange-500" />,
       items: [
         {
           key: 'script_issue',
-          title: '新反馈通知',
-          description: '当我关注的脚本收到新的问题反馈时发送通知',
+          title: t('script_issue_notification_title'),
+          description: t('script_issue_notification_description'),
           type: 'primary',
         },
         {
           key: 'script_issue_comment',
-          title: '反馈回复通知',
-          description: '当我关注的反馈有新回复时发送通知',
+          title: t('script_issue_comment_notification_title'),
+          description: t('script_issue_comment_notification_description'),
           type: 'primary',
         },
       ],
@@ -107,10 +107,10 @@ export default function NotificationSettings({
       await updateNotify(newNotifyChecked);
       // 更新SWR缓存
       mutateConfig({ notify: newNotifyChecked }, false);
-      message.success('设置已保存');
+      message.success(t('settings_saved'));
     } catch (error) {
       console.error('Failed to update notification settings:', error);
-      message.error('保存失败');
+      message.error(t('save_failed'));
     } finally {
       setSavingKey('');
     }
@@ -132,10 +132,10 @@ export default function NotificationSettings({
           </div>
           <div className="flex-1">
             <Title level={4} className="!mb-2">
-              通知设置
+              {t('notification_settings_title')}
             </Title>
             <Paragraph className="!mb-4">
-              自定义你的邮件通知偏好，及时了解脚本相关的重要动态和互动信息。
+              {t('notification_settings_description')}
             </Paragraph>
           </div>
         </div>
@@ -165,7 +165,11 @@ export default function NotificationSettings({
                           {item.title}
                         </Text>
                         {item.type === 'secondary' && (
-                          <Badge size="small" status="default" text="管理员" />
+                          <Badge
+                            size="small"
+                            status="default"
+                            text={t('admin_badge')}
+                          />
                         )}
                       </div>
                       <Switch
@@ -193,13 +197,25 @@ export default function NotificationSettings({
       {/* 说明信息 */}
       <Card>
         <Alert
-          message="邮件通知说明"
+          message={t('email_notification_info_title')}
           description={
             <div className="space-y-2">
-              <div>• 所有通知将发送到你的注册邮箱</div>
-              <div>• 你可以随时修改这些通知设置</div>
-              <div>• 重要的系统通知（如安全相关）无法关闭</div>
-              <div>• 通知邮件可能会被归类到垃圾邮件，请注意查看</div>
+              <div>
+                {'• '}
+                {t('email_notification_info_item_1')}
+              </div>
+              <div>
+                {'• '}
+                {t('email_notification_info_item_2')}
+              </div>
+              <div>
+                {'• '}
+                {t('email_notification_info_item_3')}
+              </div>
+              <div>
+                {'• '}
+                {t('email_notification_info_item_4')}
+              </div>
             </div>
           }
           type="info"

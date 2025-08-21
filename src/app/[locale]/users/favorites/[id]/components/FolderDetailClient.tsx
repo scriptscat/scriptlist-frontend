@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Card,
   Tag,
@@ -57,6 +58,7 @@ export default function FolderDetailClient({
 }: FolderDetailProps) {
   const router = useRouter();
   const { user } = useUser();
+  const t = useTranslations('user.favorites');
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentFolder] = useState(folderDetail);
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
@@ -71,11 +73,11 @@ export default function FolderDetailClient({
     return (
       <div className="container mx-auto">
         <Empty
-          description={error || '收藏夹不存在或已被删除'}
+          description={error ? t(error) : t('folder_error')}
           className="py-16"
         >
           <Button type="primary" onClick={() => router.back()}>
-            返回上一页
+            {t('go_back')}
           </Button>
         </Empty>
       </div>
@@ -99,11 +101,11 @@ export default function FolderDetailClient({
         script_id: scriptId,
       });
 
-      message.success('已取消收藏');
+      message.success(t('unfavorite_success'));
       router.refresh();
     } catch (error) {
-      console.error('取消收藏失败:', error);
-      message.error('取消收藏失败，请重试');
+      console.error(t('cancel_favorite_error'), error);
+      message.error(t('unfavorite_failed'));
     } finally {
       setLoadingScripts((prev) => {
         const newSet = new Set(prev);
@@ -128,11 +130,10 @@ export default function FolderDetailClient({
     if (!scriptManager) {
       // 没有安装脚本管理器，显示二次确认提示
       modal.confirm({
-        title: '未检测到脚本管理器',
-        content:
-          '未检测到浏览器中安装了 ScriptCat 扩展，确认要打开订阅链接吗？',
-        okText: '确认打开',
-        cancelText: '取消',
+        title: t('no_script_manager_title'),
+        content: t('no_script_manager_content'),
+        okText: t('confirm_open'),
+        cancelText: t('cancel'),
         onOk: () => {
           window.open(subscribeUrl, '_blank');
         },
@@ -155,7 +156,7 @@ export default function FolderDetailClient({
               title: (
                 <Space>
                   <HomeOutlined />
-                  <span>首页</span>
+                  <span>{t('home')}</span>
                 </Space>
               ),
             },
@@ -179,7 +180,7 @@ export default function FolderDetailClient({
               title: (
                 <Space>
                   <FolderOutlined />
-                  <span>收藏夹</span>
+                  <span>{t('favorites_breadcrumb')}</span>
                 </Space>
               ),
             },
@@ -208,7 +209,9 @@ export default function FolderDetailClient({
                 }
                 color={currentFolder.private === 2 ? 'green' : 'orange'}
               >
-                {currentFolder.private === 2 ? '公开' : '私有'}
+                {currentFolder.private === 2
+                  ? t('status_public')
+                  : t('status_private')}
               </Tag>
             </div>
 
@@ -220,7 +223,7 @@ export default function FolderDetailClient({
 
             <Space size="large">
               <Text type="secondary">
-                脚本数量:{' '}
+                {t('script_count_text')}{' '}
                 <Text strong>{formatNumber(currentFolder.count)}</Text>
               </Text>
             </Space>
@@ -233,7 +236,7 @@ export default function FolderDetailClient({
                 onClick={() => setEditModalVisible(true)}
                 icon={<EditOutlined />}
               >
-                编辑收藏夹
+                {t('edit_folder')}
               </Button>
             )}
             <Button
@@ -241,7 +244,7 @@ export default function FolderDetailClient({
               icon={<LinkOutlined />}
               onClick={handleSubscribeClick}
             >
-              订阅链接
+              {t('subscription_link')}
             </Button>
           </Space>
         </div>
@@ -250,7 +253,7 @@ export default function FolderDetailClient({
       {/* 脚本列表 */}
       <div className="mb-6">
         <Title level={3} className="mb-4">
-          收藏的脚本 ({total})
+          {t('favorite_scripts_title', { total })}
         </Title>
 
         {scripts.length > 0 ? (
@@ -264,12 +267,12 @@ export default function FolderDetailClient({
                   ? [
                       {
                         key: 'unfavorite',
-                        label: isLoading ? '取消中...' : '取消收藏',
+                        label: isLoading ? t('unfavoriting') : t('unfavorite'),
                         onClick: () => handleUnfavorite(script.id),
                         type: 'text' as const,
                         danger: true,
                         icon: <HeartFilled />,
-                        tooltip: '取消收藏此脚本',
+                        tooltip: t('unfavorite_tooltip'),
                         disabled: isLoading,
                       },
                     ]
@@ -295,7 +298,11 @@ export default function FolderDetailClient({
                   showSizeChanger={false}
                   showQuickJumper
                   showTotal={(total, range) =>
-                    `第 ${range[0]}-${range[1]} 项，共 ${total} 项`
+                    t('pagination_items', {
+                      start: range[0],
+                      end: range[1],
+                      total,
+                    })
                   }
                   onChange={handlePageChange}
                 />
@@ -303,7 +310,7 @@ export default function FolderDetailClient({
             )}
           </>
         ) : (
-          <Empty description="该收藏夹暂无脚本" className="py-16" />
+          <Empty description={t('no_scripts_in_folder')} className="py-16" />
         )}
       </div>
 

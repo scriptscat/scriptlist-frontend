@@ -48,7 +48,9 @@ export default function ManageClientLayout({
       key: 'manage',
       icon: <SyncOutlined />,
       label: (
-        <Link href={`/script-show-page/${scriptId}/manage`}>{t('source_sync')}</Link>
+        <Link href={`/script-show-page/${scriptId}/manage`}>
+          {t('source_sync')}
+        </Link>
       ),
     },
     {
@@ -73,7 +75,9 @@ export default function ManageClientLayout({
       key: 'logs',
       icon: <FileTextOutlined />,
       label: (
-        <Link href={`/script-show-page/${scriptId}/manage/logs`}>{t('manage_logs')}</Link>
+        <Link href={`/script-show-page/${scriptId}/manage/logs`}>
+          {t('manage_logs')}
+        </Link>
       ),
     },
     {

@@ -3,7 +3,6 @@
 import {
   Card,
   Button,
-  Space,
   Typography,
   Avatar,
   Tag,
@@ -30,7 +29,6 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import ActionMenu from '@/components/ActionMenu';
 import { scriptService } from '@/lib/api/services/scripts';
-import { useUser } from '@/contexts/UserContext';
 
 const { Text } = Typography;
 
@@ -48,6 +46,7 @@ function ScriptIcon({ script, size = 20 }: ScriptIconProps) {
   }
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
     <img
       src={iconUrl}
       width={size}
@@ -85,7 +84,6 @@ export default function ScriptCard({
   const tCommon = useTranslations('common');
   const semDataTime = useSemDateTime();
   const locale = useLocale();
-  const user = useUser();
 
   const scriptName = ScriptUtils.i18nName(script, locale);
   const scriptDescription = ScriptUtils.i18nDescription(script, locale);
@@ -162,7 +160,7 @@ export default function ScriptCard({
                       bordered={false}
                       className="text-xs px-1 py-0"
                     >
-                      v{script.script.version}
+                      {'v' + script.script.version}
                     </Tag>
                   </Tooltip>
                 </div>
@@ -345,7 +343,7 @@ export default function ScriptCard({
                   color={hashColor(tag.name)}
                   className="text-xs px-1 py-0 max-w-[80px] truncate"
                 >
-                  #{tag.name}
+                  {'#' + tag.name}
                 </Tag>
               </Tooltip>
             ))}

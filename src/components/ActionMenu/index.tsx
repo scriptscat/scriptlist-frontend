@@ -9,7 +9,6 @@ import { Dropdown, Modal, Select, Space, Input } from 'antd';
 import { useUser } from '@/contexts/UserContext';
 import { useTranslations } from 'next-intl';
 
-const { Option } = Select;
 const { TextArea } = Input;
 
 export type MenuItemKey = 'delete';
@@ -117,12 +116,12 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                   >
                     <span>{t('select_punish_option')}</span>
                     <Select defaultValue="lucy" style={{ width: '100%' }}>
-                      <Option value="jack">Jack</Option>
+                      {/* <Option value="jack">Jack</Option>
                       <Option value="lucy">Lucy</Option>
                       <Option value="disabled" disabled>
                         Disabled
                       </Option>
-                      <Option value="Yiminghe">yiminghe</Option>
+                      <Option value="Yiminghe">yiminghe</Option> */}
                     </Select>
                     <span>{t('punish_reason')}</span>
                     <TextArea

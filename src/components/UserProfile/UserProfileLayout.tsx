@@ -44,6 +44,7 @@ import type { GetUserDetailResponse } from '@/lib/api/services/user';
 import UserEditModal from './UserEditModal';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useFollowUser } from '@/lib/api/hooks/userClient';
+import { useTranslations } from 'next-intl';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -64,6 +65,7 @@ export default function UserProfileLayout({
   const [editModalVisible, setEditModalVisible] = useState(false);
   const semDateTime = useSemDateTime();
   const { loading: followLoading, followUser } = useFollowUser();
+  const t = useTranslations('user.profile');
 
   // 判断是否为当前用户自己
   const isCurrentUser = currentUser?.user_id === user.user_id;
@@ -87,7 +89,7 @@ export default function UserProfileLayout({
         <Link href={`/users/${user.user_id}`} style={{ color: 'unset' }}>
           <Space>
             <FileTextOutlined />
-            <span>我的脚本</span>
+            <span>{t('my_scripts')}</span>
           </Space>
         </Link>
       ),
@@ -102,7 +104,7 @@ export default function UserProfileLayout({
         >
           <Space>
             <HeartOutlined />
-            <span>我的收藏</span>
+            <span>{t('my_favorites')}</span>
           </Space>
         </Link>
       ),
@@ -121,17 +123,19 @@ export default function UserProfileLayout({
 
   const handleFollow = async () => {
     if (!currentUser) {
-      message.warning('请先登录');
+      message.warning(t('login_required'));
       return;
     }
 
     try {
       const newFollowStatus = await followUser(user.user_id, isFollowing);
       setIsFollowing(newFollowStatus);
-      message.success(newFollowStatus ? '关注成功' : '已取消关注');
+      message.success(
+        newFollowStatus ? t('follow_success') : t('unfollow_success'),
+      );
     } catch (error: any) {
       console.error('关注操作失败:', error);
-      message.error(error.message || '操作失败，请重试');
+      message.error(error.message || t('operation_failed'));
     }
   };
 
@@ -143,23 +147,23 @@ export default function UserProfileLayout({
     // 在服务端渲染模式下，需要刷新页面来获取最新数据
     // 或者可以实现客户端状态更新逻辑
     window.location.reload();
-    message.success('个人信息更新成功！');
+    message.success(t('profile_update_success'));
   };
 
   const handleMessage = () => {
-    message.info('发送消息功能开发中...');
+    message.info(t('message_feature_developing'));
   };
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    message.success('链接已复制到剪贴板');
+    message.success(t('link_copied'));
   };
 
   // 更多操作菜单
   const moreMenuItems: MenuProps['items'] = [
     {
       key: 'report',
-      label: '举报',
+      label: t('report'),
       icon: <ShareAltOutlined />,
       onClick: () => {
         window.open(
@@ -191,7 +195,7 @@ export default function UserProfileLayout({
                 </Title>
                 {currentUserData.is_admin === 1 && (
                   <Tag color="gold" icon={<CrownOutlined />}>
-                    管理员
+                    {t('administrator')}
                   </Tag>
                 )}
               </div>
@@ -207,7 +211,7 @@ export default function UserProfileLayout({
               <div className="flex justify-center gap-2 mb-4">
                 {currentUserData.email_status === 1 && (
                   <Tag color="green" icon={<CheckCircleOutlined />}>
-                    已验证
+                    {t('verified')}
                   </Tag>
                 )}
               </div>
@@ -222,7 +226,7 @@ export default function UserProfileLayout({
                     size="large"
                     block
                   >
-                    编辑个人信息
+                    {t('edit_profile')}
                   </Button>
                 ) : (
                   <Button
@@ -235,7 +239,7 @@ export default function UserProfileLayout({
                     size="large"
                     block
                   >
-                    {isFollowing ? '已关注' : '关注'}
+                    {isFollowing ? t('followed') : t('follow')}
                   </Button>
                 )}
                 {!isCurrentUser && (
@@ -247,7 +251,7 @@ export default function UserProfileLayout({
                       href={`https://bbs.tampermonkey.net.cn/home.php?mod=space&do=pm&subop=view&touid=${user.user_id}#last`}
                       target="_blank"
                     >
-                      私信
+                      {t('private_message')}
                     </Button>
                     <Button icon={<ShareAltOutlined />} onClick={handleShare} />
                     <Dropdown
@@ -275,7 +279,7 @@ export default function UserProfileLayout({
                     label: (
                       <Text type="secondary">
                         <CalendarOutlined className="mr-1" />
-                        加入时间
+                        {t('join_time')}
                       </Text>
                     ),
                     children: semDateTime(currentUserData.join_time),
@@ -287,7 +291,7 @@ export default function UserProfileLayout({
                           label: (
                             <Text type="secondary">
                               <ClockCircleOutlined className="mr-1" />
-                              最后活跃
+                              {t('last_active')}
                             </Text>
                           ),
                           children: semDateTime(currentUserData.last_active),
@@ -301,7 +305,7 @@ export default function UserProfileLayout({
                           label: (
                             <Text type="secondary">
                               <MailOutlined className="mr-1" />
-                              邮箱
+                              {t('email')}
                             </Text>
                           ),
                           children: currentUserData.email,
@@ -315,7 +319,7 @@ export default function UserProfileLayout({
                           label: (
                             <Text type="secondary">
                               <EnvironmentOutlined className="mr-1" />
-                              位置
+                              {t('location')}
                             </Text>
                           ),
                           children: currentUserData.location,
@@ -329,7 +333,7 @@ export default function UserProfileLayout({
                           label: (
                             <Text type="secondary">
                               <LinkOutlined className="mr-1" />
-                              个人网站
+                              {t('personal_website')}
                             </Text>
                           ),
                           children: (
@@ -349,10 +353,13 @@ export default function UserProfileLayout({
                     label: (
                       <Text type="secondary">
                         <TeamOutlined className="mr-1" />
-                        关注
+                        {t('follow_section')}
                       </Text>
                     ),
-                    children: `${currentUserData.followers} 关注者 · ${currentUserData.following} 正在关注`,
+                    children: t('followers_following', {
+                      followers: currentUserData.followers,
+                      following: currentUserData.following,
+                    }),
                   },
                 ] satisfies DescriptionsProps['items']
               }
@@ -363,7 +370,7 @@ export default function UserProfileLayout({
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <TrophyOutlined className="text-yellow-500" />
-                <Text strong>成就徽章</Text>
+                <Text strong>{t('achievement_badges')}</Text>
                 <Badge count={currentUserData.badge.length} color="#faad14" />
               </div>
 
@@ -375,13 +382,14 @@ export default function UserProfileLayout({
                     placement="top"
                   >
                     <Tag color="blue" className="mb-1 cursor-help text-xs">
-                      🏆 {badge.name}
+                      {'🏆'} {badge.name}
                     </Tag>
                   </Tooltip>
                 ))}
                 {currentUserData.badge.length > 6 && (
                   <Tag className="mb-1 text-xs">
-                    +{currentUserData.badge.length - 6}
+                    {'+'}
+                    {currentUserData.badge.length - 6}
                   </Tag>
                 )}
               </div>

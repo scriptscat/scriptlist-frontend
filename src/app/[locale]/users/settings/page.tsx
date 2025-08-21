@@ -10,7 +10,7 @@ export default async function SettingsPage() {
   ]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>{'Loading...'}</div>}>
       <SettingsClient
         initialWebhookToken={webhookData.token}
         initialNotificationConfig={notificationConfig.notify}

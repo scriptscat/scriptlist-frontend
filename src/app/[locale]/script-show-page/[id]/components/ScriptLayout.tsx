@@ -1,6 +1,6 @@
 'use client';
 
-import { Alert, Breadcrumb, Col, Row } from 'antd';
+import { Alert, Breadcrumb } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import type { ScriptInfo } from '../types';
 import ScriptNavigation from './ScriptNavigation';

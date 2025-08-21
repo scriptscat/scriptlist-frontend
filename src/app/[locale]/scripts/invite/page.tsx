@@ -2,7 +2,6 @@
 
 import React from 'react';
 import {
-  Badge,
   Button,
   Card,
   message,
@@ -38,7 +37,7 @@ export default function InviteConfirm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
-  const t = useTranslations('invite');
+  const t = useTranslations('script.invite');
 
   // 获取邀请信息
   const {
@@ -67,15 +66,15 @@ export default function InviteConfirm() {
         <Card className="w-full max-w-md shadow-lg">
           <Result
             status="error"
-            title="获取邀请信息失败"
-            subTitle={error.message || '请检查邀请链接是否正确'}
+            title={t('get_invite_info_failed')}
+            subTitle={error.message || t('check_invite_link')}
             extra={[
               <Button
                 type="primary"
                 key="home"
                 onClick={() => router.push('/')}
               >
-                返回首页
+                {t('back_to_home')}
               </Button>,
             ]}
           />
@@ -91,7 +90,7 @@ export default function InviteConfirm() {
         <Card className="w-full max-w-md shadow-lg">
           <div className="text-center py-8">
             <Spin size="large" />
-            <div className="mt-4 text-gray-600">加载邀请信息中...</div>
+            <div className="mt-4 text-gray-600">{t('loading_invite_info')}</div>
           </div>
         </Card>
       </div>
@@ -109,7 +108,7 @@ export default function InviteConfirm() {
       message.success(t('submit_success'));
       mutateInvite();
     } catch (error: any) {
-      message.error(error.message || '操作失败，请稍后重试');
+      message.error(error.message || t('operation_failed_retry'));
     }
   };
 
@@ -119,11 +118,31 @@ export default function InviteConfirm() {
   // 获取状态配置
   const getStatusConfig = (status: number) => {
     const configs = {
-      1: { color: 'blue', icon: <ExclamationCircleOutlined />, text: '待处理' },
-      2: { color: 'green', icon: <CheckCircleOutlined />, text: '已接受' },
-      3: { color: 'red', icon: <CloseCircleOutlined />, text: '已过期' },
-      4: { color: 'orange', icon: <ClockCircleOutlined />, text: '等待中' },
-      5: { color: 'red', icon: <CloseCircleOutlined />, text: '已拒绝' },
+      1: {
+        color: 'blue',
+        icon: <ExclamationCircleOutlined />,
+        text: t('status_pending'),
+      },
+      2: {
+        color: 'green',
+        icon: <CheckCircleOutlined />,
+        text: t('status_accepted'),
+      },
+      3: {
+        color: 'red',
+        icon: <CloseCircleOutlined />,
+        text: t('status_expired'),
+      },
+      4: {
+        color: 'orange',
+        icon: <ClockCircleOutlined />,
+        text: t('status_waiting'),
+      },
+      5: {
+        color: 'red',
+        icon: <CloseCircleOutlined />,
+        text: t('status_rejected'),
+      },
     };
     return configs[status as keyof typeof configs] || configs[1];
   };
@@ -133,10 +152,10 @@ export default function InviteConfirm() {
     if (!role) return null;
 
     const permissions = {
-      guest: [{ text: '可读', color: 'blue' }],
+      guest: [{ text: t('permission_read'), color: 'blue' }],
       manager: [
-        { text: '可读', color: 'blue' },
-        { text: '可写', color: 'green' },
+        { text: t('permission_read'), color: 'blue' },
+        { text: t('permission_write'), color: 'green' },
       ],
     };
 
@@ -177,7 +196,7 @@ export default function InviteConfirm() {
                 <Avatar icon={<UserOutlined />} />
                 <div className="flex-1">
                   <Text strong>{username}</Text>
-                  <Text className="text-gray-500 ml-2">邀请您</Text>
+                  <Text className="text-gray-500 ml-2">{t('invite_you')}</Text>
                 </div>
               </div>
 
@@ -188,13 +207,13 @@ export default function InviteConfirm() {
                   <CodeOutlined className="text-blue-500" />
                 )}
                 <div className="flex-1">
-                  <Text>加入 </Text>
+                  <Text>{t('join')} </Text>
                   <Text strong className="text-blue-600">
                     {isGroup ? group?.name : scriptname}
                   </Text>
                   {isGroup && (
                     <Tag color="purple" className="ml-2">
-                      组织
+                      {t('organization')}
                     </Tag>
                   )}
                 </div>
@@ -205,11 +224,11 @@ export default function InviteConfirm() {
           {/* 权限信息 */}
           {!isGroup && access?.role && (
             <Alert
-              message="权限说明"
+              message={t('permission_description')}
               className="!mt-3"
               description={
                 <div className="space-y-2">
-                  <Text>加入后您将获得以下权限：</Text>
+                  <Text>{t('permission_after_join')}</Text>
                   <PermissionTags role={access.role} />
                 </div>
               }
@@ -249,31 +268,31 @@ export default function InviteConfirm() {
         case 2:
           return {
             status: 'success' as const,
-            title: '邀请已接受',
-            subTitle: `${code} 已使用`,
+            title: t('invite_accepted'),
+            subTitle: t('code_used', { code: code || '' }),
           };
         case 3:
           return {
             status: 'error' as const,
-            title: '邀请已过期',
-            subTitle: `${code} 已过期`,
+            title: t('invite_expired'),
+            subTitle: t('code_expired', { code: code || '' }),
           };
         case 4:
           return {
             status: 'info' as const,
-            title: '等待处理',
-            subTitle: `${code} 等待处理中`,
+            title: t('waiting_process'),
+            subTitle: t('code_waiting', { code: code || '' }),
           };
         case 5:
           return {
             status: 'error' as const,
-            title: '邀请已拒绝',
-            subTitle: `${code} 已被拒绝`,
+            title: t('invite_rejected'),
+            subTitle: t('code_rejected', { code: code || '' }),
           };
         default:
           return {
             status: 'info' as const,
-            title: '未知状态',
+            title: t('unknown_status'),
             subTitle: '',
           };
       }
@@ -317,7 +336,11 @@ export default function InviteConfirm() {
           <Title level={3} className="mb-0">
             {t('invite_confirm')}
           </Title>
-          <Text type="secondary">{isGroup ? '组织邀请' : '脚本协作邀请'}</Text>
+          <Text type="secondary">
+            {isGroup
+              ? t('organization_invite')
+              : t('script_collaboration_invite')}
+          </Text>
         </div>
 
         <Divider />
@@ -331,7 +354,7 @@ export default function InviteConfirm() {
         <div className="text-center">
           <Link href={`/script-show-page/${script.id}`}>
             <Button size="large" className="min-w-32">
-              查看脚本详情
+              {t('view_script_details')}
             </Button>
           </Link>
         </div>

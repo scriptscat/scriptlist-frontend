@@ -38,7 +38,6 @@ import {
   CopyOutlined,
   MessageOutlined,
   ClockCircleOutlined,
-  PlayCircleOutlined,
   ExperimentOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
@@ -311,13 +310,13 @@ export default function ScriptDetailClient() {
                   </span>
                 </a>
                 {index < sitesToShow.length - 1 && (
-                  <span className="text-gray-400 ml-1">,</span>
+                  <span className="text-gray-400 ml-1">{','}</span>
                 )}
               </li>
             ))}
             {hasMore && !showAllSites && (
               <li className="inline-flex items-center whitespace-nowrap">
-                <span className="text-gray-400">,</span>
+                <span className="text-gray-400">{','}</span>
                 <a
                   onClick={() => setShowAllSites(true)}
                   className="ml-1 transition-colors cursor-pointer bg-transparent border-none p-0"
@@ -502,7 +501,7 @@ export default function ScriptDetailClient() {
                           </Space>
                         </Link>
                         <Text type="secondary" className="my-2">
-                          ·
+                          {'•'}
                         </Text>
                         <Text type="secondary">
                           <CalendarOutlined className="mr-1" />
@@ -511,7 +510,7 @@ export default function ScriptDetailClient() {
                           })}
                         </Text>
                         <Text type="secondary" className="my-2">
-                          ·
+                          {'•'}
                         </Text>
                         <Text type="secondary">
                           <CalendarOutlined className="mr-1" />
@@ -548,7 +547,7 @@ export default function ScriptDetailClient() {
                               color={hashColor(tag.name)}
                               bordered
                             >
-                              #{tag.name}
+                              {'#' + tag.name}
                             </Tag>
                           </Tooltip>
                         ))}
@@ -591,7 +590,7 @@ export default function ScriptDetailClient() {
                           valueStyle={{ color: '#faad14' }}
                           suffix={
                             <span className="text-sm text-gray-500">
-                              / 5.0 ({script.score_num})
+                              {' / 5.0 (' + script.score_num + ')'}
                             </span>
                           }
                         />

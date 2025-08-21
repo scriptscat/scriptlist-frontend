@@ -28,10 +28,26 @@ export default function RatingList({
 
   // 排序选项
   const sortOptions = [
-    { value: 'newest', label: t('sort_options.newest'), icon: <ClockCircleOutlined /> },
-    { value: 'oldest', label: t('sort_options.oldest'), icon: <ClockCircleOutlined /> },
-    { value: 'rating_high', label: t('sort_options.rating_high'), icon: <StarFilled /> },
-    { value: 'rating_low', label: t('sort_options.rating_low'), icon: <StarFilled /> },
+    {
+      value: 'newest',
+      label: t('sort_options.newest'),
+      icon: <ClockCircleOutlined />,
+    },
+    {
+      value: 'oldest',
+      label: t('sort_options.oldest'),
+      icon: <ClockCircleOutlined />,
+    },
+    {
+      value: 'rating_high',
+      label: t('sort_options.rating_high'),
+      icon: <StarFilled />,
+    },
+    {
+      value: 'rating_low',
+      label: t('sort_options.rating_low'),
+      icon: <StarFilled />,
+    },
   ];
 
   return (

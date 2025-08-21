@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, Form, Input, Switch, Button, message, Typography } from 'antd';
 import { FolderOutlined } from '@ant-design/icons';
+import { useTranslations } from 'next-intl';
 import {
   scriptFavoriteService,
   type FavoriteFolderItem,
@@ -25,6 +26,7 @@ export default function FavoriteEditModal({
   onCancel,
   onSuccess,
 }: FavoriteEditModalProps) {
+  const t = useTranslations('user.favorites.edit_modal');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -50,12 +52,12 @@ export default function FavoriteEditModal({
 
       await scriptFavoriteService.updateFolder(folder.id, updateData);
 
-      message.success('收藏夹更新成功！');
+      message.success(t('update_success'));
       onSuccess();
       onCancel();
     } catch (error: any) {
-      console.error('更新收藏夹失败:', error);
-      message.error(error.message || '更新失败，请重试');
+      console.error(t('update_failed_prefix'), error);
+      message.error(error.message || t('update_failed_generic'));
     } finally {
       setLoading(false);
     }
@@ -71,7 +73,7 @@ export default function FavoriteEditModal({
       title={
         <div className="flex items-center">
           <FolderOutlined className="mr-2" />
-          编辑收藏夹
+          {t('title')}
         </div>
       }
       open={visible}
@@ -87,41 +89,45 @@ export default function FavoriteEditModal({
         className="mt-4"
       >
         <Form.Item
-          label="收藏夹名称"
+          label={t('name_label')}
           name="name"
           rules={[
-            { required: true, message: '请输入收藏夹名称' },
-            { min: 1, max: 50, message: '收藏夹名称长度应在1-50个字符之间' },
+            { required: true, message: t('name_required') },
+            { min: 1, max: 50, message: t('name_length_error') },
           ]}
         >
-          <Input placeholder="请输入收藏夹名称" />
+          <Input placeholder={t('name_placeholder')} />
         </Form.Item>
 
         <Form.Item
-          label="描述"
+          label={t('description_label')}
           name="description"
-          rules={[{ max: 500, message: '描述不能超过500个字符' }]}
+          rules={[{ max: 500, message: t('description_length_error') }]}
         >
           <TextArea
-            placeholder="请输入收藏夹描述（可选）"
+            placeholder={t('description_placeholder')}
             rows={4}
             showCount
             maxLength={500}
           />
         </Form.Item>
 
-        <Form.Item label="私有收藏夹" name="private" valuePropName="checked">
+        <Form.Item
+          label={t('private_label')}
+          name="private"
+          valuePropName="checked"
+        >
           <Switch />
         </Form.Item>
 
         <div className="text-sm text-gray-500 -mt-2 mb-4">
-          <Text type="secondary">开启后，只有您可以看到此收藏夹</Text>
+          <Text type="secondary">{t('private_help_text')}</Text>
         </div>
 
         <div className="flex justify-end space-x-2 pt-4">
-          <Button onClick={handleCancel}>取消</Button>
+          <Button onClick={handleCancel}>{t('cancel_button')}</Button>
           <Button type="primary" htmlType="submit" loading={loading}>
-            保存
+            {t('save_button')}
           </Button>
         </div>
       </Form>

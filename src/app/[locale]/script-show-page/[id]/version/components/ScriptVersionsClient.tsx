@@ -219,9 +219,7 @@ export default function ScriptVersionsClient({
       <Card className="shadow-sm !mb-4">
         <Alert
           message={t('load_failed')}
-          description={
-            error.message || t('load_failed_description')
-          }
+          description={error.message || t('load_failed_description')}
           type="error"
           showIcon
           action={
@@ -293,13 +291,17 @@ export default function ScriptVersionsClient({
               <div className="text-2xl font-bold text-green-600">
                 {versionStat.release_num}
               </div>
-              <div className="text-sm text-gray-500">{t('release_versions')}</div>
+              <div className="text-sm text-gray-500">
+                {t('release_versions')}
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">
                 {versionStat.pre_release_num}
               </div>
-              <div className="text-sm text-gray-500">{t('prerelease_versions')}</div>
+              <div className="text-sm text-gray-500">
+                {t('prerelease_versions')}
+              </div>
             </div>
           </div>
 
@@ -308,7 +310,7 @@ export default function ScriptVersionsClient({
               {t('pagination_info', {
                 start: (currentPage - 1) * pageSize + 1,
                 end: Math.min(currentPage * pageSize, totalVersions),
-                total: totalVersions
+                total: totalVersions,
               })}
             </div>
           </div>
@@ -343,7 +345,9 @@ export default function ScriptVersionsClient({
                       onClick={() => handleEdit(version)}
                       className="flex items-center"
                     >
-                      <span className="hidden sm:inline">{t('edit_button')}</span>
+                      <span className="hidden sm:inline">
+                        {t('edit_button')}
+                      </span>
                     </Button>
                     <Popconfirm
                       title={t('confirm_delete_title')}
@@ -359,7 +363,9 @@ export default function ScriptVersionsClient({
                         danger
                         className="flex items-center"
                       >
-                        <span className="hidden sm:inline">{t('delete_button')}</span>
+                        <span className="hidden sm:inline">
+                          {t('delete_button')}
+                        </span>
                       </Button>
                     </Popconfirm>
                   </div>
@@ -430,7 +436,7 @@ export default function ScriptVersionsClient({
                 t('pagination_total', {
                   start: range[0],
                   end: range[1],
-                  total: total
+                  total: total,
                 })
               }
               pageSizeOptions={['5', '10', '20', '50']}
@@ -444,7 +450,11 @@ export default function ScriptVersionsClient({
           title={
             <div className="flex items-center space-x-2">
               <EditOutlined />
-              <span>{t('edit_modal_title', { version: editingVersion?.version || '' })}</span>
+              <span>
+                {t('edit_modal_title', {
+                  version: editingVersion?.version || '',
+                })}
+              </span>
             </div>
           }
           open={isEditModalVisible}

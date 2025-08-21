@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import FolderDetailClient from './components/FolderDetailClient';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
 import { userService } from '@/lib/api/services/user';
@@ -16,8 +17,9 @@ interface FolderDetailPageProps {
 export async function generateMetadata({
   params,
 }: FolderDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
   const folderId = parseInt(id);
+  const t = await getTranslations({ locale, namespace: 'user.favorites' });
 
   try {
     // 获取收藏夹详情
@@ -30,19 +32,26 @@ export async function generateMetadata({
     );
 
     const title =
-      `${folderDetail.name} - ${userDetail.username}的收藏夹` + ' | ScriptCat';
+      t('folder_title', {
+        folderName: folderDetail.name,
+        username: userDetail.username,
+      }) + ' | ScriptCat';
     const description =
       folderDetail.description ||
-      `${userDetail.username}的收藏夹"${folderDetail.name}"，共收录${folderDetail.count}个脚本`;
+      t('folder_description', {
+        username: userDetail.username,
+        folderName: folderDetail.name,
+        count: folderDetail.count,
+      });
 
     return {
       title,
       description,
     };
-  } catch (error) {
+  } catch (_error) {
     return {
-      title: '收藏夹不存在' + ' | ScriptCat',
-      description: '您访问的收藏夹不存在或已被删除',
+      title: t('folder_not_found') + ' | ScriptCat',
+      description: t('folder_not_found_description'),
     };
   }
 }
@@ -80,7 +89,7 @@ export default async function FolderDetailPage({
         <Suspense
           fallback={
             <div className="flex items-center justify-center min-h-screen">
-              Loading folder...
+              {'Loading folder...'}
             </div>
           }
         >
@@ -95,20 +104,17 @@ export default async function FolderDetailPage({
         </Suspense>
       </div>
     );
-  } catch (error) {
+  } catch (_error) {
     return (
       <div>
         <Suspense
           fallback={
             <div className="flex items-center justify-center min-h-screen">
-              Loading folder...
+              {'Loading folder...'}
             </div>
           }
         >
-          <FolderDetailClient
-            folderId={folderId}
-            error="收藏夹不存在或已被删除"
-          />
+          <FolderDetailClient folderId={folderId} error="folder_error" />
         </Suspense>
       </div>
     );

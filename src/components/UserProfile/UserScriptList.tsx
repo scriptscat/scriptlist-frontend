@@ -31,6 +31,7 @@ export default function UserScriptList({
   const locale = useLocale();
   const router = useRouter();
   const t = useTranslations();
+  const userT = useTranslations('user.script_list');
   const [isPending, startTransition] = useTransition();
 
   const [filters, setFilters] = useState<ScriptSearchRequest>(
@@ -98,14 +99,14 @@ export default function UserScriptList({
       <Card className="!mb-6" style={{ borderRadius: '16px' }}>
         <Space direction="vertical" size="large" className="w-full mb-6">
           <Input.Search
-            placeholder="搜索该用户的脚本"
+            placeholder={userT('search_placeholder')}
             enterButton={
               <Button
                 type="primary"
                 icon={<SearchOutlined />}
                 loading={isPending}
               >
-                搜索
+                {userT('search_button')}
               </Button>
             }
             size="large"
@@ -116,15 +117,15 @@ export default function UserScriptList({
 
           <Space wrap>
             <Select
-              placeholder="所有类型"
+              placeholder={userT('all_types_placeholder')}
               style={{ width: 150 }}
               value={filters.script_type || undefined}
               onChange={handleScriptTypeChange}
               allowClear
               disabled={isPending}
             >
-              <Option value={0}>全部</Option>
-              <Option value={1}>脚本</Option>
+              <Option value={0}>{userT('type_all')}</Option>
+              <Option value={1}>{userT('type_script')}</Option>
               <Option value={2}>{t('library')}</Option>
               <Option value={3}>{t('background_script')}</Option>
               <Option value={4}>{t('scheduled_script')}</Option>
@@ -136,18 +137,20 @@ export default function UserScriptList({
               onChange={handleSortChange}
               disabled={isPending}
             >
-              <Option value="today_download">热度排序</Option>
-              <Option value="createtime">最新发布</Option>
-              <Option value="updatetime">最近更新</Option>
-              <Option value="score">评分最高</Option>
-              <Option value="total_download">下载最多</Option>
+              <Option value="today_download">{userT('sort_by_hot')}</Option>
+              <Option value="createtime">{userT('sort_by_latest')}</Option>
+              <Option value="updatetime">{userT('sort_by_updated')}</Option>
+              <Option value="score">{userT('sort_by_score')}</Option>
+              <Option value="total_download">
+                {userT('sort_by_downloads')}
+              </Option>
             </Select>
           </Space>
         </Space>
       </Card>
 
       {/* 脚本列表 */}
-      <Spin spinning={isPending} tip="加载中...">
+      <Spin spinning={isPending} tip={userT('loading')}>
         <Space direction="vertical" size="large" className="w-full">
           {scripts.map((script) => (
             <ScriptCard key={script.id} script={script} />
@@ -165,7 +168,11 @@ export default function UserScriptList({
           showSizeChanger={false}
           showQuickJumper
           showTotal={(total, range) =>
-            `${range[0]}-${range[1]} / 共 ${total} 个脚本`
+            userT('pagination_total', {
+              start: range[0],
+              end: range[1],
+              total: total,
+            })
           }
           disabled={isPending}
         />

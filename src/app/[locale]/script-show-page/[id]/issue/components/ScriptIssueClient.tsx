@@ -251,7 +251,9 @@ export default function ScriptIssueClient({
                                 }
                                 className="text-xs"
                               >
-                                {issue.status === 1 ? t('status_pending') : t('status_resolved')}
+                                {issue.status === 1
+                                  ? t('status_pending')
+                                  : t('status_resolved')}
                               </Tag>
                             </div>
                           </Link>
@@ -261,7 +263,7 @@ export default function ScriptIssueClient({
                             ))}
                             {issue.labels.length > 4 && (
                               <Tag color="default" className="text-xs">
-                                +{issue.labels.length - 4}
+                                {'+' + (issue.labels.length - 4)}
                               </Tag>
                             )}
                           </div>
@@ -276,12 +278,15 @@ export default function ScriptIssueClient({
                             <Avatar size={20} src={issue.avatar} />
                             <span>{issue.username}</span>
                           </div>
-                          <span>#{issue.id}</span>
+                          <span>{'#' + issue.id}</span>
                           <span>{semDateTime(issue.createtime)}</span>
                           {issue.updatetime > 0 &&
                             issue.updatetime !== issue.createtime && (
                               <span>
-                                • {t('updated_at', { time: semDateTime(issue.updatetime) })}
+                                {'• ' +
+                                  t('updated_at', {
+                                    time: semDateTime(issue.updatetime),
+                                  })}
                               </span>
                             )}
                         </div>
@@ -336,7 +341,11 @@ export default function ScriptIssueClient({
                   className="text-sm"
                   style={{ color: token.colorTextSecondary }}
                 >
-                  {t('pagination_total', { start: range[0], end: range[1], total })}
+                  {t('pagination_total', {
+                    start: range[0],
+                    end: range[1],
+                    total,
+                  })}
                 </span>
               )}
             />

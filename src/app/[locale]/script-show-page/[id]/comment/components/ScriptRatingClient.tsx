@@ -324,7 +324,7 @@ export default function ScriptRatingClient({
     }
   };
 
-  const handleDeleteReply = async (ratingId: number, replyId: number) => {
+  const handleDeleteReply = async (ratingId: number) => {
     try {
       setAllRatings((prev) =>
         prev.map((rating) =>

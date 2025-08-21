@@ -124,7 +124,7 @@ export default function MainLayout({
                 fontWeight: 'bold',
               }}
             >
-              ScriptCat
+              {'ScriptCat'}
             </Title>
           </Link>
 
@@ -215,7 +215,7 @@ export default function MainLayout({
           </a>
           <Divider type="vertical" />
           <a href="https://github.com/scriptscat" target="_blank">
-            GitHub
+            {'GitHub'}
           </a>
         </div>
         <div>

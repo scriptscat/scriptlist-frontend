@@ -67,7 +67,9 @@ export function DebounceSelect<
         value = value.slice(value.length - maxCount, value.length);
       }
     }
-    onChange && onChange(value, option);
+    if (onChange) {
+      onChange(value, option);
+    }
   };
 
   return (

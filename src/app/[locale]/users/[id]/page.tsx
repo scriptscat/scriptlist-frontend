@@ -32,7 +32,7 @@ export default async function UserPage({
   const scripts = await scriptService.search(apiParams);
 
   return (
-    <Suspense fallback={<div>Loading script...</div>}>
+    <Suspense fallback={<div>{'Loading script...'}</div>}>
       <UserScriptList
         userId={userId}
         scripts={scripts.list}

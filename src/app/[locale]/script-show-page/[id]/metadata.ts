@@ -63,7 +63,7 @@ export async function generateScriptMetadata(
         type: 'website',
       },
     };
-  } catch (error) {
+  } catch {
     // 如果获取脚本信息失败，返回默认元数据
     const suffix = PAGE_SUFFIXES[pageType];
     const fallbackTitle = suffix.title

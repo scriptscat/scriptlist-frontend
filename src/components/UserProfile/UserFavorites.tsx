@@ -45,7 +45,7 @@ export default function UserFavorites({
   total,
   currentPage,
 }: UserFavoritesProps) {
-  const t = useTranslations();
+  const t = useTranslations('user.favorites');
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
@@ -66,13 +66,13 @@ export default function UserFavorites({
         script_id: scriptId,
       });
 
-      message.success('已取消收藏');
+      message.success(t('unfavorite_success'));
 
       // 刷新页面数据
       router.refresh();
     } catch (error) {
       console.error('取消收藏失败:', error);
-      message.error('取消收藏失败，请重试');
+      message.error(t('unfavorite_failed'));
     } finally {
       setLoadingScripts((prev) => {
         const newSet = new Set(prev);
@@ -83,7 +83,7 @@ export default function UserFavorites({
   };
 
   const handleCreateFolder = () => {
-    message.info('创建收藏夹功能正在开发中');
+    message.info(t('create_folder_coming_soon'));
   };
 
   const handlePageChange = (page: number) => {
@@ -117,7 +117,7 @@ export default function UserFavorites({
 
             {/* 描述 */}
             <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 min-h-[2.5rem]">
-              {folder.description || '暂无描述'}
+              {folder.description || t('no_description')}
             </p>
 
             {/* 统计信息 */}
@@ -125,7 +125,7 @@ export default function UserFavorites({
               <div className="flex items-center space-x-4 text-sm text-gray-500">
                 <span className="flex items-center">
                   <BookOutlined className="mr-1" />
-                  {folder.count} 脚本
+                  {t('script_count', { count: folder.count })}
                 </span>
               </div>
             </div>
@@ -142,12 +142,12 @@ export default function UserFavorites({
     const actions = [
       {
         key: 'unfavorite',
-        label: isLoading ? '取消中...' : '取消收藏',
+        label: isLoading ? t('unfavoriting') : t('unfavorite'),
         onClick: (script: ScriptListItem) => handleUnfavorite(script.id),
         type: 'text' as const,
         danger: true,
         icon: <HeartFilled />,
-        tooltip: '取消收藏此脚本',
+        tooltip: t('unfavorite_tooltip'),
         disabled: isLoading,
       },
     ];
@@ -166,11 +166,11 @@ export default function UserFavorites({
         image={Empty.PRESENTED_IMAGE_SIMPLE}
         description={
           <div className="text-center">
-            <Text type="secondary">该用户还没有收藏任何脚本</Text>
+            <Text type="secondary">{t('no_favorites')}</Text>
             <div className="mt-4">
               <Link href="/search">
                 <Button type="primary" icon={<StarOutlined />}>
-                  去发现脚本
+                  {t('discover_scripts')}
                 </Button>
               </Link>
             </div>
@@ -188,14 +188,14 @@ export default function UserFavorites({
           <div className="flex items-center justify-between">
             <Title level={4} className="!mb-0">
               <FolderOutlined className="mr-2" />
-              我的收藏夹
+              {t('my_folders')}
             </Title>
             <Button
               type="dashed"
               icon={<PlusOutlined />}
               onClick={handleCreateFolder}
             >
-              创建收藏夹
+              {t('create_folder')}
             </Button>
           </div>
 
@@ -215,13 +215,13 @@ export default function UserFavorites({
       <div>
         <div className="flex items-center justify-between mb-4">
           <Title level={4} className="!mb-0">
-            收藏的脚本
+            {t('favorite_scripts')}
           </Title>
         </div>
 
         <div className="space-y-4">
           {scripts.length === 0 ? (
-            <Empty description="该分类下暂无收藏的脚本" className="py-8" />
+            <Empty description={t('no_scripts_in_category')} className="py-8" />
           ) : (
             <Row gutter={[16, 16]}>
               {scripts.map((script) => (
@@ -244,7 +244,7 @@ export default function UserFavorites({
               showSizeChanger={false}
               showQuickJumper
               showTotal={(total, range) =>
-                `第 ${range[0]}-${range[1]} 条，共 ${total} 条`
+                t('pagination_total', { start: range[0], end: range[1], total })
               }
             />
           </div>

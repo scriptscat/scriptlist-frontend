@@ -31,7 +31,7 @@ import { useParams } from 'next/navigation';
 import type { GroupMember, ScriptGroup } from '@/types/api';
 import { useScriptGroupList, useGroupMemberList } from '@/lib/api/hooks';
 import { scriptAccessService } from '@/lib/api/services/scripts';
-import { UserModal } from '@/components/UserModal';
+import { UserModal } from '@/components/ScriptInvite/UserModal';
 
 const { Title, Text } = Typography;
 
@@ -82,7 +82,9 @@ const ManageModal: React.FC<{
     return (
       <span className={isExpired ? 'text-red-500' : 'text-gray-600'}>
         {expiryDate.toLocaleDateString()} {t('time.expire_on')}
-        {isExpired && <span className="ml-1 text-xs">({t('time.expired')})</span>}
+        {isExpired && (
+          <span className="ml-1 text-xs">{`(${t('time.expired')})`}</span>
+        )}
       </span>
     );
   };
@@ -93,9 +95,7 @@ const ManageModal: React.FC<{
       title: t('remove_member_confirm_title'),
       content: (
         <div>
-          <p>
-            {t('remove_member_confirm_content', { userName: memberName })}
-          </p>
+          <p>{t('remove_member_confirm_content', { userName: memberName })}</p>
           <p className="text-gray-500 text-sm mt-2">
             {t('remove_member_confirm_description')}
           </p>
@@ -223,10 +223,10 @@ const ManageModal: React.FC<{
               showSizeChanger: false,
               showQuickJumper: true,
               showTotal: (total, range) =>
-                t('pagination.total', { 
-                  start: range[0], 
-                  end: range[1], 
-                  total 
+                t('pagination.total', {
+                  start: range[0],
+                  end: range[1],
+                  total,
                 }),
               onChange: (page) => setPage(page),
             }}
@@ -302,7 +302,7 @@ const CreateGroupModal: React.FC<{
           setLoading(false);
         }
       })
-      .catch((err) => {});
+      .catch(() => {});
   };
 
   return (
@@ -368,7 +368,6 @@ export default function GroupsPage() {
 
   const {
     data,
-    error,
     isLoading,
     mutate: mutateGroups,
   } = useScriptGroupList(id, page);
@@ -412,9 +411,7 @@ export default function GroupsPage() {
       title: t('delete_confirm_title'),
       content: (
         <div>
-          <p>
-            {t('delete_confirm_content', { groupName })}
-          </p>
+          <p>{t('delete_confirm_content', { groupName })}</p>
           <p className="text-gray-500 text-sm mt-2">
             {t('delete_confirm_description')}
           </p>
@@ -431,8 +428,8 @@ export default function GroupsPage() {
           await scriptAccessService.deleteScriptGroup(id, groupId);
           message.success(t('delete_success'));
           mutateGroups();
-        } catch (error) {
-          message.error(t('delete_failed'));
+        } catch (error: any) {
+          message.error(error.message || t('delete_failed'));
         } finally {
           setDeleteLoading(null);
         }
@@ -515,9 +512,7 @@ export default function GroupsPage() {
             <TeamOutlined className="mr-2" />
             {t('title')}
           </Title>
-          <Text type="secondary">
-            {t('description')}
-          </Text>
+          <Text type="secondary">{t('description')}</Text>
         </div>
         <Button
           type="primary"
@@ -534,17 +529,17 @@ export default function GroupsPage() {
         <div className="mb-4 p-4 rounded-lg">
           <Space size="large">
             <div>
-              <Text strong>{t('stats.total_label')}：</Text>
+              <Text strong>{t('stats.total_label') + ':'}</Text>
               <Text className="text-blue-600 font-medium">{total}</Text>
             </div>
             <div>
-              <Text strong>{t('stats.member_total_label')}：</Text>
+              <Text strong>{t('stats.member_total_label') + ':'}</Text>
               <Text className="text-green-600 font-medium">
                 {list.reduce((sum, group) => sum + group.member.length, 0)}
               </Text>
             </div>
             <div>
-              <Text strong>{t('stats.active_groups_label')}：</Text>
+              <Text strong>{t('stats.active_groups_label') + ':'}</Text>
               <Text className="text-orange-600 font-medium">
                 {list.filter((group) => group.member.length > 0).length}
               </Text>
@@ -566,10 +561,10 @@ export default function GroupsPage() {
           showSizeChanger: false,
           showQuickJumper: true,
           showTotal: (total, range) =>
-            t('pagination.total', { 
-              start: range[0], 
-              end: range[1], 
-              total 
+            t('pagination.total', {
+              start: range[0],
+              end: range[1],
+              total,
             }),
           onChange: (page) => setPage(page),
         }}

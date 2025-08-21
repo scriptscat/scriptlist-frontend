@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import UserProfileLayout from '@/components/UserProfile/UserProfileLayout';
 import { userService } from '@/lib/api/services/user';
 
@@ -13,17 +14,18 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; id: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
   const user = await userService.getUserDetailCache(parseInt(id));
+  const t = await getTranslations({ locale, namespace: 'user' });
 
   if (!user) {
     return {
-      title: '用户不存在' + ' | ScriptCat',
+      title: t('user_not_found') + ' | ScriptCat',
     };
   }
 
   return {
-    title: `${user.username} - 用户主页` + ' | ScriptCat',
+    title: `${user.username} - ${t('user_homepage')}` + ' | ScriptCat',
   };
 }
 

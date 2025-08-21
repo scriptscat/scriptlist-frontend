@@ -6,13 +6,13 @@ import {
   Select,
   Switch,
   message,
-  theme,
 } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { scriptAccessService } from '@/lib/api/services/scripts';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import TextArea from 'antd/es/input/TextArea';
+import { useTranslations } from 'next-intl';
 
 export const InviteModal: React.FC<{
   status: boolean;
@@ -20,6 +20,7 @@ export const InviteModal: React.FC<{
   id: number;
   groupID?: number;
 }> = ({ status, onChange, id, groupID }) => {
+  const t = useTranslations('script.invite');
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [inviteCodeText, setInviteCodeText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,7 +45,7 @@ export const InviteModal: React.FC<{
             days: values.days,
           })
           .then((resp) => {
-            message.success('提交成功');
+            message.success(t('submit_success'));
             const inviteBaseURL =
               window.location.origin + '/scripts/invite?code=';
             setInviteCodeText(
@@ -57,7 +58,7 @@ export const InviteModal: React.FC<{
             setOpenSuccessModal(true);
           })
           .catch((error) => {
-            message.error(error.message || '创建失败');
+            message.error(error.message || t('create_failed'));
           })
           .finally(() => {
             setLoading(false);
@@ -75,12 +76,12 @@ export const InviteModal: React.FC<{
   return (
     <>
       <Modal
-        title="创建邀请码"
+        title={t('create_invite_code')}
         open={status}
         onOk={handleOk}
         onCancel={handleCancel}
-        cancelText="取消"
-        okText="创建"
+        cancelText={t('cancel')}
+        okText={t('create')}
         confirmLoading={loading}
       >
         <div>
@@ -90,22 +91,22 @@ export const InviteModal: React.FC<{
             form={form}
             initialValues={{ layout: 'horizontal' }}
           >
-            <Form.Item label="创建数量" name="count" initialValue={1}>
+            <Form.Item label={t('create_count')} name="count" initialValue={1}>
               <InputNumber className="!w-full" min={1} precision={0} />
             </Form.Item>
-            <Form.Item label="到期时间" name="days" initialValue={0}>
+            <Form.Item label={t('expire_time')} name="days" initialValue={0}>
               <Select
                 options={[
-                  { value: 1, label: 1 + '天' },
-                  { value: 3, label: 3 + '天' },
-                  { value: 7, label: 7 + '天' },
-                  { value: 15, label: 15 + '天' },
-                  { value: 0, label: '无限制' },
+                  { value: 1, label: 1 + t('days') },
+                  { value: 3, label: 3 + t('days') },
+                  { value: 7, label: 7 + t('days') },
+                  { value: 15, label: 15 + t('days') },
+                  { value: 0, label: t('no_limit') },
                 ]}
               />
             </Form.Item>
             <Form.Item
-              label="管理员审核"
+              label={t('admin_audit')}
               name="audit"
               initialValue={false}
               valuePropName="checked"
@@ -119,7 +120,7 @@ export const InviteModal: React.FC<{
         title={
           <div className="flex items-center">
             <CheckCircleTwoTone className="mr-1" twoToneColor="#52c41a" />
-            <span>创建成功</span>
+            <span>{t('create_success')}</span>
           </div>
         }
         onCancel={() => setOpenSuccessModal(false)}
@@ -129,17 +130,17 @@ export const InviteModal: React.FC<{
           <CopyToClipboard
             key="copy"
             text={inviteCodeText}
-            onCopy={() => message.success('复制成功')}
+            onCopy={() => message.success(t('copy_success'))}
           >
-            <Button type="primary">复制链接</Button>
+            <Button type="primary">{t('copy_link')}</Button>
           </CopyToClipboard>,
           <Button key="back" onClick={() => setOpenSuccessModal(false)}>
-            关闭
+            {t('close')}
           </Button>,
         ]}
       >
         <div>
-          <div className="mb-3">创建的邀请列表如下:</div>
+          <div className="mb-3">{t('invite_list_description')}</div>
           <TextArea
             className="!bg-transparent"
             value={inviteCodeText}

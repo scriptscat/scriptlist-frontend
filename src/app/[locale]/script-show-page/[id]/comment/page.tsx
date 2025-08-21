@@ -1,4 +1,4 @@
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 import type { ScriptDetailPageProps } from '../types';
 import ScriptRatingClient from './components/ScriptRatingClient';
 import { generateScriptMetadata } from '../metadata';
@@ -74,10 +74,9 @@ export default async function ScriptRatingPage({
   );
 }
 
-export async function generateMetadata(
-  { params }: ScriptDetailPageProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ScriptDetailPageProps): Promise<Metadata> {
   const { id, locale } = await params;
   return generateScriptMetadata(id, 'comment', locale);
 }

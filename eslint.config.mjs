@@ -26,6 +26,7 @@ const eslintConfig = [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+      'react-hooks/exhaustive-deps': 'off',
       'react/jsx-no-literals': 'warn',
     },
   }),

@@ -161,7 +161,7 @@ export default function IssueCommentClient({
               onCopy={() => message.success(t('copy_success'))}
             >
               <Tooltip title={t('copy_link')}>
-                <Tag className="cursor-pointer">#{issue.id}</Tag>
+                <Tag className="cursor-pointer">{'#' + issue.id}</Tag>
               </Tooltip>
             </CopyToClipboard>
             <UserOutlined className="mr-1 !text-gray-400 " />

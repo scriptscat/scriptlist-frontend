@@ -6,11 +6,12 @@ import {
   useRef,
   useEffect,
   useState,
+  useCallback,
 } from 'react';
 import { useTheme } from '@/contexts/ThemeClientContext';
-import { useUser } from '@/contexts/UserContext';
 import { resourceService } from '@/lib/api';
 import { message } from 'antd';
+import { useTranslations } from 'next-intl';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import './toast-ui-theme.css'; // 自定义主题样式
@@ -55,7 +56,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
   (
     {
       value = '',
-      placeholder = '请输入内容...',
+      placeholder,
       height,
       rows,
       onChange,
@@ -66,15 +67,18 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
     },
     ref,
   ) => {
+    const t = useTranslations('components.markdown_editor');
     const editorRef = useRef<HTMLDivElement>(null);
     const editorInstanceRef = useRef<ToastUIEditor | null>(null);
     const { themeMode } = useTheme();
-    const { user } = useUser();
     const [isClient, setIsClient] = useState(false);
     const [imageLoading, setImageLoading] = useState(false);
 
     // 计算编辑器高度：优先使用 height，否则根据 rows 计算
     const editorHeight = height || (rows ? `${rows * 24 + 100}px` : '400px');
+
+    // 设置默认placeholder
+    const defaultPlaceholder = placeholder || t('placeholder');
 
     useImperativeHandle(ref, () => ({
       getValue: () => editorInstanceRef.current?.getMarkdown() || '',
@@ -93,91 +97,105 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
     }, []);
 
     // 创建编辑器的函数
-    const createEditor = async (initialValue: string = '') => {
-      if (!editorRef.current || !isClient) return;
+    const createEditor = useCallback(
+      async (initialValue: string = '') => {
+        if (!editorRef.current || !isClient) return;
 
-      try {
-        // 动态导入 Toast UI Editor
-        // @ts-expect-error - Toast UI Editor 类型声明问题
-        const { Editor } = await import('@toast-ui/editor');
-
-        // 尝试加载代码语法高亮插件
-        let plugins: any[] = [];
         try {
-          const codeSyntaxHighlight = await import(
-            '@toast-ui/editor-plugin-code-syntax-highlight'
-          );
+          // 动态导入 Toast UI Editor
+          // @ts-expect-error - Toast UI Editor 类型声明问题
+          const { Editor } = await import('@toast-ui/editor');
 
-          // 确保 Prism 在全局可用
-          if (typeof window !== 'undefined') {
-            (window as any).Prism = Prism;
+          // 尝试加载代码语法高亮插件
+          let plugins: any[] = [];
+          try {
+            const codeSyntaxHighlight = await import(
+              '@toast-ui/editor-plugin-code-syntax-highlight'
+            );
+
+            // 确保 Prism 在全局可用
+            if (typeof window !== 'undefined') {
+              (window as any).Prism = Prism;
+            }
+
+            plugins = [
+              [
+                codeSyntaxHighlight.default,
+                {
+                  highlighter: Prism,
+                },
+              ],
+            ];
+          } catch (pluginError) {
+            console.warn(
+              'Code syntax highlight plugin failed to load:',
+              pluginError,
+            );
+            // 继续创建编辑器，但不使用语法高亮插件
           }
 
-          plugins = [
-            [
-              codeSyntaxHighlight.default,
-              {
-                highlighter: Prism,
+          const editor = new Editor({
+            el: editorRef.current,
+            height: editorHeight,
+            initialEditType: 'markdown',
+            previewStyle: 'tab',
+            initialValue: initialValue || value,
+            placeholder: defaultPlaceholder,
+            theme: themeMode.theme === 'dark' ? 'dark' : 'default',
+            plugins,
+            autofocus: autoFocus, // 使用传入的 autoFocus 属性
+            hooks: {
+              addImageBlobHook: async (
+                blob: Blob | File,
+                callback: (url: string, text?: string) => void,
+              ) => {
+                setImageLoading(true);
+                try {
+                  const resp = await resourceService.uploadImage(
+                    blob,
+                    comment,
+                    linkId,
+                  );
+
+                  // 构建完整的图片URL
+                  const imageUrl = `${process.env.NEXT_PUBLIC_APP_URL || ''}/api/v2/resource/image/${resp.id}`;
+                  const fileName = blob instanceof File ? blob.name : 'image';
+                  callback(imageUrl, fileName);
+                } catch (error) {
+                  console.error(t('image_upload_failed') + ':', error);
+                  message.error(t('image_upload_failed'));
+                } finally {
+                  setImageLoading(false);
+                }
+                return false;
               },
-            ],
-          ];
-        } catch (pluginError) {
-          console.warn(
-            'Code syntax highlight plugin failed to load:',
-            pluginError,
-          );
-          // 继续创建编辑器，但不使用语法高亮插件
+            },
+            events: {
+              change: () => {
+                const markdown = editor.getMarkdown();
+                onChange?.(markdown);
+              },
+            },
+          });
+
+          editorInstanceRef.current = editor;
+        } catch (error) {
+          console.error('Failed to create editor:', error);
         }
-
-        const editor = new Editor({
-          el: editorRef.current,
-          height: editorHeight,
-          initialEditType: 'markdown',
-          previewStyle: 'tab',
-          initialValue: initialValue || value,
-          placeholder,
-          theme: themeMode.theme === 'dark' ? 'dark' : 'default',
-          plugins,
-          autofocus: autoFocus, // 使用传入的 autoFocus 属性
-          hooks: {
-            addImageBlobHook: async (
-              blob: Blob | File,
-              callback: (url: string, text?: string) => void,
-            ) => {
-              setImageLoading(true);
-              try {
-                const resp = await resourceService.uploadImage(
-                  blob,
-                  comment,
-                  linkId,
-                );
-
-                // 构建完整的图片URL
-                const imageUrl = `${process.env.NEXT_PUBLIC_APP_URL || ''}/api/v2/resource/image/${resp.id}`;
-                const fileName = blob instanceof File ? blob.name : 'image';
-                callback(imageUrl, fileName);
-              } catch (error) {
-                console.error('图片上传失败:', error);
-                message.error('图片上传失败');
-              } finally {
-                setImageLoading(false);
-              }
-              return false;
-            },
-          },
-          events: {
-            change: () => {
-              const markdown = editor.getMarkdown();
-              onChange?.(markdown);
-            },
-          },
-        });
-
-        editorInstanceRef.current = editor;
-      } catch (error) {
-        console.error('Failed to create editor:', error);
-      }
-    };
+      },
+      [
+        isClient,
+        editorHeight,
+        value,
+        defaultPlaceholder,
+        themeMode.theme,
+        autoFocus,
+        comment,
+        linkId,
+        onChange,
+        t,
+      ],
+    );
 
     // 初始化编辑器
     useEffect(() => {
@@ -191,7 +209,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
           editorInstanceRef.current = null;
         }
       };
-    }, [isClient]);
+    }, [isClient, createEditor]);
 
     // 监听主题变化
     useEffect(() => {
@@ -201,7 +219,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
         editorInstanceRef.current.destroy();
         createEditor(currentValue);
       }
-    }, [themeMode.theme]);
+    }, [themeMode.theme, isClient, createEditor]);
 
     // 监听值变化
     useEffect(() => {
@@ -221,7 +239,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
             style={{ height: editorHeight }}
             className="flex items-center justify-center border border-app-primary rounded-lg bg-app-elevated theme-transition"
           >
-            <div className="text-app-secondary">加载编辑器中...</div>
+            <div className="text-app-secondary">{t('loading_editor')}</div>
           </div>
         </div>
       );
@@ -231,7 +249,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
       <div className={`${className} theme-transition relative`}>
         {imageLoading && (
           <div className="absolute top-2 right-2 z-10 bg-app-elevated border border-app-primary rounded px-2 py-1 text-sm text-app-secondary">
-            图片上传中...
+            {t('uploading_image')}
           </div>
         )}
         <div ref={editorRef} />

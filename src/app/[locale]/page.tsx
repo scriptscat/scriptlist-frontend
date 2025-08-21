@@ -69,7 +69,7 @@ interface BrowserStoreConfig {
   target?: string;
 }
 
-const getBrowserStores = (t: any): Record<string, BrowserStoreConfig> => ({
+const getBrowserStores = (): Record<string, BrowserStoreConfig> => ({
   edge: {
     url: 'https://microsoftedge.microsoft.com/addons/detail/scriptcat/liilgpjgabokdklappibcjfablkpcekh',
     icon: 'logos:microsoft-edge',
@@ -106,7 +106,7 @@ interface StoreItem {
 }
 
 const getStoreMap = (t: any): Record<string, StoreItem> => {
-  const browserStores = getBrowserStores(t);
+  const browserStores = getBrowserStores();
   return Object.entries(browserStores).reduce(
     (acc, [key, config]) => {
       acc[key] = {
@@ -174,7 +174,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 level={1}
                 className="!text-4xl sm:!text-6xl !font-bold !mb-0 !bg-gradient-to-r !from-blue-600 !to-purple-600 !bg-clip-text !text-transparent"
               >
-                ScriptCat
+                {'ScriptCat'}
               </Title>
             </div>
             <Typography.Paragraph className="!text-xl !text-gray-600 !mb-0 max-w-2xl mx-auto">

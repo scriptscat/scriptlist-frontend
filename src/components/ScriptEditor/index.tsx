@@ -151,11 +151,19 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
     try {
       setLoading(true);
       await onSubmit(values);
-      message.success(script ? t('messages.script_update_success') : t('messages.script_create_success'));
+      message.success(
+        script
+          ? t('messages.script_update_success')
+          : t('messages.script_create_success'),
+      );
     } catch (error: any) {
       console.error('Submit failed:', error);
       message.error(
-        t('messages.submit_failed') + ' ' + (script ? t('messages.script_update_failed') : t('messages.script_create_failed')),
+        t('messages.submit_failed') +
+          ' ' +
+          (script
+            ? t('messages.script_update_failed')
+            : t('messages.script_create_failed')),
       );
     } finally {
       setLoading(false);
@@ -263,7 +271,9 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                   loading={loading}
                   className="float-end"
                 >
-                  {script ? t('description_section.update_button') : t('description_section.create_button')}
+                  {script
+                    ? t('description_section.update_button')
+                    : t('description_section.create_button')}
                 </Button>
               </Space>
             </Card>
@@ -272,24 +282,44 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
           {/* 侧边栏信息 */}
           <div className="flex flex-col gap-3 space-y-6">
             {/* 脚本类型和版本信息 */}
-            <Card title={t('info_section.title')} size="small" className="shadow-sm">
+            <Card
+              title={t('info_section.title')}
+              size="small"
+              className="shadow-sm"
+            >
               <div className="space-y-4">
                 <Form.Item
                   name="type"
                   label={t('info_section.script_type_label')}
-                  rules={[{ required: true, message: t('info_section.script_type_required') }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: t('info_section.script_type_required'),
+                    },
+                  ]}
                   style={{
                     display: script ? 'none' : 'block',
                   }}
                 >
-                  <Select placeholder={t('info_section.script_type_placeholder')}>
-                    <Select.Option value={1}>{t('script_types.user_script')}</Select.Option>
-                    <Select.Option value={2}>{t('script_types.subscribe_script')}</Select.Option>
-                    <Select.Option value={3}>{t('script_types.library')}</Select.Option>
+                  <Select
+                    placeholder={t('info_section.script_type_placeholder')}
+                  >
+                    <Select.Option value={1}>
+                      {t('script_types.user_script')}
+                    </Select.Option>
+                    <Select.Option value={2}>
+                      {t('script_types.subscribe_script')}
+                    </Select.Option>
+                    <Select.Option value={3}>
+                      {t('script_types.library')}
+                    </Select.Option>
                   </Select>
                 </Form.Item>
 
-                <Form.Item name="category_id" label={t('info_section.script_category_label')}>
+                <Form.Item
+                  name="category_id"
+                  label={t('info_section.script_category_label')}
+                >
                   <Select
                     placeholder={t('info_section.script_category_placeholder')}
                     loading={isCategoryLoading}
@@ -311,7 +341,12 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                       </Tooltip>
                     </Space>
                   }
-                  rules={[{ required: true, message: t('info_section.version_required') }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: t('info_section.version_required'),
+                    },
+                  ]}
                 >
                   <Input
                     placeholder={t('info_section.version_placeholder')}
@@ -359,7 +394,9 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                       <span>{t('info_section.tags_label')}</span>
                       <Tooltip
                         title={
-                          scriptType === 3 ? t('info_section.tags_tooltip_library') : t('info_section.tags_tooltip_script')
+                          scriptType === 3
+                            ? t('info_section.tags_tooltip_library')
+                            : t('info_section.tags_tooltip_script')
                         }
                       >
                         <InfoCircleOutlined className="text-gray-400" />
@@ -370,7 +407,9 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                   <Select
                     mode="tags"
                     placeholder={
-                      scriptType === 3 ? t('info_section.tags_placeholder_library') : t('info_section.tags_placeholder_script')
+                      scriptType === 3
+                        ? t('info_section.tags_placeholder_library')
+                        : t('info_section.tags_placeholder_script')
                     }
                     disabled={scriptType !== 3}
                     style={{ width: '100%' }}
@@ -381,20 +420,36 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
 
             {/* 库描述信息 - 仅当脚本类型为库时显示 */}
             {scriptType === 3 && !script && (
-              <Card title={t('library_section.title')} size="small" className="shadow-sm">
+              <Card
+                title={t('library_section.title')}
+                size="small"
+                className="shadow-sm"
+              >
                 <div>
                   <Form.Item
                     name="libraryName"
                     label={t('library_section.name_label')}
-                    rules={[{ required: true, message: t('library_section.name_required') }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: t('library_section.name_required'),
+                      },
+                    ]}
                   >
-                    <Input placeholder={t('library_section.name_placeholder')} />
+                    <Input
+                      placeholder={t('library_section.name_placeholder')}
+                    />
                   </Form.Item>
 
                   <Form.Item
                     name="libraryDescription"
                     label={t('library_section.description_label')}
-                    rules={[{ required: true, message: t('library_section.description_required') }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: t('library_section.description_required'),
+                      },
+                    ]}
                   >
                     <Input.TextArea
                       placeholder={t('library_section.description_placeholder')}

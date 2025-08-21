@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { message } from 'antd';
 import { useRouter } from '@/i18n/routing';
 import ScriptEditor from '@/components/ScriptEditor';
 import { scriptService } from '@/lib/api/services/scripts';

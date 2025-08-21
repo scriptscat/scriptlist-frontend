@@ -42,7 +42,7 @@ export default function WebhookSettings({
   const [current, setCurrent] = useState(0);
   const [copied, setCopied] = useState<string>('');
   const user = useUser();
-  const t = useTranslations();
+  const t = useTranslations('user.webhook');
 
   // 使用hooks获取webhook数据
   const {
@@ -64,10 +64,10 @@ export default function WebhookSettings({
     try {
       await navigator.clipboard.writeText(text);
       setCopied(type);
-      message.success('复制成功');
+      message.success(t('copy_success'));
       setTimeout(() => setCopied(''), 2000);
-    } catch (err) {
-      message.error('复制失败');
+    } catch (_err) {
+      message.error(t('copy_failed'));
     }
   };
 
@@ -91,11 +91,9 @@ export default function WebhookSettings({
           </div>
           <div className="flex-1">
             <Title level={4} className="!mb-2">
-              Webhook 设置
+              {t('settings_title')}
             </Title>
-            <Paragraph className="!mb-4">
-              使用Webhook可以接受来自Github等地方等消息，在脚本页面的脚本管理中配置更新URL，可以实现自动的即时的脚本更新。
-            </Paragraph>
+            <Paragraph className="!mb-4">{t('settings_description')}</Paragraph>
           </div>
         </div>
       </Card>
@@ -105,13 +103,13 @@ export default function WebhookSettings({
         title={
           <div className="flex items-center space-x-2">
             <CheckCircleOutlined className="text-green-500" />
-            <span>配置步骤</span>
+            <span>{t('config_steps')}</span>
           </div>
         }
       >
         <Alert
-          message="配置提示"
-          description="请按照以下步骤完成 Webhook 配置，确保脚本能够正确同步到你的代码仓库。"
+          message={t('config_tip_title')}
+          description={t('config_tip_description')}
           type="info"
           showIcon
           className="!mb-6"
@@ -123,22 +121,22 @@ export default function WebhookSettings({
           className="custom-steps"
         >
           <Steps.Step
-            title="绑定代码仓库"
+            title={t('step_bind_repo')}
             description={
               <div className="mt-2">
-                <Text>访问 Github 仓库进入 Settings</Text>
+                <Text>{t('step_bind_repo_desc')}</Text>
               </div>
             }
             icon={<LinkOutlined />}
           />
           <Steps.Step
-            title="配置 Webhook"
+            title={t('step_config_webhook')}
             description={
               <div className="mt-2">
-                <Text>点击 &quot;Add webhook&quot;</Text>
+                <Text>{t('step_config_webhook_desc')}</Text>
                 <div className="mt-2">
                   <Text type="secondary">
-                    在你的代码仓库中配置下面的 Webhook 地址和密钥
+                    {t('step_config_webhook_detail')}
                   </Text>
                 </div>
               </div>
@@ -146,19 +144,28 @@ export default function WebhookSettings({
             icon={<ApiOutlined />}
           />
           <Steps.Step
-            title="选择触发事件"
+            title={t('step_select_events')}
             description={
               <div className="mt-2 space-y-2">
-                <Text>选择要监听的事件类型：</Text>
+                <Text>{t('step_select_events_desc')}</Text>
                 <div className="ml-4 space-y-1">
                   <div>
-                    • <Text strong>Push 事件</Text>：代码推送时触发同步
+                    {'• '}
+                    <Text strong>{t('event_push')}</Text>
+                    {'：'}
+                    {t('event_push_desc')}
                   </div>
                   <div>
-                    • <Text strong>Release 事件</Text>：发布新版本时触发同步
+                    {'• '}
+                    <Text strong>{t('event_release')}</Text>
+                    {'：'}
+                    {t('event_release_desc')}
                   </div>
                   <div>
-                    • <Text strong>Tag 事件</Text>：创建标签时触发同步
+                    {'• '}
+                    <Text strong>{t('event_tag')}</Text>
+                    {'：'}
+                    {t('event_tag_desc')}
                   </div>
                 </div>
               </div>
@@ -173,7 +180,7 @@ export default function WebhookSettings({
         title={
           <div className="flex items-center space-x-2">
             <InfoCircleOutlined className="text-blue-500" />
-            <span>Webhook 配置信息</span>
+            <span>{t('config_info_title')}</span>
           </div>
         }
       >
@@ -181,9 +188,9 @@ export default function WebhookSettings({
           <div>
             <div className="flex items-center justify-between mb-2">
               <Text strong className="text-base">
-                Webhook URL
+                {'Webhook URL'}
               </Text>
-              <Tooltip title="复制 URL">
+              <Tooltip title={t('copy_url_tooltip')}>
                 <Button
                   type="text"
                   size="small"
@@ -204,9 +211,9 @@ export default function WebhookSettings({
           <div>
             <div className="flex items-center justify-between mb-2">
               <Text strong className="text-base">
-                Content-Type
+                {'Content-Type'}
               </Text>
-              <Tooltip title="复制 Content-Type">
+              <Tooltip title={t('copy_content_type_tooltip')}>
                 <Button
                   type="text"
                   size="small"
@@ -229,10 +236,10 @@ export default function WebhookSettings({
           <div>
             <div className="flex items-center justify-between mb-2">
               <Text strong className="text-base">
-                Secret
+                {'Secret'}
               </Text>
               <div className="flex items-center space-x-2">
-                <Tooltip title="复制 Secret">
+                <Tooltip title={t('copy_secret_tooltip')}>
                   <Button
                     type="text"
                     size="small"
@@ -254,30 +261,29 @@ export default function WebhookSettings({
                   loading={loading}
                   onClick={() => {
                     modal.confirm({
-                      title: '确认刷新密钥？',
-                      content:
-                        '刷新后旧的密钥将失效，请及时更新你的 Webhook 配置',
+                      title: t('confirm_refresh_title'),
+                      content: t('confirm_refresh_content'),
                       icon: <ExclamationCircleOutlined />,
-                      okText: '确认刷新',
-                      cancelText: '取消',
+                      okText: t('confirm_refresh'),
+                      cancelText: t('cancel'),
                       onOk: async () => {
                         try {
                           const data = await refreshToken();
                           // 更新SWR缓存
                           mutateWebhook(data, false);
-                          message.success('密钥刷新成功');
+                          message.success(t('refresh_success'));
                         } catch (error) {
                           console.error(
                             'Failed to refresh webhook token:',
                             error,
                           );
-                          message.error('刷新失败');
+                          message.error(t('refresh_failed'));
                         }
                       },
                     });
                   }}
                 >
-                  刷新密钥
+                  {t('refresh_secret')}
                 </Button>
               </div>
             </div>
@@ -286,8 +292,8 @@ export default function WebhookSettings({
         </div>
 
         <Alert
-          message="安全提示"
-          description="请妥善保管你的 Secret 密钥，不要将其泄露给他人。如果怀疑密钥已泄露，请立即刷新。"
+          message={t('security_tip_title')}
+          description={t('security_tip_content')}
           type="warning"
           showIcon
           className="!mt-6"

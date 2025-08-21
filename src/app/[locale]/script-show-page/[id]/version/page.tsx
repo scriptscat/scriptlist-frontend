@@ -1,4 +1,4 @@
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 import type { ScriptDetailPageProps } from '../types';
 import ScriptVersionsClient from './components/ScriptVersionsClient';
 import { generateScriptMetadata } from '../metadata';

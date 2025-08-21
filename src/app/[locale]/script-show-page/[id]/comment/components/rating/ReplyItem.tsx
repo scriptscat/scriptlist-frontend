@@ -7,11 +7,7 @@ import { useTranslations } from 'next-intl';
 import type { ReplyItemProps } from './types';
 import { useSemDateTime } from '@/lib/utils/semdate';
 
-export default function ReplyItem({
-  reply,
-  ratingId,
-  onDelete,
-}: ReplyItemProps) {
+export default function ReplyItem({ reply }: ReplyItemProps) {
   const t = useTranslations('script.rating');
   const semDateTime = useSemDateTime();
 

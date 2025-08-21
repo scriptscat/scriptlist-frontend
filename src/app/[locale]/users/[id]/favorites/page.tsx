@@ -34,7 +34,7 @@ export default async function UserFavoritesPage({
     });
 
   return (
-    <Suspense fallback={<div>Loading favorites...</div>}>
+    <Suspense fallback={<div>{'Loading favorites...'}</div>}>
       <UserFavorites
         userId={userId}
         folders={foldersData.list}

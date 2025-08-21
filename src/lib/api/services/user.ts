@@ -1,6 +1,5 @@
 import { apiClient } from '../client';
 import { isServerEnvironment } from '@/lib/utils/utils';
-import { APIError } from '@/types/api';
 import { cache } from 'react';
 
 // 用户基础信息响应

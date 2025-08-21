@@ -183,13 +183,18 @@ const StatsCard: React.FC<{
             </Text>
           </div>
           <Tooltip
-            title={`${t('growth_tooltip').replace('{type}', isPositive ? t('growth_increase') : t('growth_decrease')).replace('{value}', Math.abs(parseFloat(growth)).toString())}`}
+            title={`${t('growth_tooltip')
+              .replace(
+                '{type}',
+                isPositive ? t('growth_increase') : t('growth_decrease'),
+              )
+              .replace('{value}', Math.abs(parseFloat(growth)).toString())}`}
           >
             <Tag
               color={isPositive ? 'green' : 'red'}
               icon={isPositive ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
             >
-              {growth}%
+              {growth + '%'}
             </Tag>
           </Tooltip>
         </div>
@@ -369,7 +374,11 @@ export default function ScriptStatsClient() {
                           <span>{t('realtime_monitoring')}</span>
                           <Badge
                             status={isRealtime ? 'processing' : 'default'}
-                            text={isRealtime ? t('realtime_updating') : t('realtime_paused')}
+                            text={
+                              isRealtime
+                                ? t('realtime_updating')
+                                : t('realtime_paused')
+                            }
                           />
                         </div>
                         <div className="flex items-center space-x-4">

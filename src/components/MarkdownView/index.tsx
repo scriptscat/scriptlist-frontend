@@ -65,7 +65,7 @@ const createRenderer = (baseUrl = '') => {
   return renderer;
 };
 
-const MarkdownView: React.FC<MarkdownViewProps> = ({ id, content }) => {
+const MarkdownView: React.FC<MarkdownViewProps> = ({ content }) => {
   const pathname = usePathname();
   const currentBaseUrl = pathname;
   const { themeMode } = useTheme();

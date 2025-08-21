@@ -1,10 +1,11 @@
 import { Modal, Form, Select, DatePicker, message, Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { DebounceSelect } from '@/components/DebounceSelect';
 import { scriptAccessService } from '@/lib/api/services/scripts';
 import { GetUserList } from '@/lib/api/services/user';
-import { InvitePage } from '@/components/InvitePage';
+import { InvitePage } from '@/components/ScriptInvite/InvitePage';
 
 interface UserModalProps {
   status: boolean;
@@ -25,6 +26,7 @@ export const UserModal: React.FC<UserModalProps> = ({
   hideGroup = false,
   hideInvite = false,
 }) => {
+  const t = useTranslations('script.user_modal');
   const [activeKey, setActiveKey] = useState('user');
   const [userForm] = Form.useForm();
   const [groupForm] = Form.useForm();
@@ -64,17 +66,17 @@ export const UserModal: React.FC<UserModalProps> = ({
         }
 
         promise
-          .then((resp: any) => {
-            message.success('提交成功');
+          .then((_resp: any) => {
+            message.success(t('submit_success'));
             handleCancel();
           })
           .catch((error) => {
-            console.error('提交失败:', error);
-            message.error(error.message || '提交失败');
+            console.error(t('submit_failed'), error);
+            message.error(error.message || t('submit_failed'));
           });
       })
       .catch((err) => {
-        console.error('表单验证失败:', err);
+        console.error(t('form_validation_failed'), err);
       });
   };
 
@@ -89,7 +91,7 @@ export const UserModal: React.FC<UserModalProps> = ({
   if (!hideUser) {
     items.push({
       key: 'user',
-      label: '通过用户名邀请',
+      label: t('invite_by_username'),
       children: (
         <div>
           <Form
@@ -99,7 +101,7 @@ export const UserModal: React.FC<UserModalProps> = ({
             initialValues={{ role: 'guest' }}
           >
             <Form.Item
-              label="用户名"
+              label={t('username')}
               name="user"
               hasFeedback
               validateTrigger="onBlur"
@@ -108,7 +110,7 @@ export const UserModal: React.FC<UserModalProps> = ({
                   type: 'array',
                   required: true,
                   len: 1,
-                  message: '请选择用户',
+                  message: t('please_select_user'),
                 },
               ]}
             >
@@ -127,21 +129,21 @@ export const UserModal: React.FC<UserModalProps> = ({
               />
             </Form.Item>
             {groupID === undefined ? (
-              <Form.Item label="授予权限" name="role">
+              <Form.Item label={t('grant_permission')} name="role">
                 <Select
                   options={[
-                    { value: 'guest', label: '访客' },
-                    { value: 'manager', label: '管理员' },
+                    { value: 'guest', label: t('guest') },
+                    { value: 'manager', label: t('admin') },
                   ]}
                 />
               </Form.Item>
             ) : (
               <></>
             )}
-            <Form.Item label="过期时间" name="time">
+            <Form.Item label={t('expire_time')} name="time">
               <DatePicker
                 className="w-full"
-                placeholder="请选择过期时间"
+                placeholder={t('please_select_expire_time')}
                 showTime
               />
             </Form.Item>
@@ -154,7 +156,7 @@ export const UserModal: React.FC<UserModalProps> = ({
   if (!hideGroup) {
     items.push({
       key: 'group',
-      label: '通过用户组邀请',
+      label: t('invite_by_user_group'),
       children: (
         <div>
           <Form
@@ -164,7 +166,7 @@ export const UserModal: React.FC<UserModalProps> = ({
             initialValues={{ role: 'guest' }}
           >
             <Form.Item
-              label="用户组"
+              label={t('user_group')}
               name="user"
               hasFeedback
               validateTrigger="onBlur"
@@ -173,14 +175,14 @@ export const UserModal: React.FC<UserModalProps> = ({
                   type: 'array',
                   required: true,
                   len: 1,
-                  message: '请选择用户组',
+                  message: t('please_select_user_group'),
                 },
               ]}
             >
               <DebounceSelect
                 maxCount={1}
                 mode="multiple"
-                fetchOptions={async (name: string) => {
+                fetchOptions={async (_name: string) => {
                   if (id !== undefined) {
                     const groupList =
                       await scriptAccessService.getScriptGroupList(id, 1);
@@ -195,18 +197,18 @@ export const UserModal: React.FC<UserModalProps> = ({
                 }}
               />
             </Form.Item>
-            <Form.Item label="授予权限" name="role">
+            <Form.Item label={t('grant_permission')} name="role">
               <Select
                 options={[
-                  { value: 'guest', label: '访客' },
-                  { value: 'manager', label: '管理员' },
+                  { value: 'guest', label: t('guest') },
+                  { value: 'manager', label: t('admin') },
                 ]}
               />
             </Form.Item>
-            <Form.Item label="过期时间" name="time">
+            <Form.Item label={t('expire_time')} name="time">
               <DatePicker
                 className="w-full"
-                placeholder="请选择过期时间"
+                placeholder={t('please_select_expire_time')}
                 showTime
               />
             </Form.Item>
@@ -219,19 +221,19 @@ export const UserModal: React.FC<UserModalProps> = ({
   if (!hideInvite) {
     items.push({
       key: 'code',
-      label: '通过邀请码邀请',
+      label: t('invite_by_code'),
       children: <InvitePage id={id} groupID={groupID} />,
     });
   }
 
   return (
     <Modal
-      title="请选择用户或用户组"
+      title={t('select_user_or_group')}
       open={status}
       onOk={handleOk}
       onCancel={handleCancel}
-      cancelText="取消"
-      okText="添加"
+      cancelText={t('cancel')}
+      okText={t('add')}
       width={700}
       footer={(_, { OkBtn, CancelBtn }) => (
         <>

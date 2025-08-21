@@ -19,7 +19,7 @@ export default function SettingsClient({
   initialWebhookToken,
   initialNotificationConfig,
 }: SettingsClientProps) {
-  const t = useTranslations();
+  const t = useTranslations('user.settings');
 
   const items = [
     {
@@ -27,7 +27,7 @@ export default function SettingsClient({
       label: (
         <div className="flex items-center space-x-2">
           <ApiOutlined />
-          <span>Webhook 设置</span>
+          <span>{t('webhook_settings')}</span>
         </div>
       ),
       children: <WebhookSettings initialToken={initialWebhookToken} />,
@@ -37,7 +37,7 @@ export default function SettingsClient({
       label: (
         <div className="flex items-center space-x-2">
           <BellOutlined />
-          <span>通知设置</span>
+          <span>{t('notification_settings')}</span>
         </div>
       ),
       children: (
@@ -57,11 +57,11 @@ export default function SettingsClient({
                 <BellOutlined className="text-white text-lg" />
               </div>
               <Title level={2} className="!mb-0">
-                用户设置
+                {t('user_settings')}
               </Title>
             </div>
             <Text type="secondary" className="text-base">
-              管理你的账户偏好设置，包括 Webhook 配置和通知选项
+              {t('settings_description')}
             </Text>
           </div>
         </div>

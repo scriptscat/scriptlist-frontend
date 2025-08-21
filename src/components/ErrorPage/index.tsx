@@ -8,7 +8,6 @@ import {
   MessageOutlined,
   GithubOutlined,
   CustomerServiceOutlined,
-  ClockCircleOutlined,
   BugOutlined,
   WarningOutlined,
 } from '@ant-design/icons';
@@ -80,9 +79,9 @@ export default function ErrorPage({
     if (title) return title;
     switch (statusCode) {
       case 404:
-        return '页面未找到';
+        return t('error.404_title');
       case 403:
-        return '访问被拒绝';
+        return t('error.403_title');
       case 500:
       default:
         return t('error.500_title');
@@ -93,9 +92,9 @@ export default function ErrorPage({
     if (subtitle) return subtitle;
     switch (statusCode) {
       case 404:
-        return '抱歉，您访问的页面不存在';
+        return t('error.404_subtitle');
       case 403:
-        return '抱歉，您没有访问此页面的权限';
+        return t('error.403_subtitle');
       case 500:
       default:
         return t('error.500_subtitle');
@@ -106,9 +105,9 @@ export default function ErrorPage({
     if (description) return description;
     switch (statusCode) {
       case 404:
-        return '请检查URL地址是否正确，或者从首页重新开始浏览。';
+        return t('error.404_description');
       case 403:
-        return '请联系管理员获取访问权限，或者检查您的登录状态。';
+        return t('error.403_description');
       case 500:
       default:
         return t('error.500_description');
@@ -172,19 +171,25 @@ export default function ErrorPage({
 
                 <Space direction="vertical" size="small">
                   <Text type="secondary">
-                    {t('error.error_time')}: {errorTime}
+                    {t('error.error_time')}
+                    {': '}
+                    {errorTime}
                   </Text>
                   <Text type="secondary">
-                    {t('error.error_code')}:
+                    {t('error.error_code')}
+                    {': '}
                     <Tag color="red" className="!ml-2">
                       {statusCode}
                     </Tag>
                   </Text>
                   <Text type="secondary">
-                    {t('error.error_id')}: {errorId}
+                    {t('error.error_id') + ':'} {errorId}
                   </Text>
                   {error?.digest && (
-                    <Text type="secondary">Digest: {error.digest}</Text>
+                    <Text type="secondary">
+                      {'Digest: '}
+                      {error.digest}
+                    </Text>
                   )}
                 </Space>
               </Space>
@@ -240,7 +245,7 @@ export default function ErrorPage({
                 <div className="text-center">
                   <Text type="secondary" className="text-sm">
                     <WarningOutlined className="mr-1" />
-                    请在反馈时提供上述错误ID和错误代码，这将帮助我们更快地定位和解决问题。
+                    {t('error.feedback_notice')}
                   </Text>
                 </div>
               </Space>

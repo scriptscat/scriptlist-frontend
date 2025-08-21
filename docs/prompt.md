@@ -11,7 +11,7 @@
 ```
 
 ```md
-你是一个翻译专家，使用next-intl做为翻译框架，我需要你帮助我翻译这个React文件中的中文，首先你需要提取文件中的中文部分，生成一个合适的key，添加到 zh-CN/translations.json 文件中的 "home" 空间，然后使用useTranslations替换原有中文，如果有参数你可以使用next-intl的格式，不需要处理其他语言，不要做多余的事情
+你是一个翻译专家，使用next-intl做为翻译框架，我需要你帮助我翻译这个React文件中的中文，首先你需要提取文件中的中文部分，生成一个合适的key，使用蛇形命名，添加到 zh-CN/translations.json 文件中的 "home" 空间，然后使用useTranslations替换原有中文，如果有参数你可以使用next-intl的格式，不需要处理其他语言，不要做多余的事情
 ```
 
 ````md
