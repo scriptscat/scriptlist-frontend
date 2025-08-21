@@ -10,7 +10,7 @@ const GoogleAd: React.FC<{
   className?: string;
   width: string;
   height: string;
-}> = ({ className, width, height }) => {
+}> = ({ className, height }) => {
   useEffect(() => {
     let cnt = 0;
     let t: NodeJS.Timeout | null = setInterval(() => {

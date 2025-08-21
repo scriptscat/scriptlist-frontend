@@ -26,7 +26,8 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import type { MonacoEditorRef } from '@/components/MonacoEditor';
 import MonacoEditor from '@/components/MonacoEditor';
-import MarkdownEditor, { MarkdownEditorRef } from '@/components/MarkdownEditor';
+import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
+import MarkdownEditor from '@/components/MarkdownEditor';
 import {
   parseMetadata,
   parseTags,
