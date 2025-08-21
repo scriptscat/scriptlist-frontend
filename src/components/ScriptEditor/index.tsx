@@ -26,7 +26,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import type { MonacoEditorRef } from '@/components/MonacoEditor';
 import MonacoEditor from '@/components/MonacoEditor';
-import MarkdownEditor from '@/components/MarkdownEditor';
+import MarkdownEditor, { MarkdownEditorRef } from '@/components/MarkdownEditor';
 import {
   parseMetadata,
   parseTags,
@@ -51,9 +51,9 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
   // 使用 Form.useWatch 监听表单字段变化
   const scriptType = Form.useWatch('type', form);
   const code = Form.useWatch('code', form);
-  const detailedDescription = Form.useWatch('detailedDescription', form);
   const isPreRelease = Form.useWatch('isPreRelease', form);
   const editorRef = useRef<MonacoEditorRef>(null);
+  const mkEditorRef = useRef<MarkdownEditorRef>(null);
 
   // 初始化表单值
   useEffect(() => {
@@ -150,6 +150,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
 
     try {
       setLoading(true);
+      values.detailedDescription = mkEditorRef.current?.getValue();
       await onSubmit(values);
       message.success(
         script
@@ -254,14 +255,12 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
               <Space direction="vertical" className="w-full">
                 <Form.Item name="detailedDescription" noStyle>
                   <MarkdownEditor
-                    value={detailedDescription}
+                    ref={mkEditorRef}
+                    initialValue={script?.content}
                     placeholder={t('description_section.placeholder')}
                     rows={12}
                     comment={script ? 'update-script' : 'create-script'}
                     linkId={script?.id}
-                    onChange={(value) =>
-                      form.setFieldValue('detailedDescription', value)
-                    }
                   />
                 </Form.Item>
                 <Button

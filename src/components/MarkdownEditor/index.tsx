@@ -26,11 +26,10 @@ interface ToastUIEditor {
 }
 
 interface MarkdownEditorProps {
-  value?: string;
+  initialValue?: string;
   placeholder?: string;
   height?: string;
   rows?: number; // 向后兼容，会转换为 height
-  onChange?: (value: string) => void;
   className?: string;
   autoFocus?: boolean; // 是否自动获取焦点
   addImageBlobHook?: (
@@ -55,11 +54,10 @@ export interface MarkdownEditorRef {
 const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
   (
     {
-      value = '',
+      initialValue = '',
       placeholder,
       height,
       rows,
-      onChange,
       className = '',
       autoFocus = false, // 默认不自动获取焦点
       comment,
@@ -139,7 +137,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
             height: editorHeight,
             initialEditType: 'markdown',
             previewStyle: 'tab',
-            initialValue: initialValue || value,
+            initialValue: initialValue,
             placeholder: defaultPlaceholder,
             theme: themeMode.theme === 'dark' ? 'dark' : 'default',
             plugins,
@@ -170,12 +168,6 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
                 return false;
               },
             },
-            events: {
-              change: () => {
-                const markdown = editor.getMarkdown();
-                onChange?.(markdown);
-              },
-            },
           });
 
           editorInstanceRef.current = editor;
@@ -186,13 +178,11 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
       [
         isClient,
         editorHeight,
-        value,
         defaultPlaceholder,
         themeMode.theme,
         autoFocus,
         comment,
         linkId,
-        onChange,
         t,
       ],
     );
@@ -225,11 +215,11 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
     useEffect(() => {
       if (
         editorInstanceRef.current &&
-        value !== editorInstanceRef.current.getMarkdown()
+        initialValue !== editorInstanceRef.current.getMarkdown()
       ) {
-        editorInstanceRef.current.setMarkdown(value);
+        editorInstanceRef.current.setMarkdown(initialValue);
       }
-    }, [value]);
+    }, [initialValue]);
 
     // 在服务器端或客户端未就绪时显示加载状态
     if (!isClient) {
