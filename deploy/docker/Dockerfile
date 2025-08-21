@@ -1,5 +1,5 @@
 # 使用 Node.js 22 Alpine 作为基础镜像
-ARG BASEIMAGE=node:22-alpine3.16
+ARG BASEIMAGE=node:22-alpine
 
 FROM ${BASEIMAGE} AS base
 
