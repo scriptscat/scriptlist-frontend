@@ -134,9 +134,11 @@ export default function ScriptCard({
           <div className="flex-1">
             {/* 主标题区域 - 脚本图标 + 标题 + 版本 */}
             <div className="flex items-start gap-3 mb-3">
-              <div className="flex-shrink-0 mt-1">
-                <ScriptIcon script={script} size={40} />
-              </div>
+              {ScriptUtils.icon(script.script.meta_json) && (
+                <div className="flex-shrink-0 mt-1">
+                  <ScriptIcon script={script} size={40} />
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <Link
