@@ -260,10 +260,15 @@ export default function ScriptIssueClient({
                             className="flex items-center gap-1 text-sm"
                             style={{ color: token.colorTextSecondary }}
                           >
-                            <div className="flex items-center gap-1">
-                              <Avatar size={20} src={issue.avatar} />
-                              <span>{issue.username}</span>
-                            </div>
+                            <Link
+                              href={'/users/' + issue.user_id}
+                              target="_blank"
+                            >
+                              <div className="flex items-center gap-1">
+                                <Avatar size={20} src={issue.avatar} />
+                                <span>{issue.username}</span>
+                              </div>
+                            </Link>
                             <span>{'#' + issue.id}</span>
                             <span>{semDateTime(issue.createtime)}</span>
                             {issue.updatetime > 0 &&
