@@ -193,7 +193,8 @@
       "library_tooltip": "這是一個腳本使用的庫",
       "library_tag": "@require庫",
       "tag_label": "標籤：{name}",
-      "share_link": "分享連結"
+      "share_link": "分享連結",
+      "latest_script_version": "最新腳本版本"
     },
     "detail": {
       "crontab": {

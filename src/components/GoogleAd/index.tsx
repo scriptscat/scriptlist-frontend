@@ -51,8 +51,8 @@ const GoogleAd: React.FC<{
     <div
       className="ad"
       style={{
-        width: width === '100%' ? '100%' : width,
-        height,
+        // width: width === '100%' ? '100%' : width,
+        // height,
         maxHeight: height,
         overflow: 'hidden',
         textAlign: 'center',

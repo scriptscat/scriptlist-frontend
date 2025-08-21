@@ -193,7 +193,8 @@
       "library_tooltip": "这是一个脚本使用的库",
       "library_tag": "@require库",
       "tag_label": "标签：{name}",
-      "share_link": "分享链接"
+      "share_link": "分享链接",
+      "latest_script_version": "最新脚本版本"
     },
     "detail": {
       "crontab": {

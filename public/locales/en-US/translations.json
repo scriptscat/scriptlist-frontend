@@ -193,7 +193,8 @@
             "library_tooltip": "This is a library used by scripts",
             "library_tag": "@require Library",
             "tag_label": "Tag: {name}",
-            "share_link": "Share Link"
+            "share_link": "Share Link",
+            "latest_script_version": "Latest Script Version"
         },
         "detail": {
             "crontab": {

@@ -62,7 +62,7 @@ export default function InviteConfirm() {
   // 错误处理
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <Card className="w-full max-w-md shadow-lg">
           <Result
             status="error"
@@ -86,7 +86,7 @@ export default function InviteConfirm() {
   // 加载中
   if (!inviteData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md shadow-lg">
           <div className="text-center py-8">
             <Spin size="large" />
