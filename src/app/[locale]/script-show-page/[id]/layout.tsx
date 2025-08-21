@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import type { ScriptDetailLayoutProps, ScriptState } from './types';
 import ScriptLayoutProvider from './components/ScriptLayoutProvider';
 import scriptService from '@/lib/api/services/scripts';
+import GoogleAdScript from '@/components/GoogleAd/script';
 
 export default async function ScriptDetailLayout({
   children,
@@ -24,8 +25,11 @@ export default async function ScriptDetailLayout({
     console.warn('Failed to fetch script state:', error);
   }
   return (
-    <ScriptLayoutProvider script={script} scriptState={scriptState}>
-      {children}
-    </ScriptLayoutProvider>
+    <>
+      <GoogleAdScript />
+      <ScriptLayoutProvider script={script} scriptState={scriptState}>
+        {children}
+      </ScriptLayoutProvider>
+    </>
   );
 }

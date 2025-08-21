@@ -1,22 +1,24 @@
 'use client';
 
-import type { NextRouter } from 'next/router';
-import { withRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
+import Script from 'next/script';
 
-const GoogleAdScript: React.FC<{ router: NextRouter }> = ({ router }) => {
+const GoogleAdScript: React.FC = () => {
+  const pathname = usePathname();
+
   // 如果pathname匹配/script-show-page/\d+/
-  if (!/\/script-show-page\/\d+[/]?$/.test(router.pathname)) {
+  if (!/\/script-show-page\/\d+[/]?$/.test(pathname)) {
     return <></>;
   }
+
   return (
-    <>
-      <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8009073269666226"
-        crossOrigin="anonymous"
-      ></script>
-    </>
+    <Script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8009073269666226"
+      crossOrigin="anonymous"
+      strategy="afterInteractive"
+    />
   );
 };
 
-export default withRouter(GoogleAdScript);
+export default GoogleAdScript;
