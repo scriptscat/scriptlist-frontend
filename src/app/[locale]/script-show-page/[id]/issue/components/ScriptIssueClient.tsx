@@ -215,6 +215,11 @@ export default function ScriptIssueClient({
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
                 }}
+                onClick={() => {
+                  router.push(
+                    `/script-show-page/${scriptId}/issue/${issue.id}`,
+                  );
+                }}
               >
                 <div className="flex items-start gap-3">
                   {/* 主要内容 */}

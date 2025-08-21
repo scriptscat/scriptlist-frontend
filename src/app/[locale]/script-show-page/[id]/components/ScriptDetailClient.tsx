@@ -557,7 +557,7 @@ export default function ScriptDetailClient() {
                   </div>
                 </div>
 
-                <GoogleAd width="970px" height="100px" />
+                <GoogleAd className="mb-2" width="970px" height="100px" />
 
                 {/* 统计数据 - 移动到底部 */}
                 <div className="mt-auto">

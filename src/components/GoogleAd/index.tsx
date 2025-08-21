@@ -7,9 +7,10 @@ declare global {
 }
 
 const GoogleAd: React.FC<{
+  className?: string;
   width: string;
   height: string;
-}> = ({ width, height }) => {
+}> = ({ className, width, height }) => {
   useEffect(() => {
     let cnt = 0;
     let t: NodeJS.Timeout | null = setInterval(() => {
@@ -49,7 +50,7 @@ const GoogleAd: React.FC<{
 
   return (
     <div
-      className="ad"
+      className={'ad' + (className ? ` ${className}` : '')}
       style={{
         // width: width === '100%' ? '100%' : width,
         // height,

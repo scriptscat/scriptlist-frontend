@@ -44,35 +44,34 @@ export default function ScriptListCard({
           const itemId = item.id;
 
           return (
-            <List.Item className="!px-0 !py-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200">
-              <Link
-                href={`/script-show-page/${itemId}`}
-                className="overflow-hidden"
-              >
-                <div className="flex items-center gap-3 w-full px-2">
-                  {scriptIcon ? (
-                    <Avatar size={24} src={scriptIcon} shape="square" />
-                  ) : (
-                    <Tag
-                      className="!m-0"
-                      color={hashColor((index + 1).toString())}
-                      style={index === 9 ? { padding: '0 3px' } : {}}
-                    >
-                      {index + 1}
-                    </Tag>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <Text
-                      className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors block"
-                      ellipsis={{ tooltip: itemTitle }}
-                      title={itemTitle}
-                    >
-                      {itemTitle}
-                    </Text>
-                  </div>
+            <Link
+              href={`/script-show-page/${itemId}`}
+              className="ant-list-item overflow-hidden !px-0 !py-2 hover:!bg-gray-50 dark:hover:!bg-gray-700/50 cursor-pointer transition-all duration-200"
+              target="_blank"
+            >
+              <div className="flex items-center gap-3 w-full px-2">
+                {scriptIcon ? (
+                  <Avatar size={24} src={scriptIcon} shape="square" />
+                ) : (
+                  <Tag
+                    className="!m-0"
+                    color={hashColor((index + 1).toString())}
+                    style={index === 9 ? { padding: '0 3px' } : {}}
+                  >
+                    {index + 1}
+                  </Tag>
+                )}
+                <div className="flex-1 min-w-0">
+                  <Text
+                    className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors block"
+                    ellipsis={{ tooltip: itemTitle }}
+                    title={itemTitle}
+                  >
+                    {itemTitle}
+                  </Text>
                 </div>
-              </Link>
-            </List.Item>
+              </div>
+            </Link>
           );
         }}
       />
