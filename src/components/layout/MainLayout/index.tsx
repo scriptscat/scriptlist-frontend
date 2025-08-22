@@ -123,6 +123,7 @@ export default function MainLayout({
                 color: '#1296DB',
                 fontWeight: 'bold',
               }}
+              className="!text-xl md:!text-2xl"
             >
               {'ScriptCat'}
             </Title>
