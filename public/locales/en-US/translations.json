@@ -194,7 +194,8 @@
             "library_tag": "@require Library",
             "tag_label": "Tag: {name}",
             "share_link": "Share Link",
-            "latest_script_version": "Latest Script Version"
+            "latest_script_version": "Latest Script Version",
+            "view_detail": "View Details"
         },
         "detail": {
             "crontab": {

@@ -194,7 +194,8 @@
       "library_tag": "@require庫",
       "tag_label": "標籤：{name}",
       "share_link": "分享連結",
-      "latest_script_version": "最新腳本版本"
+      "latest_script_version": "最新腳本版本",
+      "view_detail": "查看詳情"
     },
     "detail": {
       "crontab": {

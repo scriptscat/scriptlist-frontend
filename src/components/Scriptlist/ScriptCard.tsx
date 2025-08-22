@@ -214,11 +214,11 @@ export default function ScriptCard({
             </div>
 
             <div
-              className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed line-clamp-4 overflow-hidden"
+              className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed line-clamp-2 overflow-hidden"
               title={scriptDescription}
               style={{
                 display: '-webkit-box',
-                WebkitLineClamp: 4,
+                WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
               }}
@@ -251,6 +251,13 @@ export default function ScriptCard({
               </ActionMenu>
             </div>
             <div className="flex flex-col gap-2">
+              <Link
+                href={`/script-show-page/${script.id}`}
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Button type="primary">{t('view_detail')}</Button>
+              </Link>
               {actions && actions.length > 0 && (
                 <div className="flex flex-col gap-1">
                   {actions.map((action) => {

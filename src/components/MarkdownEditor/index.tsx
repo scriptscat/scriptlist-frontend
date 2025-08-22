@@ -190,7 +190,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
     // 初始化编辑器
     useEffect(() => {
       if (isClient) {
-        createEditor();
+        createEditor(initialValue);
       }
 
       return () => {
