@@ -255,6 +255,7 @@ export default function ScriptCard({
                 href={`/script-show-page/${script.id}`}
                 target="_blank"
                 onClick={(e) => e.stopPropagation()}
+                className="hidden md:inline"
               >
                 <Button type="primary">{t('view_detail')}</Button>
               </Link>

@@ -73,7 +73,7 @@ export default function UserAuth() {
           src={user.avatar}
           icon={!user.avatar && <UserOutlined />}
         />
-        <span>{user.username}</span>
+        <span className="hidden lg:inline">{user.username}</span>
       </Space>
     </Dropdown>
   );
