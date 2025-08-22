@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { marked } from 'marked';
 import { usePathname } from 'next/navigation';
 import Prism from 'prismjs';
@@ -65,25 +65,11 @@ const createRenderer = (baseUrl = '') => {
   return renderer;
 };
 
-const MarkdownView: React.FC<MarkdownViewProps> = ({ content }) => {
+const MarkdownView: React.FC<MarkdownViewProps> = React.memo(({ content }) => {
   const pathname = usePathname();
   const currentBaseUrl = pathname;
   const { themeMode } = useTheme();
-
-  const html = marked(content, {
-    gfm: true,
-    renderer: createRenderer(currentBaseUrl),
-    breaks: true,
-  });
-
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // 只在内容变化时进行高亮，主题变化时会在主题加载完成后自动高亮
-    if (ref.current && html) {
-      Prism.highlightAllUnder(ref.current, false);
-    }
-  }, [html, themeMode]);
+  const [isClient, setIsClient] = useState(false);
 
   const l = whiteList;
   l.input = ['type', 'checked', 'disabled'];
@@ -94,20 +80,60 @@ const MarkdownView: React.FC<MarkdownViewProps> = ({ content }) => {
   l.h4 = ['id'];
   l.h5 = ['id'];
   l.h6 = ['id'];
-  return (
-    <div
-      className="markdown-body"
-      data-prismjs-copy="copy"
-      data-prismjs-copy-error="error"
-      data-prismjs-copy-success="success"
-      dangerouslySetInnerHTML={{
-        __html: xss(html as string, {
-          whiteList: l,
-        }),
-      }}
-      ref={ref}
-    ></div>
-  );
-};
+
+  // 使用 useMemo 来确保服务器端和客户端渲染一致的内容
+  const html = React.useMemo(() => {
+    return xss(
+      marked(content, {
+        gfm: true,
+        renderer: createRenderer(currentBaseUrl),
+        breaks: true,
+      }) as string,
+      { whiteList: l },
+    );
+  }, [content, currentBaseUrl, l]);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  // 确保组件已经在客户端挂载
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    // 只在客户端挂载后且内容变化时进行高亮
+    if (isClient && ref.current && html) {
+      // 使用 requestAnimationFrame 确保 DOM 更新完成
+      requestAnimationFrame(() => {
+        if (ref.current) {
+          Prism.highlightAllUnder(ref.current, false);
+        }
+      });
+    }
+  }, [isClient, html]);
+
+  // 使用 useMemo 缓存渲染的 div 元素
+  const memoizedDiv = React.useMemo(
+    () => (
+      <div
+        key="markdown-container"
+        className="markdown-body"
+        data-prismjs-copy="copy"
+        data-prismjs-copy-error="error"
+        data-prismjs-copy-success="success"
+        dangerouslySetInnerHTML={{
+          __html: html,
+        }}
+        ref={ref}
+        suppressHydrationWarning={true}
+      ></div>
+    ),
+    [html],
+  ); // 只有当 html 内容真正改变时才重新渲染
+
+  return memoizedDiv;
+});
+
+MarkdownView.displayName = 'MarkdownView';
 
 export default MarkdownView;
