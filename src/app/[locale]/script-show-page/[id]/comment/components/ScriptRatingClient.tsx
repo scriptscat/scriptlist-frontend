@@ -15,6 +15,7 @@ import {
   type SortOption,
   type RatingStats,
 } from './rating';
+import { calculateRatingStats } from './rating/utils';
 
 interface ScriptRatingClientProps {
   initialData: ListData<ScoreListItem> | null;
@@ -46,20 +47,8 @@ export default function ScriptRatingClient({
       const scoreState = await scriptService.getScoreState(scriptId);
       if (!scoreState) return;
 
-      const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-      let totalScore = 0;
-      const totalRatings = scoreState.score_user_count;
-
-      // 填充分布数据
-      Object.entries(scoreState.score_group).forEach(([score, count]) => {
-        const scoreNum = parseInt(score);
-        if (scoreNum >= 1 && scoreNum <= 5) {
-          distribution[scoreNum as keyof typeof distribution] = count;
-          totalScore += scoreNum * count;
-        }
-      });
-
-      const averageRating = totalRatings > 0 ? totalScore / totalRatings : 0;
+      const { averageRating, totalRatings, distribution } =
+        calculateRatingStats(scoreState);
 
       setRatingStats({
         averageRating,

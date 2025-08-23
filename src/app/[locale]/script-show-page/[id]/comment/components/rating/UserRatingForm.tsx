@@ -39,7 +39,7 @@ export default function UserRatingForm({
   // 当存在已有评分时，初始化表单数据
   useEffect(() => {
     if (existingRating && !isEditing) {
-      setUserRating(existingRating.score);
+      setUserRating(existingRating.score / 10);
       setUserComment(existingRating.message);
     }
   }, [existingRating, isEditing]);
@@ -58,11 +58,11 @@ export default function UserRatingForm({
     try {
       if (existingRating && onUpdateRating) {
         // 更新已有评分
-        await onUpdateRating(existingRating.id, userRating, userComment);
+        await onUpdateRating(existingRating.id, userRating * 10, userComment);
         setIsEditing(false);
       } else {
         // 创建新评分
-        await onSubmitRating(userRating, userComment);
+        await onSubmitRating(userRating * 10, userComment);
         setUserRating(0);
         setUserComment('');
       }

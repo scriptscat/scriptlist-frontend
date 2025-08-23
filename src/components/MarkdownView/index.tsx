@@ -68,7 +68,6 @@ const createRenderer = (baseUrl = '') => {
 const MarkdownView: React.FC<MarkdownViewProps> = React.memo(({ content }) => {
   const pathname = usePathname();
   const currentBaseUrl = pathname;
-  const { themeMode } = useTheme();
   const [isClient, setIsClient] = useState(false);
 
   const l = whiteList;

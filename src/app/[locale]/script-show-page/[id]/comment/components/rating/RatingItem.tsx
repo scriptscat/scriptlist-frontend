@@ -78,7 +78,7 @@ export default function RatingItem({
                 </Link>
                 <Rate
                   disabled
-                  value={rating.score}
+                  value={rating.score / 10}
                   className="text-sm"
                   character={<StarFilled />}
                 />
