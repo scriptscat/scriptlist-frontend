@@ -5,7 +5,6 @@ import { marked } from 'marked';
 import { usePathname } from 'next/navigation';
 import Prism from 'prismjs';
 import xss, { whiteList } from 'xss';
-import { useTheme } from '@/contexts/ThemeClientContext';
 import 'prismjs/plugins/toolbar/prism-toolbar.min.css';
 import 'prismjs/plugins/toolbar/prism-toolbar.min';
 import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min';
