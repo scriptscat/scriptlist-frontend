@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/next-script-for-ga */
 import { cookies } from 'next/headers';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { UserProvider } from '@/contexts/UserContext';
