@@ -1,6 +1,7 @@
 'use client';
 
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
+import * as monaco from 'monaco-editor';
 import { useTheme } from '@/contexts/ThemeClientContext';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
@@ -17,6 +18,12 @@ export interface MonacoEditorRef {
   getValue: () => string | undefined;
   setValue: (value: string) => void;
 }
+
+loader.config({
+  paths: {
+    vs: '/assets/monaco-editor/min/vs',
+  },
+});
 
 const MonacoEditor = forwardRef<MonacoEditorRef, MonacoEditorProps>(
   (
@@ -56,30 +63,6 @@ const MonacoEditor = forwardRef<MonacoEditorRef, MonacoEditorProps>(
             lineNumbers: 'on',
             wordWrap: 'on',
             automaticLayout: true,
-          }}
-          beforeMount={() => {
-            // Configure Monaco Editor to use local assets
-            (self as any).MonacoEnvironment = {
-              getWorkerUrl: function (moduleId: string, label: string) {
-                if (label === 'json') {
-                  return '/assets/monaco-editor/min/vs/language/json/json.worker.js';
-                }
-                if (label === 'css' || label === 'scss' || label === 'less') {
-                  return '/assets/monaco-editor/min/vs/language/css/css.worker.js';
-                }
-                if (
-                  label === 'html' ||
-                  label === 'handlebars' ||
-                  label === 'razor'
-                ) {
-                  return '/assets/monaco-editor/min/vs/language/html/html.worker.js';
-                }
-                if (label === 'typescript' || label === 'javascript') {
-                  return '/assets/monaco-editor/min/vs/language/typescript/ts.worker.js';
-                }
-                return '/assets/monaco-editor/min/vs/editor/editor.worker.js';
-              },
-            };
           }}
         />
       </div>
