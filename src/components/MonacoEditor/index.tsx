@@ -1,7 +1,6 @@
 'use client';
 
 import Editor, { loader } from '@monaco-editor/react';
-import * as monaco from 'monaco-editor';
 import { useTheme } from '@/contexts/ThemeClientContext';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
