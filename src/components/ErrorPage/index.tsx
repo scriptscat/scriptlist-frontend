@@ -71,7 +71,7 @@ export default function ErrorPage({
   const getResultStatus = () => {
     if (statusCode >= 500) return '500';
     if (statusCode === 404) return '404';
-    if (statusCode === 403) return '403';
+    if (statusCode === 403 || statusCode === 401) return '403';
     return 'error';
   };
 
@@ -82,6 +82,8 @@ export default function ErrorPage({
         return t('error.404_title');
       case 403:
         return t('error.403_title');
+      case 401:
+        return t('error.401_title');
       case 500:
       default:
         return t('error.500_title');
@@ -95,6 +97,8 @@ export default function ErrorPage({
         return t('error.404_subtitle');
       case 403:
         return t('error.403_subtitle');
+      case 401:
+        return t('error.401_subtitle');
       case 500:
       default:
         return t('error.500_subtitle');
@@ -108,6 +112,8 @@ export default function ErrorPage({
         return t('error.404_description');
       case 403:
         return t('error.403_description');
+      case 401:
+        return t('error.401_description');
       case 500:
       default:
         return t('error.500_description');

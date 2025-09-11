@@ -1,3 +1,5 @@
+[![Crowdin](https://badges.crowdin.net/scriptlist/localized.svg)](https://crowdin.com/project/scriptlist)
+
 # 脚本猫脚本站
 
 一个类似 GreasyFork 的用户脚本分享平台，支持脚本发布、浏览、下载和管理
@@ -62,4 +64,3 @@ NEXT_PUBLIC_APP_BBS_OAUTH_CLIENT = 'dC37Fgznr5aAFZU'
 pnpm build
 pnpm start
 ```
-
