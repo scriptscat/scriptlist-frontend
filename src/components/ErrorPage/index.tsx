@@ -90,21 +90,6 @@ export default function ErrorPage({
     }
   };
 
-  const getErrorSubtitle = () => {
-    if (subtitle) return subtitle;
-    switch (statusCode) {
-      case 404:
-        return t('error.404_subtitle');
-      case 403:
-        return t('error.403_subtitle');
-      case 401:
-        return t('error.401_subtitle');
-      case 500:
-      default:
-        return t('error.500_subtitle');
-    }
-  };
-
   const getErrorDescription = () => {
     if (description) return description;
     switch (statusCode) {
@@ -126,7 +111,7 @@ export default function ErrorPage({
         <Result
           status={getResultStatus() as any}
           title={getErrorTitle()}
-          subTitle={getErrorSubtitle()}
+          subTitle={getErrorDescription()}
           extra={
             <Space size="middle">
               <Button
