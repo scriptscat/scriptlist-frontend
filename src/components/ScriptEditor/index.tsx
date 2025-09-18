@@ -34,6 +34,8 @@ import {
 } from '@/app/[locale]/script-show-page/[id]/utils';
 import type { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
 import { useCategoryList } from '@/lib/api/hooks';
+import { ApiError } from 'next/dist/server/api-utils';
+import { APIError } from '@/types/api';
 
 const { Text, Link } = Typography;
 
@@ -160,13 +162,17 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
       );
     } catch (error: any) {
       console.error('Submit failed:', error);
-      message.error(
-        t('messages.submit_failed') +
-          ' ' +
-          (script
-            ? t('messages.script_update_failed')
-            : t('messages.script_create_failed')),
-      );
+      if (error instanceof APIError) {
+        message.error(`${t('messages.submit_failed')} ${error.msg}`);
+      } else {
+        message.error(
+          `${t('messages.submit_failed')} ${
+            script
+              ? t('messages.script_update_failed')
+              : t('messages.script_create_failed')
+          }`,
+        );
+      }
     } finally {
       setLoading(false);
     }
