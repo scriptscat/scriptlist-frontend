@@ -29,7 +29,6 @@ interface ErrorPageProps {
 export default function ErrorPage({
   statusCode = 500,
   title,
-  subtitle,
   description,
   showErrorDetails = true,
   showFeedback = true,

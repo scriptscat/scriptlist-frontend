@@ -34,7 +34,6 @@ import {
 } from '@/app/[locale]/script-show-page/[id]/utils';
 import type { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
 import { useCategoryList } from '@/lib/api/hooks';
-import { ApiError } from 'next/dist/server/api-utils';
 import { APIError } from '@/types/api';
 
 const { Text, Link } = Typography;

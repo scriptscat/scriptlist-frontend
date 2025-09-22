@@ -10,7 +10,7 @@ type ScriptDiffClientProps = {
   script1: ScriptInfo;
   script2: ScriptInfo;
   version1: string;
-  version2: string;
+  version2?: string;
   id2?: string;
 };
 
