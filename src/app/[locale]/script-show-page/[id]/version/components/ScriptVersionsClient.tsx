@@ -25,6 +25,7 @@ import {
   CalendarOutlined,
   TagOutlined,
   HistoryOutlined,
+  DiffOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { useScript } from '../../components/ScriptContext';
@@ -41,6 +42,7 @@ import { Link } from '@/i18n/routing';
 import MarkdownView from '@/components/MarkdownView';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 
 const { Text, Title, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -65,6 +67,7 @@ export default function ScriptVersionsClient({
 }: ScriptVersionsClientProps) {
   const { script } = useScript();
   const t = useTranslations('script.version');
+  const router = useRouter();
   const [editingVersion, setEditingVersion] = useState<ScriptVersion | null>(
     null,
   );
@@ -74,6 +77,9 @@ export default function ScriptVersionsClient({
   const [pageSize, setPageSize] = useState(initialPageSize);
   const [form] = Form.useForm<EditVersionForm>();
   const isPreRelease = Form.useWatch('is_pre_release', form);
+
+  // 版本对比状态管理
+  const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 
   // 使用传入的版本数据
   const [versionData, setVersionData] =
@@ -182,11 +188,33 @@ export default function ScriptVersionsClient({
     }
   };
 
-  const handleInstall = (version: ScriptVersion) => {
-    // TODO: 处理安装逻辑，可能需要跳转到安装页面或下载文件
-    const installUrl = `/scripts/${script.id}/install?version=${version.version}`;
-    window.open(installUrl, '_blank');
-    message.success(t('install_success', { version: version.version }));
+  // 处理版本选择用于对比
+  const handleVersionSelect = (version: ScriptVersion) => {
+    const versionId = version.version;
+
+    if (selectedVersions.includes(versionId)) {
+      // 取消选择
+      setSelectedVersions((prev) => prev.filter((id) => id !== versionId));
+    } else {
+      // 选择版本
+      setSelectedVersions((prev) => {
+        const newSelected = [...prev, versionId];
+
+        // 如果选择了超过2个版本，移除最早选择的版本
+        if (newSelected.length > 2) {
+          newSelected.shift();
+        }
+
+        // 如果现在有2个版本被选择，自动跳转到对比页面
+        if (newSelected.length === 2) {
+          router.push(
+            `/script-show-page/${script.id}/diff?version1=${newSelected[0]}&version2=${newSelected[1]}`,
+          );
+        }
+
+        return newSelected;
+      });
+    }
   };
 
   const getVersionBadge = (version: ScriptVersion, index: number) => {
@@ -398,7 +426,14 @@ export default function ScriptVersionsClient({
                       type="primary"
                       size="small"
                       icon={<DownloadOutlined />}
-                      onClick={() => handleInstall(version)}
+                      href={
+                        '/scripts/code/' +
+                        script.id +
+                        '/' +
+                        encodeURIComponent(script.name) +
+                        '.user.js?version=' +
+                        version.version
+                      }
                       className="w-full sm:w-auto"
                     >
                       {t('install_button')}
@@ -414,6 +449,24 @@ export default function ScriptVersionsClient({
                         {t('view_code_button')}
                       </Button>
                     </Link>
+                    <Button
+                      size="small"
+                      color={
+                        selectedVersions.includes(version.version)
+                          ? 'primary'
+                          : 'default'
+                      }
+                      variant="outlined"
+                      icon={<DiffOutlined />}
+                      onClick={() => handleVersionSelect(version)}
+                      disabled={
+                        selectedVersions.length >= 2 &&
+                        !selectedVersions.includes(version.version)
+                      }
+                      className="w-full sm:w-auto"
+                    >
+                      {t('compare_button')}
+                    </Button>
                   </div>
                 </div>
               </Card>

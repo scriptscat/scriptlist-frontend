@@ -593,6 +593,7 @@
       "delete_button": "删除",
       "install_button": "安装此版本",
       "view_code_button": "查看代码",
+      "compare_button": "对比",
       "confirm_delete_title": "确认删除",
       "confirm_delete_description": "确定要删除这个版本吗？此操作不可撤销。",
       "confirm_delete_ok": "删除",
@@ -937,6 +938,9 @@
       "save_gray_strategy_failed": "保存灰度发布策略失败:",
       "save_failed": "保存失败",
       "save_and_apply_strategy": "保存并应用策略"
+    },
+    "diff": {
+      "compare_hint": "您可以在URL中添加 id2=scriptId 参数来对比不同的脚本"
     }
   },
   "error": {

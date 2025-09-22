@@ -15,6 +15,7 @@ export const PAGE_SUFFIXES = {
   issue: { title: 'issue', description: 'issue' },
   manage: { title: 'manage', description: 'manage' },
   update: { title: 'update', description: 'update' },
+  diff: { title: 'code', description: 'code' },
 } as const;
 
 export type PageType = keyof typeof PAGE_SUFFIXES;
@@ -31,6 +32,8 @@ export async function generateScriptMetadata(
   locale: string,
   params?: {
     version?: string;
+    version1?: string;
+    version2?: string;
   },
 ): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: 'script.metadata' });
@@ -53,6 +56,9 @@ export async function generateScriptMetadata(
       : scriptDescription;
     if (params?.version) {
       title += ` - v${params.version}`;
+    }
+    if (params?.version1 && params?.version2) {
+      title += ` - v${params.version1} vs v${params.version2}`;
     }
     return {
       title: title + ' | ScriptCat',
