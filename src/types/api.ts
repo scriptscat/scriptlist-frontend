@@ -26,7 +26,6 @@ export class APIError extends Error {
   ) {
     super(msg);
     this.name = 'APIError';
-    this.message = JSON.stringify({ statusCode, code, msg, data });
   }
 }
 

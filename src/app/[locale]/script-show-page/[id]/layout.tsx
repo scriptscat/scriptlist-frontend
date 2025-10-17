@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
-import type { ScriptDetailLayoutProps, ScriptInfo, ScriptState } from './types';
+import type { ScriptDetailLayoutProps, ScriptState } from './types';
 import ScriptLayoutProvider from './components/ScriptLayoutProvider';
 import scriptService from '@/lib/api/services/scripts';
 import GoogleAdScript from '@/components/GoogleAd/script';
+import ErrorPage from '@/components/ErrorPage';
+import { APIError } from '@/types/api';
 
 export default async function ScriptDetailLayout({
   children,
@@ -10,10 +12,25 @@ export default async function ScriptDetailLayout({
 }: ScriptDetailLayoutProps) {
   // 使用缓存版本避免与metadata中的重复请求
   const { id } = await params;
-  const script = await scriptService.infoCached(id);
+  let script;
+  try {
+    script = await scriptService.infoCached(id);
 
-  if (!script) {
-    notFound();
+    if (!script) {
+      notFound();
+    }
+  } catch (error) {
+    if (error instanceof APIError) {
+      return (
+        <ErrorPage
+          error={error}
+          statusCode={error.statusCode}
+          showErrorDetails={error.statusCode >= 500}
+          showFeedback={error.statusCode >= 500}
+        />
+      );
+    }
+    throw error;
   }
 
   // 获取脚本状态（关注状态等）
