@@ -55,7 +55,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
             {t('issue')}
           </Link>
           {scriptState?.issue_count! > 0 && (
-            <span className="inline-block px-2 py-0.5 text-xs font-medium leading-4 text-gray-300 bg-gray-600 rounded-full">
+            <span className="inline-block px-2 py-0.5 text-xs font-medium leading-4 bg-gray-300 text-white dark:text-gray-200 dark:bg-gray-600 rounded-full">
               {scriptState?.issue_count}
             </span>
           )}

@@ -32,6 +32,7 @@ interface MarkdownEditorProps {
   rows?: number; // 向后兼容，会转换为 height
   className?: string;
   autoFocus?: boolean; // 是否自动获取焦点
+  onChange?: (value: string) => void; // 内容变化回调
   addImageBlobHook?: (
     blob: Blob | File,
     callback: (url: string, text?: string) => void,
@@ -60,6 +61,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
       rows,
       className = '',
       autoFocus = false, // 默认不自动获取焦点
+      onChange,
       comment,
       linkId = 0,
     },
@@ -168,6 +170,15 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
                 return false;
               },
             },
+            events: {
+              change: () => {
+                // 当编辑器内容变化时，触发 onChange 回调
+                if (onChange && editor) {
+                  const currentValue = editor.getMarkdown();
+                  onChange(currentValue);
+                }
+              },
+            },
           });
 
           editorInstanceRef.current = editor;
@@ -181,6 +192,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
         defaultPlaceholder,
         themeMode.theme,
         autoFocus,
+        onChange,
         comment,
         linkId,
         t,

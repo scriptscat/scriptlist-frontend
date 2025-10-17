@@ -37,7 +37,7 @@ import {
   scriptIssueService,
   type Issue,
 } from '@/lib/api/services/scripts/issue';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useScript } from '../../../components/ScriptContext';
 import { useUser } from '@/contexts/UserContext';
 import { useLocale, useTranslations } from 'next-intl';
@@ -96,6 +96,7 @@ export default function IssueCommentClient({
   const formatDate = useSemDateTime();
   const t = useTranslations('script.issue.comment');
   const tIssue = useTranslations('script.issue');
+  const [commentContent, setCommentContent] = useState('');
 
   // 使用 hook 获取关注状态
   const { data: isWatch, mutate: mutateIsWatch } = useIsWatchIssue(
@@ -109,6 +110,10 @@ export default function IssueCommentClient({
   list.forEach((item) => {
     joinMember[item.user_id] = item.avatar;
   });
+
+  const onCommentChange = useCallback((value: string) => {
+    setCommentContent(value);
+  }, []);
 
   return (
     <Card>
@@ -343,6 +348,7 @@ export default function IssueCommentClient({
                 ref={editor}
                 comment="comment"
                 linkId={issueId}
+                onChange={onCommentChange}
               />
               <Space className="justify-end">
                 {(user.user.user_id == issue.user_id ||
@@ -354,26 +360,16 @@ export default function IssueCommentClient({
                       setLoading(true);
                       try {
                         const newStatus = status == 1 ? 3 : 1;
-                        if (newStatus === 3) {
-                          await scriptIssueService.closeIssue(
-                            scriptId,
-                            issueId,
-                          );
-                        } else {
-                          await scriptIssueService.openIssue(scriptId, issueId);
-                        }
+                        const resp = await scriptIssueService.openIssue(
+                          scriptId,
+                          issueId,
+                          {
+                            close: newStatus === 3,
+                            content: commentContent,
+                          },
+                        );
                         setStatus(newStatus);
-                        // 添加状态变更的评论项
-                        const mockComment: IssueComment = {
-                          id: Date.now(),
-                          content: '',
-                          type: newStatus == 3 ? 5 : 4,
-                          user_id: user.user!.user_id,
-                          username: user.user!.username,
-                          avatar: user.user!.avatar || '',
-                          createtime: Date.now() / 1000,
-                        };
-                        setList([...list, mockComment]);
+                        setList([...list, ...resp.comments]);
                         message.success(
                           newStatus === 3
                             ? t('feedback_closed')
@@ -385,7 +381,17 @@ export default function IssueCommentClient({
                       setLoading(false);
                     }}
                   >
-                    {status == 1 ? t('close_feedback') : t('reopen_feedback')}
+                    {status == 1
+                      ? t(
+                          'close' +
+                            (commentContent.length ? '_and_reply' : '') +
+                            '_feedback',
+                        )
+                      : t(
+                          'reopen' +
+                            (commentContent.length ? '_and_reply' : '') +
+                            '_feedback',
+                        )}
                   </Button>
                 )}
                 <Button

@@ -201,19 +201,22 @@ export class ScriptIssueService {
   }
 
   /**
-   * 关闭Issue
-   */
-  async closeIssue(scriptId: number, issueId: number): Promise<any> {
-    return apiClient.put(
-      `${this.basePath}/${scriptId}/issues/${issueId}/close`,
-    );
-  }
-
-  /**
    * 重新打开Issue
    */
-  async openIssue(scriptId: number, issueId: number): Promise<any> {
-    return apiClient.put(`${this.basePath}/${scriptId}/issues/${issueId}/open`);
+  async openIssue(
+    scriptId: number,
+    issueId: number,
+    options?: {
+      close?: boolean;
+      content?: string;
+    },
+  ): Promise<{
+    comments: IssueComment[];
+  }> {
+    return apiClient.put(
+      `${this.basePath}/${scriptId}/issues/${issueId}/open`,
+      options,
+    );
   }
 
   /**
