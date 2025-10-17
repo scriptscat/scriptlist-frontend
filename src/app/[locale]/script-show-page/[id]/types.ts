@@ -225,6 +225,7 @@ export interface ScriptState {
   favorite_ids: number[];
   watch_count: number;
   favorite_count: number;
+  issue_count: number;
 }
 
 // 脚本状态响应

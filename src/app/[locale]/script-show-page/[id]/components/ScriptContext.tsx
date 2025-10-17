@@ -48,6 +48,7 @@ export function useScriptState() {
       favorite_ids: [],
       watch_count: 0,
       favorite_count: 0,
+      issue_count: 0,
     }
   );
 }

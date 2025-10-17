@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Menu } from 'antd';
+import { Menu, Space } from 'antd';
 import {
   BookOutlined,
   CodeOutlined,
@@ -16,7 +16,7 @@ import {
 import useToken from 'antd/es/theme/useToken';
 import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
-import { useScript } from './ScriptContext';
+import { useScript, useScriptState } from './ScriptContext';
 
 interface ScriptNavigationProps {
   activeKey: string;
@@ -26,6 +26,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
   const params = useParams();
   const user = useUser();
   const script = useScript();
+  const scriptState = useScriptState();
   const [_, token] = useToken();
   const t = useTranslations('script.navigation');
   const { locale, id } = params;
@@ -49,9 +50,16 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
       key: 'issue',
       icon: <BugOutlined />,
       label: (
-        <Link href={`/${locale}/script-show-page/${id}/issue`}>
-          {t('issue')}
-        </Link>
+        <Space>
+          <Link href={`/${locale}/script-show-page/${id}/issue`}>
+            {t('issue')}
+          </Link>
+          {scriptState?.issue_count! > 0 && (
+            <span className="inline-block px-2 py-0.5 text-xs font-medium leading-4 text-gray-300 bg-gray-600 rounded-full">
+              {scriptState?.issue_count}
+            </span>
+          )}
+        </Space>
       ),
     },
     {

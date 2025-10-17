@@ -15,7 +15,7 @@ export type Issue = {
   status: IssueStatusType; // 0:删除 1: 待解决 3: 已关闭
   createtime: number;
   updatetime: number;
-  replies_count?: number; // 回复数量，可选字段
+  comment_count: number; // 回复数量，可选字段
 };
 
 export type IssueListParams = {

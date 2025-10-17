@@ -290,7 +290,7 @@ export default function ScriptIssueClient({
                             style={{ color: token.colorTextSecondary }}
                           >
                             <MessageOutlined style={{ fontSize: '16px' }} />
-                            <span>{issue.replies_count || 0}</span>
+                            <span>{issue.comment_count || 0}</span>
                           </div>
                           {/* <Button
                           type="text"
