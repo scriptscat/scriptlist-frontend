@@ -20,7 +20,7 @@ export default async function ScriptDetailLayout({
       notFound();
     }
   } catch (error) {
-    if (error instanceof APIError) {
+    if (error instanceof APIError && error.statusCode > 0) {
       return (
         <ErrorPage
           error={error}
