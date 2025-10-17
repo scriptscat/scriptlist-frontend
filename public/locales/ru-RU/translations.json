@@ -193,7 +193,9 @@
       "library_tooltip": "Это библиотека, используемая скриптом",
       "library_tag": "@require библиотека",
       "tag_label": "Тег: {name}",
-      "share_link": "Поделиться ссылкой"
+      "share_link": "Поделиться ссылкой",
+      "latest_script_version": "Последняя версия скрипта",
+      "view_detail": "Подробней"
     },
     "detail": {
       "crontab": {
@@ -591,6 +593,7 @@
       "delete_button": "Удалить",
       "install_button": "Установить эту версию",
       "view_code_button": "Просмотреть код",
+      "compare_button": "Сравнить",
       "confirm_delete_title": "Подтвердить удаление",
       "confirm_delete_description": "Вы уверены, что хотите удалить эту версию? Это действие нельзя отменить.",
       "confirm_delete_ok": "Удалить",
@@ -935,6 +938,9 @@
       "save_gray_strategy_failed": "Не удалось сохранить стратегию канареечного релиза:",
       "save_failed": "Сохранение не удалось",
       "save_and_apply_strategy": "Сохранить и применить стратегию"
+    },
+    "diff": {
+      "compare_hint": "Вы можете добавить параметр id2=scriptId к URL-адресу для сравнения различных скриптов."
     }
   },
   "error": {

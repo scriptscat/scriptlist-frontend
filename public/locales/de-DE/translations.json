@@ -193,7 +193,9 @@
       "library_tooltip": "Dies ist eine Bibliothek, die von Skripten verwendet wird",
       "library_tag": "@require-Bibliothek",
       "tag_label": "Tag: {name}",
-      "share_link": "Link teilen"
+      "share_link": "Link teilen",
+      "latest_script_version": "Neueste Skriptversion",
+      "view_detail": "Details anzeigen"
     },
     "detail": {
       "crontab": {
@@ -591,6 +593,7 @@
       "delete_button": "Löschen",
       "install_button": "Diese Version installieren",
       "view_code_button": "Code anzeigen",
+      "compare_button": "Vergleichen",
       "confirm_delete_title": "Löschen bestätigen",
       "confirm_delete_description": "Möchten Sie diese Version wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
       "confirm_delete_ok": "Löschen",
@@ -935,6 +938,9 @@
       "save_gray_strategy_failed": "Speichern der Graustufenveröffentlichungsstrategie fehlgeschlagen:",
       "save_failed": "Speichern fehlgeschlagen",
       "save_and_apply_strategy": "Strategie speichern und anwenden"
+    },
+    "diff": {
+      "compare_hint": "Sie können der URL den Parameter id2=scriptId hinzufügen, um verschiedene Skripte zu vergleichen."
     }
   },
   "error": {

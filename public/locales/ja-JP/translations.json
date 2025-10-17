@@ -193,7 +193,9 @@
       "library_tooltip": "これはスクリプトが使用するライブラリです",
       "library_tag": "@requireライブラリ",
       "tag_label": "タグ：{name}",
-      "share_link": "共有リンク"
+      "share_link": "共有リンク",
+      "latest_script_version": "最新のスクリプトバージョン",
+      "view_detail": "詳細を見る"
     },
     "detail": {
       "crontab": {
@@ -591,6 +593,7 @@
       "delete_button": "削除",
       "install_button": "このバージョンをインストール",
       "view_code_button": "コードを表示",
+      "compare_button": "比較",
       "confirm_delete_title": "削除の確認",
       "confirm_delete_description": "このバージョンを削除してもよろしいですか？この操作は取り消せません。",
       "confirm_delete_ok": "削除",
@@ -935,6 +938,9 @@
       "save_gray_strategy_failed": "グレースケールリリース戦略の保存に失敗しました:",
       "save_failed": "保存に失敗しました",
       "save_and_apply_strategy": "戦略を保存して適用"
+    },
+    "diff": {
+      "compare_hint": "異なるスクリプトを比較するには、URL に id2=scriptId パラメータを追加できます。"
     }
   },
   "error": {

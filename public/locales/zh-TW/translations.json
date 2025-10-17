@@ -593,6 +593,7 @@
       "delete_button": "刪除",
       "install_button": "安裝此版本",
       "view_code_button": "查看程式碼",
+      "compare_button": "對比",
       "confirm_delete_title": "確認刪除",
       "confirm_delete_description": "確定要刪除這個版本嗎？此操作不可撤銷。",
       "confirm_delete_ok": "刪除",
@@ -937,6 +938,9 @@
       "save_gray_strategy_failed": "儲存灰度發布策略失敗:",
       "save_failed": "儲存失敗",
       "save_and_apply_strategy": "儲存並應用策略"
+    },
+    "diff": {
+      "compare_hint": "您可以在網址中加入 id2=scriptId 參數來比較不同的腳本"
     }
   },
   "error": {
