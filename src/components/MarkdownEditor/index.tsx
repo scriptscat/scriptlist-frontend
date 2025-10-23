@@ -186,17 +186,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
           console.error('Failed to create editor:', error);
         }
       },
-      [
-        isClient,
-        editorHeight,
-        defaultPlaceholder,
-        themeMode.theme,
-        autoFocus,
-        onChange,
-        comment,
-        linkId,
-        t,
-      ],
+      [isClient, editorRef],
     );
 
     // 初始化编辑器
