@@ -35,8 +35,8 @@ export default function NotificationSettings({
   } = useUserConfig();
   const { updateNotify } = useUpdateUserNotify();
 
-  // 优先使用服务端传入的配置，其次使用hook获取的数据
-  const notifyChecked = initialConfig || userConfig?.notify || {};
+  // 使用本地状态管理通知配置，优先使用SWR数据，其次使用服务端初始配置
+  const notifyChecked = userConfig?.notify || initialConfig || {};
   const isLoading = !initialConfig && !userConfig && !configError;
 
   const notifyCategories = [
@@ -104,13 +104,26 @@ export default function NotificationSettings({
     };
 
     try {
+      // 先乐观更新UI
+      mutateConfig(
+        (current) => ({
+          ...current,
+          notify: newNotifyChecked,
+        }),
+        false,
+      );
+
+      // 然后发送请求到服务器
       await updateNotify(newNotifyChecked);
-      // 更新SWR缓存
-      mutateConfig({ notify: newNotifyChecked }, false);
       message.success(t('settings_saved'));
+
+      // 请求成功后重新验证数据
+      mutateConfig();
     } catch (error) {
       console.error('Failed to update notification settings:', error);
       message.error(t('save_failed'));
+      // 失败时回滚到原始状态
+      mutateConfig();
     } finally {
       setSavingKey('');
     }
