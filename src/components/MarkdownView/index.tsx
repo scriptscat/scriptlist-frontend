@@ -39,14 +39,13 @@ const createRenderer = (baseUrl = '') => {
       }
     }
 
-    const text = tokens?.[0]?.raw || '';
     return (
       '<a href="' +
       url +
       '"' +
       (title ? ' title="' + title + '"' : '') +
       ' target="_blank">' +
-      text +
+      renderer.parser.parseInline(tokens) +
       '</a>'
     );
   };
