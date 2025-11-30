@@ -1175,6 +1175,26 @@
       "email_notification_info_item_4": "通知邮件可能会被归类到垃圾邮件，请注意查看"
     }
   },
+  "notifications": {
+    "title": "通知中心",
+    "all": "全部",
+    "unread": "未读",
+    "read": "已读",
+    "all_types": "全部类型",
+    "empty": "暂无通知",
+    "mark_as_read": "标记为已读",
+    "mark_all_read": "全部标为已读",
+    "mark_read_success": "已标记为已读",
+    "mark_read_error": "标记失败，请稍后重试",
+    "batch_mark_read_success": "已标记 {count} 条通知为已读",
+    "batch_mark_read_error": "批量标记失败，请稍后重试",
+    "total": "共 {total} 条通知",
+    "type_system": "系统通知",
+    "type_script": "脚本",
+    "type_comment": "评论",
+    "type_follow": "关注",
+    "type_invite": "邀请"
+  },
   "utils": {
     "time_format": "YYYY年MM月DD日"
   }

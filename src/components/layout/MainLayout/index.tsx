@@ -9,6 +9,7 @@ import {
   Dropdown,
   Button,
   message,
+  Badge,
 } from 'antd';
 import { Header, Content, Footer } from 'antd/es/layout/layout';
 import { useTranslations } from 'next-intl';
@@ -16,7 +17,9 @@ import { languageMap, Link, usePathname, useRouter } from '@/i18n/routing';
 import { ThemeToggle } from './ThemeToggle';
 import UserAuth from '@/components/UserAuth';
 import { useUser } from '@/contexts/UserContext';
+import NotificationBell from '@/components/NotificationBell';
 import {
+  BellOutlined,
   ChromeOutlined,
   CodeOutlined,
   GlobalOutlined,
@@ -148,15 +151,20 @@ export default function MainLayout({
           <div className="flex items-center space-x-4">
             {/* Publish Script Button */}
             {user && (
-              <Button
-                className="!hidden sm:!inline-flex"
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={handlePublishScript}
-                size="small"
-              >
-                {t('publish_script')}
-              </Button>
+              <>
+                <Button
+                  className="!hidden sm:!inline-flex"
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={handlePublishScript}
+                  size="small"
+                >
+                  {t('publish_script')}
+                </Button>
+
+                {/* Notification Bell */}
+                <NotificationBell />
+              </>
             )}
 
             {/* Theme Toggle */}

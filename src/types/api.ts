@@ -45,3 +45,25 @@ export interface ScriptGroup {
   description: string;
   member: GroupMember[];
 }
+
+// 通知相关类型
+export interface Notification {
+  id: number;
+  user_id: number;
+  from_user_id?: number;
+  from_user?: {
+    user_id: number;
+    username: string;
+    avatar: string;
+    is_admin: number;
+    email_status: number;
+  };
+  type: number;
+  title: string;
+  content: string;
+  link?: string;
+  read_status: number;
+  read_time?: number;
+  createtime: number;
+  updatetime: number;
+}

@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Button, Avatar, Dropdown, Space } from 'antd';
+import { Button, Avatar, Dropdown, Space, Badge } from 'antd';
 import {
   UserOutlined,
   LoginOutlined,
   LogoutOutlined,
   SettingOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
 import { useUser } from '@/contexts/UserContext';
 import { useTranslations } from 'next-intl';
