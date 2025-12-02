@@ -11,7 +11,7 @@ export default function NotificationBell() {
   return (
     <Link href="/notifications">
       <Badge count={unreadCount?.total || 0} showZero={false} size="small">
-        <BellOutlined style={{ fontSize: '18px', display: 'block' }} />
+        <BellOutlined />
       </Badge>
     </Link>
   );

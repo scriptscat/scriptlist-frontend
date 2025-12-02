@@ -1,146 +1,130 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Card, List, Badge, Tag, Button, Tabs, Pagination, message } from 'antd';
+import { useRouter } from 'next/navigation';
+import {
+  Card,
+  List,
+  Badge,
+  Button,
+  Tag,
+  Space,
+  Segmented,
+  Select,
+  Pagination,
+  Empty,
+  message,
+  Avatar,
+  Typography,
+  Divider,
+} from 'antd';
 import {
   BellOutlined,
   CheckOutlined,
-  MessageOutlined,
+  ClockCircleOutlined,
+  CodeOutlined,
+  CommentOutlined,
+  HeartOutlined,
   UserAddOutlined,
-  FileTextOutlined,
   MailOutlined,
 } from '@ant-design/icons';
-import type {
-  Notification,
-  UnreadCountResponse,
-} from '@/lib/api/services/notification';
-import { NotificationType } from '@/lib/api/services/notification';
-import {
-  batchMarkNotificationRead,
-  markNotificationRead,
-} from '@/lib/api/hooks/notification';
-import { useSemDateTime } from '@/lib/utils/semdate';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import type { Notification } from '@/lib/api/services/notification';
+import { notificationService } from '@/lib/api/services/notification';
+import { it } from 'node:test';
 import Link from 'next/link';
+
+dayjs.extend(relativeTime);
+
+const { Text, Paragraph } = Typography;
 
 interface NotificationsClientProps {
   initialNotifications: Notification[];
   totalCount: number;
   initialPage: number;
-  initialReadStatus?: 1 | 2;
-  initialType?: number;
-  unreadCount: UnreadCountResponse;
+  initialReadStatus?: number;
+  unreadCount: number;
 }
-
-const NotificationTypeIcon: Record<NotificationType, React.ReactNode> = {
-  [NotificationType.SYSTEM]: <BellOutlined />,
-  [NotificationType.SCRIPT]: <FileTextOutlined />,
-  [NotificationType.COMMENT]: <MessageOutlined />,
-  [NotificationType.FOLLOW]: <UserAddOutlined />,
-  [NotificationType.INVITE]: <MailOutlined />,
-};
-
-const NotificationTypeLabel: Record<NotificationType, string> = {
-  [NotificationType.SYSTEM]: '系统通知',
-  [NotificationType.SCRIPT]: '脚本',
-  [NotificationType.COMMENT]: '评论',
-  [NotificationType.FOLLOW]: '关注',
-  [NotificationType.INVITE]: '邀请',
-};
 
 export default function NotificationsClient({
   initialNotifications,
   totalCount,
   initialPage,
   initialReadStatus,
-  initialType,
-  unreadCount,
+  unreadCount: initialUnreadCount,
 }: NotificationsClientProps) {
   const t = useTranslations('notifications');
   const router = useRouter();
-  const formatTime = useSemDateTime();
-  const [notifications, setNotifications] = useState(initialNotifications);
+
+  const [notifications, setNotifications] =
+    useState<Notification[]>(initialNotifications);
+  const [unreadCount, setUnreadCount] = useState(initialUnreadCount);
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [currentReadStatus, setCurrentReadStatus] = useState<
-    'all' | 'unread' | 'read'
-  >(
-    initialReadStatus === 1
-      ? 'unread'
-      : initialReadStatus === 2
-        ? 'read'
-        : 'all',
-  );
-  const [currentType, setCurrentType] = useState<number | undefined>(
-    initialType,
-  );
   const [loading, setLoading] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<number | undefined>(
+    initialReadStatus,
+  );
 
-  // 构建URL参数
-  const buildUrl = (params: {
-    page?: number;
-    readStatus?: 'all' | 'unread' | 'read';
-    type?: number;
-  }) => {
-    const searchParams = new URLSearchParams();
-    const page = params.page || currentPage;
-    const readStatus = params.readStatus || currentReadStatus;
-    const type = params.type !== undefined ? params.type : currentType;
+  useEffect(() => {
+    setNotifications(initialNotifications);
+  }, [initialNotifications]);
 
-    if (page > 1) searchParams.set('page', page.toString());
-    if (readStatus === 'unread') searchParams.set('read_status', '1');
-    if (readStatus === 'read') searchParams.set('read_status', '2');
-    if (type !== undefined) searchParams.set('type', type.toString());
-
-    const query = searchParams.toString();
-    return `/notifications${query ? `?${query}` : ''}`;
-  };
-
-  // 处理页码变化
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    router.push(buildUrl({ page }));
-  };
-
-  // 处理筛选变化
-  const handleTabChange = (key: string) => {
-    const readStatus = key as 'all' | 'unread' | 'read';
-    setCurrentReadStatus(readStatus);
+  // 处理状态筛选变化
+  const handleStatusChange = (value: number | undefined) => {
+    setFilterStatus(value);
     setCurrentPage(1);
-    router.push(buildUrl({ page: 1, readStatus }));
-  };
-
-  // 处理类型筛选
-  const handleTypeChange = (type?: number) => {
-    setCurrentType(type);
-    setCurrentPage(1);
-    router.push(buildUrl({ page: 1, type }));
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    if (value !== undefined) {
+      params.set('read_status', value.toString());
+    }
+    router.push(`/notifications?${params.toString()}`);
   };
 
   // 标记单个通知为已读
-  const handleMarkRead = async (id: number) => {
+  const handleMarkAsRead = async (id: number) => {
     try {
-      await markNotificationRead(id);
-      // 更新本地状态
+      await notificationService.markRead(id);
       setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read_status: 1 } : n)),
+        prev.map((item) =>
+          item.id === id ? { ...item, read_status: 2 } : item,
+        ),
       );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
       message.success(t('mark_read_success'));
-      router.refresh();
     } catch (error) {
       message.error(t('mark_read_error'));
     }
   };
 
-  // 批量标记已读
-  const handleBatchMarkRead = async () => {
-    setLoading(true);
+  // 标记单个通知为未读
+  const handleMarkAsUnread = async (id: number) => {
     try {
-      const result = await batchMarkNotificationRead({
-        type: currentType,
-      });
-      message.success(t('batch_mark_read_success', { count: result.count }));
-      router.refresh();
+      await notificationService.markRead(id, 1);
+      setNotifications((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, read_status: 1 } : item,
+        ),
+      );
+      setUnreadCount((prev) => prev + 1);
+      message.success(t('mark_unread_success'));
+    } catch (error) {
+      message.error(t('mark_unread_error'));
+    }
+  };
+
+  // 全部标记为已读
+  const handleMarkAllRead = async () => {
+    try {
+      setLoading(true);
+      await notificationService.batchMarkRead({});
+      setNotifications((prev) =>
+        prev.map((item) => ({ ...item, read_status: 2 })),
+      );
+      setUnreadCount(0);
+      message.success(t('batch_mark_read_success', { count: unreadCount }));
     } catch (error) {
       message.error(t('batch_mark_read_error'));
     } finally {
@@ -148,183 +132,223 @@ export default function NotificationsClient({
     }
   };
 
-  const tabItems = [
-    {
-      key: 'all',
-      label: (
-        <span>
-          {t('all')}
-          {unreadCount.total > 0 && (
-            <Badge
-              count={unreadCount.total}
-              style={{ marginLeft: 8 }}
-              showZero={false}
-            />
-          )}
-        </span>
-      ),
-    },
-    {
-      key: 'unread',
-      label: (
-        <span>
-          {t('unread')}
-          {unreadCount.total > 0 && (
-            <Badge
-              count={unreadCount.total}
-              style={{ marginLeft: 8 }}
-              showZero={false}
-            />
-          )}
-        </span>
-      ),
-    },
-    {
-      key: 'read',
-      label: t('read'),
-    },
-  ];
+  // 页码变化
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    const params = new URLSearchParams();
+    params.set('page', page.toString());
+    if (filterStatus !== undefined) {
+      params.set('read_status', filterStatus.toString());
+    }
+    router.push(`/notifications?${params.toString()}`);
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Card
-        title={
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <BellOutlined />
-              {t('title')}
-            </h1>
-            {unreadCount.total > 0 && (
+    <div className="w-full min-h-screen">
+      <div className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-3">
+        {/* 顶部操作栏 - 统计 + 筛选器合并 */}
+        <Card
+          className="shadow-sm"
+          size="small"
+          styles={{
+            body: { padding: '8px 12px' },
+          }}
+        >
+          <div className="flex flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Text type="secondary" className="text-xs whitespace-nowrap">
+                状态:
+              </Text>
+              <Segmented
+                value={filterStatus === undefined ? 'all' : filterStatus}
+                onChange={(value) => {
+                  if (value === 'all') {
+                    handleStatusChange(undefined);
+                  } else {
+                    handleStatusChange(value as number);
+                  }
+                }}
+                size="small"
+                options={[
+                  { label: t('all'), value: 'all' },
+                  {
+                    label: t('unread'),
+                    value: 1,
+                  },
+                  { label: t('read'), value: 2 },
+                ]}
+              />
+            </div>
+            {unreadCount > 0 && (
               <Button
                 type="primary"
                 icon={<CheckOutlined />}
-                onClick={handleBatchMarkRead}
+                onClick={handleMarkAllRead}
                 loading={loading}
+                size="small"
               >
                 {t('mark_all_read')}
               </Button>
             )}
           </div>
-        }
-      >
-        <Tabs
-          activeKey={currentReadStatus}
-          onChange={handleTabChange}
-          items={tabItems}
-          className="mb-4"
-        />
+        </Card>
 
-        {/* 类型筛选 */}
-        <div className="mb-4 flex gap-2 flex-wrap">
-          <Button
-            type={currentType === undefined ? 'primary' : 'default'}
-            onClick={() => handleTypeChange(undefined)}
-            size="small"
-          >
-            {t('all_types')}
-          </Button>
-          {Object.entries(NotificationTypeLabel).map(([type, label]) => {
-            const typeNum = parseInt(type);
-            const count = unreadCount.items.find((item) => item.type === typeNum)
-              ?.count;
-            return (
-              <Button
-                key={type}
-                type={currentType === typeNum ? 'primary' : 'default'}
-                onClick={() => handleTypeChange(typeNum)}
-                size="small"
-                icon={NotificationTypeIcon[typeNum as NotificationType]}
-              >
-                {label}
-                {count && count > 0 && (
-                  <Badge
-                    count={count}
-                    style={{ marginLeft: 4 }}
-                    showZero={false}
-                  />
-                )}
-              </Button>
-            );
-          })}
-        </div>
+        {/* 通知列表 */}
+        <Card
+          className="shadow-sm"
+          size="small"
+          styles={{ body: { padding: 0 } }}
+        >
+          <List
+            dataSource={notifications}
+            locale={{
+              emptyText: (
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description={<Text type="secondary">{t('empty')}</Text>}
+                />
+              ),
+            }}
+            renderItem={(item) => {
+              const isUnread = item.read_status === 1;
 
-        <List
-          dataSource={notifications}
-          locale={{
-            emptyText: t('empty'),
-          }}
-          renderItem={(item) => (
-            <List.Item
-              key={item.id}
-              className={`${item.read_status === 0 ? 'bg-blue-50 dark:bg-blue-950' : ''} hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors`}
-              actions={[
-                <span key="time" className="text-gray-500 text-sm">
-                  {formatTime(item.createtime)}
-                </span>,
-                item.read_status === 0 && (
-                  <Button
-                    key="mark-read"
-                    type="link"
-                    size="small"
-                    onClick={() => handleMarkRead(item.id)}
-                  >
-                    {t('mark_as_read')}
-                  </Button>
-                ),
-              ]}
-            >
-              <List.Item.Meta
-                avatar={
-                  <div className="flex items-center gap-2">
-                    {item.read_status === 0 && (
-                      <Badge dot status="processing" />
-                    )}
-                    {item.from_user ? (
-                      <Link href={`/users/${item.from_user.user_id}`}>
-                        <img
-                          src={item.from_user.avatar}
-                          alt={item.from_user.username}
-                          className="w-10 h-10 rounded-full"
-                        />
-                      </Link>
-                    ) : (
-                      <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white">
-                        {NotificationTypeIcon[item.type as NotificationType]}
-                      </div>
-                    )}
-                  </div>
-                }
-                title={
-                  <div className="flex items-center gap-2">
-                    {item.link ? (
-                      <Link
-                        href={item.link}
-                        className="text-base font-medium hover:text-blue-600"
+              return (
+                <List.Item
+                  key={item.id}
+                  className={`!px-3 !py-2.5 transition-all cursor-pointer ${
+                    isUnread
+                      ? 'border-l-4 border-l-blue-500 bg-blue-50/40 hover:bg-blue-50/60 dark:bg-blue-950/30 dark:hover:bg-blue-950/40'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                  }`}
+                  onClick={() => {
+                    if (item.link) {
+                      window.open(item.link, '_blank');
+                      // 如果是未读状态，点击后标记为已读
+                      if (isUnread) {
+                        handleMarkAsRead(item.id);
+                      }
+                    }
+                  }}
+                  actions={[
+                    isUnread ? (
+                      <Button
+                        type="text"
+                        size="small"
+                        icon={<CheckOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMarkAsRead(item.id);
+                        }}
+                        className="h-6 px-2"
                       >
-                        {item.title}
-                      </Link>
+                        {t('mark_as_read')}
+                      </Button>
                     ) : (
-                      <span className="text-base font-medium">
-                        {item.title}
-                      </span>
-                    )}
-                    <Tag color="blue">
-                      {NotificationTypeLabel[item.type as NotificationType]}
-                    </Tag>
-                  </div>
-                }
-                description={
-                  <div className="text-gray-600 dark:text-gray-400">
-                    {item.content}
-                  </div>
-                }
-              />
-            </List.Item>
-          )}
-        />
+                      <Button
+                        type="text"
+                        size="small"
+                        icon={<BellOutlined />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleMarkAsUnread(item.id);
+                        }}
+                        className="h-6 px-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+                      >
+                        {t('mark_as_unread')}
+                      </Button>
+                    ),
+                  ]}
+                >
+                  <List.Item.Meta
+                    avatar={
+                      item.from_user?.user_id ? (
+                        <Avatar src={item.from_user.avatar} size={32}>
+                          {item.from_user.username[0]}
+                        </Avatar>
+                      ) : (
+                        <Avatar
+                          icon={<BellOutlined className="text-blue-500" />}
+                          size={32}
+                          className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800"
+                        />
+                      )
+                    }
+                    title={
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {item.title && (
+                          <Text
+                            strong={isUnread}
+                            className={`text-sm leading-tight ${!isUnread ? 'text-gray-500 dark:text-gray-400' : ''}`}
+                          >
+                            {t(item.title, item.params)}
+                          </Text>
+                        )}
+                        {!item.from_user?.user_id && (
+                          <Tag
+                            color="blue"
+                            className="!m-0 !py-0 !text-xs !leading-5"
+                          >
+                            {t('type_system')}
+                          </Tag>
+                        )}
+                        {isUnread && (
+                          <Badge
+                            status="processing"
+                            text={
+                              <span className="text-blue-600 dark:text-blue-400 text-xs font-medium">
+                                未读
+                              </span>
+                            }
+                            className="!leading-none"
+                          />
+                        )}
+                      </div>
+                    }
+                    description={
+                      <div className="flex items-start gap-2">
+                        <Paragraph
+                          className={`!mb-0 text-sm leading-relaxed flex-1 ${!isUnread ? 'text-gray-500 dark:text-gray-400' : ''}`}
+                          ellipsis={{
+                            rows: 2,
+                            expandable: true,
+                            symbol: '展开',
+                          }}
+                        >
+                          {t.rich(item.content, {
+                            ...item.params,
+                            link: (chunks) => {
+                              return (
+                                <Link
+                                  href={'#'}
+                                  className="text-blue-600 dark:text-blue-400 underline"
+                                >
+                                  {chunks}
+                                </Link>
+                              );
+                            },
+                          })}
+                        </Paragraph>
+                        <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500 flex-shrink-0">
+                          <ClockCircleOutlined className="text-xs" />
+                          <Text
+                            type="secondary"
+                            className="text-xs leading-none whitespace-nowrap"
+                          >
+                            {dayjs.unix(item.createtime).fromNow()}
+                          </Text>
+                        </div>
+                      </div>
+                    }
+                  />
+                </List.Item>
+              );
+            }}
+          />
+        </Card>
 
+        {/* 分页 */}
         {totalCount > 20 && (
-          <div className="mt-4 flex justify-center">
+          <div className="flex justify-center mt-4">
             <Pagination
               current={currentPage}
               total={totalCount}
@@ -332,10 +356,11 @@ export default function NotificationsClient({
               onChange={handlePageChange}
               showSizeChanger={false}
               showTotal={(total) => t('total', { total })}
+              size="small"
             />
           </div>
         )}
-      </Card>
+      </div>
     </div>
   );
 }

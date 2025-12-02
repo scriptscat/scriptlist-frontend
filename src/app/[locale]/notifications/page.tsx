@@ -1,5 +1,7 @@
 import { Suspense } from 'react';
 import NotificationsClient from './components/NotificationsClient';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
 // 获取通知服务
 async function getNotificationService() {
@@ -9,11 +11,21 @@ async function getNotificationService() {
   return notificationService;
 }
 
+export async function generateMetadata({
+  searchParams,
+}: NotificationsPageProps): Promise<Metadata> {
+  const t = await getTranslations('notifications.metadata');
+
+  return {
+    title: t('title') + ' | ScriptCat',
+    description: t('description'),
+  };
+}
+
 interface NotificationsPageProps {
   searchParams: Promise<{
     page?: string;
     read_status?: string;
-    type?: string;
   }>;
 }
 
@@ -23,10 +35,7 @@ export default async function NotificationsPage({
   const resolvedSearchParams = await searchParams;
   const page = parseInt(resolvedSearchParams.page || '1');
   const readStatus = resolvedSearchParams.read_status
-    ? (parseInt(resolvedSearchParams.read_status) as 1 | 2)
-    : undefined;
-  const type = resolvedSearchParams.type
-    ? parseInt(resolvedSearchParams.type)
+    ? parseInt(resolvedSearchParams.read_status)
     : undefined;
 
   // 获取通知服务实例
@@ -38,7 +47,6 @@ export default async function NotificationsPage({
       page,
       size: 20,
       read_status: readStatus,
-      type,
     }),
     notificationService.getUnreadCount(),
   ]);
@@ -50,8 +58,7 @@ export default async function NotificationsPage({
         totalCount={notificationList.total}
         initialPage={page}
         initialReadStatus={readStatus}
-        initialType={type}
-        unreadCount={unreadCount}
+        unreadCount={unreadCount.total}
       />
     </Suspense>
   );

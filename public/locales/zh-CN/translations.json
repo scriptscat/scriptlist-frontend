@@ -1176,24 +1176,57 @@
     }
   },
   "notifications": {
-    "title": "通知中心",
+    "metadata": {
+      "title": "通知中心",
+      "description": "查看和管理你的通知"
+    },
     "all": "全部",
     "unread": "未读",
     "read": "已读",
     "all_types": "全部类型",
     "empty": "暂无通知",
     "mark_as_read": "标记为已读",
+    "mark_as_unread": "标记为未读",
     "mark_all_read": "全部标为已读",
     "mark_read_success": "已标记为已读",
     "mark_read_error": "标记失败，请稍后重试",
+    "mark_unread_success": "已标记为未读",
+    "mark_unread_error": "标记失败，请稍后重试",
     "batch_mark_read_success": "已标记 {count} 条通知为已读",
     "batch_mark_read_error": "批量标记失败，请稍后重试",
-    "total": "共 {total} 条通知",
     "type_system": "系统通知",
-    "type_script": "脚本",
-    "type_comment": "评论",
-    "type_follow": "关注",
-    "type_invite": "邀请"
+    "script": {
+      "update": {
+        "content": "<link>{name}</link> 已发布新版本 {version}"
+      },
+      "score": {
+        "content": "<link>{name}</link> 收到新评分: {score} 分",
+        "reply": {
+          "content": "<link>{name}</link> 收到作者回复"
+        }
+      }
+    },
+    "access": {
+      "invite": {
+        "content": "{username} 邀请您加入脚本 {name}"
+      }
+    },
+    "issue": {
+      "create": {
+        "content": "[{name}] 有新的反馈 <link>{title} #{issue_id}</link>"
+      },
+      "comment": {
+        "reply": {
+          "content": "[{name}] 有新的回复 <link>{title} #{issue_id}</link>"
+        },
+        "open": {
+          "content": "[{name}] 打开反馈 <link>{title} #{issue_id}</link>"
+        },
+        "close": {
+          "content": "[{name}] 关闭反馈 <link>{title} #{issue_id}</link>"
+        }
+      }
+    }
   },
   "utils": {
     "time_format": "YYYY年MM月DD日"
