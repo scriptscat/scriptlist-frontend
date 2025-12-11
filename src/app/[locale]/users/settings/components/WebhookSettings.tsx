@@ -71,7 +71,7 @@ export default function WebhookSettings({
     }
   };
 
-  const webhookUrl = `${process.env.NEXT_PUBLIC_APP_API_URL || 'https://api.scriptcat.org'}/webhook/${user.user?.user_id || 'USER_ID'}`;
+  const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://scriptcat.org'}/api/v2/webhook/${user.user?.user_id || 'USER_ID'}`;
 
   if (isLoading) {
     return <Card loading className="min-h-[400px]" />;
