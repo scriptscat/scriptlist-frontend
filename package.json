@@ -28,7 +28,7 @@
     "github-markdown-css": "^5.8.1",
     "marked": "^16.1.1",
     "monaco-editor": "^0.52.2",
-    "next": "15.4.8",
+    "next": "16.1.5",
     "next-intl": "^4.3.4",
     "nextjs-toploader": "^3.8.16",
     "prismjs": "^1.30.0",
