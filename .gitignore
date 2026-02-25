@@ -46,3 +46,4 @@ next-env.d.ts
 /public/assets/monaco-editor/*
 /public/assets/prismjs/*
 
+.claude
