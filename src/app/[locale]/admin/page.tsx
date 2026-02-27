@@ -1,5 +1,7 @@
-import { redirect } from 'next/navigation';
+import { redirect } from '@/i18n/routing';
+import { getLocale } from 'next-intl/server';
 
-export default function AdminPage() {
-  redirect('./admin/oauth-apps');
+export default async function AdminPage() {
+  const locale = await getLocale();
+  redirect({ href: '/admin/oauth-apps', locale });
 }

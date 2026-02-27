@@ -56,6 +56,15 @@ xssWhiteList.h3 = ['id'];
 xssWhiteList.h4 = ['id'];
 xssWhiteList.h5 = ['id'];
 xssWhiteList.h6 = ['id'];
+xssWhiteList.video = [
+  'src',
+  'controls',
+  'width',
+  'height',
+  'preload',
+  'poster',
+];
+xssWhiteList.source = ['src', 'type'];
 
 /**
  * Parse markdown to sanitized HTML.
