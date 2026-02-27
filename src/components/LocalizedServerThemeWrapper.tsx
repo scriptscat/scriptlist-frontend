@@ -5,7 +5,6 @@ import type { ThemeMode } from '@/lib/cookies';
 import { THEME_COOKIE_NAME, THEME_MODE_COOKIE_NAME } from '@/lib/cookies';
 import NavigationProgress from './NavigationProgress';
 import { DayjsLocaleProvider } from './DayjsLocaleProvider';
-import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { SWRProvider } from '@/lib/swr-config';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -80,15 +79,13 @@ export async function LocalizedServerThemeWrapper({
       >
         <NavigationProgress />
         <ThemeProvider initialMode={serverTheme}>
-          <AntdRegistry>
-            <SWRProvider>
-              <NextIntlClientProvider messages={messages}>
-                <DayjsLocaleProvider>
-                  <UserProvider user={user}>{children}</UserProvider>
-                </DayjsLocaleProvider>
-              </NextIntlClientProvider>
-            </SWRProvider>
-          </AntdRegistry>
+          <SWRProvider>
+            <NextIntlClientProvider messages={messages}>
+              <DayjsLocaleProvider>
+                <UserProvider user={user}>{children}</UserProvider>
+              </DayjsLocaleProvider>
+            </NextIntlClientProvider>
+          </SWRProvider>
         </ThemeProvider>
       </body>
     </html>

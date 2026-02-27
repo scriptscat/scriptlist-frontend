@@ -3,6 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import { ConfigProvider, theme } from 'antd';
 import { extractStyle } from '@ant-design/static-style-extract';
+import {
+  lightToken,
+  darkToken,
+  getComponents,
+  getCssVarConfig,
+} from '../src/lib/antd-theme';
 
 const outputPath = './public/styles/antd.min.css';
 
@@ -10,14 +16,20 @@ const css = extractStyle((node) => (
   <>
     <ConfigProvider
       theme={{
+        cssVar: getCssVarConfig('light'),
         algorithm: theme.defaultAlgorithm,
+        token: lightToken,
+        components: getComponents('light'),
       }}
     >
       {node}
     </ConfigProvider>
     <ConfigProvider
       theme={{
+        cssVar: getCssVarConfig('dark'),
         algorithm: theme.darkAlgorithm,
+        token: darkToken,
+        components: getComponents('dark'),
       }}
     >
       {node}
