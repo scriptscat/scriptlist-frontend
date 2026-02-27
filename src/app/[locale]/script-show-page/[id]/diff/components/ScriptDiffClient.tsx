@@ -3,7 +3,12 @@
 import { Card, Tag, Divider, Alert } from 'antd';
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import MonacoDiffEditor from '@/components/MonacoEditor/DiffEditor';
+import dynamic from 'next/dynamic';
+
+const MonacoDiffEditor = dynamic(
+  () => import('@/components/MonacoEditor/DiffEditor'),
+  { ssr: false, loading: () => <div style={{ height: '600px' }} /> },
+);
 import type { ScriptInfo } from '../../types';
 
 type ScriptDiffClientProps = {

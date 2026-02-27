@@ -29,7 +29,12 @@ import {
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
-import MarkdownEditor from '@/components/MarkdownEditor';
+import dynamic from 'next/dynamic';
+
+const MarkdownEditor = dynamic(() => import('@/components/MarkdownEditor'), {
+  ssr: false,
+  loading: () => <div style={{ height: '200px' }} />,
+});
 import MarkdownView from '@/components/MarkdownView';
 import ActionMenu from '@/components/ActionMenu';
 import type { IssueComment } from '@/lib/api/services/scripts/issue';

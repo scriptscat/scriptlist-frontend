@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, createContext, useState, useEffect } from 'react';
+import { useContext, createContext, useState, useEffect, useMemo } from 'react';
 import type { ThemeConfig } from 'antd';
 import { ConfigProvider, theme } from 'antd';
 import type { ThemeMode } from '@/lib/cookies';
@@ -34,7 +34,7 @@ export const ThemeClientProvider: React.FC<ThemeClientProviderProps> = ({
     initialMode || { mode: 'auto', theme: 'light' },
   );
 
-  const antdTheme: ThemeConfig = {
+  const antdTheme: ThemeConfig = useMemo(() => ({
     algorithm:
       themeMode.theme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
     token: {
@@ -168,7 +168,7 @@ export const ThemeClientProvider: React.FC<ThemeClientProviderProps> = ({
         colorBgContainer: themeMode.theme === 'dark' ? '#161b22' : '#ffffff',
       },
     },
-  };
+  }), [themeMode.theme]);
 
   useEffect(() => {
     // 记录到cookie

@@ -5,7 +5,12 @@ import { Button, Card, Input, Select, Space, message } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
-import MarkdownEditor from '@/components/MarkdownEditor';
+import dynamic from 'next/dynamic';
+
+const MarkdownEditor = dynamic(() => import('@/components/MarkdownEditor'), {
+  ssr: false,
+  loading: () => <div style={{ height: '300px' }} />,
+});
 import { useScript } from '../../components/ScriptContext';
 import { scriptIssueService } from '@/lib/api/services/scripts/issue';
 import IssueLabel from '../components/IssueLabel';

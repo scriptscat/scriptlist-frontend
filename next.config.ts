@@ -6,6 +6,16 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   env: {},
   output: 'standalone',
+  experimental: {
+    optimizePackageImports: [
+      'antd',
+      '@ant-design/icons',
+      '@ant-design/charts',
+      '@iconify/react',
+      'dayjs',
+      'prismjs',
+    ],
+  },
   async rewrites() {
     return [
       {

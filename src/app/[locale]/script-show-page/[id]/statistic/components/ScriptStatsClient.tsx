@@ -29,7 +29,16 @@ import {
 } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { useScript } from '../../components/ScriptContext';
-import { Line, Column } from '@ant-design/charts';
+import dynamic from 'next/dynamic';
+
+const Line = dynamic(() => import('@ant-design/charts').then((mod) => mod.Line), {
+  ssr: false,
+  loading: () => <div style={{ height: 300 }} />,
+});
+const Column = dynamic(
+  () => import('@ant-design/charts').then((mod) => mod.Column),
+  { ssr: false, loading: () => <div style={{ height: 300 }} /> },
+);
 import { useTheme } from '@/contexts/ThemeClientContext';
 import { useTranslations } from 'next-intl';
 import { useScriptStatistics, useScriptRealtime } from '@/lib/api/hooks/script';

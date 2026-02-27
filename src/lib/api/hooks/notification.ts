@@ -43,11 +43,11 @@ export function useUnreadCount() {
     },
     {
       // 自动刷新
-      refreshInterval: 60 * 1000, // 每分钟刷新一次
-      revalidateOnFocus: true,
+      refreshInterval: 120 * 1000, // 每2分钟刷新一次
+      revalidateOnFocus: false,
       revalidateOnReconnect: true,
-      // 缓存时间30秒
-      dedupingInterval: 30 * 1000,
+      // 缓存时间60秒
+      dedupingInterval: 60 * 1000,
     },
   );
 }
