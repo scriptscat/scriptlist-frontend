@@ -25,9 +25,17 @@ import {
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import type { MonacoEditorRef } from '@/components/MonacoEditor';
-import MonacoEditor from '@/components/MonacoEditor';
 import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
-import MarkdownEditor from '@/components/MarkdownEditor';
+import dynamic from 'next/dynamic';
+
+const MonacoEditor = dynamic(() => import('@/components/MonacoEditor'), {
+  ssr: false,
+  loading: () => <div style={{ height: '500px' }} />,
+});
+const MarkdownEditor = dynamic(() => import('@/components/MarkdownEditor'), {
+  ssr: false,
+  loading: () => <div style={{ height: '300px' }} />,
+});
 import {
   parseMetadata,
   parseTags,
