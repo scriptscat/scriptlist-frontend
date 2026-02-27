@@ -8,7 +8,7 @@ export interface RegisterRequest {
 }
 
 export interface LoginByEmailRequest {
-  email: string;
+  account: string;
   password: string;
   turnstile_token?: string;
 }

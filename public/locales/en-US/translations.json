@@ -1188,6 +1188,8 @@
     "email_placeholder": "Enter your email",
     "email_required": "Please enter your email",
     "email_invalid": "Please enter a valid email address",
+    "account_placeholder": "Email or username",
+    "account_required": "Please enter your email or username",
     "password": "Password",
     "password_placeholder": "Enter your password",
     "password_required": "Please enter your password",

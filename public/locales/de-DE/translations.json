@@ -1275,6 +1275,8 @@
     "email_placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
     "email_required": "Bitte geben Sie Ihre E-Mail-Adresse ein",
     "email_invalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "account_placeholder": "E-Mail oder Benutzername",
+    "account_required": "Bitte E-Mail oder Benutzername eingeben",
     "password": "Passwort",
     "password_placeholder": "Geben Sie Ihr Passwort ein",
     "password_required": "Bitte geben Sie Ihr Passwort ein",

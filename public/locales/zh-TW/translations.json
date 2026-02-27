@@ -1275,6 +1275,8 @@
     "email_placeholder": "請輸入信箱地址",
     "email_required": "請輸入信箱地址",
     "email_invalid": "請輸入有效的信箱地址",
+    "account_placeholder": "請輸入郵箱或用戶名",
+    "account_required": "請輸入郵箱或用戶名",
     "password": "密碼",
     "password_placeholder": "請輸入密碼",
     "password_required": "請輸入密碼",

@@ -31,7 +31,7 @@ export default function LoginClient() {
   const [loginToken, setLoginToken] = useState('');
   const [registerToken, setRegisterToken] = useState('');
 
-  const handleLogin = async (values: { email: string; password: string }) => {
+  const handleLogin = async (values: { account: string; password: string }) => {
     if (turnstileSiteKey && !loginToken) {
       message.error(t('captcha_required'));
       return;
@@ -39,7 +39,7 @@ export default function LoginClient() {
     setLoading(true);
     try {
       await authService.login({
-        email: values.email,
+        account: values.account,
         password: values.password,
         turnstile_token: loginToken,
       });
@@ -105,13 +105,12 @@ export default function LoginClient() {
       size="large"
     >
       <Form.Item
-        name="email"
+        name="account"
         rules={[
-          { required: true, message: t('email_required') },
-          { type: 'email', message: t('email_invalid') },
+          { required: true, message: t('account_required') },
         ]}
       >
-        <Input prefix={<MailOutlined />} placeholder={t('email_placeholder')} />
+        <Input prefix={<UserOutlined />} placeholder={t('account_placeholder')} />
       </Form.Item>
       <Form.Item
         name="password"

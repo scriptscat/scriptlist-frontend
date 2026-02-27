@@ -1275,6 +1275,8 @@
     "email_placeholder": "Введите адрес электронной почты",
     "email_required": "Пожалуйста, введите адрес электронной почты",
     "email_invalid": "Пожалуйста, введите действительный адрес электронной почты",
+    "account_placeholder": "Email или имя пользователя",
+    "account_required": "Введите email или имя пользователя",
     "password": "Пароль",
     "password_placeholder": "Введите пароль",
     "password_required": "Пожалуйста, введите пароль",

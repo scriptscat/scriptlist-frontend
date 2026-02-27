@@ -1275,6 +1275,8 @@
     "email_placeholder": "メールアドレスを入力してください",
     "email_required": "メールアドレスを入力してください",
     "email_invalid": "有効なメールアドレスを入力してください",
+    "account_placeholder": "メールアドレスまたはユーザー名を入力",
+    "account_required": "メールアドレスまたはユーザー名を入力してください",
     "password": "パスワード",
     "password_placeholder": "パスワードを入力してください",
     "password_required": "パスワードを入力してください",

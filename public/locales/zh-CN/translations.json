@@ -1275,6 +1275,8 @@
     "email_placeholder": "请输入邮箱地址",
     "email_required": "请输入邮箱地址",
     "email_invalid": "请输入有效的邮箱地址",
+    "account_placeholder": "请输入邮箱或用户名",
+    "account_required": "请输入邮箱或用户名",
     "password": "密码",
     "password_placeholder": "请输入密码",
     "password_required": "请输入密码",
