@@ -27,6 +27,7 @@ import {
   MessageOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
+import { Icon } from '@iconify/react';
 import Image from 'next/image';
 
 const { Title } = Typography;
@@ -97,8 +98,18 @@ export default function MainLayout({
     window.location.href = `/${newLocale}${pathname}`;
   };
 
+  // 聊天页使用独立布局：无 Footer，全屏高度，无外层滚动
+  const isFullscreenPage = pathname.startsWith('/chat');
+
   return (
-    <Layout style={{ backgroundColor: 'unset', minHeight: '100vh' }}>
+    <Layout
+      style={{
+        backgroundColor: 'unset',
+        ...(isFullscreenPage
+          ? { height: '100vh', overflow: 'hidden' }
+          : { minHeight: '100vh' }),
+      }}
+    >
       <Header
         style={{
           background: token.colorBgContainer,
@@ -167,6 +178,32 @@ export default function MainLayout({
               </>
             )}
 
+            {/* AI Chat */}
+            <button
+              onClick={() => router.push('/chat')}
+              className="!hidden sm:!inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-white cursor-pointer border-0 transition-all duration-300 hover:shadow-[0_0_16px_rgba(139,92,246,0.5)] hover:scale-105"
+              style={{
+                background:
+                  'linear-gradient(135deg, #8b5cf6, #6366f1, #3b82f6)',
+                backgroundSize: '200% 200%',
+                animation: 'ai-gradient 3s ease infinite',
+              }}
+            >
+              <Icon icon="mingcute:robot-line" width="14" height="14" />
+              {t('ai_chat')}
+            </button>
+            <style jsx>{`
+              @keyframes ai-gradient {
+                0%,
+                100% {
+                  background-position: 0% 50%;
+                }
+                50% {
+                  background-position: 100% 50%;
+                }
+              }
+            `}</style>
+
             {/* Theme Toggle */}
             <ThemeToggle />
 
@@ -192,47 +229,52 @@ export default function MainLayout({
         </div>
       </Header>
       <Content
-        className="w-full max-w-7xl mx-auto px-4 py-4"
+        className={isFullscreenPage ? '' : 'w-full max-w-7xl mx-auto px-4 py-4'}
         style={{
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
+          ...(isFullscreenPage ? { overflow: 'hidden' } : {}),
         }}
       >
         {children}
       </Content>
-      <Footer
-        className="flex flex-col items-center"
-        style={{
-          background: token.colorBgContainer,
-        }}
-      >
-        <div>
-          <a href="https://bbs.tampermonkey.net.cn/" target="_blank">
-            {t('tampermonkey_chinese_website')}
-          </a>
-          <Divider type="vertical" />
-          <a href="https://docs.scriptcat.org/" target="_blank">
-            {t('scriptcat')}
-          </a>
-          <Divider type="vertical" />
-          <a href="https://github.com/scriptscat" target="_blank">
-            {'GitHub'}
-          </a>
-        </div>
-        <div>
-          <a href={'https://docs.scriptcat.org/docs/use/policy/disclaimer/'}>
-            {t('service_agreement')}
-          </a>
-          <Divider type="vertical" />
-          <a
-            href={'https://docs.scriptcat.org/docs/use/policy/privacy_website/'}
-          >
-            {t('privacy_policy')}
-          </a>
-        </div>
-        <p className="m-0 text-sm">{t('all_rights_reserved')}</p>
-      </Footer>
+      {!isFullscreenPage && (
+        <Footer
+          className="flex flex-col items-center"
+          style={{
+            background: token.colorBgContainer,
+          }}
+        >
+          <div>
+            <a href="https://bbs.tampermonkey.net.cn/" target="_blank">
+              {t('tampermonkey_chinese_website')}
+            </a>
+            <Divider type="vertical" />
+            <a href="https://docs.scriptcat.org/" target="_blank">
+              {t('scriptcat')}
+            </a>
+            <Divider type="vertical" />
+            <a href="https://github.com/scriptscat" target="_blank">
+              {'GitHub'}
+            </a>
+          </div>
+          <div>
+            <a href={'https://docs.scriptcat.org/docs/use/policy/disclaimer/'}>
+              {t('service_agreement')}
+            </a>
+            <Divider type="vertical" />
+            <a
+              href={
+                'https://docs.scriptcat.org/docs/use/policy/privacy_website/'
+              }
+            >
+              {t('privacy_policy')}
+            </a>
+          </div>
+          <p className="m-0 text-sm">{t('all_rights_reserved')}</p>
+        </Footer>
+      )}
     </Layout>
   );
 }

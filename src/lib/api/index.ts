@@ -7,6 +7,8 @@ export { API_CONFIG } from './config';
 // 导出服务
 export { userService } from './services/user';
 export { resourceService } from './services/resource';
+export { authService } from './services/auth';
+export { adminService } from './services/admin';
 
 // 导出所有API相关类型
 export * from '@/types/api';

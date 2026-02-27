@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { marked } from 'marked';
 import { usePathname } from 'next/navigation';
 import Prism from 'prismjs';
-import xss, { whiteList } from 'xss';
 import 'prismjs/plugins/toolbar/prism-toolbar.min.css';
 import 'prismjs/plugins/toolbar/prism-toolbar.min';
 import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min';
+import { parseMarkdown } from './parseMarkdown';
 import './markdown.css';
 import './github-markdown-css.css';
 import './prism.css';
@@ -17,78 +16,14 @@ interface MarkdownViewProps {
   content: string;
 }
 
-// Custom renderer configuration
-const createRenderer = (baseUrl = '') => {
-  const renderer = new marked.Renderer();
-
-  // Override link rendering
-  renderer.link = ({ href, title, tokens }) => {
-    let url = href || '';
-
-    if (!(url.startsWith('http://') || url.startsWith('https://'))) {
-      if (url.startsWith('.')) {
-        url = baseUrl + url.substring(1);
-      } else if (
-        url.startsWith('/') ||
-        url.startsWith('#') ||
-        url.startsWith('?')
-      ) {
-        url = baseUrl + url;
-      } else {
-        url = baseUrl + '/' + url;
-      }
-    }
-
-    return (
-      '<a href="' +
-      url +
-      '"' +
-      (title ? ' title="' + title + '"' : '') +
-      ' target="_blank">' +
-      renderer.parser.parseInline(tokens) +
-      '</a>'
-    );
-  };
-
-  // Override HTML rendering
-  renderer.html = ({ text }) => {
-    let html = text || '';
-    // 判断是否为video标签，并加上controls="controls"属性
-    if (html.startsWith('<video') && !html.includes('controls="controls"')) {
-      html = html.replace('<video', '<video controls="controls"');
-    }
-    return html;
-  };
-
-  return renderer;
-};
-
 const MarkdownView: React.FC<MarkdownViewProps> = React.memo(({ content }) => {
   const pathname = usePathname();
   const currentBaseUrl = pathname;
   const [isClient, setIsClient] = useState(false);
 
-  const l = whiteList;
-  l.input = ['type', 'checked', 'disabled'];
-  l.code = ['class'];
-  l.h1 = ['id'];
-  l.h2 = ['id'];
-  l.h3 = ['id'];
-  l.h4 = ['id'];
-  l.h5 = ['id'];
-  l.h6 = ['id'];
-
-  // 使用 useMemo 来确保服务器端和客户端渲染一致的内容
   const html = React.useMemo(() => {
-    return xss(
-      marked(content, {
-        gfm: true,
-        renderer: createRenderer(currentBaseUrl),
-        breaks: true,
-      }) as string,
-      { whiteList: l },
-    );
-  }, [content, currentBaseUrl, l]);
+    return parseMarkdown(content, currentBaseUrl);
+  }, [content, currentBaseUrl]);
 
   const ref = useRef<HTMLDivElement>(null);
 

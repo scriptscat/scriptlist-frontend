@@ -33,7 +33,9 @@
     "light": "浅色模式",
     "dark": "深色模式",
     "system": "跟随系统",
-    "user_setting": "使用者設定"
+    "user_setting": "使用者設定",
+    "ai_chat": "AI 助手",
+    "system_settings": "系統設定"
   },
   "home": {
     "metadata": {
@@ -1177,5 +1179,219 @@
   },
   "utils": {
     "time_format": "YYYY年MM月DD日"
+  },
+  "notifications": {
+    "metadata": {
+      "title": "通知中心",
+      "description": "查看和管理你的通知"
+    },
+    "all": "全部",
+    "unread": "未讀",
+    "read": "已讀",
+    "all_types": "全部類型",
+    "empty": "暫無通知",
+    "mark_as_read": "標記為已讀",
+    "mark_as_unread": "標記為未讀",
+    "mark_all_read": "全部標為已讀",
+    "mark_read_success": "已標記為已讀",
+    "mark_read_error": "標記失敗，請稍後重試",
+    "mark_unread_success": "已標記為未讀",
+    "mark_unread_error": "標記失敗，請稍後重試",
+    "batch_mark_read_success": "已標記 {count} 條通知為已讀",
+    "batch_mark_read_error": "批量標記失敗，請稍後重試",
+    "type_system": "系統通知",
+    "script": {
+      "update": {
+        "content": "<link>{name}</link> 已發布新版本 {version}"
+      },
+      "score": {
+        "content": "<link>{name}</link> 收到新評分: {score} 分",
+        "reply": {
+          "content": "<link>{name}</link> 收到作者回覆"
+        }
+      }
+    },
+    "access": {
+      "invite": {
+        "content": "{username} 邀請您加入腳本 {name}"
+      }
+    },
+    "issue": {
+      "create": {
+        "content": "[{name}] 有新的回饋 <link>{title} #{issue_id}</link>"
+      },
+      "comment": {
+        "reply": {
+          "content": "[{name}] 有新的回覆 <link>{title} #{issue_id}</link>"
+        },
+        "open": {
+          "content": "[{name}] 打開回饋 <link>{title} #{issue_id}</link>"
+        },
+        "close": {
+          "content": "[{name}] 關閉回饋 <link>{title} #{issue_id}</link>"
+        }
+      }
+    }
+  },
+  "chat": {
+    "metadata": {
+      "title": "ScriptCat AI 助手",
+      "description": "ScriptCat AI 助手，提供腳本貓使用指南、油猴腳本相關問題解答與腳本查詢等功能。"
+    },
+    "welcome_title": "ScriptCat AI 助手",
+    "welcome_desc": "我可以幫你編寫、調試和理解油猴使用者腳本，選擇下方話題快速開始吧",
+    "suggestion_write_title": "編寫腳本",
+    "suggestion_write_desc": "幫我寫一個自動簽到的油猴腳本",
+    "suggestion_debug_title": "調試幫助",
+    "suggestion_debug_desc": "我的腳本在某些頁面上不生效，怎麼排查？",
+    "suggestion_guide_title": "使用指南",
+    "suggestion_guide_desc": "GM_xmlhttpRequest 和 fetch 有什麼區別？",
+    "suggestion_optimize_title": "優化腳本",
+    "suggestion_optimize_desc": "如何讓腳本在頁面載入完成前執行？",
+    "date_today": "今天",
+    "date_yesterday": "昨天",
+    "date_last_7_days": "近7天",
+    "date_earlier": "更早",
+    "clear_chat": "清空對話",
+    "new_chat": "新建對話",
+    "new_conversation": "新對話",
+    "delete_confirm": "確定刪除該會話？",
+    "delete": "刪除",
+    "cancel": "取消",
+    "no_history": "暫無對話記錄",
+    "expand_sidebar": "展開側邊欄",
+    "input_placeholder": "輸入你的問題...",
+    "stop_generating": "停止生成",
+    "retry": "重試",
+    "send_message": "發送訊息",
+    "enter_content": "請輸入內容",
+    "input_hint": "按 Enter 發送，Shift + Enter 換行。AI 回覆僅供參考。"
+  },
+  "login": {
+    "title": "登入到 ScriptCat",
+    "tab_login": "登入",
+    "tab_register": "註冊",
+    "email": "信箱",
+    "email_placeholder": "請輸入信箱地址",
+    "email_required": "請輸入信箱地址",
+    "email_invalid": "請輸入有效的信箱地址",
+    "password": "密碼",
+    "password_placeholder": "請輸入密碼",
+    "password_required": "請輸入密碼",
+    "password_min_length": "密碼至少6個字元",
+    "confirm_password": "確認密碼",
+    "confirm_password_placeholder": "請再次輸入密碼",
+    "confirm_password_required": "請確認密碼",
+    "confirm_password_mismatch": "兩次輸入的密碼不一致",
+    "login_button": "登入",
+    "register_button": "註冊",
+    "divider_text": "或",
+    "github_login": "使用 GitHub 登入",
+    "bbs_login": "使用論壇帳號登入",
+    "login_coming_soon": "信箱登入功能即將上線",
+    "register_coming_soon": "信箱註冊功能即將上線",
+    "github_coming_soon": "GitHub 登入功能即將上線",
+    "forgot_password": "忘記密碼？",
+    "login_failed": "登入失敗，請稍後重試",
+    "register_failed": "註冊失敗，請稍後重試",
+    "register_success_title": "註冊成功",
+    "register_success_description": "驗證信件已發送到您的信箱，請查收並完成驗證。",
+    "username": "使用者名稱",
+    "username_placeholder": "請輸入使用者名稱",
+    "username_required": "請輸入使用者名稱",
+    "username_min_length": "使用者名稱至少2個字元",
+    "username_max_length": "使用者名稱最多32個字元",
+    "captcha_required": "請完成驗證"
+  },
+  "auth": {
+    "verify_email": {
+      "verifying": "正在驗證...",
+      "success_title": "信箱驗證成功",
+      "success_description": "您的信箱已驗證成功，現在可以登入了。",
+      "error_title": "驗證失敗",
+      "verify_failed": "信箱驗證失敗，請重試。",
+      "invalid_link": "無效的連結",
+      "invalid_link_description": "驗證連結無效或已過期。",
+      "go_login": "前往登入"
+    },
+    "forgot_password": {
+      "title": "忘記密碼",
+      "description": "輸入您的註冊信箱，我們將發送密碼重置連結。",
+      "email_required": "請輸入信箱地址",
+      "email_invalid": "請輸入有效的信箱地址",
+      "email_placeholder": "請輸入信箱地址",
+      "submit_button": "發送重置連結",
+      "send_failed": "發送失敗，請稍後重試",
+      "sent_title": "信件已發送",
+      "sent_description": "如果該信箱已註冊，您將收到一封包含密碼重置連結的信件。",
+      "back_to_login": "返回登入",
+      "captcha_required": "請完成驗證"
+    },
+    "reset_password": {
+      "title": "重置密碼",
+      "password_required": "請輸入新密碼",
+      "password_min_length": "密碼至少6個字元",
+      "password_placeholder": "請輸入新密碼",
+      "confirm_password_required": "請確認新密碼",
+      "confirm_password_mismatch": "兩次輸入的密碼不一致",
+      "confirm_password_placeholder": "請再次輸入新密碼",
+      "submit_button": "重置密碼",
+      "reset_failed": "重置失敗，請稍後重試",
+      "success_title": "密碼重置成功",
+      "success_description": "您的密碼已重置成功，現在可以使用新密碼登入了。",
+      "invalid_link": "無效的連結",
+      "invalid_link_description": "重置連結無效或已過期。",
+      "go_login": "前往登入"
+    }
+  },
+  "oauth": {
+    "authorize": {
+      "title": "授權請求",
+      "description": "{app_name} 請求存取您的帳戶",
+      "permissions_label": "該應用將獲得以下權限：",
+      "permission_profile": "讀取您的基本資料資訊（使用者名稱、信箱、頭像）",
+      "approve_button": "授權",
+      "deny_button": "拒絕",
+      "invalid_request": "無效的授權請求",
+      "load_failed": "載入應用資訊失敗",
+      "approve_failed": "授權失敗，請稍後重試",
+      "error_title": "授權錯誤"
+    }
+  },
+  "admin": {
+    "no_permission": "您沒有管理員權限存取此頁面。",
+    "navigation": {
+      "oauth_apps": "OAuth 應用管理"
+    },
+    "oauth_apps": {
+      "title": "OAuth 應用管理",
+      "create_button": "建立應用",
+      "create_title": "建立 OAuth 應用",
+      "edit_title": "編輯 OAuth 應用",
+      "col_name": "應用名稱",
+      "col_client_id": "Client ID",
+      "col_redirect_uri": "回調地址",
+      "col_status": "狀態",
+      "col_actions": "操作",
+      "status_active": "啟用",
+      "status_disabled": "停用",
+      "action_edit": "編輯",
+      "action_delete": "刪除",
+      "delete_confirm": "確認刪除此應用？刪除後無法恢復。",
+      "field_name": "應用名稱",
+      "field_name_required": "請輸入應用名稱",
+      "field_description": "應用描述",
+      "field_redirect_uri": "回調地址",
+      "field_redirect_uri_required": "請輸入回調地址",
+      "field_redirect_uri_invalid": "請輸入有效的 URL",
+      "field_status": "狀態",
+      "save_button": "儲存",
+      "create_success": "建立成功",
+      "update_success": "更新成功",
+      "delete_success": "刪除成功",
+      "secret_title": "應用憑證",
+      "secret_warning": "請妥善保存 Client Secret，此資訊僅顯示一次！",
+      "secret_confirm": "我已保存"
+    }
   }
 }

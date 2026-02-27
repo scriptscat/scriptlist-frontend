@@ -1,85 +1,132 @@
-/* ============================
-   AI Chat Page Styles
-   ============================ */
-
-/* ---- Messages Area Scrollbar ---- */
-.chat-messages {
+/* 滚动区域 */
+.chat-scroll-area {
   overflow-y: auto;
   scroll-behavior: smooth;
 }
-
-.chat-messages::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chat-messages::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.chat-messages::-webkit-scrollbar-thumb {
+.chat-scroll-area::-webkit-scrollbar { width: 5px; }
+.chat-scroll-area::-webkit-scrollbar-track { background: transparent; }
+.chat-scroll-area::-webkit-scrollbar-thumb {
   background-color: rgb(var(--border-primary));
-  border-radius: 3px;
+  border-radius: 10px;
 }
-
-.chat-messages::-webkit-scrollbar-thumb:hover {
+.chat-scroll-area::-webkit-scrollbar-thumb:hover {
   background-color: rgb(var(--text-tertiary));
 }
 
-/* ---- Streaming cursor ---- */
-.chat-cursor {
-  display: inline-block;
-  width: 7px;
-  height: 16px;
-  margin-left: 2px;
-  background-color: rgb(var(--primary-500));
-  border-radius: 1px;
-  vertical-align: text-bottom;
-  animation: chat-cursor-blink 1s steps(2) infinite;
+/* 侧边栏滚动 */
+.chat-sidebar-scroll::-webkit-scrollbar { width: 4px; }
+.chat-sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+.chat-sidebar-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(var(--border-primary));
+  border-radius: 10px;
 }
 
-@keyframes chat-cursor-blink {
+/* 消息入场动画 */
+.chat-msg {
+  animation: chat-msg-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes chat-msg-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 流式光标 */
+.chat-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 18px;
+  margin-left: 2px;
+  background: rgb(var(--primary-500));
+  border-radius: 1px;
+  vertical-align: text-bottom;
+  animation: cursor-blink 1s steps(2) infinite;
+}
+@keyframes cursor-blink {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
 
-/* ---- Loading Dots Animation ---- */
+/* 加载点动画 */
 .chat-loading-dots {
   display: flex;
   align-items: center;
   gap: 3px;
 }
-
 .chat-loading-dots span {
   display: block;
   width: 4px;
   height: 4px;
   border-radius: 50%;
   background-color: #fff;
-  animation: chat-dot-pulse 1.4s ease-in-out infinite;
+  animation: dot-pulse 1.4s ease-in-out infinite;
+}
+.chat-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.chat-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dot-pulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1.2); }
 }
 
-.chat-loading-dots span:nth-child(2) {
-  animation-delay: 0.2s;
+/* 输入框焦点 */
+.chat-input-box:focus-within {
+  border-color: rgb(var(--primary-500)) !important;
+  box-shadow: 0 0 0 3px rgb(var(--primary-500) / 0.08) !important;
 }
 
-.chat-loading-dots span:nth-child(3) {
-  animation-delay: 0.4s;
+/* 欢迎图标浮动 */
+.chat-welcome-icon {
+  animation: icon-float 3s ease-in-out infinite;
+}
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
-@keyframes chat-dot-pulse {
-  0%, 80%, 100% {
-    opacity: 0.3;
-    transform: scale(0.8);
-  }
-  40% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
+/* 建议卡片悬停 */
+.chat-suggestion {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+.chat-suggestion:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+[data-theme="dark"] .chat-suggestion:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* ---- Responsive ---- */
+/* 对话历史项 */
+.chat-history-item {
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border-radius: 8px;
+  position: relative;
+}
+.chat-history-item:hover {
+  background: rgb(var(--bg-secondary));
+}
+.chat-history-item.active {
+  background: rgb(var(--primary-500) / 0.08);
+}
+.chat-history-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: rgb(var(--primary-500));
+}
+.chat-history-item .action-btn {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.chat-history-item:hover .action-btn {
+  opacity: 1;
+}
+
+/* 响应式 */
 @media (max-width: 640px) {
-  .chat-messages .flex.gap-3 {
-    max-width: 92% !important;
-  }
+  .chat-msg { max-width: 92% !important; }
 }

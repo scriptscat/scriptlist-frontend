@@ -33,7 +33,9 @@
     "light": "Hell",
     "dark": "Dunkel",
     "system": "System",
-    "user_setting": "Benutzereinstellungen"
+    "user_setting": "Benutzereinstellungen",
+    "ai_chat": "KI-Assistent",
+    "system_settings": "Systemeinstellungen"
   },
   "home": {
     "metadata": {
@@ -1177,5 +1179,219 @@
   },
   "utils": {
     "time_format": "DD.MM.YYYY"
+  },
+  "notifications": {
+    "metadata": {
+      "title": "Benachrichtigungszentrale",
+      "description": "Benachrichtigungen anzeigen und verwalten"
+    },
+    "all": "Alle",
+    "unread": "Ungelesen",
+    "read": "Gelesen",
+    "all_types": "Alle Typen",
+    "empty": "Keine Benachrichtigungen",
+    "mark_as_read": "Als gelesen markieren",
+    "mark_as_unread": "Als ungelesen markieren",
+    "mark_all_read": "Alle als gelesen markieren",
+    "mark_read_success": "Als gelesen markiert",
+    "mark_read_error": "Markierung fehlgeschlagen, bitte versuchen Sie es später erneut",
+    "mark_unread_success": "Als ungelesen markiert",
+    "mark_unread_error": "Markierung fehlgeschlagen, bitte versuchen Sie es später erneut",
+    "batch_mark_read_success": "{count} Benachrichtigungen als gelesen markiert",
+    "batch_mark_read_error": "Stapelmarkierung fehlgeschlagen, bitte versuchen Sie es später erneut",
+    "type_system": "Systembenachrichtigung",
+    "script": {
+      "update": {
+        "content": "<link>{name}</link> hat eine neue Version {version} veröffentlicht"
+      },
+      "score": {
+        "content": "<link>{name}</link> hat eine neue Bewertung erhalten: {score} Punkte",
+        "reply": {
+          "content": "<link>{name}</link> hat eine Antwort des Autors erhalten"
+        }
+      }
+    },
+    "access": {
+      "invite": {
+        "content": "{username} lädt Sie ein, dem Skript {name} beizutreten"
+      }
+    },
+    "issue": {
+      "create": {
+        "content": "[{name}] hat neues Feedback <link>{title} #{issue_id}</link>"
+      },
+      "comment": {
+        "reply": {
+          "content": "[{name}] hat eine neue Antwort <link>{title} #{issue_id}</link>"
+        },
+        "open": {
+          "content": "[{name}] hat Feedback wieder geöffnet <link>{title} #{issue_id}</link>"
+        },
+        "close": {
+          "content": "[{name}] hat Feedback geschlossen <link>{title} #{issue_id}</link>"
+        }
+      }
+    }
+  },
+  "chat": {
+    "metadata": {
+      "title": "ScriptCat KI-Assistent",
+      "description": "ScriptCat KI-Assistent — ScriptCat-Nutzungsanleitung, Antworten auf Fragen zu Userscripts und Skriptsuche."
+    },
+    "welcome_title": "ScriptCat KI-Assistent",
+    "welcome_desc": "Ich kann Ihnen beim Schreiben, Debuggen und Verstehen von Tampermonkey-Userscripts helfen. Wählen Sie unten ein Thema, um loszulegen.",
+    "suggestion_write_title": "Skript schreiben",
+    "suggestion_write_desc": "Hilf mir, ein automatisches Anmelde-Skript für Tampermonkey zu schreiben",
+    "suggestion_debug_title": "Debug-Hilfe",
+    "suggestion_debug_desc": "Mein Skript funktioniert auf einigen Seiten nicht. Wie kann ich das Problem beheben?",
+    "suggestion_guide_title": "Nutzungsanleitung",
+    "suggestion_guide_desc": "Was ist der Unterschied zwischen GM_xmlhttpRequest und fetch?",
+    "suggestion_optimize_title": "Skript optimieren",
+    "suggestion_optimize_desc": "Wie kann ich das Skript vor dem vollständigen Laden der Seite ausführen?",
+    "date_today": "Heute",
+    "date_yesterday": "Gestern",
+    "date_last_7_days": "Letzte 7 Tage",
+    "date_earlier": "Früher",
+    "clear_chat": "Chat leeren",
+    "new_chat": "Neuer Chat",
+    "new_conversation": "Neues Gespräch",
+    "delete_confirm": "Möchten Sie dieses Gespräch wirklich löschen?",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "no_history": "Kein Chatverlauf",
+    "expand_sidebar": "Seitenleiste erweitern",
+    "input_placeholder": "Geben Sie Ihre Frage ein...",
+    "stop_generating": "Generierung stoppen",
+    "retry": "Erneut versuchen",
+    "send_message": "Nachricht senden",
+    "enter_content": "Bitte geben Sie einen Inhalt ein",
+    "input_hint": "Drücken Sie Enter zum Senden, Shift + Enter für eine neue Zeile. KI-Antworten dienen nur als Referenz."
+  },
+  "login": {
+    "title": "Bei ScriptCat anmelden",
+    "tab_login": "Anmelden",
+    "tab_register": "Registrieren",
+    "email": "E-Mail",
+    "email_placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
+    "email_required": "Bitte geben Sie Ihre E-Mail-Adresse ein",
+    "email_invalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "password": "Passwort",
+    "password_placeholder": "Geben Sie Ihr Passwort ein",
+    "password_required": "Bitte geben Sie Ihr Passwort ein",
+    "password_min_length": "Das Passwort muss mindestens 6 Zeichen lang sein",
+    "confirm_password": "Passwort bestätigen",
+    "confirm_password_placeholder": "Geben Sie Ihr Passwort erneut ein",
+    "confirm_password_required": "Bitte bestätigen Sie Ihr Passwort",
+    "confirm_password_mismatch": "Die Passwörter stimmen nicht überein",
+    "login_button": "Anmelden",
+    "register_button": "Registrieren",
+    "divider_text": "oder",
+    "github_login": "Mit GitHub anmelden",
+    "bbs_login": "Mit Forum-Konto anmelden",
+    "login_coming_soon": "E-Mail-Anmeldung kommt bald",
+    "register_coming_soon": "E-Mail-Registrierung kommt bald",
+    "github_coming_soon": "GitHub-Anmeldung kommt bald",
+    "forgot_password": "Passwort vergessen?",
+    "login_failed": "Anmeldung fehlgeschlagen, bitte versuchen Sie es später erneut",
+    "register_failed": "Registrierung fehlgeschlagen, bitte versuchen Sie es später erneut",
+    "register_success_title": "Registrierung erfolgreich",
+    "register_success_description": "Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie Ihren Posteingang und schließen Sie die Verifizierung ab.",
+    "username": "Benutzername",
+    "username_placeholder": "Geben Sie Ihren Benutzernamen ein",
+    "username_required": "Bitte geben Sie Ihren Benutzernamen ein",
+    "username_min_length": "Der Benutzername muss mindestens 2 Zeichen lang sein",
+    "username_max_length": "Der Benutzername darf maximal 32 Zeichen lang sein",
+    "captcha_required": "Bitte schließen Sie die Verifizierung ab"
+  },
+  "auth": {
+    "verify_email": {
+      "verifying": "Wird überprüft...",
+      "success_title": "E-Mail bestätigt",
+      "success_description": "Ihre E-Mail wurde erfolgreich bestätigt. Sie können sich jetzt anmelden.",
+      "error_title": "Überprüfung fehlgeschlagen",
+      "verify_failed": "E-Mail-Überprüfung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "invalid_link": "Ungültiger Link",
+      "invalid_link_description": "Der Bestätigungslink ist ungültig oder abgelaufen.",
+      "go_login": "Zur Anmeldung"
+    },
+    "forgot_password": {
+      "title": "Passwort vergessen",
+      "description": "Geben Sie Ihre registrierte E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen des Passworts.",
+      "email_required": "Bitte geben Sie Ihre E-Mail-Adresse ein",
+      "email_invalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+      "email_placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
+      "submit_button": "Link zum Zurücksetzen senden",
+      "send_failed": "Senden fehlgeschlagen, bitte versuchen Sie es später erneut",
+      "sent_title": "E-Mail gesendet",
+      "sent_description": "Wenn diese E-Mail-Adresse registriert ist, erhalten Sie eine E-Mail mit einem Link zum Zurücksetzen des Passworts.",
+      "back_to_login": "Zurück zur Anmeldung",
+      "captcha_required": "Bitte schließen Sie die Verifizierung ab"
+    },
+    "reset_password": {
+      "title": "Passwort zurücksetzen",
+      "password_required": "Bitte geben Sie ein neues Passwort ein",
+      "password_min_length": "Das Passwort muss mindestens 6 Zeichen lang sein",
+      "password_placeholder": "Geben Sie ein neues Passwort ein",
+      "confirm_password_required": "Bitte bestätigen Sie Ihr neues Passwort",
+      "confirm_password_mismatch": "Die Passwörter stimmen nicht überein",
+      "confirm_password_placeholder": "Geben Sie das neue Passwort erneut ein",
+      "submit_button": "Passwort zurücksetzen",
+      "reset_failed": "Zurücksetzen fehlgeschlagen, bitte versuchen Sie es später erneut",
+      "success_title": "Passwort erfolgreich zurückgesetzt",
+      "success_description": "Ihr Passwort wurde zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+      "invalid_link": "Ungültiger Link",
+      "invalid_link_description": "Der Link zum Zurücksetzen ist ungültig oder abgelaufen.",
+      "go_login": "Zur Anmeldung"
+    }
+  },
+  "oauth": {
+    "authorize": {
+      "title": "Autorisierungsanfrage",
+      "description": "{app_name} fordert Zugriff auf Ihr Konto an",
+      "permissions_label": "Diese Anwendung erhält die folgenden Berechtigungen:",
+      "permission_profile": "Lesen Ihrer grundlegenden Profilinformationen (Benutzername, E-Mail, Avatar)",
+      "approve_button": "Autorisieren",
+      "deny_button": "Ablehnen",
+      "invalid_request": "Ungültige Autorisierungsanfrage",
+      "load_failed": "Laden der Anwendungsinformationen fehlgeschlagen",
+      "approve_failed": "Autorisierung fehlgeschlagen, bitte versuchen Sie es später erneut",
+      "error_title": "Autorisierungsfehler"
+    }
+  },
+  "admin": {
+    "no_permission": "Sie haben keine Administratorberechtigungen für den Zugriff auf diese Seite.",
+    "navigation": {
+      "oauth_apps": "OAuth-App-Verwaltung"
+    },
+    "oauth_apps": {
+      "title": "OAuth-App-Verwaltung",
+      "create_button": "App erstellen",
+      "create_title": "OAuth-App erstellen",
+      "edit_title": "OAuth-App bearbeiten",
+      "col_name": "App-Name",
+      "col_client_id": "Client ID",
+      "col_redirect_uri": "Weiterleitungs-URI",
+      "col_status": "Status",
+      "col_actions": "Aktionen",
+      "status_active": "Aktiv",
+      "status_disabled": "Deaktiviert",
+      "action_edit": "Bearbeiten",
+      "action_delete": "Löschen",
+      "delete_confirm": "Möchten Sie diese App wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "field_name": "App-Name",
+      "field_name_required": "Bitte geben Sie den App-Namen ein",
+      "field_description": "Beschreibung",
+      "field_redirect_uri": "Weiterleitungs-URI",
+      "field_redirect_uri_required": "Bitte geben Sie die Weiterleitungs-URI ein",
+      "field_redirect_uri_invalid": "Bitte geben Sie eine gültige URL ein",
+      "field_status": "Status",
+      "save_button": "Speichern",
+      "create_success": "Erfolgreich erstellt",
+      "update_success": "Erfolgreich aktualisiert",
+      "delete_success": "Erfolgreich gelöscht",
+      "secret_title": "App-Anmeldedaten",
+      "secret_warning": "Bitte speichern Sie das Client Secret sicher. Es wird nur einmal angezeigt!",
+      "secret_confirm": "Ich habe es gespeichert"
+    }
   }
 }

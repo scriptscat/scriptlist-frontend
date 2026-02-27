@@ -33,7 +33,9 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System",
-    "user_setting": "User Settings"
+    "user_setting": "User Settings",
+    "system_settings": "System Settings",
+    "ai_chat": "AI Assistant"
   },
   "home": {
     "metadata": {
@@ -1177,5 +1179,219 @@
   },
   "utils": {
     "time_format": "YYYY-MM-DD"
+  },
+  "login": {
+    "title": "Login to ScriptCat",
+    "tab_login": "Login",
+    "tab_register": "Register",
+    "email": "Email",
+    "email_placeholder": "Enter your email",
+    "email_required": "Please enter your email",
+    "email_invalid": "Please enter a valid email address",
+    "password": "Password",
+    "password_placeholder": "Enter your password",
+    "password_required": "Please enter your password",
+    "password_min_length": "Password must be at least 6 characters",
+    "confirm_password": "Confirm Password",
+    "confirm_password_placeholder": "Enter your password again",
+    "confirm_password_required": "Please confirm your password",
+    "confirm_password_mismatch": "Passwords do not match",
+    "login_button": "Login",
+    "register_button": "Register",
+    "divider_text": "or",
+    "github_login": "Login with GitHub",
+    "bbs_login": "Login with Forum Account",
+    "login_coming_soon": "Email login is coming soon",
+    "register_coming_soon": "Email registration is coming soon",
+    "github_coming_soon": "GitHub login is coming soon",
+    "forgot_password": "Forgot password?",
+    "login_failed": "Login failed, please try again later",
+    "register_failed": "Registration failed, please try again later",
+    "register_success_title": "Registration Successful",
+    "register_success_description": "A verification email has been sent to your email address. Please check your inbox and complete the verification.",
+    "username": "Username",
+    "username_placeholder": "Enter your username",
+    "username_required": "Please enter your username",
+    "username_min_length": "Username must be at least 2 characters",
+    "username_max_length": "Username must be at most 32 characters",
+    "captcha_required": "Please complete verification"
+  },
+  "auth": {
+    "verify_email": {
+      "verifying": "Verifying...",
+      "success_title": "Email Verified",
+      "success_description": "Your email has been verified successfully. You can now log in.",
+      "error_title": "Verification Failed",
+      "verify_failed": "Email verification failed, please try again.",
+      "invalid_link": "Invalid Link",
+      "invalid_link_description": "The verification link is invalid or has expired.",
+      "go_login": "Go to Login"
+    },
+    "forgot_password": {
+      "title": "Forgot Password",
+      "description": "Enter your registered email and we'll send you a password reset link.",
+      "email_required": "Please enter your email",
+      "email_invalid": "Please enter a valid email address",
+      "email_placeholder": "Enter your email",
+      "submit_button": "Send Reset Link",
+      "send_failed": "Failed to send, please try again later",
+      "sent_title": "Email Sent",
+      "sent_description": "If this email is registered, you will receive an email with a password reset link.",
+      "back_to_login": "Back to Login",
+      "captcha_required": "Please complete verification"
+    },
+    "reset_password": {
+      "title": "Reset Password",
+      "password_required": "Please enter a new password",
+      "password_min_length": "Password must be at least 6 characters",
+      "password_placeholder": "Enter new password",
+      "confirm_password_required": "Please confirm your new password",
+      "confirm_password_mismatch": "Passwords do not match",
+      "confirm_password_placeholder": "Enter new password again",
+      "submit_button": "Reset Password",
+      "reset_failed": "Reset failed, please try again later",
+      "success_title": "Password Reset Successful",
+      "success_description": "Your password has been reset. You can now log in with your new password.",
+      "invalid_link": "Invalid Link",
+      "invalid_link_description": "The reset link is invalid or has expired.",
+      "go_login": "Go to Login"
+    }
+  },
+  "oauth": {
+    "authorize": {
+      "title": "Authorization Request",
+      "description": "{app_name} is requesting access to your account",
+      "permissions_label": "This application will have access to:",
+      "permission_profile": "Read your basic profile information (username, email, avatar)",
+      "approve_button": "Authorize",
+      "deny_button": "Deny",
+      "invalid_request": "Invalid authorization request",
+      "load_failed": "Failed to load application info",
+      "approve_failed": "Authorization failed, please try again later",
+      "error_title": "Authorization Error"
+    }
+  },
+  "admin": {
+    "no_permission": "You do not have admin permission to access this page.",
+    "navigation": {
+      "oauth_apps": "OAuth App Management"
+    },
+    "oauth_apps": {
+      "title": "OAuth App Management",
+      "create_button": "Create App",
+      "create_title": "Create OAuth App",
+      "edit_title": "Edit OAuth App",
+      "col_name": "App Name",
+      "col_client_id": "Client ID",
+      "col_redirect_uri": "Redirect URI",
+      "col_status": "Status",
+      "col_actions": "Actions",
+      "status_active": "Active",
+      "status_disabled": "Disabled",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "delete_confirm": "Are you sure you want to delete this app? This action cannot be undone.",
+      "field_name": "App Name",
+      "field_name_required": "Please enter the app name",
+      "field_description": "Description",
+      "field_redirect_uri": "Redirect URI",
+      "field_redirect_uri_required": "Please enter the redirect URI",
+      "field_redirect_uri_invalid": "Please enter a valid URL",
+      "field_status": "Status",
+      "save_button": "Save",
+      "create_success": "Created successfully",
+      "update_success": "Updated successfully",
+      "delete_success": "Deleted successfully",
+      "secret_title": "App Credentials",
+      "secret_warning": "Please save the Client Secret securely. It will only be shown once!",
+      "secret_confirm": "I've saved it"
+    }
+  },
+  "notifications": {
+    "metadata": {
+      "title": "Notification Center",
+      "description": "View and manage your notifications"
+    },
+    "all": "All",
+    "unread": "Unread",
+    "read": "Read",
+    "all_types": "All Types",
+    "empty": "No notifications",
+    "mark_as_read": "Mark as read",
+    "mark_as_unread": "Mark as unread",
+    "mark_all_read": "Mark all as read",
+    "mark_read_success": "Marked as read",
+    "mark_read_error": "Failed to mark, please try again later",
+    "mark_unread_success": "Marked as unread",
+    "mark_unread_error": "Failed to mark, please try again later",
+    "batch_mark_read_success": "Marked {count} notifications as read",
+    "batch_mark_read_error": "Batch mark failed, please try again later",
+    "type_system": "System Notification",
+    "script": {
+      "update": {
+        "content": "<link>{name}</link> has released a new version {version}"
+      },
+      "score": {
+        "content": "<link>{name}</link> received a new rating: {score} points",
+        "reply": {
+          "content": "<link>{name}</link> received an author reply"
+        }
+      }
+    },
+    "access": {
+      "invite": {
+        "content": "{username} invited you to join the script {name}"
+      }
+    },
+    "issue": {
+      "create": {
+        "content": "[{name}] has new feedback <link>{title} #{issue_id}</link>"
+      },
+      "comment": {
+        "reply": {
+          "content": "[{name}] has a new reply <link>{title} #{issue_id}</link>"
+        },
+        "open": {
+          "content": "[{name}] reopened feedback <link>{title} #{issue_id}</link>"
+        },
+        "close": {
+          "content": "[{name}] closed feedback <link>{title} #{issue_id}</link>"
+        }
+      }
+    }
+  },
+  "chat": {
+    "metadata": {
+      "title": "ScriptCat AI Assistant",
+      "description": "ScriptCat AI Assistant, providing ScriptCat usage guide, userscript Q&A, and script search."
+    },
+    "welcome_title": "ScriptCat AI Assistant",
+    "welcome_desc": "I can help you write, debug, and understand Tampermonkey userscripts. Choose a topic below to get started.",
+    "suggestion_write_title": "Write Script",
+    "suggestion_write_desc": "Help me write a Tampermonkey auto sign-in script",
+    "suggestion_debug_title": "Debug Help",
+    "suggestion_debug_desc": "My script doesn't work on some pages, how to troubleshoot?",
+    "suggestion_guide_title": "Usage Guide",
+    "suggestion_guide_desc": "What's the difference between GM_xmlhttpRequest and fetch?",
+    "suggestion_optimize_title": "Optimize Script",
+    "suggestion_optimize_desc": "How to make the script run before the page finishes loading?",
+    "date_today": "Today",
+    "date_yesterday": "Yesterday",
+    "date_last_7_days": "Last 7 days",
+    "date_earlier": "Earlier",
+    "clear_chat": "Clear chat",
+    "new_chat": "New chat",
+    "new_conversation": "New conversation",
+    "delete_confirm": "Are you sure you want to delete this conversation?",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "no_history": "No chat history",
+    "expand_sidebar": "Expand sidebar",
+    "input_placeholder": "Type your question...",
+    "stop_generating": "Stop generating",
+    "retry": "Retry",
+    "send_message": "Send message",
+    "enter_content": "Please enter content",
+    "input_hint": "Press Enter to send, Shift + Enter for new line. AI responses are for reference only."
   }
 }

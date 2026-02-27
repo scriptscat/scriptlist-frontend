@@ -33,7 +33,9 @@
     "light": "Светлая тема",
     "dark": "Тёмная тема",
     "system": "Следовать системе",
-    "user_setting": "Настройки пользователя"
+    "user_setting": "Настройки пользователя",
+    "ai_chat": "AI Ассистент",
+    "system_settings": "Системные настройки"
   },
   "home": {
     "metadata": {
@@ -1177,5 +1179,219 @@
   },
   "utils": {
     "time_format": "DD.MM.YYYY"
+  },
+  "notifications": {
+    "metadata": {
+      "title": "Центр уведомлений",
+      "description": "Просмотр и управление уведомлениями"
+    },
+    "all": "Все",
+    "unread": "Непрочитанные",
+    "read": "Прочитанные",
+    "all_types": "Все типы",
+    "empty": "Нет уведомлений",
+    "mark_as_read": "Отметить как прочитанное",
+    "mark_as_unread": "Отметить как непрочитанное",
+    "mark_all_read": "Отметить все как прочитанные",
+    "mark_read_success": "Отмечено как прочитанное",
+    "mark_read_error": "Не удалось отметить, попробуйте позже",
+    "mark_unread_success": "Отмечено как непрочитанное",
+    "mark_unread_error": "Не удалось отметить, попробуйте позже",
+    "batch_mark_read_success": "Отмечено {count} уведомлений как прочитанные",
+    "batch_mark_read_error": "Пакетная отметка не удалась, попробуйте позже",
+    "type_system": "Системное уведомление",
+    "script": {
+      "update": {
+        "content": "<link>{name}</link> выпущена новая версия {version}"
+      },
+      "score": {
+        "content": "<link>{name}</link> получил новую оценку: {score} баллов",
+        "reply": {
+          "content": "<link>{name}</link> получил ответ автора"
+        }
+      }
+    },
+    "access": {
+      "invite": {
+        "content": "{username} приглашает вас присоединиться к скрипту {name}"
+      }
+    },
+    "issue": {
+      "create": {
+        "content": "[{name}] новый отзыв <link>{title} #{issue_id}</link>"
+      },
+      "comment": {
+        "reply": {
+          "content": "[{name}] новый ответ <link>{title} #{issue_id}</link>"
+        },
+        "open": {
+          "content": "[{name}] открыл отзыв <link>{title} #{issue_id}</link>"
+        },
+        "close": {
+          "content": "[{name}] закрыл отзыв <link>{title} #{issue_id}</link>"
+        }
+      }
+    }
+  },
+  "chat": {
+    "metadata": {
+      "title": "ScriptCat AI Ассистент",
+      "description": "ScriptCat AI Ассистент — руководство по ScriptCat, ответы на вопросы о пользовательских скриптах и поиск скриптов."
+    },
+    "welcome_title": "ScriptCat AI Ассистент",
+    "welcome_desc": "Я могу помочь вам писать, отлаживать и понимать пользовательские скрипты Tampermonkey. Выберите тему ниже, чтобы начать.",
+    "suggestion_write_title": "Написать скрипт",
+    "suggestion_write_desc": "Помогите мне написать скрипт автоматической авторизации для Tampermonkey",
+    "suggestion_debug_title": "Помощь в отладке",
+    "suggestion_debug_desc": "Мой скрипт не работает на некоторых страницах, как устранить проблему?",
+    "suggestion_guide_title": "Руководство",
+    "suggestion_guide_desc": "В чём разница между GM_xmlhttpRequest и fetch?",
+    "suggestion_optimize_title": "Оптимизация скрипта",
+    "suggestion_optimize_desc": "Как запустить скрипт до завершения загрузки страницы?",
+    "date_today": "Сегодня",
+    "date_yesterday": "Вчера",
+    "date_last_7_days": "Последние 7 дней",
+    "date_earlier": "Ранее",
+    "clear_chat": "Очистить чат",
+    "new_chat": "Новый чат",
+    "new_conversation": "Новый диалог",
+    "delete_confirm": "Вы уверены, что хотите удалить этот диалог?",
+    "delete": "Удалить",
+    "cancel": "Отмена",
+    "no_history": "Нет истории чатов",
+    "expand_sidebar": "Развернуть боковую панель",
+    "input_placeholder": "Введите ваш вопрос...",
+    "stop_generating": "Остановить генерацию",
+    "retry": "Повторить",
+    "send_message": "Отправить сообщение",
+    "enter_content": "Пожалуйста, введите содержимое",
+    "input_hint": "Нажмите Enter для отправки, Shift + Enter для новой строки. Ответы ИИ носят справочный характер."
+  },
+  "login": {
+    "title": "Войти в ScriptCat",
+    "tab_login": "Вход",
+    "tab_register": "Регистрация",
+    "email": "Электронная почта",
+    "email_placeholder": "Введите адрес электронной почты",
+    "email_required": "Пожалуйста, введите адрес электронной почты",
+    "email_invalid": "Пожалуйста, введите действительный адрес электронной почты",
+    "password": "Пароль",
+    "password_placeholder": "Введите пароль",
+    "password_required": "Пожалуйста, введите пароль",
+    "password_min_length": "Пароль должен содержать не менее 6 символов",
+    "confirm_password": "Подтверждение пароля",
+    "confirm_password_placeholder": "Введите пароль ещё раз",
+    "confirm_password_required": "Пожалуйста, подтвердите пароль",
+    "confirm_password_mismatch": "Пароли не совпадают",
+    "login_button": "Войти",
+    "register_button": "Зарегистрироваться",
+    "divider_text": "или",
+    "github_login": "Войти через GitHub",
+    "bbs_login": "Войти через аккаунт форума",
+    "login_coming_soon": "Вход по электронной почте скоро будет доступен",
+    "register_coming_soon": "Регистрация по электронной почте скоро будет доступна",
+    "github_coming_soon": "Вход через GitHub скоро будет доступен",
+    "forgot_password": "Забыли пароль?",
+    "login_failed": "Ошибка входа, попробуйте позже",
+    "register_failed": "Ошибка регистрации, попробуйте позже",
+    "register_success_title": "Регистрация успешна",
+    "register_success_description": "Письмо для подтверждения отправлено на ваш адрес. Проверьте почту и завершите верификацию.",
+    "username": "Имя пользователя",
+    "username_placeholder": "Введите имя пользователя",
+    "username_required": "Пожалуйста, введите имя пользователя",
+    "username_min_length": "Имя пользователя должно содержать не менее 2 символов",
+    "username_max_length": "Имя пользователя должно содержать не более 32 символов",
+    "captcha_required": "Пожалуйста, пройдите проверку"
+  },
+  "auth": {
+    "verify_email": {
+      "verifying": "Проверка...",
+      "success_title": "Электронная почта подтверждена",
+      "success_description": "Ваша электронная почта успешно подтверждена. Теперь вы можете войти.",
+      "error_title": "Ошибка проверки",
+      "verify_failed": "Ошибка подтверждения электронной почты, попробуйте снова.",
+      "invalid_link": "Недействительная ссылка",
+      "invalid_link_description": "Ссылка для подтверждения недействительна или устарела.",
+      "go_login": "Перейти к входу"
+    },
+    "forgot_password": {
+      "title": "Забыли пароль",
+      "description": "Введите зарегистрированный адрес электронной почты, и мы отправим ссылку для сброса пароля.",
+      "email_required": "Пожалуйста, введите адрес электронной почты",
+      "email_invalid": "Пожалуйста, введите действительный адрес электронной почты",
+      "email_placeholder": "Введите адрес электронной почты",
+      "submit_button": "Отправить ссылку для сброса",
+      "send_failed": "Ошибка отправки, попробуйте позже",
+      "sent_title": "Письмо отправлено",
+      "sent_description": "Если этот адрес зарегистрирован, вы получите письмо со ссылкой для сброса пароля.",
+      "back_to_login": "Вернуться к входу",
+      "captcha_required": "Пожалуйста, пройдите проверку"
+    },
+    "reset_password": {
+      "title": "Сброс пароля",
+      "password_required": "Пожалуйста, введите новый пароль",
+      "password_min_length": "Пароль должен содержать не менее 6 символов",
+      "password_placeholder": "Введите новый пароль",
+      "confirm_password_required": "Пожалуйста, подтвердите новый пароль",
+      "confirm_password_mismatch": "Пароли не совпадают",
+      "confirm_password_placeholder": "Введите новый пароль ещё раз",
+      "submit_button": "Сбросить пароль",
+      "reset_failed": "Ошибка сброса, попробуйте позже",
+      "success_title": "Пароль успешно сброшен",
+      "success_description": "Ваш пароль был сброшен. Теперь вы можете войти с новым паролем.",
+      "invalid_link": "Недействительная ссылка",
+      "invalid_link_description": "Ссылка для сброса недействительна или устарела.",
+      "go_login": "Перейти к входу"
+    }
+  },
+  "oauth": {
+    "authorize": {
+      "title": "Запрос на авторизацию",
+      "description": "{app_name} запрашивает доступ к вашей учётной записи",
+      "permissions_label": "Это приложение получит следующие разрешения:",
+      "permission_profile": "Чтение основной информации профиля (имя пользователя, электронная почта, аватар)",
+      "approve_button": "Авторизовать",
+      "deny_button": "Отклонить",
+      "invalid_request": "Недействительный запрос авторизации",
+      "load_failed": "Не удалось загрузить информацию о приложении",
+      "approve_failed": "Ошибка авторизации, попробуйте позже",
+      "error_title": "Ошибка авторизации"
+    }
+  },
+  "admin": {
+    "no_permission": "У вас нет прав администратора для доступа к этой странице.",
+    "navigation": {
+      "oauth_apps": "Управление OAuth приложениями"
+    },
+    "oauth_apps": {
+      "title": "Управление OAuth приложениями",
+      "create_button": "Создать приложение",
+      "create_title": "Создать OAuth приложение",
+      "edit_title": "Редактировать OAuth приложение",
+      "col_name": "Название приложения",
+      "col_client_id": "Client ID",
+      "col_redirect_uri": "URI перенаправления",
+      "col_status": "Статус",
+      "col_actions": "Действия",
+      "status_active": "Активно",
+      "status_disabled": "Отключено",
+      "action_edit": "Редактировать",
+      "action_delete": "Удалить",
+      "delete_confirm": "Вы уверены, что хотите удалить это приложение? Это действие нельзя отменить.",
+      "field_name": "Название приложения",
+      "field_name_required": "Пожалуйста, введите название приложения",
+      "field_description": "Описание",
+      "field_redirect_uri": "URI перенаправления",
+      "field_redirect_uri_required": "Пожалуйста, введите URI перенаправления",
+      "field_redirect_uri_invalid": "Пожалуйста, введите действительный URL",
+      "field_status": "Статус",
+      "save_button": "Сохранить",
+      "create_success": "Успешно создано",
+      "update_success": "Успешно обновлено",
+      "delete_success": "Успешно удалено",
+      "secret_title": "Учётные данные приложения",
+      "secret_warning": "Пожалуйста, сохраните Client Secret. Он будет показан только один раз!",
+      "secret_confirm": "Я сохранил"
+    }
   }
 }

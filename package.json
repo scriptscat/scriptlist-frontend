@@ -14,13 +14,14 @@
     "crowdin:download": "node ./scripts/crowdin-download.js"
   },
   "dependencies": {
-    "@cago/agents-client": "link:../../cago/agents/frontend",
     "@ant-design/charts": "^2.6.1",
     "@ant-design/icons": "^6.0.0",
     "@ant-design/nextjs-registry": "^1.1.0",
     "@ant-design/static-style-extract": "^1.0.3",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@cago/agents-client": "link:../../../cago/agents/frontend",
     "@iconify/react": "^6.0.0",
+    "@marsidev/react-turnstile": "^1.4.2",
     "@monaco-editor/react": "^4.7.0",
     "@toast-ui/editor": "^3.2.2",
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",

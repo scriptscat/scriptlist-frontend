@@ -3,6 +3,7 @@
 import React, { createContext, useContext } from 'react';
 import { userService } from '@/lib/api';
 import type { UserInfo } from '@/lib/api/services/user';
+import { useRouter } from '@/i18n/routing';
 
 interface UserContextType {
   user: UserInfo | null;
@@ -19,9 +20,10 @@ export function UserProvider({
   children: React.ReactNode;
   user: UserInfo | null;
 }) {
+  const router = useRouter();
+
   const login = () => {
-    const loginUrl = userService.getOAuthLoginUrl();
-    window.location.href = loginUrl;
+    router.push('/login');
   };
 
   const logout = async () => {

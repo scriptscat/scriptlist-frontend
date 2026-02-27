@@ -33,7 +33,9 @@
     "light": "ライト",
     "dark": "ダーク",
     "system": "システム",
-    "user_setting": "ユーザー設定"
+    "user_setting": "ユーザー設定",
+    "ai_chat": "AI アシスタント",
+    "system_settings": "システム設定"
   },
   "home": {
     "metadata": {
@@ -1177,5 +1179,219 @@
   },
   "utils": {
     "time_format": "YYYY年MM月DD日"
+  },
+  "notifications": {
+    "metadata": {
+      "title": "通知センター",
+      "description": "通知の表示と管理"
+    },
+    "all": "すべて",
+    "unread": "未読",
+    "read": "既読",
+    "all_types": "すべてのタイプ",
+    "empty": "通知はありません",
+    "mark_as_read": "既読にする",
+    "mark_as_unread": "未読にする",
+    "mark_all_read": "すべて既読にする",
+    "mark_read_success": "既読に設定しました",
+    "mark_read_error": "設定に失敗しました。後でもう一度お試しください",
+    "mark_unread_success": "未読に設定しました",
+    "mark_unread_error": "設定に失敗しました。後でもう一度お試しください",
+    "batch_mark_read_success": "{count} 件の通知を既読に設定しました",
+    "batch_mark_read_error": "一括設定に失敗しました。後でもう一度お試しください",
+    "type_system": "システム通知",
+    "script": {
+      "update": {
+        "content": "<link>{name}</link> が新しいバージョン {version} をリリースしました"
+      },
+      "score": {
+        "content": "<link>{name}</link> に新しい評価がありました: {score} 点",
+        "reply": {
+          "content": "<link>{name}</link> に作者からの返信がありました"
+        }
+      }
+    },
+    "access": {
+      "invite": {
+        "content": "{username} がスクリプト {name} への参加を招待しています"
+      }
+    },
+    "issue": {
+      "create": {
+        "content": "[{name}] に新しいフィードバック <link>{title} #{issue_id}</link>"
+      },
+      "comment": {
+        "reply": {
+          "content": "[{name}] に新しい返信 <link>{title} #{issue_id}</link>"
+        },
+        "open": {
+          "content": "[{name}] がフィードバックを再開 <link>{title} #{issue_id}</link>"
+        },
+        "close": {
+          "content": "[{name}] がフィードバックを終了 <link>{title} #{issue_id}</link>"
+        }
+      }
+    }
+  },
+  "chat": {
+    "metadata": {
+      "title": "ScriptCat AI アシスタント",
+      "description": "ScriptCat AI アシスタント。ScriptCatの使い方ガイド、ユーザースクリプトに関するQ&A、スクリプト検索を提供します。"
+    },
+    "welcome_title": "ScriptCat AI アシスタント",
+    "welcome_desc": "Tampermonkeyユーザースクリプトの作成、デバッグ、理解をお手伝いします。下のトピックを選んで始めましょう。",
+    "suggestion_write_title": "スクリプトを書く",
+    "suggestion_write_desc": "自動サインインのTampermonkeyスクリプトを書いてください",
+    "suggestion_debug_title": "デバッグヘルプ",
+    "suggestion_debug_desc": "スクリプトが一部のページで動作しません。どう調査すればいいですか？",
+    "suggestion_guide_title": "使い方ガイド",
+    "suggestion_guide_desc": "GM_xmlhttpRequestとfetchの違いは何ですか？",
+    "suggestion_optimize_title": "スクリプトの最適化",
+    "suggestion_optimize_desc": "ページの読み込み完了前にスクリプトを実行するには？",
+    "date_today": "今日",
+    "date_yesterday": "昨日",
+    "date_last_7_days": "過去7日間",
+    "date_earlier": "それ以前",
+    "clear_chat": "チャットをクリア",
+    "new_chat": "新しいチャット",
+    "new_conversation": "新しい会話",
+    "delete_confirm": "この会話を削除してもよろしいですか？",
+    "delete": "削除",
+    "cancel": "キャンセル",
+    "no_history": "チャット履歴がありません",
+    "expand_sidebar": "サイドバーを展開",
+    "input_placeholder": "質問を入力してください...",
+    "stop_generating": "生成を停止",
+    "retry": "リトライ",
+    "send_message": "メッセージを送信",
+    "enter_content": "内容を入力してください",
+    "input_hint": "Enterで送信、Shift + Enterで改行。AI の回答は参考としてご利用ください。"
+  },
+  "login": {
+    "title": "ScriptCat にログイン",
+    "tab_login": "ログイン",
+    "tab_register": "新規登録",
+    "email": "メールアドレス",
+    "email_placeholder": "メールアドレスを入力してください",
+    "email_required": "メールアドレスを入力してください",
+    "email_invalid": "有効なメールアドレスを入力してください",
+    "password": "パスワード",
+    "password_placeholder": "パスワードを入力してください",
+    "password_required": "パスワードを入力してください",
+    "password_min_length": "パスワードは6文字以上である必要があります",
+    "confirm_password": "パスワード確認",
+    "confirm_password_placeholder": "パスワードを再入力してください",
+    "confirm_password_required": "パスワードを確認してください",
+    "confirm_password_mismatch": "パスワードが一致しません",
+    "login_button": "ログイン",
+    "register_button": "新規登録",
+    "divider_text": "または",
+    "github_login": "GitHub でログイン",
+    "bbs_login": "フォーラムアカウントでログイン",
+    "login_coming_soon": "メールログインは近日公開予定です",
+    "register_coming_soon": "メール登録は近日公開予定です",
+    "github_coming_soon": "GitHub ログインは近日公開予定です",
+    "forgot_password": "パスワードをお忘れですか？",
+    "login_failed": "ログインに失敗しました。後でもう一度お試しください",
+    "register_failed": "登録に失敗しました。後でもう一度お試しください",
+    "register_success_title": "登録完了",
+    "register_success_description": "確認メールが送信されました。メールを確認して認証を完了してください。",
+    "username": "ユーザー名",
+    "username_placeholder": "ユーザー名を入力してください",
+    "username_required": "ユーザー名を入力してください",
+    "username_min_length": "ユーザー名は2文字以上である必要があります",
+    "username_max_length": "ユーザー名は32文字以内である必要があります",
+    "captcha_required": "認証を完了してください"
+  },
+  "auth": {
+    "verify_email": {
+      "verifying": "確認中...",
+      "success_title": "メール認証完了",
+      "success_description": "メールアドレスが正常に確認されました。ログインできます。",
+      "error_title": "認証失敗",
+      "verify_failed": "メール認証に失敗しました。もう一度お試しください。",
+      "invalid_link": "無効なリンク",
+      "invalid_link_description": "認証リンクが無効または期限切れです。",
+      "go_login": "ログインへ"
+    },
+    "forgot_password": {
+      "title": "パスワードをお忘れですか",
+      "description": "登録済みのメールアドレスを入力すると、パスワードリセットリンクをお送りします。",
+      "email_required": "メールアドレスを入力してください",
+      "email_invalid": "有効なメールアドレスを入力してください",
+      "email_placeholder": "メールアドレスを入力してください",
+      "submit_button": "リセットリンクを送信",
+      "send_failed": "送信に失敗しました。後でもう一度お試しください",
+      "sent_title": "メール送信済み",
+      "sent_description": "このメールアドレスが登録されている場合、パスワードリセットリンク付きのメールが届きます。",
+      "back_to_login": "ログインに戻る",
+      "captcha_required": "認証を完了してください"
+    },
+    "reset_password": {
+      "title": "パスワードリセット",
+      "password_required": "新しいパスワードを入力してください",
+      "password_min_length": "パスワードは6文字以上である必要があります",
+      "password_placeholder": "新しいパスワードを入力してください",
+      "confirm_password_required": "新しいパスワードを確認してください",
+      "confirm_password_mismatch": "パスワードが一致しません",
+      "confirm_password_placeholder": "新しいパスワードを再入力してください",
+      "submit_button": "パスワードをリセット",
+      "reset_failed": "リセットに失敗しました。後でもう一度お試しください",
+      "success_title": "パスワードリセット完了",
+      "success_description": "パスワードがリセットされました。新しいパスワードでログインできます。",
+      "invalid_link": "無効なリンク",
+      "invalid_link_description": "リセットリンクが無効または期限切れです。",
+      "go_login": "ログインへ"
+    }
+  },
+  "oauth": {
+    "authorize": {
+      "title": "認可リクエスト",
+      "description": "{app_name} があなたのアカウントへのアクセスを要求しています",
+      "permissions_label": "このアプリケーションは以下の権限を取得します：",
+      "permission_profile": "基本プロフィール情報の読み取り（ユーザー名、メール、アバター）",
+      "approve_button": "認可",
+      "deny_button": "拒否",
+      "invalid_request": "無効な認可リクエスト",
+      "load_failed": "アプリケーション情報の読み込みに失敗しました",
+      "approve_failed": "認可に失敗しました。後でもう一度お試しください",
+      "error_title": "認可エラー"
+    }
+  },
+  "admin": {
+    "no_permission": "このページにアクセスする管理者権限がありません。",
+    "navigation": {
+      "oauth_apps": "OAuth アプリ管理"
+    },
+    "oauth_apps": {
+      "title": "OAuth アプリ管理",
+      "create_button": "アプリを作成",
+      "create_title": "OAuth アプリを作成",
+      "edit_title": "OAuth アプリを編集",
+      "col_name": "アプリ名",
+      "col_client_id": "Client ID",
+      "col_redirect_uri": "リダイレクトURI",
+      "col_status": "ステータス",
+      "col_actions": "操作",
+      "status_active": "有効",
+      "status_disabled": "無効",
+      "action_edit": "編集",
+      "action_delete": "削除",
+      "delete_confirm": "このアプリを削除してもよろしいですか？この操作は元に戻せません。",
+      "field_name": "アプリ名",
+      "field_name_required": "アプリ名を入力してください",
+      "field_description": "説明",
+      "field_redirect_uri": "リダイレクトURI",
+      "field_redirect_uri_required": "リダイレクトURIを入力してください",
+      "field_redirect_uri_invalid": "有効なURLを入力してください",
+      "field_status": "ステータス",
+      "save_button": "保存",
+      "create_success": "作成しました",
+      "update_success": "更新しました",
+      "delete_success": "削除しました",
+      "secret_title": "アプリ資格情報",
+      "secret_warning": "Client Secretを安全に保存してください。一度だけ表示されます！",
+      "secret_confirm": "保存しました"
+    }
   }
 }

@@ -1,34 +1,30 @@
 'use client';
 
 import React from 'react';
-import { Button, Avatar, Dropdown, Space, Badge } from 'antd';
+import { Button, Avatar, Dropdown, Space } from 'antd';
 import {
   UserOutlined,
   LoginOutlined,
   LogoutOutlined,
   SettingOutlined,
-  BellOutlined,
+  ToolOutlined,
 } from '@ant-design/icons';
 import { useUser } from '@/contexts/UserContext';
 import { useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 
 export default function UserAuth() {
-  const { user, login, logout } = useUser();
+  const { user, logout } = useUser();
   const t = useTranslations('layout');
   const router = useRouter();
 
   if (!user) {
     return (
-      <Button
-        type="primary"
-        ghost
-        icon={<LoginOutlined />}
-        onClick={login}
-        size="small"
-      >
-        {t('login')}
-      </Button>
+      <Link href="/login">
+        <Button type="primary" ghost icon={<LoginOutlined />} size="small">
+          {t('login')}
+        </Button>
+      </Link>
     );
   }
 
@@ -49,6 +45,18 @@ export default function UserAuth() {
         router.push('/users/settings');
       },
     },
+    ...(user.is_admin >= 1
+      ? [
+          {
+            key: 'admin',
+            label: t('system_settings'),
+            icon: <ToolOutlined />,
+            onClick: () => {
+              router.push('/admin');
+            },
+          },
+        ]
+      : []),
     {
       type: 'divider' as const,
     },
