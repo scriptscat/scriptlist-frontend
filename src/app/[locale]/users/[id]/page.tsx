@@ -1,5 +1,6 @@
 import UserScriptList from '@/components/UserProfile/UserScriptList';
 import scriptService from '@/lib/api/services/scripts';
+import { slimScriptList } from '@/lib/utils/script-slim';
 import type { ScriptSearchRequest } from '../../script-show-page/[id]/types';
 import { Suspense } from 'react';
 
@@ -35,7 +36,7 @@ export default async function UserPage({
     <Suspense fallback={<div>{'Loading script...'}</div>}>
       <UserScriptList
         userId={userId}
-        scripts={scripts.list}
+        scripts={slimScriptList(scripts.list)}
         totalCount={scripts.total}
         initialFilters={apiParams}
         initialPage={apiParams.page || 1}

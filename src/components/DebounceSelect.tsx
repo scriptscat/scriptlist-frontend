@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { SelectProps } from 'antd';
 import { Select, Spin } from 'antd';
 
@@ -37,9 +37,11 @@ export function DebounceSelect<
   const [fetching, setFetching] = useState(false);
   const [options, setOptions] = useState<ValueType[]>([]);
   const fetchRef = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  const debounceFetcher = useMemo(() => {
-    const loadOptions = (value: string) => {
+  const debounceFetcher = (value: string) => {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
       fetchRef.current += 1;
       const fetchId = fetchRef.current;
       setOptions([]);
@@ -54,9 +56,8 @@ export function DebounceSelect<
         setOptions(newOptions);
         setFetching(false);
       });
-    };
-    return debounce(loadOptions, debounceTimeout);
-  }, [fetchOptions, debounceTimeout]);
+    }, debounceTimeout);
+  };
 
   const hanldeChange = (
     value: ValueType | ValueType[],

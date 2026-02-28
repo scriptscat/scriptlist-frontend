@@ -1,5 +1,5 @@
 import { Button, Table, Modal, message } from 'antd';
-import type { ColumnsType, TableProps } from 'antd/es/table';
+import type { TableColumnsType, TableProps } from 'antd';
 import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { CopyOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -124,7 +124,7 @@ export const InvitePage: React.FC<InvitePageProps> = ({ id, groupID }) => {
     });
   };
 
-  const inviteColumns: ColumnsType<DataType> = [
+  const inviteColumns: TableColumnsType<DataType> = [
     {
       title: t('invite_code'),
       dataIndex: 'code',

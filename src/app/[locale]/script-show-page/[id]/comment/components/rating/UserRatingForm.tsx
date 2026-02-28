@@ -11,7 +11,7 @@ import {
   Typography,
 } from 'antd';
 import { StarFilled, UserOutlined, EditOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import type { UserRatingFormProps } from './types';
 import { getRatingText } from './utils';
@@ -31,18 +31,14 @@ export default function UserRatingForm({
   const t = useTranslations('script.rating.user_form');
   const tRating = useTranslations('script.rating');
   const tRatingText = useTranslations('script.rating.text');
-  const [userRating, setUserRating] = useState<number>(0);
-  const [userComment, setUserComment] = useState<string>('');
+  const [userRating, setUserRating] = useState<number>(
+    existingRating ? existingRating.score / 10 : 0,
+  );
+  const [userComment, setUserComment] = useState<string>(
+    existingRating?.message ?? '',
+  );
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const semDateTime = useSemDateTime();
-
-  // 当存在已有评分时，初始化表单数据
-  useEffect(() => {
-    if (existingRating && !isEditing) {
-      setUserRating(existingRating.score / 10);
-      setUserComment(existingRating.message);
-    }
-  }, [existingRating, isEditing]);
 
   const handleSubmit = async () => {
     if (!user) {
@@ -77,7 +73,7 @@ export default function UserRatingForm({
 
   const handleCancel = () => {
     if (existingRating) {
-      setUserRating(existingRating.score);
+      setUserRating(existingRating.score / 10);
       setUserComment(existingRating.message);
       setIsEditing(false);
     } else {

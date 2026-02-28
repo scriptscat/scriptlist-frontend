@@ -36,6 +36,7 @@ Thumbs.db
 .github
 .gitea
 deploy
+!deploy/docker/entrypoint.sh
 
 # Documentation
 README.md

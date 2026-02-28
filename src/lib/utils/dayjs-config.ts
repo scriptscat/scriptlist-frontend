@@ -22,19 +22,19 @@ dayjs.extend(timezone);
 // 语言映射
 export const dayjsLocaleMapping: Record<string, string> = {
   en: 'en',
-  'en-US': 'en',
-  'zh-CN': 'zh-cn',
-  'zh-TW': 'zh-tw',
-  'zh-HK': 'zh-tw',
+  'en-us': 'en',
+  'zh-cn': 'zh-cn',
+  'zh-tw': 'zh-tw',
+  'zh-hk': 'zh-tw',
   ja: 'ja',
-  'ja-JP': 'ja',
+  'ja-jp': 'ja',
   ru: 'ru',
-  'ru-RU': 'ru',
+  'ru-ru': 'ru',
   vi: 'vi',
-  'vi-VN': 'vi',
+  'vi-vn': 'vi',
   de: 'de',
-  'de-DE': 'de',
-  'ach-UG': 'en', // 回退到英语
+  'de-de': 'de',
+  'ach-ug': 'en', // 回退到英语
 };
 
 /**
@@ -42,7 +42,8 @@ export const dayjsLocaleMapping: Record<string, string> = {
  * @param locale 语言代码
  */
 export function setDayjsLocale(locale: string): void {
-  const dayjsLocale = dayjsLocaleMapping[locale] || dayjsLocaleMapping['en'];
+  const dayjsLocale =
+    dayjsLocaleMapping[locale.toLocaleLowerCase()] || dayjsLocaleMapping['en'];
   dayjs.locale(dayjsLocale);
 }
 

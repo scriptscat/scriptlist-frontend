@@ -25,19 +25,29 @@ import { useLocale, useTranslations } from 'next-intl';
 import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
 import { ScriptUtils } from '@/app/[locale]/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
-import type { ReactNode } from 'react';
+import React, { useCallback, useMemo, type ReactNode } from 'react';
 import { useState } from 'react';
 import ActionMenu from '@/components/ActionMenu';
 import { scriptService } from '@/lib/api/services/scripts';
 
 const { Text } = Typography;
 
+const descriptionStyle: React.CSSProperties = {
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+};
+
 interface ScriptIconProps {
   script: ScriptListItem;
   size?: number;
 }
 
-function ScriptIcon({ script, size = 20 }: ScriptIconProps) {
+const ScriptIcon = React.memo(function ScriptIcon({
+  script,
+  size = 20,
+}: ScriptIconProps) {
   const [hasError, setHasError] = useState(false);
   const iconUrl = ScriptUtils.icon(script.script.meta_json);
 
@@ -49,6 +59,7 @@ function ScriptIcon({ script, size = 20 }: ScriptIconProps) {
     // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
     <img
       src={iconUrl}
+      loading="lazy"
       width={size}
       height={size}
       className="flex-shrink-0 rounded"
@@ -56,7 +67,7 @@ function ScriptIcon({ script, size = 20 }: ScriptIconProps) {
       onLoad={() => setHasError(false)}
     />
   );
-}
+});
 
 interface ActionButton {
   key: string;
@@ -75,7 +86,7 @@ interface ScriptCardProps {
   onDelete?: (script: ScriptListItem) => void;
 }
 
-export default function ScriptCard({
+export default React.memo(function ScriptCard({
   script,
   actions,
   onDelete,
@@ -92,11 +103,11 @@ export default function ScriptCard({
 
   const shareUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/script-show-page/${script.id}`;
 
-  const handleCopySuccess = () => {
+  const handleCopySuccess = useCallback(() => {
     message.success(tCommon('copy_success'));
-  };
+  }, [tCommon]);
 
-  const handleDeleteScript = async () => {
+  const handleDeleteScript = useCallback(async () => {
     try {
       await scriptService.deleteScript(script.id);
       message.success(tCommon('delete_success'));
@@ -105,26 +116,36 @@ export default function ScriptCard({
       message.error(tCommon('delete_failed'));
       console.error('Delete script error:', error);
     }
-  };
+  }, [script, onDelete, tCommon]);
+
+  const handleCardClick = useCallback(() => {
+    const url = `/${locale}/script-show-page/${script.id}`;
+    window.open(url, '_blank');
+  }, [locale, script.id]);
+
+  const stopPropagation = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  const ribbonStyle = useMemo(
+    () => ({
+      display: script.public > 1 ? ('block' as const) : ('none' as const),
+      height: '20px',
+      fontSize: '10px',
+      top: '-4px',
+    }),
+    [script.public],
+  );
 
   return (
     <Badge.Ribbon
       text={ScriptUtils.getRibbonText(script.public)}
       color={'orange'}
-      style={{
-        display: script.public > 1 ? 'block' : 'none',
-        height: '20px',
-        fontSize: '10px',
-        top: '-4px',
-      }}
+      style={ribbonStyle}
     >
       <Card
         hoverable
-        onClick={() => {
-          // 在新页面中打开脚本详情页面，保持国际化路由
-          const url = `/${locale}/script-show-page/${script.id}`;
-          window.open(url, '_blank');
-        }}
+        onClick={handleCardClick}
         styles={{
           body: { padding: '20px' },
         }}
@@ -146,7 +167,7 @@ export default function ScriptCard({
                     className="text-lg font-semibold !text-gray-900 dark:!text-white hover:!text-[#1677ff] line-clamp-1 leading-tight"
                     target="_blank"
                     title={scriptName}
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={stopPropagation}
                   >
                     {scriptName}
                   </Link>
@@ -159,7 +180,7 @@ export default function ScriptCard({
                   >
                     <Tag
                       color="red"
-                      bordered={false}
+                      variant="filled"
                       className="text-xs px-1 py-0"
                     >
                       {'v' + script.script.version}
@@ -172,7 +193,7 @@ export default function ScriptCard({
                   <Link
                     href={`/users/${script.user_id}`}
                     target="_blank"
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={stopPropagation}
                     className="flex items-center gap-1.5 hover:text-[#1677ff] transition-colors"
                   >
                     <Avatar
@@ -193,7 +214,7 @@ export default function ScriptCard({
                     <Tooltip title={script.category.name} placement="bottom">
                       <Tag
                         color={hashColor(script.category.name)}
-                        bordered
+                        variant="outlined"
                         className="text-xs px-1 py-0"
                       >
                         {script.category.name}
@@ -216,12 +237,7 @@ export default function ScriptCard({
             <div
               className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed line-clamp-2 overflow-hidden"
               title={scriptDescription}
-              style={{
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-              }}
+              style={descriptionStyle}
             >
               {scriptDescription}
             </div>
@@ -246,7 +262,7 @@ export default function ScriptCard({
                   size="small"
                   icon={<MoreOutlined />}
                   className="!text-gray-500 hover:!text-gray-700 dark:!text-gray-400 dark:hover:!text-gray-200"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={stopPropagation}
                 />
               </ActionMenu>
             </div>
@@ -254,7 +270,7 @@ export default function ScriptCard({
               <Link
                 href={`/script-show-page/${script.id}`}
                 target="_blank"
-                onClick={(e) => e.stopPropagation()}
+                onClick={stopPropagation}
                 className="hidden md:inline"
               >
                 <Button type="primary">{t('view_detail')}</Button>
@@ -328,7 +344,7 @@ export default function ScriptCard({
                   type="text"
                   size="small"
                   className="!text-gray-500 hover:!text-blue-500 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={stopPropagation}
                 />
               </CopyToClipboard>
             </Tooltip>
@@ -362,4 +378,4 @@ export default function ScriptCard({
       </Card>
     </Badge.Ribbon>
   );
-}
+});

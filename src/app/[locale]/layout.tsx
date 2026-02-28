@@ -6,7 +6,6 @@ import '../globals.css';
 import '@/../public/styles/antd.min.css';
 import MainLayout from '@/components/layout/MainLayout';
 import { LocalizedServerThemeWrapper } from '@/components/LocalizedServerThemeWrapper';
-import '@ant-design/v5-patch-for-react-19';
 
 interface RootLayoutProps {
   children: React.ReactNode;

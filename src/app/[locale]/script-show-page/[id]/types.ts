@@ -57,6 +57,9 @@ export interface ScriptInfo {
   sri?: string; //库才有
 }
 
+// ScriptInfo without the heavy `content` field, used in layout context
+export type ScriptInfoMeta = Omit<ScriptInfo, 'content'>;
+
 export interface Category {
   id: number;
   name: string;
@@ -103,7 +106,7 @@ export interface Script {
   is_pre_release: number;
   status: number;
   createtime: number;
-  code: string;
+  code: string; // 参数中带/code的接口会返回这个字段，其他接口不返回
 }
 
 export interface ScriptAntiFeature {
@@ -126,10 +129,10 @@ export interface ScriptDetailPageProps {
 
 export interface ScriptDetailLayoutProps {
   children: React.ReactNode;
-  params: {
+  params: Promise<{
     locale: string;
     id: string;
-  };
+  }>;
 }
 
 // 脚本搜索请求参数

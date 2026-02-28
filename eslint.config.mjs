@@ -1,19 +1,20 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import prettierConfig from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
+import tseslint from 'typescript-eslint';
 
 const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
-  ...compat.extends('prettier'),
-  ...compat.config({
-    plugins: ['prettier'],
+  {
+    ignores: ['node_modules/**', '.next/**', 'out/**', 'public/**'],
+  },
+  ...nextCoreWebVitals,
+  prettierConfig,
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+      prettier: prettierPlugin,
+    },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
@@ -26,10 +27,14 @@ const eslintConfig = [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+    },
+  },
+  {
+    rules: {
       'react-hooks/exhaustive-deps': 'off',
       'react/jsx-no-literals': 'warn',
     },
-  }),
+  },
 ];
 
 export default eslintConfig;

@@ -11,118 +11,142 @@ import {
   Avatar,
   Space,
   theme,
+  Skeleton,
 } from 'antd';
 import { PlusOutlined, MessageOutlined } from '@ant-design/icons';
-import React, { useState, useEffect } from 'react';
-import { Link, useRouter } from '@/i18n/routing';
-import { useSearchParams } from 'next/navigation';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import type { Issue } from '@/lib/api/services/scripts/issue';
 import { useSemDateTime } from '@/lib/utils/semdate';
+import { useIssueList } from '@/lib/api/hooks/issue';
 import IssueLabel from './IssueLabel';
 
+const PAGE_SIZE = 15;
+
 interface ScriptIssueClientProps {
-  issues: Issue[];
-  totalCount: number;
   scriptId: number;
   initialPage: number;
   initialStatus: 'all' | 'pending' | 'resolved';
+  initialKeyword: string;
+  initialIssues: Issue[];
+  initialTotal: number;
 }
 
 export default function ScriptIssueClient({
-  issues,
-  totalCount,
   scriptId,
+  initialPage,
+  initialStatus,
+  initialKeyword,
+  initialIssues,
+  initialTotal,
 }: ScriptIssueClientProps) {
   const { token } = theme.useToken();
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const semDateTime = useSemDateTime();
   const t = useTranslations('script.issue');
 
-  // 从 URL 参数获取当前状态
-  const currentKeyword = searchParams.get('keyword') || '';
-  const urlStatus = searchParams.get('status');
-  const currentStatus: 'all' | 'pending' | 'resolved' =
-    urlStatus === 'pending' || urlStatus === 'resolved' ? urlStatus : 'all';
-  const currentPage = parseInt(searchParams.get('page') || '1');
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [currentStatus, setCurrentStatus] = useState<
+    'all' | 'pending' | 'resolved'
+  >(initialStatus);
+  const [currentKeyword, setCurrentKeyword] = useState(initialKeyword);
+  const [searchValue, setSearchValue] = useState(initialKeyword);
 
-  const [searchValue, setSearchValue] = useState(currentKeyword); // 输入框的值
+  // 参数是否已偏离 SSR 初始值
+  const paramsChanged =
+    currentPage !== initialPage ||
+    currentStatus !== initialStatus ||
+    currentKeyword !== initialKeyword;
+
+  // 仅在用户交互改变参数后才通过 SWR 获取，初始数据由 SSR props 提供（SEO）
+  const swrParams = paramsChanged
+    ? {
+        page: currentPage,
+        size: PAGE_SIZE,
+        keyword: currentKeyword || undefined,
+        sort: 'createtime' as const,
+        ...(currentStatus === 'pending'
+          ? { status: 1 as const }
+          : currentStatus === 'resolved'
+            ? { status: 3 as const }
+            : {}),
+      }
+    : null;
+
+  const { data, isLoading } = useIssueList(scriptId, swrParams);
+
+  const displayIssues = paramsChanged ? (data?.list ?? []) : initialIssues;
+  const totalCount = paramsChanged ? (data?.total ?? 0) : initialTotal;
+  const loading = paramsChanged && isLoading;
+
+  // Sync URL without triggering navigation
+  const syncURL = useCallback(
+    (page: number, status: string, keyword: string) => {
+      const params = new URLSearchParams();
+      if (keyword) params.set('keyword', keyword);
+      if (status !== 'all') params.set('status', status);
+      if (page > 1) params.set('page', page.toString());
+      const queryString = params.toString();
+      const newURL = queryString ? `?${queryString}` : '';
+      window.history.replaceState(
+        null,
+        '',
+        `/script-show-page/${scriptId}/issue${newURL}`,
+      );
+    },
+    [scriptId],
+  );
 
   // 防抖搜索
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchValue !== currentKeyword) {
-        updateURL({ keyword: searchValue, page: 1 });
+        setCurrentKeyword(searchValue);
+        setCurrentPage(1);
+        syncURL(1, currentStatus, searchValue);
       }
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [searchValue, currentKeyword]);
-
-  // 更新 URL 参数
-  const updateURL = (params: {
-    keyword?: string;
-    status?: 'all' | 'pending' | 'resolved';
-    page?: number;
-  }) => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-
-    if (params.keyword !== undefined) {
-      if (params.keyword) {
-        newSearchParams.set('keyword', params.keyword);
-      } else {
-        newSearchParams.delete('keyword');
-      }
-    }
-
-    if (params.status !== undefined) {
-      if (params.status && params.status !== 'all') {
-        newSearchParams.set('status', params.status);
-      } else {
-        newSearchParams.delete('status');
-      }
-    }
-
-    if (params.page !== undefined) {
-      if (params.page > 1) {
-        newSearchParams.set('page', params.page.toString());
-      } else {
-        newSearchParams.delete('page');
-      }
-    }
-
-    const queryString = newSearchParams.toString();
-    const newURL = queryString ? `?${queryString}` : '';
-
-    router.push(`/script-show-page/${scriptId}/issue${newURL}`);
-  };
-
-  // 过滤和搜索逻辑现在由服务端处理，这里直接显示数据
-  const displayIssues = issues;
+  }, [searchValue, currentKeyword, currentStatus, syncURL]);
 
   // 处理筛选状态变化
-  const handleStatusFilter = (status: 'all' | 'pending' | 'resolved') => {
-    updateURL({ status, page: 1 });
-  };
+  const handleStatusFilter = useCallback(
+    (status: 'all' | 'pending' | 'resolved') => {
+      setCurrentStatus(status);
+      setCurrentPage(1);
+      syncURL(1, status, currentKeyword);
+    },
+    [syncURL, currentKeyword],
+  );
 
   // 处理搜索输入变化
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value);
-  };
+  const handleSearchInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(e.target.value);
+    },
+    [],
+  );
 
   // 处理搜索
-  const handleSearch = (value: string) => {
-    setSearchValue(value);
-    updateURL({ keyword: value, page: 1 });
-  };
+  const handleSearch = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      setCurrentKeyword(value);
+      setCurrentPage(1);
+      syncURL(1, currentStatus, value);
+    },
+    [syncURL, currentStatus],
+  );
 
   // 处理分页变化
-  const handlePageChange = (page: number) => {
-    updateURL({ page });
-  };
-
-  const pageSize = 15;
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      syncURL(page, currentStatus, currentKeyword);
+    },
+    [syncURL, currentStatus, currentKeyword],
+  );
 
   return (
     <Card className="shadow-sm">
@@ -171,7 +195,11 @@ export default function ScriptIssueClient({
         </div>
 
         {/* 问题列表 */}
-        {displayIssues.length === 0 ? (
+        {loading ? (
+          <div className="p-4">
+            <Skeleton active paragraph={{ rows: 6 }} />
+          </div>
+        ) : displayIssues.length === 0 ? (
           <div
             style={{
               border: `1px solid ${token.colorBorder}`,
@@ -292,21 +320,6 @@ export default function ScriptIssueClient({
                             <MessageOutlined style={{ fontSize: '16px' }} />
                             <span>{issue.comment_count || 0}</span>
                           </div>
-                          {/* <Button
-                          type="text"
-                          size="small"
-                          icon={<EyeOutlined />}
-                          style={{
-                            color: token.colorTextTertiary,
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.color = token.colorPrimary;
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.color =
-                              token.colorTextTertiary;
-                          }}
-                        /> */}
                         </div>
                       </div>
                     </div>
@@ -318,12 +331,12 @@ export default function ScriptIssueClient({
         )}
 
         {/* 分页 */}
-        {totalCount > pageSize && (
+        {totalCount > PAGE_SIZE && (
           <div className="flex justify-center mt-4">
             <Pagination
               current={currentPage}
               total={totalCount}
-              pageSize={pageSize}
+              pageSize={PAGE_SIZE}
               onChange={handlePageChange}
               showSizeChanger={false}
               showQuickJumper

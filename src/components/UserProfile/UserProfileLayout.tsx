@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { MenuProps, DescriptionsProps } from 'antd';
 import {
   Avatar,
@@ -60,7 +60,7 @@ export default function UserProfileLayout({
   const router = useRouter();
   const pathname = usePathname();
   const { user: currentUser } = useUser();
-  const [activeTab, setActiveTab] = useState('scripts');
+  const activeTab = pathname.includes('/favorites') ? 'favorites' : 'scripts';
   const [isFollowing, setIsFollowing] = useState(user.is_follow);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const semDateTime = useSemDateTime();
@@ -72,15 +72,6 @@ export default function UserProfileLayout({
 
   // 直接使用传入的用户详细数据
   const currentUserData = user;
-
-  // 根据当前路径设置活动标签
-  useEffect(() => {
-    if (pathname.includes('/favorites')) {
-      setActiveTab('favorites');
-    } else {
-      setActiveTab('scripts');
-    }
-  }, [pathname]);
 
   const tabItems = [
     {
@@ -113,7 +104,6 @@ export default function UserProfileLayout({
   ];
 
   const handleTabChange = (key: string) => {
-    setActiveTab(key);
     const targetItem = tabItems.find((item) => item.key === key);
     if (targetItem && key !== 'activity') {
       const newPath = `/users/${user.user_id}${targetItem.path}`;

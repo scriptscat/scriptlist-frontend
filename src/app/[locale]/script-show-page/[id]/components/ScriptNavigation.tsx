@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Menu, Space } from 'antd';
+import { Menu, Space, theme } from 'antd';
 import {
   BookOutlined,
   CodeOutlined,
@@ -13,10 +13,10 @@ import {
   SettingOutlined,
   BugOutlined,
 } from '@ant-design/icons';
-import useToken from 'antd/es/theme/useToken';
 import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
 import { useScript, useScriptState } from './ScriptContext';
+import { useMemo } from 'react';
 
 interface ScriptNavigationProps {
   activeKey: string;
@@ -27,69 +27,73 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
   const user = useUser();
   const script = useScript();
   const scriptState = useScriptState();
-  const [_, token] = useToken();
+  const { token } = theme.useToken();
   const t = useTranslations('script.navigation');
   const { locale, id } = params;
 
-  const menuItems = [
-    {
-      key: 'overview',
-      icon: <BookOutlined />,
-      label: (
-        <Link href={`/${locale}/script-show-page/${id}`}>{t('overview')}</Link>
-      ),
-    },
-    {
-      key: 'code',
-      icon: <CodeOutlined />,
-      label: (
-        <Link href={`/${locale}/script-show-page/${id}/code`}>{t('code')}</Link>
-      ),
-    },
-    {
-      key: 'issue',
-      icon: <BugOutlined />,
-      label: (
-        <Space>
-          <Link href={`/${locale}/script-show-page/${id}/issue`}>
-            {t('issue')}
+  const menuItems = useMemo(() => {
+    const items = [
+      {
+        key: 'overview',
+        icon: <BookOutlined />,
+        label: (
+          <Link href={`/${locale}/script-show-page/${id}`}>
+            {t('overview')}
           </Link>
-          {scriptState?.issue_count > 0 && (
-            <span className="inline-block px-2 py-0.5 text-xs font-medium leading-4 bg-gray-300 text-white dark:text-gray-200 dark:bg-gray-600 rounded-full">
-              {scriptState?.issue_count}
-            </span>
-          )}
-        </Space>
-      ),
-    },
-    {
-      key: 'comment',
-      icon: <StarOutlined />,
-      label: (
-        <Link href={`/${locale}/script-show-page/${id}/comment`}>
-          {t('comment')}
-        </Link>
-      ),
-    },
-    {
-      key: 'version',
-      icon: <HistoryOutlined />,
-      label: (
-        <Link href={`/${locale}/script-show-page/${id}/version`}>
-          {t('version')}
-        </Link>
-      ),
-    },
-  ];
+        ),
+      },
+      {
+        key: 'code',
+        icon: <CodeOutlined />,
+        label: (
+          <Link href={`/${locale}/script-show-page/${id}/code`}>
+            {t('code')}
+          </Link>
+        ),
+      },
+      {
+        key: 'issue',
+        icon: <BugOutlined />,
+        label: (
+          <Space>
+            <Link href={`/${locale}/script-show-page/${id}/issue`}>
+              {t('issue')}
+            </Link>
+            {scriptState?.issue_count > 0 && (
+              <span className="inline-block px-2 py-0.5 text-xs font-medium leading-4 bg-gray-300 text-white dark:text-gray-200 dark:bg-gray-600 rounded-full">
+                {scriptState?.issue_count}
+              </span>
+            )}
+          </Space>
+        ),
+      },
+      {
+        key: 'comment',
+        icon: <StarOutlined />,
+        label: (
+          <Link href={`/${locale}/script-show-page/${id}/comment`}>
+            {t('comment')}
+          </Link>
+        ),
+      },
+      {
+        key: 'version',
+        icon: <HistoryOutlined />,
+        label: (
+          <Link href={`/${locale}/script-show-page/${id}/version`}>
+            {t('version')}
+          </Link>
+        ),
+      },
+    ];
 
-  if (
-    user.user &&
-    (user.user.user_id === script.script.user_id ||
-      user.user.is_admin === 1 ||
-      script.script.role === 'manager')
-  ) {
-    menuItems.push(
-      ...[
+    if (
+      user.user &&
+      (user.user.user_id === script.script.user_id ||
+        user.user.is_admin === 1 ||
+        script.script.role === 'manager')
+    ) {
+      items.push(
         {
           key: 'update',
           icon: <EditOutlined />,
@@ -117,9 +121,27 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
             </Link>
           ),
         },
-      ],
-    );
-  }
+      );
+    }
+
+    return items;
+  }, [
+    locale,
+    id,
+    t,
+    user.user,
+    script.script.user_id,
+    script.script.role,
+    scriptState?.issue_count,
+  ]);
+
+  const menuStyle = useMemo(
+    () => ({
+      borderRadius: '12px',
+      border: '1px solid ' + token.colorBorder,
+    }),
+    [token.colorBorder],
+  );
 
   return (
     <Menu
@@ -127,7 +149,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
       selectedKeys={[activeKey]}
       items={menuItems}
       className="w-full shadow-sm"
-      style={{ borderRadius: '12px', border: '1px solid ' + token.colorBorder }}
+      style={menuStyle}
     />
   );
 }

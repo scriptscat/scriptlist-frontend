@@ -5,7 +5,6 @@ import type { ThemeMode } from '@/lib/cookies';
 import { THEME_COOKIE_NAME, THEME_MODE_COOKIE_NAME } from '@/lib/cookies';
 import NavigationProgress from './NavigationProgress';
 import { DayjsLocaleProvider } from './DayjsLocaleProvider';
-import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { SWRProvider } from '@/lib/swr-config';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -42,10 +41,12 @@ export async function LocalizedServerThemeWrapper({
   children,
   locale,
 }: LocalizedServerThemeWrapperProps) {
-  // 获取服务端主题
-  const serverTheme = await getThemeFromServerCookies();
-  const messages = await getMessages();
-  const user = await userService.getCurrentUser();
+  // 并行获取服务端主题、国际化消息和用户信息
+  const [serverTheme, messages, user] = await Promise.all([
+    getThemeFromServerCookies(),
+    getMessages(),
+    userService.getCurrentUser(),
+  ]);
 
   return (
     <html lang={locale} data-theme={serverTheme.theme}>
@@ -80,15 +81,13 @@ export async function LocalizedServerThemeWrapper({
       >
         <NavigationProgress />
         <ThemeProvider initialMode={serverTheme}>
-          <AntdRegistry>
-            <SWRProvider>
-              <NextIntlClientProvider messages={messages}>
-                <DayjsLocaleProvider>
-                  <UserProvider user={user}>{children}</UserProvider>
-                </DayjsLocaleProvider>
-              </NextIntlClientProvider>
-            </SWRProvider>
-          </AntdRegistry>
+          <SWRProvider>
+            <NextIntlClientProvider messages={messages}>
+              <DayjsLocaleProvider>
+                <UserProvider user={user}>{children}</UserProvider>
+              </DayjsLocaleProvider>
+            </NextIntlClientProvider>
+          </SWRProvider>
         </ThemeProvider>
       </body>
     </html>

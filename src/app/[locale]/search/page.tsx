@@ -2,6 +2,7 @@ import { Row, Col } from 'antd';
 import Sidebar from '@/components/Sidebar';
 import ScriptList from '@/components/Scriptlist';
 import { scriptService } from '@/lib/api/services/scripts';
+import { slimScriptList, slimScriptListForSidebar } from '@/lib/utils/script-slim';
 import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
@@ -66,7 +67,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       <Col xs={24} lg={18}>
         {/* 搜索区域 */}
         <ScriptList
-          scripts={scripts.list}
+          scripts={slimScriptList(scripts.list)}
           totalCount={scripts.total}
           initialFilters={apiParams}
           initialPage={apiParams.page || 1}
@@ -76,8 +77,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       {/* 侧边栏 */}
       <Col xs={24} lg={6}>
         <Sidebar
-          recentScripts={recentScripts.list}
-          ratingScripts={ratingScripts.list}
+          recentScripts={slimScriptListForSidebar(recentScripts.list)}
+          ratingScripts={slimScriptListForSidebar(ratingScripts.list)}
         />
       </Col>
     </Row>

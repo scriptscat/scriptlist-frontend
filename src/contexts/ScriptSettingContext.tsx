@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import type { ScriptSetting } from '@/app/[locale]/script-show-page/[id]/types';
 
 interface ScriptSettingContextType {
@@ -21,8 +21,10 @@ export function ScriptSettingProvider({
   children,
   scriptSetting,
 }: ScriptSettingProviderProps) {
+  const value = useMemo(() => ({ scriptSetting }), [scriptSetting]);
+
   return (
-    <ScriptSettingContext.Provider value={{ scriptSetting }}>
+    <ScriptSettingContext.Provider value={value}>
       {children}
     </ScriptSettingContext.Provider>
   );

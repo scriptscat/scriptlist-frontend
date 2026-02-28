@@ -11,7 +11,7 @@ import {
   message,
   Badge,
 } from 'antd';
-import { Header, Content, Footer } from 'antd/es/layout/layout';
+const { Header, Content, Footer } = Layout;
 import { useTranslations } from 'next-intl';
 import { languageMap, Link, usePathname, useRouter } from '@/i18n/routing';
 import { ThemeToggle } from './ThemeToggle';
@@ -29,6 +29,7 @@ import {
 } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
 import Image from 'next/image';
+import { useCallback, useMemo } from 'react';
 
 const { Title } = Typography;
 
@@ -43,14 +44,14 @@ export default function MainLayout({
   const router = useRouter();
   const { user } = useUser();
 
-  const handlePublishScript = () => {
+  const handlePublishScript = useCallback(() => {
     if (!user) {
       message.warning(t('login_required'));
       return;
     }
     // 跳转到发布脚本页面
     router.push('/scripts/create');
-  };
+  }, [user, t, router]);
 
   type NavItem = {
     href: string;
@@ -58,45 +59,68 @@ export default function MainLayout({
     icon: React.ReactNode;
   };
 
-  const navItems: NavItem[] = [
-    { href: '/', label: t('home'), icon: <HomeOutlined /> },
-    {
-      href: 'https://bbs.tampermonkey.net.cn',
-      label: t('community'),
-      icon: <MessageOutlined />,
-    },
-    { href: '/search', label: t('script_list'), icon: <CodeOutlined /> },
-    // { href: '/developer', label: t('developer'), icon: <CodeOutlined /> },
-    {
-      href: 'https://docs.scriptcat.org/',
-      label: t('browser_extension'),
-      icon: <ChromeOutlined />,
-    },
-  ];
+  const navItems: NavItem[] = useMemo(
+    () => [
+      { href: '/', label: t('home'), icon: <HomeOutlined /> },
+      {
+        href: 'https://bbs.tampermonkey.net.cn',
+        label: t('community'),
+        icon: <MessageOutlined />,
+      },
+      { href: '/search', label: t('script_list'), icon: <CodeOutlined /> },
+      // { href: '/developer', label: t('developer'), icon: <CodeOutlined /> },
+      {
+        href: 'https://docs.scriptcat.org/',
+        label: t('browser_extension'),
+        icon: <ChromeOutlined />,
+      },
+    ],
+    [t],
+  );
 
   // 用于Menu的items
-  const menuItems = navItems.map((item) => ({
-    key: item.href,
-    label: (
-      <Link
-        href={item.href}
-        style={{
-          color: pathname === item.href ? token.colorPrimary : token.colorText,
-          textDecoration: 'none',
-          fontWeight: pathname === item.href ? 500 : 400,
-          transition: 'color 0.2s',
-        }}
-        target={item.href.startsWith('http') ? '_blank' : undefined}
-      >
-        {item.icon} {item.label}
-      </Link>
-    ),
-  }));
+  const menuItems = useMemo(
+    () =>
+      navItems.map((item) => ({
+        key: item.href,
+        label: (
+          <Link
+            href={item.href}
+            style={{
+              color:
+                pathname === item.href ? token.colorPrimary : token.colorText,
+              textDecoration: 'none',
+              fontWeight: pathname === item.href ? 500 : 400,
+              transition: 'color 0.2s',
+            }}
+            target={item.href.startsWith('http') ? '_blank' : undefined}
+          >
+            {item.icon} {item.label}
+          </Link>
+        ),
+      })),
+    [navItems, pathname, token.colorPrimary, token.colorText],
+  );
 
-  const switchLocale = (newLocale: string) => {
-    // 简单的语言切换实现
-    window.location.href = `/${newLocale}${pathname}`;
-  };
+  const switchLocale = useCallback(
+    (newLocale: string) => {
+      // 简单的语言切换实现
+      window.location.assign(`/${newLocale}${pathname}`);
+    },
+    [pathname],
+  );
+
+  const languageMenuProps = useMemo(
+    () => ({
+      items: Object.keys(languageMap).map((key) => ({
+        key: key,
+        label: `${languageMap[key].label} (${key})`,
+        onClick: () => switchLocale(key),
+      })),
+      forceSubMenuRender: true,
+    }),
+    [switchLocale],
+  );
 
   // 聊天页使用独立布局：无 Footer，全屏高度，无外层滚动
   const isFullscreenPage = pathname.startsWith('/chat');
@@ -209,14 +233,7 @@ export default function MainLayout({
 
             {/* Language Switcher */}
             <Dropdown
-              menu={{
-                items: Object.keys(languageMap).map((key) => ({
-                  key: key,
-                  label: `${languageMap[key].label} (${key})`,
-                  onClick: () => switchLocale(key),
-                })),
-                forceSubMenuRender: true,
-              }}
+              menu={languageMenuProps}
               trigger={['click']}
               placement="bottomLeft"
             >

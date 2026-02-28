@@ -62,8 +62,12 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
+# 复制启动脚本
+COPY deploy/docker/entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
 # 暴露端口
 EXPOSE 3000
 
-# 启动应用（standalone 模式使用 server.js）
-CMD ["node", "server.js"]
+# 启动应用（包含预热）
+CMD ["./entrypoint.sh"]

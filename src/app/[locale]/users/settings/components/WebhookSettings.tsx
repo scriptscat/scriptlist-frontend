@@ -119,60 +119,61 @@ export default function WebhookSettings({
           onChange={onChange}
           direction="vertical"
           className="custom-steps"
-        >
-          <Steps.Step
-            title={t('step_bind_repo')}
-            description={
-              <div className="mt-2">
-                <Text>{t('step_bind_repo_desc')}</Text>
-              </div>
-            }
-            icon={<LinkOutlined />}
-          />
-          <Steps.Step
-            title={t('step_config_webhook')}
-            description={
-              <div className="mt-2">
-                <Text>{t('step_config_webhook_desc')}</Text>
+          items={[
+            {
+              title: t('step_bind_repo'),
+              description: (
                 <div className="mt-2">
-                  <Text type="secondary">
-                    {t('step_config_webhook_detail')}
-                  </Text>
+                  <Text>{t('step_bind_repo_desc')}</Text>
                 </div>
-              </div>
-            }
-            icon={<ApiOutlined />}
-          />
-          <Steps.Step
-            title={t('step_select_events')}
-            description={
-              <div className="mt-2 space-y-2">
-                <Text>{t('step_select_events_desc')}</Text>
-                <div className="ml-4 space-y-1">
-                  <div>
-                    {'• '}
-                    <Text strong>{t('event_push')}</Text>
-                    {'：'}
-                    {t('event_push_desc')}
-                  </div>
-                  <div>
-                    {'• '}
-                    <Text strong>{t('event_release')}</Text>
-                    {'：'}
-                    {t('event_release_desc')}
-                  </div>
-                  <div>
-                    {'• '}
-                    <Text strong>{t('event_tag')}</Text>
-                    {'：'}
-                    {t('event_tag_desc')}
+              ),
+              icon: <LinkOutlined />,
+            },
+            {
+              title: t('step_config_webhook'),
+              description: (
+                <div className="mt-2">
+                  <Text>{t('step_config_webhook_desc')}</Text>
+                  <div className="mt-2">
+                    <Text type="secondary">
+                      {t('step_config_webhook_detail')}
+                    </Text>
                   </div>
                 </div>
-              </div>
-            }
-            icon={<BellOutlined />}
-          />
-        </Steps>
+              ),
+              icon: <ApiOutlined />,
+            },
+            {
+              title: t('step_select_events'),
+              description: (
+                <div className="mt-2 space-y-2">
+                  <Text>{t('step_select_events_desc')}</Text>
+                  <div className="ml-4 space-y-1">
+                    <div>
+                      {'• '}
+                      <Text strong>{t('event_push')}</Text>
+                      {'：'}
+                      {t('event_push_desc')}
+                    </div>
+                    <div>
+                      {'• '}
+                      <Text strong>{t('event_release')}</Text>
+                      {'：'}
+                      {t('event_release_desc')}
+                    </div>
+                    <div>
+                      {'• '}
+                      <Text strong>{t('event_tag')}</Text>
+                      {'：'}
+                      {t('event_tag_desc')}
+                    </div>
+                  </div>
+                </div>
+              ),
+              icon: <BellOutlined />,
+            },
+          ]}
+        />
       </Card>
 
       {/* Webhook 配置信息 */}

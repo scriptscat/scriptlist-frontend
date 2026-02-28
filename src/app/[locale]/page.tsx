@@ -18,7 +18,6 @@ import {
   CodeFilled,
   DownOutlined,
 } from '@ant-design/icons';
-import { browserName } from 'react-device-detect';
 import { Icon } from '@iconify/react';
 import { Link, useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
@@ -140,7 +139,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   onSearch,
 }) => {
   const t = useTranslations();
-  const currentBrowser = browserName.toLowerCase();
+  const ua =
+    typeof navigator !== 'undefined' ? navigator.userAgent.toLowerCase() : '';
+  const currentBrowser = ua.includes('edg')
+    ? 'edge'
+    : ua.includes('firefox')
+      ? 'firefox'
+      : ua.includes('chrome')
+        ? 'chrome'
+        : 'default';
   const storeMap = getStoreMap(t);
   const browserStore = storeMap[currentBrowser] || storeMap.default;
 

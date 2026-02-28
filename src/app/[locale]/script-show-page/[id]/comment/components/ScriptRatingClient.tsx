@@ -123,18 +123,24 @@ export default function ScriptRatingClient({
     }, 100);
   }, [loading, hasMore]);
 
-  // 无限滚动监听
+  // 无限滚动监听（带节流）
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 100
-      ) {
-        loadMoreRatings();
-      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (
+          window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.offsetHeight - 100
+        ) {
+          loadMoreRatings();
+        }
+        ticking = false;
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loadMoreRatings]);
 

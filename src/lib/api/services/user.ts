@@ -198,6 +198,14 @@ export class UserService {
   }
 
   /**
+   * 刷新登录 token（fire-and-forget）
+   * 后端会判断是否需要刷新（超过3天才会真正刷新）
+   */
+  async refreshToken() {
+    return apiClient.post<void>(`${this.basePath}/refresh-token`);
+  }
+
+  /**
    * 设置用户通知配置
    * @param notify 通知配置对象
    */
