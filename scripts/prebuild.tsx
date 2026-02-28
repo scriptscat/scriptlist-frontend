@@ -12,7 +12,7 @@ import {
 
 const outputPath = './public/styles/antd.min.css';
 
-const css = extractStyle((node) => (
+let css = extractStyle((node) => (
   <>
     <ConfigProvider
       theme={{
@@ -37,9 +37,19 @@ const css = extractStyle((node) => (
   </>
 ));
 
+// 修复 antd v6 Tour 组件的 CSS bug：
+// 生成的选择器如 `:where(.css-HASH)-placement-left` 是无效 CSS，
+// 缺少 `.ant-tour` 前缀，需要补全为 `:where(.css-HASH).ant-tour-placement-left`
+css = css.replace(
+  /(:where\([^)]+\))(-placement-(left|leftTop|leftBottom|right|rightTop|rightBottom|top|topLeft|topRight|bottom|bottomLeft|bottomRight)\b)/g,
+  '$1.ant-tour$2',
+);
+
+// 每条规则换行，避免超长行导致 Turbopack CSS 解析失败
+css = css.replace(/}\s*/g, '}\n');
+
 // 创建目录
 fs.mkdirSync('./public/styles', { recursive: true });
-// 生成css
 fs.writeFileSync(outputPath, css);
 
 // 拷贝monaco - 只复制必要的文件，减少体积（14MB -> ~5MB）
@@ -48,7 +58,10 @@ const monacoDst = './public/assets/monaco-editor/min/vs';
 
 // 核心文件（必须）
 fs.mkdirSync(monacoDst, { recursive: true });
-fs.copyFileSync(path.join(monacoSrc, 'loader.js'), path.join(monacoDst, 'loader.js'));
+fs.copyFileSync(
+  path.join(monacoSrc, 'loader.js'),
+  path.join(monacoDst, 'loader.js'),
+);
 
 // 中文语言包
 const nlsFile = 'nls.messages.zh-cn.js';
@@ -58,7 +71,9 @@ if (fs.existsSync(path.join(monacoSrc, nlsFile))) {
 
 // base（核心运行时）和 editor（编辑器主体）
 for (const dir of ['base', 'editor']) {
-  fs.cpSync(path.join(monacoSrc, dir), path.join(monacoDst, dir), { recursive: true });
+  fs.cpSync(path.join(monacoSrc, dir), path.join(monacoDst, dir), {
+    recursive: true,
+  });
 }
 
 // language - 只复制 typescript 和 json（JS 由 typescript worker 处理）
@@ -74,6 +89,8 @@ for (const lang of ['typescript', 'json']) {
 for (const lang of ['javascript', 'typescript', 'css']) {
   const langSrc = path.join(monacoSrc, 'basic-languages', lang);
   if (fs.existsSync(langSrc)) {
-    fs.cpSync(langSrc, path.join(monacoDst, 'basic-languages', lang), { recursive: true });
+    fs.cpSync(langSrc, path.join(monacoDst, 'basic-languages', lang), {
+      recursive: true,
+    });
   }
 }

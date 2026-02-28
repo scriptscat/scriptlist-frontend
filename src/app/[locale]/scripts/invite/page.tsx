@@ -172,7 +172,7 @@ export default function InviteConfirm() {
     );
   };
 
-  function InviteDetail({ invite_status }: { invite_status: number }) {
+  function renderInviteDetail(invite_status: number) {
     const statusConfig = getStatusConfig(invite_status);
     const inviteText = isGroup
       ? t('invite_you_join_group', {
@@ -346,7 +346,7 @@ export default function InviteConfirm() {
         <Divider />
 
         {/* 邀请详情 */}
-        <InviteDetail invite_status={invite_status} />
+        {renderInviteDetail(invite_status)}
 
         <Divider />
 

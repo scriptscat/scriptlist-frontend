@@ -1,17 +1,19 @@
 import {
   Button,
   Form,
+  Input,
   InputNumber,
   Modal,
   Select,
   Switch,
   message,
 } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { scriptAccessService } from '@/lib/api/services/scripts';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import TextArea from 'antd/es/input/TextArea';
+
+const { TextArea } = Input;
 import { useTranslations } from 'next-intl';
 
 export const InviteModal: React.FC<{
@@ -24,14 +26,11 @@ export const InviteModal: React.FC<{
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [inviteCodeText, setInviteCodeText] = useState('');
   const [loading, setLoading] = useState(false);
-  const codeTextRef = useRef('');
-  codeTextRef.current = inviteCodeText;
 
-  useEffect(() => {
-    if (openSuccessModal === false) {
-      setInviteCodeText('');
-    }
-  }, [openSuccessModal]);
+  const closeSuccessModal = () => {
+    setOpenSuccessModal(false);
+    setInviteCodeText('');
+  };
 
   const handleOk = () => {
     form
@@ -123,7 +122,7 @@ export const InviteModal: React.FC<{
             <span>{t('create_success')}</span>
           </div>
         }
-        onCancel={() => setOpenSuccessModal(false)}
+        onCancel={closeSuccessModal}
         style={{ top: 10 }}
         open={openSuccessModal}
         footer={[
@@ -134,7 +133,7 @@ export const InviteModal: React.FC<{
           >
             <Button type="primary">{t('copy_link')}</Button>
           </CopyToClipboard>,
-          <Button key="back" onClick={() => setOpenSuccessModal(false)}>
+          <Button key="back" onClick={closeSuccessModal}>
             {t('close')}
           </Button>,
         ]}

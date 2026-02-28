@@ -41,10 +41,12 @@ export async function LocalizedServerThemeWrapper({
   children,
   locale,
 }: LocalizedServerThemeWrapperProps) {
-  // 获取服务端主题
-  const serverTheme = await getThemeFromServerCookies();
-  const messages = await getMessages();
-  const user = await userService.getCurrentUser();
+  // 并行获取服务端主题、国际化消息和用户信息
+  const [serverTheme, messages, user] = await Promise.all([
+    getThemeFromServerCookies(),
+    getMessages(),
+    userService.getCurrentUser(),
+  ]);
 
   return (
     <html lang={locale} data-theme={serverTheme.theme}>

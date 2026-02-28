@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { marked } from 'marked';
 import { usePathname } from 'next/navigation';
 import Prism from 'prismjs';
@@ -66,17 +66,18 @@ const createRenderer = (baseUrl = '') => {
 const MarkdownView: React.FC<MarkdownViewProps> = React.memo(({ content }) => {
   const pathname = usePathname();
   const currentBaseUrl = pathname;
-  const [isClient, setIsClient] = useState(false);
 
-  const l = whiteList;
-  l.input = ['type', 'checked', 'disabled'];
-  l.code = ['class'];
-  l.h1 = ['id'];
-  l.h2 = ['id'];
-  l.h3 = ['id'];
-  l.h4 = ['id'];
-  l.h5 = ['id'];
-  l.h6 = ['id'];
+  const l = {
+    ...whiteList,
+    input: ['type', 'checked', 'disabled'],
+    code: ['class'],
+    h1: ['id'],
+    h2: ['id'],
+    h3: ['id'],
+    h4: ['id'],
+    h5: ['id'],
+    h6: ['id'],
+  };
 
   // 使用 useMemo 来确保服务器端和客户端渲染一致的内容
   const html = React.useMemo(() => {
@@ -92,22 +93,16 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(({ content }) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  // 确保组件已经在客户端挂载
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    // 只在客户端挂载后且内容变化时进行高亮
-    if (isClient && ref.current && html) {
-      // 使用 requestAnimationFrame 确保 DOM 更新完成
+    // 在客户端挂载后且内容变化时进行高亮
+    if (ref.current && html) {
       requestAnimationFrame(() => {
         if (ref.current) {
           Prism.highlightAllUnder(ref.current, false);
         }
       });
     }
-  }, [isClient, html]);
+  }, [html]);
 
   // 使用 useMemo 缓存渲染的 div 元素
   const memoizedDiv = React.useMemo(

@@ -1,8 +1,9 @@
 'use client';
 
-import { Card } from 'antd';
+import { Card, Typography } from 'antd';
 import { ToolOutlined } from '@ant-design/icons';
-import Title from 'antd/es/typography/Title';
+
+const { Title } = Typography;
 import { useTranslations } from 'next-intl';
 
 export default function LogsPage() {

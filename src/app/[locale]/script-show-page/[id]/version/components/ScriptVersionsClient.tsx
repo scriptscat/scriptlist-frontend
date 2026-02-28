@@ -39,7 +39,8 @@ import {
   scriptService,
 } from '@/lib/api/services/scripts/scripts';
 import { Link } from '@/i18n/routing';
-import MarkdownView from '@/components/MarkdownView';
+import dynamic from 'next/dynamic';
+const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';

@@ -1,13 +1,12 @@
 'use client';
 
-import { Alert, Breadcrumb } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
-import type { ScriptInfo } from '../types';
+import { Alert } from 'antd';
+import type { ScriptInfoMeta } from '../types';
 import ScriptNavigation from './ScriptNavigation';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 interface ScriptLayoutProps {
-  script: ScriptInfo;
+  script: ScriptInfoMeta;
   activeTab: string;
   children: React.ReactNode;
 }
@@ -17,20 +16,9 @@ export default function ScriptLayout({
   activeTab,
   children,
 }: ScriptLayoutProps) {
-  const locale = useLocale();
   const t = useTranslations('script');
   return (
     <div>
-      {/* 面包屑导航 */}
-      <Breadcrumb
-        className="!mb-3"
-        items={[
-          { href: '/', title: <HomeOutlined /> },
-          { href: '/' + locale + '/search', title: t('navigation.market') },
-          { title: script.name },
-        ]}
-      ></Breadcrumb>
-
       {script.archive == 1 && (
         <Alert
           message={t('alerts.archived_title')}

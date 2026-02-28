@@ -1,11 +1,11 @@
 'use client';
 
-import React, { createContext, useContext } from 'react';
-import type { ScriptInfo, ScriptState } from '../types';
+import React, { createContext, useContext, useMemo } from 'react';
+import type { ScriptInfoMeta, ScriptState } from '../types';
 import { WatchLevel } from '../types';
 
 interface ScriptContextType {
-  script: ScriptInfo;
+  script: ScriptInfoMeta;
   scriptState?: ScriptState;
 }
 
@@ -13,7 +13,7 @@ const ScriptContext = createContext<ScriptContextType | undefined>(undefined);
 
 interface ScriptProviderProps {
   children: React.ReactNode;
-  script: ScriptInfo;
+  script: ScriptInfoMeta;
   scriptState?: ScriptState;
 }
 
@@ -22,10 +22,10 @@ export function ScriptProvider({
   script,
   scriptState,
 }: ScriptProviderProps) {
+  const value = useMemo(() => ({ script, scriptState }), [script, scriptState]);
+
   return (
-    <ScriptContext.Provider value={{ script, scriptState }}>
-      {children}
-    </ScriptContext.Provider>
+    <ScriptContext.Provider value={value}>{children}</ScriptContext.Provider>
   );
 }
 

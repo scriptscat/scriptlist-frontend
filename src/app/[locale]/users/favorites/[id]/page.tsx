@@ -65,16 +65,14 @@ export default async function FolderDetailPage({
   const folderId = parseInt(id);
   const currentPage = parseInt(page);
 
-  try {
-    // 首先获取收藏夹详情
-    const folderDetail: FavoriteFolderItem =
-      await scriptFavoriteService.getFolderDetail(folderId);
+  let folderDetail: FavoriteFolderItem | undefined;
+  let userDetail: GetUserDetailResponse | undefined;
+  let scriptsData: ListData<ScriptInfo> | undefined;
+  let hasError = false;
 
-    // 并行获取用户信息和脚本列表
-    const [userDetail, scriptsData]: [
-      GetUserDetailResponse,
-      ListData<ScriptInfo>,
-    ] = await Promise.all([
+  try {
+    folderDetail = await scriptFavoriteService.getFolderDetail(folderId);
+    [userDetail, scriptsData] = await Promise.all([
       userService.getUserDetail(folderDetail.user_id),
       scriptFavoriteService.getFavoriteScriptList({
         user_id: folderDetail.user_id,
@@ -83,16 +81,22 @@ export default async function FolderDetailPage({
         size: 20,
       }),
     ]);
+  } catch (_error) {
+    hasError = true;
+  }
 
-    return (
-      <div>
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center min-h-screen">
-              {'Loading folder...'}
-            </div>
-          }
-        >
+  return (
+    <div>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center min-h-screen">
+            {'Loading folder...'}
+          </div>
+        }
+      >
+        {hasError || !folderDetail || !userDetail || !scriptsData ? (
+          <FolderDetailClient folderId={folderId} error="folder_error" />
+        ) : (
           <FolderDetailClient
             folderId={folderId}
             folderDetail={folderDetail}
@@ -101,22 +105,8 @@ export default async function FolderDetailPage({
             total={scriptsData.total}
             currentPage={currentPage}
           />
-        </Suspense>
-      </div>
-    );
-  } catch (_error) {
-    return (
-      <div>
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center min-h-screen">
-              {'Loading folder...'}
-            </div>
-          }
-        >
-          <FolderDetailClient folderId={folderId} error="folder_error" />
-        </Suspense>
-      </div>
-    );
-  }
+        )}
+      </Suspense>
+    </div>
+  );
 }

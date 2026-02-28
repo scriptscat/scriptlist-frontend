@@ -12,7 +12,7 @@ import {
   WarningOutlined,
 } from '@ant-design/icons';
 import { useRouter } from '@/i18n/routing';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const { Paragraph, Text } = Typography;
 
@@ -36,28 +36,23 @@ export default function ErrorPage({
 }: ErrorPageProps) {
   const t = useTranslations();
   const router = useRouter();
-  const [errorId, setErrorId] = useState<string>('');
-  const [errorTime, setErrorTime] = useState<string>('');
+  const [errorId] = useState(() =>
+    Math.random().toString(36).substr(2, 9).toUpperCase(),
+  );
+  const errorTime = useMemo(() => new Date().toLocaleString('zh-CN'), []);
 
   useEffect(() => {
-    // 生成错误ID和时间
-    const id = Math.random().toString(36).substr(2, 9).toUpperCase();
-    const time = new Date().toLocaleString('zh-CN');
-    setErrorId(id);
-    setErrorTime(time);
-
-    // 记录错误信息
     if (error) {
       console.error('Error details:', {
-        errorId: id,
-        timestamp: time,
+        errorId,
+        timestamp: errorTime,
         statusCode,
         error: error.message,
         stack: error.stack,
         digest: error.digest,
       });
     }
-  }, [error, statusCode]);
+  }, [error, statusCode, errorId, errorTime]);
 
   const handleRefresh = () => {
     window.location.reload();

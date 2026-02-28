@@ -15,25 +15,26 @@ export default async function ScriptVersionsPage({
     notFound();
   }
 
+  let versionListData;
+  let versionStatData;
   try {
-    // 并行获取版本列表数据和统计数据
-    const [versionListData, versionStatData] = await Promise.all([
+    [versionListData, versionStatData] = await Promise.all([
       scriptService.getVersionListCached(scriptId, { page: 1, size: 10 }),
       scriptService.getVersionStatCached(scriptId),
     ]);
-
-    return (
-      <ScriptVersionsClient
-        initialVersionData={versionListData}
-        versionStat={versionStatData}
-        initialPage={1}
-        initialPageSize={10}
-      />
-    );
   } catch (error) {
     console.error('Failed to fetch version data:', error);
     notFound();
   }
+
+  return (
+    <ScriptVersionsClient
+      initialVersionData={versionListData}
+      versionStat={versionStatData}
+      initialPage={1}
+      initialPageSize={10}
+    />
+  );
 }
 
 export async function generateMetadata({

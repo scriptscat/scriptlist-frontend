@@ -35,7 +35,7 @@ const MarkdownEditor = dynamic(() => import('@/components/MarkdownEditor'), {
   ssr: false,
   loading: () => <div style={{ height: '200px' }} />,
 });
-import MarkdownView from '@/components/MarkdownView';
+const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
 import ActionMenu from '@/components/ActionMenu';
 import type { IssueComment } from '@/lib/api/services/scripts/issue';
 import {
@@ -97,6 +97,7 @@ export default function IssueCommentClient({
   const editor = useRef<MarkdownEditorRef>(null);
   const [loading, setLoading] = useState(false);
   const [labels, setLabels] = useState(issue.labels || []);
+  const committedLabelsRef = useRef(issue.labels || []);
   const locale = useLocale();
   const formatDate = useSemDateTime();
   const t = useTranslations('script.issue.comment');
@@ -119,6 +120,9 @@ export default function IssueCommentClient({
   const onCommentChange = useCallback((value: string) => {
     setCommentContent(value);
   }, []);
+
+  // 构造 SSR 安全的 URL（location 在服务端不可用）
+  const issueUrl = `${process.env.NEXT_PUBLIC_APP_URL || ''}/${locale}/script-show-page/${scriptId}/issue/${issueId}`;
 
   return (
     <Card>
@@ -167,7 +171,7 @@ export default function IssueCommentClient({
               </Tag>
             )}
             <CopyToClipboard
-              text={`${location.origin}${location.pathname}#issue-${issue.id}`}
+              text={`${issueUrl}#issue-${issue.id}`}
               onCopy={() => message.success(t('copy_success'))}
             >
               <Tooltip title={t('copy_link')}>
@@ -281,7 +285,7 @@ export default function IssueCommentClient({
                               {t('reply')}
                             </Button>
                             <CopyToClipboard
-                              text={`${location.origin}${location.pathname}#comment-${item.id}`}
+                              text={`${issueUrl}#comment-${item.id}`}
                               onCopy={() => message.success(t('copy_success'))}
                             >
                               <Button
@@ -301,12 +305,7 @@ export default function IssueCommentClient({
                     {item.type != 1 && (
                       <List.Item key={item.id} className="!p-0">
                         <div className="flex flex-row">
-                          <Divider
-                            type="vertical"
-                            className="!h-16"
-                            orientation="center"
-                            plain
-                          />
+                          <Divider type="vertical" className="!h-16" />
                           <div
                             className="flex items-center gap-2"
                             style={{ position: 'relative', left: '-19px' }}
@@ -508,9 +507,9 @@ export default function IssueCommentClient({
 
                   // 创建标签变更的评论项
                   const addedLabels = labels.filter(
-                    (l) => !issue.labels.includes(l),
+                    (l) => !committedLabelsRef.current.includes(l),
                   );
-                  const deletedLabels = issue.labels.filter(
+                  const deletedLabels = committedLabelsRef.current.filter(
                     (l) => !labels.includes(l),
                   );
 
@@ -530,8 +529,8 @@ export default function IssueCommentClient({
                     setList([...list, mockComment]);
                   }
 
-                  // 更新issue的labels
-                  issue.labels = labels;
+                  // 记录已提交的labels
+                  committedLabelsRef.current = labels;
                   message.success(t('labels_update_success'));
                 } catch (error: any) {
                   message.error(error.message || t('update_failed'));

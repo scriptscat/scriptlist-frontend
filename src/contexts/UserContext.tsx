@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useCallback, useContext, useMemo } from 'react';
 import { userService } from '@/lib/api';
 import type { UserInfo } from '@/lib/api/services/user';
 
@@ -19,12 +19,12 @@ export function UserProvider({
   children: React.ReactNode;
   user: UserInfo | null;
 }) {
-  const login = () => {
+  const login = useCallback(() => {
     const loginUrl = userService.getOAuthLoginUrl();
     window.location.href = loginUrl;
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await userService.logout();
       // 刷新页面
@@ -32,13 +32,16 @@ export function UserProvider({
     } catch (err: any) {
       console.error('登出失败:', err);
     }
-  };
+  }, []);
 
-  const value: UserContextType = {
-    user,
-    login,
-    logout,
-  };
+  const value = useMemo<UserContextType>(
+    () => ({
+      user,
+      login,
+      logout,
+    }),
+    [user, login, logout],
+  );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }

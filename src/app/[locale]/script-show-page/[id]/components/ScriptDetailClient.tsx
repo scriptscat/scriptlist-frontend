@@ -40,14 +40,15 @@ import {
   ClockCircleOutlined,
   ExperimentOutlined,
 } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Icon } from '@iconify/react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useScript, useScriptState } from './ScriptContext';
 import { useUser } from '@/contexts/UserContext';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { Link, useRouter } from '@/i18n/routing';
-import MarkdownView from '@/components/MarkdownView';
+import dynamic from 'next/dynamic';
+const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
 import { ScriptUtils } from '../utils';
 import { copyToClipboard, hashColor } from '@/lib/utils/utils';
 import { checkScriptInstalled } from '@/lib/utils/script-manager';
@@ -92,7 +93,7 @@ const licenseMap: { [key: string]: string } = {
   'LGPL-2.1': 'http://opensource.org/licenses/LGPL-2.1',
 };
 
-export default function ScriptDetailClient() {
+export default function ScriptDetailClient({ content }: { content: string }) {
   const { script } = useScript();
   const scriptState = useScriptState();
   const { user: _user } = useUser();
@@ -106,69 +107,80 @@ export default function ScriptDetailClient() {
   const [installTitle, setInstallTitle] = useState(t('install.install_script')); // 安装按钮文案
 
   // 解析crontab表达式为更友好的描述
-  const parseCrontabDescription = (cron: string): string => {
-    let oncePos = 0;
-    if (cron.includes('once')) {
-      const vals = cron.split(' ');
-      vals.forEach((val, index) => {
-        if (val === 'once') {
-          oncePos = index;
+  const parseCrontabDescription = useCallback(
+    (cron: string): string => {
+      let oncePos = 0;
+      if (cron.includes('once')) {
+        const vals = cron.split(' ');
+        vals.forEach((val, index) => {
+          if (val === 'once') {
+            oncePos = index;
+          }
+        });
+        if (vals.length === 5) {
+          oncePos++;
         }
-      });
-      if (vals.length === 5) {
-        oncePos++;
       }
-    }
-    if (oncePos) {
-      switch (oncePos) {
-        case 1: // 每分钟
-          return t('crontab.every_minute');
-        case 2: // 每小时
-          return t('crontab.every_hour');
-        case 3: // 每天
-          return t('crontab.every_day');
-        case 4: // 每月
-          return t('crontab.every_month');
-        case 5: // 每星期
-          return t('crontab.every_week');
+      if (oncePos) {
+        switch (oncePos) {
+          case 1: // 每分钟
+            return t('crontab.every_minute');
+          case 2: // 每小时
+            return t('crontab.every_hour');
+          case 3: // 每天
+            return t('crontab.every_day');
+          case 4: // 每月
+            return t('crontab.every_month');
+          case 5: // 每星期
+            return t('crontab.every_week');
+        }
+        throw new Error(t('crontab.error_expression'));
       }
-      throw new Error(t('crontab.error_expression'));
-    }
 
-    const parts = cron.trim().split(/\s+/);
-    if (parts.length < 5) return cron;
+      const parts = cron.trim().split(/\s+/);
+      if (parts.length < 5) return cron;
 
-    const [minute, hour] = parts;
+      const [minute, hour] = parts;
 
-    // 简单的crontab解析
-    if (cron === '* * * * *') return t('crontab.every_minute_execute');
-    if (cron === '0 * * * *') return t('crontab.every_hour_execute');
-    if (cron === '0 0 * * *') return t('crontab.daily_at_midnight');
-    if (cron === '0 0 * * 0') return t('crontab.weekly_sunday_midnight');
-    if (cron === '0 0 1 * *') return t('crontab.monthly_first_midnight');
+      // 简单的crontab解析
+      if (cron === '* * * * *') return t('crontab.every_minute_execute');
+      if (cron === '0 * * * *') return t('crontab.every_hour_execute');
+      if (cron === '0 0 * * *') return t('crontab.daily_at_midnight');
+      if (cron === '0 0 * * 0') return t('crontab.weekly_sunday_midnight');
+      if (cron === '0 0 1 * *') return t('crontab.monthly_first_midnight');
 
-    // 常见模式
-    if (minute === '0' && hour !== '*') {
-      if (hour.includes('/')) {
-        const interval = hour.split('/')[1];
-        return t('crontab.every_n_hours', { interval });
+      // 常见模式
+      if (minute === '0' && hour !== '*') {
+        if (hour.includes('/')) {
+          const interval = hour.split('/')[1];
+          return t('crontab.every_n_hours', { interval });
+        }
+        if (hour.includes(',')) {
+          return t('crontab.daily_at_hours', {
+            hours: hour.replace(/,/g, '、'),
+          });
+        }
+        return t('crontab.daily_at_hours', { hours: hour });
       }
-      if (hour.includes(',')) {
-        return t('crontab.daily_at_hours', { hours: hour.replace(/,/g, '、') });
+
+      if (minute.includes('/')) {
+        const interval = minute.split('/')[1];
+        return t('crontab.every_n_minutes', { interval });
       }
-      return t('crontab.daily_at_hours', { hours: hour });
-    }
 
-    if (minute.includes('/')) {
-      const interval = minute.split('/')[1];
-      return t('crontab.every_n_minutes', { interval });
-    }
+      return cron; // 返回原始表达式
+    },
+    [t],
+  );
 
-    return cron; // 返回原始表达式
-  };
-
-  const scriptName = ScriptUtils.i18nName(script, router.locale);
-  const scriptDescription = ScriptUtils.i18nDescription(script, router.locale);
+  const scriptName = useMemo(
+    () => ScriptUtils.i18nName(script, router.locale),
+    [script, router.locale],
+  );
+  const scriptDescription = useMemo(
+    () => ScriptUtils.i18nDescription(script, router.locale),
+    [script, router.locale],
+  );
 
   // 使用关注功能Hook
   const {
@@ -226,47 +238,52 @@ export default function ScriptDetailClient() {
   }, [script]);
 
   // AntiFeatures 配置
-  const antifeatures: {
+  const antifeatures = useMemo<{
     [key: string]: { color: string; title: string; description: string };
-  } = {
-    'referral-link': {
-      color: '#9254de',
-      title: t('antifeatures.referral_link.title'),
-      description: t('antifeatures.referral_link.description'),
-    },
-    ads: {
-      color: '#faad14',
-      title: t('antifeatures.ads.title'),
-      description: t('antifeatures.ads.description'),
-    },
-    payment: {
-      color: '#eb2f96',
-      title: t('antifeatures.payment.title'),
-      description: t('antifeatures.payment.description'),
-    },
-    miner: {
-      color: '#fa541c',
-      title: t('antifeatures.miner.title'),
-      description: t('antifeatures.miner.description'),
-    },
-    membership: {
-      color: '#1890ff',
-      title: t('antifeatures.membership.title'),
-      description: t('antifeatures.membership.description'),
-    },
-    tracking: {
-      color: '#722ed1',
-      title: t('antifeatures.tracking.title'),
-      description: t('antifeatures.tracking.description'),
-    },
-  };
+  }>(
+    () => ({
+      'referral-link': {
+        color: '#9254de',
+        title: t('antifeatures.referral_link.title'),
+        description: t('antifeatures.referral_link.description'),
+      },
+      ads: {
+        color: '#faad14',
+        title: t('antifeatures.ads.title'),
+        description: t('antifeatures.ads.description'),
+      },
+      payment: {
+        color: '#eb2f96',
+        title: t('antifeatures.payment.title'),
+        description: t('antifeatures.payment.description'),
+      },
+      miner: {
+        color: '#fa541c',
+        title: t('antifeatures.miner.title'),
+        description: t('antifeatures.miner.description'),
+      },
+      membership: {
+        color: '#1890ff',
+        title: t('antifeatures.membership.title'),
+        description: t('antifeatures.membership.description'),
+      },
+      tracking: {
+        color: '#722ed1',
+        title: t('antifeatures.tracking.title'),
+        description: t('antifeatures.tracking.description'),
+      },
+    }),
+    [t],
+  );
 
   // 计算是否已收藏（有选中的收藏夹）
-  const isFavorited = selectedFolders.length > 0;
+  const isFavorited = useMemo(
+    () => selectedFolders.length > 0,
+    [selectedFolders],
+  );
 
   // 处理适用网站显示
-  const getSupportSites = () => {
-    // 从脚本的match和include字段获取支持的网站
+  const supportSites = useMemo(() => {
     const supportUrls = new Set<string>();
     if (script.script.meta_json.match) {
       script.script.meta_json.match.forEach((url: string) => {
@@ -279,12 +296,10 @@ export default function ScriptDetailClient() {
       });
     }
     return Array.from(supportUrls).filter((site) => site.length > 0);
-  };
-
-  const supportSites = getSupportSites();
+  }, [script.script.meta_json]);
 
   // 优化的渲染适用网站组件
-  const renderSupportSites = () => {
+  const renderSupportSites = useMemo(() => {
     const maxDisplay = 6; // 最多显示4个网站
     const sitesToShow = showAllSites
       ? supportSites
@@ -342,54 +357,63 @@ export default function ScriptDetailClient() {
         )}
       </div>
     );
-  };
+  }, [supportSites, showAllSites, t]);
 
   // 复制库链接到剪贴板
-  const handleCopyRequire = async (requireLink: string) => {
-    try {
-      copyToClipboard(requireLink);
-      message.success(t('copy.copied_to_clipboard'));
-    } catch (_error) {
-      message.error(t('copy.copy_failed'));
-    }
-  };
+  const handleCopyRequire = useCallback(
+    async (requireLink: string) => {
+      try {
+        copyToClipboard(requireLink);
+        message.success(t('copy.copied_to_clipboard'));
+      } catch (_error) {
+        message.error(t('copy.copy_failed'));
+      }
+    },
+    [t],
+  );
 
   // 分享脚本 - 复制脚本名称和链接
-  const handleShare = () => {
+  const handleShare = useMemo(() => {
     const currentUrl =
       process.env.NEXT_PUBLIC_APP_URL +
       `/${router.locale}/script-show-page/${script.id}`;
     const shareText = `${scriptName}\n${currentUrl}`;
     return shareText;
-  };
+  }, [scriptName, router.locale, script.id]);
 
-  const handleFollowChange = async (value: string) => {
-    const watchLevelMap: { [key: string]: WatchLevel } = {
-      none: WatchLevel.NONE,
-      version: WatchLevel.VERSION,
-      feedback: WatchLevel.FEEDBACK,
-      all: WatchLevel.ALL,
-    };
+  const handleFollowChange = useCallback(
+    async (value: string) => {
+      const watchLevelMap: { [key: string]: WatchLevel } = {
+        none: WatchLevel.NONE,
+        version: WatchLevel.VERSION,
+        feedback: WatchLevel.FEEDBACK,
+        all: WatchLevel.ALL,
+      };
 
-    const newWatchLevel = watchLevelMap[value] ?? WatchLevel.NONE;
-    await updateWatch(newWatchLevel);
-  };
+      const newWatchLevel = watchLevelMap[value] ?? WatchLevel.NONE;
+      await updateWatch(newWatchLevel);
+    },
+    [updateWatch],
+  );
 
   // 处理收藏夹变更
-  const handleFoldersChange = async (checkedValues: string[]) => {
-    const numberIds = checkedValues.map((id) => parseInt(id, 10));
-    setSelectedFolders(numberIds);
+  const handleFoldersChange = useCallback(
+    async (checkedValues: string[]) => {
+      const numberIds = checkedValues.map((id) => parseInt(id, 10));
+      setSelectedFolders(numberIds);
 
-    try {
-      await updateFavorites(numberIds);
-    } catch (error) {
-      // updateFavorites 中已经处理了错误消息
-      console.error(t('folders.favorite_update_failed'), error);
-    }
-  };
+      try {
+        await updateFavorites(numberIds);
+      } catch (error) {
+        // updateFavorites 中已经处理了错误消息
+        console.error(t('folders.favorite_update_failed'), error);
+      }
+    },
+    [updateFavorites, t],
+  );
 
   // 添加新收藏夹
-  const handleAddFolder = async () => {
+  const handleAddFolder = useCallback(async () => {
     modal.confirm({
       title: t('folders.create_new_folder'),
       maskClosable: true,
@@ -435,18 +459,78 @@ export default function ScriptDetailClient() {
         }
       },
     });
-  };
+  }, [modal, createFolder, t]);
 
   // 原有的收藏处理函数改为快速收藏到默认收藏夹
-  const handleQuickFavorite = async () => {
+  const handleQuickFavorite = useCallback(async () => {
     try {
       await quickFavorite();
     } catch (error) {
       console.error(t('folders.quick_favorite_failed'), error);
     }
-  };
+  }, [quickFavorite, t]);
 
-  const icon = ScriptUtils.icon(script.script.meta_json);
+  const icon = useMemo(
+    () => ScriptUtils.icon(script.script.meta_json),
+    [script.script.meta_json],
+  );
+
+  const handleCopyRequireClick = useCallback(() => {
+    const requireLink =
+      requireSelect == 1
+        ? genRequire(script.id, script.name, script.script.version, script.sri)
+        : requireSelect == 2
+          ? genRequire(script.id, script.name, '^' + script.script.version)
+          : genRequire(script.id, script.name, '~' + script.script.version);
+    handleCopyRequire(requireLink);
+  }, [
+    requireSelect,
+    script.id,
+    script.name,
+    script.script.version,
+    script.sri,
+    handleCopyRequire,
+  ]);
+
+  const handleOpenInstallGuide = useCallback(() => {
+    window.open('https://bbs.tampermonkey.net.cn/thread-57-1-1.html', '_blank');
+  }, []);
+
+  const handleDeleteClick = useCallback(async () => {
+    await scriptService
+      .deleteScript(script.id)
+      .then(() => {
+        message.success(t('delete.success'));
+        router.push('/');
+      })
+      .catch((e) => {
+        message.error(e.message || t('delete.failed'));
+      });
+  }, [script.id, t, router]);
+
+  const watchMenuProps = useMemo(
+    () => ({
+      items: [
+        { key: 'none', label: t('actions.watch_options.none') },
+        { key: 'version', label: t('actions.watch_options.version') },
+        { key: 'feedback', label: t('actions.watch_options.feedback') },
+        { key: 'all', label: t('actions.watch_options.all') },
+      ],
+      onClick: ({ key }: { key: string }) => handleFollowChange(key),
+      selectedKeys: [
+        watchLevel === WatchLevel.NONE
+          ? 'none'
+          : watchLevel === WatchLevel.VERSION
+            ? 'version'
+            : watchLevel === WatchLevel.FEEDBACK
+              ? 'feedback'
+              : watchLevel === WatchLevel.ALL
+                ? 'all'
+                : 'none',
+      ],
+    }),
+    [t, handleFollowChange, watchLevel],
+  );
 
   return (
     <div>
@@ -546,7 +630,7 @@ export default function ScriptDetailClient() {
                             <Tag
                               key={tag.id}
                               color={hashColor(tag.name)}
-                              bordered
+                              variant="filled"
                             >
                               {'#' + tag.name}
                             </Tag>
@@ -625,9 +709,7 @@ export default function ScriptDetailClient() {
                         overflow: 'hidden',
                       }}
                       value={requireSelect}
-                      onChange={(value) => {
-                        setRequireSelect(value);
-                      }}
+                      onChange={setRequireSelect}
                     >
                       <Select.Option value={1}>
                         {genRequire(
@@ -661,28 +743,7 @@ export default function ScriptDetailClient() {
                       <Button
                         type="default"
                         icon={<CopyOutlined />}
-                        onClick={() => {
-                          const requireLink =
-                            requireSelect == 1
-                              ? genRequire(
-                                  script.id,
-                                  script.name,
-                                  script.script.version,
-                                  script.sri,
-                                )
-                              : requireSelect == 2
-                                ? genRequire(
-                                    script.id,
-                                    script.name,
-                                    '^' + script.script.version,
-                                  )
-                                : genRequire(
-                                    script.id,
-                                    script.name,
-                                    '~' + script.script.version,
-                                  );
-                          handleCopyRequire(requireLink);
-                        }}
+                        onClick={handleCopyRequireClick}
                       ></Button>
                     </Tooltip>
                     <Tooltip
@@ -720,12 +781,7 @@ export default function ScriptDetailClient() {
                         type="primary"
                         size="large"
                         icon={<QuestionCircleOutlined />}
-                        onClick={() =>
-                          window.open(
-                            'https://bbs.tampermonkey.net.cn/thread-57-1-1.html',
-                            '_blank',
-                          )
-                        }
+                        onClick={handleOpenInstallGuide}
                         className="bg-gradient-to-r !px-3"
                       />
                     </Tooltip>
@@ -758,7 +814,7 @@ export default function ScriptDetailClient() {
                 {/* GitHub风格的操作按钮组 */}
                 <div className="flex flex-wrap gap-2 justify-end">
                   <CopyToClipboard
-                    text={handleShare()}
+                    text={handleShare}
                     onCopy={() => message.success(t('copy.share_copied'))}
                   >
                     <Button icon={<ShareAltOutlined />} size="small">
@@ -772,32 +828,7 @@ export default function ScriptDetailClient() {
                   <Dropdown
                     trigger={['click']}
                     placement="bottomRight"
-                    menu={{
-                      items: [
-                        { key: 'none', label: t('actions.watch_options.none') },
-                        {
-                          key: 'version',
-                          label: t('actions.watch_options.version'),
-                        },
-                        {
-                          key: 'feedback',
-                          label: t('actions.watch_options.feedback'),
-                        },
-                        { key: 'all', label: t('actions.watch_options.all') },
-                      ],
-                      onClick: ({ key }) => handleFollowChange(key),
-                      selectedKeys: [
-                        watchLevel === WatchLevel.NONE
-                          ? 'none'
-                          : watchLevel === WatchLevel.VERSION
-                            ? 'version'
-                            : watchLevel === WatchLevel.FEEDBACK
-                              ? 'feedback'
-                              : watchLevel === WatchLevel.ALL
-                                ? 'all'
-                                : 'none',
-                      ],
-                    }}
+                    menu={watchMenuProps}
                   >
                     <Button
                       icon={isWatched ? <EyeFilled /> : <EyeOutlined />}
@@ -900,17 +931,7 @@ export default function ScriptDetailClient() {
                     deleteLevel="super_moderator"
                     allowSelfDelete
                     punish
-                    onDeleteClick={async () => {
-                      await scriptService
-                        .deleteScript(script.id)
-                        .then(() => {
-                          message.success(t('delete.success'));
-                          router.push('/');
-                        })
-                        .catch((e) => {
-                          message.error(e.message || t('delete.failed'));
-                        });
-                    }}
+                    onDeleteClick={handleDeleteClick}
                   >
                     <Button
                       type="default"
@@ -952,7 +973,7 @@ export default function ScriptDetailClient() {
                             {t('info.applicable_sites')}
                           </Text>
                           <div className="text-right max-w-[200px] min-w-[120px]">
-                            {renderSupportSites()}
+                            {renderSupportSites}
                           </div>
                         </div>
                       )}
@@ -1060,7 +1081,11 @@ export default function ScriptDetailClient() {
                                   }
                                   color={config.color}
                                 >
-                                  <Tag color={config.color} className="text-xs">
+                                  <Tag
+                                    color={config.color}
+                                    className="text-xs"
+                                    variant="solid"
+                                  >
                                     {config.title}
                                   </Tag>
                                 </Tooltip>
@@ -1072,7 +1097,7 @@ export default function ScriptDetailClient() {
 
                       {/* 社区与支持 - 统一放在底部 */}
                       {script.post_id !== 0 && (
-                        <div className="pt-2 float-end">
+                        <div className="pt-2 flex justify-end">
                           <Button
                             type="link"
                             icon={<MessageOutlined />}
@@ -1098,7 +1123,7 @@ export default function ScriptDetailClient() {
       {/* 功能介绍 */}
       <Card className="shadow-sm">
         <div className="prose max-w-none">
-          <MarkdownView id="readme" content={script.content} />
+          <MarkdownView id="readme" content={content} />
         </div>
       </Card>
     </div>

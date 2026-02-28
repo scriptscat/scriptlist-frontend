@@ -1,13 +1,13 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import type { ScriptInfo, ScriptState } from '../types';
+import type { ScriptInfoMeta, ScriptState } from '../types';
 import ScriptLayout from './ScriptLayout';
 import { ScriptProvider } from './ScriptContext';
 
 interface ScriptLayoutProviderProps {
   children: React.ReactNode;
-  script: ScriptInfo;
+  script: ScriptInfoMeta;
   scriptState?: ScriptState;
 }
 

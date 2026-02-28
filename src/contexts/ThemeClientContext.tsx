@@ -1,6 +1,13 @@
 'use client';
 
-import { useContext, createContext, useState, useEffect, useMemo } from 'react';
+import {
+  useContext,
+  createContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import type { ThemeConfig } from 'antd';
 import { ConfigProvider, theme } from 'antd';
 import type { ThemeMode } from '@/lib/cookies';
@@ -31,9 +38,16 @@ export const ThemeClientProvider: React.FC<ThemeClientProviderProps> = ({
   children,
   initialMode,
 }) => {
-  const [themeMode, setThemeMode] = useState<ThemeMode>(
-    initialMode || { mode: 'auto', theme: 'light' },
-  );
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    const initial = initialMode || { mode: 'auto', theme: 'light' };
+    if (initial.mode === 'auto' && typeof window !== 'undefined') {
+      const prefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)',
+      ).matches;
+      return { mode: 'auto', theme: prefersDark ? 'dark' : 'light' };
+    }
+    return initial;
+  });
 
   const antdTheme: ThemeConfig = useMemo(
     () => ({
@@ -49,57 +63,40 @@ export const ThemeClientProvider: React.FC<ThemeClientProviderProps> = ({
   );
 
   useEffect(() => {
-    // 记录到cookie
-    const saveThemeMode = (mode: ThemeMode) => {
-      // 更新 html 元素的 class 以应用 Tailwind 的暗色模式
-      const html = document.documentElement;
-      html.setAttribute('data-theme', mode.theme);
-      setThemeCookie(mode);
-    };
+    // 同步主题到 DOM 和 cookie
+    document.documentElement.setAttribute('data-theme', themeMode.theme);
+    setThemeCookie(themeMode);
 
+    // auto 模式下监听系统主题变化
     if (themeMode.mode === 'auto') {
-      const prefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)',
-      ).matches;
-      const newThemeMode: ThemeMode = {
-        mode: 'auto',
-        theme: prefersDark ? 'dark' : 'light',
-      };
-      setThemeMode(newThemeMode);
-      saveThemeMode(newThemeMode);
-      // 监听系统主题变化
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const handleChange = (e: MediaQueryListEvent) => {
-        if (themeMode.mode === 'auto') {
-          const newThemeMode: ThemeMode = {
-            mode: 'auto',
-            theme: e.matches ? 'dark' : 'light',
-          };
-          setThemeMode(newThemeMode);
-          saveThemeMode(newThemeMode);
-        }
+        const newThemeMode: ThemeMode = {
+          mode: 'auto',
+          theme: e.matches ? 'dark' : 'light',
+        };
+        setThemeMode(newThemeMode);
       };
-
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
-    } else {
-      // 更新 html 元素的 class 以应用 Tailwind 的暗色模式
-      const html = document.documentElement;
-      html.setAttribute('data-theme', themeMode.theme);
-      setThemeCookie(themeMode);
     }
-  }, [themeMode.mode]);
+  }, [themeMode]);
+
+  const handleSetThemeMode = useCallback((mode: ThemeMode) => {
+    // 设置主题到cookie
+    setThemeMode(mode);
+  }, []);
+
+  const contextValue = useMemo<ThemeContextType>(
+    () => ({
+      themeMode,
+      setThemeMode: handleSetThemeMode,
+    }),
+    [themeMode, handleSetThemeMode],
+  );
 
   return (
-    <ThemeContext.Provider
-      value={{
-        themeMode: themeMode,
-        setThemeMode: (mode: ThemeMode) => {
-          // 设置主题到cookie
-          setThemeMode(mode);
-        },
-      }}
-    >
+    <ThemeContext.Provider value={contextValue}>
       <ConfigProvider theme={antdTheme}>{children}</ConfigProvider>
     </ThemeContext.Provider>
   );
