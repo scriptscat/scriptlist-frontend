@@ -8,7 +8,7 @@ SERVER_PID=$!
 # Wait for the server to be ready
 echo "Waiting for Next.js server to start..."
 for i in $(seq 1 30); do
-  if wget -q --spider http://localhost:3000/ 2>/dev/null; then
+  if wget -q -S --spider http://localhost:3000/ 2>&1 | grep -q "HTTP/"; then
     echo "Server is up, starting warmup..."
     break
   fi
