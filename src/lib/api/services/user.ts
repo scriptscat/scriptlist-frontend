@@ -8,7 +8,6 @@ export interface UserInfo {
   username: string;
   avatar: string;
   is_admin: number; // AdminLevel
-  email_status: number;
 }
 
 // 徽章项
@@ -100,24 +99,6 @@ export class UserService {
     return apiClient.getWithCookie<UserInfo>(`${this.basePath}`).catch(() => {
       return null;
     });
-  }
-
-  /**
-   * 获取OAuth2登录链接
-   */
-  getOAuthLoginUrl(): string {
-    const oauthClient = process.env.NEXT_PUBLIC_APP_BBS_OAUTH_CLIENT || '';
-
-    return (
-      'https://bbs.tampermonkey.net.cn/plugin.php?id=codfrm_oauth2:oauth&client_id=' +
-      encodeURIComponent(oauthClient) +
-      '&scope=user&response_type=code&redirect_uri=' +
-      encodeURIComponent((process.env.NEXT_PUBLIC_APP_URL || '') + '/api/v2') +
-      '%2Flogin%2Foauth%3Fredirect_uri%3D' +
-      encodeURIComponent(
-        location.pathname + (location.search ? '?' + location.search : ''),
-      )
-    );
   }
 
   /**

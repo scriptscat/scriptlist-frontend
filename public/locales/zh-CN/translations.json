@@ -1289,7 +1289,6 @@
     "register_button": "注册",
     "divider_text": "或",
     "github_login": "使用 GitHub 登录",
-    "bbs_login": "使用论坛账号登录",
     "login_coming_soon": "邮箱登录功能即将上线",
     "register_coming_soon": "邮箱注册功能即将上线",
     "github_coming_soon": "GitHub 登录功能即将上线",
@@ -1297,7 +1296,13 @@
     "login_failed": "登录失败，请稍后重试",
     "register_failed": "注册失败，请稍后重试",
     "register_success_title": "注册成功",
-    "register_success_description": "验证邮件已发送到您的邮箱，请查收并完成验证。",
+    "register_success_description": "注册成功，您现在可以登录了。",
+    "send_code": "发送验证码",
+    "resend_code_countdown": "{seconds}秒后重发",
+    "code_sent": "验证码已发送到您的邮箱",
+    "code_send_failed": "验证码发送失败，请稍后重试",
+    "code_placeholder": "请输入6位验证码",
+    "code_required": "请输入6位验证码",
     "username": "用户名",
     "username_placeholder": "请输入用户名",
     "username_required": "请输入用户名",
@@ -1306,16 +1311,6 @@
     "captcha_required": "请完成验证"
   },
   "auth": {
-    "verify_email": {
-      "verifying": "正在验证...",
-      "success_title": "邮箱验证成功",
-      "success_description": "您的邮箱已验证成功，现在可以登录了。",
-      "error_title": "验证失败",
-      "verify_failed": "邮箱验证失败，请重试。",
-      "invalid_link": "无效的链接",
-      "invalid_link_description": "验证链接无效或已过期。",
-      "go_login": "前往登录"
-    },
     "forgot_password": {
       "title": "忘记密码",
       "description": "输入您的注册邮箱，我们将发送密码重置链接。",

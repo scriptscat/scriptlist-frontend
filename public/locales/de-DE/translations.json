@@ -1289,7 +1289,6 @@
     "register_button": "Registrieren",
     "divider_text": "oder",
     "github_login": "Mit GitHub anmelden",
-    "bbs_login": "Mit Forum-Konto anmelden",
     "login_coming_soon": "E-Mail-Anmeldung kommt bald",
     "register_coming_soon": "E-Mail-Registrierung kommt bald",
     "github_coming_soon": "GitHub-Anmeldung kommt bald",
@@ -1297,7 +1296,13 @@
     "login_failed": "Anmeldung fehlgeschlagen, bitte versuchen Sie es später erneut",
     "register_failed": "Registrierung fehlgeschlagen, bitte versuchen Sie es später erneut",
     "register_success_title": "Registrierung erfolgreich",
-    "register_success_description": "Eine Bestätigungs-E-Mail wurde an Ihre E-Mail-Adresse gesendet. Bitte überprüfen Sie Ihren Posteingang und schließen Sie die Verifizierung ab.",
+    "register_success_description": "Registrierung erfolgreich, Sie können sich jetzt anmelden.",
+    "send_code": "Code senden",
+    "resend_code_countdown": "Erneut senden in {seconds}s",
+    "code_sent": "Bestätigungscode wurde an Ihre E-Mail gesendet",
+    "code_send_failed": "Code konnte nicht gesendet werden, bitte versuchen Sie es später erneut",
+    "code_placeholder": "6-stelligen Code eingeben",
+    "code_required": "Bitte geben Sie den 6-stelligen Bestätigungscode ein",
     "username": "Benutzername",
     "username_placeholder": "Geben Sie Ihren Benutzernamen ein",
     "username_required": "Bitte geben Sie Ihren Benutzernamen ein",
@@ -1306,16 +1311,6 @@
     "captcha_required": "Bitte schließen Sie die Verifizierung ab"
   },
   "auth": {
-    "verify_email": {
-      "verifying": "Wird überprüft...",
-      "success_title": "E-Mail bestätigt",
-      "success_description": "Ihre E-Mail wurde erfolgreich bestätigt. Sie können sich jetzt anmelden.",
-      "error_title": "Überprüfung fehlgeschlagen",
-      "verify_failed": "E-Mail-Überprüfung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-      "invalid_link": "Ungültiger Link",
-      "invalid_link_description": "Der Bestätigungslink ist ungültig oder abgelaufen.",
-      "go_login": "Zur Anmeldung"
-    },
     "forgot_password": {
       "title": "Passwort vergessen",
       "description": "Geben Sie Ihre registrierte E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen des Passworts.",

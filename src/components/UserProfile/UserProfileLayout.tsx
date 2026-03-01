@@ -207,11 +207,6 @@ export default function UserProfileLayout({
                     {t('administrator')}
                   </Tag>
                 )}
-                {currentUserData.email_status === 1 && (
-                  <Tag color="green" icon={<CheckCircleOutlined />}>
-                    {t('verified')}
-                  </Tag>
-                )}
               </div>
 
               {/* 操作按钮 */}

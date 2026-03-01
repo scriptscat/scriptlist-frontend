@@ -1202,7 +1202,6 @@
     "register_button": "Register",
     "divider_text": "or",
     "github_login": "Login with GitHub",
-    "bbs_login": "Login with Forum Account",
     "login_coming_soon": "Email login is coming soon",
     "register_coming_soon": "Email registration is coming soon",
     "github_coming_soon": "GitHub login is coming soon",
@@ -1210,7 +1209,13 @@
     "login_failed": "Login failed, please try again later",
     "register_failed": "Registration failed, please try again later",
     "register_success_title": "Registration Successful",
-    "register_success_description": "A verification email has been sent to your email address. Please check your inbox and complete the verification.",
+    "register_success_description": "Registration successful, you can now log in.",
+    "send_code": "Send Code",
+    "resend_code_countdown": "Resend in {seconds}s",
+    "code_sent": "Verification code sent to your email",
+    "code_send_failed": "Failed to send verification code, please try again later",
+    "code_placeholder": "Enter 6-digit code",
+    "code_required": "Please enter the 6-digit verification code",
     "username": "Username",
     "username_placeholder": "Enter your username",
     "username_required": "Please enter your username",
@@ -1219,16 +1224,6 @@
     "captcha_required": "Please complete verification"
   },
   "auth": {
-    "verify_email": {
-      "verifying": "Verifying...",
-      "success_title": "Email Verified",
-      "success_description": "Your email has been verified successfully. You can now log in.",
-      "error_title": "Verification Failed",
-      "verify_failed": "Email verification failed, please try again.",
-      "invalid_link": "Invalid Link",
-      "invalid_link_description": "The verification link is invalid or has expired.",
-      "go_login": "Go to Login"
-    },
     "forgot_password": {
       "title": "Forgot Password",
       "description": "Enter your registered email and we'll send you a password reset link.",

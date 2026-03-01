@@ -17,8 +17,6 @@ env:
     value: http://scriptlist-cago.app.svc.cluster.local/api/v2
   - name: APP_API_PROXY
     value: http://scriptlist-cago.app.svc.cluster.local/api/v2
-  - name: NEXT_PUBLIC_APP_BBS_OAUTH_CLIENT
-    value: 80mfto0y3b8v
   - name: APP_ENV
     value: prod
 

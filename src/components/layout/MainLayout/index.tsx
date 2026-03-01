@@ -202,8 +202,8 @@ export default function MainLayout({
               </>
             )}
 
-            {/* AI Chat */}
-            <button
+            {/* AI Chat - 暂时注释，后续版本恢复 */}
+            {/* <button
               onClick={() => router.push('/chat')}
               className="!hidden sm:!inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-white cursor-pointer border-0 transition-all duration-300 hover:shadow-[0_0_16px_rgba(139,92,246,0.5)] hover:scale-105"
               style={{
@@ -226,7 +226,7 @@ export default function MainLayout({
                   background-position: 100% 50%;
                 }
               }
-            `}</style>
+            `}</style> */}
 
             {/* Theme Toggle */}
             <ThemeToggle />

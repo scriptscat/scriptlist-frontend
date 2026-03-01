@@ -1,20 +1,21 @@
 import { apiClient } from '../client';
 
+export interface SendRegisterCodeRequest {
+  email: string;
+  turnstile_token?: string;
+}
+
 export interface RegisterRequest {
   email: string;
   username: string;
   password: string;
-  turnstile_token?: string;
+  code: string;
 }
 
-export interface LoginByEmailRequest {
+export interface LoginRequest {
   account: string;
   password: string;
   turnstile_token?: string;
-}
-
-export interface VerifyEmailRequest {
-  token: string;
 }
 
 export interface ForgotPasswordRequest {
@@ -30,16 +31,16 @@ export interface ResetPasswordRequest {
 class AuthService {
   private readonly basePath = '/auth';
 
+  async sendRegisterCode(data: SendRegisterCodeRequest) {
+    return apiClient.post<void>(`${this.basePath}/send-register-code`, data);
+  }
+
   async register(data: RegisterRequest) {
     return apiClient.post<void>(`${this.basePath}/register`, data);
   }
 
-  async login(data: LoginByEmailRequest) {
+  async login(data: LoginRequest) {
     return apiClient.post<void>(`${this.basePath}/login`, data);
-  }
-
-  async verifyEmail(data: VerifyEmailRequest) {
-    return apiClient.post<void>(`${this.basePath}/verify-email`, data);
   }
 
   async forgotPassword(data: ForgotPasswordRequest) {

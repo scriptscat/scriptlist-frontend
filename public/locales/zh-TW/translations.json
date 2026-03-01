@@ -1289,7 +1289,6 @@
     "register_button": "註冊",
     "divider_text": "或",
     "github_login": "使用 GitHub 登入",
-    "bbs_login": "使用論壇帳號登入",
     "login_coming_soon": "信箱登入功能即將上線",
     "register_coming_soon": "信箱註冊功能即將上線",
     "github_coming_soon": "GitHub 登入功能即將上線",
@@ -1297,7 +1296,13 @@
     "login_failed": "登入失敗，請稍後重試",
     "register_failed": "註冊失敗，請稍後重試",
     "register_success_title": "註冊成功",
-    "register_success_description": "驗證信件已發送到您的信箱，請查收並完成驗證。",
+    "register_success_description": "註冊成功，您現在可以登入了。",
+    "send_code": "傳送驗證碼",
+    "resend_code_countdown": "{seconds}秒後重新傳送",
+    "code_sent": "驗證碼已傳送至您的信箱",
+    "code_send_failed": "驗證碼傳送失敗，請稍後重試",
+    "code_placeholder": "請輸入6位驗證碼",
+    "code_required": "請輸入6位驗證碼",
     "username": "使用者名稱",
     "username_placeholder": "請輸入使用者名稱",
     "username_required": "請輸入使用者名稱",
@@ -1306,16 +1311,6 @@
     "captcha_required": "請完成驗證"
   },
   "auth": {
-    "verify_email": {
-      "verifying": "正在驗證...",
-      "success_title": "信箱驗證成功",
-      "success_description": "您的信箱已驗證成功，現在可以登入了。",
-      "error_title": "驗證失敗",
-      "verify_failed": "信箱驗證失敗，請重試。",
-      "invalid_link": "無效的連結",
-      "invalid_link_description": "驗證連結無效或已過期。",
-      "go_login": "前往登入"
-    },
     "forgot_password": {
       "title": "忘記密碼",
       "description": "輸入您的註冊信箱，我們將發送密碼重置連結。",

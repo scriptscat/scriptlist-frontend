@@ -52,7 +52,6 @@ jobs:
       uses: actions/build-push-action@v6
       env:
         INNER_DOMAIN: ${{ env.ENV=='prod' && 'scriptlist-cago' || format('scriptlist-{0}-cago', env.ENV) }}
-        APP_BBS_OAUTH_CLIENT: ${{ env.ENV=='prod' && '80mfto0y3b8v' || env.ENV=='pre' && '5uk70yummcoe' || 'sxIv1i8H1ZwnSAH' }}
         DOMAIN: ${{ env.ENV=='prod' && env.DOMAIN || format('{0}.{1}', env.ENV, env.DOMAIN) }}
       with:
         push: true
@@ -66,7 +65,6 @@ jobs:
           NEXT_PUBLIC_APP_URL=https://${{ env.DOMAIN }}
           APP_API_URL=http://${{ env.INNER_DOMAIN }}.app.svc.cluster.local/api/v2
           APP_API_PROXY=http://${{ env.INNER_DOMAIN }}.app.svc.cluster.local/api/v2
-          APP_BBS_OAUTH_CLIENT=${{ env.APP_BBS_OAUTH_CLIENT }}
 
     - name: Set up kubeconfig
 #      uses: azure/k8s-set-context@v4
@@ -89,7 +87,6 @@ jobs:
         RESOURCE_CPU: ${{ env.ENV=='prod' && '500m' || '100m' }}
         RESOURCE_MEMORY: ${{ env.ENV=='prod' && '512Mi' || '128Mi' }}
         INNER_DOMAIN: ${{ env.ENV=='prod' && 'scriptlist-cago' || format('scriptlist-{0}-cago', env.ENV) }}
-        APP_BBS_OAUTH_CLIENT: ${{ env.ENV=='prod' && '80mfto0y3b8v' || env.ENV=='pre' && '5uk70yummcoe' || 'sxIv1i8H1ZwnSAH' }}
         AUTO_SCALING: ${{ env.ENV=='prod' && 'true' || 'false' }}
         AUTO_SCALING_MIN_REPLICAS: ${{ env.ENV=='prod' && '2' || '1' }}
       run: |
@@ -100,7 +97,6 @@ jobs:
         --set env[0].value=https://$DOMAIN \
         --set env[1].value=http://$INNER_DOMAIN.app.svc.cluster.local/api/v2 \
         --set env[2].value=http://$INNER_DOMAIN.app.svc.cluster.local/api/v2 \
-        --set env[3].value=$APP_BBS_OAUTH_CLIENT \
         --set ingress.hosts[0].host=$DOMAIN \
         --set ingress.tls[0].hosts[0]=$DOMAIN \
         --set resources.requests.cpu=$RESOURCE_CPU \

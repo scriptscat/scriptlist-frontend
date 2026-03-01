@@ -1289,7 +1289,6 @@
     "register_button": "新規登録",
     "divider_text": "または",
     "github_login": "GitHub でログイン",
-    "bbs_login": "フォーラムアカウントでログイン",
     "login_coming_soon": "メールログインは近日公開予定です",
     "register_coming_soon": "メール登録は近日公開予定です",
     "github_coming_soon": "GitHub ログインは近日公開予定です",
@@ -1297,7 +1296,13 @@
     "login_failed": "ログインに失敗しました。後でもう一度お試しください",
     "register_failed": "登録に失敗しました。後でもう一度お試しください",
     "register_success_title": "登録完了",
-    "register_success_description": "確認メールが送信されました。メールを確認して認証を完了してください。",
+    "register_success_description": "登録が完了しました。ログインできます。",
+    "send_code": "コードを送信",
+    "resend_code_countdown": "{seconds}秒後に再送信",
+    "code_sent": "認証コードがメールに送信されました",
+    "code_send_failed": "コードの送信に失敗しました。後でもう一度お試しください",
+    "code_placeholder": "6桁のコードを入力",
+    "code_required": "6桁の認証コードを入力してください",
     "username": "ユーザー名",
     "username_placeholder": "ユーザー名を入力してください",
     "username_required": "ユーザー名を入力してください",
@@ -1306,16 +1311,6 @@
     "captcha_required": "認証を完了してください"
   },
   "auth": {
-    "verify_email": {
-      "verifying": "確認中...",
-      "success_title": "メール認証完了",
-      "success_description": "メールアドレスが正常に確認されました。ログインできます。",
-      "error_title": "認証失敗",
-      "verify_failed": "メール認証に失敗しました。もう一度お試しください。",
-      "invalid_link": "無効なリンク",
-      "invalid_link_description": "認証リンクが無効または期限切れです。",
-      "go_login": "ログインへ"
-    },
     "forgot_password": {
       "title": "パスワードをお忘れですか",
       "description": "登録済みのメールアドレスを入力すると、パスワードリセットリンクをお送りします。",

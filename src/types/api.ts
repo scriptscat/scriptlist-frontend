@@ -56,7 +56,6 @@ export interface Notification {
     username: string;
     avatar: string;
     is_admin: number;
-    email_status: number;
   };
   type: number;
   title: string;

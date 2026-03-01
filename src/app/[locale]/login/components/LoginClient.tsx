@@ -1,18 +1,17 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Button, Divider, Form, Input, message, Tabs } from 'antd';
 import {
   GithubOutlined,
   LockOutlined,
   MailOutlined,
-  MessageOutlined,
+  SafetyOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { Turnstile } from '@marsidev/react-turnstile';
 import type { TurnstileInstance } from '@marsidev/react-turnstile';
-import { userService } from '@/lib/api';
 import { authService } from '@/lib/api/services/auth';
 import { APIError } from '@/types/api';
 import { Link } from '@/i18n/routing';
@@ -30,6 +29,17 @@ export default function LoginClient() {
   const registerTurnstileRef = useRef<TurnstileInstance>(null);
   const [loginToken, setLoginToken] = useState('');
   const [registerToken, setRegisterToken] = useState('');
+
+  // 验证码相关状态
+  const [countdown, setCountdown] = useState(0);
+  const [sendingCode, setSendingCode] = useState(false);
+
+  // 倒计时
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
   const handleLogin = async (values: { account: string; password: string }) => {
     if (turnstileSiteKey && !loginToken) {
@@ -57,22 +67,54 @@ export default function LoginClient() {
     }
   };
 
-  const handleRegister = async (values: {
-    email: string;
-    username: string;
-    password: string;
-  }) => {
+  const handleSendCode = useCallback(async () => {
+    try {
+      await registerForm.validateFields(['email']);
+    } catch {
+      return;
+    }
     if (turnstileSiteKey && !registerToken) {
       message.error(t('captcha_required'));
       return;
     }
+    const email = registerForm.getFieldValue('email') as string;
+    setSendingCode(true);
+    try {
+      await authService.sendRegisterCode({
+        email,
+        turnstile_token: registerToken,
+      });
+      setCountdown(60);
+      message.success(t('code_sent'));
+      // 重置 turnstile，以便倒计时结束后用户可以再次发送验证码
+      registerTurnstileRef.current?.reset();
+      setRegisterToken('');
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      } else {
+        message.error(t('code_send_failed'));
+      }
+      registerTurnstileRef.current?.reset();
+      setRegisterToken('');
+    } finally {
+      setSendingCode(false);
+    }
+  }, [registerForm, registerToken, t]);
+
+  const handleRegister = async (values: {
+    email: string;
+    username: string;
+    password: string;
+    code: string;
+  }) => {
     setLoading(true);
     try {
       await authService.register({
         email: values.email,
         username: values.username,
         password: values.password,
-        turnstile_token: registerToken,
+        code: values.code,
       });
       setRegisterSuccess(true);
     } catch (err) {
@@ -81,8 +123,6 @@ export default function LoginClient() {
       } else {
         message.error(t('register_failed'));
       }
-      registerTurnstileRef.current?.reset();
-      setRegisterToken('');
     } finally {
       setLoading(false);
     }
@@ -90,11 +130,6 @@ export default function LoginClient() {
 
   const handleGithubLogin = () => {
     message.info(t('github_coming_soon'));
-  };
-
-  const handleBBSLogin = () => {
-    const loginUrl = userService.getOAuthLoginUrl();
-    window.location.href = loginUrl;
   };
 
   const loginTab = (
@@ -106,11 +141,12 @@ export default function LoginClient() {
     >
       <Form.Item
         name="account"
-        rules={[
-          { required: true, message: t('account_required') },
-        ]}
+        rules={[{ required: true, message: t('account_required') }]}
       >
-        <Input prefix={<UserOutlined />} placeholder={t('account_placeholder')} />
+        <Input
+          prefix={<UserOutlined />}
+          placeholder={t('account_placeholder')}
+        />
       </Form.Item>
       <Form.Item
         name="password"
@@ -172,6 +208,43 @@ export default function LoginClient() {
       >
         <Input prefix={<MailOutlined />} placeholder={t('email_placeholder')} />
       </Form.Item>
+      {turnstileSiteKey && (
+        <div className="mb-4">
+          <Turnstile
+            ref={registerTurnstileRef}
+            siteKey={turnstileSiteKey}
+            onSuccess={setRegisterToken}
+          />
+        </div>
+      )}
+      <Form.Item>
+        <div className="flex gap-2">
+          <Form.Item
+            name="code"
+            noStyle
+            rules={[
+              { required: true, message: t('code_required') },
+              { len: 6, message: t('code_required') },
+            ]}
+          >
+            <Input
+              prefix={<SafetyOutlined />}
+              placeholder={t('code_placeholder')}
+              maxLength={6}
+            />
+          </Form.Item>
+          <Button
+            onClick={handleSendCode}
+            loading={sendingCode}
+            disabled={countdown > 0}
+            style={{ minWidth: 120 }}
+          >
+            {countdown > 0
+              ? t('resend_code_countdown', { seconds: countdown })
+              : t('send_code')}
+          </Button>
+        </div>
+      </Form.Item>
       <Form.Item
         name="username"
         rules={[
@@ -218,15 +291,6 @@ export default function LoginClient() {
         />
       </Form.Item>
       <Form.Item>
-        {turnstileSiteKey && (
-          <div className="mb-4">
-            <Turnstile
-              ref={registerTurnstileRef}
-              siteKey={turnstileSiteKey}
-              onSuccess={setRegisterToken}
-            />
-          </div>
-        )}
         <Button type="primary" htmlType="submit" block loading={loading}>
           {t('register_button')}
         </Button>
@@ -274,14 +338,6 @@ export default function LoginClient() {
               onClick={handleGithubLogin}
             >
               {t('github_login')}
-            </Button>
-            <Button
-              icon={<MessageOutlined />}
-              block
-              size="large"
-              onClick={handleBBSLogin}
-            >
-              {t('bbs_login')}
             </Button>
           </div>
         </div>

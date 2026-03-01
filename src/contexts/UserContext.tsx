@@ -26,10 +26,10 @@ export function UserProvider({
   children: React.ReactNode;
   user: UserInfo | null;
 }) {
+  const router = useRouter();
   const login = useCallback(() => {
-    const loginUrl = userService.getOAuthLoginUrl();
-    window.location.href = loginUrl;
-  }, []);
+    router.push('/login');
+  }, [router]);
 
   const logout = useCallback(async () => {
     try {
