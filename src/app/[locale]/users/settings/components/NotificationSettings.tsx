@@ -18,7 +18,7 @@ const { Title, Text, Paragraph } = Typography;
 
 interface NotificationSettingsProps {
   initialConfig?: {
-    [key: string]: boolean;
+    [key: string]: number;
   };
 }
 
@@ -69,7 +69,7 @@ export default function NotificationSettings({
           key: 'create_script',
           title: t('create_script_notification_title'),
           description: t('create_script_notification_description'),
-          type: 'secondary',
+          type: 'primary',
         },
         {
           key: 'script_update',
@@ -127,7 +127,7 @@ export default function NotificationSettings({
     setSavingKey(key);
     const newNotifyChecked = {
       ...notifyChecked,
-      [key]: checked,
+      [key]: checked ? 1 : 2,
     };
 
     try {
@@ -213,7 +213,7 @@ export default function NotificationSettings({
                         )}
                       </div>
                       <Switch
-                        checked={notifyChecked[item.key]}
+                        checked={notifyChecked[item.key] !== 2}
                         loading={savingKey === item.key}
                         onChange={(checked) =>
                           handleNotifyChange(item.key, checked)
