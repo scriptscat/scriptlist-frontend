@@ -373,7 +373,11 @@ export default function IssueCommentClient({
                           },
                         );
                         setStatus(newStatus);
-                        setList([...list, ...resp.comments]);
+                        if (resp?.comments) {
+                          setList([...list, ...resp.comments]);
+                        }
+                        // 清空编辑器内容
+                        editor.current?.setValue('');
                         message.success(
                           newStatus === 3
                             ? t('feedback_closed')

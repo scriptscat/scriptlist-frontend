@@ -16,6 +16,7 @@ export const PAGE_SUFFIXES = {
   manage: { title: 'manage', description: 'manage' },
   update: { title: 'update', description: 'update' },
   diff: { title: 'code', description: 'code' },
+  report: { title: 'report', description: 'report' },
 } as const;
 
 export type PageType = keyof typeof PAGE_SUFFIXES;

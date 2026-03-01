@@ -64,7 +64,7 @@ export function useUserConfig() {
 export function useUpdateUserNotify() {
   const [loading, setLoading] = useState(false);
 
-  const updateNotify = async (notify: { [key: string]: boolean }) => {
+  const updateNotify = async (notify: { [key: string]: number }) => {
     setLoading(true);
     try {
       await userService.setUserNotify(notify);

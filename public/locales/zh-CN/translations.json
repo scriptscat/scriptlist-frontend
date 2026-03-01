@@ -12,7 +12,18 @@
     "confirm": "确认",
     "cancel": "取消",
     "confirm_delete": "确认删除",
-    "delete_warning": "删除后无法恢复，确认删除吗？"
+    "delete_warning": "删除后无法恢复，确认删除吗？",
+    "login_required": "请先登录",
+    "admin_delete_title": "管理员删除",
+    "admin_delete_content": "删除后所有数据将无法恢复，请谨慎操作！",
+    "admin_delete_reason_label": "删除原因",
+    "admin_delete_reason_none": "不填写原因",
+    "admin_delete_reason_violation": "违反平台规范",
+    "admin_delete_reason_malicious": "恶意代码/脚本",
+    "admin_delete_reason_copyright": "侵权/版权问题",
+    "admin_delete_reason_spam": "垃圾信息/广告",
+    "admin_delete_reason_custom": "自定义原因",
+    "admin_delete_reason_custom_placeholder": "请输入自定义删除原因"
   },
   "layout": {
     "home": "首页",
@@ -35,7 +46,8 @@
     "system": "跟随系统",
     "user_setting": "用户设置",
     "ai_chat": "AI 助手",
-    "system_settings": "系统设置"
+    "system_settings": "系统设置",
+    "audit_logs": "管理日志"
   },
   "home": {
     "metadata": {
@@ -131,6 +143,10 @@
         "update": {
           "title": "更新脚本",
           "description": "更新{name}脚本"
+        },
+        "report": {
+          "title": "举报",
+          "description": "查看{name}的举报信息"
         }
       },
       "fallback": {
@@ -148,7 +164,8 @@
       "version": "版本列表",
       "update": "更新脚本",
       "statistic": "脚本统计",
-      "manage": "脚本管理"
+      "manage": "脚本管理",
+      "report": "举报"
     },
     "alerts": {
       "archived_title": "脚本已归档",
@@ -694,6 +711,8 @@
       },
       "logs": {
         "title": "管理日志",
+        "log_description": "该脚本的所有操作记录",
+        "no_logs": "暂无操作日志",
         "under_construction": "功能建设中",
         "description": "日志管理功能正在开发中，敬请期待。"
       },
@@ -821,7 +840,15 @@
           "delete_confirm_content": "删除脚本后所有数据将无法恢复，请谨慎操作！",
           "confirm_button": "确认",
           "confirm_delete_button": "确认删除",
-          "cancel_button": "取消"
+          "cancel_button": "取消",
+          "delete_reason_label": "删除原因（可选）",
+          "reason_none": "不填写原因",
+          "reason_violation": "违反使用规范",
+          "reason_malicious": "恶意脚本",
+          "reason_copyright": "版权侵犯",
+          "reason_spam": "垃圾内容",
+          "reason_custom": "自定义原因",
+          "reason_custom_placeholder": "请输入自定义删除原因"
         },
         "messages": {
           "archive_success": "脚本已归档",
@@ -942,6 +969,61 @@
       "save_gray_strategy_failed": "保存灰度发布策略失败:",
       "save_failed": "保存失败",
       "save_and_apply_strategy": "保存并应用策略"
+    },
+    "report": {
+      "report": "举报",
+      "page_not_found": "页面未找到",
+      "detail_title": "{scriptName} - 举报详情",
+      "detail_description": "查看{scriptName}的举报详情",
+      "reasons": {
+        "malware": "恶意软件",
+        "privacy": "隐私侵犯",
+        "copyright": "版权问题",
+        "spam": "垃圾内容",
+        "other": "其他"
+      },
+      "reason": "举报原因",
+      "reason_required": "请选择举报原因",
+      "content_required": "请输入举报内容",
+      "content_placeholder": "请详细描述举报原因...",
+      "submit_button": "提交举报",
+      "submit_success": "举报提交成功",
+      "submit_failed": "举报提交失败",
+      "filter_all": "全部",
+      "status_pending": "待处理",
+      "status_resolved": "已解决",
+      "no_reports": "暂无举报",
+      "pagination_total": "{start}-{end} / {total}",
+      "delete_success": "删除成功",
+      "delete_failed": "删除失败",
+      "copy_success": "复制成功",
+      "copy_link": "复制链接",
+      "created_at": "创建于 {time}",
+      "no_comments": "暂无评论",
+      "reply": "回复",
+      "link": "链接",
+      "resolved_report": "解决了举报",
+      "reopened_report": "重新开启了举报",
+      "comment_placeholder": "请输入评论内容...",
+      "resolve_report": "解决",
+      "resolve_and_reply_report": "解决并回复",
+      "reopen_report": "开启",
+      "reopen_and_reply_report": "开启并回复",
+      "report_resolved": "举报已解决",
+      "report_reopened": "举报已重新开启",
+      "operation_failed": "操作失败",
+      "system_error": "系统错误",
+      "comment_content_required": "请输入评论内容",
+      "reply_success": "回复成功",
+      "comment_failed": "发表评论失败",
+      "comment_button": "评论",
+      "login_to_comment": "登录后评论",
+      "login": "登录",
+      "login_required": "请先登录后再提交举报",
+      "login_to_report_title": "登录后提交举报",
+      "login_to_report_description": "登录后您可以对脚本进行举报，帮助维护社区环境",
+      "login_to_report_button": "立即登录",
+      "participants": "参与者"
     },
     "diff": {
       "compare_hint": "您可以在URL中添加 id2=scriptId 参数来对比不同的脚本"
@@ -1171,6 +1253,11 @@
       "script_issue_comment_notification_title": "反馈回复通知",
       "script_issue_comment_notification_description": "当我关注的反馈有新回复时发送通知",
       "admin_badge": "管理员",
+      "report_management": "举报管理",
+      "script_report_notification_title": "新举报通知",
+      "script_report_notification_description": "当有脚本收到新的举报时发送通知",
+      "script_report_comment_notification_title": "举报回复通知",
+      "script_report_comment_notification_description": "当举报有新回复时发送通知",
       "email_notification_info_title": "邮件通知说明",
       "email_notification_info_item_1": "所有通知将发送到你的注册邮箱",
       "email_notification_info_item_2": "你可以随时修改这些通知设置",
@@ -1223,6 +1310,9 @@
         "reply": {
           "content": "<link>{name}</link> 收到作者回复"
         }
+      },
+      "delete": {
+        "content": "您的脚本 {name} 已被管理员删除，原因：{reason}"
       }
     },
     "access": {
@@ -1244,6 +1334,14 @@
         "close": {
           "content": "[{name}] 关闭反馈 <link>{title} #{issue_id}</link>"
         }
+      }
+    },
+    "report": {
+      "create": {
+        "content": "[{name}] 收到新的举报，原因: {reason}"
+      },
+      "comment": {
+        "content": "[{name}] 举报有新回复 <link>#{report_id}</link>"
       }
     }
   },
@@ -1571,6 +1669,28 @@
       "ai_api_key": "API Key",
       "ai_model": "模型",
       "ai_system_prompt": "系统提示词"
+    }
+  },
+  "admin": {
+    "audit_logs": {
+      "title": "管理日志",
+      "description": "管理员操作记录",
+      "table": {
+        "time": "操作时间",
+        "operator": "操作者",
+        "action": "操作类型",
+        "target": "操作对象",
+        "reason": "原因"
+      },
+      "actions": {
+        "script_delete": "删除脚本",
+        "script_update": "更新脚本",
+        "script_create": "创建脚本"
+      },
+      "filter": {
+        "action": "操作类型",
+        "all": "全部"
+      }
     }
   }
 }

@@ -12,6 +12,7 @@ import {
   BarChartOutlined,
   SettingOutlined,
   BugOutlined,
+  AlertOutlined,
 } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
@@ -87,6 +88,25 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
       },
     ];
 
+    if (scriptState?.report_count > 0) {
+      // 插入到反馈(issue)后面
+      const issueIndex = items.findIndex((item) => item.key === 'issue');
+      items.splice(issueIndex + 1, 0, {
+        key: 'report',
+        icon: <AlertOutlined />,
+        label: (
+          <Space>
+            <Link href={`/${locale}/script-show-page/${id}/report`}>
+              {t('report')}
+            </Link>
+            <span className="inline-block px-2 py-0.5 text-xs font-medium leading-4 bg-red-500 text-white rounded-full">
+              {scriptState.report_count}
+            </span>
+          </Space>
+        ),
+      });
+    }
+
     if (
       user.user &&
       (user.user.user_id === script.script.user_id ||
@@ -132,7 +152,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
     user.user,
     script.script.user_id,
     script.script.role,
-    scriptState?.issue_count,
+    scriptState,
   ]);
 
   const menuStyle = useMemo(

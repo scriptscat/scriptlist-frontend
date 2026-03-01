@@ -229,6 +229,7 @@ export interface ScriptState {
   watch_count: number;
   favorite_count: number;
   issue_count: number;
+  report_count: number;
 }
 
 // 脚本状态响应

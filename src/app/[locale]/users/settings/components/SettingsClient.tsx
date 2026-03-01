@@ -12,7 +12,7 @@ const { Title, Text } = Typography;
 interface SettingsClientProps {
   initialWebhookToken?: string;
   initialNotificationConfig?: {
-    [key: string]: boolean;
+    [key: string]: number;
   };
 }
 
