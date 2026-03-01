@@ -1,10 +1,11 @@
 'use client';
 
-import { ApiOutlined, BellOutlined } from '@ant-design/icons';
+import { ApiOutlined, BellOutlined, LinkOutlined } from '@ant-design/icons';
 import { Card, Tabs, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import WebhookSettings from './WebhookSettings';
 import NotificationSettings from './NotificationSettings';
+import OAuthBindSettings from './OAuthBindSettings';
 
 const { Title, Text } = Typography;
 
@@ -43,6 +44,16 @@ export default function SettingsClient({
       children: (
         <NotificationSettings initialConfig={initialNotificationConfig} />
       ),
+    },
+    {
+      key: 'oauth_bind',
+      label: (
+        <div className="flex items-center space-x-2">
+          <LinkOutlined />
+          <span>{t('oauth_bind_settings')}</span>
+        </div>
+      ),
+      children: <OAuthBindSettings />,
     },
   ];
 

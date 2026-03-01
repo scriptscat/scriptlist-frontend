@@ -1,6 +1,8 @@
 import type { ListData } from '@/types/api';
 import { apiClient } from '../client';
 
+// ==================== OAuth Apps ====================
+
 export interface OAuthAppItem {
   id: number;
   client_id: string;
@@ -31,9 +33,107 @@ export interface UpdateOAuthAppRequest {
   status: number;
 }
 
+// ==================== System Config ====================
+
+export interface SystemConfigItem {
+  key: string;
+  value: string;
+}
+
+export interface GetSystemConfigsResponse {
+  configs: SystemConfigItem[];
+}
+
+// ==================== User Management ====================
+
+export interface UserItem {
+  id: number;
+  username: string;
+  email: string;
+  avatar: string;
+  status: number;
+  admin_level: number;
+  createtime: number;
+}
+
+// ==================== Script Management ====================
+
+export interface ScriptItem {
+  id: number;
+  name: string;
+  user_id: number;
+  username: string;
+  type: number;
+  public: number;
+  unwell: number;
+  status: number;
+  createtime: number;
+  updatetime: number;
+}
+
+// ==================== Feedback Management ====================
+
+export interface FeedbackItem {
+  id: number;
+  reason: string;
+  content: string;
+  client_ip: string;
+  createtime: number;
+}
+
+// ==================== Score Management ====================
+
+export interface ScoreItem {
+  id: number;
+  user_id: number;
+  username: string;
+  script_id: number;
+  script_name: string;
+  score: number;
+  message: string;
+  createtime: number;
+}
+
+// ==================== OIDC Provider Management ====================
+
+export interface OIDCProviderItem {
+  id: number;
+  name: string;
+  issuer_url: string;
+  client_id: string;
+  scopes: string;
+  icon: string;
+  display_order: number;
+  status: number;
+  createtime: number;
+  updatetime: number;
+}
+
+export interface CreateOIDCProviderRequest {
+  name: string;
+  issuer_url: string;
+  client_id: string;
+  client_secret: string;
+  scopes: string;
+  icon: string;
+  display_order: number;
+}
+
+export interface UpdateOIDCProviderRequest {
+  name: string;
+  issuer_url: string;
+  client_id: string;
+  client_secret: string;
+  scopes: string;
+  icon: string;
+  display_order: number;
+  status: number;
+}
+
 class AdminService {
   private readonly basePath = '/admin';
 
+  // OAuth Apps
   async listOAuthApps(page: number = 1, size: number = 20) {
     return apiClient.get<ListData<OAuthAppItem>>(
       `${this.basePath}/oauth-apps`,
@@ -54,6 +154,128 @@ class AdminService {
 
   async deleteOAuthApp(id: number) {
     return apiClient.delete<void>(`${this.basePath}/oauth-apps/${id}`);
+  }
+
+  // System Config
+  async getSystemConfigs(prefix?: string) {
+    return apiClient.get<GetSystemConfigsResponse>(
+      `${this.basePath}/system-configs`,
+      prefix ? { prefix } : undefined,
+    );
+  }
+
+  async updateSystemConfigs(configs: SystemConfigItem[]) {
+    return apiClient.put<void>(`${this.basePath}/system-configs`, {
+      configs,
+    });
+  }
+
+  // User Management
+  async listUsers(page: number = 1, size: number = 20, keyword?: string) {
+    return apiClient.get<ListData<UserItem>>(`${this.basePath}/users`, {
+      page,
+      size,
+      keyword,
+    });
+  }
+
+  async updateUserStatus(id: number, status: number) {
+    return apiClient.put<void>(`${this.basePath}/users/${id}/status`, {
+      status,
+    });
+  }
+
+  async updateUserAdminLevel(id: number, admin_level: number) {
+    return apiClient.put<void>(`${this.basePath}/users/${id}/admin-level`, {
+      admin_level,
+    });
+  }
+
+  // Script Management
+  async listScripts(
+    page: number = 1,
+    size: number = 20,
+    keyword?: string,
+    status?: number,
+  ) {
+    return apiClient.get<ListData<ScriptItem>>(`${this.basePath}/scripts`, {
+      page,
+      size,
+      keyword,
+      status,
+    });
+  }
+
+  async deleteScript(id: number) {
+    return apiClient.delete<void>(`${this.basePath}/scripts/${id}`);
+  }
+
+  async restoreScript(id: number) {
+    return apiClient.put<void>(`${this.basePath}/scripts/${id}/restore`);
+  }
+
+  async updateScriptVisibility(
+    id: number,
+    data: { public: number; unwell: number },
+  ) {
+    return apiClient.put<void>(
+      `${this.basePath}/scripts/${id}/visibility`,
+      data,
+    );
+  }
+
+  // Feedback Management
+  async listFeedbacks(page: number = 1, size: number = 20) {
+    return apiClient.get<ListData<FeedbackItem>>(`${this.basePath}/feedbacks`, {
+      page,
+      size,
+    });
+  }
+
+  async deleteFeedback(id: number) {
+    return apiClient.delete<void>(`${this.basePath}/feedbacks/${id}`);
+  }
+
+  // Score Management
+  async listScores(
+    page: number = 1,
+    size: number = 20,
+    scriptId?: number,
+    keyword?: string,
+  ) {
+    return apiClient.get<ListData<ScoreItem>>(`${this.basePath}/scores`, {
+      page,
+      size,
+      script_id: scriptId,
+      keyword,
+    });
+  }
+
+  async deleteScore(id: number) {
+    return apiClient.delete<void>(`${this.basePath}/scores/${id}`);
+  }
+
+  // OIDC Provider Management
+  async listOIDCProviders(page: number = 1, size: number = 20) {
+    return apiClient.get<ListData<OIDCProviderItem>>(
+      `${this.basePath}/oidc-providers`,
+      { page, size },
+    );
+  }
+
+  async createOIDCProvider(data: CreateOIDCProviderRequest) {
+    return apiClient.post<{ id: number }>(
+      `${this.basePath}/oidc-providers`,
+      data,
+    );
+  }
+
+  async updateOIDCProvider(id: number, data: UpdateOIDCProviderRequest) {
+    return apiClient.put<void>(`${this.basePath}/oidc-providers/${id}`, data);
+  }
+
+  async deleteOIDCProvider(id: number) {
+    return apiClient.delete<void>(`${this.basePath}/oidc-providers/${id}`);
   }
 }
 

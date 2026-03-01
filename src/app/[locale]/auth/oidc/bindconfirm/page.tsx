@@ -1,10 +1,21 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Button, Divider, Form, Input, message, Tabs } from 'antd';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import {
+  Alert,
+  Avatar,
+  Button,
+  Card,
+  Descriptions,
+  Form,
+  Input,
+  message,
+  Spin,
+  Tabs,
+} from 'antd';
 import {
   LockOutlined,
-  LoginOutlined,
   MailOutlined,
   SafetyOutlined,
   UserOutlined,
@@ -12,77 +23,85 @@ import {
 import { useTranslations } from 'next-intl';
 import { Turnstile } from '@marsidev/react-turnstile';
 import type { TurnstileInstance } from '@marsidev/react-turnstile';
-import { authService } from '@/lib/api/services/auth';
 import { oidcService } from '@/lib/api/services/oidc';
-import type { OIDCProviderInfo } from '@/lib/api/services/oidc';
+import type { OIDCBindInfoResponse } from '@/lib/api/services/oidc';
+import { authService } from '@/lib/api/services/auth';
 import { APIError } from '@/types/api';
-import { Link } from '@/i18n/routing';
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
-export default function LoginClient() {
-  const t = useTranslations('login');
-  const [activeTab, setActiveTab] = useState('login');
+function OIDCBindConfirmContent() {
+  const t = useTranslations('auth.oidc_bind');
+  const tLogin = useTranslations('login');
+  const searchParams = useSearchParams();
+  const bindToken = searchParams.get('bind_token') || '';
+
+  const [bindInfo, setBindInfo] = useState<OIDCBindInfoResponse | null>(null);
+  const [loadingInfo, setLoadingInfo] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [loginForm] = Form.useForm();
   const [registerForm] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const [registerSuccess, setRegisterSuccess] = useState(false);
-  const loginTurnstileRef = useRef<TurnstileInstance>(null);
-  const registerTurnstileRef = useRef<TurnstileInstance>(null);
-  const [loginToken, setLoginToken] = useState('');
-  const [registerToken, setRegisterToken] = useState('');
 
-  // 验证码相关状态
+  // 验证码相关
   const [countdown, setCountdown] = useState(0);
   const [sendingCode, setSendingCode] = useState(false);
-  // OIDC 提供商
-  const [oidcProviders, setOidcProviders] = useState<OIDCProviderInfo[]>([]);
+  const registerTurnstileRef = useRef<TurnstileInstance>(null);
+  const [registerToken, setRegisterToken] = useState('');
 
-  // 倒计时
   useEffect(() => {
     if (countdown <= 0) return;
     const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  // 加载 OIDC 提供商
+  // 加载绑定信息
   useEffect(() => {
-    oidcService
-      .getProviders()
-      .then((resp) => {
-        setOidcProviders(resp.providers || []);
-      })
-      .catch(() => {
-        // 忽略错误，不影响页面渲染
-      });
-  }, []);
-
-  const handleLogin = async (values: { account: string; password: string }) => {
-    if (turnstileSiteKey && !loginToken) {
-      message.error(t('captcha_required'));
+    if (!bindToken) {
+      setLoadError(true);
+      setLoadingInfo(false);
       return;
     }
+    oidcService
+      .getBindInfo(bindToken)
+      .then((resp) => {
+        setBindInfo(resp);
+      })
+      .catch(() => {
+        setLoadError(true);
+      })
+      .finally(() => {
+        setLoadingInfo(false);
+      });
+  }, [bindToken]);
+
+  // 登录并绑定
+  const handleLoginBind = async (values: {
+    account: string;
+    password: string;
+  }) => {
     setLoading(true);
     try {
-      await authService.login({
+      await oidcService.bindConfirm({
+        bind_token: bindToken,
         account: values.account,
         password: values.password,
-        turnstile_token: loginToken,
       });
+      message.success(t('bind_success'));
       window.location.href = '/';
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
       } else {
-        message.error(t('login_failed'));
+        message.error(t('bind_failed'));
       }
-      loginTurnstileRef.current?.reset();
-      setLoginToken('');
     } finally {
       setLoading(false);
     }
   };
 
+  // 发送验证码
   const handleSendCode = useCallback(async () => {
     try {
       await registerForm.validateFields(['email']);
@@ -90,7 +109,7 @@ export default function LoginClient() {
       return;
     }
     if (turnstileSiteKey && !registerToken) {
-      message.error(t('captcha_required'));
+      message.error(tLogin('captcha_required'));
       return;
     }
     const email = registerForm.getFieldValue('email') as string;
@@ -101,24 +120,24 @@ export default function LoginClient() {
         turnstile_token: registerToken,
       });
       setCountdown(60);
-      message.success(t('code_sent'));
-      // 重置 turnstile，以便倒计时结束后用户可以再次发送验证码
+      message.success(tLogin('code_sent'));
       registerTurnstileRef.current?.reset();
       setRegisterToken('');
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
       } else {
-        message.error(t('code_send_failed'));
+        message.error(tLogin('code_send_failed'));
       }
       registerTurnstileRef.current?.reset();
       setRegisterToken('');
     } finally {
       setSendingCode(false);
     }
-  }, [registerForm, registerToken, t]);
+  }, [registerForm, registerToken, tLogin]);
 
-  const handleRegister = async (values: {
+  // 注册并绑定
+  const handleRegisterBind = async (values: {
     email: string;
     username: string;
     password: string;
@@ -126,13 +145,15 @@ export default function LoginClient() {
   }) => {
     setLoading(true);
     try {
-      await authService.register({
+      await oidcService.registerAndBind({
+        bind_token: bindToken,
         email: values.email,
         username: values.username,
         password: values.password,
         code: values.code,
       });
-      setRegisterSuccess(true);
+      message.success(t('bind_success'));
+      window.location.href = '/';
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -144,14 +165,28 @@ export default function LoginClient() {
     }
   };
 
-  const handleOIDCLogin = (providerId: number) => {
-    window.location.href = `/api/v2/auth/oidc/${providerId}/login`;
-  };
+  if (loadingInfo) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+        <Spin size="large">{t('loading')}</Spin>
+      </div>
+    );
+  }
+
+  if (loadError || !bindInfo) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-200px)] px-4">
+        <div className="w-full max-w-md">
+          <Alert type="error" description={t('invalid_token')} showIcon />
+        </div>
+      </div>
+    );
+  }
 
   const loginTab = (
     <Form
       form={loginForm}
-      onFinish={handleLogin}
+      onFinish={handleLoginBind}
       layout="vertical"
       size="large"
     >
@@ -166,10 +201,7 @@ export default function LoginClient() {
       </Form.Item>
       <Form.Item
         name="password"
-        rules={[
-          { required: true, message: t('password_required') },
-          { min: 6, message: t('password_min_length') },
-        ]}
+        rules={[{ required: true, message: t('password_required') }]}
       >
         <Input.Password
           prefix={<LockOutlined />}
@@ -177,52 +209,31 @@ export default function LoginClient() {
         />
       </Form.Item>
       <Form.Item>
-        <div className="flex justify-end mb-2">
-          <Link
-            href="/forgot-password"
-            className="text-sm text-[rgb(var(--text-secondary))] hover:text-[rgb(var(--text-primary))]"
-          >
-            {t('forgot_password')}
-          </Link>
-        </div>
-        {turnstileSiteKey && (
-          <div className="mb-4">
-            <Turnstile
-              ref={loginTurnstileRef}
-              siteKey={turnstileSiteKey}
-              onSuccess={setLoginToken}
-            />
-          </div>
-        )}
         <Button type="primary" htmlType="submit" block loading={loading}>
-          {t('login_button')}
+          {t('bind_button')}
         </Button>
       </Form.Item>
     </Form>
   );
 
-  const registerTab = registerSuccess ? (
-    <Alert
-      type="success"
-      message={t('register_success_title')}
-      description={t('register_success_description')}
-      showIcon
-    />
-  ) : (
+  const registerTab = (
     <Form
       form={registerForm}
-      onFinish={handleRegister}
+      onFinish={handleRegisterBind}
       layout="vertical"
       size="large"
     >
       <Form.Item
         name="email"
         rules={[
-          { required: true, message: t('email_required') },
-          { type: 'email', message: t('email_invalid') },
+          { required: true, message: tLogin('email_required') },
+          { type: 'email', message: tLogin('email_invalid') },
         ]}
       >
-        <Input prefix={<MailOutlined />} placeholder={t('email_placeholder')} />
+        <Input
+          prefix={<MailOutlined />}
+          placeholder={tLogin('email_placeholder')}
+        />
       </Form.Item>
       {turnstileSiteKey && (
         <div className="mb-4">
@@ -239,13 +250,13 @@ export default function LoginClient() {
             name="code"
             noStyle
             rules={[
-              { required: true, message: t('code_required') },
-              { len: 6, message: t('code_required') },
+              { required: true, message: tLogin('code_required') },
+              { len: 6, message: tLogin('code_required') },
             ]}
           >
             <Input
               prefix={<SafetyOutlined />}
-              placeholder={t('code_placeholder')}
+              placeholder={tLogin('code_placeholder')}
               maxLength={6}
             />
           </Form.Item>
@@ -256,127 +267,130 @@ export default function LoginClient() {
             style={{ minWidth: 120 }}
           >
             {countdown > 0
-              ? t('resend_code_countdown', { seconds: countdown })
-              : t('send_code')}
+              ? tLogin('resend_code_countdown', { seconds: countdown })
+              : tLogin('send_code')}
           </Button>
         </div>
       </Form.Item>
       <Form.Item
         name="username"
         rules={[
-          { required: true, message: t('username_required') },
-          { min: 2, message: t('username_min_length') },
-          { max: 32, message: t('username_max_length') },
+          { required: true, message: tLogin('username_required') },
+          { min: 2, message: tLogin('username_min_length') },
+          { max: 32, message: tLogin('username_max_length') },
         ]}
       >
         <Input
           prefix={<UserOutlined />}
-          placeholder={t('username_placeholder')}
+          placeholder={tLogin('username_placeholder')}
         />
       </Form.Item>
       <Form.Item
         name="password"
         rules={[
-          { required: true, message: t('password_required') },
-          { min: 6, message: t('password_min_length') },
+          { required: true, message: tLogin('password_required') },
+          { min: 6, message: tLogin('password_min_length') },
           {
             pattern: /^(?=.*[a-zA-Z])(?=.*\d)/,
-            message: t('password_complexity'),
+            message: tLogin('password_complexity'),
           },
         ]}
       >
         <Input.Password
           prefix={<LockOutlined />}
-          placeholder={t('password_placeholder')}
+          placeholder={tLogin('password_placeholder')}
         />
       </Form.Item>
       <Form.Item
         name="confirmPassword"
         dependencies={['password']}
         rules={[
-          { required: true, message: t('confirm_password_required') },
+          { required: true, message: tLogin('confirm_password_required') },
           ({ getFieldValue }) => ({
             validator(_, value) {
               if (!value || getFieldValue('password') === value) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error(t('confirm_password_mismatch')));
+              return Promise.reject(
+                new Error(tLogin('confirm_password_mismatch')),
+              );
             },
           }),
         ]}
       >
         <Input.Password
           prefix={<LockOutlined />}
-          placeholder={t('confirm_password_placeholder')}
+          placeholder={tLogin('confirm_password_placeholder')}
         />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" block loading={loading}>
-          {t('register_button')}
+          {t('register_bind_button')}
         </Button>
       </Form.Item>
     </Form>
   );
 
   const tabItems = [
-    { key: 'login', label: t('tab_login'), children: loginTab },
-    { key: 'register', label: t('tab_register'), children: registerTab },
+    { key: 'login', label: t('tab_login_bind'), children: loginTab },
+    { key: 'register', label: t('tab_register_bind'), children: registerTab },
   ];
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-200px)] px-4">
       <div className="w-full max-w-md">
         <div className="bg-[rgb(var(--bg-elevated))] rounded-2xl border border-[rgb(var(--border-secondary))] p-8 shadow-sm">
-          {/* Logo & Title */}
+          {/* Title */}
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-[rgb(var(--text-primary))]">
               {t('title')}
             </h1>
           </div>
 
-          {/* Tabs */}
-          <Tabs
-            activeKey={activeTab}
-            onChange={setActiveTab}
-            items={tabItems}
-            centered
-          />
-
-          {/* Divider & OIDC Buttons */}
-          {oidcProviders.length > 0 && (
-            <>
-              <Divider plain className="!my-4">
-                <span className="text-[rgb(var(--text-tertiary))] text-sm">
-                  {t('divider_text')}
-                </span>
-              </Divider>
-              <div className="flex flex-col gap-3">
-                {oidcProviders.map((provider) => (
-                  <Button
-                    key={provider.id}
-                    icon={
-                      provider.icon ? (
-                        <img
-                          src={provider.icon}
-                          alt={provider.name}
-                          className="w-4 h-4"
-                        />
-                      ) : (
-                        <LoginOutlined />
-                      )
-                    }
-                    block
-                    size="large"
-                    onClick={() => handleOIDCLogin(provider.id)}
-                  >
-                    {t('oidc_login_with', { provider: provider.name })}
-                  </Button>
-                ))}
+          {/* OIDC Account Info */}
+          <Card size="small" className="mb-6">
+            <div className="flex items-center gap-3 mb-3">
+              {bindInfo.picture && <Avatar src={bindInfo.picture} size={40} />}
+              <div>
+                <div className="font-medium text-[rgb(var(--text-primary))]">
+                  {bindInfo.name || bindInfo.email}
+                </div>
+                <div className="text-sm text-[rgb(var(--text-tertiary))]">
+                  {bindInfo.provider_name}
+                </div>
               </div>
-            </>
-          )}
+            </div>
+            <Descriptions size="small" column={1}>
+              {bindInfo.email && (
+                <Descriptions.Item label={t('provider_email')}>
+                  {bindInfo.email}
+                </Descriptions.Item>
+              )}
+            </Descriptions>
+          </Card>
+
+          <p className="text-sm text-[rgb(var(--text-secondary))] mb-4">
+            {t('description', { provider: bindInfo.provider_name })}
+          </p>
+
+          {/* Tabs */}
+          <Tabs items={tabItems} centered />
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OIDCBindConfirmPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
+          <Spin size="large" />
+        </div>
+      }
+    >
+      <OIDCBindConfirmContent />
+    </Suspense>
   );
 }
