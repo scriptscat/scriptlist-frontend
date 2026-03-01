@@ -1,0 +1,46 @@
+import {
+  auditLogService,
+  type AuditLogListParams,
+  type AuditLogItem,
+} from '@/lib/api/services/auditLog';
+import AuditLogList from './components/AuditLogList';
+
+interface PageProps {
+  params: Promise<{
+    locale: string;
+  }>;
+  searchParams: Promise<{
+    page?: string;
+  }>;
+}
+
+export default async function AuditLogsPage({ searchParams }: PageProps) {
+  const resolvedSearchParams = await searchParams;
+
+  const initialPage = resolvedSearchParams.page
+    ? parseInt(resolvedSearchParams.page)
+    : 1;
+
+  const apiParams: AuditLogListParams = {
+    page: initialPage,
+    size: 20,
+  };
+
+  let initialList: AuditLogItem[] = [];
+  let initialTotal = 0;
+  try {
+    const data = await auditLogService.list(apiParams);
+    initialList = data.list;
+    initialTotal = data.total;
+  } catch (error) {
+    console.error('Failed to fetch audit logs:', error);
+  }
+
+  return (
+    <AuditLogList
+      initialPage={initialPage}
+      initialList={initialList}
+      initialTotal={initialTotal}
+    />
+  );
+}

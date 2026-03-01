@@ -40,8 +40,10 @@ interface MarkdownEditorProps {
   comment:
     | 'create-script'
     | 'create-issue'
+    | 'create-report'
     | 'update-script'
     | 'comment'
+    | 'report-comment'
     | 'avatar'; // 上传图片的注释
   linkId?: number; // 关联ID
 }

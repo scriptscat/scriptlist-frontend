@@ -2,7 +2,10 @@ import { Row, Col } from 'antd';
 import Sidebar from '@/components/Sidebar';
 import ScriptList from '@/components/Scriptlist';
 import { scriptService } from '@/lib/api/services/scripts';
-import { slimScriptList, slimScriptListForSidebar } from '@/lib/utils/script-slim';
+import {
+  slimScriptList,
+  slimScriptListForSidebar,
+} from '@/lib/utils/script-slim';
 import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';

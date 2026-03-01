@@ -8,6 +8,7 @@ import {
   Radio,
   Checkbox,
   Modal,
+  Select,
   message,
   Card,
   Divider,
@@ -19,6 +20,7 @@ import { useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { useScript } from '../../components/ScriptContext';
 import { scriptService } from '@/lib/api/services/scripts';
+import { useUser } from '@/contexts/UserContext';
 import { APIError } from '@/types/api';
 
 const { TextArea } = Input;
@@ -27,9 +29,20 @@ const { Title, Text } = Typography;
 export default function SettingsPage() {
   const script = useScript();
   const router = useRouter();
+  const { user } = useUser();
   const [modal, contextHolder] = Modal.useModal();
   const [loading, setLoading] = useState(false);
   const t = useTranslations('script.manage.settings');
+
+  // 管理员删除对话框状态
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteReason, setDeleteReason] = useState<string>('');
+  const [deleteReasonType, setDeleteReasonType] = useState<string>('');
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  // 判断是否是管理员删除他人脚本（is_admin === 1 为超级管理员）
+  const isAdminDelete =
+    user && user.is_admin === 1 && user.user_id !== script.script.user_id;
 
   // 脚本基本信息状态
   const [name, setName] = useState(script.script.name || '');
@@ -162,34 +175,59 @@ export default function SettingsPage() {
     });
   };
 
+  const doDelete = async (reason?: string) => {
+    setDeleteLoading(true);
+    setLoading(true);
+    try {
+      await scriptService.deleteScript(script.script.id, reason || undefined);
+      message.success(t('messages.delete_success'));
+      setDeleteModalOpen(false);
+      router.push('/');
+    } catch (error) {
+      console.error('Delete script failed:', error);
+      if (error instanceof APIError) {
+        message.error(error.msg || t('messages.delete_failed'));
+      } else {
+        message.error(t('messages.delete_failed'));
+      }
+    } finally {
+      setDeleteLoading(false);
+      setLoading(false);
+    }
+  };
+
   const handleDelete = () => {
-    modal.confirm({
-      title: t('confirmations.delete_confirm_title'),
-      content: t('confirmations.delete_confirm_content'),
-      icon: <ExclamationCircleOutlined />,
-      okText: t('confirmations.confirm_delete_button'),
-      cancelText: t('confirmations.cancel_button'),
-      okType: 'danger',
-      maskClosable: true,
-      onOk: async () => {
-        setLoading(true);
-        try {
-          await scriptService.deleteScript(script.script.id);
-          message.success(t('messages.delete_success'));
-          // 删除成功后跳转到首页或脚本列表
-          router.push('/');
-        } catch (error) {
-          console.error('Delete script failed:', error);
-          if (error instanceof APIError) {
-            message.error(error.msg || t('messages.delete_failed'));
-          } else {
-            message.error(t('messages.delete_failed'));
-          }
-        } finally {
-          setLoading(false);
-        }
-      },
-    });
+    if (isAdminDelete) {
+      setDeleteReason('');
+      setDeleteReasonType('');
+      setDeleteModalOpen(true);
+    } else {
+      modal.confirm({
+        title: t('confirmations.delete_confirm_title'),
+        content: t('confirmations.delete_confirm_content'),
+        icon: <ExclamationCircleOutlined />,
+        okText: t('confirmations.confirm_delete_button'),
+        cancelText: t('confirmations.cancel_button'),
+        okType: 'danger',
+        maskClosable: true,
+        onOk: () => doDelete(),
+      });
+    }
+  };
+
+  const DELETE_REASON_LABELS: Record<string, string> = {
+    violation: t('confirmations.reason_violation'),
+    malicious: t('confirmations.reason_malicious'),
+    copyright: t('confirmations.reason_copyright'),
+    spam: t('confirmations.reason_spam'),
+  };
+
+  const handleAdminDeleteConfirm = () => {
+    const reason =
+      deleteReasonType === 'custom'
+        ? deleteReason
+        : DELETE_REASON_LABELS[deleteReasonType] || '';
+    doDelete(reason);
   };
 
   return (
@@ -349,6 +387,69 @@ export default function SettingsPage() {
           </div>
         </div>
       </Card>
+
+      {/* 管理员删除理由对话框 */}
+      <Modal
+        title={t('confirmations.delete_confirm_title')}
+        open={deleteModalOpen}
+        onOk={handleAdminDeleteConfirm}
+        onCancel={() => setDeleteModalOpen(false)}
+        okText={t('confirmations.confirm_delete_button')}
+        cancelText={t('confirmations.cancel_button')}
+        okType="danger"
+        confirmLoading={deleteLoading}
+        maskClosable={true}
+      >
+        <p>{t('confirmations.delete_confirm_content')}</p>
+        <div className="mt-4">
+          <Text className="block mb-2">
+            {t('confirmations.delete_reason_label')}
+          </Text>
+          <Select
+            className="w-full"
+            value={deleteReasonType}
+            onChange={(value) => {
+              setDeleteReasonType(value);
+              if (value !== 'custom') {
+                setDeleteReason('');
+              }
+            }}
+            options={[
+              { value: '', label: t('confirmations.reason_none') },
+              {
+                value: 'violation',
+                label: t('confirmations.reason_violation'),
+              },
+              {
+                value: 'malicious',
+                label: t('confirmations.reason_malicious'),
+              },
+              {
+                value: 'copyright',
+                label: t('confirmations.reason_copyright'),
+              },
+              {
+                value: 'spam',
+                label: t('confirmations.reason_spam'),
+              },
+              {
+                value: 'custom',
+                label: t('confirmations.reason_custom'),
+              },
+            ]}
+          />
+          {deleteReasonType === 'custom' && (
+            <TextArea
+              className="mt-2"
+              rows={3}
+              value={deleteReason}
+              onChange={(e) => setDeleteReason(e.target.value)}
+              placeholder={t('confirmations.reason_custom_placeholder')}
+              maxLength={1024}
+            />
+          )}
+        </div>
+      </Modal>
     </Space>
   );
 }

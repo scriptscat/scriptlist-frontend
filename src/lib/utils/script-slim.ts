@@ -11,7 +11,11 @@ import type {
  * @param scriptId 脚本 ID，用于生成 icon 代理 URL
  * @param updatetime 脚本更新时间，附加到 icon URL 用于缓存失效
  */
-function slimMetaJson(meta: Metadata, scriptId?: number, updatetime?: number): Metadata {
+function slimMetaJson(
+  meta: Metadata,
+  scriptId?: number,
+  updatetime?: number,
+): Metadata {
   if (!meta) return {} as Metadata;
 
   const slim: Record<string, string[]> = {};
@@ -66,7 +70,11 @@ export function slimScriptList(list: ScriptListItem[]): ScriptListItem[] {
         updatetime: item.updatetime,
         script: {
           version: item.script.version,
-          meta_json: slimMetaJson(item.script.meta_json, item.id, item.updatetime),
+          meta_json: slimMetaJson(
+            item.script.meta_json,
+            item.id,
+            item.updatetime,
+          ),
         },
       }) as ScriptListItem,
   );
@@ -86,7 +94,11 @@ export function slimScriptListForSidebar(
         id: item.id,
         name: item.name,
         script: {
-          meta_json: slimMetaJson(item.script.meta_json, item.id, item.updatetime),
+          meta_json: slimMetaJson(
+            item.script.meta_json,
+            item.id,
+            item.updatetime,
+          ),
         },
       }) as ScriptListItem,
   );

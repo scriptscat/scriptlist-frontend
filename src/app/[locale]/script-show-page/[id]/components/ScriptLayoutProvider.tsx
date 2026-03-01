@@ -27,6 +27,7 @@ export default function ScriptLayoutProvider({
     if (pathname.includes('/update')) return 'update';
     if (pathname.includes('/manage')) return 'manage';
     if (pathname.includes('/comment')) return 'comment';
+    if (pathname.includes('/report')) return 'report';
     return 'overview';
   };
 

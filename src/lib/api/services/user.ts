@@ -69,7 +69,7 @@ export type WebhookResponse = Webhook;
 
 // 用户配置
 export interface UserConfig {
-  notify: { [key: string]: boolean };
+  notify: { [key: string]: number };
 }
 
 export type UserConfigResponse = UserConfig;
@@ -209,7 +209,7 @@ export class UserService {
    * 设置用户通知配置
    * @param notify 通知配置对象
    */
-  async setUserNotify(notify: { [key: string]: boolean }) {
+  async setUserNotify(notify: { [key: string]: number }) {
     return apiClient.put(`${this.basePath}/config`, { notify });
   }
 

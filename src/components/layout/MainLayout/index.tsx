@@ -236,6 +236,8 @@ export default function MainLayout({
           <a href="https://github.com/scriptscat" target="_blank">
             {'GitHub'}
           </a>
+          <Divider type="vertical" />
+          <Link href="/audit-logs">{t('audit_logs')}</Link>
         </div>
         <div>
           <a href={'https://docs.scriptcat.org/docs/use/policy/disclaimer/'}>

@@ -342,10 +342,15 @@ class APIClient {
   /**
    * DELETE请求
    */
-  async delete<T>(endpoint: string, options?: RequestOptions): Promise<T> {
+  async delete<T>(
+    endpoint: string,
+    options?: RequestOptions & { data?: Record<string, unknown> },
+  ): Promise<T> {
+    const { data, ...restOptions } = options || {};
     return this.request<T>(endpoint, {
       method: 'DELETE',
-      ...options,
+      body: data ? JSON.stringify(data) : undefined,
+      ...restOptions,
     });
   }
 }
