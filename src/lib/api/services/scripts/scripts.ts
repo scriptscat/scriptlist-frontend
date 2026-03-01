@@ -255,8 +255,11 @@ export class ScriptService {
   /**
    * 删除脚本
    */
-  async deleteScript(id: number) {
-    return apiClient.delete(`${this.basePath}/${id}`);
+  async deleteScript(id: number, reason?: string) {
+    return apiClient.delete(
+      `${this.basePath}/${id}`,
+      reason !== undefined ? { data: { reason } } : undefined,
+    );
   }
 
   /**

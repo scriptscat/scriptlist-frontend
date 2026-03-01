@@ -931,6 +931,7 @@ export default function ScriptDetailClient({ content }: { content: string }) {
                     deleteLevel="super_moderator"
                     allowSelfDelete
                     punish
+                    scriptId={script.id}
                     onDeleteClick={handleDeleteClick}
                   >
                     <Button

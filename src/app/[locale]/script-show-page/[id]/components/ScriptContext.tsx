@@ -49,6 +49,7 @@ export function useScriptState() {
       watch_count: 0,
       favorite_count: 0,
       issue_count: 0,
+      report_count: 0,
     }
   );
 }

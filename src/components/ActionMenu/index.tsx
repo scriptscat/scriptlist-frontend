@@ -5,7 +5,7 @@ import {
   ExclamationCircleOutlined,
   FileExclamationOutlined,
 } from '@ant-design/icons';
-import { Dropdown, Modal, Select, Space, Input } from 'antd';
+import { Dropdown, Modal, Select, Space, Input, message } from 'antd';
 import { useUser } from '@/contexts/UserContext';
 import { useTranslations } from 'next-intl';
 
@@ -24,6 +24,9 @@ export interface ActionMenuProps {
   // 处罚
   punish?: boolean;
   onPunishClick?: () => void;
+  // 举报
+  scriptId?: number;
+  onReportClick?: () => void;
 }
 
 const ActionMenu: React.FC<ActionMenuProps> = ({
@@ -34,6 +37,8 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   onDeleteClick,
   punish,
   onPunishClick,
+  scriptId,
+  onReportClick,
 }) => {
   const user = useUser();
   const t = useTranslations('common');
@@ -100,10 +105,18 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
           items: items,
           onClick: (value) => {
             if (value.key === 'report') {
-              window.open(
-                'https://bbs.tampermonkey.net.cn/forum-75-1.html',
-                '_blank',
-              );
+              if (!user.user) {
+                message.warning(t('login_required'));
+                return;
+              }
+              if (onReportClick) {
+                onReportClick();
+              } else if (scriptId) {
+                window.open(
+                  `/script-show-page/${scriptId}/report/create`,
+                  '_blank',
+                );
+              }
             } else if (value.key === 'punish') {
               modal.confirm({
                 title: t('confirm_punish'),

@@ -12,6 +12,7 @@ import {
   useUserConfig,
   useUpdateUserNotify,
 } from '@/lib/api/hooks/userSettings';
+import { useUser } from '@/contexts/UserContext';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -26,6 +27,8 @@ export default function NotificationSettings({
 }: NotificationSettingsProps) {
   const [savingKey, setSavingKey] = useState<string>('');
   const t = useTranslations('user.notification_settings');
+  const { user } = useUser();
+  const isAdmin = user && user.is_admin === 1;
 
   // 使用hooks获取用户配置
   const {
@@ -94,6 +97,30 @@ export default function NotificationSettings({
         },
       ],
     },
+    ...(isAdmin
+      ? [
+          {
+            title: t('report_management'),
+            icon: <ExclamationCircleOutlined className="text-red-500" />,
+            items: [
+              {
+                key: 'script_report',
+                title: t('script_report_notification_title'),
+                description: t('script_report_notification_description'),
+                type: 'secondary',
+              },
+              {
+                key: 'script_report_comment',
+                title: t('script_report_comment_notification_title'),
+                description: t(
+                  'script_report_comment_notification_description',
+                ),
+                type: 'secondary',
+              },
+            ],
+          },
+        ]
+      : []),
   ];
 
   const handleNotifyChange = async (key: string, checked: boolean) => {
