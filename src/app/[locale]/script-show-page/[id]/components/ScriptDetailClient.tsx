@@ -496,17 +496,20 @@ export default function ScriptDetailClient({ content }: { content: string }) {
     window.open('https://bbs.tampermonkey.net.cn/thread-57-1-1.html', '_blank');
   }, []);
 
-  const handleDeleteClick = useCallback(async (reason?: string) => {
-    await scriptService
-      .deleteScript(script.id, reason)
-      .then(() => {
-        message.success(t('delete.success'));
-        router.push('/');
-      })
-      .catch((e) => {
-        message.error(e.message || t('delete.failed'));
-      });
-  }, [script.id, t, router]);
+  const handleDeleteClick = useCallback(
+    async (reason?: string) => {
+      await scriptService
+        .deleteScript(script.id, reason)
+        .then(() => {
+          message.success(t('delete.success'));
+          router.push('/');
+        })
+        .catch((e) => {
+          message.error(e.message || t('delete.failed'));
+        });
+    },
+    [script.id, t, router],
+  );
 
   const watchMenuProps = useMemo(
     () => ({

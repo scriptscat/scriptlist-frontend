@@ -204,9 +204,7 @@ export default function ReportDetailClient({
                                     item.id,
                                   );
                                   message.success(t('delete_success'));
-                                  setList(
-                                    list.filter((i) => i.id !== item.id),
-                                  );
+                                  setList(list.filter((i) => i.id !== item.id));
                                 } catch (error: any) {
                                   message.error(
                                     error.message || t('delete_failed'),

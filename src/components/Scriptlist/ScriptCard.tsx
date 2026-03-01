@@ -107,16 +107,19 @@ export default React.memo(function ScriptCard({
     message.success(tCommon('copy_success'));
   }, [tCommon]);
 
-  const handleDeleteScript = useCallback(async (reason?: string) => {
-    try {
-      await scriptService.deleteScript(script.id, reason);
-      message.success(tCommon('delete_success'));
-      onDelete?.(script);
-    } catch (error) {
-      message.error(tCommon('delete_failed'));
-      console.error('Delete script error:', error);
-    }
-  }, [script, onDelete, tCommon]);
+  const handleDeleteScript = useCallback(
+    async (reason?: string) => {
+      try {
+        await scriptService.deleteScript(script.id, reason);
+        message.success(tCommon('delete_success'));
+        onDelete?.(script);
+      } catch (error) {
+        message.error(tCommon('delete_failed'));
+        console.error('Delete script error:', error);
+      }
+    },
+    [script, onDelete, tCommon],
+  );
 
   const handleCardClick = useCallback(() => {
     const url = `/${locale}/script-show-page/${script.id}`;

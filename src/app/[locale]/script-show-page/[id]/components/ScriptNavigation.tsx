@@ -152,8 +152,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
     user.user,
     script.script.user_id,
     script.script.role,
-    scriptState?.issue_count,
-    scriptState?.report_count,
+    scriptState,
   ]);
 
   const menuStyle = useMemo(
