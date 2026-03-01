@@ -263,6 +263,10 @@ export default function LoginClient() {
         rules={[
           { required: true, message: t('password_required') },
           { min: 6, message: t('password_min_length') },
+          {
+            pattern: /^(?=.*[a-zA-Z])(?=.*\d)/,
+            message: t('password_complexity'),
+          },
         ]}
       >
         <Input.Password
