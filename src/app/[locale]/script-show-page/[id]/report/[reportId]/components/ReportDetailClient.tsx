@@ -101,27 +101,31 @@ export default function ReportDetailClient({
                 {status === 1 ? t('status_pending') : t('status_resolved')}
               </Tag>
             </div>
-            <ActionMenu
-              uid={[report.user_id, script.script?.user_id || -1]}
-              deleteLevel="admin"
-              allowSelfDelete={false}
-              onDeleteClick={async () => {
-                try {
-                  await scriptReportService.deleteReport(scriptId, reportId);
-                  message.success(t('delete_success'));
-                  router.push(`/${locale}/script-show-page/${scriptId}/report`);
-                } catch (error: any) {
-                  message.error(error.message || t('delete_failed'));
-                }
-              }}
-            >
-              <Button
-                type="default"
-                size="small"
-                className="!p-0"
-                icon={<EllipsisOutlined />}
-              />
-            </ActionMenu>
+            {isAdmin && (
+              <ActionMenu
+                uid={[report.user_id, script.script?.user_id || -1]}
+                deleteLevel="admin"
+                allowSelfDelete={false}
+                onDeleteClick={async () => {
+                  try {
+                    await scriptReportService.deleteReport(scriptId, reportId);
+                    message.success(t('delete_success'));
+                    router.push(
+                      `/${locale}/script-show-page/${scriptId}/report`,
+                    );
+                  } catch (error: any) {
+                    message.error(error.message || t('delete_failed'));
+                  }
+                }}
+              >
+                <Button
+                  type="default"
+                  size="small"
+                  className="!p-0"
+                  icon={<EllipsisOutlined />}
+                />
+              </ActionMenu>
+            )}
           </div>
           <div className="flex flex-row items-center gap-1">
             <CopyToClipboard
@@ -183,37 +187,41 @@ export default function ReportDetailClient({
                               </a>
                             </div>
                           </div>
-                          <ActionMenu
-                            uid={[
-                              item.user_id,
-                              report.user_id,
-                              script.script?.user_id || -1,
-                            ]}
-                            deleteLevel="admin"
-                            allowSelfDelete={false}
-                            onDeleteClick={async () => {
-                              try {
-                                await scriptReportService.deleteComment(
-                                  scriptId,
-                                  reportId,
-                                  item.id,
-                                );
-                                message.success(t('delete_success'));
-                                setList(list.filter((i) => i.id !== item.id));
-                              } catch (error: any) {
-                                message.error(
-                                  error.message || t('delete_failed'),
-                                );
-                              }
-                            }}
-                          >
-                            <Button
-                              type="default"
-                              size="small"
-                              className="!p-0"
-                              icon={<EllipsisOutlined />}
-                            />
-                          </ActionMenu>
+                          {isAdmin && (
+                            <ActionMenu
+                              uid={[
+                                item.user_id,
+                                report.user_id,
+                                script.script?.user_id || -1,
+                              ]}
+                              deleteLevel="admin"
+                              allowSelfDelete={false}
+                              onDeleteClick={async () => {
+                                try {
+                                  await scriptReportService.deleteComment(
+                                    scriptId,
+                                    reportId,
+                                    item.id,
+                                  );
+                                  message.success(t('delete_success'));
+                                  setList(
+                                    list.filter((i) => i.id !== item.id),
+                                  );
+                                } catch (error: any) {
+                                  message.error(
+                                    error.message || t('delete_failed'),
+                                  );
+                                }
+                              }}
+                            >
+                              <Button
+                                type="default"
+                                size="small"
+                                className="!p-0"
+                                icon={<EllipsisOutlined />}
+                              />
+                            </ActionMenu>
+                          )}
                         </div>
                         <MarkdownView
                           id={'comment-' + item.id}

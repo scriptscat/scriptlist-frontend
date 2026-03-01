@@ -107,9 +107,9 @@ export default React.memo(function ScriptCard({
     message.success(tCommon('copy_success'));
   }, [tCommon]);
 
-  const handleDeleteScript = useCallback(async () => {
+  const handleDeleteScript = useCallback(async (reason?: string) => {
     try {
-      await scriptService.deleteScript(script.id);
+      await scriptService.deleteScript(script.id, reason);
       message.success(tCommon('delete_success'));
       onDelete?.(script);
     } catch (error) {
@@ -253,6 +253,7 @@ export default React.memo(function ScriptCard({
               </div>
               <ActionMenu
                 uid={script.user_id}
+                scriptId={script.id}
                 deleteLevel="admin"
                 allowSelfDelete={true}
                 onDeleteClick={handleDeleteScript}

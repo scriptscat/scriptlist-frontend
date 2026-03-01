@@ -13,7 +13,17 @@
     "cancel": "取消",
     "confirm_delete": "确认删除",
     "delete_warning": "删除后无法恢复，确认删除吗？",
-    "login_required": "请先登录"
+    "login_required": "请先登录",
+    "admin_delete_title": "管理员删除",
+    "admin_delete_content": "删除后所有数据将无法恢复，请谨慎操作！",
+    "admin_delete_reason_label": "删除原因",
+    "admin_delete_reason_none": "不填写原因",
+    "admin_delete_reason_violation": "违反平台规范",
+    "admin_delete_reason_malicious": "恶意代码/脚本",
+    "admin_delete_reason_copyright": "侵权/版权问题",
+    "admin_delete_reason_spam": "垃圾信息/广告",
+    "admin_delete_reason_custom": "自定义原因",
+    "admin_delete_reason_custom_placeholder": "请输入自定义删除原因"
   },
   "layout": {
     "home": "首页",
@@ -131,6 +141,10 @@
         "update": {
           "title": "更新脚本",
           "description": "更新{name}脚本"
+        },
+        "report": {
+          "title": "举报",
+          "description": "查看{name}的举报信息"
         }
       },
       "fallback": {
@@ -1277,6 +1291,9 @@
         "reply": {
           "content": "<link>{name}</link> 收到作者回复"
         }
+      },
+      "delete": {
+        "content": "您的脚本 {name} 已被管理员删除，原因：{reason}"
       }
     },
     "access": {
@@ -1298,6 +1315,14 @@
         "close": {
           "content": "[{name}] 关闭反馈 <link>{title} #{issue_id}</link>"
         }
+      }
+    },
+    "report": {
+      "create": {
+        "content": "[{name}] 收到新的举报，原因: {reason}"
+      },
+      "comment": {
+        "content": "[{name}] 举报有新回复 <link>#{report_id}</link>"
       }
     }
   },

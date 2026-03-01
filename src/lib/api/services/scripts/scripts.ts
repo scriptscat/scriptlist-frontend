@@ -258,7 +258,7 @@ export class ScriptService {
   async deleteScript(id: number, reason?: string) {
     return apiClient.delete(
       `${this.basePath}/${id}`,
-      reason !== undefined ? { data: { reason } } : undefined,
+      reason ? { params: { reason } } : undefined,
     );
   }
 

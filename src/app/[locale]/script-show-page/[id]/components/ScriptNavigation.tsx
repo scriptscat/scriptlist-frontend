@@ -89,7 +89,9 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
     ];
 
     if (scriptState?.report_count > 0) {
-      items.push({
+      // 插入到反馈(issue)后面
+      const issueIndex = items.findIndex((item) => item.key === 'issue');
+      items.splice(issueIndex + 1, 0, {
         key: 'report',
         icon: <AlertOutlined />,
         label: (
