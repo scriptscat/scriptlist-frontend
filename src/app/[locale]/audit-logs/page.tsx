@@ -11,7 +11,6 @@ interface PageProps {
   }>;
   searchParams: Promise<{
     page?: string;
-    action?: string;
   }>;
 }
 
@@ -21,12 +20,10 @@ export default async function AuditLogsPage({ searchParams }: PageProps) {
   const initialPage = resolvedSearchParams.page
     ? parseInt(resolvedSearchParams.page)
     : 1;
-  const initialAction = resolvedSearchParams.action || '';
 
   const apiParams: AuditLogListParams = {
     page: initialPage,
     size: 20,
-    action: initialAction || undefined,
   };
 
   let initialList: AuditLogItem[] = [];
@@ -42,7 +39,6 @@ export default async function AuditLogsPage({ searchParams }: PageProps) {
   return (
     <AuditLogList
       initialPage={initialPage}
-      initialAction={initialAction}
       initialList={initialList}
       initialTotal={initialTotal}
     />

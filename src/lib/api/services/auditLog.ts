@@ -17,7 +17,6 @@ export type AuditLogItem = {
 export type AuditLogListParams = {
   page?: number;
   size?: number;
-  action?: string;
 };
 
 export type AuditLogListResponse = ListData<AuditLogItem>;

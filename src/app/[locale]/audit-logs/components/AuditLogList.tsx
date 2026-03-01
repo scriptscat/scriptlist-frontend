@@ -1,6 +1,6 @@
 'use client';
 
-import { Table, Tag, Select, Card, Typography, Space } from 'antd';
+import { Table, Card, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 import { Link } from '@/i18n/routing';
@@ -14,20 +14,12 @@ const PAGE_SIZE = 20;
 
 interface AuditLogListProps {
   initialPage: number;
-  initialAction: string;
   initialList: AuditLogItem[];
   initialTotal: number;
 }
 
-const ACTION_COLORS: Record<string, string> = {
-  script_delete: 'red',
-  script_update: 'blue',
-  script_create: 'green',
-};
-
 export default function AuditLogList({
   initialPage,
-  initialAction,
   initialList,
   initialTotal,
 }: AuditLogListProps) {
@@ -35,16 +27,13 @@ export default function AuditLogList({
   const semDateTime = useSemDateTime();
 
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [currentAction, setCurrentAction] = useState(initialAction);
 
-  const paramsChanged =
-    currentPage !== initialPage || currentAction !== initialAction;
+  const paramsChanged = currentPage !== initialPage;
 
   const swrParams = paramsChanged
     ? {
         page: currentPage,
         size: PAGE_SIZE,
-        action: currentAction || undefined,
       }
     : null;
 
@@ -52,11 +41,6 @@ export default function AuditLogList({
 
   const displayList = paramsChanged ? (data?.list ?? []) : initialList;
   const displayTotal = paramsChanged ? (data?.total ?? 0) : initialTotal;
-
-  const getActionLabel = (action: string) => {
-    const key = `actions.${action}`;
-    return t.has(key) ? t(key) : action;
-  };
 
   const columns: ColumnsType<AuditLogItem> = [
     {
@@ -73,17 +57,6 @@ export default function AuditLogList({
       width: 150,
       render: (username: string, record) => (
         <Link href={`/users/${record.user_id}`}>{username}</Link>
-      ),
-    },
-    {
-      title: t('table.action'),
-      dataIndex: 'action',
-      key: 'action',
-      width: 120,
-      render: (action: string) => (
-        <Tag color={ACTION_COLORS[action] || 'default'}>
-          {getActionLabel(action)}
-        </Tag>
       ),
     },
     {
@@ -107,21 +80,7 @@ export default function AuditLogList({
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.history.replaceState(
-      null,
-      '',
-      `?page=${page}${currentAction ? `&action=${currentAction}` : ''}`,
-    );
-  };
-
-  const handleActionChange = (value: string) => {
-    setCurrentAction(value);
-    setCurrentPage(1);
-    window.history.replaceState(
-      null,
-      '',
-      `?page=1${value ? `&action=${value}` : ''}`,
-    );
+    window.history.replaceState(null, '', `?page=${page}`);
   };
 
   return (
@@ -133,30 +92,6 @@ export default function AuditLogList({
           </Title>
           <Text type="secondary">{t('description')}</Text>
         </div>
-
-        <Space className="mb-4">
-          <Text>{t('filter.action')}:</Text>
-          <Select
-            className="w-48"
-            value={currentAction}
-            onChange={handleActionChange}
-            options={[
-              { value: '', label: t('filter.all') },
-              {
-                value: 'script_delete',
-                label: t('actions.script_delete'),
-              },
-              {
-                value: 'script_update',
-                label: t('actions.script_update'),
-              },
-              {
-                value: 'script_create',
-                label: t('actions.script_create'),
-              },
-            ]}
-          />
-        </Space>
 
         <Table
           columns={columns}

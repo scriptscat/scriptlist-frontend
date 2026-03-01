@@ -19,7 +19,6 @@ import UserAuth from '@/components/UserAuth';
 import { useUser } from '@/contexts/UserContext';
 import NotificationBell from '@/components/NotificationBell';
 import {
-  AuditOutlined,
   BellOutlined,
   ChromeOutlined,
   CodeOutlined,
@@ -73,11 +72,6 @@ export default function MainLayout({
         href: 'https://docs.scriptcat.org/',
         label: t('browser_extension'),
         icon: <ChromeOutlined />,
-      },
-      {
-        href: '/audit-logs',
-        label: t('audit_logs'),
-        icon: <AuditOutlined />,
       },
     ],
     [t],
@@ -242,6 +236,8 @@ export default function MainLayout({
           <a href="https://github.com/scriptscat" target="_blank">
             {'GitHub'}
           </a>
+          <Divider type="vertical" />
+          <Link href="/audit-logs">{t('audit_logs')}</Link>
         </div>
         <div>
           <a href={'https://docs.scriptcat.org/docs/use/policy/disclaimer/'}>
