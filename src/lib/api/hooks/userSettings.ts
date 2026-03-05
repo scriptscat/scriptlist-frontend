@@ -59,6 +59,30 @@ export function useUserConfig() {
 }
 
 /**
+ * 修改密码的hook
+ */
+export function useChangePassword() {
+  const [loading, setLoading] = useState(false);
+
+  const changePassword = async (oldPassword: string, newPassword: string) => {
+    setLoading(true);
+    try {
+      const data = await userService.changePassword(oldPassword, newPassword);
+      setLoading(false);
+      return data;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
+  return {
+    changePassword,
+    loading,
+  };
+}
+
+/**
  * 更新用户通知配置的hook
  */
 export function useUpdateUserNotify() {

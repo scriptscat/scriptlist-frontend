@@ -240,6 +240,7 @@
       "invalid_link": "Invalid Link",
       "invalid_link_description": "The reset link is invalid or has expired.",
       "password_complexity": "Password must contain both letters and numbers",
+      "password_max_length": "Mật khẩu không được vượt quá 32 ký tự",
       "password_min_length": "Password must be at least 6 characters",
       "password_placeholder": "Enter new password",
       "password_required": "Please enter a new password",
@@ -1639,6 +1640,7 @@
     "settings": {
       "notification_settings": "Notification Settings",
       "oauth_bind_settings": "Liên kết OIDC",
+      "password_settings": "Đổi mật khẩu",
       "settings_description": "Manage your account preferences, including Webhook configuration and notification options",
       "user_settings": "User Settings",
       "webhook_settings": "Webhook Settings"
@@ -1649,6 +1651,26 @@
     "user_not_found": "User not found",
     "username": "Username",
     "username_placeholder": "Please enter username",
+    "password": {
+      "title": "Đổi mật khẩu",
+      "description": "Thay đổi mật khẩu đăng nhập của bạn. Sau khi thay đổi, tất cả phiên đăng nhập sẽ bị vô hiệu hóa và bạn cần đăng nhập lại.",
+      "old_password": "Mật khẩu hiện tại",
+      "old_password_placeholder": "Nhập mật khẩu hiện tại",
+      "old_password_required": "Vui lòng nhập mật khẩu hiện tại",
+      "new_password": "Mật khẩu mới",
+      "new_password_placeholder": "Nhập mật khẩu mới",
+      "new_password_required": "Vui lòng nhập mật khẩu mới",
+      "confirm_password": "Xác nhận mật khẩu mới",
+      "confirm_password_placeholder": "Nhập lại mật khẩu mới",
+      "confirm_password_required": "Vui lòng xác nhận mật khẩu mới",
+      "password_mismatch": "Mật khẩu không khớp",
+      "password_min_length": "Mật khẩu phải có ít nhất 6 ký tự",
+      "password_max_length": "Mật khẩu không được vượt quá 32 ký tự",
+      "password_complexity": "Mật khẩu phải chứa cả chữ cái và chữ số",
+      "submit": "Đổi mật khẩu",
+      "change_success": "Đổi mật khẩu thành công, đang chuyển hướng đến trang đăng nhập...",
+      "change_failed": "Đổi mật khẩu thất bại"
+    },
     "webhook": {
       "cancel": "Cancel",
       "config_info_title": "Webhook Configuration Information",

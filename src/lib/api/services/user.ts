@@ -179,6 +179,16 @@ export class UserService {
   }
 
   /**
+   * 修改密码
+   */
+  async changePassword(oldPassword: string, newPassword: string) {
+    return apiClient.put<{ message: string }>(`${this.basePath}/password`, {
+      old_password: oldPassword,
+      new_password: newPassword,
+    });
+  }
+
+  /**
    * 刷新登录 token（fire-and-forget）
    * 后端会判断是否需要刷新（超过3天才会真正刷新）
    */

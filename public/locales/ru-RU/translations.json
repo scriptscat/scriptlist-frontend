@@ -240,6 +240,7 @@
       "invalid_link": "Недействительная ссылка",
       "invalid_link_description": "Ссылка для сброса недействительна или устарела.",
       "password_complexity": "Пароль должен содержать буквы и цифры",
+      "password_max_length": "Пароль не должен превышать 32 символов",
       "password_min_length": "Пароль должен содержать не менее 6 символов",
       "password_placeholder": "Введите новый пароль",
       "password_required": "Пожалуйста, введите новый пароль",
@@ -1639,6 +1640,7 @@
     "settings": {
       "notification_settings": "Настройки уведомлений",
       "oauth_bind_settings": "Привязка OIDC",
+      "password_settings": "Изменить пароль",
       "settings_description": "Управляйте настройками предпочтений вашей учётной записи, включая конфигурацию Webhook и параметры уведомлений",
       "user_settings": "Настройки пользователя",
       "webhook_settings": "Настройки Webhook"
@@ -1649,6 +1651,26 @@
     "user_not_found": "Пользователь не найден",
     "username": "Имя пользователя",
     "username_placeholder": "Пожалуйста, введите имя пользователя",
+    "password": {
+      "title": "Изменить пароль",
+      "description": "Измените пароль для входа. После изменения все активные сеансы будут аннулированы, и вам потребуется войти заново.",
+      "old_password": "Текущий пароль",
+      "old_password_placeholder": "Введите текущий пароль",
+      "old_password_required": "Пожалуйста, введите текущий пароль",
+      "new_password": "Новый пароль",
+      "new_password_placeholder": "Введите новый пароль",
+      "new_password_required": "Пожалуйста, введите новый пароль",
+      "confirm_password": "Подтвердите новый пароль",
+      "confirm_password_placeholder": "Введите новый пароль ещё раз",
+      "confirm_password_required": "Пожалуйста, подтвердите новый пароль",
+      "password_mismatch": "Пароли не совпадают",
+      "password_min_length": "Пароль должен содержать не менее 6 символов",
+      "password_max_length": "Пароль не должен превышать 32 символов",
+      "password_complexity": "Пароль должен содержать буквы и цифры",
+      "submit": "Изменить пароль",
+      "change_success": "Пароль успешно изменён, перенаправление на страницу входа...",
+      "change_failed": "Не удалось изменить пароль"
+    },
     "webhook": {
       "cancel": "Отменить",
       "config_info_title": "Информация о конфигурации Webhook",

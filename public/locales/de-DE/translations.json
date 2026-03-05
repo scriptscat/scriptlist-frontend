@@ -240,6 +240,7 @@
       "invalid_link": "Ungültiger Link",
       "invalid_link_description": "Der Link zum Zurücksetzen ist ungültig oder abgelaufen.",
       "password_complexity": "Das Passwort muss Buchstaben und Zahlen enthalten",
+      "password_max_length": "Das Passwort darf nicht länger als 32 Zeichen sein",
       "password_min_length": "Das Passwort muss mindestens 6 Zeichen lang sein",
       "password_placeholder": "Geben Sie ein neues Passwort ein",
       "password_required": "Bitte geben Sie ein neues Passwort ein",
@@ -1639,6 +1640,7 @@
     "settings": {
       "notification_settings": "Benachrichtigungseinstellungen",
       "oauth_bind_settings": "OIDC-Verknüpfung",
+      "password_settings": "Passwort ändern",
       "settings_description": "Verwalten Sie Ihre Kontopräferenzen, einschließlich Webhook-Konfiguration und Benachrichtigungsoptionen",
       "user_settings": "Benutzereinstellungen",
       "webhook_settings": "Webhook-Einstellungen"
@@ -1649,6 +1651,26 @@
     "user_not_found": "Benutzer existiert nicht",
     "username": "Benutzername",
     "username_placeholder": "Bitte Benutzername eingeben",
+    "password": {
+      "title": "Passwort ändern",
+      "description": "Ändern Sie Ihr Login-Passwort. Nach der Änderung werden alle aktiven Sitzungen ungültig und Sie müssen sich erneut anmelden.",
+      "old_password": "Aktuelles Passwort",
+      "old_password_placeholder": "Aktuelles Passwort eingeben",
+      "old_password_required": "Bitte geben Sie Ihr aktuelles Passwort ein",
+      "new_password": "Neues Passwort",
+      "new_password_placeholder": "Neues Passwort eingeben",
+      "new_password_required": "Bitte geben Sie ein neues Passwort ein",
+      "confirm_password": "Neues Passwort bestätigen",
+      "confirm_password_placeholder": "Neues Passwort erneut eingeben",
+      "confirm_password_required": "Bitte bestätigen Sie Ihr neues Passwort",
+      "password_mismatch": "Die Passwörter stimmen nicht überein",
+      "password_min_length": "Das Passwort muss mindestens 6 Zeichen lang sein",
+      "password_max_length": "Das Passwort darf nicht länger als 32 Zeichen sein",
+      "password_complexity": "Das Passwort muss sowohl Buchstaben als auch Ziffern enthalten",
+      "submit": "Passwort ändern",
+      "change_success": "Passwort erfolgreich geändert, Weiterleitung zur Anmeldung...",
+      "change_failed": "Passwortänderung fehlgeschlagen"
+    },
     "webhook": {
       "cancel": "Abbrechen",
       "config_info_title": "Webhook-Konfigurationsinformationen",

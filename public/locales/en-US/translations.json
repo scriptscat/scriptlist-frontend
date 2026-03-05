@@ -240,6 +240,7 @@
       "invalid_link": "Invalid Link",
       "invalid_link_description": "The reset link is invalid or has expired.",
       "password_complexity": "Password must contain both letters and numbers",
+      "password_max_length": "Password must not exceed 32 characters",
       "password_min_length": "Password must be at least 6 characters",
       "password_placeholder": "Enter new password",
       "password_required": "Please enter a new password",
@@ -1639,6 +1640,7 @@
     "settings": {
       "notification_settings": "Notification Settings",
       "oauth_bind_settings": "OIDC Binding",
+      "password_settings": "Change Password",
       "settings_description": "Manage your account preferences, including Webhook configuration and notification options",
       "user_settings": "User Settings",
       "webhook_settings": "Webhook Settings"
@@ -1649,6 +1651,26 @@
     "user_not_found": "User not found",
     "username": "Username",
     "username_placeholder": "Please enter username",
+    "password": {
+      "title": "Change Password",
+      "description": "Change your login password. After changing, all active sessions will be invalidated and you will need to log in again.",
+      "old_password": "Current Password",
+      "old_password_placeholder": "Enter current password",
+      "old_password_required": "Please enter your current password",
+      "new_password": "New Password",
+      "new_password_placeholder": "Enter new password",
+      "new_password_required": "Please enter a new password",
+      "confirm_password": "Confirm New Password",
+      "confirm_password_placeholder": "Re-enter new password",
+      "confirm_password_required": "Please confirm your new password",
+      "password_mismatch": "Passwords do not match",
+      "password_min_length": "Password must be at least 6 characters",
+      "password_max_length": "Password must not exceed 32 characters",
+      "password_complexity": "Password must contain both letters and digits",
+      "submit": "Change Password",
+      "change_success": "Password changed successfully, redirecting to login...",
+      "change_failed": "Failed to change password"
+    },
     "webhook": {
       "cancel": "Cancel",
       "config_info_title": "Webhook Configuration Information",

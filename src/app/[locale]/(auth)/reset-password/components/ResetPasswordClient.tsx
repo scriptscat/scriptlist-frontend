@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Form, Input, message, Result } from 'antd';
-import { LockOutlined } from '@ant-design/icons';
+import { Button, Form, message, Result } from 'antd';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { authService } from '@/lib/api/services/auth';
 import { Link } from '@/i18n/routing';
 import { APIError } from '@/types/api';
+import PasswordFormItems from '@/components/PasswordFormItems';
 
 export default function ResetPasswordClient() {
   const t = useTranslations('auth.reset_password');
@@ -93,50 +93,19 @@ export default function ResetPasswordClient() {
           layout="vertical"
           size="large"
         >
-          <Form.Item
-            name="password"
-            rules={[
-              { required: true, message: t('password_required') },
-              { min: 6, message: t('password_min_length') },
-              {
-                pattern: /^(?=.*[a-zA-Z])(?=.*\d)/,
-                message: t('password_complexity'),
-              },
-            ]}
-          >
-            <Input.Password
-              prefix={
-                <LockOutlined className="text-[rgb(var(--text-tertiary))]" />
-              }
-              placeholder={t('password_placeholder')}
-              className="!rounded-xl"
-            />
-          </Form.Item>
-          <Form.Item
-            name="confirmPassword"
-            dependencies={['password']}
-            rules={[
-              { required: true, message: t('confirm_password_required') },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error(t('confirm_password_mismatch')),
-                  );
-                },
-              }),
-            ]}
-          >
-            <Input.Password
-              prefix={
-                <LockOutlined className="text-[rgb(var(--text-tertiary))]" />
-              }
-              placeholder={t('confirm_password_placeholder')}
-              className="!rounded-xl"
-            />
-          </Form.Item>
+          <PasswordFormItems
+            t={(key: string) => t(key)}
+            passwordField="password"
+            confirmField="confirmPassword"
+            passwordLabel=""
+            confirmLabel=""
+            passwordPlaceholderKey="password_placeholder"
+            confirmPlaceholderKey="confirm_password_placeholder"
+            passwordRequiredKey="password_required"
+            confirmRequiredKey="confirm_password_required"
+            mismatchKey="confirm_password_mismatch"
+            inputClassName="!rounded-xl"
+          />
           <Form.Item className="!mb-0">
             <Button
               type="primary"

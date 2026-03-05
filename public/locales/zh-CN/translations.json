@@ -240,6 +240,7 @@
       "invalid_link": "无效的链接",
       "invalid_link_description": "重置链接无效或已过期。",
       "password_complexity": "密码必须包含字母和数字",
+      "password_max_length": "密码长度不能超过32位",
       "password_min_length": "密码至少6个字符",
       "password_placeholder": "请输入新密码",
       "password_required": "请输入新密码",
@@ -1639,6 +1640,7 @@
     "settings": {
       "notification_settings": "通知设置",
       "oauth_bind_settings": "OIDC 绑定",
+      "password_settings": "修改密码",
       "settings_description": "管理你的账户偏好设置，包括 Webhook 配置和通知选项",
       "user_settings": "用户设置",
       "webhook_settings": "Webhook 设置"
@@ -1649,6 +1651,26 @@
     "user_not_found": "用户不存在",
     "username": "用户名",
     "username_placeholder": "请输入用户名",
+    "password": {
+      "title": "修改密码",
+      "description": "修改你的登录密码，修改后所有设备上的登录会话将失效，需要重新登录。",
+      "old_password": "当前密码",
+      "old_password_placeholder": "请输入当前密码",
+      "old_password_required": "请输入当前密码",
+      "new_password": "新密码",
+      "new_password_placeholder": "请输入新密码",
+      "new_password_required": "请输入新密码",
+      "confirm_password": "确认新密码",
+      "confirm_password_placeholder": "请再次输入新密码",
+      "confirm_password_required": "请再次输入新密码",
+      "password_mismatch": "两次输入的密码不一致",
+      "password_min_length": "密码长度不能少于6位",
+      "password_max_length": "密码长度不能超过32位",
+      "password_complexity": "密码必须包含字母和数字",
+      "submit": "修改密码",
+      "change_success": "密码修改成功，即将跳转到登录页...",
+      "change_failed": "密码修改失败"
+    },
     "webhook": {
       "cancel": "取消",
       "config_info_title": "Webhook 配置信息",

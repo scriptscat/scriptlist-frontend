@@ -240,6 +240,7 @@
       "invalid_link": "無効なリンク",
       "invalid_link_description": "リセットリンクが無効または期限切れです。",
       "password_complexity": "パスワードには英字と数字の両方を含める必要があります",
+      "password_max_length": "パスワードは32文字以内にしてください",
       "password_min_length": "パスワードは6文字以上である必要があります",
       "password_placeholder": "新しいパスワードを入力してください",
       "password_required": "新しいパスワードを入力してください",
@@ -1639,6 +1640,7 @@
     "settings": {
       "notification_settings": "通知設定",
       "oauth_bind_settings": "OIDC連携",
+      "password_settings": "パスワード変更",
       "settings_description": "Webhook設定や通知オプションなど、アカウントの設定を管理します",
       "user_settings": "ユーザー設定",
       "webhook_settings": "Webhook設定"
@@ -1649,6 +1651,26 @@
     "user_not_found": "ユーザーが存在しません",
     "username": "ユーザー名",
     "username_placeholder": "ユーザー名を入力してください",
+    "password": {
+      "title": "パスワード変更",
+      "description": "ログインパスワードを変更します。変更後、すべてのデバイスのセッションが無効になり、再ログインが必要です。",
+      "old_password": "現在のパスワード",
+      "old_password_placeholder": "現在のパスワードを入力してください",
+      "old_password_required": "現在のパスワードを入力してください",
+      "new_password": "新しいパスワード",
+      "new_password_placeholder": "新しいパスワードを入力してください",
+      "new_password_required": "新しいパスワードを入力してください",
+      "confirm_password": "新しいパスワードの確認",
+      "confirm_password_placeholder": "新しいパスワードを再入力してください",
+      "confirm_password_required": "新しいパスワードを再入力してください",
+      "password_mismatch": "パスワードが一致しません",
+      "password_min_length": "パスワードは6文字以上必要です",
+      "password_max_length": "パスワードは32文字以内にしてください",
+      "password_complexity": "パスワードには英字と数字の両方を含める必要があります",
+      "submit": "パスワード変更",
+      "change_success": "パスワードが変更されました。ログインページへ移動します...",
+      "change_failed": "パスワードの変更に失敗しました"
+    },
     "webhook": {
       "cancel": "キャンセル",
       "config_info_title": "Webhook設定情報",
