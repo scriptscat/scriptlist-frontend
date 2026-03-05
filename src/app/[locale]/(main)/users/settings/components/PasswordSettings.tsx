@@ -7,7 +7,7 @@ import { useChangePassword } from '@/lib/api/hooks/userSettings';
 import { useRouter } from 'next/navigation';
 import PasswordFormItems from '@/components/PasswordFormItems';
 
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 export default function PasswordSettings() {
   const t = useTranslations('user.password');
@@ -33,30 +33,28 @@ export default function PasswordSettings() {
   };
 
   return (
-    <div className="flex flex-col gap-3">
-      <Card className="bg-gradient-to-r">
-        <div className="flex items-start space-x-4">
-          <div className="flex-shrink-0">
-            <div className="w-12 h-12 rounded-lg flex items-center justify-center">
-              <LockOutlined className="text-2xl" />
-            </div>
-          </div>
-          <div className="flex-1">
-            <Title level={4} className="!mb-2">
-              {t('title')}
-            </Title>
-            <Paragraph className="!mb-4">{t('description')}</Paragraph>
-          </div>
+    <div className="flex flex-col gap-5">
+      {/* Section Intro */}
+      <div className="flex items-start gap-4 rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-5 dark:border-neutral-700 dark:bg-neutral-800/50">
+        <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-emerald-500/10 text-xl text-emerald-500">
+          <LockOutlined />
         </div>
-      </Card>
+        <div>
+          <h3 className="m-0 mb-1 text-base font-semibold">{t('title')}</h3>
+          <Paragraph className="!mb-0" type="secondary">
+            {t('description')}
+          </Paragraph>
+        </div>
+      </div>
 
-      <Card>
+      {/* Password Form */}
+      <Card bordered>
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
           autoComplete="off"
-          style={{ maxWidth: 400 }}
+          className="max-w-[440px]"
         >
           <Form.Item
             name="old_password"
@@ -66,13 +64,21 @@ export default function PasswordSettings() {
             <Input.Password
               prefix={<LockOutlined />}
               placeholder={t('old_password_placeholder')}
+              size="large"
             />
           </Form.Item>
 
+          <div className="my-4 h-px bg-neutral-200 dark:bg-neutral-700" />
+
           <PasswordFormItems t={(key: string) => t(key)} />
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
+          <Form.Item className="!mb-0 !mt-6">
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              size="large"
+            >
               {t('submit')}
             </Button>
           </Form.Item>

@@ -1,19 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import {
   ApiOutlined,
   BellOutlined,
   LinkOutlined,
   LockOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
-import { Card, Tabs, Typography } from 'antd';
+import { Card, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import WebhookSettings from './WebhookSettings';
 import NotificationSettings from './NotificationSettings';
 import OAuthBindSettings from './OAuthBindSettings';
 import PasswordSettings from './PasswordSettings';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 interface SettingsClientProps {
   initialWebhookToken?: string;
@@ -22,81 +24,131 @@ interface SettingsClientProps {
   };
 }
 
+const NAV_ITEMS = [
+  {
+    key: 'webhook',
+    icon: ApiOutlined,
+    activeIconCls: 'text-blue-500',
+    activeIconBgCls: 'bg-blue-500/10',
+    indicatorCls: 'bg-blue-500',
+  },
+  {
+    key: 'notification',
+    icon: BellOutlined,
+    activeIconCls: 'text-amber-500',
+    activeIconBgCls: 'bg-amber-500/10',
+    indicatorCls: 'bg-amber-500',
+  },
+  {
+    key: 'password',
+    icon: LockOutlined,
+    activeIconCls: 'text-emerald-500',
+    activeIconBgCls: 'bg-emerald-500/10',
+    indicatorCls: 'bg-emerald-500',
+  },
+  {
+    key: 'oauth_bind',
+    icon: LinkOutlined,
+    activeIconCls: 'text-violet-500',
+    activeIconBgCls: 'bg-violet-500/10',
+    indicatorCls: 'bg-violet-500',
+  },
+] as const;
+
+type SettingsKey = (typeof NAV_ITEMS)[number]['key'];
+
 export default function SettingsClient({
   initialWebhookToken,
   initialNotificationConfig,
 }: SettingsClientProps) {
   const t = useTranslations('user.settings');
+  const [activeKey, setActiveKey] = useState<SettingsKey>('webhook');
 
-  const items = [
-    {
-      key: 'webhook',
-      label: (
-        <div className="flex items-center space-x-2">
-          <ApiOutlined />
-          <span>{t('webhook_settings')}</span>
-        </div>
-      ),
-      children: <WebhookSettings initialToken={initialWebhookToken} />,
-    },
-    {
-      key: 'notification',
-      label: (
-        <div className="flex items-center space-x-2">
-          <BellOutlined />
-          <span>{t('notification_settings')}</span>
-        </div>
-      ),
-      children: (
-        <NotificationSettings initialConfig={initialNotificationConfig} />
-      ),
-    },
-    {
-      key: 'password',
-      label: (
-        <div className="flex items-center space-x-2">
-          <LockOutlined />
-          <span>{t('password_settings')}</span>
-        </div>
-      ),
-      children: <PasswordSettings />,
-    },
-    {
-      key: 'oauth_bind',
-      label: (
-        <div className="flex items-center space-x-2">
-          <LinkOutlined />
-          <span>{t('oauth_bind_settings')}</span>
-        </div>
-      ),
-      children: <OAuthBindSettings />,
-    },
-  ];
+  const labelMap: Record<SettingsKey, string> = {
+    webhook: t('webhook_settings'),
+    notification: t('notification_settings'),
+    password: t('password_settings'),
+    oauth_bind: t('oauth_bind_settings'),
+  };
+
+  const renderContent = () => {
+    switch (activeKey) {
+      case 'webhook':
+        return <WebhookSettings initialToken={initialWebhookToken} />;
+      case 'notification':
+        return (
+          <NotificationSettings initialConfig={initialNotificationConfig} />
+        );
+      case 'password':
+        return <PasswordSettings />;
+      case 'oauth_bind':
+        return <OAuthBindSettings />;
+    }
+  };
 
   return (
-    <div>
-      {/* 页面头部 */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center space-x-3 mb-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <BellOutlined className="text-white text-lg" />
-              </div>
-              <Title level={2} className="!mb-0">
-                {t('user_settings')}
-              </Title>
-            </div>
-            <Text type="secondary" className="text-base">
-              {t('settings_description')}
-            </Text>
-          </div>
+    <div className="mx-auto w-full max-w-[1100px]">
+      {/* Page Header */}
+      <div className="mb-6 flex items-center gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-blue-500/10 text-[22px] text-blue-500">
+          <SettingOutlined />
+        </div>
+        <div>
+          <h1 className="m-0 mb-0.5 text-2xl font-bold leading-tight tracking-tight">
+            {t('user_settings')}
+          </h1>
+          <Text type="secondary">{t('settings_description')}</Text>
         </div>
       </div>
 
-      {/* 设置选项卡 */}
-      <Card className="shadow-lg border-0">
-        <Tabs defaultActiveKey="webhook" items={items} size="large" />
+      {/* Outer Card wrapping sidebar + content */}
+      <Card bordered>
+        <div className="flex min-h-[560px] items-stretch max-md:min-h-0 max-md:flex-col">
+          {/* Sidebar Navigation */}
+          <nav className="flex w-[200px] shrink-0 flex-col gap-1 pr-1 max-md:w-full max-md:flex-row max-md:overflow-x-auto max-md:pr-0 max-md:pb-1">
+            {NAV_ITEMS.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeKey === item.key;
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => setActiveKey(item.key)}
+                  className={`relative flex w-full cursor-pointer items-center gap-2.5 rounded-[10px] border-none px-3 py-2.5 text-left transition-all duration-200 max-md:shrink-0 max-md:rounded-lg max-md:px-3.5 max-md:py-2 ${
+                    isActive
+                      ? 'bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-50'
+                      : 'bg-transparent text-neutral-400 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-500 dark:hover:bg-neutral-800 dark:hover:text-neutral-50'
+                  }`}
+                >
+                  <span
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[15px] transition-all duration-200 ${
+                      isActive
+                        ? `${item.activeIconCls} ${item.activeIconBgCls}`
+                        : 'bg-neutral-50 dark:bg-neutral-800'
+                    }`}
+                  >
+                    <Icon />
+                  </span>
+                  <span className="whitespace-nowrap text-sm font-medium max-md:text-[13px]">
+                    {labelMap[item.key]}
+                  </span>
+                  {isActive && (
+                    <span
+                      className={`absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-sm ${item.indicatorCls} max-md:hidden`}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Divider */}
+          <div className="mx-6 w-px shrink-0 bg-neutral-200 dark:bg-neutral-700 max-md:mx-0 max-md:my-4 max-md:h-px max-md:w-full" />
+
+          {/* Content Area */}
+          <main className="min-w-0 flex-1 overflow-hidden">
+            {renderContent()}
+          </main>
+        </div>
       </Card>
     </div>
   );

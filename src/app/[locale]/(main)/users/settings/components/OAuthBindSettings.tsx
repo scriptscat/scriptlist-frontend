@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  Card,
   Dropdown,
   Empty,
   message,
@@ -20,7 +21,7 @@ import type {
 } from '@/lib/api/services/oidc';
 import { APIError } from '@/types/api';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 export default function OAuthBindSettings() {
   const t = useTranslations('user.oauth_bind');
@@ -109,61 +110,67 @@ export default function OAuthBindSettings() {
     },
   ];
 
-  // 过滤出未绑定的提供商
   const boundProviderKeys = new Set(bindings.map((b) => b.provider));
   const availableProviders = providers.filter(
     (p) => !boundProviderKeys.has(`oidc:${p.id}`),
   );
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2">
-          <LinkOutlined className="text-blue-500" />
-          <Text strong className="text-lg">
-            {t('title')}
-          </Text>
+    <div className="flex flex-col gap-5">
+      {/* Section Intro */}
+      <div className="flex items-start gap-4 rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-5 dark:border-neutral-700 dark:bg-neutral-800/50">
+        <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-violet-500/10 text-xl text-violet-500">
+          <LinkOutlined />
         </div>
-        {availableProviders.length > 0 && (
-          <Dropdown
-            menu={{
-              items: availableProviders.map((p) => ({
-                key: p.id,
-                label: p.name,
-                onClick: () => handleBind(p.id),
-              })),
-            }}
-            trigger={['click']}
-          >
-            <Button type="primary" icon={<PlusOutlined />}>
-              {t('bind_new')}
-            </Button>
-          </Dropdown>
-        )}
+        <div className="flex-1">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="m-0 mb-1 text-base font-semibold">{t('title')}</h3>
+            {availableProviders.length > 0 && (
+              <Dropdown
+                menu={{
+                  items: availableProviders.map((p) => ({
+                    key: p.id,
+                    label: p.name,
+                    onClick: () => handleBind(p.id),
+                  })),
+                }}
+                trigger={['click']}
+              >
+                <Button type="primary" size="small" icon={<PlusOutlined />}>
+                  {t('bind_new')}
+                </Button>
+              </Dropdown>
+            )}
+          </div>
+          <Paragraph className="!mb-0" type="secondary">
+            {t('description')}
+          </Paragraph>
+        </div>
       </div>
-      <Text type="secondary" className="block mb-4">
-        {t('description')}
-      </Text>
-      <Table
-        columns={columns}
-        dataSource={bindings}
-        rowKey="id"
-        loading={loading}
-        pagination={false}
-        locale={{
-          emptyText: (
-            <Empty
-              description={t('no_bindings')}
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-            />
-          ),
-        }}
-      />
-      {providers.length === 0 && !loading && (
-        <div className="mt-2">
-          <Text type="secondary">{t('no_providers')}</Text>
-        </div>
-      )}
+
+      {/* Bindings Table */}
+      <Card bordered>
+        <Table
+          columns={columns}
+          dataSource={bindings}
+          rowKey="id"
+          loading={loading}
+          pagination={false}
+          locale={{
+            emptyText: (
+              <Empty
+                description={t('no_bindings')}
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ),
+          }}
+        />
+        {providers.length === 0 && !loading && (
+          <div className="mt-3">
+            <Text type="secondary">{t('no_providers')}</Text>
+          </div>
+        )}
+      </Card>
     </div>
   );
 }
