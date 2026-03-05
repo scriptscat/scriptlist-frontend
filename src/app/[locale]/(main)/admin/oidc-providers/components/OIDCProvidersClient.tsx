@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import {
+  Avatar,
   Button,
   Form,
   Input,
@@ -11,15 +12,22 @@ import {
   Popconfirm,
   Select,
   Space,
+  Spin,
   Table,
   Tag,
+  Upload,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  SearchOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
 import type { OIDCProviderItem } from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
+import { API_CONFIG } from '@/lib/api/config';
 
 export default function OIDCProvidersClient() {
   const t = useTranslations('admin.oidc_providers');
@@ -33,6 +41,9 @@ export default function OIDCProvidersClient() {
     useState<OIDCProviderItem | null>(null);
   const [createForm] = Form.useForm();
   const [editForm] = Form.useForm();
+  const [discovering, setDiscovering] = useState(false);
+  const [createIconUrl, setCreateIconUrl] = useState<string>('');
+  const [editIconUrl, setEditIconUrl] = useState<string>('');
 
   const fetchData = useCallback(
     async (p: number = page) => {
@@ -56,6 +67,49 @@ export default function OIDCProvidersClient() {
     fetchData(page);
   }, [page]);
 
+  const handleDiscover = async (form: ReturnType<typeof Form.useForm>[0]) => {
+    const issuerUrl = form.getFieldValue('issuer_url');
+    if (!issuerUrl) {
+      message.warning(t('field_issuer_url_required'));
+      return;
+    }
+    setDiscovering(true);
+    try {
+      const config = await adminService.discoverOIDCConfig(issuerUrl);
+      form.setFieldsValue({
+        issuer_url: config.issuer || issuerUrl,
+        scopes: config.scopes_supported || 'openid,profile,email',
+      });
+      message.success(t('discover_success'));
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      } else {
+        message.error(t('discover_failed'));
+      }
+    } finally {
+      setDiscovering(false);
+    }
+  };
+
+  const handleIconUpload = async (
+    file: File,
+    setUrl: (url: string) => void,
+    form: ReturnType<typeof Form.useForm>[0],
+  ) => {
+    try {
+      const resp = await adminService.uploadOIDCIcon(file);
+      const iconUrl = `${API_CONFIG.baseURL}/resource/image/${resp.id}`;
+      setUrl(iconUrl);
+      form.setFieldsValue({ icon: iconUrl });
+      message.success(t('icon_upload_success'));
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      }
+    }
+  };
+
   const handleCreate = async (values: {
     name: string;
     issuer_url: string;
@@ -69,6 +123,7 @@ export default function OIDCProvidersClient() {
       await adminService.createOIDCProvider(values);
       setCreateModalOpen(false);
       createForm.resetFields();
+      setCreateIconUrl('');
       message.success(t('create_success'));
       fetchData(1);
       setPage(1);
@@ -96,6 +151,7 @@ export default function OIDCProvidersClient() {
       setEditModalOpen(false);
       editForm.resetFields();
       setEditingProvider(null);
+      setEditIconUrl('');
       fetchData();
     } catch (err) {
       if (err instanceof APIError) {
@@ -118,6 +174,7 @@ export default function OIDCProvidersClient() {
 
   const openEdit = (provider: OIDCProviderItem) => {
     setEditingProvider(provider);
+    setEditIconUrl(provider.icon || '');
     editForm.setFieldsValue({
       name: provider.name,
       issuer_url: provider.issuer_url,
@@ -132,6 +189,20 @@ export default function OIDCProvidersClient() {
   };
 
   const columns: ColumnsType<OIDCProviderItem> = [
+    {
+      title: t('col_icon'),
+      dataIndex: 'icon',
+      key: 'icon',
+      width: 60,
+      render: (val: string, record: OIDCProviderItem) =>
+        val ? (
+          <Avatar src={val} size="small" shape="square" />
+        ) : (
+          <Avatar size="small" shape="square">
+            {record.name?.[0]?.toUpperCase()}
+          </Avatar>
+        ),
+    },
     {
       title: t('col_name'),
       dataIndex: 'name',
@@ -181,15 +252,46 @@ export default function OIDCProvidersClient() {
     },
   ];
 
-  const formFields = (isEdit: boolean) => (
+  const iconField = (
+    iconUrl: string,
+    setUrl: (url: string) => void,
+    form: ReturnType<typeof Form.useForm>[0],
+  ) => (
+    <Form.Item name="icon" label={t('field_icon')}>
+      <Space direction="vertical" className="w-full">
+        <Space>
+          {iconUrl && <Avatar src={iconUrl} size={40} shape="square" />}
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            maxCount={1}
+            beforeUpload={(file) => {
+              handleIconUpload(file as File, setUrl, form);
+              return false;
+            }}
+          >
+            <Button icon={<UploadOutlined />}>{t('icon_upload')}</Button>
+          </Upload>
+        </Space>
+        <Input
+          placeholder="https://example.com/icon.svg"
+          value={iconUrl}
+          onChange={(e) => {
+            setUrl(e.target.value);
+            form.setFieldsValue({ icon: e.target.value });
+          }}
+        />
+      </Space>
+    </Form.Item>
+  );
+
+  const formFields = (
+    isEdit: boolean,
+    form: ReturnType<typeof Form.useForm>[0],
+    iconUrl: string,
+    setUrl: (url: string) => void,
+  ) => (
     <>
-      <Form.Item
-        name="name"
-        label={t('field_name')}
-        rules={[{ required: true, message: t('field_name_required') }]}
-      >
-        <Input />
-      </Form.Item>
       <Form.Item
         name="issuer_url"
         label={t('field_issuer_url')}
@@ -198,7 +300,28 @@ export default function OIDCProvidersClient() {
           { type: 'url', message: t('field_issuer_url_invalid') },
         ]}
       >
-        <Input placeholder="https://accounts.google.com" />
+        <Input
+          placeholder="https://accounts.google.com"
+          addonAfter={
+            <Button
+              type="text"
+              size="small"
+              icon={<SearchOutlined />}
+              loading={discovering}
+              onClick={() => handleDiscover(form)}
+              className="!h-auto !p-0"
+            >
+              {t('discover_button')}
+            </Button>
+          }
+        />
+      </Form.Item>
+      <Form.Item
+        name="name"
+        label={t('field_name')}
+        rules={[{ required: true, message: t('field_name_required') }]}
+      >
+        <Input />
       </Form.Item>
       <Form.Item
         name="client_id"
@@ -222,9 +345,7 @@ export default function OIDCProvidersClient() {
       <Form.Item name="scopes" label={t('field_scopes')}>
         <Input placeholder="openid,profile,email" />
       </Form.Item>
-      <Form.Item name="icon" label={t('field_icon')}>
-        <Input placeholder="https://example.com/icon.svg" />
-      </Form.Item>
+      {iconField(iconUrl, setUrl, form)}
       <Form.Item name="display_order" label={t('field_display_order')}>
         <InputNumber min={0} />
       </Form.Item>
@@ -238,7 +359,10 @@ export default function OIDCProvidersClient() {
         <Button
           type="primary"
           icon={<PlusOutlined />}
-          onClick={() => setCreateModalOpen(true)}
+          onClick={() => {
+            setCreateIconUrl('');
+            setCreateModalOpen(true);
+          }}
         >
           {t('create_button')}
         </Button>
@@ -264,22 +388,25 @@ export default function OIDCProvidersClient() {
         onCancel={() => {
           setCreateModalOpen(false);
           createForm.resetFields();
+          setCreateIconUrl('');
         }}
         footer={null}
       >
-        <Form
-          form={createForm}
-          onFinish={handleCreate}
-          layout="vertical"
-          initialValues={{ display_order: 0 }}
-        >
-          {formFields(false)}
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              {t('create_button')}
-            </Button>
-          </Form.Item>
-        </Form>
+        <Spin spinning={discovering}>
+          <Form
+            form={createForm}
+            onFinish={handleCreate}
+            layout="vertical"
+            initialValues={{ display_order: 0 }}
+          >
+            {formFields(false, createForm, createIconUrl, setCreateIconUrl)}
+            <Form.Item>
+              <Button type="primary" htmlType="submit" block>
+                {t('create_button')}
+              </Button>
+            </Form.Item>
+          </Form>
+        </Spin>
       </Modal>
 
       {/* Edit Modal */}
@@ -290,23 +417,26 @@ export default function OIDCProvidersClient() {
           setEditModalOpen(false);
           editForm.resetFields();
           setEditingProvider(null);
+          setEditIconUrl('');
         }}
         footer={null}
       >
-        <Form form={editForm} onFinish={handleEdit} layout="vertical">
-          {formFields(true)}
-          <Form.Item name="status" label={t('field_status')}>
-            <Select>
-              <Select.Option value={1}>{t('status_active')}</Select.Option>
-              <Select.Option value={2}>{t('status_disabled')}</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              {t('save_button')}
-            </Button>
-          </Form.Item>
-        </Form>
+        <Spin spinning={discovering}>
+          <Form form={editForm} onFinish={handleEdit} layout="vertical">
+            {formFields(true, editForm, editIconUrl, setEditIconUrl)}
+            <Form.Item name="status" label={t('field_status')}>
+              <Select>
+                <Select.Option value={1}>{t('status_active')}</Select.Option>
+                <Select.Option value={2}>{t('status_disabled')}</Select.Option>
+              </Select>
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" block>
+                {t('save_button')}
+              </Button>
+            </Form.Item>
+          </Form>
+        </Spin>
       </Modal>
     </div>
   );

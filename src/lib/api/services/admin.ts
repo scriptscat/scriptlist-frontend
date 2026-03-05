@@ -130,6 +130,15 @@ export interface UpdateOIDCProviderRequest {
   status: number;
 }
 
+export interface OIDCDiscoverResponse {
+  issuer: string;
+  authorization_endpoint: string;
+  token_endpoint: string;
+  userinfo_endpoint: string;
+  jwks_uri: string;
+  scopes_supported: string;
+}
+
 class AdminService {
   private readonly basePath = '/admin';
 
@@ -258,6 +267,23 @@ class AdminService {
 
   async deleteOIDCProvider(id: number) {
     return apiClient.delete<void>(`${this.basePath}/oidc-providers/${id}`);
+  }
+
+  // OIDC Discovery
+  async discoverOIDCConfig(issuerUrl: string) {
+    return apiClient.post<OIDCDiscoverResponse>(
+      `${this.basePath}/oidc-providers/discover`,
+      { issuer_url: issuerUrl },
+    );
+  }
+
+  // OIDC Icon Upload
+  async uploadOIDCIcon(file: File) {
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('comment', 'oidc-icon');
+    formData.append('link_id', '0');
+    return apiClient.post<{ id: string }>('/resource/image', formData);
   }
 }
 
