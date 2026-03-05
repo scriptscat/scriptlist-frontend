@@ -4,7 +4,6 @@ import { getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
 import '@/../public/styles/antd.min.css';
-import MainLayout from '@/components/layout/MainLayout';
 import { LocalizedServerThemeWrapper } from '@/components/LocalizedServerThemeWrapper';
 
 interface RootLayoutProps {
@@ -33,7 +32,7 @@ export default async function RootLayout({
 
   return (
     <LocalizedServerThemeWrapper locale={locale}>
-      <MainLayout>{children}</MainLayout>
+      {children}
     </LocalizedServerThemeWrapper>
   );
 }

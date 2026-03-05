@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { message } from 'antd';
 import { scriptService } from '../services/scripts/scripts';
-import { WatchLevel } from '@/app/[locale]/script-show-page/[id]/types';
+import { WatchLevel } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 /**
  * 脚本关注功能Hook

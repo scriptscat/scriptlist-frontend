@@ -8,7 +8,7 @@ import type {
   ScriptSetting,
   Category,
   ScriptState,
-} from '@/app/[locale]/script-show-page/[id]/types';
+} from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 // 评分相关类型定义
 export interface MyScoreResponse {
@@ -121,7 +121,7 @@ export interface ScoreStateResponse {
 }
 
 import { cache } from 'react';
-import type { GrayControlValue } from '@/app/[locale]/script-show-page/[id]/components/GrayControl';
+import type { GrayControlValue } from '@/app/[locale]/(main)/script-show-page/[id]/components/GrayControl';
 
 /**
  * 脚本核心功能API服务

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { createContext, useContext, useMemo } from 'react';
-import type { ScriptSetting } from '@/app/[locale]/script-show-page/[id]/types';
+import type { ScriptSetting } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 interface ScriptSettingContextType {
   scriptSetting: ScriptSetting;

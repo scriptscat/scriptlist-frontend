@@ -10,7 +10,7 @@ import ScriptCard from './ScriptCard';
 import type {
   ScriptListItem,
   ScriptSearchRequest,
-} from '@/app/[locale]/script-show-page/[id]/types';
+} from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 const { Option } = Select;
 

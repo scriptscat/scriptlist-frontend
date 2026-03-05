@@ -2,10 +2,10 @@
 
 import { Card, List, Avatar, Tag, Typography, Space } from 'antd';
 import { Link } from '@/i18n/routing';
-import { ScriptUtils } from '@/app/[locale]/script-show-page/[id]/utils';
+import { ScriptUtils } from '@/app/[locale]/(main)/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
 import type { ReactNode } from 'react';
-import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
+import type { ScriptListItem } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 const { Text } = Typography;
 

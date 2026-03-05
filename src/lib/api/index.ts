@@ -9,6 +9,7 @@ export { userService } from './services/user';
 export { resourceService } from './services/resource';
 export { authService } from './services/auth';
 export { adminService } from './services/admin';
+export { systemService } from './services/system';
 
 // 导出所有API相关类型
 export * from '@/types/api';

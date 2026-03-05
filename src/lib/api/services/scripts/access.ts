@@ -4,7 +4,7 @@ import type {
   InviteListItem,
   AccessRoleItem,
   InviteMessage,
-} from '@/app/[locale]/script-show-page/[id]/types';
+} from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 /**
  * 脚本访问控制API服务

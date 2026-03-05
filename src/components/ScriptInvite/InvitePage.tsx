@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 import { scriptAccessService } from '@/lib/api/services/scripts';
 import { InviteModal } from '@/components/ScriptInvite/InviteModal';
 import { useInviteList } from '@/lib/api/hooks';
-import type { InviteListItem } from '@/app/[locale]/script-show-page/[id]/types';
+import type { InviteListItem } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 interface DataType extends InviteListItem {
   key: string;

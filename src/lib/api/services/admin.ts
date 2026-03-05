@@ -206,22 +206,8 @@ class AdminService {
     });
   }
 
-  async deleteScript(id: number) {
-    return apiClient.delete<void>(`${this.basePath}/scripts/${id}`);
-  }
-
   async restoreScript(id: number) {
     return apiClient.put<void>(`${this.basePath}/scripts/${id}/restore`);
-  }
-
-  async updateScriptVisibility(
-    id: number,
-    data: { public: number; unwell: number },
-  ) {
-    return apiClient.put<void>(
-      `${this.basePath}/scripts/${id}/visibility`,
-      data,
-    );
   }
 
   // Feedback Management
@@ -249,10 +235,6 @@ class AdminService {
       script_id: scriptId,
       keyword,
     });
-  }
-
-  async deleteScore(id: number) {
-    return apiClient.delete<void>(`${this.basePath}/scores/${id}`);
   }
 
   // OIDC Provider Management

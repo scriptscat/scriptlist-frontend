@@ -14,7 +14,7 @@ import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
 import { Link } from '@/i18n/routing';
 import ScriptListCard from './ScriptListCard';
-import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
+import type { ScriptListItem } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 const { Text } = Typography;
 

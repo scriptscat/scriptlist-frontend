@@ -4,7 +4,7 @@ import type {
   InviteListItem,
   AccessRoleItem,
   Category,
-} from '@/app/[locale]/script-show-page/[id]/types';
+} from '@/app/[locale]/(main)/script-show-page/[id]/types';
 import scriptService, { scriptAccessService } from '../services/scripts';
 import { scriptIssueService } from '../services/scripts/issue';
 import type {

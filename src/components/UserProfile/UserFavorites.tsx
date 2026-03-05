@@ -27,7 +27,7 @@ import { Link } from '@/i18n/routing';
 import ScriptCard from '@/components/Scriptlist/ScriptCard';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
-import type { ScriptListItem } from '@/app/[locale]/script-show-page/[id]/types';
+import type { ScriptListItem } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 const { Title, Text } = Typography;
 

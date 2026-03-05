@@ -39,8 +39,8 @@ const MarkdownEditor = dynamic(() => import('@/components/MarkdownEditor'), {
 import {
   parseMetadata,
   parseTags,
-} from '@/app/[locale]/script-show-page/[id]/utils';
-import type { ScriptInfo } from '@/app/[locale]/script-show-page/[id]/types';
+} from '@/app/[locale]/(main)/script-show-page/[id]/utils';
+import type { ScriptInfo } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 import { useCategoryList } from '@/lib/api/hooks';
 import { APIError } from '@/types/api';
 

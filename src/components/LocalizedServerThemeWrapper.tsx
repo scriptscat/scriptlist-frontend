@@ -8,7 +8,8 @@ import { DayjsLocaleProvider } from './DayjsLocaleProvider';
 import { SWRProvider } from '@/lib/swr-config';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { userService } from '@/lib/api';
+import { userService, systemService } from '@/lib/api';
+import { GlobalConfigProvider } from '@/contexts/GlobalConfigContext';
 import Head from 'next/head';
 import GoogleAdScript from './GoogleAd/script';
 import Script from 'next/script';
@@ -41,15 +42,16 @@ export async function LocalizedServerThemeWrapper({
   children,
   locale,
 }: LocalizedServerThemeWrapperProps) {
-  // 并行获取服务端主题、国际化消息和用户信息
-  const [serverTheme, messages, user] = await Promise.all([
+  // 并行获取服务端主题、国际化消息、用户信息和全局配置
+  const [serverTheme, messages, user, globalConfig] = await Promise.all([
     getThemeFromServerCookies(),
     getMessages(),
     userService.getCurrentUser(),
+    systemService.getGlobalConfig().catch(() => ({ turnstile_site_key: '' })),
   ]);
 
   return (
-    <html lang={locale} data-theme={serverTheme.theme}>
+    <html lang={locale} data-theme={serverTheme.theme} suppressHydrationWarning>
       <Head>
         <meta
           name="theme-color"
@@ -60,6 +62,13 @@ export async function LocalizedServerThemeWrapper({
         )}
         <GoogleAdScript />
       </Head>
+      {serverTheme.mode === 'auto' && (
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var d=document.documentElement;var m=window.matchMedia('(prefers-color-scheme:dark)');if(m.matches){d.setAttribute('data-theme','dark')}else{d.setAttribute('data-theme','light')}}catch(e){}})()`,
+          }}
+        />
+      )}
       <Script
         async
         src="https://www.googletagmanager.com/gtag/js?id=G-N2X6MNVRL3"
@@ -84,7 +93,9 @@ export async function LocalizedServerThemeWrapper({
           <SWRProvider>
             <NextIntlClientProvider messages={messages}>
               <DayjsLocaleProvider>
-                <UserProvider user={user}>{children}</UserProvider>
+                <GlobalConfigProvider config={globalConfig}>
+                  <UserProvider user={user}>{children}</UserProvider>
+                </GlobalConfigProvider>
               </DayjsLocaleProvider>
             </NextIntlClientProvider>
           </SWRProvider>

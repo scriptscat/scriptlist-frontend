@@ -1,7 +1,7 @@
 import type {
   Metadata,
   ScriptListItem,
-} from '@/app/[locale]/script-show-page/[id]/types';
+} from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 /**
  * 裁剪 meta_json，只保留列表渲染需要的字段：
