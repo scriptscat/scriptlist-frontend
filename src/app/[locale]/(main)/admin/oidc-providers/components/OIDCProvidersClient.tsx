@@ -24,7 +24,11 @@ import {
 } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
-import type { OIDCProviderItem } from '@/lib/api/services/admin';
+import type {
+  OIDCProviderItem,
+  CreateOIDCProviderRequest,
+  UpdateOIDCProviderRequest,
+} from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { API_CONFIG } from '@/lib/api/config';
@@ -44,6 +48,8 @@ export default function OIDCProvidersClient() {
   const [discovering, setDiscovering] = useState(false);
   const [createIconUrl, setCreateIconUrl] = useState<string>('');
   const [editIconUrl, setEditIconUrl] = useState<string>('');
+  const [createType, setCreateType] = useState<string>('oidc');
+  const [editType, setEditType] = useState<string>('oidc');
 
   const fetchData = useCallback(
     async (p: number = page) => {
@@ -110,20 +116,13 @@ export default function OIDCProvidersClient() {
     }
   };
 
-  const handleCreate = async (values: {
-    name: string;
-    issuer_url: string;
-    client_id: string;
-    client_secret: string;
-    scopes: string;
-    icon: string;
-    display_order: number;
-  }) => {
+  const handleCreate = async (values: CreateOIDCProviderRequest) => {
     try {
       await adminService.createOIDCProvider(values);
       setCreateModalOpen(false);
       createForm.resetFields();
       setCreateIconUrl('');
+      setCreateType('oidc');
       message.success(t('create_success'));
       fetchData(1);
       setPage(1);
@@ -134,16 +133,7 @@ export default function OIDCProvidersClient() {
     }
   };
 
-  const handleEdit = async (values: {
-    name: string;
-    issuer_url: string;
-    client_id: string;
-    client_secret: string;
-    scopes: string;
-    icon: string;
-    display_order: number;
-    status: number;
-  }) => {
+  const handleEdit = async (values: UpdateOIDCProviderRequest) => {
     if (!editingProvider) return;
     try {
       await adminService.updateOIDCProvider(editingProvider.id, values);
@@ -152,6 +142,7 @@ export default function OIDCProvidersClient() {
       editForm.resetFields();
       setEditingProvider(null);
       setEditIconUrl('');
+      setEditType('oidc');
       fetchData();
     } catch (err) {
       if (err instanceof APIError) {
@@ -173,11 +164,17 @@ export default function OIDCProvidersClient() {
   };
 
   const openEdit = (provider: OIDCProviderItem) => {
+    const providerType = provider.type || 'oidc';
     setEditingProvider(provider);
     setEditIconUrl(provider.icon || '');
+    setEditType(providerType);
     editForm.setFieldsValue({
+      type: providerType,
       name: provider.name,
       issuer_url: provider.issuer_url,
+      auth_url: provider.auth_url,
+      token_url: provider.token_url,
+      userinfo_url: provider.userinfo_url,
       client_id: provider.client_id,
       client_secret: '****',
       scopes: provider.scopes,
@@ -186,6 +183,17 @@ export default function OIDCProvidersClient() {
       status: provider.status,
     });
     setEditModalOpen(true);
+  };
+
+  const typeLabel = (type: string) => {
+    switch (type) {
+      case 'oauth2':
+        return t('type_oauth2');
+      case 'qq':
+        return t('type_qq');
+      default:
+        return t('type_oidc');
+    }
   };
 
   const columns: ColumnsType<OIDCProviderItem> = [
@@ -204,6 +212,13 @@ export default function OIDCProvidersClient() {
         ),
     },
     {
+      title: t('col_type'),
+      dataIndex: 'type',
+      key: 'type',
+      width: 80,
+      render: (val: string) => <Tag>{typeLabel(val)}</Tag>,
+    },
+    {
       title: t('col_name'),
       dataIndex: 'name',
       key: 'name',
@@ -213,6 +228,11 @@ export default function OIDCProvidersClient() {
       dataIndex: 'issuer_url',
       key: 'issuer_url',
       ellipsis: true,
+      render: (_: string, record: OIDCProviderItem) => {
+        const type = record.type || 'oidc';
+        if (type === 'oidc') return record.issuer_url;
+        return record.auth_url || '-';
+      },
     },
     {
       title: t('col_client_id'),
@@ -290,67 +310,133 @@ export default function OIDCProvidersClient() {
     form: ReturnType<typeof Form.useForm>[0],
     iconUrl: string,
     setUrl: (url: string) => void,
-  ) => (
-    <>
-      <Form.Item
-        name="issuer_url"
-        label={t('field_issuer_url')}
-        rules={[
-          { required: true, message: t('field_issuer_url_required') },
-          { type: 'url', message: t('field_issuer_url_invalid') },
-        ]}
-      >
-        <Input
-          placeholder="https://accounts.google.com"
-          addonAfter={
-            <Button
-              type="text"
-              size="small"
-              icon={<SearchOutlined />}
-              loading={discovering}
-              onClick={() => handleDiscover(form)}
-              className="!h-auto !p-0"
+    currentType: string,
+    setCurrentType: (t: string) => void,
+  ) => {
+    const isOIDC = currentType === 'oidc' || currentType === '';
+    return (
+      <>
+        <Form.Item
+          name="type"
+          label={t('field_type')}
+          rules={[{ required: true }]}
+        >
+          <Select
+            onChange={(val: string) => {
+              setCurrentType(val);
+              form.setFieldsValue({ type: val });
+              // Clear irrelevant URL fields to avoid stale data submission
+              if (val === 'oidc' || val === '') {
+                form.setFieldsValue({ auth_url: undefined, token_url: undefined, userinfo_url: undefined });
+              } else {
+                form.setFieldsValue({ issuer_url: undefined });
+              }
+            }}
+          >
+            <Select.Option value="oidc">{t('type_oidc')}</Select.Option>
+            <Select.Option value="oauth2">{t('type_oauth2')}</Select.Option>
+            <Select.Option value="qq">{t('type_qq')}</Select.Option>
+          </Select>
+        </Form.Item>
+        {isOIDC ? (
+          <Form.Item
+            name="issuer_url"
+            label={t('field_issuer_url')}
+            rules={[
+              { required: true, message: t('field_issuer_url_required') },
+              { type: 'url', message: t('field_issuer_url_invalid') },
+            ]}
+          >
+            <Input
+              placeholder="https://accounts.google.com"
+              addonAfter={
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<SearchOutlined />}
+                  loading={discovering}
+                  onClick={() => handleDiscover(form)}
+                  className="!h-auto !p-0"
+                >
+                  {t('discover_button')}
+                </Button>
+              }
+            />
+          </Form.Item>
+        ) : (
+          <>
+            <Form.Item
+              name="auth_url"
+              label={t('field_auth_url')}
+              rules={[
+                { required: true, message: t('field_auth_url_required') },
+                { type: 'url', message: t('field_url_invalid') },
+              ]}
             >
-              {t('discover_button')}
-            </Button>
-          }
-        />
-      </Form.Item>
-      <Form.Item
-        name="name"
-        label={t('field_name')}
-        rules={[{ required: true, message: t('field_name_required') }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="client_id"
-        label={t('field_client_id')}
-        rules={[{ required: true, message: t('field_client_id_required') }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="client_secret"
-        label={t('field_client_secret')}
-        rules={[
-          {
-            required: !isEdit,
-            message: t('field_client_secret_required'),
-          },
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
-      <Form.Item name="scopes" label={t('field_scopes')}>
-        <Input placeholder="openid,profile,email" />
-      </Form.Item>
-      {iconField(iconUrl, setUrl, form)}
-      <Form.Item name="display_order" label={t('field_display_order')}>
-        <InputNumber min={0} />
-      </Form.Item>
-    </>
-  );
+              <Input placeholder="https://github.com/login/oauth/authorize" />
+            </Form.Item>
+            <Form.Item
+              name="token_url"
+              label={t('field_token_url')}
+              rules={[
+                { required: true, message: t('field_token_url_required') },
+                { type: 'url', message: t('field_url_invalid') },
+              ]}
+            >
+              <Input placeholder="https://github.com/login/oauth/access_token" />
+            </Form.Item>
+            <Form.Item
+              name="userinfo_url"
+              label={t('field_userinfo_url')}
+              rules={[
+                { required: true, message: t('field_userinfo_url_required') },
+                { type: 'url', message: t('field_url_invalid') },
+              ]}
+            >
+              <Input placeholder="https://api.github.com/user" />
+            </Form.Item>
+          </>
+        )}
+        <Form.Item
+          name="name"
+          label={t('field_name')}
+          rules={[{ required: true, message: t('field_name_required') }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="client_id"
+          label={t('field_client_id')}
+          rules={[{ required: true, message: t('field_client_id_required') }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="client_secret"
+          label={t('field_client_secret')}
+          rules={[
+            {
+              required: !isEdit,
+              message: t('field_client_secret_required'),
+            },
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+        <Form.Item name="scopes" label={t('field_scopes')}>
+          <Input
+            placeholder={
+              isOIDC ? 'openid,profile,email' : 'read:user,user:email'
+            }
+          />
+        </Form.Item>
+        {iconField(iconUrl, setUrl, form)}
+        <Form.Item name="display_order" label={t('field_display_order')}>
+          <InputNumber min={0} />
+        </Form.Item>
+      </>
+    );
+  };
 
   return (
     <div>
@@ -361,6 +447,7 @@ export default function OIDCProvidersClient() {
           icon={<PlusOutlined />}
           onClick={() => {
             setCreateIconUrl('');
+            setCreateType('oidc');
             setCreateModalOpen(true);
           }}
         >
@@ -389,6 +476,7 @@ export default function OIDCProvidersClient() {
           setCreateModalOpen(false);
           createForm.resetFields();
           setCreateIconUrl('');
+          setCreateType('oidc');
         }}
         footer={null}
       >
@@ -397,9 +485,16 @@ export default function OIDCProvidersClient() {
             form={createForm}
             onFinish={handleCreate}
             layout="vertical"
-            initialValues={{ display_order: 0 }}
+            initialValues={{ display_order: 0, type: 'oidc' }}
           >
-            {formFields(false, createForm, createIconUrl, setCreateIconUrl)}
+            {formFields(
+              false,
+              createForm,
+              createIconUrl,
+              setCreateIconUrl,
+              createType,
+              setCreateType,
+            )}
             <Form.Item>
               <Button type="primary" htmlType="submit" block>
                 {t('create_button')}
@@ -418,12 +513,20 @@ export default function OIDCProvidersClient() {
           editForm.resetFields();
           setEditingProvider(null);
           setEditIconUrl('');
+          setEditType('oidc');
         }}
         footer={null}
       >
         <Spin spinning={discovering}>
           <Form form={editForm} onFinish={handleEdit} layout="vertical">
-            {formFields(true, editForm, editIconUrl, setEditIconUrl)}
+            {formFields(
+              true,
+              editForm,
+              editIconUrl,
+              setEditIconUrl,
+              editType,
+              setEditType,
+            )}
             <Form.Item name="status" label={t('field_status')}>
               <Select>
                 <Select.Option value={1}>{t('status_active')}</Select.Option>

@@ -49,12 +49,20 @@ export default function Sidebar({
             </div>
           }
           description={
-            <span
-              className="text-gray-400"
-              dangerouslySetInnerHTML={{
-                __html: t.raw('visit_community'),
-              }}
-            ></span>
+            <span className="text-gray-400">
+              {t.rich('visit_community', {
+                a: (chunks) => (
+                  <a
+                    href="https://bbs.tampermonkey.net.cn/"
+                    className="text-gray-400"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {chunks}
+                  </a>
+                ),
+              })}
+            </span>
           }
         ></Card.Meta>
       </Card>

@@ -26,8 +26,27 @@ import type { ColumnsType } from 'antd/es/table';
 
 const { Paragraph } = Typography;
 
+function useRedirectUriValidator(t: ReturnType<typeof useTranslations>) {
+  return (_: unknown, value: string) => {
+    if (!value) return Promise.resolve();
+    const lines = value.split('\n').filter((s: string) => s.trim());
+    for (const line of lines) {
+      try {
+        const url = new URL(line.trim());
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+          return Promise.reject(new Error(t('field_redirect_uri_invalid')));
+        }
+      } catch {
+        return Promise.reject(new Error(t('field_redirect_uri_invalid')));
+      }
+    }
+    return Promise.resolve();
+  };
+}
+
 export default function OAuthAppsClient() {
   const t = useTranslations('admin.oauth_apps');
+  const validateRedirectUri = useRedirectUriValidator(t);
   const [data, setData] = useState<OAuthAppItem[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -104,6 +123,18 @@ export default function OAuthAppsClient() {
     }
   };
 
+  const handleResetSecret = async (id: number) => {
+    try {
+      const resp = await adminService.resetOAuthAppSecret(id);
+      setSecretInfo(resp);
+      message.success(t('reset_secret_success'));
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      }
+    }
+  };
+
   const handleDelete = async (id: number) => {
     try {
       await adminService.deleteOAuthApp(id);
@@ -148,6 +179,11 @@ export default function OAuthAppsClient() {
       dataIndex: 'redirect_uri',
       key: 'redirect_uri',
       ellipsis: true,
+      render: (val: string) => {
+        const uris = val.split('\n').filter((s: string) => s.trim());
+        if (uris.length <= 1) return val;
+        return `${uris[0]} (+${uris.length - 1})`;
+      },
     },
     {
       title: t('col_status'),
@@ -168,6 +204,14 @@ export default function OAuthAppsClient() {
           <Button type="link" size="small" onClick={() => openEdit(record)}>
             {t('action_edit')}
           </Button>
+          <Popconfirm
+            title={t('reset_secret_confirm')}
+            onConfirm={() => handleResetSecret(record.id)}
+          >
+            <Button type="link" size="small">
+              {t('reset_secret')}
+            </Button>
+          </Popconfirm>
           <Popconfirm
             title={t('delete_confirm')}
             onConfirm={() => handleDelete(record.id)}
@@ -231,12 +275,13 @@ export default function OAuthAppsClient() {
           <Form.Item
             name="redirect_uri"
             label={t('field_redirect_uri')}
+            extra={t('field_redirect_uri_hint')}
             rules={[
               { required: true, message: t('field_redirect_uri_required') },
-              { type: 'url', message: t('field_redirect_uri_invalid') },
+              { validator: validateRedirectUri },
             ]}
           >
-            <Input />
+            <Input.TextArea rows={3} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
@@ -271,12 +316,13 @@ export default function OAuthAppsClient() {
           <Form.Item
             name="redirect_uri"
             label={t('field_redirect_uri')}
+            extra={t('field_redirect_uri_hint')}
             rules={[
               { required: true, message: t('field_redirect_uri_required') },
-              { type: 'url', message: t('field_redirect_uri_invalid') },
+              { validator: validateRedirectUri },
             ]}
           >
-            <Input />
+            <Input.TextArea rows={3} />
           </Form.Item>
           <Form.Item name="status" label={t('field_status')}>
             <Select>

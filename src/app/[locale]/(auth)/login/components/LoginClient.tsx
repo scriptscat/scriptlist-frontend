@@ -10,6 +10,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { Turnstile } from '@marsidev/react-turnstile';
 import type { TurnstileInstance } from '@marsidev/react-turnstile';
 import { authService } from '@/lib/api/services/auth';
@@ -23,6 +24,13 @@ import Image from 'next/image';
 export default function LoginClient() {
   const t = useTranslations('login');
   const { turnstile_site_key: turnstileSiteKey } = useGlobalConfig();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get('redirect');
+  // Only allow relative paths to prevent open redirect (reject protocol-relative URLs like //evil.com)
+  const safeRedirect =
+    redirectParam && redirectParam.startsWith('/') && !redirectParam.startsWith('//')
+      ? redirectParam
+      : '/';
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [loginForm] = Form.useForm();
   const [registerForm] = Form.useForm();
@@ -64,7 +72,7 @@ export default function LoginClient() {
         password: values.password,
         turnstile_token: loginToken,
       });
-      window.location.href = '/';
+      window.location.href = safeRedirect;
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -139,7 +147,12 @@ export default function LoginClient() {
   };
 
   const handleOIDCLogin = (providerId: number) => {
-    window.location.href = `/api/v2/auth/oidc/${providerId}/login`;
+    const oidcUrl = `/api/v2/auth/oidc/${providerId}/login`;
+    if (safeRedirect !== '/') {
+      window.location.href = `${oidcUrl}?redirect=${encodeURIComponent(safeRedirect)}`;
+    } else {
+      window.location.href = oidcUrl;
+    }
   };
 
   return (

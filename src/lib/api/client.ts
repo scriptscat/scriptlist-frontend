@@ -65,13 +65,16 @@ export class ServerCookieUtils {
   }
 
   /**
-   * 构建cookie字符串（用于发送到API）
+   * 构建cookie字符串（用于发送到API，仅转发认证相关cookie）
    */
+  private static readonly AUTH_COOKIE_NAMES = new Set(['login_id', 'token']);
+
   static async buildCookieString(): Promise<string> {
     const { cookies } = await import('next/headers');
     const cookieStore = await cookies();
     return cookieStore
       .getAll()
+      .filter((cookie) => this.AUTH_COOKIE_NAMES.has(cookie.name))
       .map((cookie) => `${cookie.name}=${cookie.value}`)
       .join('; ');
   }

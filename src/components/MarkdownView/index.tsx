@@ -77,6 +77,8 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(({ content }) => {
     h4: ['id'],
     h5: ['id'],
     h6: ['id'],
+    video: ['src', 'controls', 'width', 'height', 'preload', 'poster'],
+    source: ['src', 'type'],
   };
 
   // 使用 useMemo 来确保服务器端和客户端渲染一致的内容

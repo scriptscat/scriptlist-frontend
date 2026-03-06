@@ -63,6 +63,8 @@ function OIDCBindConfirmContent() {
       setLoadingInfo(false);
       return;
     }
+    // 从URL中清除bind_token，防止通过浏览器历史/Referer泄露
+    window.history.replaceState({}, '', window.location.pathname);
     oidcService
       .getBindInfo(bindToken)
       .then((resp) => {

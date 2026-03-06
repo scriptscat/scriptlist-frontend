@@ -49,10 +49,17 @@ export default function AuthorizeClient() {
         setAppInfo(data);
         setLoading(false);
       })
-      .catch((err: APIError) => {
-        setError(err.msg || t('load_failed'));
+      .catch((err: unknown) => {
+        if (err instanceof APIError && err.statusCode === 401) {
+          const currentPath = `/oauth/authorize?${searchParams.toString()}`;
+          window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+          return;
+        }
+        const apiErr = err instanceof APIError ? err : null;
+        setError(apiErr?.msg || t('load_failed'));
         setLoading(false);
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- OAuth authorize runs once on mount with stable search params
   }, []);
 
   const isSafeRedirect = (uri: string): boolean => {
