@@ -29,6 +29,7 @@ export interface OIDCRegisterAndBindRequest {
   username: string;
   password: string;
   code: string;
+  agree_terms: boolean;
 }
 
 export interface UserOAuthBindItem {

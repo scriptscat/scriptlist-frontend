@@ -28,6 +28,7 @@ import type { OIDCBindInfoResponse } from '@/lib/api/services/oidc';
 import { authService } from '@/lib/api/services/auth';
 import { APIError } from '@/types/api';
 import { useGlobalConfig } from '@/contexts/GlobalConfigContext';
+import AgreeTermsCheckbox from '@/components/AgreeTermsCheckbox';
 
 function OIDCBindConfirmContent() {
   const t = useTranslations('auth.oidc_bind');
@@ -136,7 +137,7 @@ function OIDCBindConfirmContent() {
     } finally {
       setSendingCode(false);
     }
-  }, [registerForm, registerToken, tLogin]);
+  }, [registerForm, registerToken, tLogin, turnstileSiteKey]);
 
   // 注册并绑定
   const handleRegisterBind = async (values: {
@@ -144,6 +145,7 @@ function OIDCBindConfirmContent() {
     username: string;
     password: string;
     code: string;
+    agree_terms: boolean;
   }) => {
     setLoading(true);
     try {
@@ -153,6 +155,7 @@ function OIDCBindConfirmContent() {
         username: values.username,
         password: values.password,
         code: values.code,
+        agree_terms: values.agree_terms,
       });
       message.success(t('bind_success'));
       window.location.href = '/';
@@ -325,6 +328,7 @@ function OIDCBindConfirmContent() {
           placeholder={tLogin('confirm_password_placeholder')}
         />
       </Form.Item>
+      <AgreeTermsCheckbox />
       <Form.Item>
         <Button type="primary" htmlType="submit" block loading={loading}>
           {t('register_bind_button')}

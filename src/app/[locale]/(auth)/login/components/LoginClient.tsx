@@ -19,6 +19,7 @@ import type { OIDCProviderInfo } from '@/lib/api/services/oidc';
 import { APIError } from '@/types/api';
 import { Link } from '@/i18n/routing';
 import { useGlobalConfig } from '@/contexts/GlobalConfigContext';
+import AgreeTermsCheckbox from '@/components/AgreeTermsCheckbox';
 import Image from 'next/image';
 
 export default function LoginClient() {
@@ -118,13 +119,14 @@ export default function LoginClient() {
     } finally {
       setSendingCode(false);
     }
-  }, [registerForm, registerToken, t]);
+  }, [registerForm, registerToken, t, turnstileSiteKey]);
 
   const handleRegister = async (values: {
     email: string;
     username: string;
     password: string;
     code: string;
+    agree_terms: boolean;
   }) => {
     setLoading(true);
     try {
@@ -133,6 +135,7 @@ export default function LoginClient() {
         username: values.username,
         password: values.password,
         code: values.code,
+        agree_terms: values.agree_terms,
       });
       setRegisterSuccess(true);
     } catch (err) {
@@ -400,6 +403,7 @@ export default function LoginClient() {
                     className="!rounded-xl"
                   />
                 </Form.Item>
+                <AgreeTermsCheckbox />
                 <Form.Item className="!mb-0">
                   <Button
                     type="primary"

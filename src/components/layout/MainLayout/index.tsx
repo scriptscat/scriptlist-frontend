@@ -279,17 +279,11 @@ export default function MainLayout({
             <Link href="/audit-logs">{t('audit_logs')}</Link>
           </div>
           <div>
-            <a href={'https://docs.scriptcat.org/docs/use/policy/disclaimer/'}>
-              {t('service_agreement')}
-            </a>
+            <Link href="/terms-of-service">{t('service_agreement')}</Link>
             <Divider type="vertical" />
-            <a
-              href={
-                'https://docs.scriptcat.org/docs/use/policy/privacy_website/'
-              }
-            >
-              {t('privacy_policy')}
-            </a>
+            <Link href="/privacy-policy">{t('privacy_policy')}</Link>
+            <Divider type="vertical" />
+            <Link href="/disclaimer">{t('disclaimer')}</Link>
           </div>
           <p className="m-0 text-sm">{t('all_rights_reserved')}</p>
         </Footer>
