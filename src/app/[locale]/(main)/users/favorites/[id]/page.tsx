@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import FolderDetailClient from './components/FolderDetailClient';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
 import { userService } from '@/lib/api/services/user';
+import { PageIntlProvider } from '@/components/PageIntlProvider';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
 import type { ScriptInfo } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
@@ -86,27 +87,29 @@ export default async function FolderDetailPage({
   }
 
   return (
-    <div>
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center min-h-screen">
-            {'Loading folder...'}
-          </div>
-        }
-      >
-        {hasError || !folderDetail || !userDetail || !scriptsData ? (
-          <FolderDetailClient folderId={folderId} error="folder_error" />
-        ) : (
-          <FolderDetailClient
-            folderId={folderId}
-            folderDetail={folderDetail}
-            userDetail={userDetail}
-            scripts={scriptsData.list}
-            total={scriptsData.total}
-            currentPage={currentPage}
-          />
-        )}
-      </Suspense>
-    </div>
+    <PageIntlProvider namespaces={['user']}>
+      <div>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              {'Loading folder...'}
+            </div>
+          }
+        >
+          {hasError || !folderDetail || !userDetail || !scriptsData ? (
+            <FolderDetailClient folderId={folderId} error="folder_error" />
+          ) : (
+            <FolderDetailClient
+              folderId={folderId}
+              folderDetail={folderDetail}
+              userDetail={userDetail}
+              scripts={scriptsData.list}
+              total={scriptsData.total}
+              currentPage={currentPage}
+            />
+          )}
+        </Suspense>
+      </div>
+    </PageIntlProvider>
   );
 }

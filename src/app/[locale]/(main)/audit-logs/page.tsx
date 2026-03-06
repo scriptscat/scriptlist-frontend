@@ -4,6 +4,7 @@ import {
   type AuditLogItem,
 } from '@/lib/api/services/auditLog';
 import AuditLogList from './components/AuditLogList';
+import { PageIntlProvider } from '@/components/PageIntlProvider';
 
 interface PageProps {
   params: Promise<{
@@ -37,10 +38,12 @@ export default async function AuditLogsPage({ searchParams }: PageProps) {
   }
 
   return (
-    <AuditLogList
-      initialPage={initialPage}
-      initialList={initialList}
-      initialTotal={initialTotal}
-    />
+    <PageIntlProvider namespaces={['admin']}>
+      <AuditLogList
+        initialPage={initialPage}
+        initialList={initialList}
+        initialTotal={initialTotal}
+      />
+    </PageIntlProvider>
   );
 }

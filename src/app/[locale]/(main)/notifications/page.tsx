@@ -1,6 +1,7 @@
 import NotificationsClient from './components/NotificationsClient';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import { PageIntlProvider } from '@/components/PageIntlProvider';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('notifications.metadata');
@@ -28,6 +29,8 @@ export default async function NotificationsPage({
     : undefined;
 
   return (
-    <NotificationsClient initialPage={page} initialReadStatus={readStatus} />
+    <PageIntlProvider namespaces={['notifications']}>
+      <NotificationsClient initialPage={page} initialReadStatus={readStatus} />
+    </PageIntlProvider>
   );
 }

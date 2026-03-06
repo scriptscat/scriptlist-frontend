@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import UserProfileLayout from '@/components/UserProfile/UserProfileLayout';
 import { userService } from '@/lib/api/services/user';
+import { PageIntlProvider } from '@/components/PageIntlProvider';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -40,5 +41,9 @@ export default async function RootLayout({
     notFound();
   }
 
-  return <UserProfileLayout user={user}>{children}</UserProfileLayout>;
+  return (
+    <PageIntlProvider namespaces={['user', 'script']}>
+      <UserProfileLayout user={user}>{children}</UserProfileLayout>
+    </PageIntlProvider>
+  );
 }

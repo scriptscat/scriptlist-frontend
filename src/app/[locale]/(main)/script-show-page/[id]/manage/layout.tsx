@@ -5,6 +5,7 @@ import ManageClientLayout from './components/ManageClientLayout';
 import { generateScriptMetadata } from '../metadata';
 import type { Metadata } from 'next';
 import type { ScriptDetailPageProps } from '../types';
+import { PageIntlProvider } from '@/components/PageIntlProvider';
 
 interface ManageLayoutProps {
   children: ReactNode;
@@ -27,8 +28,10 @@ export default async function ManageLayout({
   const scriptSetting = await scriptService.getSettingCached(Number(id));
 
   return (
-    <ScriptSettingProvider scriptSetting={scriptSetting}>
-      <ManageClientLayout scriptId={id}>{children}</ManageClientLayout>
-    </ScriptSettingProvider>
+    <PageIntlProvider namespaces={['script', 'admin']}>
+      <ScriptSettingProvider scriptSetting={scriptSetting}>
+        <ManageClientLayout scriptId={id}>{children}</ManageClientLayout>
+      </ScriptSettingProvider>
+    </PageIntlProvider>
   );
 }

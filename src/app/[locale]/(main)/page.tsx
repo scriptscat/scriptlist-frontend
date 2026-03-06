@@ -1,3 +1,4 @@
+import { PageIntlProvider } from '@/components/PageIntlProvider';
 import { announcementService } from '@/lib/api/services/announcement';
 import type { Announcement } from '@/lib/api/services/announcement';
 import HomeClient from './components/HomeClient';
@@ -21,5 +22,9 @@ export default async function HomePage({ params }: PageProps) {
     // 获取公告失败不影响页面渲染
   }
 
-  return <HomeClient announcements={announcements} />;
+  return (
+    <PageIntlProvider namespaces={['home', 'script']}>
+      <HomeClient announcements={announcements} />
+    </PageIntlProvider>
+  );
 }

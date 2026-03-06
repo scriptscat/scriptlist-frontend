@@ -98,13 +98,14 @@ export interface ScoreItem {
 
 export interface OIDCProviderItem {
   id: number;
-  type: string;
   name: string;
+  type: string;
   issuer_url: string;
   auth_url: string;
   token_url: string;
   userinfo_url: string;
   client_id: string;
+  client_secret: string;
   scopes: string;
   icon: string;
   display_order: number;
@@ -114,31 +115,31 @@ export interface OIDCProviderItem {
 }
 
 export interface CreateOIDCProviderRequest {
-  type?: string;
   name: string;
+  type?: string;
   issuer_url?: string;
   auth_url?: string;
   token_url?: string;
   userinfo_url?: string;
   client_id: string;
   client_secret: string;
-  scopes: string;
-  icon: string;
-  display_order: number;
+  scopes?: string;
+  icon?: string;
+  display_order?: number;
 }
 
 export interface UpdateOIDCProviderRequest {
-  type?: string;
   name: string;
+  type?: string;
   issuer_url?: string;
   auth_url?: string;
   token_url?: string;
   userinfo_url?: string;
   client_id: string;
   client_secret: string;
-  scopes: string;
-  icon: string;
-  display_order: number;
+  scopes?: string;
+  icon?: string;
+  display_order?: number;
   status: number;
 }
 
@@ -178,7 +179,7 @@ class AdminService {
   }
 
   async resetOAuthAppSecret(id: number) {
-    return apiClient.put<CreateOAuthAppResponse>(
+    return apiClient.post<CreateOAuthAppResponse>(
       `${this.basePath}/oauth-apps/${id}/secret`,
     );
   }

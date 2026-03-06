@@ -8,6 +8,7 @@ import { DayjsLocaleProvider } from './DayjsLocaleProvider';
 import { SWRProvider } from '@/lib/swr-config';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { pickMessages } from '@/i18n/pickMessages';
 import { userService, systemService } from '@/lib/api';
 import { GlobalConfigProvider } from '@/contexts/GlobalConfigContext';
 import Head from 'next/head';
@@ -91,7 +92,15 @@ export async function LocalizedServerThemeWrapper({
         <NavigationProgress />
         <ThemeProvider initialMode={serverTheme}>
           <SWRProvider>
-            <NextIntlClientProvider messages={messages}>
+            <NextIntlClientProvider
+              messages={pickMessages(messages, [
+                'layout',
+                'common',
+                'components',
+                'error',
+                'utils',
+              ])}
+            >
               <DayjsLocaleProvider>
                 <GlobalConfigProvider config={globalConfig}>
                   <UserProvider user={user}>{children}</UserProvider>

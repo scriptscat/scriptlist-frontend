@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import { PageIntlProvider } from '@/components/PageIntlProvider';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('chat.metadata');
@@ -19,5 +20,5 @@ export default function ChatLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <PageIntlProvider namespaces={['chat']}>{children}</PageIntlProvider>;
 }

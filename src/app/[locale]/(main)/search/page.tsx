@@ -9,6 +9,7 @@ import {
 import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import { PageIntlProvider } from '@/components/PageIntlProvider';
 
 interface SearchPageProps {
   searchParams: Promise<ScriptSearchRequest>;
@@ -65,25 +66,27 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   ]);
 
   return (
-    <Row gutter={[24, 24]}>
-      {/* 主要内容区域 */}
-      <Col xs={24} lg={18}>
-        {/* 搜索区域 */}
-        <ScriptList
-          scripts={slimScriptList(scripts.list)}
-          totalCount={scripts.total}
-          initialFilters={apiParams}
-          initialPage={apiParams.page || 1}
-        />
-      </Col>
+    <PageIntlProvider namespaces={['script']}>
+      <Row gutter={[24, 24]}>
+        {/* 主要内容区域 */}
+        <Col xs={24} lg={18}>
+          {/* 搜索区域 */}
+          <ScriptList
+            scripts={slimScriptList(scripts.list)}
+            totalCount={scripts.total}
+            initialFilters={apiParams}
+            initialPage={apiParams.page || 1}
+          />
+        </Col>
 
-      {/* 侧边栏 */}
-      <Col xs={24} lg={6}>
-        <Sidebar
-          recentScripts={slimScriptListForSidebar(recentScripts.list)}
-          ratingScripts={slimScriptListForSidebar(ratingScripts.list)}
-        />
-      </Col>
-    </Row>
+        {/* 侧边栏 */}
+        <Col xs={24} lg={6}>
+          <Sidebar
+            recentScripts={slimScriptListForSidebar(recentScripts.list)}
+            ratingScripts={slimScriptListForSidebar(ratingScripts.list)}
+          />
+        </Col>
+      </Row>
+    </PageIntlProvider>
   );
 }
