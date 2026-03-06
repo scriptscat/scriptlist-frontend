@@ -150,7 +150,6 @@
       "title": "OIDC Provider Management",
       "type_oauth2": "OAuth2 (GitHub)",
       "type_oidc": "OIDC",
-      "type_qq": "QQ",
       "update_success": "Updated successfully"
     },
     "scores": {

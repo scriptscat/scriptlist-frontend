@@ -150,7 +150,6 @@
       "title": "OIDC 提供商管理",
       "type_oauth2": "OAuth2 (GitHub)",
       "type_oidc": "OIDC",
-      "type_qq": "QQ",
       "update_success": "更新成功"
     },
     "scores": {

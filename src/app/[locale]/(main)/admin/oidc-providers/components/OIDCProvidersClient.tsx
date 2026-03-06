@@ -189,8 +189,6 @@ export default function OIDCProvidersClient() {
     switch (type) {
       case 'oauth2':
         return t('type_oauth2');
-      case 'qq':
-        return t('type_qq');
       default:
         return t('type_oidc');
     }
@@ -339,7 +337,6 @@ export default function OIDCProvidersClient() {
           >
             <Select.Option value="oidc">{t('type_oidc')}</Select.Option>
             <Select.Option value="oauth2">{t('type_oauth2')}</Select.Option>
-            <Select.Option value="qq">{t('type_qq')}</Select.Option>
           </Select>
         </Form.Item>
         {isOIDC ? (
