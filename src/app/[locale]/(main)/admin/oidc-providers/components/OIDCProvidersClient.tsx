@@ -327,7 +327,11 @@ export default function OIDCProvidersClient() {
               form.setFieldsValue({ type: val });
               // Clear irrelevant URL fields to avoid stale data submission
               if (val === 'oidc' || val === '') {
-                form.setFieldsValue({ auth_url: undefined, token_url: undefined, userinfo_url: undefined });
+                form.setFieldsValue({
+                  auth_url: undefined,
+                  token_url: undefined,
+                  userinfo_url: undefined,
+                });
               } else {
                 form.setFieldsValue({ issuer_url: undefined });
               }

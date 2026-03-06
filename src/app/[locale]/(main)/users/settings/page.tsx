@@ -4,9 +4,10 @@ import { userService } from '@/lib/api/services/user';
 
 export default async function SettingsPage() {
   // 在服务端并行获取数据
-  const [webhookData, notificationConfig] = await Promise.all([
+  const [webhookData, notificationConfig, currentUser] = await Promise.all([
     userService.getWebhook(),
     userService.getUserConfig(),
+    userService.getCurrentUser(),
   ]);
 
   return (
@@ -14,6 +15,8 @@ export default async function SettingsPage() {
       <SettingsClient
         initialWebhookToken={webhookData.token}
         initialNotificationConfig={notificationConfig.notify}
+        userStatus={currentUser?.status}
+        deactivateAt={currentUser?.deactivate_at}
       />
     </Suspense>
   );

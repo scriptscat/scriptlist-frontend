@@ -1745,7 +1745,8 @@
       "password_settings": "修改密码",
       "settings_description": "管理你的账户偏好设置，包括 Webhook 配置和通知选项",
       "user_settings": "用户设置",
-      "webhook_settings": "Webhook 设置"
+      "webhook_settings": "Webhook 设置",
+      "deactivate_settings": "注销账号"
     },
     "update_failed": "更新失败，请重试",
     "update_success": "用户信息更新成功！",
@@ -1811,7 +1812,28 @@
     "website": "个人网站",
     "website_max_length": "网址不能超过100个字符",
     "website_placeholder": "https://example.com",
-    "website_validation": "请输入有效的网址"
+    "website_validation": "请输入有效的网址",
+    "deactivate": {
+      "title": "注销账号",
+      "description": "注销后账号将进入30天冷静期，冷静期内可登录撤销。到期后个人数据将被清除，脚本保留但作者匿名化。",
+      "warning": "此操作不可逆，请谨慎操作！",
+      "send_code": "发送验证码",
+      "code_sent": "验证码已发送到您的邮箱",
+      "code_placeholder": "请输入6位验证码",
+      "code_label": "邮箱验证码",
+      "confirm_deactivate": "确认注销",
+      "confirm_title": "确认注销账号",
+      "confirm_content": "确认后账号将进入30天冷静期，期间可以登录撤销注销。冷静期结束后，个人数据将被永久清除。",
+      "deactivate_success": "账号注销申请已提交",
+      "deactivate_failed": "注销失败",
+      "cooling_title": "账号注销中",
+      "cooling_description": "您的账号正在注销冷静期中，{effectiveDate} 后生效。冷静期内您可以取消注销。",
+      "cancel_deactivate": "取消注销",
+      "cancel_success": "已取消注销",
+      "cancel_failed": "取消注销失败",
+      "applied_at": "申请时间",
+      "effective_at": "生效时间"
+    }
   },
   "utils": {
     "time_format": "YYYY年MM月DD日"

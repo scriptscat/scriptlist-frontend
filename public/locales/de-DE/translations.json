@@ -1709,7 +1709,8 @@
       "password_settings": "Passwort ändern",
       "settings_description": "Verwalten Sie Ihre Kontopräferenzen, einschließlich Webhook-Konfiguration und Benachrichtigungsoptionen",
       "user_settings": "Benutzereinstellungen",
-      "webhook_settings": "Webhook-Einstellungen"
+      "webhook_settings": "Webhook-Einstellungen",
+      "deactivate_settings": "Konto löschen"
     },
     "update_failed": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es erneut",
     "update_success": "Benutzerinformationen erfolgreich aktualisiert!",
@@ -1775,7 +1776,28 @@
     "website": "Persönliche Website",
     "website_max_length": "URL darf 100 Zeichen nicht überschreiten",
     "website_placeholder": "https://example.com",
-    "website_validation": "Bitte gültige URL eingeben"
+    "website_validation": "Bitte gültige URL eingeben",
+    "deactivate": {
+      "title": "Konto löschen",
+      "description": "Nach der Löschung tritt Ihr Konto in eine 30-tägige Abkühlphase ein. Sie können sich anmelden, um dies rückgängig zu machen. Nach Ablauf werden persönliche Daten dauerhaft entfernt, Skripte bleiben anonym erhalten.",
+      "warning": "Diese Aktion ist unwiderruflich. Bitte gehen Sie vorsichtig vor!",
+      "send_code": "Code senden",
+      "code_sent": "Bestätigungscode wurde an Ihre E-Mail gesendet",
+      "code_placeholder": "6-stelligen Code eingeben",
+      "code_label": "E-Mail-Bestätigungscode",
+      "confirm_deactivate": "Löschung bestätigen",
+      "confirm_title": "Kontolöschung bestätigen",
+      "confirm_content": "Nach der Bestätigung tritt Ihr Konto in eine 30-tägige Abkühlphase ein. Sie können sich anmelden, um dies rückgängig zu machen. Danach werden persönliche Daten dauerhaft entfernt.",
+      "deactivate_success": "Antrag auf Kontolöschung eingereicht",
+      "deactivate_failed": "Löschung fehlgeschlagen",
+      "cooling_title": "Kontolöschung läuft",
+      "cooling_description": "Ihr Konto befindet sich in der Abkühlphase. Es wird nach {effectiveDate} wirksam. Sie können die Löschung in dieser Zeit stornieren.",
+      "cancel_deactivate": "Löschung abbrechen",
+      "cancel_success": "Löschung abgebrochen",
+      "cancel_failed": "Abbruch fehlgeschlagen",
+      "applied_at": "Beantragt am",
+      "effective_at": "Wirksam am"
+    }
   },
   "utils": {
     "time_format": "DD.MM.YYYY"

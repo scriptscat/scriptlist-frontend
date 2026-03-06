@@ -1709,7 +1709,8 @@
       "password_settings": "パスワード変更",
       "settings_description": "Webhook設定や通知オプションなど、アカウントの設定を管理します",
       "user_settings": "ユーザー設定",
-      "webhook_settings": "Webhook設定"
+      "webhook_settings": "Webhook設定",
+      "deactivate_settings": "アカウント削除"
     },
     "update_failed": "更新に失敗しました。再試行してください",
     "update_success": "ユーザー情報の更新が完了しました！",
@@ -1775,7 +1776,28 @@
     "website": "個人ウェブサイト",
     "website_max_length": "URLは100文字以内で入力してください",
     "website_placeholder": "https://example.com",
-    "website_validation": "有効なURLを入力してください"
+    "website_validation": "有効なURLを入力してください",
+    "deactivate": {
+      "title": "アカウント削除",
+      "description": "削除後、アカウントは30日間のクーリングオフ期間に入ります。この期間中はログインしてキャンセルできます。期間後、個人データは削除されますが、スクリプトは匿名で保持されます。",
+      "warning": "この操作は取り消せません。慎重に操作してください！",
+      "send_code": "認証コードを送信",
+      "code_sent": "認証コードがメールに送信されました",
+      "code_placeholder": "6桁のコードを入力",
+      "code_label": "メール認証コード",
+      "confirm_deactivate": "削除を確認",
+      "confirm_title": "アカウント削除の確認",
+      "confirm_content": "確認後、アカウントは30日間のクーリングオフ期間に入ります。この期間中はキャンセルできます。期間後、個人データは永久に削除されます。",
+      "deactivate_success": "アカウント削除リクエストが送信されました",
+      "deactivate_failed": "削除に失敗しました",
+      "cooling_title": "アカウント削除処理中",
+      "cooling_description": "アカウントはクーリングオフ期間中です。{effectiveDate} 以降に有効になります。この期間中にキャンセルできます。",
+      "cancel_deactivate": "削除をキャンセル",
+      "cancel_success": "削除がキャンセルされました",
+      "cancel_failed": "キャンセルに失敗しました",
+      "applied_at": "申請日時",
+      "effective_at": "有効日時"
+    }
   },
   "utils": {
     "time_format": "YYYY年MM月DD日"

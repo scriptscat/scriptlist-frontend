@@ -83,6 +83,69 @@ export function useChangePassword() {
 }
 
 /**
+ * 发送注销验证码的hook
+ */
+export function useSendDeactivateCode() {
+  const [loading, setLoading] = useState(false);
+
+  const sendCode = async () => {
+    setLoading(true);
+    try {
+      const data = await userService.sendDeactivateCode();
+      setLoading(false);
+      return data;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
+  return { sendCode, loading };
+}
+
+/**
+ * 确认注销的hook
+ */
+export function useDeactivate() {
+  const [loading, setLoading] = useState(false);
+
+  const deactivate = async (code: string) => {
+    setLoading(true);
+    try {
+      const data = await userService.deactivate(code);
+      setLoading(false);
+      return data;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
+  return { deactivate, loading };
+}
+
+/**
+ * 取消注销的hook
+ */
+export function useCancelDeactivate() {
+  const [loading, setLoading] = useState(false);
+
+  const cancelDeactivate = async () => {
+    setLoading(true);
+    try {
+      const data = await userService.cancelDeactivate();
+      setLoading(false);
+      return data;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
+  return { cancelDeactivate, loading };
+}
+
+/**
  * 更新用户通知配置的hook
  */
 export function useUpdateUserNotify() {

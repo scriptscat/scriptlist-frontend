@@ -1709,7 +1709,8 @@
       "password_settings": "修改密碼",
       "settings_description": "管理你的帳戶偏好設定，包括 Webhook 設定和通知選項",
       "user_settings": "使用者設定",
-      "webhook_settings": "Webhook 設定"
+      "webhook_settings": "Webhook 設定",
+      "deactivate_settings": "註銷帳號"
     },
     "update_failed": "更新失敗，請重試",
     "update_success": "使用者資訊更新成功！",
@@ -1775,7 +1776,28 @@
     "website": "個人網站",
     "website_max_length": "網址不能超過100個字元",
     "website_placeholder": "https://example.com",
-    "website_validation": "請輸入有效的網址"
+    "website_validation": "請輸入有效的網址",
+    "deactivate": {
+      "title": "註銷帳號",
+      "description": "註銷後帳號將進入30天冷靜期，冷靜期內可登入撤銷。到期後個人資料將被清除，腳本保留但作者匿名化。",
+      "warning": "此操作不可逆，請謹慎操作！",
+      "send_code": "發送驗證碼",
+      "code_sent": "驗證碼已發送到您的郵箱",
+      "code_placeholder": "請輸入6位驗證碼",
+      "code_label": "郵箱驗證碼",
+      "confirm_deactivate": "確認註銷",
+      "confirm_title": "確認註銷帳號",
+      "confirm_content": "確認後帳號將進入30天冷靜期，期間可以登入撤銷註銷。冷靜期結束後，個人資料將被永久清除。",
+      "deactivate_success": "帳號註銷申請已提交",
+      "deactivate_failed": "註銷失敗",
+      "cooling_title": "帳號註銷中",
+      "cooling_description": "您的帳號正在註銷冷靜期中，{effectiveDate} 後生效。冷靜期內您可以取消註銷。",
+      "cancel_deactivate": "取消註銷",
+      "cancel_success": "已取消註銷",
+      "cancel_failed": "取消註銷失敗",
+      "applied_at": "申請時間",
+      "effective_at": "生效時間"
+    }
   },
   "utils": {
     "time_format": "YYYY年MM月DD日"

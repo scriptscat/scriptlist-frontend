@@ -98,8 +98,12 @@ export interface ScoreItem {
 
 export interface OIDCProviderItem {
   id: number;
+  type: string;
   name: string;
   issuer_url: string;
+  auth_url: string;
+  token_url: string;
+  userinfo_url: string;
   client_id: string;
   scopes: string;
   icon: string;
@@ -110,8 +114,12 @@ export interface OIDCProviderItem {
 }
 
 export interface CreateOIDCProviderRequest {
+  type?: string;
   name: string;
-  issuer_url: string;
+  issuer_url?: string;
+  auth_url?: string;
+  token_url?: string;
+  userinfo_url?: string;
   client_id: string;
   client_secret: string;
   scopes: string;
@@ -120,8 +128,12 @@ export interface CreateOIDCProviderRequest {
 }
 
 export interface UpdateOIDCProviderRequest {
+  type?: string;
   name: string;
-  issuer_url: string;
+  issuer_url?: string;
+  auth_url?: string;
+  token_url?: string;
+  userinfo_url?: string;
   client_id: string;
   client_secret: string;
   scopes: string;
@@ -163,6 +175,12 @@ class AdminService {
 
   async deleteOAuthApp(id: number) {
     return apiClient.delete<void>(`${this.basePath}/oauth-apps/${id}`);
+  }
+
+  async resetOAuthAppSecret(id: number) {
+    return apiClient.put<CreateOAuthAppResponse>(
+      `${this.basePath}/oauth-apps/${id}/secret`,
+    );
   }
 
   // System Config

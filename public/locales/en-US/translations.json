@@ -1745,7 +1745,8 @@
       "password_settings": "Change Password",
       "settings_description": "Manage your account preferences, including Webhook configuration and notification options",
       "user_settings": "User Settings",
-      "webhook_settings": "Webhook Settings"
+      "webhook_settings": "Webhook Settings",
+      "deactivate_settings": "Delete Account"
     },
     "update_failed": "Update failed, please try again",
     "update_success": "User information updated successfully!",
@@ -1811,7 +1812,28 @@
     "website": "Personal Website",
     "website_max_length": "URL cannot exceed 100 characters",
     "website_placeholder": "https://example.com",
-    "website_validation": "Please enter a valid URL"
+    "website_validation": "Please enter a valid URL",
+    "deactivate": {
+      "title": "Delete Account",
+      "description": "After deletion, your account will enter a 30-day cooling period. You can log in to cancel during this period. After the cooling period, personal data will be permanently removed, but scripts will be retained with anonymous authorship.",
+      "warning": "This action is irreversible. Please proceed with caution!",
+      "send_code": "Send Code",
+      "code_sent": "Verification code has been sent to your email",
+      "code_placeholder": "Enter 6-digit code",
+      "code_label": "Email Verification Code",
+      "confirm_deactivate": "Confirm Deletion",
+      "confirm_title": "Confirm Account Deletion",
+      "confirm_content": "After confirmation, your account will enter a 30-day cooling period. You can log in to cancel during this time. After the cooling period, personal data will be permanently removed.",
+      "deactivate_success": "Account deletion request submitted",
+      "deactivate_failed": "Deletion failed",
+      "cooling_title": "Account Deletion in Progress",
+      "cooling_description": "Your account is in the cooling period. It will take effect after {effectiveDate}. You can cancel the deletion during this period.",
+      "cancel_deactivate": "Cancel Deletion",
+      "cancel_success": "Deletion cancelled",
+      "cancel_failed": "Failed to cancel deletion",
+      "applied_at": "Applied at",
+      "effective_at": "Effective at"
+    }
   },
   "utils": {
     "time_format": "YYYY-MM-DD"

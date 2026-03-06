@@ -7,6 +7,7 @@ import {
   LinkOutlined,
   LockOutlined,
   SettingOutlined,
+  StopOutlined,
 } from '@ant-design/icons';
 import { Card, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -14,6 +15,7 @@ import WebhookSettings from './WebhookSettings';
 import NotificationSettings from './NotificationSettings';
 import OAuthBindSettings from './OAuthBindSettings';
 import PasswordSettings from './PasswordSettings';
+import DeactivationSettings from './DeactivationSettings';
 
 const { Text } = Typography;
 
@@ -22,6 +24,8 @@ interface SettingsClientProps {
   initialNotificationConfig?: {
     [key: string]: number;
   };
+  userStatus?: number;
+  deactivateAt?: number;
 }
 
 const NAV_ITEMS = [
@@ -53,6 +57,13 @@ const NAV_ITEMS = [
     activeIconBgCls: 'bg-violet-500/10',
     indicatorCls: 'bg-violet-500',
   },
+  {
+    key: 'deactivate',
+    icon: StopOutlined,
+    activeIconCls: 'text-red-500',
+    activeIconBgCls: 'bg-red-500/10',
+    indicatorCls: 'bg-red-500',
+  },
 ] as const;
 
 type SettingsKey = (typeof NAV_ITEMS)[number]['key'];
@@ -60,6 +71,8 @@ type SettingsKey = (typeof NAV_ITEMS)[number]['key'];
 export default function SettingsClient({
   initialWebhookToken,
   initialNotificationConfig,
+  userStatus,
+  deactivateAt,
 }: SettingsClientProps) {
   const t = useTranslations('user.settings');
   const [activeKey, setActiveKey] = useState<SettingsKey>('webhook');
@@ -69,6 +82,7 @@ export default function SettingsClient({
     notification: t('notification_settings'),
     password: t('password_settings'),
     oauth_bind: t('oauth_bind_settings'),
+    deactivate: t('deactivate_settings'),
   };
 
   const renderContent = () => {
@@ -83,6 +97,13 @@ export default function SettingsClient({
         return <PasswordSettings />;
       case 'oauth_bind':
         return <OAuthBindSettings />;
+      case 'deactivate':
+        return (
+          <DeactivationSettings
+            userStatus={userStatus}
+            deactivateAt={deactivateAt}
+          />
+        );
     }
   };
 

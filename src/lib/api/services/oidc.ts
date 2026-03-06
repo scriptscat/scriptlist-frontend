@@ -4,6 +4,7 @@ export interface OIDCProviderInfo {
   id: number;
   name: string;
   icon: string;
+  type: string;
 }
 
 export interface OIDCProvidersResponse {

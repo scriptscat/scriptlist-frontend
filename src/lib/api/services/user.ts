@@ -8,6 +8,8 @@ export interface UserInfo {
   username: string;
   avatar: string;
   is_admin: number; // AdminLevel
+  status?: number; // 1=active, 2=banned, 3=deactivating, 4=deactivated
+  deactivate_at?: number; // 注销申请时间戳
 }
 
 // 徽章项
@@ -210,6 +212,33 @@ export class UserService {
    */
   async getUserConfig() {
     return apiClient.getWithCookie<UserConfig>(`${this.basePath}/config`);
+  }
+
+  /**
+   * 发送注销验证码
+   */
+  async sendDeactivateCode() {
+    return apiClient.post<{ message: string }>(
+      `${this.basePath}/deactivate/code`,
+    );
+  }
+
+  /**
+   * 确认注销账号
+   */
+  async deactivate(code: string) {
+    return apiClient.post<{
+      message: string;
+      deactivate_at: number;
+      effective_at: number;
+    }>(`${this.basePath}/deactivate`, { code });
+  }
+
+  /**
+   * 取消注销
+   */
+  async cancelDeactivate() {
+    return apiClient.delete<{ message: string }>(`${this.basePath}/deactivate`);
   }
 }
 

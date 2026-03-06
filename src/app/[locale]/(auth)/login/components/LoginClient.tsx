@@ -29,7 +29,9 @@ export default function LoginClient() {
   const redirectParam = searchParams.get('redirect');
   // Only allow relative paths to prevent open redirect (reject protocol-relative URLs like //evil.com)
   const safeRedirect =
-    redirectParam && redirectParam.startsWith('/') && !redirectParam.startsWith('//')
+    redirectParam &&
+    redirectParam.startsWith('/') &&
+    !redirectParam.startsWith('//')
       ? redirectParam
       : '/';
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');

@@ -1709,7 +1709,8 @@
       "password_settings": "Đổi mật khẩu",
       "settings_description": "Manage your account preferences, including Webhook configuration and notification options",
       "user_settings": "User Settings",
-      "webhook_settings": "Webhook Settings"
+      "webhook_settings": "Webhook Settings",
+      "deactivate_settings": "Xóa tài khoản"
     },
     "update_failed": "Update failed, please try again",
     "update_success": "User information updated successfully!",
@@ -1775,7 +1776,28 @@
     "website": "Personal Website",
     "website_max_length": "URL cannot exceed 100 characters",
     "website_placeholder": "https://example.com",
-    "website_validation": "Please enter a valid URL"
+    "website_validation": "Please enter a valid URL",
+    "deactivate": {
+      "title": "Xóa tài khoản",
+      "description": "Sau khi xóa, tài khoản sẽ vào giai đoạn chờ 30 ngày. Bạn có thể đăng nhập để hủy trong thời gian này. Sau đó, dữ liệu cá nhân sẽ bị xóa vĩnh viễn, script được giữ lại với tác giả ẩn danh.",
+      "warning": "Hành động này không thể hoàn tác. Xin hãy cẩn thận!",
+      "send_code": "Gửi mã",
+      "code_sent": "Mã xác nhận đã được gửi đến email của bạn",
+      "code_placeholder": "Nhập mã 6 chữ số",
+      "code_label": "Mã xác nhận email",
+      "confirm_deactivate": "Xác nhận xóa",
+      "confirm_title": "Xác nhận xóa tài khoản",
+      "confirm_content": "Sau khi xác nhận, tài khoản sẽ vào giai đoạn chờ 30 ngày. Bạn có thể hủy trong thời gian này. Sau đó, dữ liệu cá nhân sẽ bị xóa vĩnh viễn.",
+      "deactivate_success": "Yêu cầu xóa tài khoản đã được gửi",
+      "deactivate_failed": "Xóa thất bại",
+      "cooling_title": "Đang xóa tài khoản",
+      "cooling_description": "Tài khoản đang trong giai đoạn chờ. Nó sẽ có hiệu lực sau {effectiveDate}. Bạn có thể hủy xóa trong thời gian này.",
+      "cancel_deactivate": "Hủy xóa",
+      "cancel_success": "Đã hủy xóa",
+      "cancel_failed": "Hủy thất bại",
+      "applied_at": "Thời gian yêu cầu",
+      "effective_at": "Thời gian hiệu lực"
+    }
   },
   "utils": {
     "time_format": "YYYY-MM-DD"

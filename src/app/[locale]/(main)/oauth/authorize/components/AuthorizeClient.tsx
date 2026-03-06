@@ -59,7 +59,6 @@ export default function AuthorizeClient() {
         setError(apiErr?.msg || t('load_failed'));
         setLoading(false);
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- OAuth authorize runs once on mount with stable search params
   }, []);
 
   const isSafeRedirect = (uri: string): boolean => {
