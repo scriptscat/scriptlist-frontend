@@ -5,6 +5,7 @@ import { Card, Layout, Menu, theme } from 'antd';
 import {
   ApiOutlined,
   LoginOutlined,
+  NotificationOutlined,
   UserOutlined,
   FileTextOutlined,
   MessageOutlined,
@@ -33,6 +34,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname.includes('/admin/scripts')) return 'scripts';
     if (pathname.includes('/admin/feedbacks')) return 'feedbacks';
     if (pathname.includes('/admin/scores')) return 'scores';
+    if (pathname.includes('/admin/announcements')) return 'announcements';
     if (pathname.includes('/admin/system-config')) return 'system-config';
     if (pathname.includes('/admin/oidc-providers')) return 'oidc-providers';
     if (pathname.includes('/admin/oauth-apps')) return 'oauth-apps';
@@ -59,6 +61,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       key: 'scores',
       icon: <StarOutlined />,
       label: <Link href="/admin/scores">{t('scores')}</Link>,
+    },
+    {
+      key: 'announcements',
+      icon: <NotificationOutlined />,
+      label: <Link href="/admin/announcements">{t('announcements')}</Link>,
     },
     {
       key: 'oauth-apps',

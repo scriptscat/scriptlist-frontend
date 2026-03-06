@@ -1,5 +1,31 @@
 {
   "admin": {
+    "announcements": {
+      "title": "Announcement Management",
+      "action_create": "Create",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "create_title": "Create Announcement",
+      "edit_title": "Edit Announcement",
+      "col_title": "Title",
+      "col_level": "Level",
+      "col_status": "Status",
+      "col_createtime": "Created At",
+      "col_actions": "Actions",
+      "field_title": "Title",
+      "field_content": "Content",
+      "field_level": "Level",
+      "field_status": "Status",
+      "level_normal": "Normal",
+      "level_important": "Important",
+      "status_enabled": "Enabled",
+      "status_disabled": "Disabled",
+      "create_success": "Announcement created successfully",
+      "update_success": "Announcement updated successfully",
+      "delete_success": "Announcement deleted successfully",
+      "delete_confirm": "Are you sure you want to delete this announcement?",
+      "at_least_one_language": "Please fill in the title for at least one language"
+    },
     "audit_logs": {
       "actions": {
         "script_create": "Create Script",
@@ -32,6 +58,7 @@
       "title": "Feedback Management"
     },
     "navigation": {
+      "announcements": "Announcements",
       "feedbacks": "Feedback Management",
       "oauth_apps": "OAuth App Management",
       "oidc_providers": "OIDC Provider Management",
@@ -368,6 +395,9 @@
     "try_refresh": "Refresh the current page",
     "what_can_do": "You can try:",
     "what_happened": "What happened?"
+  },
+  "announcements": {
+    "title": "Announcements"
   },
   "home": {
     "browser_stores": {

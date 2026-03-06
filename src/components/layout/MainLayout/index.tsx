@@ -16,6 +16,7 @@ import { useTranslations } from 'next-intl';
 import { languageMap, Link, usePathname, useRouter } from '@/i18n/routing';
 import { ThemeToggle } from './ThemeToggle';
 import UserAuth from '@/components/UserAuth';
+import AnnouncementBanner from '@/components/AnnouncementBanner';
 import { useUser } from '@/contexts/UserContext';
 import NotificationBell from '@/components/NotificationBell';
 import {
@@ -134,6 +135,7 @@ export default function MainLayout({
           : { minHeight: '100vh' }),
       }}
     >
+      <AnnouncementBanner />
       <Header
         style={{
           background: token.colorBgContainer,

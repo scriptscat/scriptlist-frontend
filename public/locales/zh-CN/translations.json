@@ -1,5 +1,31 @@
 {
   "admin": {
+    "announcements": {
+      "title": "公告管理",
+      "action_create": "新建公告",
+      "action_edit": "编辑",
+      "action_delete": "删除",
+      "create_title": "新建公告",
+      "edit_title": "编辑公告",
+      "col_title": "标题",
+      "col_level": "级别",
+      "col_status": "状态",
+      "col_createtime": "创建时间",
+      "col_actions": "操作",
+      "field_title": "标题",
+      "field_content": "内容",
+      "field_level": "级别",
+      "field_status": "状态",
+      "level_normal": "普通",
+      "level_important": "重要",
+      "status_enabled": "启用",
+      "status_disabled": "禁用",
+      "create_success": "公告创建成功",
+      "update_success": "公告更新成功",
+      "delete_success": "公告删除成功",
+      "delete_confirm": "确定要删除此公告吗？",
+      "at_least_one_language": "至少需要填写一种语言的标题"
+    },
     "audit_logs": {
       "actions": {
         "script_create": "创建脚本",
@@ -32,6 +58,7 @@
       "title": "反馈管理"
     },
     "navigation": {
+      "announcements": "公告管理",
       "feedbacks": "反馈管理",
       "oauth_apps": "OAuth 应用管理",
       "oidc_providers": "OIDC 提供商管理",
@@ -368,6 +395,9 @@
     "try_refresh": "刷新当前页面",
     "what_can_do": "您可以尝试：",
     "what_happened": "发生了什么？"
+  },
+  "announcements": {
+    "title": "公告"
   },
   "home": {
     "browser_stores": {
