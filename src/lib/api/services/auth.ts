@@ -29,6 +29,11 @@ export interface ResetPasswordRequest {
   password: string;
 }
 
+export interface LoginResponse {
+  require_webauthn?: boolean;
+  session_token?: string;
+}
+
 class AuthService {
   private readonly basePath = '/auth';
 
@@ -41,7 +46,7 @@ class AuthService {
   }
 
   async login(data: LoginRequest) {
-    return apiClient.post<void>(`${this.basePath}/login`, data);
+    return apiClient.post<LoginResponse>(`${this.basePath}/login`, data);
   }
 
   async forgotPassword(data: ForgotPasswordRequest) {

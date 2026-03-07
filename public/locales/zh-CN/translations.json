@@ -535,7 +535,15 @@
     "agree_terms_required": "请阅读并同意服务协议、隐私政策和免责声明",
     "terms_of_service_link": "《服务协议》",
     "privacy_policy_link": "《隐私政策》",
-    "disclaimer_link": "《免责声明》"
+    "disclaimer_link": "《免责声明》",
+    "webauthn_title": "通行密钥验证",
+    "webauthn_description": "请使用您注册的通行密钥完成二次验证",
+    "webauthn_retry": "重新验证",
+    "webauthn_back": "返回登录",
+    "webauthn_verification_failed": "通行密钥验证失败，请重试",
+    "passkey_login": "使用通行密钥登录",
+    "passkey_login_loading": "验证中...",
+    "passkey_login_failed": "通行密钥登录失败，请重试"
   },
   "notifications": {
     "access": {
@@ -1699,6 +1707,27 @@
       "unbind_failed": "解绑失败",
       "unbind_success": "解绑成功"
     },
+    "passkey": {
+      "title": "通行密钥管理",
+      "description": "管理您的通行密钥（Passkey），可用于二次验证或无密码登录",
+      "add": "添加通行密钥",
+      "add_success": "通行密钥添加成功",
+      "add_failed": "通行密钥添加失败",
+      "no_passkeys": "暂无已注册的通行密钥",
+      "col_name": "名称",
+      "col_createtime": "创建时间",
+      "col_actions": "操作",
+      "rename": "重命名",
+      "rename_title": "重命名通行密钥",
+      "rename_placeholder": "请输入新名称",
+      "rename_ok": "确定",
+      "rename_success": "重命名成功",
+      "rename_failed": "重命名失败",
+      "delete": "删除",
+      "delete_confirm": "确认删除此通行密钥？删除后将无法使用该密钥进行验证。",
+      "delete_success": "删除成功",
+      "delete_failed": "删除失败"
+    },
     "profile": {
       "achievement_badges": "成就徽章",
       "administrator": "管理员",
@@ -1747,7 +1776,8 @@
       "settings_description": "管理你的账户偏好设置，包括 Webhook 配置和通知选项",
       "user_settings": "用户设置",
       "webhook_settings": "Webhook 设置",
-      "deactivate_settings": "注销账号"
+      "deactivate_settings": "注销账号",
+      "passkey_settings": "通行密钥"
     },
     "update_failed": "更新失败，请重试",
     "update_success": "用户信息更新成功！",

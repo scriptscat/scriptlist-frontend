@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   ApiOutlined,
   BellOutlined,
+  KeyOutlined,
   LinkOutlined,
   LockOutlined,
   SettingOutlined,
@@ -16,6 +17,7 @@ import NotificationSettings from './NotificationSettings';
 import OAuthBindSettings from './OAuthBindSettings';
 import PasswordSettings from './PasswordSettings';
 import DeactivationSettings from './DeactivationSettings';
+import PasskeySettings from './PasskeySettings';
 
 const { Text } = Typography;
 
@@ -51,6 +53,13 @@ const NAV_ITEMS = [
     indicatorCls: 'bg-emerald-500',
   },
   {
+    key: 'passkey',
+    icon: KeyOutlined,
+    activeIconCls: 'text-cyan-500',
+    activeIconBgCls: 'bg-cyan-500/10',
+    indicatorCls: 'bg-cyan-500',
+  },
+  {
     key: 'oauth_bind',
     icon: LinkOutlined,
     activeIconCls: 'text-violet-500',
@@ -81,6 +90,7 @@ export default function SettingsClient({
     webhook: t('webhook_settings'),
     notification: t('notification_settings'),
     password: t('password_settings'),
+    passkey: t('passkey_settings'),
     oauth_bind: t('oauth_bind_settings'),
     deactivate: t('deactivate_settings'),
   };
@@ -95,6 +105,8 @@ export default function SettingsClient({
         );
       case 'password':
         return <PasswordSettings />;
+      case 'passkey':
+        return <PasskeySettings />;
       case 'oauth_bind':
         return <OAuthBindSettings />;
       case 'deactivate':

@@ -499,7 +499,15 @@
     "agree_terms_required": "Bitte lesen und akzeptieren Sie die Nutzungsbedingungen, Datenschutzrichtlinie und den Haftungsausschluss",
     "terms_of_service_link": "Nutzungsbedingungen",
     "privacy_policy_link": "Datenschutzrichtlinie",
-    "disclaimer_link": "Haftungsausschluss"
+    "disclaimer_link": "Haftungsausschluss",
+    "webauthn_title": "Passkey Verification",
+    "webauthn_description": "Please verify with your registered passkey to complete login",
+    "webauthn_retry": "Retry Verification",
+    "webauthn_back": "Back to Login",
+    "webauthn_verification_failed": "Passkey verification failed, please try again",
+    "passkey_login": "Sign in with Passkey",
+    "passkey_login_loading": "Verifying...",
+    "passkey_login_failed": "Passkey login failed, please try again"
   },
   "notifications": {
     "access": {
@@ -1663,6 +1671,27 @@
       "unbind_failed": "Aufheben der Verknüpfung fehlgeschlagen",
       "unbind_success": "Verknüpfung erfolgreich aufgehoben"
     },
+    "passkey": {
+      "title": "Passkey Management",
+      "description": "Manage your passkeys for two-factor authentication or passwordless login",
+      "add": "Add Passkey",
+      "add_success": "Passkey added successfully",
+      "add_failed": "Failed to add passkey",
+      "no_passkeys": "No passkeys registered",
+      "col_name": "Name",
+      "col_createtime": "Created",
+      "col_actions": "Actions",
+      "rename": "Rename",
+      "rename_title": "Rename Passkey",
+      "rename_placeholder": "Enter new name",
+      "rename_ok": "OK",
+      "rename_success": "Renamed successfully",
+      "rename_failed": "Failed to rename",
+      "delete": "Delete",
+      "delete_confirm": "Are you sure you want to delete this passkey? You won't be able to use it for authentication after deletion.",
+      "delete_success": "Deleted successfully",
+      "delete_failed": "Failed to delete"
+    },
     "profile": {
       "achievement_badges": "Auszeichnungen",
       "administrator": "Administrator",
@@ -1711,7 +1740,8 @@
       "settings_description": "Verwalten Sie Ihre Kontopräferenzen, einschließlich Webhook-Konfiguration und Benachrichtigungsoptionen",
       "user_settings": "Benutzereinstellungen",
       "webhook_settings": "Webhook-Einstellungen",
-      "deactivate_settings": "Konto löschen"
+      "deactivate_settings": "Konto löschen",
+      "passkey_settings": "Passkeys"
     },
     "update_failed": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es erneut",
     "update_success": "Benutzerinformationen erfolgreich aktualisiert!",

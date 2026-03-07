@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Button, Divider, Form, Input, message } from 'antd';
 import {
+  KeyOutlined,
   LockOutlined,
   LoginOutlined,
   MailOutlined,
@@ -14,6 +15,8 @@ import { useSearchParams } from 'next/navigation';
 import { Turnstile } from '@marsidev/react-turnstile';
 import type { TurnstileInstance } from '@marsidev/react-turnstile';
 import { authService } from '@/lib/api/services/auth';
+import { webauthnService } from '@/lib/api/services/webauthn';
+import { startAuthentication } from '@simplewebauthn/browser';
 import { oidcService } from '@/lib/api/services/oidc';
 import type { OIDCProviderInfo } from '@/lib/api/services/oidc';
 import { APIError } from '@/types/api';
@@ -51,6 +54,12 @@ export default function LoginClient() {
   const [sendingCode, setSendingCode] = useState(false);
   const [oidcProviders, setOidcProviders] = useState<OIDCProviderInfo[]>([]);
 
+  // WebAuthn 2FA state
+  const [webAuthnSessionToken, setWebAuthnSessionToken] = useState('');
+  const [showWebAuthnStep, setShowWebAuthnStep] = useState(false);
+  const [webAuthnLoading, setWebAuthnLoading] = useState(false);
+  const [passlessLoading, setPasslessLoading] = useState(false);
+
   useEffect(() => {
     if (countdown <= 0) return;
     const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
@@ -73,12 +82,20 @@ export default function LoginClient() {
     }
     setLoading(true);
     try {
-      await authService.login({
+      const resp = await authService.login({
         account: values.account,
         password: values.password,
         turnstile_token: loginToken,
       });
-      window.location.href = safeRedirect;
+      if (resp?.require_webauthn && resp?.session_token) {
+        // Need 2FA WebAuthn verification
+        setWebAuthnSessionToken(resp.session_token);
+        setShowWebAuthnStep(true);
+        // Auto-trigger WebAuthn verification
+        handleWebAuthn2FA(resp.session_token);
+      } else {
+        window.location.href = safeRedirect;
+      }
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -89,6 +106,52 @@ export default function LoginClient() {
       setLoginToken('');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleWebAuthn2FA = async (sessionToken: string) => {
+    setWebAuthnLoading(true);
+    try {
+      const beginResp = await webauthnService.loginBegin(sessionToken);
+      const assertionResp = await startAuthentication({
+        optionsJSON: beginResp.options,
+      });
+      await webauthnService.loginFinish(
+        sessionToken,
+        JSON.stringify(assertionResp),
+      );
+      window.location.href = safeRedirect;
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      } else if (err instanceof Error && err.name !== 'NotAllowedError') {
+        message.error(t('webauthn_verification_failed'));
+      }
+    } finally {
+      setWebAuthnLoading(false);
+    }
+  };
+
+  const handlePasskeyLogin = async () => {
+    setPasslessLoading(true);
+    try {
+      const beginResp = await webauthnService.passlessBegin();
+      const assertionResp = await startAuthentication({
+        optionsJSON: beginResp.options,
+      });
+      await webauthnService.passlessFinish(
+        beginResp.challenge_id,
+        JSON.stringify(assertionResp),
+      );
+      window.location.href = safeRedirect;
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      } else if (err instanceof Error && err.name !== 'NotAllowedError') {
+        message.error(t('passkey_login_failed'));
+      }
+    } finally {
+      setPasslessLoading(false);
     }
   };
 
@@ -206,8 +269,40 @@ export default function LoginClient() {
           </button>
         </div>
 
+        {/* WebAuthn 2FA step */}
+        {showWebAuthnStep && activeTab === 'login' && (
+          <div className="flex flex-col items-center gap-4 py-8">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-500/10">
+              <KeyOutlined className="text-2xl text-blue-500" />
+            </div>
+            <h3 className="text-lg font-semibold text-[rgb(var(--text-primary))]">
+              {t('webauthn_title')}
+            </h3>
+            <p className="text-sm text-[rgb(var(--text-secondary))] text-center">
+              {t('webauthn_description')}
+            </p>
+            <Button
+              type="primary"
+              loading={webAuthnLoading}
+              onClick={() => handleWebAuthn2FA(webAuthnSessionToken)}
+              className="!rounded-xl !h-11 !min-w-[200px]"
+            >
+              {t('webauthn_retry')}
+            </Button>
+            <Button
+              type="link"
+              onClick={() => {
+                setShowWebAuthnStep(false);
+                setWebAuthnSessionToken('');
+              }}
+            >
+              {t('webauthn_back')}
+            </Button>
+          </div>
+        )}
+
         {/* Login form */}
-        {activeTab === 'login' && (
+        {activeTab === 'login' && !showWebAuthnStep && (
           <Form
             form={loginForm}
             onFinish={handleLogin}
@@ -425,8 +520,8 @@ export default function LoginClient() {
           </>
         )}
 
-        {/* OIDC providers */}
-        {oidcProviders.length > 0 && (
+        {/* Passkey login + OIDC providers */}
+        {!showWebAuthnStep && (
           <>
             <Divider plain className="!my-5">
               <span className="text-[rgb(var(--text-tertiary))] text-xs tracking-wider uppercase">
@@ -434,6 +529,16 @@ export default function LoginClient() {
               </span>
             </Divider>
             <div className="flex flex-col gap-2.5">
+              <button
+                onClick={handlePasskeyLogin}
+                disabled={passlessLoading}
+                className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <KeyOutlined className="text-base" />
+                {passlessLoading
+                  ? t('passkey_login_loading')
+                  : t('passkey_login')}
+              </button>
               {oidcProviders.map((provider) => (
                 <button
                   key={provider.id}
