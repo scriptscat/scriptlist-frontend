@@ -7,10 +7,12 @@ export interface WebAuthnCredentialItem {
 }
 
 export interface WebAuthnRegisterBeginResponse {
+  session_id: string;
   options: PublicKeyCredentialCreationOptionsJSON;
 }
 
 export interface WebAuthnRegisterFinishRequest {
+  session_id: string;
   name: string;
   credential: string;
 }

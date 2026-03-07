@@ -68,6 +68,7 @@ export default function PasskeySettings() {
       // Step 3: Send result to server with a default name
       const name = `Passkey ${credentials.length + 1}`;
       await webauthnService.registerFinish({
+        session_id: beginResp.session_id,
         name,
         credential: JSON.stringify(attResp),
       });
