@@ -140,27 +140,27 @@ export class UserService {
 
   /**
    * 获取用户详细信息
-   * @param uid 用户ID
+   * @param userId 用户ID
    */
-  async getUserDetail(uid: number) {
+  async getUserDetail(userId: number) {
     return apiClient.getWithCookie<GetUserDetailResponse>(
-      `${this.basePath}/${uid}/detail`,
+      `${this.basePath}/${userId}/detail`,
     );
   }
 
-  getUserDetailCache = cache((uid: number) => {
-    return this.getUserDetail(uid);
+  getUserDetailCache = cache((userId: number) => {
+    return this.getUserDetail(userId);
   });
 
   /**
    * 关注或取消关注用户
-   * @param uid 用户ID
+   * @param userId 用户ID
    * @param unfollow 是否取消关注，true为取消关注，false或undefined为关注
    */
-  async followUser(uid: number, unfollow: boolean = false) {
+  async followUser(userId: number, unfollow: boolean = false) {
     const data: FollowUserRequest = { unfollow };
     return apiClient.post<FollowUserResponse>(
-      `${this.basePath}/${uid}/follow`,
+      `${this.basePath}/${userId}/follow`,
       data,
     );
   }

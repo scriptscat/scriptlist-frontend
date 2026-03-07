@@ -10,12 +10,12 @@ import { userService } from '../services/user';
 export function useFollowUser() {
   const [loading, setLoading] = useState(false);
 
-  const followUser = async (uid: number, isCurrentlyFollowing: boolean) => {
+  const followUser = async (userId: number, isCurrentlyFollowing: boolean) => {
     setLoading(true);
     try {
       // 如果当前已关注，则传入 unfollow: true 来取消关注
       // 如果当前未关注，则传入 unfollow: false 来关注
-      await userService.followUser(uid, isCurrentlyFollowing);
+      await userService.followUser(userId, isCurrentlyFollowing);
       return !isCurrentlyFollowing; // 返回新的关注状态
     } finally {
       setLoading(false);

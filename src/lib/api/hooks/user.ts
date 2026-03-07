@@ -5,18 +5,18 @@ import type { APIError } from '@/types/api';
 
 /**
  * 获取用户详细信息的hook
- * @param uid 用户ID
+ * @param userId 用户ID
  * @param shouldFetch 是否应该请求数据，默认为true
  */
 export function useUserDetail(
-  uid: number | undefined,
+  userId: number | undefined,
   shouldFetch: boolean = true,
 ) {
-  const key = uid && shouldFetch ? ['user-detail', uid] : null;
+  const key = userId && shouldFetch ? ['user-detail', userId] : null;
 
   return useSWR<GetUserDetailResponse, APIError>(
     key,
-    () => userService.getUserDetail(uid!),
+    () => userService.getUserDetail(userId!),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
