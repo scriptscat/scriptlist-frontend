@@ -471,6 +471,8 @@
     "login_coming_soon": "Email login is coming soon",
     "login_failed": "Login failed, please try again later",
     "oidc_login_with": "Đăng nhập bằng {provider}",
+    "qq_migrate_button": "Đăng nhập bằng QQ diễn đàn",
+    "qq_migrate_notice": "Nếu bạn đã sử dụng đăng nhập QQ trên diễn đàn, hãy nhấn vào đây để chuyển đăng nhập sang ScriptCat.",
     "password": "Password",
     "password_complexity": "Password must contain both letters and numbers",
     "password_min_length": "Password must be at least 6 characters",

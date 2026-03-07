@@ -24,7 +24,10 @@ import Image from 'next/image';
 
 export default function LoginClient() {
   const t = useTranslations('login');
-  const { turnstile_site_key: turnstileSiteKey } = useGlobalConfig();
+  const {
+    turnstile_site_key: turnstileSiteKey,
+    qq_migrate_enabled: qqMigrateEnabled,
+  } = useGlobalConfig();
   const searchParams = useSearchParams();
   const redirectParam = searchParams.get('redirect');
   // Only allow relative paths to prevent open redirect (reject protocol-relative URLs like //evil.com)
@@ -451,6 +454,31 @@ export default function LoginClient() {
               ))}
             </div>
           </>
+        )}
+
+        {/* QQ 迁移登录（临时，迁移期结束后删除） */}
+        {qqMigrateEnabled && (
+          <div className="mt-4">
+            {oidcProviders.length === 0 && (
+              <Divider plain className="!my-5">
+                <span className="text-[rgb(var(--text-tertiary))] text-xs tracking-wider uppercase">
+                  {t('divider_text')}
+                </span>
+              </Divider>
+            )}
+            <button
+              onClick={() => {
+                window.location.href = '/api/v2/auth/qq-migrate';
+              }}
+              className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm"
+            >
+              <LoginOutlined className="text-base" />
+              {t('qq_migrate_button')}
+            </button>
+            <p className="text-xs text-[rgb(var(--text-tertiary))] text-center mt-2">
+              {t('qq_migrate_notice')}
+            </p>
+          </div>
         )}
       </div>
     </div>

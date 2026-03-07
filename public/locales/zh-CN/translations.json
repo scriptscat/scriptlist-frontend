@@ -507,6 +507,8 @@
     "login_coming_soon": "邮箱登录功能即将上线",
     "login_failed": "登录失败，请稍后重试",
     "oidc_login_with": "使用 {provider} 登录",
+    "qq_migrate_button": "使用论坛 QQ 登录",
+    "qq_migrate_notice": "如果您曾在论坛使用 QQ 登录，请点击此按钮迁移登录到脚本站。",
     "password": "密码",
     "password_complexity": "密码必须包含字母和数字",
     "password_min_length": "密码至少6个字符",

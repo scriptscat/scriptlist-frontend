@@ -471,6 +471,8 @@
     "login_coming_soon": "E-Mail-Anmeldung kommt bald",
     "login_failed": "Anmeldung fehlgeschlagen, bitte versuchen Sie es später erneut",
     "oidc_login_with": "Mit {provider} anmelden",
+    "qq_migrate_button": "Mit Forum QQ anmelden",
+    "qq_migrate_notice": "Wenn Sie sich zuvor im Forum mit QQ angemeldet haben, klicken Sie hier, um Ihre Anmeldung zu ScriptCat zu migrieren.",
     "password": "Passwort",
     "password_complexity": "Das Passwort muss Buchstaben und Zahlen enthalten",
     "password_min_length": "Das Passwort muss mindestens 6 Zeichen lang sein",

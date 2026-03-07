@@ -507,6 +507,8 @@
     "login_coming_soon": "Email login is coming soon",
     "login_failed": "Login failed, please try again later",
     "oidc_login_with": "Login with {provider}",
+    "qq_migrate_button": "Login with Forum QQ",
+    "qq_migrate_notice": "If you previously used QQ login on the forum, click here to migrate your login to ScriptCat.",
     "password": "Password",
     "password_complexity": "Password must contain both letters and numbers",
     "password_min_length": "Password must be at least 6 characters",

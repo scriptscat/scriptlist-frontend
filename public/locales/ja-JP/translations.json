@@ -471,6 +471,8 @@
     "login_coming_soon": "メールログインは近日公開予定です",
     "login_failed": "ログインに失敗しました。後でもう一度お試しください",
     "oidc_login_with": "{provider} でログイン",
+    "qq_migrate_button": "フォーラム QQ でログイン",
+    "qq_migrate_notice": "以前フォーラムで QQ ログインを使用していた場合は、こちらをクリックして ScriptCat にログインを移行してください。",
     "password": "パスワード",
     "password_complexity": "パスワードには英字と数字の両方を含める必要があります",
     "password_min_length": "パスワードは6文字以上である必要があります",

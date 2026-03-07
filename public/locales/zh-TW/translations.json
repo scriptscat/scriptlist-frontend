@@ -471,6 +471,8 @@
     "login_coming_soon": "信箱登入功能即將上線",
     "login_failed": "登入失敗，請稍後重試",
     "oidc_login_with": "使用 {provider} 登錄",
+    "qq_migrate_button": "使用論壇 QQ 登錄",
+    "qq_migrate_notice": "如果您曾在論壇使用 QQ 登錄，請點擊此按鈕遷移登錄到腳本站。",
     "password": "密碼",
     "password_complexity": "密碼必須包含字母和數字",
     "password_min_length": "密碼至少6個字元",
