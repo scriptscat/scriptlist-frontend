@@ -9,7 +9,6 @@ import {
   Dropdown,
   Button,
   message,
-  Badge,
 } from 'antd';
 const { Header, Content, Footer } = Layout;
 import { useTranslations } from 'next-intl';
@@ -20,7 +19,6 @@ import AnnouncementBanner from '@/components/AnnouncementBanner';
 import { useUser } from '@/contexts/UserContext';
 import NotificationBell from '@/components/NotificationBell';
 import {
-  BellOutlined,
   ChromeOutlined,
   CodeOutlined,
   GlobalOutlined,
@@ -28,7 +26,6 @@ import {
   MessageOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { Icon } from '@iconify/react';
 import Image from 'next/image';
 import { useCallback, useMemo } from 'react';
 

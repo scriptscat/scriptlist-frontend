@@ -222,7 +222,11 @@ export default function UserProfileLayout({
                   </div>
 
                   {/* 操作按钮 */}
-                  <Space direction="vertical" size="middle" className="w-full mb-6">
+                  <Space
+                    direction="vertical"
+                    size="middle"
+                    className="w-full mb-6"
+                  >
                     {isCurrentUser ? (
                       <Button
                         type="primary"
@@ -237,7 +241,11 @@ export default function UserProfileLayout({
                       <Button
                         type={isFollowing ? 'default' : 'primary'}
                         icon={
-                          isFollowing ? <CheckCircleOutlined /> : <PlusOutlined />
+                          isFollowing ? (
+                            <CheckCircleOutlined />
+                          ) : (
+                            <PlusOutlined />
+                          )
                         }
                         onClick={handleFollow}
                         loading={followLoading}
@@ -258,7 +266,10 @@ export default function UserProfileLayout({
                         >
                           {t('private_message')}
                         </Button>
-                        <Button icon={<ShareAltOutlined />} onClick={handleShare} />
+                        <Button
+                          icon={<ShareAltOutlined />}
+                          onClick={handleShare}
+                        />
                         <Dropdown
                           menu={{ items: moreMenuItems }}
                           placement="bottomRight"
@@ -303,7 +314,9 @@ export default function UserProfileLayout({
                                   {t('last_active')}
                                 </Text>
                               ),
-                              children: semDateTime(currentUserData.last_active),
+                              children: semDateTime(
+                                currentUserData.last_active,
+                              ),
                             },
                           ]
                         : []),
@@ -380,7 +393,10 @@ export default function UserProfileLayout({
                   <div className="flex items-center gap-2 mb-3">
                     <TrophyOutlined className="text-yellow-500" />
                     <Text strong>{t('achievement_badges')}</Text>
-                    <Badge count={currentUserData.badge.length} color="#faad14" />
+                    <Badge
+                      count={currentUserData.badge.length}
+                      color="#faad14"
+                    />
                   </div>
 
                   <div className="flex flex-wrap gap-1">

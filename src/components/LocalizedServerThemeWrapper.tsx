@@ -48,11 +48,17 @@ export async function LocalizedServerThemeWrapper({
     getThemeFromServerCookies(),
     getMessages(),
     userService.getCurrentUser(),
-    systemService.getGlobalConfig().catch((): GlobalConfig => ({ turnstile_site_key: '', qq_migrate_enabled: false })),
+    systemService.getGlobalConfig().catch(
+      (): GlobalConfig => ({
+        turnstile_site_key: '',
+        qq_migrate_enabled: false,
+      }),
+    ),
   ]);
 
   return (
     <html lang={locale} data-theme={serverTheme.theme} suppressHydrationWarning>
+      {/* eslint-disable-next-line @next/next/no-head-element -- Root layout requires native <head> in App Router */}
       <head>
         <meta
           name="theme-color"

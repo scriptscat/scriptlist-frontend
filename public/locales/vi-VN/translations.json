@@ -577,7 +577,8 @@
       }
     },
     "type_system": "System Notification",
-    "unread": "Unread"
+    "unread": "Unread",
+    "status_label": "Trạng thái:"
   },
   "oauth": {
     "authorize": {

@@ -613,7 +613,8 @@
       }
     },
     "type_system": "System Notification",
-    "unread": "Unread"
+    "unread": "Unread",
+    "status_label": "Status:"
   },
   "oauth": {
     "authorize": {

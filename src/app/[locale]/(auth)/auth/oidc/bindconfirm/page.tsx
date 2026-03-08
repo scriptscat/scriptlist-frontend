@@ -366,7 +366,11 @@ function OIDCBindConfirmContent() {
                   {bindInfo.name || bindInfo.email}
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-[rgb(var(--text-tertiary))]">
-                  <ProviderIcon icon={bindInfo.provider_icon} name={bindInfo.provider_name} size={16} />
+                  <ProviderIcon
+                    icon={bindInfo.provider_icon}
+                    name={bindInfo.provider_name}
+                    size={16}
+                  />
                   {bindInfo.provider_name}
                 </div>
               </div>

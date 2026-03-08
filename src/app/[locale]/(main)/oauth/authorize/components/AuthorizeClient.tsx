@@ -26,17 +26,16 @@ export default function AuthorizeClient() {
   const scope = searchParams.get('scope') || '';
   const state = searchParams.get('state') || '';
 
+  const hasValidParams = !!(clientId && redirectUri && responseType === 'code');
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(hasValidParams);
   const [approving, setApproving] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(
+    hasValidParams ? '' : t('invalid_request'),
+  );
 
   useEffect(() => {
-    if (!clientId || !redirectUri || responseType !== 'code') {
-      setError(t('invalid_request'));
-      setLoading(false);
-      return;
-    }
+    if (!hasValidParams) return;
     apiClient
       .get<AppInfo>('/oauth/authorize', {
         client_id: clientId,

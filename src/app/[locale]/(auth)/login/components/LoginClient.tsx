@@ -56,7 +56,9 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
     qq_migrate_failed: t('error_qq_migrate_failed'),
     login_failed: t('login_failed'),
   };
-  const errorMessage = errorParam ? (errorMessageMap[errorParam] || t('error_unknown')) : null;
+  const errorMessage = errorParam
+    ? errorMessageMap[errorParam] || t('error_unknown')
+    : null;
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [loginForm] = Form.useForm();
   const [registerForm] = Form.useForm();

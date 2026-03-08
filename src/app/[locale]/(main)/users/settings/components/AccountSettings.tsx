@@ -27,7 +27,12 @@ interface SectionHeaderProps {
   title: string;
 }
 
-function SectionHeader({ icon, iconCls, iconBgCls, title }: SectionHeaderProps) {
+function SectionHeader({
+  icon,
+  iconCls,
+  iconBgCls,
+  title,
+}: SectionHeaderProps) {
   return (
     <div className="flex items-center gap-3">
       <div

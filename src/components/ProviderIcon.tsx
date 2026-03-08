@@ -28,6 +28,7 @@ export default function ProviderIcon({
 
   if (icon.startsWith('http')) {
     return (
+      // eslint-disable-next-line @next/next/no-img-element -- External provider icons with dynamic URLs
       <img
         src={icon}
         alt={name || ''}

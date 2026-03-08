@@ -2,18 +2,6 @@ import { useRef, useState } from 'react';
 import type { SelectProps } from 'antd';
 import { Select, Spin } from 'antd';
 
-// 简单的防抖实现
-function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  delay: number,
-): T {
-  let timeoutId: NodeJS.Timeout;
-  return ((...args: Parameters<T>) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), delay);
-  }) as T;
-}
-
 export interface DebounceSelectProps<ValueType = any>
   extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
   fetchOptions: (search: string) => Promise<ValueType[]>;

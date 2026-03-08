@@ -158,7 +158,7 @@ export default function NotificationsClient({
           <div className="flex flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <Text type="secondary" className="text-xs whitespace-nowrap">
-                状态:
+                {t('status_label')}
               </Text>
               <Segmented
                 value={filterStatus === undefined ? 'all' : filterStatus}
@@ -304,7 +304,7 @@ export default function NotificationsClient({
                               status="processing"
                               text={
                                 <span className="text-blue-600 dark:text-blue-400 text-xs font-medium">
-                                  未读
+                                  {t('unread')}
                                 </span>
                               }
                               className="!leading-none"

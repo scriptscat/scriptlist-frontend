@@ -1,8 +1,7 @@
 'use client';
 
-import { Dropdown, theme } from 'antd';
+import { Dropdown } from 'antd';
 import { GlobalOutlined } from '@ant-design/icons';
-import { useTranslations } from 'next-intl';
 import { languageMap, Link, usePathname } from '@/i18n/routing';
 import { ThemeToggle } from '@/components/layout/MainLayout/ThemeToggle';
 import Image from 'next/image';
@@ -13,7 +12,6 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const t = useTranslations('layout');
   const pathname = usePathname();
 
   const switchLocale = useCallback(
@@ -69,7 +67,9 @@ export default function AuthLayout({
               alt="logo"
               className="transition-transform duration-300 group-hover:scale-110"
             />
-            <span className="text-lg font-bold text-[#1296DB]">ScriptCat</span>
+            <span className="text-lg font-bold text-[#1296DB]">
+              {'ScriptCat'}
+            </span>
           </Link>
 
           <div className="flex items-center space-x-3">

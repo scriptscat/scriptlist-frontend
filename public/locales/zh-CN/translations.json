@@ -617,7 +617,8 @@
       }
     },
     "type_system": "系统通知",
-    "unread": "未读"
+    "unread": "未读",
+    "status_label": "状态:"
   },
   "oauth": {
     "authorize": {

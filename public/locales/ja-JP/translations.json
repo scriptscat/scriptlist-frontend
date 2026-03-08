@@ -577,7 +577,8 @@
       }
     },
     "type_system": "システム通知",
-    "unread": "未読"
+    "unread": "未読",
+    "status_label": "ステータス:"
   },
   "oauth": {
     "authorize": {

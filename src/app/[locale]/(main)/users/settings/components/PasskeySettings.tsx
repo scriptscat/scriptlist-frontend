@@ -178,9 +178,7 @@ export default function PasskeySettings({ embedded }: PasskeySettingsProps) {
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between gap-3">
-              <h3 className="m-0 mb-1 text-base font-semibold">
-                {t('title')}
-              </h3>
+              <h3 className="m-0 mb-1 text-base font-semibold">{t('title')}</h3>
               <Button
                 type="primary"
                 size="small"

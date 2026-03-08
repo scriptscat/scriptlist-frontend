@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import ErrorPage from '@/components/ErrorPage';
-import { APIError } from '@/types/api';
 
 export default function Error({
   error,

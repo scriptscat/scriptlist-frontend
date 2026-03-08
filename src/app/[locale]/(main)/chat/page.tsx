@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Avatar, Button, Popconfirm, Space, Tooltip, Typography } from 'antd';
 import {
   RobotOutlined,
@@ -466,7 +466,7 @@ export default function ChatPage() {
   const [activeSessionId, setActiveSessionId] = useState<number | undefined>();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   // Key to force re-mount ChatProvider when switching sessions
-  const [chatKey, setChatKey] = useState(0);
+  const [chatKeySeed, setChatKeySeed] = useState(0);
 
   // Fetch session list
   const { data: sessionsData, mutate: mutateSessions } = useChatSessionList();
@@ -504,11 +504,11 @@ export default function ChatPage() {
       const session = await chatService.createSession();
       await mutateSessions();
       setActiveSessionId(session.id);
-      setChatKey((k) => k + 1);
+      setChatKeySeed((k) => k + 1);
     } catch {
       // If session creation fails, just start a stateless chat
       setActiveSessionId(undefined);
-      setChatKey((k) => k + 1);
+      setChatKeySeed((k) => k + 1);
     }
   }, [mutateSessions]);
 
@@ -517,7 +517,7 @@ export default function ChatPage() {
     (id: number) => {
       if (id === activeSessionId) return;
       setActiveSessionId(id);
-      setChatKey((k) => k + 1);
+      setChatKeySeed((k) => k + 1);
     },
     [activeSessionId],
   );
@@ -530,7 +530,7 @@ export default function ChatPage() {
         await mutateSessions();
         if (activeSessionId === id) {
           setActiveSessionId(undefined);
-          setChatKey((k) => k + 1);
+          setChatKeySeed((k) => k + 1);
         }
       } catch {
         // ignore
@@ -544,12 +544,8 @@ export default function ChatPage() {
     mutateSessions();
   }, [mutateSessions]);
 
-  // When messages data loads, trigger a re-key to re-mount the ChatProvider with new initial messages
-  useEffect(() => {
-    if (messagesData) {
-      setChatKey((k) => k + 1);
-    }
-  }, [messagesData]);
+  // Derive a composite key that changes when messages data loads or user triggers a re-mount
+  const chatKey = `${chatKeySeed}-${activeSessionId ?? 'none'}-${messagesData ? 'loaded' : 'pending'}`;
 
   return (
     <>
