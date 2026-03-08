@@ -13,6 +13,7 @@ import { ConfigProvider, theme } from 'antd';
 import type { ThemeMode } from '@/lib/cookies';
 import { setThemeCookie } from '@/lib/cookies';
 import { getToken, getComponents, getCssVarConfig } from '@/lib/antd-theme';
+import '@/lib/iconify-preload';
 
 interface ThemeContextType {
   themeMode: ThemeMode;

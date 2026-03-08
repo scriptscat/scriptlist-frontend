@@ -129,9 +129,9 @@ const lightComponents: ThemeConfig['components'] = {
   },
   Menu: {
     colorBgContainer: '#ffffff',
-    colorItemBgSelected: '#ebf5ff',
-    colorItemBgHover: '#f6f8fa',
-    colorItemTextSelected: '#0969da',
+    itemSelectedBg: '#ebf5ff',
+    itemHoverBg: '#f6f8fa',
+    itemSelectedColor: '#0969da',
   },
   Input: {
     colorBgContainer: '#ffffff',
@@ -178,9 +178,9 @@ const darkComponents: ThemeConfig['components'] = {
   },
   Menu: {
     colorBgContainer: '#161b22',
-    colorItemBgSelected: '#21262d',
-    colorItemBgHover: '#21262d',
-    colorItemTextSelected: '#58a6ff',
+    itemSelectedBg: '#21262d',
+    itemHoverBg: '#21262d',
+    itemSelectedColor: '#58a6ff',
   },
   Input: {
     colorBgContainer: '#161b22',

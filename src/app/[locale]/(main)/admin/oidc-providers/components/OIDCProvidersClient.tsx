@@ -32,6 +32,7 @@ import type {
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { API_CONFIG } from '@/lib/api/config';
+import ProviderIcon from '@/components/ProviderIcon';
 
 export default function OIDCProvidersClient() {
   const t = useTranslations('admin.oidc_providers');
@@ -176,7 +177,7 @@ export default function OIDCProvidersClient() {
       token_url: provider.token_url,
       userinfo_url: provider.userinfo_url,
       client_id: provider.client_id,
-      client_secret: '****',
+      client_secret: '',
       scopes: provider.scopes,
       icon: provider.icon,
       display_order: provider.display_order,
@@ -202,7 +203,7 @@ export default function OIDCProvidersClient() {
       width: 60,
       render: (val: string, record: OIDCProviderItem) =>
         val ? (
-          <Avatar src={val} size="small" shape="square" />
+          <ProviderIcon icon={val} name={record.name} size={24} />
         ) : (
           <Avatar size="small" shape="square">
             {record.name?.[0]?.toUpperCase()}
@@ -278,7 +279,7 @@ export default function OIDCProvidersClient() {
     <Form.Item name="icon" label={t('field_icon')}>
       <Space direction="vertical" className="w-full">
         <Space>
-          {iconUrl && <Avatar src={iconUrl} size={40} shape="square" />}
+          {iconUrl && <ProviderIcon icon={iconUrl} size={40} />}
           <Upload
             accept="image/*"
             showUploadList={false}
@@ -292,7 +293,7 @@ export default function OIDCProvidersClient() {
           </Upload>
         </Space>
         <Input
-          placeholder="https://example.com/icon.svg"
+          placeholder={t('field_icon_placeholder')}
           value={iconUrl}
           onChange={(e) => {
             setUrl(e.target.value);

@@ -1,11 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Button, Divider, Form, Input, message } from 'antd';
+import { Alert, Button, Divider, Form, Input, message, Modal } from 'antd';
 import {
   KeyOutlined,
   LockOutlined,
-  LoginOutlined,
   MailOutlined,
   SafetyOutlined,
   UserOutlined,
@@ -17,15 +16,19 @@ import type { TurnstileInstance } from '@marsidev/react-turnstile';
 import { authService } from '@/lib/api/services/auth';
 import { webauthnService } from '@/lib/api/services/webauthn';
 import { startAuthentication } from '@simplewebauthn/browser';
-import { oidcService } from '@/lib/api/services/oidc';
 import type { OIDCProviderInfo } from '@/lib/api/services/oidc';
 import { APIError } from '@/types/api';
 import { Link } from '@/i18n/routing';
 import { useGlobalConfig } from '@/contexts/GlobalConfigContext';
 import AgreeTermsCheckbox from '@/components/AgreeTermsCheckbox';
 import Image from 'next/image';
+import ProviderIcon from '@/components/ProviderIcon';
 
-export default function LoginClient() {
+interface LoginClientProps {
+  oidcProviders: OIDCProviderInfo[];
+}
+
+export default function LoginClient({ oidcProviders }: LoginClientProps) {
   const t = useTranslations('login');
   const {
     turnstile_site_key: turnstileSiteKey,
@@ -52,8 +55,6 @@ export default function LoginClient() {
 
   const [countdown, setCountdown] = useState(0);
   const [sendingCode, setSendingCode] = useState(false);
-  const [oidcProviders, setOidcProviders] = useState<OIDCProviderInfo[]>([]);
-
   // WebAuthn 2FA state
   const [webAuthnSessionToken, setWebAuthnSessionToken] = useState('');
   const [showWebAuthnStep, setShowWebAuthnStep] = useState(false);
@@ -65,15 +66,6 @@ export default function LoginClient() {
     const timer = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
   }, [countdown]);
-
-  useEffect(() => {
-    oidcService
-      .getProviders()
-      .then((resp) => {
-        setOidcProviders(resp.providers || []);
-      })
-      .catch(() => {});
-  }, []);
 
   const handleLogin = async (values: { account: string; password: string }) => {
     if (turnstileSiteKey && !loginToken) {
@@ -224,6 +216,18 @@ export default function LoginClient() {
     } else {
       window.location.href = oidcUrl;
     }
+  };
+
+  const handleQQMigrateLogin = () => {
+    Modal.confirm({
+      title: t('qq_migrate_deprecation_title'),
+      content: t('qq_migrate_deprecation_content'),
+      okText: t('qq_migrate_deprecation_continue'),
+      cancelText: t('qq_migrate_deprecation_cancel'),
+      onOk: () => {
+        window.location.href = '/api/v2/auth/qq-migrate';
+      },
+    });
   };
 
   return (
@@ -520,8 +524,8 @@ export default function LoginClient() {
           </>
         )}
 
-        {/* Passkey login + OIDC providers */}
-        {!showWebAuthnStep && (
+        {/* Passkey login + OIDC providers (only on login tab) */}
+        {activeTab === 'login' && !showWebAuthnStep && (
           <>
             <Divider plain className="!my-5">
               <span className="text-[rgb(var(--text-tertiary))] text-xs tracking-wider uppercase">
@@ -545,45 +549,21 @@ export default function LoginClient() {
                   onClick={() => handleOIDCLogin(provider.id)}
                   className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm"
                 >
-                  {provider.icon ? (
-                    <img
-                      src={provider.icon}
-                      alt={provider.name}
-                      className="w-[18px] h-[18px]"
-                    />
-                  ) : (
-                    <LoginOutlined className="text-base" />
-                  )}
+                  <ProviderIcon icon={provider.icon} name={provider.name} />
                   {t('oidc_login_with', { provider: provider.name })}
                 </button>
               ))}
+              {qqMigrateEnabled && (
+                <button
+                  onClick={handleQQMigrateLogin}
+                  className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm"
+                >
+                  <ProviderIcon icon="mingcute:qq-fill" />
+                  {t('qq_migrate_button')}
+                </button>
+              )}
             </div>
           </>
-        )}
-
-        {/* QQ 迁移登录（临时，迁移期结束后删除） */}
-        {qqMigrateEnabled && (
-          <div className="mt-4">
-            {oidcProviders.length === 0 && (
-              <Divider plain className="!my-5">
-                <span className="text-[rgb(var(--text-tertiary))] text-xs tracking-wider uppercase">
-                  {t('divider_text')}
-                </span>
-              </Divider>
-            )}
-            <button
-              onClick={() => {
-                window.location.href = '/api/v2/auth/qq-migrate';
-              }}
-              className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm"
-            >
-              <LoginOutlined className="text-base" />
-              {t('qq_migrate_button')}
-            </button>
-            <p className="text-xs text-[rgb(var(--text-tertiary))] text-center mt-2">
-              {t('qq_migrate_notice')}
-            </p>
-          </div>
         )}
       </div>
     </div>

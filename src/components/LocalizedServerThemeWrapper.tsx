@@ -11,7 +11,6 @@ import { getMessages } from 'next-intl/server';
 import { pickMessages } from '@/i18n/pickMessages';
 import { userService, systemService } from '@/lib/api';
 import { GlobalConfigProvider } from '@/contexts/GlobalConfigContext';
-import Head from 'next/head';
 import GoogleAdScript from './GoogleAd/script';
 import Script from 'next/script';
 
@@ -53,7 +52,7 @@ export async function LocalizedServerThemeWrapper({
 
   return (
     <html lang={locale} data-theme={serverTheme.theme} suppressHydrationWarning>
-      <Head>
+      <head>
         <meta
           name="theme-color"
           content={serverTheme.theme === 'dark' ? '#0d1117' : '#f6f8fa'}
@@ -62,33 +61,34 @@ export async function LocalizedServerThemeWrapper({
           <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         )}
         <GoogleAdScript />
-      </Head>
-      {serverTheme.mode === 'auto' && (
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;var m=window.matchMedia('(prefers-color-scheme:dark)');if(m.matches){d.setAttribute('data-theme','dark')}else{d.setAttribute('data-theme','light')}}catch(e){}})()`,
-          }}
-        />
-      )}
-      <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-N2X6MNVRL3"
-      />
-      <Script
-        id="google-analytics"
-        dangerouslySetInnerHTML={{
-          __html: `  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-N2X6MNVRL3');`,
-        }}
-      />
+        {serverTheme.mode === 'auto' && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(){try{var d=document.documentElement;var m=window.matchMedia('(prefers-color-scheme:dark)');if(m.matches){d.setAttribute('data-theme','dark')}else{d.setAttribute('data-theme','light')}}catch(e){}})()`,
+            }}
+          />
+        )}
+      </head>
       <body
         className={
           'page-gradient-bg text-app-primary min-h-screen theme-transition'
         }
       >
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-N2X6MNVRL3"
+        />
+        <Script
+          id="google-analytics"
+          dangerouslySetInnerHTML={{
+            __html: `  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-N2X6MNVRL3');`,
+          }}
+        />
         <NavigationProgress />
         <ThemeProvider initialMode={serverTheme}>
           <SWRProvider>

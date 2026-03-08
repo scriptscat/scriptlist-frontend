@@ -7,7 +7,7 @@ export default function AuthGroupLayout({
   children: React.ReactNode;
 }) {
   return (
-    <PageIntlProvider namespaces={['auth', 'login']}>
+    <PageIntlProvider namespaces={['auth', 'login', 'layout']}>
       <AuthLayout>{children}</AuthLayout>
     </PageIntlProvider>
   );
