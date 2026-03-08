@@ -29,6 +29,7 @@ import { authService } from '@/lib/api/services/auth';
 import { APIError } from '@/types/api';
 import { useGlobalConfig } from '@/contexts/GlobalConfigContext';
 import AgreeTermsCheckbox from '@/components/AgreeTermsCheckbox';
+import ProviderIcon from '@/components/ProviderIcon';
 
 function OIDCBindConfirmContent() {
   const t = useTranslations('auth.oidc_bind');
@@ -365,9 +366,7 @@ function OIDCBindConfirmContent() {
                   {bindInfo.name || bindInfo.email}
                 </div>
                 <div className="flex items-center gap-1.5 text-sm text-[rgb(var(--text-tertiary))]">
-                  {bindInfo.provider_icon && (
-                    <img src={bindInfo.provider_icon} alt="" className="w-4 h-4" />
-                  )}
+                  <ProviderIcon icon={bindInfo.provider_icon} name={bindInfo.provider_name} size={16} />
                   {bindInfo.provider_name}
                 </div>
               </div>
