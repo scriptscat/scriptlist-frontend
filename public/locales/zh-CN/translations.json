@@ -1739,6 +1739,7 @@
       "delete_failed": "删除失败"
     },
     "profile": {
+      "account_deactivated": "该账号已注销",
       "achievement_badges": "成就徽章",
       "administrator": "管理员",
       "edit_profile": "编辑个人信息",

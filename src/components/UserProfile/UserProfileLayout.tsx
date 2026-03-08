@@ -73,6 +73,9 @@ export default function UserProfileLayout({
   // 直接使用传入的用户详细数据
   const currentUserData = user;
 
+  // 判断是否已注销
+  const isDeactivated = currentUserData.status === 4;
+
   const tabItems = [
     {
       key: 'scripts',
@@ -174,219 +177,234 @@ export default function UserProfileLayout({
             <div className="text-center mb-6">
               <Avatar
                 size={100}
-                src={currentUserData.avatar}
+                src={isDeactivated ? undefined : currentUserData.avatar}
                 icon={<UserOutlined />}
                 className="shadow-lg border-4 border-white mb-4"
               />
 
               <div className="flex items-center justify-center gap-2 mb-3">
                 <Title level={3} className="!mb-0">
-                  <Link
-                    href={
-                      'https://bbs.tampermonkey.net.cn/?' +
-                      currentUserData.user_id
-                    }
-                    target="_blank"
-                  >
-                    {currentUserData.username}
-                  </Link>
-                </Title>
-              </div>
-              {/* 用户描述 */}
-              {currentUserData.description && (
-                <>
-                  <Paragraph className="text-gray-600 dark:text-gray-300 text-sm mb-0">
-                    {currentUserData.description}
-                  </Paragraph>
-                </>
-              )}
-
-              <div className="flex justify-center gap-2 mb-4">
-                {currentUserData.is_admin === 1 && (
-                  <Tag color="gold" icon={<CrownOutlined />}>
-                    {t('administrator')}
-                  </Tag>
-                )}
-              </div>
-
-              {/* 操作按钮 */}
-              <Space direction="vertical" size="middle" className="w-full mb-6">
-                {isCurrentUser ? (
-                  <Button
-                    type="primary"
-                    icon={<EditOutlined />}
-                    onClick={handleEditProfile}
-                    size="large"
-                    block
-                  >
-                    {t('edit_profile')}
-                  </Button>
-                ) : (
-                  <Button
-                    type={isFollowing ? 'default' : 'primary'}
-                    icon={
-                      isFollowing ? <CheckCircleOutlined /> : <PlusOutlined />
-                    }
-                    onClick={handleFollow}
-                    loading={followLoading}
-                    size="large"
-                    block
-                  >
-                    {isFollowing ? t('followed') : t('follow')}
-                  </Button>
-                )}
-                {!isCurrentUser && (
-                  <Space.Compact className="w-full">
-                    <Button
-                      icon={<MessageOutlined />}
-                      onClick={handleMessage}
-                      className="flex-1"
-                      href={`https://bbs.tampermonkey.net.cn/home.php?mod=space&do=pm&subop=view&touid=${user.user_id}#last`}
+                  {isDeactivated ? (
+                    <Text type="secondary">{currentUserData.username}</Text>
+                  ) : (
+                    <Link
+                      href={
+                        'https://bbs.tampermonkey.net.cn/?' +
+                        currentUserData.user_id
+                      }
                       target="_blank"
                     >
-                      {t('private_message')}
-                    </Button>
-                    <Button icon={<ShareAltOutlined />} onClick={handleShare} />
-                    <Dropdown
-                      menu={{ items: moreMenuItems }}
-                      placement="bottomRight"
-                    >
-                      <Button icon={<MoreOutlined />} />
-                    </Dropdown>
-                  </Space.Compact>
-                )}
-              </Space>
-            </div>
-
-            <Divider />
-
-            {/* 用户详细信息 */}
-            <Descriptions
-              column={1}
-              size="small"
-              className="mb-6"
-              items={
-                [
-                  {
-                    key: 'join_time',
-                    label: (
-                      <Text type="secondary">
-                        <CalendarOutlined className="mr-1" />
-                        {t('join_time')}
-                      </Text>
-                    ),
-                    children: semDateTime(currentUserData.join_time),
-                  },
-                  ...(currentUserData.last_active
-                    ? [
-                        {
-                          key: 'last_active',
-                          label: (
-                            <Text type="secondary">
-                              <ClockCircleOutlined className="mr-1" />
-                              {t('last_active')}
-                            </Text>
-                          ),
-                          children: semDateTime(currentUserData.last_active),
-                        },
-                      ]
-                    : []),
-                  ...(currentUserData.email
-                    ? [
-                        {
-                          key: 'email',
-                          label: (
-                            <Text type="secondary">
-                              <MailOutlined className="mr-1" />
-                              {t('email')}
-                            </Text>
-                          ),
-                          children: currentUserData.email,
-                        },
-                      ]
-                    : []),
-                  ...(currentUserData.location
-                    ? [
-                        {
-                          key: 'location',
-                          label: (
-                            <Text type="secondary">
-                              <EnvironmentOutlined className="mr-1" />
-                              {t('location')}
-                            </Text>
-                          ),
-                          children: currentUserData.location,
-                        },
-                      ]
-                    : []),
-                  ...(currentUserData.website
-                    ? [
-                        {
-                          key: 'website',
-                          label: (
-                            <Text type="secondary">
-                              <LinkOutlined className="mr-1" />
-                              {t('personal_website')}
-                            </Text>
-                          ),
-                          children: (
-                            <a
-                              href={currentUserData.website}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {currentUserData.website}
-                            </a>
-                          ),
-                        },
-                      ]
-                    : []),
-                  {
-                    key: 'followers',
-                    label: (
-                      <Text type="secondary">
-                        <TeamOutlined className="mr-1" />
-                        {t('follow_section')}
-                      </Text>
-                    ),
-                    children: t('followers_following', {
-                      followers: currentUserData.followers,
-                      following: currentUserData.following,
-                    }),
-                  },
-                ] satisfies DescriptionsProps['items']
-              }
-            />
-
-            {/* 成就徽章 */}
-            <Divider />
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <TrophyOutlined className="text-yellow-500" />
-                <Text strong>{t('achievement_badges')}</Text>
-                <Badge count={currentUserData.badge.length} color="#faad14" />
+                      {currentUserData.username}
+                    </Link>
+                  )}
+                </Title>
               </div>
 
-              <div className="flex flex-wrap gap-1">
-                {currentUserData.badge.slice(0, 6).map((badge, index) => (
-                  <Tooltip
-                    key={index}
-                    title={badge.description}
-                    placement="top"
-                  >
-                    <Tag color="blue" className="mb-1 cursor-help text-xs">
-                      {'🏆'} {badge.name}
-                    </Tag>
-                  </Tooltip>
-                ))}
-                {currentUserData.badge.length > 6 && (
-                  <Tag className="mb-1 text-xs">
-                    {'+'}
-                    {currentUserData.badge.length - 6}
-                  </Tag>
-                )}
-              </div>
+              {isDeactivated ? (
+                <Tag color="default" className="mb-4">
+                  {t('account_deactivated')}
+                </Tag>
+              ) : (
+                <>
+                  {/* 用户描述 */}
+                  {currentUserData.description && (
+                    <Paragraph className="text-gray-600 dark:text-gray-300 text-sm mb-0">
+                      {currentUserData.description}
+                    </Paragraph>
+                  )}
+
+                  <div className="flex justify-center gap-2 mb-4">
+                    {currentUserData.is_admin === 1 && (
+                      <Tag color="gold" icon={<CrownOutlined />}>
+                        {t('administrator')}
+                      </Tag>
+                    )}
+                  </div>
+
+                  {/* 操作按钮 */}
+                  <Space direction="vertical" size="middle" className="w-full mb-6">
+                    {isCurrentUser ? (
+                      <Button
+                        type="primary"
+                        icon={<EditOutlined />}
+                        onClick={handleEditProfile}
+                        size="large"
+                        block
+                      >
+                        {t('edit_profile')}
+                      </Button>
+                    ) : (
+                      <Button
+                        type={isFollowing ? 'default' : 'primary'}
+                        icon={
+                          isFollowing ? <CheckCircleOutlined /> : <PlusOutlined />
+                        }
+                        onClick={handleFollow}
+                        loading={followLoading}
+                        size="large"
+                        block
+                      >
+                        {isFollowing ? t('followed') : t('follow')}
+                      </Button>
+                    )}
+                    {!isCurrentUser && (
+                      <Space.Compact className="w-full">
+                        <Button
+                          icon={<MessageOutlined />}
+                          onClick={handleMessage}
+                          className="flex-1"
+                          href={`https://bbs.tampermonkey.net.cn/home.php?mod=space&do=pm&subop=view&touid=${user.user_id}#last`}
+                          target="_blank"
+                        >
+                          {t('private_message')}
+                        </Button>
+                        <Button icon={<ShareAltOutlined />} onClick={handleShare} />
+                        <Dropdown
+                          menu={{ items: moreMenuItems }}
+                          placement="bottomRight"
+                        >
+                          <Button icon={<MoreOutlined />} />
+                        </Dropdown>
+                      </Space.Compact>
+                    )}
+                  </Space>
+                </>
+              )}
             </div>
+
+            {!isDeactivated && (
+              <>
+                <Divider />
+
+                {/* 用户详细信息 */}
+                <Descriptions
+                  column={1}
+                  size="small"
+                  className="mb-6"
+                  items={
+                    [
+                      {
+                        key: 'join_time',
+                        label: (
+                          <Text type="secondary">
+                            <CalendarOutlined className="mr-1" />
+                            {t('join_time')}
+                          </Text>
+                        ),
+                        children: semDateTime(currentUserData.join_time),
+                      },
+                      ...(currentUserData.last_active
+                        ? [
+                            {
+                              key: 'last_active',
+                              label: (
+                                <Text type="secondary">
+                                  <ClockCircleOutlined className="mr-1" />
+                                  {t('last_active')}
+                                </Text>
+                              ),
+                              children: semDateTime(currentUserData.last_active),
+                            },
+                          ]
+                        : []),
+                      ...(currentUserData.email
+                        ? [
+                            {
+                              key: 'email',
+                              label: (
+                                <Text type="secondary">
+                                  <MailOutlined className="mr-1" />
+                                  {t('email')}
+                                </Text>
+                              ),
+                              children: currentUserData.email,
+                            },
+                          ]
+                        : []),
+                      ...(currentUserData.location
+                        ? [
+                            {
+                              key: 'location',
+                              label: (
+                                <Text type="secondary">
+                                  <EnvironmentOutlined className="mr-1" />
+                                  {t('location')}
+                                </Text>
+                              ),
+                              children: currentUserData.location,
+                            },
+                          ]
+                        : []),
+                      ...(currentUserData.website
+                        ? [
+                            {
+                              key: 'website',
+                              label: (
+                                <Text type="secondary">
+                                  <LinkOutlined className="mr-1" />
+                                  {t('personal_website')}
+                                </Text>
+                              ),
+                              children: (
+                                <a
+                                  href={currentUserData.website}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {currentUserData.website}
+                                </a>
+                              ),
+                            },
+                          ]
+                        : []),
+                      {
+                        key: 'followers',
+                        label: (
+                          <Text type="secondary">
+                            <TeamOutlined className="mr-1" />
+                            {t('follow_section')}
+                          </Text>
+                        ),
+                        children: t('followers_following', {
+                          followers: currentUserData.followers,
+                          following: currentUserData.following,
+                        }),
+                      },
+                    ] satisfies DescriptionsProps['items']
+                  }
+                />
+
+                {/* 成就徽章 */}
+                <Divider />
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <TrophyOutlined className="text-yellow-500" />
+                    <Text strong>{t('achievement_badges')}</Text>
+                    <Badge count={currentUserData.badge.length} color="#faad14" />
+                  </div>
+
+                  <div className="flex flex-wrap gap-1">
+                    {currentUserData.badge.slice(0, 6).map((badge, index) => (
+                      <Tooltip
+                        key={index}
+                        title={badge.description}
+                        placement="top"
+                      >
+                        <Tag color="blue" className="mb-1 cursor-help text-xs">
+                          {'🏆'} {badge.name}
+                        </Tag>
+                      </Tooltip>
+                    ))}
+                    {currentUserData.badge.length > 6 && (
+                      <Tag className="mb-1 text-xs">
+                        {'+'}
+                        {currentUserData.badge.length - 6}
+                      </Tag>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
           </Card>
         </Col>
 
