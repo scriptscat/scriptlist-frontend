@@ -1770,6 +1770,8 @@
       "type_script": "Scripts"
     },
     "settings": {
+      "account_settings": "Account Management",
+      "account_settings_description": "Manage passwords, passkeys, third-party bindings and account security settings",
       "notification_settings": "Notification Settings",
       "oauth_bind_settings": "OIDC Binding",
       "password_settings": "Change Password",

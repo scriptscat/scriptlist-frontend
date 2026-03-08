@@ -15,7 +15,10 @@ import { Turnstile } from '@marsidev/react-turnstile';
 import type { TurnstileInstance } from '@marsidev/react-turnstile';
 import { authService } from '@/lib/api/services/auth';
 import { webauthnService } from '@/lib/api/services/webauthn';
-import { startAuthentication } from '@simplewebauthn/browser';
+import {
+  browserSupportsWebAuthn,
+  startAuthentication,
+} from '@simplewebauthn/browser';
 import type { OIDCProviderInfo } from '@/lib/api/services/oidc';
 import { APIError } from '@/types/api';
 import { Link } from '@/i18n/routing';
@@ -60,6 +63,11 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
   const [showWebAuthnStep, setShowWebAuthnStep] = useState(false);
   const [webAuthnLoading, setWebAuthnLoading] = useState(false);
   const [passlessLoading, setPasslessLoading] = useState(false);
+  const [webAuthnSupported, setWebAuthnSupported] = useState(false);
+
+  useEffect(() => {
+    setWebAuthnSupported(browserSupportsWebAuthn());
+  }, []);
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -106,7 +114,7 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
     try {
       const beginResp = await webauthnService.loginBegin(sessionToken);
       const assertionResp = await startAuthentication({
-        optionsJSON: beginResp.options,
+        optionsJSON: beginResp.options.publicKey,
       });
       await webauthnService.loginFinish(
         sessionToken,
@@ -129,7 +137,7 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
     try {
       const beginResp = await webauthnService.passlessBegin();
       const assertionResp = await startAuthentication({
-        optionsJSON: beginResp.options,
+        optionsJSON: beginResp.options.publicKey,
       });
       await webauthnService.passlessFinish(
         beginResp.challenge_id,
@@ -533,16 +541,18 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
               </span>
             </Divider>
             <div className="flex flex-col gap-2.5">
-              <button
-                onClick={handlePasskeyLogin}
-                disabled={passlessLoading}
-                className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <KeyOutlined className="text-base" />
-                {passlessLoading
-                  ? t('passkey_login_loading')
-                  : t('passkey_login')}
-              </button>
+              {webAuthnSupported && (
+                <button
+                  onClick={handlePasskeyLogin}
+                  disabled={passlessLoading}
+                  className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <KeyOutlined className="text-base" />
+                  {passlessLoading
+                    ? t('passkey_login_loading')
+                    : t('passkey_login')}
+                </button>
+              )}
               {oidcProviders.map((provider) => (
                 <button
                   key={provider.id}

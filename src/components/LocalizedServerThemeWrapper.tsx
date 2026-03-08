@@ -10,6 +10,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { pickMessages } from '@/i18n/pickMessages';
 import { userService, systemService } from '@/lib/api';
+import type { GlobalConfig } from '@/lib/api/services/system';
 import { GlobalConfigProvider } from '@/contexts/GlobalConfigContext';
 import GoogleAdScript from './GoogleAd/script';
 import Script from 'next/script';
@@ -47,7 +48,7 @@ export async function LocalizedServerThemeWrapper({
     getThemeFromServerCookies(),
     getMessages(),
     userService.getCurrentUser(),
-    systemService.getGlobalConfig().catch(() => ({ turnstile_site_key: '' })),
+    systemService.getGlobalConfig().catch((): GlobalConfig => ({ turnstile_site_key: '', qq_migrate_enabled: false })),
   ]);
 
   return (

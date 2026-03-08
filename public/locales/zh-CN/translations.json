@@ -1774,6 +1774,8 @@
       "type_script": "脚本"
     },
     "settings": {
+      "account_settings": "账号管理",
+      "account_settings_description": "管理密码、通行密钥、第三方绑定等账号安全设置",
       "notification_settings": "通知设置",
       "oauth_bind_settings": "OIDC 绑定",
       "password_settings": "修改密码",

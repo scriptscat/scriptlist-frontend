@@ -12,7 +12,9 @@ export interface OIDCProvidersResponse {
 }
 
 export interface OIDCBindInfoResponse {
+  provider_id: number;
   provider_name: string;
+  provider_icon: string;
   email: string;
   name: string;
   picture: string;

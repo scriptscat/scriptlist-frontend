@@ -24,11 +24,13 @@ const { Paragraph } = Typography;
 interface DeactivationSettingsProps {
   userStatus?: number;
   deactivateAt?: number;
+  embedded?: boolean;
 }
 
 export default function DeactivationSettings({
   userStatus,
   deactivateAt,
+  embedded,
 }: DeactivationSettingsProps) {
   const t = useTranslations('user.deactivate');
   const { sendCode, loading: sendLoading } = useSendDeactivateCode();
@@ -93,20 +95,21 @@ export default function DeactivationSettings({
   if (isDeactivating) {
     return (
       <div className="flex flex-col gap-5">
-        {/* Section Intro */}
-        <div className="flex items-start gap-4 rounded-xl border border-red-200 bg-red-50 px-6 py-5 dark:border-red-900 dark:bg-red-950/50">
-          <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-red-500/10 text-xl text-red-500">
-            <StopOutlined />
+        {!embedded && (
+          <div className="flex items-start gap-4 rounded-xl border border-red-200 bg-red-50 px-6 py-5 dark:border-red-900 dark:bg-red-950/50">
+            <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-red-500/10 text-xl text-red-500">
+              <StopOutlined />
+            </div>
+            <div>
+              <h3 className="m-0 mb-1 text-base font-semibold text-red-600 dark:text-red-400">
+                {t('cooling_title')}
+              </h3>
+              <Paragraph className="!mb-0 text-red-600 dark:text-red-400">
+                {t('cooling_description', { effectiveDate })}
+              </Paragraph>
+            </div>
           </div>
-          <div>
-            <h3 className="m-0 mb-1 text-base font-semibold text-red-600 dark:text-red-400">
-              {t('cooling_title')}
-            </h3>
-            <Paragraph className="!mb-0 text-red-600 dark:text-red-400">
-              {t('cooling_description', { effectiveDate })}
-            </Paragraph>
-          </div>
-        </div>
+        )}
 
         <Card bordered>
           <div className="flex flex-col gap-4">
@@ -147,18 +150,19 @@ export default function DeactivationSettings({
   // 正常状态 - 显示注销表单
   return (
     <div className="flex flex-col gap-5">
-      {/* Section Intro */}
-      <div className="flex items-start gap-4 rounded-xl border border-red-200 bg-red-50 px-6 py-5 dark:border-red-900 dark:bg-red-950/50">
-        <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-red-500/10 text-xl text-red-500">
-          <StopOutlined />
+      {!embedded && (
+        <div className="flex items-start gap-4 rounded-xl border border-red-200 bg-red-50 px-6 py-5 dark:border-red-900 dark:bg-red-950/50">
+          <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-red-500/10 text-xl text-red-500">
+            <StopOutlined />
+          </div>
+          <div>
+            <h3 className="m-0 mb-1 text-base font-semibold">{t('title')}</h3>
+            <Paragraph className="!mb-0" type="secondary">
+              {t('description')}
+            </Paragraph>
+          </div>
         </div>
-        <div>
-          <h3 className="m-0 mb-1 text-base font-semibold">{t('title')}</h3>
-          <Paragraph className="!mb-0" type="secondary">
-            {t('description')}
-          </Paragraph>
-        </div>
-      </div>
+      )}
 
       <Card bordered>
         <Alert type="error" showIcon message={t('warning')} className="mb-6" />

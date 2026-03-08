@@ -24,7 +24,11 @@ import { APIError } from '@/types/api';
 
 const { Paragraph } = Typography;
 
-export default function PasskeySettings() {
+interface PasskeySettingsProps {
+  embedded?: boolean;
+}
+
+export default function PasskeySettings({ embedded }: PasskeySettingsProps) {
   const t = useTranslations('user.passkey');
 
   const [credentials, setCredentials] = useState<WebAuthnCredentialItem[]>([]);
@@ -62,7 +66,7 @@ export default function PasskeySettings() {
 
       // Step 2: Use browser WebAuthn API
       const attResp = await startRegistration({
-        optionsJSON: beginResp.options,
+        optionsJSON: beginResp.options.publicKey,
       });
 
       // Step 3: Send result to server with a default name
@@ -167,31 +171,45 @@ export default function PasskeySettings() {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Section Intro */}
-      <div className="flex items-start gap-4 rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-5 dark:border-neutral-700 dark:bg-neutral-800/50">
-        <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-cyan-500/10 text-xl text-cyan-500">
-          <KeyOutlined />
-        </div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="m-0 mb-1 text-base font-semibold">{t('title')}</h3>
-            <Button
-              type="primary"
-              size="small"
-              icon={<PlusOutlined />}
-              loading={registering}
-              onClick={handleAdd}
-            >
-              {t('add')}
-            </Button>
+      {!embedded ? (
+        <div className="flex items-start gap-4 rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-5 dark:border-neutral-700 dark:bg-neutral-800/50">
+          <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-cyan-500/10 text-xl text-cyan-500">
+            <KeyOutlined />
           </div>
-          <Paragraph className="!mb-0" type="secondary">
-            {t('description')}
-          </Paragraph>
+          <div className="flex-1">
+            <div className="flex items-center justify-between gap-3">
+              <h3 className="m-0 mb-1 text-base font-semibold">
+                {t('title')}
+              </h3>
+              <Button
+                type="primary"
+                size="small"
+                icon={<PlusOutlined />}
+                loading={registering}
+                onClick={handleAdd}
+              >
+                {t('add')}
+              </Button>
+            </div>
+            <Paragraph className="!mb-0" type="secondary">
+              {t('description')}
+            </Paragraph>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex justify-end">
+          <Button
+            type="primary"
+            size="small"
+            icon={<PlusOutlined />}
+            loading={registering}
+            onClick={handleAdd}
+          >
+            {t('add')}
+          </Button>
+        </div>
+      )}
 
-      {/* Credentials Table */}
       <Card bordered>
         <Table
           columns={columns}

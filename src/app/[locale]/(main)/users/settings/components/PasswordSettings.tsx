@@ -9,7 +9,11 @@ import PasswordFormItems from '@/components/PasswordFormItems';
 
 const { Paragraph } = Typography;
 
-export default function PasswordSettings() {
+interface PasswordSettingsProps {
+  embedded?: boolean;
+}
+
+export default function PasswordSettings({ embedded }: PasswordSettingsProps) {
   const t = useTranslations('user.password');
   const { changePassword, loading } = useChangePassword();
   const [form] = Form.useForm();
@@ -34,20 +38,20 @@ export default function PasswordSettings() {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Section Intro */}
-      <div className="flex items-start gap-4 rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-5 dark:border-neutral-700 dark:bg-neutral-800/50">
-        <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-emerald-500/10 text-xl text-emerald-500">
-          <LockOutlined />
+      {!embedded && (
+        <div className="flex items-start gap-4 rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-5 dark:border-neutral-700 dark:bg-neutral-800/50">
+          <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] bg-emerald-500/10 text-xl text-emerald-500">
+            <LockOutlined />
+          </div>
+          <div>
+            <h3 className="m-0 mb-1 text-base font-semibold">{t('title')}</h3>
+            <Paragraph className="!mb-0" type="secondary">
+              {t('description')}
+            </Paragraph>
+          </div>
         </div>
-        <div>
-          <h3 className="m-0 mb-1 text-base font-semibold">{t('title')}</h3>
-          <Paragraph className="!mb-0" type="secondary">
-            {t('description')}
-          </Paragraph>
-        </div>
-      </div>
+      )}
 
-      {/* Password Form */}
       <Card bordered>
         <Form
           form={form}

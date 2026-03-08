@@ -35,7 +35,10 @@ function OIDCBindConfirmContent() {
   const tLogin = useTranslations('login');
   const { turnstile_site_key: turnstileSiteKey } = useGlobalConfig();
   const searchParams = useSearchParams();
-  const bindToken = searchParams.get('bind_token') || '';
+
+  // 用 useRef 缓存 bindToken，防止 replaceState 清除 URL 后 useSearchParams 重新渲染导致丢失
+  const bindTokenRef = useRef(searchParams.get('bind_token') || '');
+  const bindToken = bindTokenRef.current;
 
   const [bindInfo, setBindInfo] = useState<OIDCBindInfoResponse | null>(null);
   const [loadingInfo, setLoadingInfo] = useState(true);
@@ -361,7 +364,10 @@ function OIDCBindConfirmContent() {
                 <div className="font-medium text-[rgb(var(--text-primary))]">
                   {bindInfo.name || bindInfo.email}
                 </div>
-                <div className="text-sm text-[rgb(var(--text-tertiary))]">
+                <div className="flex items-center gap-1.5 text-sm text-[rgb(var(--text-tertiary))]">
+                  {bindInfo.provider_icon && (
+                    <img src={bindInfo.provider_icon} alt="" className="w-4 h-4" />
+                  )}
                   {bindInfo.provider_name}
                 </div>
               </div>

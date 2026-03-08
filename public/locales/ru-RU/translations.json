@@ -1741,7 +1741,9 @@
       "user_settings": "Настройки пользователя",
       "webhook_settings": "Настройки Webhook",
       "deactivate_settings": "Удалить аккаунт",
-      "passkey_settings": "Passkeys"
+      "passkey_settings": "Passkeys",
+      "account_settings": "Управление аккаунтом",
+      "account_settings_description": "Управление паролями, ключами доступа, привязками сторонних сервисов и настройками безопасности аккаунта"
     },
     "update_failed": "Обновление не удалось, попробуйте ещё раз",
     "update_success": "Информация пользователя успешно обновлена!",

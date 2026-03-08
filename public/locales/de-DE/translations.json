@@ -1741,7 +1741,9 @@
       "user_settings": "Benutzereinstellungen",
       "webhook_settings": "Webhook-Einstellungen",
       "deactivate_settings": "Konto löschen",
-      "passkey_settings": "Passkeys"
+      "passkey_settings": "Passkeys",
+      "account_settings": "Kontoverwaltung",
+      "account_settings_description": "Passwörter, Passkeys, Drittanbieter-Verknüpfungen und Kontosicherheitseinstellungen verwalten"
     },
     "update_failed": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es erneut",
     "update_success": "Benutzerinformationen erfolgreich aktualisiert!",

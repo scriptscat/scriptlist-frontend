@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, List, Avatar, Tag, Typography, Space } from 'antd';
+import { Card, Avatar, Tag, Typography, Space } from 'antd';
 import { Link } from '@/i18n/routing';
 import { ScriptUtils } from '@/app/[locale]/(main)/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
@@ -34,9 +34,8 @@ export default function ScriptListCard({
       className={`border-0 shadow-sm rounded-xl bg-white dark:bg-gray-800 ${className}`}
       bodyStyle={{ padding: '8px 12px' }}
     >
-      <List
-        dataSource={data}
-        renderItem={(item, index) => {
+      <div>
+        {data.map((item, index) => {
           const scriptIcon = item.script?.meta_json
             ? ScriptUtils.icon(item.script.meta_json)
             : null;
@@ -45,8 +44,9 @@ export default function ScriptListCard({
 
           return (
             <Link
+              key={itemId}
               href={`/script-show-page/${itemId}`}
-              className="ant-list-item overflow-hidden !px-0 !py-2 hover:!bg-gray-50 dark:hover:!bg-gray-700/50 cursor-pointer transition-all duration-200"
+              className="flex overflow-hidden px-0 py-2 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-all duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
               target="_blank"
             >
               <div className="flex items-center gap-3 w-full px-2">
@@ -73,8 +73,8 @@ export default function ScriptListCard({
               </div>
             </Link>
           );
-        }}
-      />
+        })}
+      </div>
     </Card>
   );
 }

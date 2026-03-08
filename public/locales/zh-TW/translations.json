@@ -1741,7 +1741,9 @@
       "user_settings": "使用者設定",
       "webhook_settings": "Webhook 設定",
       "deactivate_settings": "註銷帳號",
-      "passkey_settings": "Passkeys"
+      "passkey_settings": "Passkeys",
+      "account_settings": "帳號管理",
+      "account_settings_description": "管理密碼、通行金鑰、第三方綁定等帳號安全設定"
     },
     "update_failed": "更新失敗，請重試",
     "update_success": "使用者資訊更新成功！",

@@ -4,20 +4,14 @@ import { useState } from 'react';
 import {
   ApiOutlined,
   BellOutlined,
-  KeyOutlined,
-  LinkOutlined,
-  LockOutlined,
   SettingOutlined,
-  StopOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { Card, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
 import WebhookSettings from './WebhookSettings';
 import NotificationSettings from './NotificationSettings';
-import OAuthBindSettings from './OAuthBindSettings';
-import PasswordSettings from './PasswordSettings';
-import DeactivationSettings from './DeactivationSettings';
-import PasskeySettings from './PasskeySettings';
+import AccountSettings from './AccountSettings';
 
 const { Text } = Typography;
 
@@ -46,32 +40,11 @@ const NAV_ITEMS = [
     indicatorCls: 'bg-amber-500',
   },
   {
-    key: 'password',
-    icon: LockOutlined,
-    activeIconCls: 'text-emerald-500',
-    activeIconBgCls: 'bg-emerald-500/10',
-    indicatorCls: 'bg-emerald-500',
-  },
-  {
-    key: 'passkey',
-    icon: KeyOutlined,
-    activeIconCls: 'text-cyan-500',
-    activeIconBgCls: 'bg-cyan-500/10',
-    indicatorCls: 'bg-cyan-500',
-  },
-  {
-    key: 'oauth_bind',
-    icon: LinkOutlined,
-    activeIconCls: 'text-violet-500',
-    activeIconBgCls: 'bg-violet-500/10',
-    indicatorCls: 'bg-violet-500',
-  },
-  {
-    key: 'deactivate',
-    icon: StopOutlined,
-    activeIconCls: 'text-red-500',
-    activeIconBgCls: 'bg-red-500/10',
-    indicatorCls: 'bg-red-500',
+    key: 'account',
+    icon: UserOutlined,
+    activeIconCls: 'text-purple-500',
+    activeIconBgCls: 'bg-purple-500/10',
+    indicatorCls: 'bg-purple-500',
   },
 ] as const;
 
@@ -89,10 +62,7 @@ export default function SettingsClient({
   const labelMap: Record<SettingsKey, string> = {
     webhook: t('webhook_settings'),
     notification: t('notification_settings'),
-    password: t('password_settings'),
-    passkey: t('passkey_settings'),
-    oauth_bind: t('oauth_bind_settings'),
-    deactivate: t('deactivate_settings'),
+    account: t('account_settings'),
   };
 
   const renderContent = () => {
@@ -103,15 +73,9 @@ export default function SettingsClient({
         return (
           <NotificationSettings initialConfig={initialNotificationConfig} />
         );
-      case 'password':
-        return <PasswordSettings />;
-      case 'passkey':
-        return <PasskeySettings />;
-      case 'oauth_bind':
-        return <OAuthBindSettings />;
-      case 'deactivate':
+      case 'account':
         return (
-          <DeactivationSettings
+          <AccountSettings
             userStatus={userStatus}
             deactivateAt={deactivateAt}
           />

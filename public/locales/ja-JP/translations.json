@@ -1741,7 +1741,9 @@
       "user_settings": "ユーザー設定",
       "webhook_settings": "Webhook設定",
       "deactivate_settings": "アカウント削除",
-      "passkey_settings": "Passkeys"
+      "passkey_settings": "Passkeys",
+      "account_settings": "アカウント管理",
+      "account_settings_description": "パスワード、パスキー、サードパーティ連携などのアカウントセキュリティ設定を管理"
     },
     "update_failed": "更新に失敗しました。再試行してください",
     "update_success": "ユーザー情報の更新が完了しました！",

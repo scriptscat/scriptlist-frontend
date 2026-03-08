@@ -1741,7 +1741,9 @@
       "user_settings": "User Settings",
       "webhook_settings": "Webhook Settings",
       "deactivate_settings": "Xóa tài khoản",
-      "passkey_settings": "Passkeys"
+      "passkey_settings": "Passkeys",
+      "account_settings": "Quản lý tài khoản",
+      "account_settings_description": "Quản lý mật khẩu, passkey, liên kết bên thứ ba và cài đặt bảo mật tài khoản"
     },
     "update_failed": "Update failed, please try again",
     "update_success": "User information updated successfully!",
