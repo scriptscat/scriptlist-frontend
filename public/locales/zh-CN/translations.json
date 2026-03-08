@@ -547,7 +547,13 @@
     "webauthn_verification_failed": "通行密钥验证失败，请重试",
     "passkey_login": "使用通行密钥登录",
     "passkey_login_loading": "验证中...",
-    "passkey_login_failed": "通行密钥登录失败，请重试"
+    "passkey_login_failed": "通行密钥登录失败，请重试",
+    "error_no_binding": "该第三方账号尚未绑定平台账号，请先注册或登录后在设置中绑定",
+    "error_rate_limited": "操作过于频繁，请稍后再试",
+    "error_qq_migrate_unavailable": "QQ 登录迁移服务暂不可用，请使用其他方式登录",
+    "error_invalid_params": "参数错误，请重试",
+    "error_qq_migrate_failed": "QQ 登录迁移失败，请稍后重试",
+    "error_unknown": "登录过程中出现错误，请重试"
   },
   "notifications": {
     "access": {

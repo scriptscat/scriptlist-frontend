@@ -543,7 +543,13 @@
     "webauthn_verification_failed": "Passkey verification failed, please try again",
     "passkey_login": "Sign in with Passkey",
     "passkey_login_loading": "Verifying...",
-    "passkey_login_failed": "Passkey login failed, please try again"
+    "passkey_login_failed": "Passkey login failed, please try again",
+    "error_no_binding": "This third-party account is not linked to any account. Please register or log in first, then link it in settings.",
+    "error_rate_limited": "Too many requests, please try again later",
+    "error_qq_migrate_unavailable": "QQ login migration service is currently unavailable, please use another login method",
+    "error_invalid_params": "Invalid parameters, please try again",
+    "error_qq_migrate_failed": "QQ login migration failed, please try again later",
+    "error_unknown": "An error occurred during login, please try again"
   },
   "notifications": {
     "access": {

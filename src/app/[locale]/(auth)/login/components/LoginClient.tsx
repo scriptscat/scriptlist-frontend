@@ -46,6 +46,17 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
     !redirectParam.startsWith('//')
       ? redirectParam
       : '/';
+  const errorParam = searchParams.get('error');
+
+  const errorMessageMap: Record<string, string> = {
+    no_binding: t('error_no_binding'),
+    rate_limited: t('error_rate_limited'),
+    qq_migrate_unavailable: t('error_qq_migrate_unavailable'),
+    invalid_params: t('error_invalid_params'),
+    qq_migrate_failed: t('error_qq_migrate_failed'),
+    login_failed: t('login_failed'),
+  };
+  const errorMessage = errorParam ? (errorMessageMap[errorParam] || t('error_unknown')) : null;
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [loginForm] = Form.useForm();
   const [registerForm] = Form.useForm();
@@ -257,6 +268,15 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
 
       {/* Card */}
       <div className="bg-[rgb(var(--bg-elevated))]/80 backdrop-blur-xl rounded-2xl border border-[rgb(var(--border-secondary))]/60 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+        {errorMessage && (
+          <Alert
+            type="error"
+            message={errorMessage}
+            showIcon
+            closable
+            className="!rounded-xl !mb-4"
+          />
+        )}
         {/* Tab switcher */}
         <div className="flex mb-6 bg-[rgb(var(--bg-tertiary))]/60 rounded-xl p-1 gap-1">
           <button

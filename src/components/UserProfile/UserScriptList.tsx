@@ -30,8 +30,8 @@ export default function UserScriptList({
 }: UserScriptListProps) {
   const locale = useLocale();
   const router = useRouter();
-  const t = useTranslations();
   const userT = useTranslations('user.script_list');
+  const typeT = useTranslations('script.types');
   const [isPending, startTransition] = useTransition();
 
   const [filters, setFilters] = useState<ScriptSearchRequest>(
@@ -126,9 +126,9 @@ export default function UserScriptList({
             >
               <Option value={0}>{userT('type_all')}</Option>
               <Option value={1}>{userT('type_script')}</Option>
-              <Option value={2}>{t('library')}</Option>
-              <Option value={3}>{t('background_script')}</Option>
-              <Option value={4}>{t('scheduled_script')}</Option>
+              <Option value={2}>{typeT('library')}</Option>
+              <Option value={3}>{typeT('background_script')}</Option>
+              <Option value={4}>{typeT('scheduled_script')}</Option>
             </Select>
 
             <Select

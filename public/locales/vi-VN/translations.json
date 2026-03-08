@@ -507,7 +507,13 @@
     "webauthn_verification_failed": "Passkey verification failed, please try again",
     "passkey_login": "Sign in with Passkey",
     "passkey_login_loading": "Verifying...",
-    "passkey_login_failed": "Passkey login failed, please try again"
+    "passkey_login_failed": "Đăng nhập bằng khóa truy cập thất bại, vui lòng thử lại",
+    "error_no_binding": "Tài khoản bên thứ ba này chưa được liên kết với tài khoản nền tảng. Vui lòng đăng ký hoặc đăng nhập trước, sau đó liên kết trong phần cài đặt",
+    "error_rate_limited": "Quá nhiều yêu cầu, vui lòng thử lại sau",
+    "error_qq_migrate_unavailable": "Dịch vụ di chuyển đăng nhập QQ hiện không khả dụng, vui lòng sử dụng phương thức đăng nhập khác",
+    "error_invalid_params": "Tham số không hợp lệ, vui lòng thử lại",
+    "error_qq_migrate_failed": "Di chuyển đăng nhập QQ thất bại, vui lòng thử lại sau",
+    "error_unknown": "Đã xảy ra lỗi trong quá trình đăng nhập, vui lòng thử lại"
   },
   "notifications": {
     "access": {

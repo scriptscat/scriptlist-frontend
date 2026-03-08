@@ -507,7 +507,13 @@
     "webauthn_verification_failed": "Passkey verification failed, please try again",
     "passkey_login": "Sign in with Passkey",
     "passkey_login_loading": "Verifying...",
-    "passkey_login_failed": "Passkey login failed, please try again"
+    "passkey_login_failed": "通行密鑰登入失敗，請重試",
+    "error_no_binding": "該第三方帳號尚未綁定平台帳號，請先註冊或登入後在設定中綁定",
+    "error_rate_limited": "操作過於頻繁，請稍後再試",
+    "error_qq_migrate_unavailable": "QQ 登入遷移服務暫時不可用，請使用其他方式登入",
+    "error_invalid_params": "參數錯誤，請重試",
+    "error_qq_migrate_failed": "QQ 登入遷移失敗，請稍後重試",
+    "error_unknown": "登入過程中出現錯誤，請重試"
   },
   "notifications": {
     "access": {

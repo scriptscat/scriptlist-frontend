@@ -507,7 +507,13 @@
     "webauthn_verification_failed": "Passkey verification failed, please try again",
     "passkey_login": "Sign in with Passkey",
     "passkey_login_loading": "Verifying...",
-    "passkey_login_failed": "Passkey login failed, please try again"
+    "passkey_login_failed": "Passkey-Anmeldung fehlgeschlagen, bitte versuchen Sie es erneut",
+    "error_no_binding": "Dieses Drittanbieter-Konto ist noch nicht mit einem Plattform-Konto verknüpft. Bitte registrieren Sie sich oder melden Sie sich an und verknüpfen Sie es in den Einstellungen",
+    "error_rate_limited": "Zu viele Anfragen, bitte versuchen Sie es später erneut",
+    "error_qq_migrate_unavailable": "Der QQ-Login-Migrationsdienst ist derzeit nicht verfügbar, bitte verwenden Sie eine andere Anmeldemethode",
+    "error_invalid_params": "Ungültige Parameter, bitte versuchen Sie es erneut",
+    "error_qq_migrate_failed": "QQ-Login-Migration fehlgeschlagen, bitte versuchen Sie es später erneut",
+    "error_unknown": "Beim Anmelden ist ein Fehler aufgetreten, bitte versuchen Sie es erneut"
   },
   "notifications": {
     "access": {

@@ -507,7 +507,13 @@
     "webauthn_verification_failed": "Passkey verification failed, please try again",
     "passkey_login": "Sign in with Passkey",
     "passkey_login_loading": "Verifying...",
-    "passkey_login_failed": "Passkey login failed, please try again"
+    "passkey_login_failed": "Ошибка входа с помощью ключа доступа, попробуйте ещё раз",
+    "error_no_binding": "Эта сторонняя учётная запись не привязана к аккаунту платформы. Сначала зарегистрируйтесь или войдите, затем привяжите её в настройках",
+    "error_rate_limited": "Слишком много запросов, попробуйте позже",
+    "error_qq_migrate_unavailable": "Служба миграции QQ-входа временно недоступна, используйте другой способ входа",
+    "error_invalid_params": "Неверные параметры, попробуйте ещё раз",
+    "error_qq_migrate_failed": "Миграция QQ-входа не удалась, попробуйте позже",
+    "error_unknown": "Произошла ошибка при входе, попробуйте ещё раз"
   },
   "notifications": {
     "access": {
