@@ -217,7 +217,12 @@
       "ucenter_api": "API URL",
       "ucenter_appid": "App ID",
       "ucenter_key": "Communication Key",
-      "ucenter_title": "UCenter Configuration"
+      "ucenter_title": "UCenter Configuration",
+      "migrate_avatar_title": "Avatar Migration",
+      "migrate_avatar_button": "Start Migration",
+      "migrate_avatar_confirm": "Are you sure you want to start avatar migration? This will download user avatars from UCenter and save them locally.",
+      "migrate_avatar_started": "Avatar migration started",
+      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}"
     },
     "users": {
       "action_admin_level": "Change Level",

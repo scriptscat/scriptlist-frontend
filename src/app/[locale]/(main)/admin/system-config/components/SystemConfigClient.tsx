@@ -1,10 +1,22 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Form, Input, message, Spin } from 'antd';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  message,
+  Popconfirm,
+  Progress,
+  Spin,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
-import type { SystemConfigItem } from '@/lib/api/services/admin';
+import type {
+  MigrateAvatarStatus,
+  SystemConfigItem,
+} from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
 
 export default function SystemConfigClient() {
@@ -12,6 +24,12 @@ export default function SystemConfigClient() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [configs, setConfigs] = useState<Record<string, string>>({});
+
+  // Migrate avatar state
+  const [migrateStarting, setMigrateStarting] = useState(false);
+  const [migrateStatus, setMigrateStatus] =
+    useState<MigrateAvatarStatus | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchConfigs = useCallback(async (isInitial = false) => {
     if (isInitial) setInitialLoading(true);
@@ -31,9 +49,49 @@ export default function SystemConfigClient() {
     }
   }, []);
 
+  const fetchMigrateStatus = useCallback(async () => {
+    try {
+      const status = await adminService.getMigrateAvatarStatus();
+      setMigrateStatus(status);
+      if (!status.running && pollRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+    } catch {
+      // ignore polling errors
+    }
+  }, []);
+
   useEffect(() => {
     fetchConfigs(true);
+    fetchMigrateStatus();
+    return () => {
+      if (pollRef.current) {
+        clearInterval(pollRef.current);
+      }
+    };
   }, []);
+
+  const startPolling = useCallback(() => {
+    if (pollRef.current) return;
+    pollRef.current = setInterval(fetchMigrateStatus, 2000);
+  }, [fetchMigrateStatus]);
+
+  const handleMigrateAvatar = async () => {
+    setMigrateStarting(true);
+    try {
+      await adminService.migrateAvatar();
+      message.success(t('migrate_avatar_started'));
+      await fetchMigrateStatus();
+      startPolling();
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      }
+    } finally {
+      setMigrateStarting(false);
+    }
+  };
 
   const handleSave = async (group: string, keys: string[]) => {
     setSaving(group);
@@ -72,6 +130,15 @@ export default function SystemConfigClient() {
   ];
   const ucenterKeys = ['ucenter.api', 'ucenter.key', 'ucenter.appid'];
   const aiKeys = ['ai.base_url', 'ai.api_key', 'ai.model', 'ai.system_prompt'];
+
+  const migrateRunning = migrateStatus?.running ?? false;
+  const migrateTotal = migrateStatus?.total ?? 0;
+  const migrateProcessed =
+    (migrateStatus?.migrated ?? 0) +
+    (migrateStatus?.skipped ?? 0) +
+    (migrateStatus?.failed ?? 0);
+  const migratePercent =
+    migrateTotal > 0 ? Math.round((migrateProcessed / migrateTotal) * 100) : 0;
 
   return (
     <div>
@@ -136,6 +203,55 @@ export default function SystemConfigClient() {
               {t('save_button')}
             </Button>
           </Form>
+        </Card>
+
+        {/* Migrate Avatar */}
+        <Card title={t('migrate_avatar_title')} size="small">
+          <div className="space-y-4">
+            <Popconfirm
+              title={t('migrate_avatar_confirm')}
+              onConfirm={handleMigrateAvatar}
+              disabled={migrateRunning}
+            >
+              <Button
+                type="primary"
+                loading={migrateStarting}
+                disabled={migrateRunning}
+              >
+                {t('migrate_avatar_button')}
+              </Button>
+            </Popconfirm>
+
+            {migrateStatus &&
+              (migrateRunning || migrateStatus.message !== '') && (
+                <div>
+                  {migrateRunning && (
+                    <Progress percent={migratePercent} status="active" />
+                  )}
+                  {!migrateRunning &&
+                    migrateStatus.message === 'completed' &&
+                    migrateProcessed > 0 && (
+                      <Progress percent={100} status="success" />
+                    )}
+                  <div className="text-sm text-gray-500 mt-2">
+                    {t('migrate_avatar_progress', {
+                      migrated: migrateStatus.migrated,
+                      skipped: migrateStatus.skipped,
+                      failed: migrateStatus.failed,
+                      total: migrateStatus.total,
+                    })}
+                  </div>
+                  {!migrateRunning &&
+                    migrateStatus.message &&
+                    migrateStatus.message !== 'completed' &&
+                    migrateStatus.message !== '' && (
+                      <div className="text-sm text-red-500 mt-1">
+                        {migrateStatus.message}
+                      </div>
+                    )}
+                </div>
+              )}
+          </div>
         </Card>
 
         {/* AI */}

@@ -217,7 +217,12 @@
       "ucenter_api": "API 地址",
       "ucenter_appid": "应用 ID",
       "ucenter_key": "通信密钥",
-      "ucenter_title": "UCenter 配置"
+      "ucenter_title": "UCenter 配置",
+      "migrate_avatar_title": "头像迁移",
+      "migrate_avatar_button": "开始迁移",
+      "migrate_avatar_confirm": "确定要开始头像迁移吗？将从 UCenter 下载用户头像并保存到本地。",
+      "migrate_avatar_started": "头像迁移已启动",
+      "migrate_avatar_progress": "已迁移: {migrated} / 跳过: {skipped} / 失败: {failed} / 总计: {total}"
     },
     "users": {
       "action_admin_level": "修改等级",

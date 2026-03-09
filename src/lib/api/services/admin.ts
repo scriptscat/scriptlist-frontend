@@ -152,6 +152,17 @@ export interface OIDCDiscoverResponse {
   scopes_supported: string;
 }
 
+// ==================== Migrate Avatar ====================
+
+export interface MigrateAvatarStatus {
+  running: boolean;
+  migrated: number;
+  skipped: number;
+  failed: number;
+  total: number;
+  message: string;
+}
+
 class AdminService {
   private readonly basePath = '/admin';
 
@@ -293,6 +304,17 @@ class AdminService {
     return apiClient.post<OIDCDiscoverResponse>(
       `${this.basePath}/oidc-providers/discover`,
       { issuer_url: issuerUrl },
+    );
+  }
+
+  // Migrate Avatar
+  async migrateAvatar() {
+    return apiClient.post<void>(`${this.basePath}/migrate-avatar`);
+  }
+
+  async getMigrateAvatarStatus() {
+    return apiClient.get<MigrateAvatarStatus>(
+      `${this.basePath}/migrate-avatar/status`,
     );
   }
 
