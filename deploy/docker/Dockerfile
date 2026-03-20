@@ -13,6 +13,8 @@ RUN corepack enable
 # 构建阶段
 FROM base AS deps
 
+ARG NPM_REGISTRY=""
+
 # 设置工作目录
 WORKDIR /app
 
@@ -20,7 +22,9 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # 安装所有依赖（包括开发依赖，构建时需要）
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    if [ -n "$NPM_REGISTRY" ]; then pnpm config set registry "$NPM_REGISTRY"; fi && \
+    pnpm install --frozen-lockfile
 
 # 构建阶段
 FROM base AS builder

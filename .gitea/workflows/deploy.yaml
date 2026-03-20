@@ -16,6 +16,7 @@ env:
   DOMAIN: scriptcat.org
   ENV: ${{ startsWith(github.ref, 'refs/heads/release/') && 'pre' || startsWith(github.ref, 'refs/heads/test/') && 'test' || github.ref=='refs/heads/main' && 'prod' }}
   BASEIMAGE: ${{ secrets.BASEIMAGE && secrets.BASEIMAGE || '' }}
+  NPM_REGISTRY: ${{ secrets.NPM_REGISTRY && secrets.NPM_REGISTRY || 'https://registry.npmmirror.com' }}
 
 jobs:
   deploy:
@@ -62,6 +63,7 @@ jobs:
         cache-to: type=gha,mode=max
         build-args: |
           BASEIMAGE=${{ env.BASEIMAGE }}/node:22-alpine
+          NPM_REGISTRY=${{ env.NPM_REGISTRY }}
           NEXT_PUBLIC_APP_URL=https://${{ env.DOMAIN }}
           APP_API_URL=http://${{ env.INNER_DOMAIN }}.app.svc.cluster.local/api/v2
           APP_API_PROXY=http://${{ env.INNER_DOMAIN }}.app.svc.cluster.local/api/v2
