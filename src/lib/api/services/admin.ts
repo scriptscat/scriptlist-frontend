@@ -235,9 +235,19 @@ class AdminService {
     });
   }
 
-  async updateUserStatus(id: number, status: number) {
+  async updateUserStatus(
+    id: number,
+    status: number,
+    options?: {
+      reason?: string;
+      expire_at?: number;
+      clean_scores?: boolean;
+      clean_scripts?: boolean;
+    },
+  ) {
     return apiClient.put<void>(`${this.basePath}/users/${id}/status`, {
       status,
+      ...options,
     });
   }
 

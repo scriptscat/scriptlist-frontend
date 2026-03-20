@@ -37,11 +37,14 @@ import {
   EditOutlined,
   MailOutlined,
   LinkOutlined,
+  StopOutlined,
 } from '@ant-design/icons';
 import { useRouter, usePathname, Link } from '@/i18n/routing';
 import { useUser } from '@/contexts/UserContext';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
 import UserEditModal from './UserEditModal';
+import BanUserModal from './BanUserModal';
+import { adminService } from '@/lib/api/services/admin';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useFollowUser } from '@/lib/api/hooks/userClient';
 import { useTranslations } from 'next-intl';
@@ -63,6 +66,7 @@ export default function UserProfileLayout({
   const activeTab = pathname.includes('/favorites') ? 'favorites' : 'scripts';
   const [isFollowing, setIsFollowing] = useState(user.is_follow);
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [banModalVisible, setBanModalVisible] = useState(false);
   const semDateTime = useSemDateTime();
   const { loading: followLoading, followUser } = useFollowUser();
   const t = useTranslations('user.profile');
@@ -72,6 +76,12 @@ export default function UserProfileLayout({
 
   // 直接使用传入的用户详细数据
   const currentUserData = user;
+
+  // 判断当前登录用户是否是管理员
+  const isAdmin = currentUser && currentUser.is_admin >= 1;
+
+  // 判断目标用户是否已封禁
+  const isBanned = currentUserData.status === 2;
 
   // 判断是否已注销
   const isDeactivated = currentUserData.status === 4;
@@ -152,6 +162,21 @@ export default function UserProfileLayout({
     message.success(t('link_copied'));
   };
 
+  const handleUnban = async () => {
+    try {
+      await adminService.updateUserStatus(user.user_id, 1);
+      message.success(t('unban_success'));
+      window.location.reload();
+    } catch (error: any) {
+      message.error(error?.message || t('operation_failed'));
+    }
+  };
+
+  const handleBanSuccess = () => {
+    setBanModalVisible(false);
+    window.location.reload();
+  };
+
   // 更多操作菜单
   const moreMenuItems: MenuProps['items'] = [
     {
@@ -165,6 +190,26 @@ export default function UserProfileLayout({
         );
       },
     },
+    // 管理员操作
+    ...(isAdmin && !isCurrentUser
+      ? [
+          { type: 'divider' as const },
+          isBanned
+            ? {
+                key: 'unban',
+                label: t('unban_user'),
+                icon: <StopOutlined />,
+                onClick: handleUnban,
+              }
+            : {
+                key: 'ban',
+                label: t('ban_user'),
+                icon: <StopOutlined />,
+                danger: true,
+                onClick: () => setBanModalVisible(true),
+              },
+        ]
+      : []),
   ];
 
   return (
@@ -217,6 +262,11 @@ export default function UserProfileLayout({
                     {currentUserData.is_admin === 1 && (
                       <Tag color="gold" icon={<CrownOutlined />}>
                         {t('administrator')}
+                      </Tag>
+                    )}
+                    {isBanned && (
+                      <Tag color="red" icon={<StopOutlined />}>
+                        {t('user_banned')}
                       </Tag>
                     )}
                   </div>
@@ -447,6 +497,15 @@ export default function UserProfileLayout({
         user={currentUserData}
         onCancel={() => setEditModalVisible(false)}
         onSuccess={handleEditSuccess}
+      />
+
+      {/* 封禁用户模态框 */}
+      <BanUserModal
+        visible={banModalVisible}
+        userId={user.user_id}
+        username={user.username}
+        onCancel={() => setBanModalVisible(false)}
+        onSuccess={handleBanSuccess}
       />
     </>
   );

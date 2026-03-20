@@ -40,6 +40,9 @@ export interface GetUserDetailResponse extends UserInfo {
   followers: number;
   // 关注
   following: number;
+  // 封禁信息（仅管理员可见）
+  ban_reason?: string;
+  ban_expire_at?: number;
 }
 
 export interface UpdateUserDetailRequest {
