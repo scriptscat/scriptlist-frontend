@@ -60,6 +60,7 @@
     "navigation": {
       "announcements": "公告管理",
       "feedbacks": "反馈管理",
+      "reports": "举报管理",
       "oauth_apps": "OAuth 应用管理",
       "oidc_providers": "OIDC 提供商管理",
       "scores": "评分管理",
@@ -68,6 +69,18 @@
       "users": "用户管理"
     },
     "no_permission": "您没有管理员权限访问此页面。",
+    "reports": {
+      "title": "举报管理",
+      "col_script": "脚本",
+      "col_reporter": "举报人",
+      "col_reason": "原因",
+      "col_status": "状态",
+      "col_comments": "评论",
+      "col_createtime": "创建时间",
+      "col_actions": "操作",
+      "action_view": "查看",
+      "filter_status": "筛选状态"
+    },
     "oauth_apps": {
       "action_delete": "删除",
       "action_edit": "编辑",

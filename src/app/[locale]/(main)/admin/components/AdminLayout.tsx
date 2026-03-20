@@ -11,6 +11,7 @@ import {
   MessageOutlined,
   StarOutlined,
   SettingOutlined,
+  WarningOutlined,
 } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
@@ -33,6 +34,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname.includes('/admin/users')) return 'users';
     if (pathname.includes('/admin/scripts')) return 'scripts';
     if (pathname.includes('/admin/feedbacks')) return 'feedbacks';
+    if (pathname.includes('/admin/reports')) return 'reports';
     if (pathname.includes('/admin/scores')) return 'scores';
     if (pathname.includes('/admin/announcements')) return 'announcements';
     if (pathname.includes('/admin/system-config')) return 'system-config';
@@ -56,6 +58,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       key: 'feedbacks',
       icon: <MessageOutlined />,
       label: <Link href="/admin/feedbacks">{t('feedbacks')}</Link>,
+    },
+    {
+      key: 'reports',
+      icon: <WarningOutlined />,
+      label: <Link href="/admin/reports">{t('reports')}</Link>,
     },
     {
       key: 'scores',

@@ -154,6 +154,21 @@ export interface OIDCDiscoverResponse {
   scopes_supported: string;
 }
 
+// ==================== Report Management ====================
+
+export interface AdminReportItem {
+  id: number;
+  script_id: number;
+  script_name: string;
+  user_id: number;
+  username: string;
+  reason: string;
+  comment_count: number;
+  status: number;
+  createtime: number;
+  updatetime: number;
+}
+
 // ==================== Migrate Avatar ====================
 
 export interface MigrateAvatarStatus {
@@ -317,6 +332,14 @@ class AdminService {
   async getMigrateAvatarStatus() {
     return apiClient.get<MigrateAvatarStatus>(
       `${this.basePath}/migrate-avatar/status`,
+    );
+  }
+
+  // Report Management
+  async listReports(page: number = 1, size: number = 20, status?: number) {
+    return apiClient.get<ListData<AdminReportItem>>(
+      `${this.basePath}/reports`,
+      { page, size, status },
     );
   }
 
