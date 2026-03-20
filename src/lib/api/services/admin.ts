@@ -50,6 +50,8 @@ export interface UserItem {
   id: number;
   username: string;
   email: string;
+  register_ip: string;
+  ip_location: string;
   avatar: string;
   status: number;
   admin_level: number;

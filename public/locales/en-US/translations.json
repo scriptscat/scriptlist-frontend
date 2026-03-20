@@ -236,6 +236,7 @@
       "col_admin_level": "Admin Level",
       "col_createtime": "Created At",
       "col_email": "Email",
+      "col_register_ip": "Register IP",
       "col_status": "Status",
       "col_username": "Username",
       "level_admin": "Admin",

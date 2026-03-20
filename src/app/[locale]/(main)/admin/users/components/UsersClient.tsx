@@ -138,6 +138,18 @@ export default function UsersClient() {
       key: 'email',
     },
     {
+      title: t('col_register_ip'),
+      key: 'register_ip',
+      render: (_: unknown, record: UserItem) => (
+        <div>
+          <div>{record.register_ip || '-'}</div>
+          {record.ip_location && (
+            <div className="text-xs text-neutral-500">{record.ip_location}</div>
+          )}
+        </div>
+      ),
+    },
+    {
       title: t('col_status'),
       dataIndex: 'status',
       key: 'status',

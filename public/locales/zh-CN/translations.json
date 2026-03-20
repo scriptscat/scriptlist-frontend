@@ -236,6 +236,7 @@
       "col_admin_level": "管理员等级",
       "col_createtime": "创建时间",
       "col_email": "邮箱",
+      "col_register_ip": "注册IP",
       "col_status": "状态",
       "col_username": "用户名",
       "level_admin": "管理员",
