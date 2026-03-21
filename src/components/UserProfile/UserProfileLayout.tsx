@@ -433,6 +433,45 @@ export default function UserProfileLayout({
                           following: currentUserData.following,
                         }),
                       },
+                      // 管理员可见信息
+                      ...(isAdmin && currentUserData.register_ip
+                        ? [
+                            {
+                              key: 'register_ip',
+                              label: (
+                                <Text type="secondary">{t('register_ip')}</Text>
+                              ),
+                              children: (
+                                <span>
+                                  {currentUserData.register_ip}
+                                  {currentUserData.register_ip_location && (
+                                    <Text
+                                      type="secondary"
+                                      className="ml-1 text-xs"
+                                    >
+                                      {'('}
+                                      {currentUserData.register_ip_location}
+                                      {')'}
+                                    </Text>
+                                  )}
+                                </span>
+                              ),
+                            },
+                          ]
+                        : []),
+                      ...(isAdmin && currentUserData.register_email
+                        ? [
+                            {
+                              key: 'register_email',
+                              label: (
+                                <Text type="secondary">
+                                  {t('register_email')}
+                                </Text>
+                              ),
+                              children: currentUserData.register_email,
+                            },
+                          ]
+                        : []),
                     ] satisfies DescriptionsProps['items']
                   }
                 />

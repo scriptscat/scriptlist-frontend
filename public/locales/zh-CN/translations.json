@@ -1805,7 +1805,10 @@
       "unban_confirm": "确定要解封此用户吗？",
       "user_banned": "已封禁",
       "ban_expire_at": "封禁到期时间",
-      "ban_permanent_label": "永久"
+      "ban_permanent_label": "永久",
+      "register_ip": "注册IP",
+      "ip_location": "IP归属地",
+      "register_email": "注册邮箱"
     },
     "save": "保存",
     "script_list": {
