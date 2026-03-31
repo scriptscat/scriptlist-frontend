@@ -4,7 +4,7 @@ import AdminRootLayoutClient from './components/AdminRootLayoutClient';
 
 export default function AdminRootLayout({ children }: { children: ReactNode }) {
   return (
-    <PageIntlProvider namespaces={['admin']}>
+    <PageIntlProvider namespaces={['admin', 'script']}>
       <AdminRootLayoutClient>{children}</AdminRootLayoutClient>
     </PageIntlProvider>
   );
