@@ -18,6 +18,7 @@ import type { ScoreItem } from '@/lib/api/services/admin';
 import { scriptService } from '@/lib/api/services/scripts/scripts';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
+import { Link } from '@/i18n/routing';
 
 export default function ScoresClient() {
   const t = useTranslations('admin.scores');
@@ -86,14 +87,22 @@ export default function ScoresClient() {
     },
     {
       title: t('col_username'),
-      dataIndex: 'username',
       key: 'username',
+      render: (_: unknown, record: ScoreItem) => (
+        <Link href={`/users/${record.user_id}`} target="_blank">
+          {record.username}
+        </Link>
+      ),
     },
     {
       title: t('col_script'),
-      dataIndex: 'script_name',
       key: 'script_name',
       ellipsis: true,
+      render: (_: unknown, record: ScoreItem) => (
+        <Link href={`/script-show-page/${record.script_id}`} target="_blank">
+          {record.script_name}
+        </Link>
+      ),
     },
     {
       title: t('col_score'),

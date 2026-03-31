@@ -19,6 +19,7 @@ import type { ScriptItem } from '@/lib/api/services/admin';
 import { scriptService } from '@/lib/api/services/scripts/scripts';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
+import { Link } from '@/i18n/routing';
 
 export default function ScriptsClient() {
   const t = useTranslations('admin.scripts');
@@ -155,14 +156,22 @@ export default function ScriptsClient() {
     },
     {
       title: t('col_name'),
-      dataIndex: 'name',
       key: 'name',
       ellipsis: true,
+      render: (_: unknown, record: ScriptItem) => (
+        <Link href={`/script-show-page/${record.id}`} target="_blank">
+          {record.name}
+        </Link>
+      ),
     },
     {
       title: t('col_author'),
-      dataIndex: 'username',
       key: 'username',
+      render: (_: unknown, record: ScriptItem) => (
+        <Link href={`/users/${record.user_id}`} target="_blank">
+          {record.username}
+        </Link>
+      ),
     },
     {
       title: t('col_type'),

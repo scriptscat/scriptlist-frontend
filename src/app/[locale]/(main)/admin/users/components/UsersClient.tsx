@@ -18,6 +18,7 @@ import { adminService } from '@/lib/api/services/admin';
 import type { UserItem } from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
+import { Link } from '@/i18n/routing';
 
 export default function UsersClient() {
   const t = useTranslations('admin.users');
@@ -129,8 +130,12 @@ export default function UsersClient() {
     },
     {
       title: t('col_username'),
-      dataIndex: 'username',
       key: 'username',
+      render: (_: unknown, record: UserItem) => (
+        <Link href={`/users/${record.id}`} target="_blank">
+          {record.username}
+        </Link>
+      ),
     },
     {
       title: t('col_email'),
