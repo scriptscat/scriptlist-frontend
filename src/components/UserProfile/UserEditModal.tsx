@@ -45,6 +45,17 @@ export default function UserEditModal({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(user.avatar || '');
+  const [codeSent, setCodeSent] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const [sendingCode, setSendingCode] = useState(false);
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
+  const originalEmail = (user as any)?.email || '';
 
   useEffect(() => {
     if (visible) {
@@ -56,19 +67,47 @@ export default function UserEditModal({
         website: user.website || '',
       });
       setAvatarUrl(user.avatar || '');
+      setCodeSent(false);
+      setCountdown(0);
     }
   }, [visible, user, form]);
+
+  const handleSendCode = async () => {
+    const email = form.getFieldValue('email');
+    if (!email) {
+      message.error(t('email_validation'));
+      return;
+    }
+    try {
+      setSendingCode(true);
+      await userService.sendEmailCode(email);
+      message.success(t('email_code_sent'));
+      setCodeSent(true);
+      setCountdown(60);
+    } catch (error: unknown) {
+      const err = error as { message?: string };
+      message.error(err?.message || t('update_failed'));
+    } finally {
+      setSendingCode(false);
+    }
+  };
 
   const handleSubmit = async (values: any) => {
     try {
       setLoading(true);
-
-      // 仅提交 userService 定义的字段
+      const emailChanged =
+        (values.email || '') !== originalEmail && values.email !== '';
+      if (emailChanged && !values.email_code) {
+        message.error(t('email_code_required'));
+        setLoading(false);
+        return;
+      }
       await userService.updateUserDetail({
         description: values.description || '',
         location: values.location || '',
         website: values.website || '',
         email: values.email || '',
+        ...(emailChanged ? { email_code: values.email_code } : {}),
       });
 
       // 更新成功后拉取最新详情
@@ -200,8 +239,30 @@ export default function UserEditModal({
             prefix={<MailOutlined />}
             placeholder={t('email_placeholder')}
             maxLength={50}
+            addonAfter={
+              <Button
+                type="link"
+                size="small"
+                loading={sendingCode}
+                disabled={countdown > 0}
+                onClick={handleSendCode}
+                style={{ padding: 0 }}
+              >
+                {countdown > 0
+                  ? t('email_send_code_countdown', { seconds: countdown })
+                  : codeSent
+                    ? t('email_code_resend')
+                    : t('email_send_code')}
+              </Button>
+            }
           />
         </Form.Item>
+
+        {codeSent && (
+          <Form.Item label={t('email_code_placeholder')} name="email_code">
+            <Input placeholder={t('email_code_placeholder')} maxLength={6} />
+          </Form.Item>
+        )}
 
         <Form.Item
           label={t('location')}
