@@ -55,14 +55,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   };
 
   // 在服务端获取数据
-  const [scripts, recentScripts, ratingScripts] = await Promise.all([
+  const [scripts, recentScripts] = await Promise.all([
     scriptService.search(apiParams),
     scriptService.search({
       size: 10,
       page: 1,
       sort: 'createtime',
     }),
-    scriptService.lastScoreScript(),
+    // scriptService.lastScoreScript(),
   ]);
 
   return (
@@ -83,7 +83,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <Col xs={24} lg={6}>
           <Sidebar
             recentScripts={slimScriptListForSidebar(recentScripts.list)}
-            ratingScripts={slimScriptListForSidebar(ratingScripts.list)}
+            // ratingScripts={slimScriptListForSidebar(ratingScripts.list)}
           />
         </Col>
       </Row>

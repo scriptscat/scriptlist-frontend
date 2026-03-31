@@ -20,12 +20,12 @@ const { Text } = Typography;
 
 interface SidebarProps {
   recentScripts?: ScriptListItem[];
-  ratingScripts?: ScriptListItem[];
+  // ratingScripts?: ScriptListItem[];
 }
 
 export default function Sidebar({
   recentScripts = [],
-  ratingScripts = [],
+  // ratingScripts = [],
 }: SidebarProps) {
   const { user } = useUser();
   const t = useTranslations('script.search.sidebar');
@@ -75,11 +75,11 @@ export default function Sidebar({
       />
 
       {/* 最新评分 */}
-      <ScriptListCard
+      {/* <ScriptListCard
         title={t('latest_ratings')}
         data={ratingScripts}
         icon={<StarOutlined className="text-yellow-500" />}
-      />
+      /> */}
 
       {/* 快速操作 */}
       {user && (
