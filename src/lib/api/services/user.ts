@@ -57,6 +57,7 @@ export interface UpdateUserDetailRequest {
   website: string;
   // 邮箱
   email: string;
+  email_code?: string;
 }
 
 // 关注用户请求
@@ -218,6 +219,15 @@ export class UserService {
    */
   async getUserConfig() {
     return apiClient.getWithCookie<UserConfig>(`${this.basePath}/config`);
+  }
+
+  /**
+   * 发送邮箱验证码
+   */
+  async sendEmailCode(email: string) {
+    return apiClient.post<{ message: string }>(`${this.basePath}/email/code`, {
+      email,
+    });
   }
 
   /**
