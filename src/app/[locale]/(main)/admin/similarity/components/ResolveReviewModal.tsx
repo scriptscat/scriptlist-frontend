@@ -50,6 +50,7 @@ export default function ResolveReviewModal({
       onCancel={onClose}
       onOk={handleOK}
       confirmLoading={submitting}
+      destroyOnHidden
     >
       <Form
         form={form}
