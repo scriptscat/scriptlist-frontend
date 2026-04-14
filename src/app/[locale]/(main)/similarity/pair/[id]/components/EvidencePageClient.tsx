@@ -10,7 +10,7 @@ export default function EvidencePageClient({ pairID }: { pairID: number }) {
     <div className="space-y-4">
       <Alert
         type="warning"
-        message={t('disclaimer_title')}
+        title={t('disclaimer_title')}
         description={t('disclaimer_body')}
       />
       <PairDetailClient pairID={pairID} source="evidence" />
