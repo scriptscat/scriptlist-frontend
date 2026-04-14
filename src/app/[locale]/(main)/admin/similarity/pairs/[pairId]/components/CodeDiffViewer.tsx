@@ -22,12 +22,30 @@ interface MountState {
   monaco: Monaco;
 }
 
-function byteOffsetToLine(code: string, byteOffset: number): number {
-  let line = 1;
-  for (let i = 0; i < byteOffset && i < code.length; i++) {
-    if (code.charCodeAt(i) === 10) line++;
+// Backend match-segment offsets are UTF-8 byte offsets, but JS string indices
+// are UTF-16 code units. Build a sorted list of (byteOffset, line) pairs from
+// the encoded source so each segment endpoint maps to the correct line.
+function buildByteToLineIndex(code: string): number[] {
+  const bytes = new TextEncoder().encode(code);
+  const newlineByteOffsets: number[] = [];
+  for (let i = 0; i < bytes.length; i++) {
+    if (bytes[i] === 10) newlineByteOffsets.push(i);
   }
-  return line;
+  return newlineByteOffsets;
+}
+
+function byteOffsetToLine(
+  newlineByteOffsets: number[],
+  byteOffset: number,
+): number {
+  let lo = 0;
+  let hi = newlineByteOffsets.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (newlineByteOffsets[mid] < byteOffset) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo + 1;
 }
 
 export default function CodeDiffViewer({ codeA, codeB, segments }: Props) {
@@ -53,28 +71,31 @@ export default function CodeDiffViewer({ codeA, codeB, segments }: Props) {
       return;
     }
 
+    const aIndex = buildByteToLineIndex(codeA);
+    const bIndex = buildByteToLineIndex(codeB);
+
     const aDecos = segments.map((s) => ({
       range: new monaco.Range(
-        byteOffsetToLine(codeA, s.a_start),
+        byteOffsetToLine(aIndex, s.a_start),
         1,
-        byteOffsetToLine(codeA, s.a_end),
+        byteOffsetToLine(aIndex, s.a_end),
         1,
       ),
       options: {
         isWholeLine: true,
-        className: 'bg-yellow-100 dark:bg-yellow-800/30',
+        className: 'similarity-match-highlight',
       },
     }));
     const bDecos = segments.map((s) => ({
       range: new monaco.Range(
-        byteOffsetToLine(codeB, s.b_start),
+        byteOffsetToLine(bIndex, s.b_start),
         1,
-        byteOffsetToLine(codeB, s.b_end),
+        byteOffsetToLine(bIndex, s.b_end),
         1,
       ),
       options: {
         isWholeLine: true,
-        className: 'bg-yellow-100 dark:bg-yellow-800/30',
+        className: 'similarity-match-highlight',
       },
     }));
 
