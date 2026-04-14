@@ -66,7 +66,8 @@
       "scores": "评分管理",
       "scripts": "脚本管理",
       "system_config": "系统配置",
-      "users": "用户管理"
+      "users": "用户管理",
+      "similarity": "相似度检测"
     },
     "no_permission": "您没有管理员权限访问此页面。",
     "reports": {
@@ -263,6 +264,56 @@
       "title": "用户管理",
       "unban_confirm": "确定要解封此用户吗？",
       "unban_success": "用户解封成功"
+    },
+    "similarity": {
+      "tab_pairs": "相似对",
+      "tab_suspects": "嫌疑脚本",
+      "tab_integrity_reviews": "完整性警告",
+      "tab_pair_whitelist": "相似对白名单",
+      "tab_integrity_whitelist": "完整性豁免",
+      "col_id": "ID",
+      "col_script_a": "脚本 A",
+      "col_script_b": "脚本 B",
+      "col_jaccard": "Jaccard",
+      "col_common": "共同指纹",
+      "col_earlier": "较早方",
+      "col_status": "状态",
+      "col_integrity": "完整性评分",
+      "col_actions": "操作",
+      "col_script": "脚本",
+      "col_max_jaccard": "最高 Jaccard",
+      "col_coverage": "外源覆盖率",
+      "col_pair_count": "相似对数",
+      "col_detected_at": "检测时间",
+      "col_score": "分数",
+      "col_createtime": "时间",
+      "status_pending": "待审查",
+      "status_whitelisted": "已白名单",
+      "status_resolved": "已处理",
+      "review_pending": "待审",
+      "review_ok": "正常",
+      "review_violated": "违规",
+      "action_detail": "详情",
+      "action_resolve": "处理",
+      "action_whitelist": "加入白名单",
+      "modal_resolve_title": "标记完整性警告",
+      "label_decision": "判定",
+      "label_note": "备注",
+      "decision_ok": "正常",
+      "decision_violated": "违规",
+      "msg_review_resolved": "标记成功",
+      "msg_whitelisted": "已加入白名单",
+      "drawer_review_detail": "完整性警告详情",
+      "label_score": "总分",
+      "label_sub_scores": "分类分数",
+      "label_hit_signals": "命中信号",
+      "label_jaccard": "Jaccard",
+      "label_common": "共同指纹",
+      "label_earlier": "较早方",
+      "label_detected_at": "检测时间",
+      "label_script_a": "脚本 A",
+      "label_script_b": "脚本 B",
+      "label_code_diff": "代码差异"
     }
   },
   "auth": {
@@ -1932,5 +1983,17 @@
   },
   "utils": {
     "time_format": "YYYY年MM月DD日"
+  },
+  "similarity": {
+    "evidence": {
+      "disclaimer_title": "初步判定，非最终结论",
+      "disclaimer_body": "此页面为系统自动检测的相似代码证据，仅供参考，请勿据此对作者做出结论性判断。"
+    }
+  },
+  "errors": {
+    "integrity_rejected": {
+      "title": "代码未通过完整性检查",
+      "help": "如为误判，请通过站点 FAQ 的「管理员联系方式」申请豁免。"
+    }
   }
 }
