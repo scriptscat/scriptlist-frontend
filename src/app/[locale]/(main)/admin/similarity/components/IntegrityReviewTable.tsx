@@ -119,9 +119,9 @@ export default function IntegrityReviewTable() {
       <Drawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        width={960}
+        size="large"
         title={t('drawer_review_detail')}
-        destroyOnClose
+        destroyOnHidden
       >
         {detail && (
           <div>
