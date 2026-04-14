@@ -86,7 +86,7 @@ export default function PairsTable() {
     {
       title: t('col_integrity'),
       dataIndex: 'integrity_score',
-      render: (v?: number) => (v ? v.toFixed(2) : '-'),
+      render: (v?: number) => (v != null ? v.toFixed(2) : '-'),
     },
     {
       title: t('col_actions'),

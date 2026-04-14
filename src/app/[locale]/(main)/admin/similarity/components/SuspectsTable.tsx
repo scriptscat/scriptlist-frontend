@@ -1,14 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { message, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { similarityService } from '@/lib/api/services/similarity';
 import type { SuspectScriptItem } from '@/lib/api/services/similarity';
 import { APIError } from '@/types/api';
-import { message } from 'antd';
 
 const PAGE_SIZE = 20;
 
@@ -60,7 +59,7 @@ export default function SuspectsTable() {
     {
       title: t('col_integrity'),
       dataIndex: 'integrity_score',
-      render: (v?: number) => (v ? v.toFixed(2) : '-'),
+      render: (v?: number) => (v != null ? v.toFixed(2) : '-'),
     },
     {
       title: t('col_detected_at'),
