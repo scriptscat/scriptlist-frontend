@@ -170,6 +170,10 @@ class SimilarityService {
     return apiClient.delete<void>(`${this.adminBase}/pairs/${id}/whitelist`);
   }
 
+  removePairWhitelistByID(whitelistID: number) {
+    return apiClient.delete<void>(`${this.adminBase}/whitelist/${whitelistID}`);
+  }
+
   listPairWhitelist(params: { page?: number; size?: number }) {
     return apiClient.get<ListData<PairWhitelistItem>>(
       `${this.adminBase}/whitelist`,
