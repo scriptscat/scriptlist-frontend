@@ -230,6 +230,33 @@ class SimilarityService {
       `${this.publicBase}/pair/${id}`,
     );
   }
+
+  // Phase 4: backfill / manual scan
+  triggerBackfill(reset: boolean) {
+    return apiClient.post<BackfillStatus>(`${this.adminBase}/backfill`, {
+      reset,
+    });
+  }
+
+  getBackfillStatus() {
+    return apiClient.get<BackfillStatus>(`${this.adminBase}/backfill/status`);
+  }
+
+  manualScan(scriptID: number) {
+    return apiClient.post<void>(`${this.adminBase}/scan/${scriptID}`, {});
+  }
+
+  refreshStopFp() {
+    return apiClient.post<void>(`${this.adminBase}/stop-fp/refresh`, {});
+  }
+}
+
+export interface BackfillStatus {
+  running: boolean;
+  cursor: number;
+  total: number;
+  started_at: number;
+  finished_at: number;
 }
 
 export const similarityService = new SimilarityService();

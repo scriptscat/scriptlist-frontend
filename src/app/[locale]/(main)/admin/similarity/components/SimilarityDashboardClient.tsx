@@ -8,6 +8,7 @@ import SuspectsTable from './SuspectsTable';
 import IntegrityReviewTable from './IntegrityReviewTable';
 import IntegrityWhitelistTable from './IntegrityWhitelistTable';
 import PairWhitelistTable from './PairWhitelistTable';
+import BackfillControl from './BackfillControl';
 
 export default function SimilarityDashboardClient() {
   const t = useTranslations('admin.similarity');
@@ -38,6 +39,11 @@ export default function SimilarityDashboardClient() {
           key: 'int-whitelist',
           label: t('tab_integrity_whitelist'),
           children: <IntegrityWhitelistTable />,
+        },
+        {
+          key: 'backfill',
+          label: t('tab_backfill'),
+          children: <BackfillControl />,
         },
       ]}
     />
