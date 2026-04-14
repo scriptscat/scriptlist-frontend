@@ -38,7 +38,8 @@
       "scores": "Bewertungsverwaltung",
       "scripts": "Skriptverwaltung",
       "system_config": "Systemkonfiguration",
-      "users": "Benutzerverwaltung"
+      "users": "Benutzerverwaltung",
+      "similarity": "Similarity Detection"
     },
     "no_permission": "Sie haben keine Administratorberechtigung für den Zugriff auf diese Seite.",
     "oauth_apps": {
@@ -211,6 +212,65 @@
       "title": "Benutzerverwaltung",
       "unban_confirm": "Möchten Sie diesen Benutzer wirklich entsperren?",
       "unban_success": "Benutzer erfolgreich entsperrt"
+    },
+    "similarity": {
+      "tab_pairs": "Pairs",
+      "tab_suspects": "Suspects",
+      "tab_integrity_reviews": "Integrity Reviews",
+      "tab_pair_whitelist": "Pair Whitelist",
+      "tab_integrity_whitelist": "Integrity Exemptions",
+      "col_id": "ID",
+      "col_script_a": "Script A",
+      "col_script_b": "Script B",
+      "col_jaccard": "Jaccard",
+      "col_common": "Common Fingerprints",
+      "col_earlier": "Earlier Side",
+      "col_status": "Status",
+      "col_integrity": "Integrity Score",
+      "col_actions": "Actions",
+      "col_script": "Script",
+      "col_max_jaccard": "Max Jaccard",
+      "col_coverage": "External Coverage",
+      "col_pair_count": "Pair Count",
+      "col_detected_at": "Detected At",
+      "col_score": "Score",
+      "col_createtime": "Created",
+      "col_reason": "Reason",
+      "col_added_by": "Added By",
+      "status_pending": "Pending",
+      "status_whitelisted": "Whitelisted",
+      "status_resolved": "Resolved",
+      "review_pending": "Pending",
+      "review_ok": "OK",
+      "review_violated": "Violation",
+      "action_detail": "Details",
+      "action_resolve": "Resolve",
+      "action_whitelist": "Whitelist",
+      "action_remove": "Remove",
+      "confirm_remove_whitelist": "Remove this whitelist entry?",
+      "msg_removed": "Removed",
+      "modal_add_int_whitelist": "Add Integrity Exemption",
+      "label_script_id": "Script ID",
+      "label_reason": "Reason",
+      "btn_add": "Add",
+      "modal_resolve_title": "Mark Integrity Review",
+      "label_decision": "Decision",
+      "label_note": "Note",
+      "decision_ok": "OK",
+      "decision_violated": "Violation",
+      "msg_review_resolved": "Marked successfully",
+      "msg_whitelisted": "Added to whitelist",
+      "drawer_review_detail": "Integrity Review Details",
+      "label_score": "Total Score",
+      "label_sub_scores": "Category Scores",
+      "label_hit_signals": "Hit Signals",
+      "label_jaccard": "Jaccard",
+      "label_common": "Common Fingerprints",
+      "label_earlier": "Earlier Side",
+      "label_detected_at": "Detected At",
+      "label_script_a": "Script A",
+      "label_script_b": "Script B",
+      "label_code_diff": "Code Diff"
     }
   },
   "auth": {
@@ -1841,5 +1901,17 @@
   },
   "utils": {
     "time_format": "DD.MM.YYYY"
+  },
+  "similarity": {
+    "evidence": {
+      "disclaimer_title": "Preliminary Finding, Not a Final Verdict",
+      "disclaimer_body": "This page shows automatically detected similar-code evidence. It is informational only. Please do not draw definitive conclusions about the author from this data."
+    }
+  },
+  "errors": {
+    "integrity_rejected": {
+      "title": "Code Failed Integrity Check",
+      "help": "If this is a false positive, please apply for an exemption via the admin contact listed in the site FAQ."
+    }
   }
 }
