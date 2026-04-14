@@ -313,7 +313,16 @@
       "label_detected_at": "检测时间",
       "label_script_a": "脚本 A",
       "label_script_b": "脚本 B",
-      "label_code_diff": "代码差异"
+      "label_code_diff": "代码差异",
+      "col_reason": "原因",
+      "col_added_by": "添加人",
+      "action_remove": "移除",
+      "confirm_remove_whitelist": "确认移除该白名单？",
+      "msg_removed": "已移除",
+      "modal_add_int_whitelist": "添加完整性豁免",
+      "label_script_id": "脚本 ID",
+      "label_reason": "原因",
+      "btn_add": "添加"
     }
   },
   "auth": {
