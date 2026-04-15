@@ -290,6 +290,8 @@
       "status_pending": "待审查",
       "status_whitelisted": "已白名单",
       "status_resolved": "已处理",
+      "script_deleted": "已删除",
+      "filter_exclude_deleted": "隐藏含已删除脚本的对",
       "review_pending": "待审",
       "review_ok": "正常",
       "review_violated": "违规",

@@ -8,6 +8,7 @@ export interface ScriptBrief {
   username: string;
   public: number;
   createtime: number;
+  is_deleted: boolean;
 }
 
 export interface ScriptFullInfo extends ScriptBrief {
@@ -134,6 +135,7 @@ class SimilarityService {
     status?: number;
     min_jaccard?: number;
     script_id?: number;
+    exclude_deleted?: boolean;
   }) {
     return apiClient.get<ListData<SimilarPairItem>>(
       `${this.adminBase}/pairs`,
