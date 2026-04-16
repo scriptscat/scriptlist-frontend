@@ -140,7 +140,11 @@ export default function IntegrityReviewTable() {
               <ul>
                 {detail.hit_signals.map((h) => (
                   <li key={h.name}>
-                    <b>{t.has(`signal_desc.${h.name}`) ? t(`signal_desc.${h.name}`) : h.name}</b>
+                    <b>
+                      {t.has(`signal_desc.${h.name}`)
+                        ? t(`signal_desc.${h.name}`)
+                        : h.name}
+                    </b>
                     <br />
                     <Typography.Text type="secondary">
                       {h.name}: {h.value.toFixed(3)} / {h.threshold.toFixed(3)}
