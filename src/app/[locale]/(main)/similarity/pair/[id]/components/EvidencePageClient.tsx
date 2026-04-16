@@ -2,7 +2,7 @@
 
 import { Alert } from 'antd';
 import { useTranslations } from 'next-intl';
-import PairDetailClient from '@/app/[locale]/(main)/admin/similarity/pairs/[pairId]/components/PairDetailClient';
+import PairDetailClient from '@/components/similarity/PairDetailClient';
 
 export default function EvidencePageClient({ pairID }: { pairID: number }) {
   const t = useTranslations('similarity.evidence');

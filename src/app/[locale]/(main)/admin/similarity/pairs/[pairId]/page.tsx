@@ -1,4 +1,4 @@
-import PairDetailClient from './components/PairDetailClient';
+import PairDetailClient from '@/components/similarity/PairDetailClient';
 
 export default async function PairDetailPage({
   params,
