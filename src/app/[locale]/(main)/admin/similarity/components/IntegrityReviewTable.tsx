@@ -15,6 +15,20 @@ import ResolveReviewModal from './ResolveReviewModal';
 
 const PAGE_SIZE = 20;
 
+const SIGNAL_DESCRIPTIONS: Record<string, string> = {
+  avg_line_length: '平均行长度过长（代码可能被压缩为少量长行）',
+  max_line_length: '最大行长度过长（存在超长代码行）',
+  whitespace_ratio: '空白字符比例过低（代码缺少正常的空格和缩进）',
+  comment_ratio: '注释比例过低（代码几乎没有注释）',
+  single_char_ident_ratio: '单字符变量名比例过高（变量名被缩短为单个字符）',
+  hex_ident_ratio: '十六进制变量名比例过高（使用了 _0x 开头的混淆变量名）',
+  large_string_array: '检测到大型字符串数组（常见于混淆工具的字符串表）',
+  dean_edwards_packer: '检测到 Dean Edwards 打包器',
+  aa_encode: '检测到 AAEncode 编码',
+  jj_encode: '检测到 JJEncode 编码',
+  eval_density: 'eval/动态执行调用密度过高',
+};
+
 export default function IntegrityReviewTable() {
   const t = useTranslations('admin.similarity');
   const [data, setData] = useState<IntegrityReviewItem[]>([]);
@@ -140,8 +154,11 @@ export default function IntegrityReviewTable() {
               <ul>
                 {detail.hit_signals.map((h) => (
                   <li key={h.name}>
-                    {h.name}: {h.value.toFixed(3)} (threshold{' '}
-                    {h.threshold.toFixed(3)})
+                    <b>{SIGNAL_DESCRIPTIONS[h.name] ?? h.name}</b>
+                    <br />
+                    <Typography.Text type="secondary">
+                      {h.name}: {h.value.toFixed(3)} / {h.threshold.toFixed(3)}
+                    </Typography.Text>
                   </li>
                 ))}
               </ul>
