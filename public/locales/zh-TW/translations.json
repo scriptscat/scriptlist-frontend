@@ -270,7 +270,20 @@
       "label_detected_at": "檢測時間",
       "label_script_a": "腳本 A",
       "label_script_b": "腳本 B",
-      "label_code_diff": "程式碼差異"
+      "label_code_diff": "程式碼差異",
+      "signal_desc": {
+        "avg_line_length": "平均行長度過長（程式碼可能被壓縮為少量長行）",
+        "max_line_length": "最大行長度過長（存在超長程式碼行）",
+        "whitespace_ratio": "空白字元比例過低（程式碼缺少正常的空格和縮排）",
+        "comment_ratio": "註解比例過低（程式碼幾乎沒有註解）",
+        "single_char_ident_ratio": "單字元變數名稱比例過高（變數名稱被縮短為單個字元）",
+        "hex_ident_ratio": "十六進位變數名稱比例過高（使用了 _0x 開頭的混淆變數名稱）",
+        "large_string_array": "偵測到大型字串陣列（常見於混淆工具的字串表）",
+        "dean_edwards_packer": "偵測到 Dean Edwards 打包器",
+        "aa_encode": "偵測到 AAEncode 編碼",
+        "jj_encode": "偵測到 JJEncode 編碼",
+        "eval_density": "eval/動態執行呼叫密度過高"
+      }
     }
   },
   "auth": {

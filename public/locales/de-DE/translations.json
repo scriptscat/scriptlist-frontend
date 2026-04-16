@@ -270,7 +270,20 @@
       "label_detected_at": "Detected At",
       "label_script_a": "Script A",
       "label_script_b": "Script B",
-      "label_code_diff": "Code Diff"
+      "label_code_diff": "Code Diff",
+      "signal_desc": {
+        "avg_line_length": "Durchschnittliche Zeilenlänge zu hoch (Code möglicherweise in wenige lange Zeilen komprimiert)",
+        "max_line_length": "Maximale Zeilenlänge zu hoch (enthält extrem lange Zeilen)",
+        "whitespace_ratio": "Leerzeichenanteil zu niedrig (Code fehlt normale Einrückung)",
+        "comment_ratio": "Kommentaranteil zu niedrig (Code hat fast keine Kommentare)",
+        "single_char_ident_ratio": "Anteil einstelliger Bezeichner zu hoch (Variablennamen auf einzelne Zeichen verkürzt)",
+        "hex_ident_ratio": "Anteil hexadezimaler Bezeichner zu hoch (verwendet _0x-verschleierte Variablennamen)",
+        "large_string_array": "Großes String-Array erkannt (typisch für Verschleierungswerkzeuge)",
+        "dean_edwards_packer": "Dean Edwards Packer erkannt",
+        "aa_encode": "AAEncode-Kodierung erkannt",
+        "jj_encode": "JJEncode-Kodierung erkannt",
+        "eval_density": "eval/dynamische Ausführungsdichte zu hoch"
+      }
     }
   },
   "auth": {

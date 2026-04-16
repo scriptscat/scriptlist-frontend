@@ -309,7 +309,20 @@
       "label_detected_at": "Detected At",
       "label_script_a": "Script A",
       "label_script_b": "Script B",
-      "label_code_diff": "Code Diff"
+      "label_code_diff": "Code Diff",
+      "signal_desc": {
+        "avg_line_length": "Average line length too high (code may be compressed into few long lines)",
+        "max_line_length": "Maximum line length too high (contains extremely long lines)",
+        "whitespace_ratio": "Whitespace ratio too low (code lacks normal spacing and indentation)",
+        "comment_ratio": "Comment ratio too low (code has almost no comments)",
+        "single_char_ident_ratio": "Single-character identifier ratio too high (variable names shortened to single characters)",
+        "hex_ident_ratio": "Hex identifier ratio too high (uses _0x prefixed obfuscated variable names)",
+        "large_string_array": "Large string array detected (common in obfuscation tool string tables)",
+        "dean_edwards_packer": "Dean Edwards packer detected",
+        "aa_encode": "AAEncode encoding detected",
+        "jj_encode": "JJEncode encoding detected",
+        "eval_density": "eval/dynamic execution call density too high"
+      }
     }
   },
   "auth": {

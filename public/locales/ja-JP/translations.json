@@ -270,7 +270,20 @@
       "label_detected_at": "Detected At",
       "label_script_a": "Script A",
       "label_script_b": "Script B",
-      "label_code_diff": "Code Diff"
+      "label_code_diff": "Code Diff",
+      "signal_desc": {
+        "avg_line_length": "平均行長が長すぎます（コードが少数の長い行に圧縮されている可能性）",
+        "max_line_length": "最大行長が長すぎます（非常に長い行が存在）",
+        "whitespace_ratio": "空白比率が低すぎます（コードに通常のスペースやインデントがない）",
+        "comment_ratio": "コメント比率が低すぎます（コードにほとんどコメントがない）",
+        "single_char_ident_ratio": "1文字識別子の割合が高すぎます（変数名が1文字に短縮）",
+        "hex_ident_ratio": "16進識別子の割合が高すぎます（_0xプレフィックスの難読化変数名を使用）",
+        "large_string_array": "大きな文字列配列を検出（難読化ツールの文字列テーブルに多い）",
+        "dean_edwards_packer": "Dean Edwardsパッカーを検出",
+        "aa_encode": "AAEncodeエンコーディングを検出",
+        "jj_encode": "JJEncodeエンコーディングを検出",
+        "eval_density": "eval/動的実行呼び出し密度が高すぎます"
+      }
     }
   },
   "auth": {
