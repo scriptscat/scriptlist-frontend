@@ -149,3 +149,10 @@ html[data-theme='dark'] {
   border-start-start-radius: 0 !important;
   border-end-start-radius: 0 !important;
 }
+
+.similarity-match-highlight {
+  background: rgba(253, 224, 71, 0.35);
+}
+html[data-theme='dark'] .similarity-match-highlight {
+  background: rgba(133, 77, 14, 0.35);
+}

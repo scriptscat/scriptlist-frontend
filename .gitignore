@@ -47,5 +47,6 @@ next-env.d.ts
 /public/assets/prismjs/*
 
 .claude
-
+.omc
 CLAUDE.md
+
