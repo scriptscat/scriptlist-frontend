@@ -228,14 +228,20 @@ export default function UserEditModal({
         </Form.Item>
 
         <Form.Item
-          label="Email"
+          label={t('contact_email')}
           name="email"
           rules={[
             { type: 'email', message: t('email_validation') },
             { max: 50, message: t('email_max_length') },
           ]}
+          extra={
+            <Text type="secondary" className="text-xs">
+              {t('email_help_text')}
+            </Text>
+          }
         >
           <Input
+            allowClear
             prefix={<MailOutlined />}
             placeholder={t('email_placeholder')}
             maxLength={50}

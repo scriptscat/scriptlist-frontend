@@ -459,7 +459,7 @@ export default function UserProfileLayout({
                             },
                           ]
                         : []),
-                      ...(isAdmin && currentUserData.register_email
+                      ...(currentUserData.register_email
                         ? [
                             {
                               key: 'register_email',
