@@ -43,6 +43,8 @@ import {
 import type { ScriptInfo } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 import { useCategoryList } from '@/lib/api/hooks';
 import { APIError } from '@/types/api';
+import IntegrityErrorAlert from '@/components/IntegrityErrorAlert/IntegrityErrorAlert';
+import { ErrorCodes } from '@/lib/api/errorCodes';
 
 const { Text, Link } = Typography;
 
@@ -55,6 +57,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
   const t = useTranslations('script.editor');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [integrityError, setIntegrityError] = useState<string | null>(null);
   const parseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { data: category, isLoading: isCategoryLoading } = useCategoryList();
 
@@ -160,6 +163,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
 
     try {
       setLoading(true);
+      setIntegrityError(null);
       values.detailedDescription = mkEditorRef.current?.getValue();
       await onSubmit(values);
       message.success(
@@ -170,7 +174,11 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
     } catch (error: any) {
       console.error('Submit failed:', error);
       if (error instanceof APIError) {
-        message.error(`${t('messages.submit_failed')} ${error.msg}`);
+        if (error.code === ErrorCodes.SimilarityIntegrityRejected) {
+          setIntegrityError(error.msg);
+        } else {
+          message.error(`${t('messages.submit_failed')} ${error.msg}`);
+        }
       } else {
         message.error(
           `${t('messages.submit_failed')} ${
@@ -187,6 +195,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
 
   return (
     <div className="flex flex-col gap-3 max-w-7xl mx-auto space-y-6">
+      {integrityError && <IntegrityErrorAlert message={integrityError} />}
       {/* 提示信息 */}
       <Alert
         description={
