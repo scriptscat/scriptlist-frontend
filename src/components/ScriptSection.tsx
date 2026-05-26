@@ -134,7 +134,7 @@ function CompactCard({ script }: { script: ScriptListItem }) {
             >
               {'↓'}
             </span>
-            {formatNumber(script.total_install)}
+            {formatNumber(script.today_install)}
           </span>
           <span className="inline-flex items-center gap-1 text-app-secondary font-medium">
             <span className="text-yellow-500">{'★'}</span>
@@ -196,7 +196,7 @@ function ListRow({ script }: { script: ScriptListItem }) {
         >
           {'↓'}
         </span>
-        {formatNumber(script.total_install)}
+        {formatNumber(script.today_install)}
       </span>
       <span className="inline-flex items-center gap-1 text-xs text-app-secondary font-medium flex-shrink-0 w-[56px] justify-end">
         <span className="text-yellow-500">{'★'}</span>
