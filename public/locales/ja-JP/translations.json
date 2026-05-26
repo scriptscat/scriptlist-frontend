@@ -139,12 +139,14 @@
     "scripts": {
       "action_delete": "削除",
       "action_restore": "復元",
+      "action_trending_score": "トレンドスコアを編集",
       "action_visibility": "公開設定を変更",
       "col_actions": "操作",
       "col_author": "作者",
       "col_createtime": "作成日時",
       "col_name": "スクリプト名",
       "col_status": "ステータス",
+      "col_trending_score": "トレンドスコア",
       "col_type": "タイプ",
       "col_visibility": "公開設定",
       "delete_confirm": "このスクリプトを削除してもよろしいですか？",
@@ -162,6 +164,11 @@
       "status_active": "有効",
       "status_deleted": "削除済み",
       "title": "スクリプト管理",
+      "trending_score_hint": "Manual changes only affect the current trending_score; the next automatic or manual full recompute will overwrite this value.",
+      "trending_score_invalid": "Enter a valid trending_score",
+      "trending_score_label": "trending_score",
+      "trending_score_success": "trending_score updated successfully",
+      "trending_score_title": "Edit trending_score",
       "type_library": "ライブラリ",
       "type_subscribe": "購読",
       "type_userscript": "ユーザースクリプト",
@@ -176,6 +183,26 @@
       "ai_model": "モデル",
       "ai_system_prompt": "システムプロンプト",
       "ai_title": "AI設定",
+      "audit_credit_title": "Script Audit and Credit",
+      "audit_enabled": "Enable low-credit script audit",
+      "audit_enabled_help": "When disabled, users with credit above 0 but below the audit threshold publish directly; credit at or below 0 is still blocked.",
+      "audit_max_pending": "Low-credit pending limit",
+      "audit_max_pending_help": "Maximum number of pending script audits allowed for users below the audit threshold.",
+      "credit_review_threshold": "Audit threshold",
+      "credit_review_threshold_help": "Users with credit below this value and above 0 enter the audit queue.",
+      "credit_signal_register": "Registration base score",
+      "credit_signal_register_help": "Base score granted when a user credit snapshot is initialized.",
+      "credit_signal_register_7d": "Registration 7-day bonus",
+      "credit_signal_register_30d": "Registration 30-day bonus",
+      "credit_signal_register_180d": "Registration 180-day bonus",
+      "credit_signal_oauth_bind": "OAuth binding bonus",
+      "credit_signal_oauth_bind_help": "One-time bonus granted after binding any OAuth account.",
+      "credit_event_audit_approved": "Audit approved delta",
+      "credit_event_audit_rejected": "Audit rejected delta",
+      "credit_event_force_deleted": "Force-delete active script delta",
+      "credit_event_help": "Positive, negative, and zero values are allowed.",
+      "credit_max_admin_adjust_delta": "Admin adjustment limit",
+      "credit_max_admin_adjust_delta_help": "Absolute maximum allowed for a single manual admin credit delta.",
       "save_button": "保存",
       "save_success": "保存しました",
       "title": "システム設定",
@@ -185,7 +212,12 @@
       "ucenter_api": "API URL",
       "ucenter_appid": "アプリID",
       "ucenter_key": "通信キー",
-      "ucenter_title": "UCenter設定"
+      "ucenter_title": "UCenter設定",
+      "es_index_title": "ES検索インデックス",
+      "es_index_hint": "バックグラウンドでスクリプト検索インデックスを全件再構築します。APIの応答はタスク開始のみを示します。完了状況はバックエンドログで確認してください。",
+      "es_index_button": "ESインデックスを再構築",
+      "es_index_confirm": "ES検索インデックスの再構築を開始しますか？大きなデータベースでは時間がかかる場合があります。",
+      "es_index_started": "ES検索インデックスの再構築を開始しました"
     },
     "users": {
       "action_admin_level": "レベルを変更",
@@ -746,6 +778,12 @@
     "alerts": {
       "archived_description": "このスクリプトは作者によってアーカイブされており、スクリプトが無効になり、作者がメンテナンスを行わなくなった可能性があります。問題のフィードバックはできません。",
       "archived_title": "スクリプトはアーカイブされました",
+      "deleted_description": "このスクリプトは削除されており、一般ユーザーはアクセスできません。管理者として閲覧中で、右側のボタンから復元できます。",
+      "deleted_restore_button": "スクリプトを復元",
+      "deleted_restore_confirm": "このスクリプトを復元しますか？",
+      "deleted_restore_failed": "復元に失敗しました",
+      "deleted_restore_success": "復元しました",
+      "deleted_title": "スクリプトは削除されました",
       "obfuscated_description": "このスクリプトは作者によって読み取り不可能な処理が施されています。スクリプトサイトで審査は行っていますが、危険な権限の付与には注意してください。",
       "obfuscated_title": "スクリプトコードは読み取り不可能な処理が施されています"
     },
@@ -1556,10 +1594,25 @@
       },
       "sort": {
         "createtime": "最新公開",
+        "daily_pick": "今日のおすすめ",
         "score": "評価順",
         "today_download": "人気順",
-        "total_download": "ダウンロード数順",
-        "updatetime": "最近更新"
+        "total_download": "ダウンロード数順"
+      }
+    },
+    "section": {
+      "more": "もっと見る",
+      "daily_pick": {
+        "title": "今日のおすすめ"
+      },
+      "hot": {
+        "title": "人気のスクリプト"
+      },
+      "new": {
+        "title": "新着"
+      },
+      "longtail": {
+        "title": "おすすめ"
       }
     },
     "statistics": {

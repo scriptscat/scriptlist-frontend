@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Drawer, message, Space, Table, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import MonacoEditor from '@/components/MonacoEditor';
+import { Link } from '@/i18n/routing';
 import { similarityService } from '@/lib/api/services/similarity';
 import type {
   IntegrityReviewDetail,
@@ -55,9 +56,19 @@ export default function IntegrityReviewTable() {
     }
   };
 
+  const visibleData = useMemo(
+    () => data.filter((r) => !r.script.is_deleted),
+    [data],
+  );
+
   const columns: ColumnsType<IntegrityReviewItem> = [
     { title: t('col_id'), dataIndex: 'id', width: 70 },
-    { title: t('col_script'), render: (_, r) => r.script.name },
+    {
+      title: t('col_script'),
+      render: (_, r) => (
+        <Link href={`/script-show-page/${r.script.id}`}>{r.script.name}</Link>
+      ),
+    },
     {
       title: t('col_score'),
       dataIndex: 'score',
@@ -107,7 +118,7 @@ export default function IntegrityReviewTable() {
       <Table
         rowKey="id"
         columns={columns}
-        dataSource={data}
+        dataSource={visibleData}
         loading={loading}
         pagination={{
           current: page,

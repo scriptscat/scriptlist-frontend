@@ -11,20 +11,17 @@ import {
   Row,
   Col,
   Dropdown,
-  List,
 } from 'antd';
 import {
   SearchOutlined,
   QuestionCircleFilled,
   CodeFilled,
   DownOutlined,
-  NotificationOutlined,
 } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
 import { Link, useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import type { Announcement } from '@/lib/api/services/announcement';
 
 const { Title, Text } = Typography;
 
@@ -237,11 +234,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   );
 };
 
-interface HomeClientProps {
-  announcements: Announcement[];
-}
-
-export default function HomeClient({ announcements }: HomeClientProps) {
+export default function HomeClient() {
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
   const t = useTranslations();
@@ -262,41 +255,6 @@ export default function HomeClient({ announcements }: HomeClientProps) {
         onSearchChange={setSearchValue}
         onSearch={handleSearch}
       />
-
-      {/* Announcements Section */}
-      {announcements.length > 0 && (
-        <div className="py-8">
-          <div className="max-w-6xl mx-auto px-4">
-            <Card
-              title={
-                <span>
-                  <NotificationOutlined className="mr-2" />
-                  {t('announcements.title')}
-                </span>
-              }
-              className="!rounded-2xl !shadow-md"
-            >
-              <List
-                dataSource={announcements}
-                renderItem={(item) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      title={item.title}
-                      description={
-                        <Text type="secondary" className="text-xs">
-                          {new Date(
-                            item.createtime * 1000,
-                          ).toLocaleDateString()}
-                        </Text>
-                      }
-                    />
-                  </List.Item>
-                )}
-              />
-            </Card>
-          </div>
-        </div>
-      )}
 
       {/* Features Section */}
       <div className="py-10">

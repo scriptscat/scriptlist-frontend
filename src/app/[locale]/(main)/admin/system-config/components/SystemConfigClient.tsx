@@ -6,18 +6,36 @@ import {
   Card,
   Form,
   Input,
+  InputNumber,
   message,
   Popconfirm,
   Progress,
   Spin,
+  Switch,
 } from 'antd';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
+import { scriptService } from '@/lib/api/services/scripts';
 import type {
   MigrateAvatarStatus,
   SystemConfigItem,
 } from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
+
+const policyDefaults: Record<string, string> = {
+  'script_audit.enabled': 'true',
+  'script_audit.max_pending_per_user': '1',
+  'credit.review_threshold': '30',
+  'credit.signal_register': '10',
+  'credit.signal_register_7d': '10',
+  'credit.signal_register_30d': '20',
+  'credit.signal_register_180d': '20',
+  'credit.signal_oauth_bind': '20',
+  'credit.event_audit_approved': '15',
+  'credit.event_audit_rejected': '-10',
+  'credit.event_force_deleted': '-50',
+  'credit.max_admin_adjust_delta': '1000',
+};
 
 export default function SystemConfigClient() {
   const t = useTranslations('admin.system_config');
@@ -31,6 +49,10 @@ export default function SystemConfigClient() {
     useState<MigrateAvatarStatus | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Recompute trending_score state
+  const [recomputing, setRecomputing] = useState(false);
+  const [rebuildingEsIndex, setRebuildingEsIndex] = useState(false);
+
   const fetchConfigs = useCallback(async (isInitial = false) => {
     if (isInitial) setInitialLoading(true);
     try {
@@ -39,7 +61,7 @@ export default function SystemConfigClient() {
       for (const c of resp.configs) {
         map[c.key] = c.value;
       }
-      setConfigs(map);
+      setConfigs({ ...policyDefaults, ...map });
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -76,6 +98,38 @@ export default function SystemConfigClient() {
     if (pollRef.current) return;
     pollRef.current = setInterval(fetchMigrateStatus, 2000);
   }, [fetchMigrateStatus]);
+
+  const handleRecomputeTrending = async () => {
+    setRecomputing(true);
+    try {
+      const resp = await adminService.recomputeTrendingScore();
+      if (resp.started) {
+        message.success(t('recompute_trending_started'));
+      } else {
+        message.info(t('recompute_trending_running'));
+      }
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      }
+    } finally {
+      setRecomputing(false);
+    }
+  };
+
+  const handleRebuildEsIndex = async () => {
+    setRebuildingEsIndex(true);
+    try {
+      await scriptService.migrateEs();
+      message.success(t('es_index_started'));
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      }
+    } finally {
+      setRebuildingEsIndex(false);
+    }
+  };
 
   const handleMigrateAvatar = async () => {
     setMigrateStarting(true);
@@ -116,6 +170,18 @@ export default function SystemConfigClient() {
     setConfigs((prev) => ({ ...prev, [key]: value }));
   };
 
+  const boolConfig = (key: string) =>
+    configs[key] === 'true' || configs[key] === '1';
+
+  const numberConfig = (key: string) => {
+    const value = Number(configs[key]);
+    return Number.isFinite(value) ? value : undefined;
+  };
+
+  const updateNumberConfig = (key: string, value: number | string | null) => {
+    updateConfig(key, value === null ? '' : String(value));
+  };
+
   if (initialLoading) {
     return (
       <div className="flex justify-center py-12">
@@ -130,6 +196,20 @@ export default function SystemConfigClient() {
   ];
   const ucenterKeys = ['ucenter.api', 'ucenter.key', 'ucenter.appid'];
   const aiKeys = ['ai.base_url', 'ai.api_key', 'ai.model', 'ai.system_prompt'];
+  const auditCreditKeys = [
+    'script_audit.enabled',
+    'script_audit.max_pending_per_user',
+    'credit.review_threshold',
+    'credit.signal_register',
+    'credit.signal_register_7d',
+    'credit.signal_register_30d',
+    'credit.signal_register_180d',
+    'credit.signal_oauth_bind',
+    'credit.event_audit_approved',
+    'credit.event_audit_rejected',
+    'credit.event_force_deleted',
+    'credit.max_admin_adjust_delta',
+  ];
 
   const migrateRunning = migrateStatus?.running ?? false;
   const migrateTotal = migrateStatus?.total ?? 0;
@@ -168,6 +248,169 @@ export default function SystemConfigClient() {
               type="primary"
               loading={saving === 'turnstile'}
               onClick={() => handleSave('turnstile', turnstileKeys)}
+            >
+              {t('save_button')}
+            </Button>
+          </Form>
+        </Card>
+
+        {/* Script audit and credit */}
+        <Card title={t('audit_credit_title')} size="small">
+          <Form layout="vertical">
+            <Form.Item
+              label={t('audit_enabled')}
+              extra={t('audit_enabled_help')}
+            >
+              <Switch
+                checked={boolConfig('script_audit.enabled')}
+                onChange={(checked) =>
+                  updateConfig(
+                    'script_audit.enabled',
+                    checked ? 'true' : 'false',
+                  )
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              label={t('audit_max_pending')}
+              extra={t('audit_max_pending_help')}
+            >
+              <InputNumber
+                min={1}
+                precision={0}
+                className="w-full"
+                value={numberConfig('script_audit.max_pending_per_user')}
+                onChange={(value) =>
+                  updateNumberConfig('script_audit.max_pending_per_user', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              label={t('credit_review_threshold')}
+              extra={t('credit_review_threshold_help')}
+            >
+              <InputNumber
+                min={1}
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.review_threshold')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.review_threshold', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              label={t('credit_signal_register')}
+              extra={t('credit_signal_register_help')}
+            >
+              <InputNumber
+                min={0}
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.signal_register')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.signal_register', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item label={t('credit_signal_register_7d')}>
+              <InputNumber
+                min={0}
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.signal_register_7d')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.signal_register_7d', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item label={t('credit_signal_register_30d')}>
+              <InputNumber
+                min={0}
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.signal_register_30d')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.signal_register_30d', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item label={t('credit_signal_register_180d')}>
+              <InputNumber
+                min={0}
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.signal_register_180d')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.signal_register_180d', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              label={t('credit_signal_oauth_bind')}
+              extra={t('credit_signal_oauth_bind_help')}
+            >
+              <InputNumber
+                min={0}
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.signal_oauth_bind')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.signal_oauth_bind', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              label={t('credit_event_audit_approved')}
+              extra={t('credit_event_help')}
+            >
+              <InputNumber
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.event_audit_approved')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.event_audit_approved', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item label={t('credit_event_audit_rejected')}>
+              <InputNumber
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.event_audit_rejected')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.event_audit_rejected', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item label={t('credit_event_force_deleted')}>
+              <InputNumber
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.event_force_deleted')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.event_force_deleted', value)
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              label={t('credit_max_admin_adjust_delta')}
+              extra={t('credit_max_admin_adjust_delta_help')}
+            >
+              <InputNumber
+                min={1}
+                precision={0}
+                className="w-full"
+                value={numberConfig('credit.max_admin_adjust_delta')}
+                onChange={(value) =>
+                  updateNumberConfig('credit.max_admin_adjust_delta', value)
+                }
+              />
+            </Form.Item>
+            <Button
+              type="primary"
+              loading={saving === 'audit-credit'}
+              onClick={() => handleSave('audit-credit', auditCreditKeys)}
             >
               {t('save_button')}
             </Button>
@@ -251,6 +494,38 @@ export default function SystemConfigClient() {
                     )}
                 </div>
               )}
+          </div>
+        </Card>
+
+        {/* ES search index */}
+        <Card title={t('es_index_title')} size="small">
+          <div className="space-y-2">
+            <div className="text-sm text-gray-500">{t('es_index_hint')}</div>
+            <Popconfirm
+              title={t('es_index_confirm')}
+              onConfirm={handleRebuildEsIndex}
+            >
+              <Button type="primary" loading={rebuildingEsIndex}>
+                {t('es_index_button')}
+              </Button>
+            </Popconfirm>
+          </div>
+        </Card>
+
+        {/* Ranking: recompute trending_score */}
+        <Card title={t('ranking_title')} size="small">
+          <div className="space-y-2">
+            <div className="text-sm text-gray-500">
+              {t('recompute_trending_hint')}
+            </div>
+            <Popconfirm
+              title={t('recompute_trending_confirm')}
+              onConfirm={handleRecomputeTrending}
+            >
+              <Button type="primary" loading={recomputing}>
+                {t('recompute_trending_button')}
+              </Button>
+            </Popconfirm>
           </div>
         </Card>
 

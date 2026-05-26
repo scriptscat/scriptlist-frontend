@@ -164,7 +164,7 @@ export default function ScriptList({
                 {t('search.sort.today_download')}
               </Option>
               <Option value="createtime">{t('search.sort.createtime')}</Option>
-              <Option value="updatetime">{t('search.sort.updatetime')}</Option>
+              <Option value="daily_pick">{t('search.sort.daily_pick')}</Option>
               <Option value="score">{t('search.sort.score')}</Option>
               <Option value="total_download">
                 {t('search.sort.total_download')}

@@ -71,6 +71,7 @@ export interface ScriptItem {
   status: number;
   createtime: number;
   updatetime: number;
+  trending_score: number;
 }
 
 // ==================== Feedback Management ====================
@@ -169,6 +170,56 @@ export interface AdminReportItem {
   updatetime: number;
 }
 
+// ==================== Script Audit ====================
+
+export interface ScriptAuditItem {
+  id: number;
+  script_id: number;
+  code_id: number;
+  submitter_id: number;
+  submitter: string;
+  submitter_credit: number;
+  script_name: string;
+  version: string;
+  status: number; // 1=pending, 2=approved, 3=rejected
+  reason: string;
+  createtime: number;
+}
+
+export interface ScriptAuditDetail extends ScriptAuditItem {
+  code: string;
+  meta: string;
+  changelog: string;
+}
+
+// ==================== Credit Logs ====================
+
+export interface CreditLogItem {
+  id: number;
+  action: string;
+  delta: number;
+  new_score: number;
+  reason: string;
+  operator_id: number;
+  related_id: number;
+  createtime: number;
+}
+
+// ==================== Migrate Credit ====================
+
+export interface MigrateCreditStatus {
+  running: boolean;
+  processed: number;
+  skipped: number;
+  failed: number;
+  last_id: number;
+  message: string;
+}
+
+export interface MigrateCreditTriggerResponse extends MigrateCreditStatus {
+  started: boolean;
+}
+
 // ==================== Migrate Avatar ====================
 
 export interface MigrateAvatarStatus {
@@ -178,6 +229,19 @@ export interface MigrateAvatarStatus {
   failed: number;
   total: number;
   message: string;
+}
+
+// 用户被处理过的脚本条目（管理员视角）
+export interface ProcessedScriptItem {
+  id: number;
+  action: 'script_delete' | 'script_audit_rejected' | string;
+  operator_id: number;
+  operator_name: string;
+  script_id: number;
+  script_name: string;
+  script_status: number;
+  reason: string;
+  createtime: number;
 }
 
 class AdminService {
@@ -257,23 +321,48 @@ class AdminService {
     });
   }
 
+  async listUserProcessedScripts(
+    userId: number,
+    params?: { page?: number; size?: number },
+  ) {
+    return apiClient.get<ListData<ProcessedScriptItem>>(
+      `${this.basePath}/users/${userId}/processed-scripts`,
+      params,
+    );
+  }
+
   // Script Management
   async listScripts(
     page: number = 1,
     size: number = 20,
     keyword?: string,
     status?: number,
+    searchField?: 'name' | 'description' | 'content',
+    sortField?: 'trending_score',
+    sortOrder?: 'asc' | 'desc',
   ) {
     return apiClient.get<ListData<ScriptItem>>(`${this.basePath}/scripts`, {
       page,
       size,
       keyword,
       status,
+      search_field: searchField,
+      sort_field: sortField,
+      sort_order: sortOrder,
     });
   }
 
   async restoreScript(id: number) {
     return apiClient.put<void>(`${this.basePath}/scripts/${id}/restore`);
+  }
+
+  async updateScriptTrendingScore(id: number, trendingScore: number) {
+    return apiClient.put<void>(
+      `${this.basePath}/scripts/${id}/trending-score`,
+      {
+        trending_score: trendingScore,
+      },
+    );
   }
 
   // Feedback Management
@@ -342,6 +431,73 @@ class AdminService {
   async getMigrateAvatarStatus() {
     return apiClient.get<MigrateAvatarStatus>(
       `${this.basePath}/migrate-avatar/status`,
+    );
+  }
+
+  // Ranking: trending_score 手动重算
+  async recomputeTrendingScore() {
+    return apiClient.post<{ started: boolean; message: string }>(
+      `${this.basePath}/ranking/recompute-trending`,
+    );
+  }
+
+  // Script Audit Management
+  async listScriptAudits(
+    page: number = 1,
+    size: number = 20,
+    status?: number,
+    submitterId?: number,
+  ) {
+    return apiClient.get<ListData<ScriptAuditItem>>(
+      `${this.basePath}/script-audits`,
+      { page, size, status, submitter_id: submitterId },
+    );
+  }
+
+  async getScriptAudit(id: number) {
+    return apiClient.get<ScriptAuditDetail>(
+      `${this.basePath}/script-audits/${id}`,
+    );
+  }
+
+  async approveScriptAudit(id: number) {
+    return apiClient.put<void>(`${this.basePath}/script-audits/${id}/approve`);
+  }
+
+  async rejectScriptAudit(id: number, reason: string) {
+    return apiClient.put<void>(`${this.basePath}/script-audits/${id}/reject`, {
+      reason,
+    });
+  }
+
+  // Credit Management
+  async adjustCredit(userId: number, delta: number, reason: string) {
+    return apiClient.post<void>(`${this.basePath}/users/${userId}/credit`, {
+      delta,
+      reason,
+    });
+  }
+
+  async listUserCreditLogs(
+    userId: number,
+    page: number = 1,
+    size: number = 20,
+  ) {
+    return apiClient.get<ListData<CreditLogItem>>(
+      `${this.basePath}/users/${userId}/credit/logs`,
+      { page, size },
+    );
+  }
+
+  async migrateCredit() {
+    return apiClient.post<MigrateCreditTriggerResponse>(
+      `${this.basePath}/migrate-credit`,
+    );
+  }
+
+  async getMigrateCreditStatus() {
+    return apiClient.get<MigrateCreditStatus>(
+      `${this.basePath}/migrate-credit/status`,
     );
   }
 

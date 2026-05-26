@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import {
+  Alert,
   Button,
   Input,
+  InputNumber,
   message,
   Modal,
   Popconfirm,
@@ -18,8 +20,12 @@ import { adminService } from '@/lib/api/services/admin';
 import type { ScriptItem } from '@/lib/api/services/admin';
 import { scriptService } from '@/lib/api/services/scripts/scripts';
 import { APIError } from '@/types/api';
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnsType, TableProps } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
+import DeleteScriptModal from './DeleteScriptModal';
+
+type ScriptSortField = 'trending_score';
+type ScriptSortOrder = 'asc' | 'desc';
 
 export default function ScriptsClient() {
   const t = useTranslations('admin.scripts');
@@ -28,6 +34,13 @@ export default function ScriptsClient() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
+  const [searchField, setSearchField] = useState<
+    'name' | 'description' | 'content'
+  >('name');
+  const [appliedKeyword, setAppliedKeyword] = useState('');
+  const [appliedSearchField, setAppliedSearchField] = useState<
+    'name' | 'description' | 'content'
+  >('name');
   const [statusFilter, setStatusFilter] = useState<number | undefined>(
     undefined,
   );
@@ -35,16 +48,35 @@ export default function ScriptsClient() {
   const [editingScript, setEditingScript] = useState<ScriptItem | null>(null);
   const [newPublic, setNewPublic] = useState(1);
   const [newUnwell, setNewUnwell] = useState(2);
+  const [sortField, setSortField] = useState<ScriptSortField | undefined>();
+  const [sortOrder, setSortOrder] = useState<ScriptSortOrder | undefined>();
+  const [trendingModalOpen, setTrendingModalOpen] = useState(false);
+  const [editingTrendingScript, setEditingTrendingScript] =
+    useState<ScriptItem | null>(null);
+  const [newTrendingScore, setNewTrendingScore] = useState<number | null>(0);
+  const [updatingTrendingScore, setUpdatingTrendingScore] = useState(false);
+  const [deletingScript, setDeletingScript] = useState<ScriptItem | null>(null);
 
   const fetchData = useCallback(
     async (
-      p: number = page,
-      kw: string = keyword,
-      st: number | undefined = statusFilter,
+      p: number,
+      kw: string,
+      st: number | undefined,
+      field: 'name' | 'description' | 'content',
+      sf: ScriptSortField | undefined,
+      so: ScriptSortOrder | undefined,
     ) => {
       setLoading(true);
       try {
-        const resp = await adminService.listScripts(p, 20, kw || undefined, st);
+        const resp = await adminService.listScripts(
+          p,
+          20,
+          kw || undefined,
+          st,
+          kw ? field : undefined,
+          sf,
+          so,
+        );
         setData(resp.list || []);
         setTotal(resp.total);
       } catch (err) {
@@ -55,35 +87,65 @@ export default function ScriptsClient() {
         setLoading(false);
       }
     },
-    [page, keyword, statusFilter],
+    [],
   );
 
   useEffect(() => {
-    fetchData(page, keyword, statusFilter);
-  }, [page, statusFilter]);
+    fetchData(
+      page,
+      appliedKeyword,
+      statusFilter,
+      appliedSearchField,
+      sortField,
+      sortOrder,
+    );
+  }, [
+    fetchData,
+    page,
+    appliedKeyword,
+    statusFilter,
+    appliedSearchField,
+    sortField,
+    sortOrder,
+  ]);
 
   const handleSearch = () => {
+    setAppliedKeyword(keyword);
+    setAppliedSearchField(searchField);
     setPage(1);
-    fetchData(1, keyword, statusFilter);
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await scriptService.deleteScript(id);
-      message.success(t('delete_success'));
-      fetchData();
-    } catch (err) {
-      if (err instanceof APIError) {
-        message.error(err.msg);
-      }
-    }
-  };
+  const refreshList = useCallback(() => {
+    fetchData(
+      page,
+      appliedKeyword,
+      statusFilter,
+      appliedSearchField,
+      sortField,
+      sortOrder,
+    );
+  }, [
+    fetchData,
+    page,
+    appliedKeyword,
+    statusFilter,
+    appliedSearchField,
+    sortField,
+    sortOrder,
+  ]);
 
   const handleRestore = async (id: number) => {
     try {
       await adminService.restoreScript(id);
       message.success(t('restore_success'));
-      fetchData();
+      fetchData(
+        page,
+        appliedKeyword,
+        statusFilter,
+        appliedSearchField,
+        sortField,
+        sortOrder,
+      );
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -98,6 +160,12 @@ export default function ScriptsClient() {
     setVisibilityModalOpen(true);
   };
 
+  const openTrendingModal = (script: ScriptItem) => {
+    setEditingTrendingScript(script);
+    setNewTrendingScore(script.trending_score ?? 0);
+    setTrendingModalOpen(true);
+  };
+
   const handleUpdateVisibility = async () => {
     if (!editingScript) return;
     try {
@@ -108,12 +176,72 @@ export default function ScriptsClient() {
       message.success(t('visibility_success'));
       setVisibilityModalOpen(false);
       setEditingScript(null);
-      fetchData();
+      fetchData(
+        page,
+        appliedKeyword,
+        statusFilter,
+        appliedSearchField,
+        sortField,
+        sortOrder,
+      );
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
       }
     }
+  };
+
+  const handleUpdateTrendingScore = async () => {
+    if (!editingTrendingScript || newTrendingScore === null) return;
+    if (!Number.isFinite(newTrendingScore)) {
+      message.error(t('trending_score_invalid'));
+      return;
+    }
+    setUpdatingTrendingScore(true);
+    try {
+      await adminService.updateScriptTrendingScore(
+        editingTrendingScript.id,
+        newTrendingScore,
+      );
+      message.success(t('trending_score_success'));
+      setTrendingModalOpen(false);
+      setEditingTrendingScript(null);
+      fetchData(
+        page,
+        appliedKeyword,
+        statusFilter,
+        appliedSearchField,
+        sortField,
+        sortOrder,
+      );
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      }
+    } finally {
+      setUpdatingTrendingScore(false);
+    }
+  };
+
+  const handleTableChange: TableProps<ScriptItem>['onChange'] = (
+    pagination,
+    _filters,
+    sorter,
+  ) => {
+    const currentSorter = Array.isArray(sorter) ? sorter[0] : sorter;
+    if (currentSorter?.field === 'trending_score' && currentSorter.order) {
+      setSortField('trending_score');
+      setSortOrder(currentSorter.order === 'ascend' ? 'asc' : 'desc');
+    } else {
+      setSortField(undefined);
+      setSortOrder(undefined);
+    }
+    setPage(pagination.current || 1);
+  };
+
+  const formatTrendingScore = (score: number | undefined) => {
+    if (typeof score !== 'number' || !Number.isFinite(score)) return '0';
+    return score.toFixed(6).replace(/\.?0+$/, '');
   };
 
   const getTypeTag = (type: number) => {
@@ -191,6 +319,20 @@ export default function ScriptsClient() {
       render: (val: number) => getStatusTag(val),
     },
     {
+      title: t('col_trending_score'),
+      dataIndex: 'trending_score',
+      key: 'trending_score',
+      width: 150,
+      sorter: true,
+      sortOrder:
+        sortField === 'trending_score'
+          ? sortOrder === 'asc'
+            ? 'ascend'
+            : 'descend'
+          : undefined,
+      render: (val: number) => formatTrendingScore(val),
+    },
+    {
       title: t('col_createtime'),
       dataIndex: 'createtime',
       key: 'createtime',
@@ -202,14 +344,14 @@ export default function ScriptsClient() {
       render: (_: unknown, record: ScriptItem) => (
         <Space>
           {record.status === 1 ? (
-            <Popconfirm
-              title={t('delete_confirm')}
-              onConfirm={() => handleDelete(record.id)}
+            <Button
+              type="link"
+              size="small"
+              danger
+              onClick={() => setDeletingScript(record)}
             >
-              <Button type="link" size="small" danger>
-                {t('action_delete')}
-              </Button>
-            </Popconfirm>
+              {t('action_delete')}
+            </Button>
           ) : (
             <Popconfirm
               title={t('restore_confirm')}
@@ -226,6 +368,13 @@ export default function ScriptsClient() {
             onClick={() => openVisibilityModal(record)}
           >
             {t('action_visibility')}
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => openTrendingModal(record)}
+          >
+            {t('action_trending_score')}
           </Button>
         </Space>
       ),
@@ -251,6 +400,16 @@ export default function ScriptsClient() {
               { value: 0, label: t('status_deleted') },
             ]}
           />
+          <Select
+            value={searchField}
+            onChange={setSearchField}
+            style={{ width: 120 }}
+            options={[
+              { value: 'name', label: t('search_field_name') },
+              { value: 'description', label: t('search_field_description') },
+              { value: 'content', label: t('search_field_content') },
+            ]}
+          />
           <Input
             placeholder={t('search_placeholder')}
             value={keyword}
@@ -273,11 +432,11 @@ export default function ScriptsClient() {
         dataSource={data}
         rowKey="id"
         loading={loading}
+        onChange={handleTableChange}
         pagination={{
           current: page,
           total,
           pageSize: 20,
-          onChange: setPage,
         }}
       />
 
@@ -318,6 +477,48 @@ export default function ScriptsClient() {
           </div>
         </div>
       </Modal>
+
+      <Modal
+        title={t('trending_score_title')}
+        open={trendingModalOpen}
+        onOk={handleUpdateTrendingScore}
+        confirmLoading={updatingTrendingScore}
+        onCancel={() => {
+          setTrendingModalOpen(false);
+          setEditingTrendingScript(null);
+        }}
+      >
+        <div className="py-4 space-y-4">
+          <Alert type="info" showIcon message={t('trending_score_hint')} />
+          <div>
+            <div className="mb-2">{t('trending_score_label')}</div>
+            <InputNumber
+              value={newTrendingScore}
+              onChange={(value) =>
+                setNewTrendingScore(typeof value === 'number' ? value : null)
+              }
+              precision={6}
+              step={0.1}
+              style={{ width: '100%' }}
+            />
+          </div>
+        </div>
+      </Modal>
+
+      {deletingScript && (
+        <DeleteScriptModal
+          open={!!deletingScript}
+          scriptId={deletingScript.id}
+          scriptName={deletingScript.name}
+          authorId={deletingScript.user_id}
+          authorName={deletingScript.username}
+          onCancel={() => setDeletingScript(null)}
+          onSuccess={() => {
+            setDeletingScript(null);
+            refreshList();
+          }}
+        />
+      )}
     </div>
   );
 }

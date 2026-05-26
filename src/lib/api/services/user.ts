@@ -18,6 +18,13 @@ export interface BadgeItem {
   description: string;
 }
 
+// 用户信用分快照（仅管理员可见）
+export interface UserCreditInfo {
+  score: number;
+  pending_count: number;
+  updatetime: number;
+}
+
 // 获取用户详细信息响应
 export interface GetUserDetailResponse extends UserInfo {
   // 成就徽章
@@ -46,6 +53,7 @@ export interface GetUserDetailResponse extends UserInfo {
   register_ip?: string;
   register_ip_location?: string;
   register_email?: string;
+  credit?: UserCreditInfo;
 }
 
 export interface UpdateUserDetailRequest {

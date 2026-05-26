@@ -175,6 +175,17 @@ export class ScriptService {
   });
 
   /**
+   * 记录脚本详情页访问，用于下载量统计门控
+   */
+  async recordVisit(id: string, headers?: Record<string, string>) {
+    return apiClient.postWithCookie<Record<string, never>>(
+      `${this.basePath}/${id}/visit`,
+      {},
+      headers ? { headers } : undefined,
+    );
+  }
+
+  /**
    * 获取脚本代码
    */
   async code(id: string) {
@@ -336,6 +347,13 @@ export class ScriptService {
    */
   async watchScript(id: number, watch: number) {
     return apiClient.post(`${this.basePath}/${id}/watch`, { watch });
+  }
+
+  /**
+   * 触发脚本搜索 ES 索引全量重建
+   */
+  async migrateEs() {
+    return apiClient.post<void>(`${this.basePath}/migrate/es`);
   }
 
   /**

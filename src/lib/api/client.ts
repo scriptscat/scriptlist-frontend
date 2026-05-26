@@ -304,6 +304,22 @@ class APIClient {
     });
   }
 
+  async postWithCookie<T>(
+    endpoint: string,
+    data?: any,
+    options?: RequestOptions,
+  ): Promise<T> {
+    return this.requestWithCookie<T>(endpoint, {
+      method: 'POST',
+      body: data
+        ? data instanceof FormData
+          ? data
+          : JSON.stringify(data)
+        : undefined,
+      ...options,
+    });
+  }
+
   /**
    * POST请求
    */

@@ -472,6 +472,35 @@ export default function UserProfileLayout({
                             },
                           ]
                         : []),
+                      ...(isAdmin && currentUserData.credit
+                        ? [
+                            {
+                              key: 'credit',
+                              label: (
+                                <Text type="secondary">
+                                  <TrophyOutlined className="mr-1" />
+                                  {t('credit_score')}
+                                </Text>
+                              ),
+                              children: (
+                                <span>
+                                  {currentUserData.credit.score}
+                                  {currentUserData.credit.pending_count > 0 && (
+                                    <Text
+                                      type="secondary"
+                                      className="ml-2 text-xs"
+                                    >
+                                      {t('credit_pending', {
+                                        count:
+                                          currentUserData.credit.pending_count,
+                                      })}
+                                    </Text>
+                                  )}
+                                </span>
+                              ),
+                            },
+                          ]
+                        : []),
                     ] satisfies DescriptionsProps['items']
                   }
                 />

@@ -28,6 +28,14 @@ import mdiGoogle from '@iconify-icons/mdi/google';
 import mdiMicrosoft from '@iconify-icons/mdi/microsoft';
 import mdiApple from '@iconify-icons/mdi/apple';
 
+// mdi - search / section chips
+import mdiFire from '@iconify-icons/mdi/fire';
+import mdiSparkles from '@iconify-icons/mdi/sparkles';
+import mdiNewBox from '@iconify-icons/mdi/new-box';
+import mdiLibrary from '@iconify-icons/mdi/library';
+import mdiCog from '@iconify-icons/mdi/cog';
+import mdiTrendingUp from '@iconify-icons/mdi/trending-up';
+
 // Register all icons
 addIcon('mingcute:qq-fill', qqFill);
 
@@ -43,3 +51,10 @@ addIcon('mdi:github', mdiGithub);
 addIcon('mdi:google', mdiGoogle);
 addIcon('mdi:microsoft', mdiMicrosoft);
 addIcon('mdi:apple', mdiApple);
+
+addIcon('mdi:fire', mdiFire);
+addIcon('mdi:sparkles', mdiSparkles);
+addIcon('mdi:new-box', mdiNewBox);
+addIcon('mdi:library', mdiLibrary);
+addIcon('mdi:cog', mdiCog);
+addIcon('mdi:trending-up', mdiTrendingUp);

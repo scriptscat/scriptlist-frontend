@@ -147,7 +147,10 @@ export interface ScriptSearchRequest extends PageRequest {
     | 'total_download'
     | 'score'
     | 'createtime'
-    | 'updatetime';
+    | 'updatetime'
+    | 'today_update'
+    | 'daily_pick'
+    | 'long_tail';
 }
 
 // 脚本同步配置参数

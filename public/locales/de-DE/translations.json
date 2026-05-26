@@ -139,12 +139,14 @@
     "scripts": {
       "action_delete": "Löschen",
       "action_restore": "Wiederherstellen",
+      "action_trending_score": "Trend Score bearbeiten",
       "action_visibility": "Sichtbarkeit ändern",
       "col_actions": "Aktionen",
       "col_author": "Autor",
       "col_createtime": "Erstellt am",
       "col_name": "Skriptname",
       "col_status": "Status",
+      "col_trending_score": "Trend Score",
       "col_type": "Typ",
       "col_visibility": "Sichtbarkeit",
       "delete_confirm": "Möchten Sie dieses Skript wirklich löschen?",
@@ -162,6 +164,11 @@
       "status_active": "Aktiv",
       "status_deleted": "Gelöscht",
       "title": "Skriptverwaltung",
+      "trending_score_hint": "Manual changes only affect the current trending_score; the next automatic or manual full recompute will overwrite this value.",
+      "trending_score_invalid": "Enter a valid trending_score",
+      "trending_score_label": "trending_score",
+      "trending_score_success": "trending_score updated successfully",
+      "trending_score_title": "Edit trending_score",
       "type_library": "Bibliothek",
       "type_subscribe": "Abonnement",
       "type_userscript": "Benutzerskript",
@@ -176,6 +183,26 @@
       "ai_model": "Modell",
       "ai_system_prompt": "System-Prompt",
       "ai_title": "KI-Konfiguration",
+      "audit_credit_title": "Script Audit and Credit",
+      "audit_enabled": "Enable low-credit script audit",
+      "audit_enabled_help": "When disabled, users with credit above 0 but below the audit threshold publish directly; credit at or below 0 is still blocked.",
+      "audit_max_pending": "Low-credit pending limit",
+      "audit_max_pending_help": "Maximum number of pending script audits allowed for users below the audit threshold.",
+      "credit_review_threshold": "Audit threshold",
+      "credit_review_threshold_help": "Users with credit below this value and above 0 enter the audit queue.",
+      "credit_signal_register": "Registration base score",
+      "credit_signal_register_help": "Base score granted when a user credit snapshot is initialized.",
+      "credit_signal_register_7d": "Registration 7-day bonus",
+      "credit_signal_register_30d": "Registration 30-day bonus",
+      "credit_signal_register_180d": "Registration 180-day bonus",
+      "credit_signal_oauth_bind": "OAuth binding bonus",
+      "credit_signal_oauth_bind_help": "One-time bonus granted after binding any OAuth account.",
+      "credit_event_audit_approved": "Audit approved delta",
+      "credit_event_audit_rejected": "Audit rejected delta",
+      "credit_event_force_deleted": "Force-delete active script delta",
+      "credit_event_help": "Positive, negative, and zero values are allowed.",
+      "credit_max_admin_adjust_delta": "Admin adjustment limit",
+      "credit_max_admin_adjust_delta_help": "Absolute maximum allowed for a single manual admin credit delta.",
       "save_button": "Speichern",
       "save_success": "Erfolgreich gespeichert",
       "title": "Systemkonfiguration",
@@ -185,7 +212,12 @@
       "ucenter_api": "API-URL",
       "ucenter_appid": "App-ID",
       "ucenter_key": "Kommunikationsschlüssel",
-      "ucenter_title": "UCenter-Konfiguration"
+      "ucenter_title": "UCenter-Konfiguration",
+      "es_index_title": "ES-Suchindex",
+      "es_index_hint": "Startet im Hintergrund einen vollständigen Neuaufbau des Skript-Suchindex. Die API-Antwort bedeutet nur, dass die Aufgabe gestartet wurde; den Fortschritt bitte in den Backend-Logs prüfen.",
+      "es_index_button": "ES-Index neu aufbauen",
+      "es_index_confirm": "ES-Suchindex jetzt neu aufbauen? Bei großen Datenbanken kann das länger dauern.",
+      "es_index_started": "Neuaufbau des ES-Suchindex gestartet"
     },
     "users": {
       "action_admin_level": "Stufe ändern",
@@ -746,6 +778,12 @@
     "alerts": {
       "archived_description": "Dieses Skript wurde vom Autor archiviert. Das Skript funktioniert möglicherweise nicht mehr und der Autor wartet es nicht mehr. Sie können kein Feedback mehr abgeben.",
       "archived_title": "Skript wurde archiviert",
+      "deleted_description": "Dieses Skript wurde gelöscht und ist für normale Nutzer nicht zugänglich. Sie sehen es als Administrator und können es mit der Schaltfläche rechts wiederherstellen.",
+      "deleted_restore_button": "Skript wiederherstellen",
+      "deleted_restore_confirm": "Dieses Skript wiederherstellen?",
+      "deleted_restore_failed": "Wiederherstellen fehlgeschlagen",
+      "deleted_restore_success": "Wiederhergestellt",
+      "deleted_title": "Skript wurde gelöscht",
       "obfuscated_description": "Dieses Skript wurde vom Autor verschleiert. Obwohl die Skriptseite bereits eine Überprüfung durchgeführt hat, seien Sie dennoch vorsichtig bei der Gewährung gefährlicher Berechtigungen.",
       "obfuscated_title": "Skriptcode wurde verschleiert"
     },
@@ -1556,10 +1594,25 @@
       },
       "sort": {
         "createtime": "Neueste Veröffentlichung",
+        "daily_pick": "Tägliche Auswahl",
         "score": "Höchste Bewertung",
         "today_download": "Nach Popularität sortieren",
-        "total_download": "Meist heruntergeladen",
-        "updatetime": "Kürzlich aktualisiert"
+        "total_download": "Meist heruntergeladen"
+      }
+    },
+    "section": {
+      "more": "Mehr",
+      "daily_pick": {
+        "title": "Tägliche Auswahl"
+      },
+      "hot": {
+        "title": "Beliebte Skripte"
+      },
+      "new": {
+        "title": "Neuveröffentlichungen"
+      },
+      "longtail": {
+        "title": "Könnte dich interessieren"
       }
     },
     "statistics": {

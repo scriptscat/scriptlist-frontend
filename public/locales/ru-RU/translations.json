@@ -139,12 +139,14 @@
     "scripts": {
       "action_delete": "Удалить",
       "action_restore": "Восстановить",
+      "action_trending_score": "Изменить Trend Score",
       "action_visibility": "Изменить видимость",
       "col_actions": "Действия",
       "col_author": "Автор",
       "col_createtime": "Дата создания",
       "col_name": "Название скрипта",
       "col_status": "Статус",
+      "col_trending_score": "Trend Score",
       "col_type": "Тип",
       "col_visibility": "Видимость",
       "delete_confirm": "Вы уверены, что хотите удалить этот скрипт?",
@@ -162,6 +164,11 @@
       "status_active": "Активный",
       "status_deleted": "Удалён",
       "title": "Управление скриптами",
+      "trending_score_hint": "Manual changes only affect the current trending_score; the next automatic or manual full recompute will overwrite this value.",
+      "trending_score_invalid": "Enter a valid trending_score",
+      "trending_score_label": "trending_score",
+      "trending_score_success": "trending_score updated successfully",
+      "trending_score_title": "Edit trending_score",
       "type_library": "Библиотека",
       "type_subscribe": "Подписка",
       "type_userscript": "Пользовательский скрипт",
@@ -176,6 +183,26 @@
       "ai_model": "Модель",
       "ai_system_prompt": "Системный промпт",
       "ai_title": "Настройка ИИ",
+      "audit_credit_title": "Script Audit and Credit",
+      "audit_enabled": "Enable low-credit script audit",
+      "audit_enabled_help": "When disabled, users with credit above 0 but below the audit threshold publish directly; credit at or below 0 is still blocked.",
+      "audit_max_pending": "Low-credit pending limit",
+      "audit_max_pending_help": "Maximum number of pending script audits allowed for users below the audit threshold.",
+      "credit_review_threshold": "Audit threshold",
+      "credit_review_threshold_help": "Users with credit below this value and above 0 enter the audit queue.",
+      "credit_signal_register": "Registration base score",
+      "credit_signal_register_help": "Base score granted when a user credit snapshot is initialized.",
+      "credit_signal_register_7d": "Registration 7-day bonus",
+      "credit_signal_register_30d": "Registration 30-day bonus",
+      "credit_signal_register_180d": "Registration 180-day bonus",
+      "credit_signal_oauth_bind": "OAuth binding bonus",
+      "credit_signal_oauth_bind_help": "One-time bonus granted after binding any OAuth account.",
+      "credit_event_audit_approved": "Audit approved delta",
+      "credit_event_audit_rejected": "Audit rejected delta",
+      "credit_event_force_deleted": "Force-delete active script delta",
+      "credit_event_help": "Positive, negative, and zero values are allowed.",
+      "credit_max_admin_adjust_delta": "Admin adjustment limit",
+      "credit_max_admin_adjust_delta_help": "Absolute maximum allowed for a single manual admin credit delta.",
       "save_button": "Сохранить",
       "save_success": "Успешно сохранено",
       "title": "Настройки системы",
@@ -185,7 +212,12 @@
       "ucenter_api": "URL API",
       "ucenter_appid": "ID приложения",
       "ucenter_key": "Ключ связи",
-      "ucenter_title": "Настройка UCenter"
+      "ucenter_title": "Настройка UCenter",
+      "es_index_title": "Поисковый индекс ES",
+      "es_index_hint": "Запускает полную перестройку поискового индекса скриптов в фоне. Ответ API означает только запуск задачи; прогресс смотрите в логах backend.",
+      "es_index_button": "Перестроить индекс ES",
+      "es_index_confirm": "Начать перестройку поискового индекса ES? Для больших баз это может занять время.",
+      "es_index_started": "Перестройка поискового индекса ES запущена"
     },
     "users": {
       "action_admin_level": "Изменить уровень",
@@ -746,6 +778,12 @@
     "alerts": {
       "archived_description": "Этот скрипт был архивирован автором, скрипт может не работать и автор больше не поддерживает его, вы не можете отправлять отчёты о проблемах.",
       "archived_title": "Скрипт архивирован",
+      "deleted_description": "Этот скрипт удалён и недоступен обычным пользователям. Вы просматриваете его как администратор и можете восстановить его кнопкой справа.",
+      "deleted_restore_button": "Восстановить скрипт",
+      "deleted_restore_confirm": "Восстановить этот скрипт?",
+      "deleted_restore_failed": "Не удалось восстановить",
+      "deleted_restore_success": "Восстановлено",
+      "deleted_title": "Скрипт был удалён",
       "obfuscated_description": "Этот скрипт был обработан автором для нечитаемости, хотя сайт скриптов уже прошёл проверку, всё же будьте осторожны с предоставлением опасных разрешений.",
       "obfuscated_title": "Код скрипта обработан для нечитаемости"
     },
@@ -1556,10 +1594,25 @@
       },
       "sort": {
         "createtime": "Последние опубликованные",
+        "daily_pick": "Выбор дня",
         "score": "Самый высокий рейтинг",
         "today_download": "Сортировка по популярности",
-        "total_download": "Наиболее загружаемые",
-        "updatetime": "Недавно обновлённые"
+        "total_download": "Наиболее загружаемые"
+      }
+    },
+    "section": {
+      "more": "Ещё",
+      "daily_pick": {
+        "title": "Выбор дня"
+      },
+      "hot": {
+        "title": "Популярные"
+      },
+      "new": {
+        "title": "Новые"
+      },
+      "longtail": {
+        "title": "Может быть интересно"
       }
     },
     "statistics": {

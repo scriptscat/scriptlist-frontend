@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { Card, Layout, Menu, theme } from 'antd';
 import {
   ApiOutlined,
+  AuditOutlined,
   DiffOutlined,
   LoginOutlined,
   NotificationOutlined,
@@ -42,6 +43,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname.includes('/admin/oidc-providers')) return 'oidc-providers';
     if (pathname.includes('/admin/oauth-apps')) return 'oauth-apps';
     if (pathname.includes('/admin/similarity')) return 'similarity';
+    if (pathname.includes('/admin/script-audits')) return 'script-audits';
     return 'users';
   };
 
@@ -60,6 +62,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       key: 'similarity',
       icon: <DiffOutlined />,
       label: <Link href="/admin/similarity">{t('similarity')}</Link>,
+    },
+    {
+      key: 'script-audits',
+      icon: <AuditOutlined />,
+      label: <Link href="/admin/script-audits">{t('script_audits')}</Link>,
     },
     {
       key: 'feedbacks',

@@ -138,12 +138,14 @@
     "scripts": {
       "action_delete": "Xóa",
       "action_restore": "Khôi phục",
+      "action_trending_score": "Sửa Trend Score",
       "action_visibility": "Thay đổi hiển thị",
       "col_actions": "Thao tác",
       "col_author": "Tác giả",
       "col_createtime": "Ngày tạo",
       "col_name": "Tên script",
       "col_status": "Trạng thái",
+      "col_trending_score": "Trend Score",
       "col_type": "Loại",
       "col_visibility": "Hiển thị",
       "delete_confirm": "Bạn có chắc muốn xóa script này?",
@@ -161,6 +163,11 @@
       "status_active": "Hoạt động",
       "status_deleted": "Đã xóa",
       "title": "Quản lý script",
+      "trending_score_hint": "Manual changes only affect the current trending_score; the next automatic or manual full recompute will overwrite this value.",
+      "trending_score_invalid": "Enter a valid trending_score",
+      "trending_score_label": "trending_score",
+      "trending_score_success": "trending_score updated successfully",
+      "trending_score_title": "Edit trending_score",
       "type_library": "Thư viện",
       "type_subscribe": "Đăng ký",
       "type_userscript": "Script người dùng",
@@ -175,6 +182,26 @@
       "ai_model": "Mô hình",
       "ai_system_prompt": "Lời nhắc hệ thống",
       "ai_title": "Cấu hình AI",
+      "audit_credit_title": "Script Audit and Credit",
+      "audit_enabled": "Enable low-credit script audit",
+      "audit_enabled_help": "When disabled, users with credit above 0 but below the audit threshold publish directly; credit at or below 0 is still blocked.",
+      "audit_max_pending": "Low-credit pending limit",
+      "audit_max_pending_help": "Maximum number of pending script audits allowed for users below the audit threshold.",
+      "credit_review_threshold": "Audit threshold",
+      "credit_review_threshold_help": "Users with credit below this value and above 0 enter the audit queue.",
+      "credit_signal_register": "Registration base score",
+      "credit_signal_register_help": "Base score granted when a user credit snapshot is initialized.",
+      "credit_signal_register_7d": "Registration 7-day bonus",
+      "credit_signal_register_30d": "Registration 30-day bonus",
+      "credit_signal_register_180d": "Registration 180-day bonus",
+      "credit_signal_oauth_bind": "OAuth binding bonus",
+      "credit_signal_oauth_bind_help": "One-time bonus granted after binding any OAuth account.",
+      "credit_event_audit_approved": "Audit approved delta",
+      "credit_event_audit_rejected": "Audit rejected delta",
+      "credit_event_force_deleted": "Force-delete active script delta",
+      "credit_event_help": "Positive, negative, and zero values are allowed.",
+      "credit_max_admin_adjust_delta": "Admin adjustment limit",
+      "credit_max_admin_adjust_delta_help": "Absolute maximum allowed for a single manual admin credit delta.",
       "save_button": "Lưu",
       "save_success": "Đã lưu thành công",
       "title": "Cấu hình hệ thống",
@@ -184,7 +211,12 @@
       "ucenter_api": "URL API",
       "ucenter_appid": "ID ứng dụng",
       "ucenter_key": "Khóa liên lạc",
-      "ucenter_title": "Cấu hình UCenter"
+      "ucenter_title": "Cấu hình UCenter",
+      "es_index_title": "Chỉ mục tìm kiếm ES",
+      "es_index_hint": "Thao tác này khởi chạy xây dựng lại toàn bộ chỉ mục tìm kiếm script trong nền. Phản hồi API chỉ cho biết tác vụ đã bắt đầu; hãy xem log backend để theo dõi tiến độ.",
+      "es_index_button": "Xây dựng lại chỉ mục ES",
+      "es_index_confirm": "Bắt đầu xây dựng lại chỉ mục tìm kiếm ES? Cơ sở dữ liệu lớn có thể mất nhiều thời gian.",
+      "es_index_started": "Đã bắt đầu xây dựng lại chỉ mục tìm kiếm ES"
     },
     "users": {
       "action_admin_level": "Thay đổi cấp",
@@ -640,6 +672,12 @@
     "alerts": {
       "archived_description": "This script has been archived by the author. The script may malfunction and the author is no longer maintaining it, so you cannot provide feedback.",
       "archived_title": "Script archived",
+      "deleted_description": "This script has been deleted and is not accessible to regular users. You are viewing it as an administrator and can restore it with the button on the right.",
+      "deleted_restore_button": "Restore script",
+      "deleted_restore_confirm": "Restore this script?",
+      "deleted_restore_failed": "Restore failed",
+      "deleted_restore_success": "Restored",
+      "deleted_title": "Script has been deleted",
       "obfuscated_description": "This script has been obfuscated by the author. Although the script site has conducted a review, please be careful when granting dangerous permissions.",
       "obfuscated_title": "Script code has been obfuscated"
     },
@@ -1449,11 +1487,26 @@
         "visit_community": "Visit <a>Community</a>"
       },
       "sort": {
-        "createtime": "Latest",
-        "score": "Highest Rated",
-        "today_download": "Trending",
-        "total_download": "Most Downloaded",
-        "updatetime": "Recently Updated"
+        "createtime": "Mới nhất",
+        "daily_pick": "Lựa chọn hàng ngày",
+        "score": "Đánh giá cao nhất",
+        "today_download": "Xu hướng",
+        "total_download": "Tải nhiều nhất"
+      }
+    },
+    "section": {
+      "more": "Xem thêm",
+      "daily_pick": {
+        "title": "Lựa chọn hàng ngày"
+      },
+      "hot": {
+        "title": "Phổ biến"
+      },
+      "new": {
+        "title": "Mới phát hành"
+      },
+      "longtail": {
+        "title": "Có thể bạn quan tâm"
       }
     },
     "statistics": {

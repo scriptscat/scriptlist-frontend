@@ -1,9 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { Modal, Form, Input, Select, Checkbox, Space, message } from 'antd';
+import {
+  Modal,
+  Form,
+  Input,
+  Select,
+  Checkbox,
+  Space,
+  Collapse,
+  message,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
+import ProcessedScriptsList from './ProcessedScriptsList';
 
 interface BanUserModalProps {
   visible: boolean;
@@ -24,6 +34,7 @@ export default function BanUserModal({
 }: BanUserModalProps) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [processedActiveKeys, setProcessedActiveKeys] = useState<string[]>([]);
   const t = useTranslations('user.profile');
 
   const durationOptions = [
@@ -111,6 +122,27 @@ export default function BanUserModal({
           </Space>
         </Form.Item>
       </Form>
+
+      <Collapse
+        activeKey={processedActiveKeys}
+        onChange={(keys) =>
+          setProcessedActiveKeys(Array.isArray(keys) ? keys : [keys])
+        }
+        items={[
+          {
+            key: 'processed',
+            label: t('previously_processed_scripts'),
+            children: (
+              <ProcessedScriptsList
+                userId={userId}
+                shouldFetch={
+                  visible && processedActiveKeys.includes('processed')
+                }
+              />
+            ),
+          },
+        ]}
+      />
     </Modal>
   );
 }

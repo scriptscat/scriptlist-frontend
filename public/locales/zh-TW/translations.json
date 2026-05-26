@@ -139,12 +139,14 @@
     "scripts": {
       "action_delete": "刪除",
       "action_restore": "恢復",
+      "action_trending_score": "修改趨勢分",
       "action_visibility": "修改可见性",
       "col_actions": "操作",
       "col_author": "作者",
       "col_createtime": "創建時間",
       "col_name": "腳本名称",
       "col_status": "狀態",
+      "col_trending_score": "趨勢分",
       "col_type": "類型",
       "col_visibility": "可见性",
       "delete_confirm": "確定要刪除此腳本吗？",
@@ -162,6 +164,11 @@
       "status_active": "正常",
       "status_deleted": "已刪除",
       "title": "腳本管理",
+      "trending_score_hint": "手動修改只影響目前 trending_score；下次自動重算或手動全量重算會按公式覆蓋此值。",
+      "trending_score_invalid": "請輸入有效的 trending_score",
+      "trending_score_label": "trending_score",
+      "trending_score_success": "trending_score 更新成功",
+      "trending_score_title": "修改 trending_score",
       "type_library": "庫",
       "type_subscribe": "訂閱腳本",
       "type_userscript": "用戶腳本",
@@ -176,6 +183,26 @@
       "ai_model": "模型",
       "ai_system_prompt": "系統提示词",
       "ai_title": "AI 配置",
+      "audit_credit_title": "腳本審核與信用分",
+      "audit_enabled": "啟用低分腳本審核",
+      "audit_enabled_help": "關閉後，信用分大於 0 但低於審核閾值的用戶將直接發布；信用分小於等於 0 仍禁止發布。",
+      "audit_max_pending": "低分用戶待審上限",
+      "audit_max_pending_help": "低於審核閾值的用戶最多允許同時存在的待審腳本數。",
+      "credit_review_threshold": "審核閾值",
+      "credit_review_threshold_help": "信用分低於該值且大於 0 時進入審核佇列。",
+      "credit_signal_register": "註冊基礎分",
+      "credit_signal_register_help": "用戶首次初始化信用分快照時獲得的基礎分。",
+      "credit_signal_register_7d": "註冊滿 7 天加分",
+      "credit_signal_register_30d": "註冊滿 30 天加分",
+      "credit_signal_register_180d": "註冊滿 180 天加分",
+      "credit_signal_oauth_bind": "綁定 OAuth 加分",
+      "credit_signal_oauth_bind_help": "綁定任意 OAuth 帳號後獲得的一次性加分。",
+      "credit_event_audit_approved": "審核通過加分",
+      "credit_event_audit_rejected": "審核拒絕扣分",
+      "credit_event_force_deleted": "強刪已上線腳本扣分",
+      "credit_event_help": "可填寫正數、負數或 0。",
+      "credit_max_admin_adjust_delta": "管理員單次調分上限",
+      "credit_max_admin_adjust_delta_help": "管理員手動調分時，單次 delta 的絕對值不能超過該值。",
       "save_button": "保存",
       "save_success": "保存成功",
       "title": "系統配置",
@@ -185,7 +212,18 @@
       "ucenter_api": "API 地址",
       "ucenter_appid": "應用 ID",
       "ucenter_key": "通信密鑰",
-      "ucenter_title": "UCenter 配置"
+      "ucenter_title": "UCenter 配置",
+      "ranking_title": "排行榜重算",
+      "recompute_trending_hint": "每日精選（trending_score）預設每天凌晨 3:10 自動重算。修改完排序參數後可在此手動觸發一次全量重算，立即看到效果。",
+      "recompute_trending_button": "手動重算 trending_score",
+      "recompute_trending_confirm": "確定要立即重算所有腳本的 trending_score 嗎？大庫可能需要數秒到數十秒。",
+      "recompute_trending_started": "已開始重算 trending_score",
+      "recompute_trending_running": "重算任務正在進行中，未重複啟動",
+      "es_index_title": "ES 搜尋索引",
+      "es_index_hint": "觸發後會在後台全量重建腳本搜尋索引。接口返回只表示任務已啟動，完成進度請查看後端日誌。",
+      "es_index_button": "重建 ES 索引",
+      "es_index_confirm": "確定要開始重建 ES 搜尋索引嗎？大庫可能需要較長時間。",
+      "es_index_started": "ES 搜尋索引重建任務已啟動"
     },
     "users": {
       "action_admin_level": "修改等級",
@@ -746,6 +784,12 @@
     "alerts": {
       "archived_description": "該腳本已經被作者歸檔，腳本可能失效並且作者不再維護，你無法再進行問題回饋。",
       "archived_title": "腳本已歸檔",
+      "deleted_description": "該腳本已被刪除，一般使用者無法訪問。你正在以管理員身份檢視，可點選右側按鈕將其恢復。",
+      "deleted_restore_button": "恢復腳本",
+      "deleted_restore_confirm": "確認恢復該腳本？",
+      "deleted_restore_failed": "恢復失敗",
+      "deleted_restore_success": "已恢復",
+      "deleted_title": "腳本已被刪除",
       "obfuscated_description": "該腳本已經被作者經過了不可讀處理，雖然腳本站已經經過了一層審查，但還是請註意危險權限的授予。",
       "obfuscated_title": "腳本程式碼經過了不可讀處理"
     },
@@ -1556,10 +1600,25 @@
       },
       "sort": {
         "createtime": "最新發佈",
+        "daily_pick": "每日精選",
         "score": "評分最高",
         "today_download": "熱度排序",
-        "total_download": "下載最多",
-        "updatetime": "最近更新"
+        "total_download": "下載最多"
+      }
+    },
+    "section": {
+      "more": "更多",
+      "daily_pick": {
+        "title": "每日精選"
+      },
+      "hot": {
+        "title": "熱門腳本"
+      },
+      "new": {
+        "title": "新發布"
+      },
+      "longtail": {
+        "title": "可能感興趣"
       }
     },
     "statistics": {
