@@ -196,7 +196,10 @@ export default function ScriptAuditsClient() {
   return (
     <div>
       <Space style={{ marginBottom: 16 }}>
-        <span>{t('filter_status')}:</span>
+        <span>
+          {t('filter_status')}
+          {':'}
+        </span>
         <Select<StatusFilter>
           value={statusFilter}
           style={{ width: 140 }}
@@ -257,7 +260,10 @@ export default function ScriptAuditsClient() {
         {detail && (
           <div className="space-y-4">
             <div>
-              <b>{t('detail_script')}:</b>{' '}
+              <b>
+                {t('detail_script')}
+                {':'}
+              </b>{' '}
               <a
                 href={`/script-show-page/${detail.script_id}`}
                 target="_blank"
@@ -269,15 +275,23 @@ export default function ScriptAuditsClient() {
               {statusTag(detail.status)}
             </div>
             <div>
-              <b>{t('detail_submitter')}:</b>{' '}
+              <b>
+                {t('detail_submitter')}
+                {':'}
+              </b>{' '}
               {detail.submitter || `#${detail.submitter_id}`}{' '}
               <Tag color="blue">
-                {t('detail_credit')}: {detail.submitter_credit}
+                {t('detail_credit')}
+                {': '}
+                {detail.submitter_credit}
               </Tag>
             </div>
             {detail.changelog && (
               <div>
-                <b>{t('detail_changelog')}:</b>
+                <b>
+                  {t('detail_changelog')}
+                  {':'}
+                </b>
                 <pre className="whitespace-pre-wrap text-sm bg-gray-50 dark:bg-zinc-800 p-3 rounded">
                   {detail.changelog}
                 </pre>
@@ -285,14 +299,20 @@ export default function ScriptAuditsClient() {
             )}
             {detail.status === STATUS_REJECTED && detail.reason && (
               <div>
-                <b>{t('detail_reject_reason')}:</b>
+                <b>
+                  {t('detail_reject_reason')}
+                  {':'}
+                </b>
                 <pre className="whitespace-pre-wrap text-sm bg-red-50 dark:bg-red-900/20 p-3 rounded">
                   {detail.reason}
                 </pre>
               </div>
             )}
             <div>
-              <b>{t('detail_code')}:</b>
+              <b>
+                {t('detail_code')}
+                {':'}
+              </b>
               <pre className="text-xs bg-gray-50 dark:bg-zinc-800 p-3 rounded max-h-[60vh] overflow-auto">
                 {detail.code}
               </pre>

@@ -89,8 +89,12 @@ export default function SuspectsTable() {
                 <Link href={`/script-show-page/${s.script_id}`}>
                   {s.script_name}
                 </Link>
-                {' — '}Jaccard {s.jaccard.toFixed(3)} / contrib{' '}
-                {(s.contribution_pct * 100).toFixed(1)}%
+                {' — '}
+                {'Jaccard '}
+                {s.jaccard.toFixed(3)}
+                {' / contrib '}
+                {(s.contribution_pct * 100).toFixed(1)}
+                {'%'}
               </li>
             ))}
           </ul>

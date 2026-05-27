@@ -96,7 +96,7 @@ export default function ProcessedScriptsList({
             {reason}
           </Text>
         ) : (
-          <Text type="secondary">-</Text>
+          <Text type="secondary">{'-'}</Text>
         ),
     },
   ];

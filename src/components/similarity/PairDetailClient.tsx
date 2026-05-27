@@ -75,10 +75,14 @@ export default function PairDetailClient({ pairID, source }: Props) {
             {new Date(detail.detected_at * 1000).toLocaleString()}
           </Descriptions.Item>
           <Descriptions.Item label={t('label_script_a')}>
-            {detail.script_a.name} @ {detail.script_a.version}
+            {detail.script_a.name}
+            {' @ '}
+            {detail.script_a.version}
           </Descriptions.Item>
           <Descriptions.Item label={t('label_script_b')}>
-            {detail.script_b.name} @ {detail.script_b.version}
+            {detail.script_b.name}
+            {' @ '}
+            {detail.script_b.version}
           </Descriptions.Item>
         </Descriptions>
       </Card>

@@ -6,7 +6,6 @@ import {
   HeartOutlined,
   UserOutlined,
   SettingOutlined,
-  StarOutlined,
   FireOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons';

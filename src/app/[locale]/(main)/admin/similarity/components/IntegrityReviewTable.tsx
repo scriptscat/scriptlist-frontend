@@ -137,17 +137,31 @@ export default function IntegrityReviewTable() {
         {detail && (
           <div>
             <Typography.Paragraph>
-              <b>{t('label_score')}:</b> {detail.score.toFixed(3)}
+              <b>
+                {t('label_score')}
+                {':'}
+              </b>{' '}
+              {detail.score.toFixed(3)}
             </Typography.Paragraph>
             <Typography.Paragraph>
-              <b>{t('label_sub_scores')}:</b> A=
-              {detail.sub_scores.cat_a.toFixed(2)} B=
-              {detail.sub_scores.cat_b.toFixed(2)} C=
-              {detail.sub_scores.cat_c.toFixed(2)} D=
+              <b>
+                {t('label_sub_scores')}
+                {':'}
+              </b>{' '}
+              {'A='}
+              {detail.sub_scores.cat_a.toFixed(2)}
+              {' B='}
+              {detail.sub_scores.cat_b.toFixed(2)}
+              {' C='}
+              {detail.sub_scores.cat_c.toFixed(2)}
+              {' D='}
               {detail.sub_scores.cat_d.toFixed(2)}
             </Typography.Paragraph>
             <Typography.Paragraph>
-              <b>{t('label_hit_signals')}:</b>
+              <b>
+                {t('label_hit_signals')}
+                {':'}
+              </b>
               <ul>
                 {detail.hit_signals.map((h) => (
                   <li key={h.name}>
@@ -158,7 +172,11 @@ export default function IntegrityReviewTable() {
                     </b>
                     <br />
                     <Typography.Text type="secondary">
-                      {h.name}: {h.value.toFixed(3)} / {h.threshold.toFixed(3)}
+                      {h.name}
+                      {': '}
+                      {h.value.toFixed(3)}
+                      {' / '}
+                      {h.threshold.toFixed(3)}
                     </Typography.Text>
                   </li>
                 ))}
