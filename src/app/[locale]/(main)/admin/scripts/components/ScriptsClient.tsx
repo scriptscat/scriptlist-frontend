@@ -347,17 +347,18 @@ export default function ScriptsClient() {
       render: (_: unknown, record: ScriptItem) => {
         const active = record.multiplier_expire_at > dayjs().unix();
         if (!active || record.score_multiplier === 1) {
-          return <span style={{ color: '#999' }}>—</span>;
+          return <span style={{ color: '#999' }}>{'—'}</span>;
         }
         return (
           <span>
-            {record.score_multiplier.toFixed(2)} ×{' '}
+            {record.score_multiplier.toFixed(2)}
+            {' × '}
             <span style={{ color: '#999', fontSize: 12 }}>
-              (
+              {'('}
               {dayjs
                 .unix(record.multiplier_expire_at)
                 .format('YYYY-MM-DD HH:mm')}
-              )
+              {')'}
             </span>
           </span>
         );
