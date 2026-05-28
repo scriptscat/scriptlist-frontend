@@ -72,6 +72,8 @@ export interface ScriptItem {
   createtime: number;
   updatetime: number;
   trending_score: number;
+  score_multiplier: number;
+  multiplier_expire_at: number; // unix 秒；0 表示未设置
 }
 
 // ==================== Feedback Management ====================
@@ -362,6 +364,26 @@ class AdminService {
       {
         trending_score: trendingScore,
       },
+    );
+  }
+
+  async setScriptScoreMultiplier(
+    id: number,
+    multiplier: number,
+    expireAt: number,
+  ) {
+    return apiClient.put<void>(
+      `${this.basePath}/scripts/${id}/score-multiplier`,
+      {
+        multiplier,
+        expire_at: expireAt,
+      },
+    );
+  }
+
+  async clearScriptScoreMultiplier(id: number) {
+    return apiClient.delete<void>(
+      `${this.basePath}/scripts/${id}/score-multiplier`,
     );
   }
 

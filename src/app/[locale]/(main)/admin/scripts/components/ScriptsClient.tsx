@@ -22,7 +22,9 @@ import { scriptService } from '@/lib/api/services/scripts/scripts';
 import { APIError } from '@/types/api';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
+import dayjs from 'dayjs';
 import DeleteScriptModal from './DeleteScriptModal';
+import ScoreMultiplierModal from './ScoreMultiplierModal';
 
 type ScriptSortField = 'trending_score';
 type ScriptSortOrder = 'asc' | 'desc';
@@ -56,6 +58,12 @@ export default function ScriptsClient() {
   const [newTrendingScore, setNewTrendingScore] = useState<number | null>(0);
   const [updatingTrendingScore, setUpdatingTrendingScore] = useState(false);
   const [deletingScript, setDeletingScript] = useState<ScriptItem | null>(null);
+  const [multiplierTarget, setMultiplierTarget] = useState<{
+    id: number;
+    name: string;
+    multiplier: number;
+    expireAt: number;
+  } | null>(null);
 
   const fetchData = useCallback(
     async (
@@ -333,6 +341,29 @@ export default function ScriptsClient() {
       render: (val: number) => formatTrendingScore(val),
     },
     {
+      title: t('col_score_multiplier'),
+      key: 'score_multiplier',
+      width: 180,
+      render: (_: unknown, record: ScriptItem) => {
+        const active = record.multiplier_expire_at > dayjs().unix();
+        if (!active || record.score_multiplier === 1) {
+          return <span style={{ color: '#999' }}>—</span>;
+        }
+        return (
+          <span>
+            {record.score_multiplier.toFixed(2)} ×{' '}
+            <span style={{ color: '#999', fontSize: 12 }}>
+              (
+              {dayjs
+                .unix(record.multiplier_expire_at)
+                .format('YYYY-MM-DD HH:mm')}
+              )
+            </span>
+          </span>
+        );
+      },
+    },
+    {
       title: t('col_createtime'),
       dataIndex: 'createtime',
       key: 'createtime',
@@ -375,6 +406,20 @@ export default function ScriptsClient() {
             onClick={() => openTrendingModal(record)}
           >
             {t('action_trending_score')}
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() =>
+              setMultiplierTarget({
+                id: record.id,
+                name: record.name,
+                multiplier: record.score_multiplier,
+                expireAt: record.multiplier_expire_at,
+              })
+            }
+          >
+            {t('action_set_multiplier')}
           </Button>
         </Space>
       ),
@@ -517,6 +562,18 @@ export default function ScriptsClient() {
             setDeletingScript(null);
             refreshList();
           }}
+        />
+      )}
+
+      {multiplierTarget && (
+        <ScoreMultiplierModal
+          open
+          scriptId={multiplierTarget.id}
+          scriptName={multiplierTarget.name}
+          initialMultiplier={multiplierTarget.multiplier}
+          initialExpireAt={multiplierTarget.expireAt}
+          onClose={() => setMultiplierTarget(null)}
+          onSaved={refreshList}
         />
       )}
     </div>
