@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import ScriptDetailClient from './components/ScriptDetailClient';
 import { generateScriptMetadata } from './metadata';
 import scriptService from '@/lib/api/services/scripts';
+import { calculateRatingStats } from './comment/components/rating/utils';
 
 export default async function ScriptDetailPage({
   params,
@@ -11,6 +12,48 @@ export default async function ScriptDetailPage({
   const { id } = await params;
   // Fetch content separately - React.cache deduplicates with layout's call
   const script = await scriptService.infoCached(id);
+  const scriptId = parseInt(id, 10);
+
+  const [
+    versionListResult,
+    versionStatResult,
+    scoreStateResult,
+    scoreListResult,
+  ] = await Promise.allSettled([
+    scriptService.getVersionListCached(scriptId, { page: 1, size: 10 }),
+    scriptService.getVersionStatCached(scriptId),
+    scriptService.getScoreState(scriptId),
+    scriptService.getScoreList(scriptId, {
+      page: 1,
+      size: 10,
+      sort: 'createtime',
+      order: 'desc',
+    }),
+  ]);
+
+  const initialVersionData =
+    versionListResult.status === 'fulfilled' ? versionListResult.value : null;
+  const versionStat =
+    versionStatResult.status === 'fulfilled' ? versionStatResult.value : null;
+  const initialScoreList =
+    scoreListResult.status === 'fulfilled' ? scoreListResult.value : null;
+  const ratingStats =
+    scoreStateResult.status === 'fulfilled'
+      ? calculateRatingStats(scoreStateResult.value)
+      : {
+          averageRating:
+            script.score && script.score_num
+              ? parseFloat((script.score / script.score_num / 10).toFixed(1))
+              : 0,
+          totalRatings: script.score_num,
+          distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+        };
+  const versionError =
+    versionListResult.status === 'rejected'
+      ? versionListResult.reason?.message
+      : versionStatResult.status === 'rejected'
+        ? versionStatResult.reason?.message
+        : undefined;
 
   try {
     const h = await headers();
@@ -26,7 +69,16 @@ export default async function ScriptDetailPage({
     // 访问统计失败不阻断详情页渲染
   }
 
-  return <ScriptDetailClient content={script.content} />;
+  return (
+    <ScriptDetailClient
+      content={script.content}
+      initialVersionData={initialVersionData}
+      versionStat={versionStat}
+      versionError={versionError}
+      initialScoreList={initialScoreList}
+      initialRatingStats={ratingStats}
+    />
+  );
 }
 
 export async function generateMetadata({

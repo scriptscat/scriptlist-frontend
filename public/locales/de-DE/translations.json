@@ -930,6 +930,12 @@
         "today_installs": "Heute neu",
         "total_installs": "Gesamtinstallationen",
         "user_rating": "Benutzerbewertung"
+      },
+      "tabs": {
+        "description": "Beschreibung",
+        "metadata": "Berechtigungen",
+        "ratings": "Bewertungen",
+        "versions": "Versionen"
       }
     },
     "diff": {
@@ -1516,6 +1522,8 @@
       "update_success": "Bewertung erfolgreich aktualisiert!",
       "user_form": {
         "cancel_button": "Abbrechen",
+        "collapsed_hint": "Zum Starten Stern antippen",
+        "collapsed_prompt": "Dieses Skript bewerten",
         "edit_button": "Bearbeiten",
         "edit_review_title": "Bewertung bearbeiten",
         "login_prompt_button": "Jetzt anmelden",
@@ -1696,6 +1704,7 @@
       "changelog_label": "Update-Beschreibung",
       "changelog_placeholder": "z.B.:\n✨ Neue Funktion: Benutzeroberflächen-Optimierung hinzugefügt\n🐛 Problem behoben: Browser-Kompatibilitätsproblem gelöst\n⚡ Leistungsverbesserung: Skript-Ausführungsgeschwindigkeit optimiert\n📦 Abhängigkeits-Update: Auf neueste Version aktualisiert",
       "changelog_subtitle": "(Unterstützt Markdown-Syntax)",
+      "collapse_changelog": "Einklappen",
       "compare_button": "Vergleichen",
       "confirm_delete_cancel": "Abbrechen",
       "confirm_delete_description": "Möchten Sie diese Version wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -1707,6 +1716,7 @@
       "delete_version_failed": "Versionslöschung fehlgeschlagen:",
       "edit_button": "Bearbeiten",
       "edit_modal_title": "Version {version} bearbeiten",
+      "expand_changelog": "Alle anzeigen",
       "history_description": "Alle veröffentlichten Versionen anzeigen, einschließlich Vollversionen und Vorveröffentlichungsversionen. Sie können jede Version installieren oder ihren Quellcode anzeigen.",
       "history_title": "Versionshistorie",
       "install_button": "Diese Version installieren",
@@ -1719,9 +1729,11 @@
       "pagination_info": "Zeigt Element {start}-{end} von insgesamt {total}",
       "pagination_total": "Element {start}-{end} von insgesamt {total} Versionen",
       "prerelease_badge": "Vorveröffentlichungsversion",
+      "prerelease_chip": "Vorabversion {count}",
       "prerelease_checked": "Vorveröffentlichungsversion",
       "prerelease_unchecked": "Vollversion",
       "prerelease_versions": "Vorveröffentlichungsversionen",
+      "release_chip": "Stabil {count}",
       "release_versions": "Vollversionen",
       "retry": "Erneut versuchen",
       "save_changes": "Änderungen speichern",
@@ -1730,6 +1742,7 @@
       "update_success": "Versionsinformationen erfolgreich aktualisiert",
       "update_version_failed": "Version-Update fehlgeschlagen:",
       "version_type_extra": "Vorveröffentlichungsversionen werden normalerweise zum Testen neuer Funktionen verwendet und sind möglicherweise nicht stabil",
+      "version_count": "{count} Versionen insgesamt",
       "version_type_label": "Versionstyp",
       "view_code_button": "Code anzeigen"
     }

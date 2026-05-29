@@ -1,7 +1,11 @@
 'use client';
 
 import { Avatar, Tag } from 'antd';
-import { UserOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  ClockCircleOutlined,
+  CheckCircleFilled,
+} from '@ant-design/icons';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import type { ReplyItemProps } from './types';
@@ -12,7 +16,7 @@ export default function ReplyItem({ reply }: ReplyItemProps) {
   const semDateTime = useSemDateTime();
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border-l-4 border-blue-200 dark:border-blue-700">
+    <div className="rounded-lg border-l-[3px] border-blue-500 bg-blue-50 p-3 dark:bg-blue-950/30">
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-3 flex-1">
           <Link href={`/users/${reply.user_id}`} target="_blank">
@@ -36,7 +40,10 @@ export default function ReplyItem({ reply }: ReplyItemProps) {
                 </span>
               </Link>
               {reply.is_author === 1 && (
-                <Tag className="bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700 text-xs px-2 py-0">
+                <Tag
+                  icon={<CheckCircleFilled />}
+                  className="!m-0 border-0 bg-blue-600 px-2 py-0 text-xs text-white"
+                >
                   {t('author_tag')}
                 </Tag>
               )}

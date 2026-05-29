@@ -8,7 +8,7 @@ import type { RatingOverviewProps } from './types';
 export default function RatingOverview({ ratingStats }: RatingOverviewProps) {
   const t = useTranslations('script');
   return (
-    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 rounded-2xl p-8 border border-amber-100 dark:border-amber-800/30">
+    <div className="rounded-xl border border-gray-100 bg-gray-50 p-6 dark:border-gray-800 dark:bg-gray-800/50">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         {/* 左侧：评分展示 */}
         <div className="text-center lg:text-left">

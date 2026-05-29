@@ -38,6 +38,7 @@ export default function UserRatingForm({
     existingRating?.message ?? '',
   );
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState(false);
   const semDateTime = useSemDateTime();
 
   const handleSubmit = async () => {
@@ -61,6 +62,7 @@ export default function UserRatingForm({
         await onSubmitRating(userRating * 10, userComment);
         setUserRating(0);
         setUserComment('');
+        setExpanded(false);
       }
     } catch {
       // 错误处理由父组件处理
@@ -79,6 +81,7 @@ export default function UserRatingForm({
     } else {
       setUserRating(0);
       setUserComment('');
+      setExpanded(false);
     }
   };
 
@@ -185,6 +188,29 @@ export default function UserRatingForm({
           </div>
         </div>
       </Card>
+    );
+  }
+
+  // 收起态：新评分尚未开始 → 一行评分入口
+  if (!existingRating && !expanded) {
+    return (
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-800/50">
+        <div className="flex items-center gap-3">
+          <span className="font-semibold text-gray-900 dark:text-gray-100">
+            {t('collapsed_prompt')}
+          </span>
+          <Rate
+            value={userRating}
+            character={<StarFilled />}
+            onChange={(v) => {
+              setUserRating(v);
+              setExpanded(true);
+            }}
+            className="text-2xl"
+          />
+        </div>
+        <span className="text-sm text-gray-500">{t('collapsed_hint')}</span>
+      </div>
     );
   }
 

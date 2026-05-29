@@ -1017,6 +1017,78 @@
         "reinstall_script": "重新安装脚本 v{version}",
         "update_script": "更新脚本至 v{version}"
       },
+      "metadata": {
+        "empty_description": "该脚本没有声明可展示的权限、连接或运行规则。",
+        "empty_title": "暂无元数据说明",
+        "fields": {
+          "author": "作者",
+          "connect": "跨域连接",
+          "exclude": "排除规则",
+          "grant": "权限申请",
+          "include": "包含规则",
+          "license": "许可协议",
+          "match": "匹配规则",
+          "namespace": "命名空间",
+          "require": "外部依赖",
+          "resource": "外部资源",
+          "run_at": "运行时机"
+        },
+        "grants": {
+          "addElement": "允许脚本向页面创建并插入元素。",
+          "addStyle": "允许脚本向页面注入 CSS 样式。",
+          "deleteValue": "允许脚本删除脚本管理器保存的数据。",
+          "download": "允许脚本触发文件下载。",
+          "getResourceText": "允许脚本读取 @resource 声明的文本资源。",
+          "getResourceUrl": "允许脚本读取 @resource 声明资源的 URL。",
+          "getValue": "允许脚本读取脚本管理器保存的数据。",
+          "info": "允许脚本读取脚本和脚本管理器的运行信息。",
+          "listValues": "允许脚本列出已保存的数据键名。",
+          "none": "脚本声明不申请额外的脚本管理器权限。",
+          "notification": "允许脚本显示系统或浏览器通知。",
+          "openInTab": "允许脚本打开新的浏览器标签页。",
+          "registerMenuCommand": "允许脚本在脚本管理器菜单中注册命令。",
+          "setClipboard": "允许脚本写入剪贴板。",
+          "setValue": "允许脚本在脚本管理器中保存数据。",
+          "unknown": "脚本请求的扩展权限，具体行为取决于脚本管理器支持。",
+          "unregisterMenuCommand": "允许脚本移除已注册的菜单命令。",
+          "unsafeWindow": "允许脚本访问页面自身的 window 对象，可能与页面脚本直接交互。",
+          "xmlhttpRequest": "允许脚本发起由脚本管理器代理的网络请求。"
+        },
+        "intro": "这些说明来自脚本头部的 userscript 元数据，用于帮助理解脚本声明的权限、运行范围和外部依赖。",
+        "run_at": {
+          "context_menu": "仅在用户通过上下文菜单触发时运行。",
+          "document_body": "在页面 body 可用后运行。",
+          "document_end": "在 DOM 加载完成附近运行。",
+          "document_idle": "在页面主要内容加载后空闲时运行。",
+          "document_start": "在页面开始加载时尽早运行。",
+          "unknown": "脚本声明的运行时机，具体行为取决于脚本管理器。"
+        },
+        "sections": {
+          "author": "脚本声明的作者信息。",
+          "connect": "脚本可连接的域名范围，通常配合网络请求权限使用。",
+          "exclude": "这些 URL 规则会从运行范围中排除。",
+          "grant": "脚本向脚本管理器申请的能力或 API 权限。",
+          "include": "脚本声明会运行的 URL 规则。",
+          "license": "脚本声明的开源或使用许可。",
+          "match": "脚本声明会匹配并运行的 URL 规则。",
+          "namespace": "脚本用于区分来源或身份的命名空间。",
+          "require": "脚本运行前加载的外部 JavaScript 依赖。",
+          "resource": "脚本声明可读取的外部资源。",
+          "run_at": "脚本希望在页面生命周期中的哪个阶段运行。"
+        },
+        "values": {
+          "author": "作者声明值。",
+          "connect": "允许连接的域名或通配规则。",
+          "exclude": "排除运行的 URL 规则。",
+          "include": "包含运行的 URL 规则。",
+          "license": "许可协议标识。",
+          "match": "匹配运行的 URL 规则。",
+          "namespace": "命名空间标识。",
+          "require": "外部脚本依赖地址。",
+          "resource": "外部资源声明。",
+          "unknown": "元数据声明值。"
+        }
+      },
       "require": {
         "compatible_version": "(兼容版本) ",
         "copy_tooltip": "复制引用代码",
@@ -1032,6 +1104,12 @@
         "today_installs": "今日新增",
         "total_installs": "总安装量",
         "user_rating": "用户评分"
+      },
+      "tabs": {
+        "description": "描述",
+        "metadata": "权限说明",
+        "ratings": "评分",
+        "versions": "版本"
       }
     },
     "diff": {
@@ -1618,6 +1696,8 @@
       "update_success": "评分更新成功！",
       "user_form": {
         "cancel_button": "取消",
+        "collapsed_hint": "点击星标开始评价",
+        "collapsed_prompt": "为这个脚本评分",
         "edit_button": "编辑",
         "edit_review_title": "编辑评价",
         "login_prompt_button": "立即登录",
@@ -1798,6 +1878,7 @@
       "changelog_label": "更新说明",
       "changelog_placeholder": "例如：\n✨ 新增功能：添加了用户界面优化\n🐛 修复问题：解决了浏览器兼容性问题\n⚡ 性能提升：优化了脚本执行速度\n📦 依赖更新：升级到最新版本",
       "changelog_subtitle": "(支持Markdown语法)",
+      "collapse_changelog": "收起",
       "compare_button": "对比",
       "confirm_delete_cancel": "取消",
       "confirm_delete_description": "确定要删除这个版本吗？此操作不可撤销。",
@@ -1809,6 +1890,7 @@
       "delete_version_failed": "删除版本失败:",
       "edit_button": "编辑",
       "edit_modal_title": "编辑版本 {version}",
+      "expand_changelog": "展开全部",
       "history_description": "查看所有已发布的版本，包括正式版本和预发布版本。您可以安装任何版本或查看其源代码。",
       "history_title": "版本历史",
       "install_button": "安装此版本",
@@ -1821,9 +1903,11 @@
       "pagination_info": "显示第 {start}-{end} 项，共 {total} 项",
       "pagination_total": "第 {start}-{end} 项，共 {total} 个版本",
       "prerelease_badge": "预发布版本",
+      "prerelease_chip": "预发布 {count}",
       "prerelease_checked": "预发布版本",
       "prerelease_unchecked": "正式版本",
       "prerelease_versions": "预发布版本",
+      "release_chip": "正式 {count}",
       "release_versions": "正式版本",
       "retry": "重试",
       "save_changes": "保存更改",
@@ -1832,6 +1916,7 @@
       "update_success": "版本信息更新成功",
       "update_version_failed": "更新版本失败:",
       "version_type_extra": "预发布版本通常用于测试新功能，可能不够稳定",
+      "version_count": "共 {count} 个版本",
       "version_type_label": "版本类型",
       "view_code_button": "查看代码"
     }

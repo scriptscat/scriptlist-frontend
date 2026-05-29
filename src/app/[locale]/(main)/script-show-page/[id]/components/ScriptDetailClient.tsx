@@ -19,6 +19,7 @@ import {
   Badge,
   Input,
   Select,
+  Tabs,
 } from 'antd';
 import {
   DownloadOutlined,
@@ -58,8 +59,35 @@ import { scriptService } from '@/lib/api/services/scripts';
 import { useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
 import GoogleAd from '@/components/GoogleAd';
+import ScriptVersionsClient from '../version/components/ScriptVersionsClient';
+import ScriptRatingClient from '../comment/components/ScriptRatingClient';
+import ScriptMetadataExplainer from './ScriptMetadataExplainer';
+import type {
+  ScoreListItem,
+  VersionListResponse,
+  VersionStatResponse,
+} from '@/lib/api/services/scripts/scripts';
+import type { ListData } from '@/types/api';
+import type { RatingStats } from '../comment/components/rating';
 
 const { Title, Text, Paragraph } = Typography;
+
+interface ScriptDetailClientProps {
+  content: string;
+  initialVersionData: VersionListResponse | null;
+  versionStat: VersionStatResponse | null;
+  versionError?: string;
+  initialScoreList: ListData<ScoreListItem> | null;
+  initialRatingStats: RatingStats;
+}
+
+function CountChip({ value }: { value: number }) {
+  return (
+    <span className="ml-1.5 inline-flex items-center rounded-full bg-gray-100 px-1.5 text-xs font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+      {value}
+    </span>
+  );
+}
 
 // 生成@require链接的函数
 function genRequire(
@@ -93,7 +121,14 @@ const licenseMap: { [key: string]: string } = {
   'LGPL-2.1': 'http://opensource.org/licenses/LGPL-2.1',
 };
 
-export default function ScriptDetailClient({ content }: { content: string }) {
+export default function ScriptDetailClient({
+  content,
+  initialVersionData,
+  versionStat,
+  versionError,
+  initialScoreList,
+  initialRatingStats,
+}: ScriptDetailClientProps) {
   const { script } = useScript();
   const scriptState = useScriptState();
   const { user: _user } = useUser();
@@ -533,6 +568,72 @@ export default function ScriptDetailClient({ content }: { content: string }) {
       ],
     }),
     [t, handleFollowChange, watchLevel],
+  );
+
+  const detailTabs = useMemo(
+    () => [
+      {
+        key: 'description',
+        label: t('tabs.description'),
+        children: (
+          <div className="prose prose-sm max-w-3xl dark:prose-invert">
+            <MarkdownView id="readme" content={content} />
+          </div>
+        ),
+      },
+      {
+        key: 'versions',
+        label: (
+          <span className="inline-flex items-center">
+            {t('tabs.versions')}
+            <CountChip value={initialVersionData?.total ?? 0} />
+          </span>
+        ),
+        children: (
+          <ScriptVersionsClient
+            initialVersionData={initialVersionData}
+            versionStat={versionStat}
+            initialPage={1}
+            initialPageSize={10}
+            embedded
+            initialError={versionError}
+          />
+        ),
+      },
+      {
+        key: 'ratings',
+        label: (
+          <span className="inline-flex items-center">
+            {t('tabs.ratings')}
+            <CountChip value={initialRatingStats.totalRatings} />
+          </span>
+        ),
+        children: (
+          <ScriptRatingClient
+            initialData={initialScoreList}
+            initialRatingStats={initialRatingStats}
+            scriptId={script.id}
+            embedded
+          />
+        ),
+      },
+      {
+        key: 'metadata',
+        label: t('tabs.metadata'),
+        children: <ScriptMetadataExplainer meta={script.script.meta_json} />,
+      },
+    ],
+    [
+      content,
+      initialRatingStats,
+      initialScoreList,
+      initialVersionData,
+      script.id,
+      script.script.meta_json,
+      t,
+      versionError,
+      versionStat,
+    ],
   );
 
   return (
@@ -1125,10 +1226,15 @@ export default function ScriptDetailClient({ content }: { content: string }) {
       </Badge.Ribbon>
 
       {/* 功能介绍 */}
-      <Card className="shadow-sm">
-        <div className="prose max-w-none">
-          <MarkdownView id="readme" content={content} />
-        </div>
+      <Card className="shadow-sm" classNames={{ body: '!p-0' }}>
+        <Tabs
+          items={detailTabs}
+          size="middle"
+          classNames={{
+            header: '!mb-0 !px-4 sm:!px-6',
+            content: '!px-4 !py-5 sm:!px-6 sm:!pb-6',
+          }}
+        />
       </Card>
     </div>
   );

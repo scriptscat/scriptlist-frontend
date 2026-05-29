@@ -921,6 +921,78 @@
         "reinstall_script": "重新安裝腳本 v{version}",
         "update_script": "更新腳本至 v{version}"
       },
+      "metadata": {
+        "empty_description": "此腳本沒有宣告可展示的權限、連線或執行規則。",
+        "empty_title": "暫無元資料說明",
+        "fields": {
+          "author": "作者",
+          "connect": "跨域連線",
+          "exclude": "排除規則",
+          "grant": "權限申請",
+          "include": "包含規則",
+          "license": "授權條款",
+          "match": "匹配規則",
+          "namespace": "命名空間",
+          "require": "外部依賴",
+          "resource": "外部資源",
+          "run_at": "執行時機"
+        },
+        "grants": {
+          "addElement": "允許腳本向頁面建立並插入元素。",
+          "addStyle": "允許腳本向頁面注入 CSS 樣式。",
+          "deleteValue": "允許腳本刪除腳本管理器儲存的資料。",
+          "download": "允許腳本觸發檔案下載。",
+          "getResourceText": "允許腳本讀取 @resource 宣告的文字資源。",
+          "getResourceUrl": "允許腳本讀取 @resource 宣告資源的 URL。",
+          "getValue": "允許腳本讀取腳本管理器儲存的資料。",
+          "info": "允許腳本讀取腳本與腳本管理器的執行資訊。",
+          "listValues": "允許腳本列出已儲存的資料鍵名。",
+          "none": "腳本宣告不申請額外的腳本管理器權限。",
+          "notification": "允許腳本顯示系統或瀏覽器通知。",
+          "openInTab": "允許腳本開啟新的瀏覽器分頁。",
+          "registerMenuCommand": "允許腳本在腳本管理器選單中註冊命令。",
+          "setClipboard": "允許腳本寫入剪貼簿。",
+          "setValue": "允許腳本在腳本管理器中儲存資料。",
+          "unknown": "腳本請求的擴充權限，具體行為取決於腳本管理器支援。",
+          "unregisterMenuCommand": "允許腳本移除已註冊的選單命令。",
+          "unsafeWindow": "允許腳本存取頁面自身的 window 物件，可能與頁面腳本直接互動。",
+          "xmlhttpRequest": "允許腳本發起由腳本管理器代理的網路請求。"
+        },
+        "intro": "這些說明來自腳本頭部的 userscript 元資料，用於協助理解腳本宣告的權限、執行範圍與外部依賴。",
+        "run_at": {
+          "context_menu": "僅在使用者透過內容選單觸發時執行。",
+          "document_body": "在頁面 body 可用後執行。",
+          "document_end": "在 DOM 載入完成附近執行。",
+          "document_idle": "在頁面主要內容載入後空閒時執行。",
+          "document_start": "在頁面開始載入時盡早執行。",
+          "unknown": "腳本宣告的執行時機，具體行為取決於腳本管理器。"
+        },
+        "sections": {
+          "author": "腳本宣告的作者資訊。",
+          "connect": "腳本可連線的網域範圍，通常搭配網路請求權限使用。",
+          "exclude": "這些 URL 規則會從執行範圍中排除。",
+          "grant": "腳本向腳本管理器申請的能力或 API 權限。",
+          "include": "腳本宣告會執行的 URL 規則。",
+          "license": "腳本宣告的開源或使用授權。",
+          "match": "腳本宣告會匹配並執行的 URL 規則。",
+          "namespace": "腳本用於區分來源或身份的命名空間。",
+          "require": "腳本執行前載入的外部 JavaScript 依賴。",
+          "resource": "腳本宣告可讀取的外部資源。",
+          "run_at": "腳本希望在頁面生命週期中的哪個階段執行。"
+        },
+        "values": {
+          "author": "作者宣告值。",
+          "connect": "允許連線的網域或萬用規則。",
+          "exclude": "排除執行的 URL 規則。",
+          "include": "包含執行的 URL 規則。",
+          "license": "授權條款識別。",
+          "match": "匹配執行的 URL 規則。",
+          "namespace": "命名空間識別。",
+          "require": "外部腳本依賴地址。",
+          "resource": "外部資源宣告。",
+          "unknown": "元資料宣告值。"
+        }
+      },
       "require": {
         "compatible_version": "(相容版本) ",
         "copy_tooltip": "複製引用程式碼",
@@ -936,6 +1008,12 @@
         "today_installs": "今日新增",
         "total_installs": "總安裝量",
         "user_rating": "使用者評分"
+      },
+      "tabs": {
+        "description": "描述",
+        "metadata": "權限說明",
+        "ratings": "評分",
+        "versions": "版本"
       }
     },
     "diff": {
@@ -1522,6 +1600,8 @@
       "update_success": "評分更新成功！",
       "user_form": {
         "cancel_button": "取消",
+        "collapsed_hint": "點擊星標開始評價",
+        "collapsed_prompt": "為這個腳本評分",
         "edit_button": "編輯",
         "edit_review_title": "編輯評價",
         "login_prompt_button": "立即登入",
@@ -1702,6 +1782,7 @@
       "changelog_label": "更新說明",
       "changelog_placeholder": "例如：\n✨ 新增功能：新增了使用者介面最佳化\n🐛 修復問題：解決了瀏覽器相容性問題\n⚡ 效能提升：最佳化了腳本執行速度\n📦 相依性更新：升級到最新版本",
       "changelog_subtitle": "(支援Markdown語法)",
+      "collapse_changelog": "收起",
       "compare_button": "對比",
       "confirm_delete_cancel": "取消",
       "confirm_delete_description": "確定要刪除這個版本嗎？此操作不可撤銷。",
@@ -1713,6 +1794,7 @@
       "delete_version_failed": "刪除版本失敗:",
       "edit_button": "編輯",
       "edit_modal_title": "編輯版本 {version}",
+      "expand_changelog": "展開全部",
       "history_description": "查看所有已發佈的版本，包括正式版本和預發佈版本。您可以安裝任何版本或查看其原始碼。",
       "history_title": "版本歷史",
       "install_button": "安裝此版本",
@@ -1725,9 +1807,11 @@
       "pagination_info": "顯示第 {start}-{end} 項，共 {total} 項",
       "pagination_total": "第 {start}-{end} 項，共 {total} 個版本",
       "prerelease_badge": "預發佈版本",
+      "prerelease_chip": "預發佈 {count}",
       "prerelease_checked": "預發佈版本",
       "prerelease_unchecked": "正式版本",
       "prerelease_versions": "預發佈版本",
+      "release_chip": "正式 {count}",
       "release_versions": "正式版本",
       "retry": "重試",
       "save_changes": "儲存變更",
@@ -1736,6 +1820,7 @@
       "update_success": "版本資訊更新成功",
       "update_version_failed": "更新版本失敗:",
       "version_type_extra": "預發佈版本通常用於測試新功能，可能不夠穩定",
+      "version_count": "共 {count} 個版本",
       "version_type_label": "版本類型",
       "view_code_button": "查看程式碼"
     }

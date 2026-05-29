@@ -915,6 +915,78 @@
         "reinstall_script": "スクリプト v{version} を再インストール",
         "update_script": "スクリプトを v{version} に更新"
       },
+      "metadata": {
+        "empty_description": "このスクリプトには表示できる権限、接続、実行ルールが宣言されていません。",
+        "empty_title": "メタデータ説明はありません",
+        "fields": {
+          "author": "作者",
+          "connect": "ネットワーク接続",
+          "exclude": "除外ルール",
+          "grant": "権限",
+          "include": "対象ルール",
+          "license": "ライセンス",
+          "match": "一致ルール",
+          "namespace": "名前空間",
+          "require": "外部依存",
+          "resource": "外部リソース",
+          "run_at": "実行タイミング"
+        },
+        "grants": {
+          "addElement": "スクリプトがページに要素を作成して挿入できます。",
+          "addStyle": "スクリプトがページに CSS を注入できます。",
+          "deleteValue": "スクリプトがユーザースクリプトマネージャーに保存されたデータを削除できます。",
+          "download": "スクリプトがファイルダウンロードを開始できます。",
+          "getResourceText": "スクリプトが @resource で宣言されたテキストリソースを読み取れます。",
+          "getResourceUrl": "スクリプトが @resource で宣言されたリソース URL を読み取れます。",
+          "getValue": "スクリプトがユーザースクリプトマネージャーに保存されたデータを読み取れます。",
+          "info": "スクリプトとマネージャーの実行情報を読み取れます。",
+          "listValues": "保存済みデータのキー一覧を取得できます。",
+          "none": "追加のユーザースクリプトマネージャー権限を要求しない宣言です。",
+          "notification": "システムまたはブラウザー通知を表示できます。",
+          "openInTab": "新しいブラウザータブを開けます。",
+          "registerMenuCommand": "ユーザースクリプトマネージャーのメニューにコマンドを登録できます。",
+          "setClipboard": "クリップボードへ書き込めます。",
+          "setValue": "ユーザースクリプトマネージャーにデータを保存できます。",
+          "unknown": "スクリプトが要求する拡張権限です。動作はマネージャーの対応状況に依存します。",
+          "unregisterMenuCommand": "登録済みメニューコマンドを削除できます。",
+          "unsafeWindow": "ページ自身の window オブジェクトへアクセスし、ページスクリプトと直接やり取りできます。",
+          "xmlhttpRequest": "ユーザースクリプトマネージャー経由のネットワークリクエストを実行できます。"
+        },
+        "intro": "これらは userscript メタデータから取得した説明で、宣言された権限、実行範囲、外部依存を理解するためのものです。",
+        "run_at": {
+          "context_menu": "コンテキストメニューから起動された場合のみ実行します。",
+          "document_body": "ページの body が利用可能になった後に実行します。",
+          "document_end": "DOM の読み込み完了付近で実行します。",
+          "document_idle": "ページの主要内容が読み込まれ、アイドル状態になった後に実行します。",
+          "document_start": "ページ読み込み開始時にできるだけ早く実行します。",
+          "unknown": "宣言された実行タイミングです。動作はユーザースクリプトマネージャーに依存します。"
+        },
+        "sections": {
+          "author": "スクリプトが宣言した作者情報です。",
+          "connect": "スクリプトが接続できるドメイン範囲です。通常はネットワーク権限と組み合わせて使われます。",
+          "exclude": "実行範囲から除外される URL ルールです。",
+          "grant": "スクリプトがユーザースクリプトマネージャーに要求する API 権限です。",
+          "include": "スクリプトが実行対象として宣言した URL ルールです。",
+          "license": "スクリプトが宣言したライセンスです。",
+          "match": "スクリプトが一致して実行される URL ルールです。",
+          "namespace": "スクリプトの出所や識別に使う名前空間です。",
+          "require": "スクリプト実行前に読み込まれる外部 JavaScript 依存です。",
+          "resource": "スクリプトが読み取れる外部リソースです。",
+          "run_at": "ページライフサイクル上でスクリプトが実行を希望する段階です。"
+        },
+        "values": {
+          "author": "作者の宣言値です。",
+          "connect": "接続を許可するドメインまたはワイルドカードルールです。",
+          "exclude": "実行から除外する URL ルールです。",
+          "include": "実行対象に含める URL ルールです。",
+          "license": "ライセンス識別子です。",
+          "match": "実行対象に一致する URL ルールです。",
+          "namespace": "名前空間識別子です。",
+          "require": "外部スクリプト依存の URL です。",
+          "resource": "外部リソース宣言です。",
+          "unknown": "メタデータ宣言値です。"
+        }
+      },
       "require": {
         "compatible_version": "（互換バージョン）",
         "copy_tooltip": "参照コードをコピー",
@@ -930,6 +1002,12 @@
         "today_installs": "今日の新規",
         "total_installs": "総インストール数",
         "user_rating": "ユーザー評価"
+      },
+      "tabs": {
+        "description": "説明",
+        "metadata": "権限の説明",
+        "ratings": "評価",
+        "versions": "バージョン"
       }
     },
     "diff": {
@@ -1516,6 +1594,8 @@
       "update_success": "評価が更新されました！",
       "user_form": {
         "cancel_button": "キャンセル",
+        "collapsed_hint": "星をタップして開始",
+        "collapsed_prompt": "このスクリプトを評価",
         "edit_button": "編集",
         "edit_review_title": "レビューを編集",
         "login_prompt_button": "今すぐログイン",
@@ -1696,6 +1776,7 @@
       "changelog_label": "更新説明",
       "changelog_placeholder": "例：\n✨ 新機能：ユーザーインターフェースの最適化を追加\n🐛 問題修正：ブラウザ互換性の問題を解決\n⚡ パフォーマンス向上：スクリプト実行速度を最適化\n📦 依存関係更新：最新バージョンにアップグレード",
       "changelog_subtitle": "（Markdown構文をサポート）",
+      "collapse_changelog": "折りたたむ",
       "compare_button": "比較",
       "confirm_delete_cancel": "キャンセル",
       "confirm_delete_description": "このバージョンを削除してもよろしいですか？この操作は取り消せません。",
@@ -1707,6 +1788,7 @@
       "delete_version_failed": "バージョンの削除に失敗しました:",
       "edit_button": "編集",
       "edit_modal_title": "バージョン {version} を編集",
+      "expand_changelog": "すべて表示",
       "history_description": "公開されたすべてのバージョン（正式版とプレリリース版）を表示します。任意のバージョンをインストールしたり、ソースコードを表示できます。",
       "history_title": "バージョン履歴",
       "install_button": "このバージョンをインストール",
@@ -1719,9 +1801,11 @@
       "pagination_info": "{start}-{end} 項目を表示、全 {total} 項目",
       "pagination_total": "{start}-{end} 項目、全 {total} バージョン",
       "prerelease_badge": "プレリリース版",
+      "prerelease_chip": "プレリリース {count}",
       "prerelease_checked": "プレリリース版",
       "prerelease_unchecked": "正式版",
       "prerelease_versions": "プレリリース版",
+      "release_chip": "正式版 {count}",
       "release_versions": "正式版",
       "retry": "再試行",
       "save_changes": "変更を保存",
@@ -1730,6 +1814,7 @@
       "update_success": "バージョン情報の更新が完了しました",
       "update_version_failed": "バージョンの更新に失敗しました:",
       "version_type_extra": "プレリリース版は通常新機能のテストに使用され、不安定な場合があります",
+      "version_count": "全 {count} バージョン",
       "version_type_label": "バージョンタイプ",
       "view_code_button": "コードを表示"
     }

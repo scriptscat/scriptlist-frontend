@@ -1000,6 +1000,78 @@
         "reinstall_script": "Reinstall Script v{version}",
         "update_script": "Update Script to v{version}"
       },
+      "metadata": {
+        "empty_description": "This script does not declare displayable permissions, connections, or run rules.",
+        "empty_title": "No metadata details",
+        "fields": {
+          "author": "Author",
+          "connect": "Network access",
+          "exclude": "Exclude rules",
+          "grant": "Permissions",
+          "include": "Include rules",
+          "license": "License",
+          "match": "Match rules",
+          "namespace": "Namespace",
+          "require": "External dependencies",
+          "resource": "External resources",
+          "run_at": "Run timing"
+        },
+        "grants": {
+          "addElement": "Allows the script to create and insert elements into the page.",
+          "addStyle": "Allows the script to inject CSS into the page.",
+          "deleteValue": "Allows the script to delete data stored by the userscript manager.",
+          "download": "Allows the script to trigger file downloads.",
+          "getResourceText": "Allows the script to read text resources declared with @resource.",
+          "getResourceUrl": "Allows the script to read URLs for resources declared with @resource.",
+          "getValue": "Allows the script to read data stored by the userscript manager.",
+          "info": "Allows the script to read script and manager runtime information.",
+          "listValues": "Allows the script to list stored data keys.",
+          "none": "The script declares that it needs no extra userscript-manager permissions.",
+          "notification": "Allows the script to show system or browser notifications.",
+          "openInTab": "Allows the script to open new browser tabs.",
+          "registerMenuCommand": "Allows the script to add commands to the userscript manager menu.",
+          "setClipboard": "Allows the script to write to the clipboard.",
+          "setValue": "Allows the script to save data in the userscript manager.",
+          "unknown": "An extended permission requested by the script; behavior depends on manager support.",
+          "unregisterMenuCommand": "Allows the script to remove registered menu commands.",
+          "unsafeWindow": "Allows access to the page window object and direct interaction with page scripts.",
+          "xmlhttpRequest": "Allows network requests proxied by the userscript manager."
+        },
+        "intro": "These details come from the userscript metadata block and help explain declared permissions, run scope, and external dependencies.",
+        "run_at": {
+          "context_menu": "Runs only when triggered from the context menu.",
+          "document_body": "Runs after the page body is available.",
+          "document_end": "Runs around DOM load completion.",
+          "document_idle": "Runs when the page is mostly loaded and idle.",
+          "document_start": "Runs as early as possible while the page starts loading.",
+          "unknown": "A declared run timing whose behavior depends on the userscript manager."
+        },
+        "sections": {
+          "author": "Author information declared by the script.",
+          "connect": "Domains the script may connect to, usually used with network request permissions.",
+          "exclude": "URL rules excluded from the run scope.",
+          "grant": "Capabilities or API permissions requested from the userscript manager.",
+          "include": "URL rules where the script declares it can run.",
+          "license": "Open source or usage license declared by the script.",
+          "match": "URL rules matched by the script.",
+          "namespace": "Namespace used to distinguish the script identity or source.",
+          "require": "External JavaScript dependencies loaded before the script runs.",
+          "resource": "External resources declared for script access.",
+          "run_at": "The page lifecycle stage where the script prefers to run."
+        },
+        "values": {
+          "author": "Declared author value.",
+          "connect": "Allowed domain or wildcard connection rule.",
+          "exclude": "URL rule excluded from execution.",
+          "include": "URL rule included for execution.",
+          "license": "License identifier.",
+          "match": "URL rule matched for execution.",
+          "namespace": "Namespace identifier.",
+          "require": "External script dependency URL.",
+          "resource": "External resource declaration.",
+          "unknown": "Metadata declaration value."
+        }
+      },
       "require": {
         "compatible_version": "(Compatible Version) ",
         "copy_tooltip": "Copy reference code",
@@ -1015,6 +1087,12 @@
         "today_installs": "Today's New",
         "total_installs": "Total Installs",
         "user_rating": "User Rating"
+      },
+      "tabs": {
+        "description": "Description",
+        "metadata": "Permissions",
+        "ratings": "Ratings",
+        "versions": "Versions"
       }
     },
     "diff": {
@@ -1601,6 +1679,8 @@
       "update_success": "Rating updated successfully!",
       "user_form": {
         "cancel_button": "Cancel",
+        "collapsed_hint": "Tap a star to start",
+        "collapsed_prompt": "Rate this script",
         "edit_button": "Edit",
         "edit_review_title": "Edit Review",
         "login_prompt_button": "Login Now",
@@ -1781,6 +1861,7 @@
       "changelog_label": "Update Notes",
       "changelog_placeholder": "e.g.:\n✨ New Feature: Added UI optimization\n🐛 Bug Fix: Resolved browser compatibility issues\n⚡ Performance: Optimized script execution speed\n📦 Dependencies: Updated to latest version",
       "changelog_subtitle": "(Supports Markdown syntax)",
+      "collapse_changelog": "Collapse",
       "compare_button": "Compare",
       "confirm_delete_cancel": "Cancel",
       "confirm_delete_description": "Are you sure you want to delete this version? This action cannot be undone.",
@@ -1792,6 +1873,7 @@
       "delete_version_failed": "Delete version failed:",
       "edit_button": "Edit",
       "edit_modal_title": "Edit Version {version}",
+      "expand_changelog": "Show all",
       "history_description": "View all published versions, including stable and prerelease versions. You can install any version or view its source code.",
       "history_title": "Version History",
       "install_button": "Install This Version",
@@ -1804,9 +1886,11 @@
       "pagination_info": "Showing {start}-{end}, total {total}",
       "pagination_total": "{start}-{end}, total {total} versions",
       "prerelease_badge": "Prerelease Version",
+      "prerelease_chip": "Pre-release {count}",
       "prerelease_checked": "Prerelease Version",
       "prerelease_unchecked": "Stable Version",
       "prerelease_versions": "Prerelease Versions",
+      "release_chip": "Stable {count}",
       "release_versions": "Stable Versions",
       "retry": "Retry",
       "save_changes": "Save Changes",
@@ -1815,6 +1899,7 @@
       "update_success": "Version information updated successfully",
       "update_version_failed": "Update version failed:",
       "version_type_extra": "Prerelease versions are usually for testing new features and may not be stable",
+      "version_count": "Total {count} versions",
       "version_type_label": "Version Type",
       "view_code_button": "View Code"
     }
