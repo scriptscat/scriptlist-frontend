@@ -150,7 +150,6 @@ const lightComponents: ThemeConfig['components'] = {
   },
   Tooltip: {
     colorBgSpotlight: '#1f2937',
-    colorText: '#ffffff',
   },
   Tag: {
     colorFill: '#f3f4f6',
@@ -199,7 +198,6 @@ const darkComponents: ThemeConfig['components'] = {
   },
   Tooltip: {
     colorBgSpotlight: '#30363d',
-    colorText: '#f8f8f2',
   },
   Tag: {
     colorFill: '#21262d',

@@ -200,27 +200,6 @@ export default function ScriptMetadataExplainer({
       t('sections.run_at'),
       describeRunAt,
     ),
-    makeSection(
-      'license',
-      '@license',
-      getValues(meta, 'license'),
-      t('sections.license'),
-      () => t('values.license'),
-    ),
-    makeSection(
-      'namespace',
-      '@namespace',
-      getValues(meta, 'namespace'),
-      t('sections.namespace'),
-      () => t('values.namespace'),
-    ),
-    makeSection(
-      'author',
-      '@author',
-      getValues(meta, 'author'),
-      t('sections.author'),
-      () => t('values.author'),
-    ),
   ].filter((section): section is MetadataSection => Boolean(section));
 
   if (sections.length === 0) {
