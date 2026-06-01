@@ -11,6 +11,7 @@ import {
   UserOutlined,
   FileTextOutlined,
   MessageOutlined,
+  RobotOutlined,
   StarOutlined,
   SettingOutlined,
   WarningOutlined,
@@ -43,6 +44,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname.includes('/admin/oidc-providers')) return 'oidc-providers';
     if (pathname.includes('/admin/oauth-apps')) return 'oauth-apps';
     if (pathname.includes('/admin/similarity')) return 'similarity';
+    if (pathname.includes('/admin/ai-review/full-scan'))
+      return 'ai-review-fullscan';
+    if (pathname.includes('/admin/ai-review')) return 'ai-review-records';
     if (pathname.includes('/admin/script-audits')) return 'script-audits';
     return 'users';
   };
@@ -67,6 +71,25 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       key: 'script-audits',
       icon: <AuditOutlined />,
       label: <Link href="/admin/script-audits">{t('script_audits')}</Link>,
+    },
+    {
+      key: 'ai-review',
+      icon: <RobotOutlined />,
+      label: t('ai_review'),
+      children: [
+        {
+          key: 'ai-review-records',
+          label: <Link href="/admin/ai-review">{t('ai_review_records')}</Link>,
+        },
+        {
+          key: 'ai-review-fullscan',
+          label: (
+            <Link href="/admin/ai-review/full-scan">
+              {t('ai_review_fullscan')}
+            </Link>
+          ),
+        },
+      ],
     },
     {
       key: 'feedbacks',

@@ -180,7 +180,6 @@ export interface ScriptAuditItem {
   code_id: number;
   submitter_id: number;
   submitter: string;
-  submitter_credit: number;
   script_name: string;
   version: string;
   status: number; // 1=pending, 2=approved, 3=rejected
@@ -192,34 +191,6 @@ export interface ScriptAuditDetail extends ScriptAuditItem {
   code: string;
   meta: string;
   changelog: string;
-}
-
-// ==================== Credit Logs ====================
-
-export interface CreditLogItem {
-  id: number;
-  action: string;
-  delta: number;
-  new_score: number;
-  reason: string;
-  operator_id: number;
-  related_id: number;
-  createtime: number;
-}
-
-// ==================== Migrate Credit ====================
-
-export interface MigrateCreditStatus {
-  running: boolean;
-  processed: number;
-  skipped: number;
-  failed: number;
-  last_id: number;
-  message: string;
-}
-
-export interface MigrateCreditTriggerResponse extends MigrateCreditStatus {
-  started: boolean;
 }
 
 // ==================== Migrate Avatar ====================
@@ -482,45 +453,17 @@ class AdminService {
     );
   }
 
-  async approveScriptAudit(id: number) {
-    return apiClient.put<void>(`${this.basePath}/script-audits/${id}/approve`);
+  async approveScriptAudit(id: number, reason?: string) {
+    return apiClient.put<void>(
+      `${this.basePath}/script-audits/${id}/approve`,
+      reason ? { reason } : {},
+    );
   }
 
   async rejectScriptAudit(id: number, reason: string) {
     return apiClient.put<void>(`${this.basePath}/script-audits/${id}/reject`, {
       reason,
     });
-  }
-
-  // Credit Management
-  async adjustCredit(userId: number, delta: number, reason: string) {
-    return apiClient.post<void>(`${this.basePath}/users/${userId}/credit`, {
-      delta,
-      reason,
-    });
-  }
-
-  async listUserCreditLogs(
-    userId: number,
-    page: number = 1,
-    size: number = 20,
-  ) {
-    return apiClient.get<ListData<CreditLogItem>>(
-      `${this.basePath}/users/${userId}/credit/logs`,
-      { page, size },
-    );
-  }
-
-  async migrateCredit() {
-    return apiClient.post<MigrateCreditTriggerResponse>(
-      `${this.basePath}/migrate-credit`,
-    );
-  }
-
-  async getMigrateCreditStatus() {
-    return apiClient.get<MigrateCreditStatus>(
-      `${this.basePath}/migrate-credit/status`,
-    );
   }
 
   // Report Management

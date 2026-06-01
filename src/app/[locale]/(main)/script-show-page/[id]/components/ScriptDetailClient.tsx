@@ -56,6 +56,7 @@ import { checkScriptInstalled } from '@/lib/utils/script-manager';
 import { useScriptWatch, useScriptFavorite } from '@/lib/api/hooks';
 import { WatchLevel } from '../types';
 import { scriptService } from '@/lib/api/services/scripts';
+import { aiReviewService } from '@/lib/api/services/aiReview';
 import { useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
 import GoogleAd from '@/components/GoogleAd';
@@ -67,6 +68,7 @@ import type {
   VersionListResponse,
   VersionStatResponse,
 } from '@/lib/api/services/scripts/scripts';
+import { APIError } from '@/types/api';
 import type { ListData } from '@/types/api';
 import type { RatingStats } from '../comment/components/rating';
 
@@ -86,6 +88,40 @@ function CountChip({ value }: { value: number }) {
     <span className="ml-1.5 inline-flex items-center rounded-full bg-gray-100 px-1.5 text-xs font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-400">
       {value}
     </span>
+  );
+}
+
+function AISummary({ summary }: { summary: string }) {
+  const t = useTranslations('script.detail');
+  const [expanded, setExpanded] = useState(true);
+  return (
+    <div className="mb-4 rounded-md border-l-[3px] border-indigo-500 bg-indigo-50 px-3.5 py-2.5 dark:border-indigo-400 dark:bg-indigo-950/40">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="flex w-full items-center gap-1.5"
+        aria-expanded={expanded}
+      >
+        <Icon
+          icon="mdi:auto-awesome"
+          className="flex-shrink-0 text-base text-indigo-600 dark:text-indigo-400"
+        />
+        <span className="text-xs font-semibold tracking-wide text-indigo-700 dark:text-indigo-300">
+          {t('summary.label')}
+        </span>
+        <Icon
+          icon="mdi:chevron-down"
+          className={`ml-auto flex-shrink-0 text-base text-indigo-400 transition-transform dark:text-indigo-500 ${
+            expanded ? '' : '-rotate-90'
+          }`}
+        />
+      </button>
+      {expanded && (
+        <div className="mt-1.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+          {summary}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -131,13 +167,17 @@ export default function ScriptDetailClient({
 }: ScriptDetailClientProps) {
   const { script } = useScript();
   const scriptState = useScriptState();
-  const { user: _user } = useUser();
+  const { user } = useUser();
   const [showAllSites, setShowAllSites] = useState(false);
   const [requireSelect, setRequireSelect] = useState<number>(1); // 库模式的选择状态
+  const [reviewing, setReviewing] = useState(false);
   const semDateTime = useSemDateTime();
   const [modal, contextHolder] = Modal.useModal();
   const t = useTranslations('script.detail');
+  const commonT = useTranslations('common');
+  const adminScriptsT = useTranslations('admin.scripts');
   const router = useRouter();
+  const isAdmin = !!user && user.is_admin >= 1;
 
   const [installTitle, setInstallTitle] = useState(t('install.install_script')); // 安装按钮文案
 
@@ -546,6 +586,24 @@ export default function ScriptDetailClient({
     [script.id, t, router],
   );
 
+  const handleAIReview = useCallback(async () => {
+    setReviewing(true);
+    try {
+      await aiReviewService.triggerScriptReview(script.id);
+      message.success(adminScriptsT('ai_review_success'));
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      } else if (err instanceof Error) {
+        message.error(err.message);
+      } else {
+        message.error(commonT('delete_failed'));
+      }
+    } finally {
+      setReviewing(false);
+    }
+  }, [adminScriptsT, commonT, script.id]);
+
   const watchMenuProps = useMemo(
     () => ({
       items: [
@@ -576,8 +634,11 @@ export default function ScriptDetailClient({
         key: 'description',
         label: t('tabs.description'),
         children: (
-          <div className="prose prose-sm max-w-3xl dark:prose-invert">
-            <MarkdownView id="readme" content={content} />
+          <div>
+            {script.summary && <AISummary summary={script.summary} />}
+            <div className="prose prose-sm max-w-3xl dark:prose-invert">
+              <MarkdownView id="readme" content={content} />
+            </div>
           </div>
         ),
       },
@@ -629,6 +690,7 @@ export default function ScriptDetailClient({
       initialScoreList,
       initialVersionData,
       script.id,
+      script.summary,
       script.script.meta_json,
       t,
       versionError,
@@ -1037,6 +1099,9 @@ export default function ScriptDetailClient({
                     punish
                     scriptId={script.id}
                     onDeleteClick={handleDeleteClick}
+                    allowAIReview={isAdmin}
+                    aiReviewLoading={reviewing}
+                    onAIReviewClick={handleAIReview}
                   >
                     <Button
                       type="default"

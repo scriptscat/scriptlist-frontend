@@ -55,6 +55,8 @@ export interface ScriptInfo {
   content: string;
   role: string;
   sri?: string; //库才有
+  // AI 审核结果（后端可能返回字符串 JSON 或对象）
+  summary?: string;
 }
 
 // ScriptInfo without the heavy `content` field, used in layout context
@@ -65,6 +67,7 @@ export interface Category {
   name: string;
   num: number;
   sort: number;
+  type: number; // 1 分类 2 用户可编辑标签 3 AI 生成标签
   createtime: number;
   updatetime: number;
 }

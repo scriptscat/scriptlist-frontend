@@ -5,6 +5,7 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined,
   FileExclamationOutlined,
+  RobotOutlined,
 } from '@ant-design/icons';
 import { Dropdown, Modal, Select, Space, Input, message } from 'antd';
 import { useUser } from '@/contexts/UserContext';
@@ -28,6 +29,10 @@ export interface ActionMenuProps {
   // 举报
   scriptId?: number;
   onReportClick?: () => void;
+  // AI 审核
+  allowAIReview?: boolean;
+  aiReviewLoading?: boolean;
+  onAIReviewClick?: () => Promise<void> | void;
 }
 
 const ActionMenu: React.FC<ActionMenuProps> = ({
@@ -40,9 +45,13 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   onPunishClick,
   scriptId,
   onReportClick,
+  allowAIReview,
+  aiReviewLoading,
+  onAIReviewClick,
 }) => {
   const user = useUser();
   const t = useTranslations('common');
+  const adminScriptsT = useTranslations('admin.scripts');
   const authorMap = useMemo(() => {
     const map = new Map<number, boolean>();
     if (uid instanceof Array) {
@@ -66,6 +75,19 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   }, [user.user, authorMap]);
 
   const items = [];
+
+  if (allowAIReview && user.user?.is_admin && user.user.is_admin >= 1) {
+    items.push({
+      label: (
+        <Space className="anticon-middle">
+          <RobotOutlined />
+          <span>{adminScriptsT('action_ai_review')}</span>
+        </Space>
+      ),
+      key: 'ai-review',
+      disabled: aiReviewLoading,
+    });
+  }
 
   if (user.user) {
     // 判断用户等级是否为管理员 或者 允许作者删除
@@ -144,7 +166,16 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
         menu={{
           items: items,
           onClick: (value) => {
-            if (value.key === 'report') {
+            if (value.key === 'ai-review') {
+              modal.confirm({
+                title: adminScriptsT('ai_review_confirm'),
+                icon: <RobotOutlined />,
+                okText: t('confirm'),
+                cancelText: t('cancel'),
+                maskClosable: true,
+                onOk: () => onAIReviewClick?.(),
+              });
+            } else if (value.key === 'report') {
               if (!user.user) {
                 message.warning(t('login_required'));
                 return;

@@ -48,7 +48,7 @@ export default async function ScriptDetailLayout({
   const { content: _content, ...scriptMeta } = script;
 
   return (
-    <PageIntlProvider namespaces={['script']}>
+    <PageIntlProvider namespaces={['script', 'admin']}>
       <GoogleAdScript />
       <ScriptBreadcrumb scriptName={script.name} locale={locale} />
       <ScriptLayoutProvider script={scriptMeta} scriptState={scriptState}>

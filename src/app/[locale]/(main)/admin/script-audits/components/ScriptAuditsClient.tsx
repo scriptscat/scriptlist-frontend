@@ -14,7 +14,7 @@ import {
   message,
 } from 'antd';
 import { useTranslations } from 'next-intl';
-import type { ColumnsType } from 'antd/es/table';
+import type { ColumnsType, TableProps } from 'antd/es/table';
 import { adminService } from '@/lib/api/services/admin';
 import type {
   ScriptAuditDetail,
@@ -43,13 +43,12 @@ export default function ScriptAuditsClient() {
   const [detailLoading, setDetailLoading] = useState(false);
 
   const [rejectOpen, setRejectOpen] = useState(false);
+  const [approveOpen, setApproveOpen] = useState(false);
+  const [approveForm] = Form.useForm<{ reason?: string }>();
   const [rejectForm] = Form.useForm<{ reason: string }>();
   const [submitting, setSubmitting] = useState(false);
 
-  const statusFilterParam = useMemo(
-    () => (statusFilter === 0 ? undefined : statusFilter),
-    [statusFilter],
-  );
+  const statusFilterParam = useMemo(() => statusFilter, [statusFilter]);
 
   const fetchList = useCallback(
     async (p: number = page) => {
@@ -89,12 +88,19 @@ export default function ScriptAuditsClient() {
     }
   };
 
+  const openApprove = () => {
+    approveForm.resetFields();
+    setApproveOpen(true);
+  };
+
   const handleApprove = async () => {
     if (!detail) return;
+    const values = await approveForm.validateFields();
     setSubmitting(true);
     try {
-      await adminService.approveScriptAudit(detail.id);
+      await adminService.approveScriptAudit(detail.id, values.reason?.trim());
       message.success(t('approve_success'));
+      setApproveOpen(false);
       setDetailOpen(false);
       fetchList(page);
     } catch (err) {
@@ -136,6 +142,27 @@ export default function ScriptAuditsClient() {
     return <Tag>{status}</Tag>;
   };
 
+  const statusFilterOptions = [
+    { text: t('status_pending'), value: STATUS_PENDING },
+    { text: t('status_approved'), value: STATUS_APPROVED },
+    { text: t('status_rejected'), value: STATUS_REJECTED },
+  ];
+
+  const handleTableChange: TableProps<ScriptAuditItem>['onChange'] = (
+    pagination,
+    filters,
+  ) => {
+    const nextStatus = filters.status?.[0];
+    const parsedStatus =
+      nextStatus === undefined ? undefined : Number(nextStatus);
+    setStatusFilter(
+      parsedStatus !== undefined && Number.isFinite(parsedStatus)
+        ? (parsedStatus as StatusFilter)
+        : 0,
+    );
+    setPage(pagination.current || 1);
+  };
+
   const columns: ColumnsType<ScriptAuditItem> = [
     { title: 'ID', dataIndex: 'id', key: 'id', width: 80 },
     {
@@ -161,10 +188,7 @@ export default function ScriptAuditsClient() {
       title: t('col_submitter'),
       key: 'submitter',
       render: (_, row) => (
-        <span>
-          {row.submitter || `#${row.submitter_id}`}{' '}
-          <Tag color="blue">{row.submitter_credit}</Tag>
-        </span>
+        <span>{row.submitter || `#${row.submitter_id}`}</span>
       ),
     },
     {
@@ -173,6 +197,9 @@ export default function ScriptAuditsClient() {
       key: 'status',
       render: (s: number) => statusTag(s),
       width: 100,
+      filters: statusFilterOptions,
+      filterMultiple: false,
+      filteredValue: statusFilter === 0 ? null : [statusFilter],
     },
     {
       title: t('col_createtime'),
@@ -221,6 +248,7 @@ export default function ScriptAuditsClient() {
         columns={columns}
         dataSource={data}
         loading={loading}
+        onChange={handleTableChange}
         pagination={{
           current: page,
           pageSize: size,
@@ -246,11 +274,7 @@ export default function ScriptAuditsClient() {
               <Button danger onClick={openReject} disabled={submitting}>
                 {t('action_reject')}
               </Button>
-              <Button
-                type="primary"
-                onClick={handleApprove}
-                loading={submitting}
-              >
+              <Button type="primary" onClick={openApprove} loading={submitting}>
                 {t('action_approve')}
               </Button>
             </Space>
@@ -279,12 +303,7 @@ export default function ScriptAuditsClient() {
                 {t('detail_submitter')}
                 {':'}
               </b>{' '}
-              {detail.submitter || `#${detail.submitter_id}`}{' '}
-              <Tag color="blue">
-                {t('detail_credit')}
-                {': '}
-                {detail.submitter_credit}
-              </Tag>
+              {detail.submitter || `#${detail.submitter_id}`}
             </div>
             {detail.changelog && (
               <div>
@@ -297,13 +316,13 @@ export default function ScriptAuditsClient() {
                 </pre>
               </div>
             )}
-            {detail.status === STATUS_REJECTED && detail.reason && (
+            {detail.reason && (
               <div>
                 <b>
-                  {t('detail_reject_reason')}
+                  {t('detail_reason')}
                   {':'}
                 </b>
-                <pre className="whitespace-pre-wrap text-sm bg-red-50 dark:bg-red-900/20 p-3 rounded">
+                <pre className="whitespace-pre-wrap text-sm bg-gray-50 dark:bg-zinc-800 p-3 rounded">
                   {detail.reason}
                 </pre>
               </div>
@@ -320,6 +339,26 @@ export default function ScriptAuditsClient() {
           </div>
         )}
       </Drawer>
+
+      <Modal
+        title={t('approve_modal_title')}
+        open={approveOpen}
+        onCancel={() => setApproveOpen(false)}
+        onOk={handleApprove}
+        confirmLoading={submitting}
+        okText={t('action_approve')}
+      >
+        <Form form={approveForm} layout="vertical">
+          <Form.Item name="reason" label={t('approve_reason_label')}>
+            <Input.TextArea
+              rows={4}
+              maxLength={1024}
+              showCount
+              placeholder={t('approve_reason_placeholder')}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
 
       <Modal
         title={t('reject_modal_title')}

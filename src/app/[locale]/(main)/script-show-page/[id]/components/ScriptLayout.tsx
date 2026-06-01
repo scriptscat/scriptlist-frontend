@@ -10,6 +10,9 @@ import { useRouter } from '@/i18n/routing';
 import { adminService } from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
 
+const STATUS_DELETED = 2;
+const STATUS_AUDIT = 3;
+
 interface ScriptLayoutProps {
   script: ScriptInfoMeta;
   activeTab: string;
@@ -26,9 +29,12 @@ export default function ScriptLayout({
   const router = useRouter();
   const [restoring, setRestoring] = useState(false);
 
-  const isDeleted = script.status !== 1;
+  const isDeleted = script.status === STATUS_DELETED;
+  const isAudit = script.status === STATUS_AUDIT;
   const isAdmin = !!user && user.is_admin >= 1;
-  const showDeletedAlert = isDeleted && isAdmin;
+  const isOwner = !!user && user.user_id === script.user_id;
+  const showDeletedAlert = isDeleted && (isAdmin || isOwner);
+  const showAuditAlert = isAudit;
 
   const handleRestore = async () => {
     setRestoring(true);
@@ -52,20 +58,36 @@ export default function ScriptLayout({
       {showDeletedAlert && (
         <Alert
           message={t('alerts.deleted_title')}
-          description={t('alerts.deleted_description')}
+          description={t(
+            isAdmin
+              ? 'alerts.deleted_description'
+              : 'alerts.deleted_owner_description',
+          )}
           type="error"
           className="!mb-3"
           showIcon
           action={
-            <Popconfirm
-              title={t('alerts.deleted_restore_confirm')}
-              onConfirm={handleRestore}
-            >
-              <Button size="small" type="primary" loading={restoring}>
-                {t('alerts.deleted_restore_button')}
-              </Button>
-            </Popconfirm>
+            isAdmin ? (
+              <Popconfirm
+                title={t('alerts.deleted_restore_confirm')}
+                onConfirm={handleRestore}
+              >
+                <Button size="small" type="primary" loading={restoring}>
+                  {t('alerts.deleted_restore_button')}
+                </Button>
+              </Popconfirm>
+            ) : undefined
           }
+        />
+      )}
+
+      {showAuditAlert && (
+        <Alert
+          message={t('alerts.audit_title')}
+          description={t('alerts.audit_description')}
+          type="warning"
+          className="!mb-3"
+          showIcon
         />
       )}
 

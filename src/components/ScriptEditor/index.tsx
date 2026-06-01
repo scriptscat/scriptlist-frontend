@@ -47,6 +47,7 @@ import IntegrityErrorAlert from '@/components/IntegrityErrorAlert/IntegrityError
 import { ErrorCodes } from '@/lib/api/errorCodes';
 
 const { Text, Link } = Typography;
+const EDITABLE_TAG_TYPE = 2;
 
 export interface ScriptEditorProps {
   script?: ScriptInfo | null;
@@ -73,7 +74,10 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
     form.setFieldsValue({
       type: script ? script.type : 1,
       code: script?.script?.code || '',
-      tags: script?.tags.map((tag) => tag.name) || [],
+      tags:
+        script?.tags
+          .filter((tag) => tag.type === EDITABLE_TAG_TYPE)
+          .map((tag) => tag.name) || [],
       isPreRelease: 0,
       detailedDescription: script?.content || '',
       version: script?.script?.version || '',
