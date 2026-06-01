@@ -634,6 +634,17 @@
       }
     },
     "script": {
+      "audit": {
+        "approved": {
+          "content": "Script <link>{name}</link> của bạn đã được duyệt và xuất bản. Phiên bản: {version}"
+        },
+        "rejected": {
+          "content": "Script <link>{name}</link> của bạn không được duyệt. Lý do: {reason}"
+        },
+        "submitted": {
+          "content": "Script <link>{name}</link> của bạn đã vào hàng đợi xét duyệt. Phiên bản: {version}"
+        }
+      },
       "delete": {
         "content": "Script {name} của bạn đã bị quản trị viên xóa, lý do: {reason}"
       },
@@ -649,7 +660,8 @@
     },
     "type_system": "System Notification",
     "unread": "Unread",
-    "status_label": "Trạng thái:"
+    "status_label": "Trạng thái:",
+    "total": "{total} tổng cộng"
   },
   "oauth": {
     "authorize": {

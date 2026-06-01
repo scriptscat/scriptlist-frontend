@@ -864,6 +864,17 @@
       }
     },
     "script": {
+      "audit": {
+        "approved": {
+          "content": "您的脚本 <link>{name}</link> 已通过审核并发布，版本：{version}"
+        },
+        "rejected": {
+          "content": "您的脚本 <link>{name}</link> 审核未通过，原因：{reason}"
+        },
+        "submitted": {
+          "content": "您的脚本 <link>{name}</link> 已进入审核队列，版本：{version}"
+        }
+      },
       "delete": {
         "content": "您的脚本 {name} 已被管理员删除，原因：{reason}"
       },
@@ -879,7 +890,8 @@
     },
     "type_system": "系统通知",
     "unread": "未读",
-    "status_label": "状态:"
+    "status_label": "状态:",
+    "total": "共 {total} 条"
   },
   "oauth": {
     "authorize": {

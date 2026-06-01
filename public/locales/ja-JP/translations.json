@@ -759,6 +759,17 @@
       }
     },
     "script": {
+      "audit": {
+        "approved": {
+          "content": "あなたのスクリプト <link>{name}</link> は審査に通過し公開されました。バージョン: {version}"
+        },
+        "rejected": {
+          "content": "あなたのスクリプト <link>{name}</link> は審査に通過しませんでした。理由: {reason}"
+        },
+        "submitted": {
+          "content": "あなたのスクリプト <link>{name}</link> は審査キューに入りました。バージョン: {version}"
+        }
+      },
       "delete": {
         "content": "あなたのスクリプト {name} が管理者により削除されました。理由：{reason}"
       },
@@ -774,7 +785,8 @@
     },
     "type_system": "システム通知",
     "unread": "未読",
-    "status_label": "ステータス:"
+    "status_label": "ステータス:",
+    "total": "全 {total} 件"
   },
   "oauth": {
     "authorize": {

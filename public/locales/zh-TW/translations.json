@@ -765,6 +765,17 @@
       }
     },
     "script": {
+      "audit": {
+        "approved": {
+          "content": "您的腳本 <link>{name}</link> 已通過審核並發佈，版本：{version}"
+        },
+        "rejected": {
+          "content": "您的腳本 <link>{name}</link> 審核未通過，原因：{reason}"
+        },
+        "submitted": {
+          "content": "您的腳本 <link>{name}</link> 已進入審核佇列，版本：{version}"
+        }
+      },
       "delete": {
         "content": "您的腳本 {name} 已被管理員刪除，原因：{reason}"
       },
@@ -780,7 +791,8 @@
     },
     "type_system": "繫統通知",
     "unread": "未讀",
-    "status_label": "狀態:"
+    "status_label": "狀態:",
+    "total": "共 {total} 條"
   },
   "oauth": {
     "authorize": {

@@ -25,6 +25,7 @@ import { APIError } from '@/types/api';
 const STATUS_PENDING = 1;
 const STATUS_APPROVED = 2;
 const STATUS_REJECTED = 3;
+const ACTION_MODAL_Z_INDEX = 1200;
 
 type StatusFilter = 0 | 1 | 2 | 3; // 0 = all
 
@@ -343,6 +344,7 @@ export default function ScriptAuditsClient() {
       <Modal
         title={t('approve_modal_title')}
         open={approveOpen}
+        zIndex={ACTION_MODAL_Z_INDEX}
         onCancel={() => setApproveOpen(false)}
         onOk={handleApprove}
         confirmLoading={submitting}
@@ -363,6 +365,7 @@ export default function ScriptAuditsClient() {
       <Modal
         title={t('reject_modal_title')}
         open={rejectOpen}
+        zIndex={ACTION_MODAL_Z_INDEX}
         onCancel={() => setRejectOpen(false)}
         onOk={handleReject}
         confirmLoading={submitting}

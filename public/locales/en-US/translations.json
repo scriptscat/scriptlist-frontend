@@ -847,6 +847,17 @@
       }
     },
     "script": {
+      "audit": {
+        "approved": {
+          "content": "Your script <link>{name}</link> passed review and was published. Version: {version}"
+        },
+        "rejected": {
+          "content": "Your script <link>{name}</link> did not pass review. Reason: {reason}"
+        },
+        "submitted": {
+          "content": "Your script <link>{name}</link> has entered the review queue. Version: {version}"
+        }
+      },
       "delete": {
         "content": "Your script {name} has been deleted by admin, reason: {reason}"
       },
@@ -862,7 +873,8 @@
     },
     "type_system": "System Notification",
     "unread": "Unread",
-    "status_label": "Status:"
+    "status_label": "Status:",
+    "total": "{total} total"
   },
   "oauth": {
     "authorize": {
