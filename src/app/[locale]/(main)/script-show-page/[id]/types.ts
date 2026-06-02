@@ -145,6 +145,7 @@ export interface ScriptSearchRequest extends PageRequest {
   category?: string;
   user_id?: number;
   script_type?: 0 | 1 | 2 | 3 | 4; // 0:全部 1: 脚本 2: 库 3: 后台脚本 4: 定时脚本
+  status?: 0 | 1 | 3; // 0:全部 1:已发布 3:审核中
   sort?:
     | 'today_download'
     | 'total_download'

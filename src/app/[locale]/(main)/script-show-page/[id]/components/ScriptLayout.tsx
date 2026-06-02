@@ -1,7 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { Alert, Button, message, Popconfirm } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  Alert,
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Popconfirm,
+  Space,
+} from 'antd';
 import type { ScriptInfoMeta } from '../types';
 import ScriptNavigation from './ScriptNavigation';
 import { useTranslations } from 'next-intl';
@@ -12,6 +21,7 @@ import { APIError } from '@/types/api';
 
 const STATUS_DELETED = 2;
 const STATUS_AUDIT = 3;
+const AUDIT_STATUS_PENDING = 1;
 
 interface ScriptLayoutProps {
   script: ScriptInfoMeta;
@@ -28,6 +38,15 @@ export default function ScriptLayout({
   const { user } = useUser();
   const router = useRouter();
   const [restoring, setRestoring] = useState(false);
+  const [auditId, setAuditId] = useState<number | null>(null);
+  const [auditLoading, setAuditLoading] = useState(false);
+  const [approveOpen, setApproveOpen] = useState(false);
+  const [rejectOpen, setRejectOpen] = useState(false);
+  const [auditSubmitting, setAuditSubmitting] = useState<
+    'approve' | 'reject' | null
+  >(null);
+  const [approveForm] = Form.useForm<{ reason?: string }>();
+  const [rejectForm] = Form.useForm<{ reason: string }>();
 
   const isDeleted = script.status === STATUS_DELETED;
   const isAudit = script.status === STATUS_AUDIT;
@@ -50,6 +69,88 @@ export default function ScriptLayout({
       }
     } finally {
       setRestoring(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!isAudit || !isAdmin) {
+      setAuditId(null);
+      return;
+    }
+
+    let ignore = false;
+    setAuditLoading(true);
+    adminService
+      .listScriptAudits(1, 1, AUDIT_STATUS_PENDING, undefined, script.id)
+      .then((resp) => {
+        if (ignore) return;
+        setAuditId(resp.list?.[0]?.id ?? null);
+      })
+      .catch((err) => {
+        if (ignore) return;
+        setAuditId(null);
+        if (err instanceof APIError) {
+          message.error(err.msg);
+        }
+      })
+      .finally(() => {
+        if (!ignore) {
+          setAuditLoading(false);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [isAudit, isAdmin, script.id]);
+
+  const openApprove = useCallback(() => {
+    approveForm.resetFields();
+    setApproveOpen(true);
+  }, [approveForm]);
+
+  const openReject = useCallback(() => {
+    rejectForm.resetFields();
+    setRejectOpen(true);
+  }, [rejectForm]);
+
+  const handleApproveAudit = async () => {
+    if (!auditId) return;
+    const values = await approveForm.validateFields();
+    setAuditSubmitting('approve');
+    try {
+      await adminService.approveScriptAudit(auditId, values.reason?.trim());
+      message.success(t('alerts.audit_approve_success'));
+      setApproveOpen(false);
+      router.refresh();
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      } else {
+        message.error(t('alerts.audit_approve_failed'));
+      }
+    } finally {
+      setAuditSubmitting(null);
+    }
+  };
+
+  const handleRejectAudit = async () => {
+    if (!auditId) return;
+    const values = await rejectForm.validateFields();
+    setAuditSubmitting('reject');
+    try {
+      await adminService.rejectScriptAudit(auditId, values.reason.trim());
+      message.success(t('alerts.audit_reject_success'));
+      setRejectOpen(false);
+      router.refresh();
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      } else {
+        message.error(t('alerts.audit_reject_failed'));
+      }
+    } finally {
+      setAuditSubmitting(null);
     }
   };
 
@@ -88,6 +189,30 @@ export default function ScriptLayout({
           type="warning"
           className="!mb-3"
           showIcon
+          action={
+            isAdmin ? (
+              <Space>
+                <Button
+                  size="small"
+                  danger
+                  disabled={!auditId}
+                  loading={auditLoading || auditSubmitting === 'reject'}
+                  onClick={openReject}
+                >
+                  {t('alerts.audit_reject_button')}
+                </Button>
+                <Button
+                  size="small"
+                  type="primary"
+                  disabled={!auditId}
+                  loading={auditLoading || auditSubmitting === 'approve'}
+                  onClick={openApprove}
+                >
+                  {t('alerts.audit_approve_button')}
+                </Button>
+              </Space>
+            ) : undefined
+          }
         />
       )}
 
@@ -119,6 +244,60 @@ export default function ScriptLayout({
 
       {/* 页面内容 */}
       {children}
+
+      <Modal
+        title={t('alerts.audit_approve_modal_title')}
+        open={approveOpen}
+        onCancel={() => setApproveOpen(false)}
+        onOk={handleApproveAudit}
+        confirmLoading={auditSubmitting === 'approve'}
+        okText={t('alerts.audit_approve_button')}
+      >
+        <Form form={approveForm} layout="vertical">
+          <Form.Item
+            name="reason"
+            label={t('alerts.audit_approve_reason_label')}
+          >
+            <Input.TextArea
+              rows={4}
+              maxLength={1024}
+              showCount
+              placeholder={t('alerts.audit_approve_reason_placeholder')}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title={t('alerts.audit_reject_modal_title')}
+        open={rejectOpen}
+        onCancel={() => setRejectOpen(false)}
+        onOk={handleRejectAudit}
+        confirmLoading={auditSubmitting === 'reject'}
+        okText={t('alerts.audit_reject_button')}
+        okButtonProps={{ danger: true }}
+      >
+        <Form form={rejectForm} layout="vertical">
+          <Form.Item
+            name="reason"
+            label={t('alerts.audit_reject_reason_label')}
+            rules={[
+              {
+                required: true,
+                whitespace: true,
+                message: t('alerts.audit_reject_reason_required'),
+              },
+            ]}
+          >
+            <Input.TextArea
+              rows={4}
+              maxLength={1024}
+              showCount
+              placeholder={t('alerts.audit_reject_reason_placeholder')}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

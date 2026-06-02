@@ -55,6 +55,9 @@ export default function UserScriptList({
       if (newFilters.script_type) {
         params.set('script_type', newFilters.script_type.toString());
       }
+      if (newFilters.status) {
+        params.set('status', newFilters.status.toString());
+      }
       if (newFilters.sort) params.set('sort', newFilters.sort);
       if (newFilters.category) params.set('category', newFilters.category);
       if (page > 1) params.set('page', page.toString());
@@ -83,6 +86,13 @@ export default function UserScriptList({
     value: ScriptSearchRequest['script_type'],
   ) => {
     const newFilters = { ...filters, script_type: value };
+    setFilters(newFilters);
+    setCurrentPage(1);
+    updateURL(newFilters, 1);
+  };
+
+  const handleStatusChange = (value: ScriptSearchRequest['status']) => {
+    const newFilters = { ...filters, status: value };
     setFilters(newFilters);
     setCurrentPage(1);
     updateURL(newFilters, 1);
@@ -129,6 +139,19 @@ export default function UserScriptList({
               <Option value={2}>{typeT('library')}</Option>
               <Option value={3}>{typeT('background_script')}</Option>
               <Option value={4}>{typeT('scheduled_script')}</Option>
+            </Select>
+
+            <Select
+              placeholder={userT('all_status_placeholder')}
+              style={{ width: 150 }}
+              value={filters.status || undefined}
+              onChange={handleStatusChange}
+              allowClear
+              disabled={isPending}
+            >
+              <Option value={0}>{userT('status_all')}</Option>
+              <Option value={1}>{userT('status_active')}</Option>
+              <Option value={3}>{userT('status_audit')}</Option>
             </Select>
 
             <Select

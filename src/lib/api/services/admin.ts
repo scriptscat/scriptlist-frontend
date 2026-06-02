@@ -440,10 +440,11 @@ class AdminService {
     size: number = 20,
     status?: number,
     submitterId?: number,
+    scriptId?: number,
   ) {
     return apiClient.get<ListData<ScriptAuditItem>>(
       `${this.basePath}/script-audits`,
-      { page, size, status, submitter_id: submitterId },
+      { page, size, status, submitter_id: submitterId, script_id: scriptId },
     );
   }
 
