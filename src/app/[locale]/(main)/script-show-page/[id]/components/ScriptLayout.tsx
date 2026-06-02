@@ -23,6 +23,8 @@ const STATUS_DELETED = 2;
 const STATUS_AUDIT = 3;
 const AUDIT_STATUS_PENDING = 1;
 const AUDIT_FALLBACK_PAGE_SIZE = 100;
+const COMMUNITY_FEEDBACK_URL =
+  'https://bbs.tampermonkey.net.cn/forum-75-1.html';
 
 interface ScriptLayoutProps {
   script: ScriptInfoMeta;
@@ -41,6 +43,7 @@ export default function ScriptLayout({
   const [restoring, setRestoring] = useState(false);
   const [auditId, setAuditId] = useState<number | null>(null);
   const [auditLoading, setAuditLoading] = useState(false);
+  const [auditMissing, setAuditMissing] = useState(false);
   const [approveOpen, setApproveOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [auditSubmitting, setAuditSubmitting] = useState<
@@ -56,7 +59,7 @@ export default function ScriptLayout({
   const showDeletedAlert = isDeleted && (isAdmin || isOwner);
   const showAuditAlert = isAudit;
   const auditDescriptionKey =
-    isAdmin && !auditLoading && !auditId
+    isAdmin && auditMissing
       ? 'alerts.audit_description_no_record'
       : 'alerts.audit_description';
 
@@ -80,11 +83,13 @@ export default function ScriptLayout({
   useEffect(() => {
     if (!isAudit || !isAdmin) {
       setAuditId(null);
+      setAuditMissing(false);
       return;
     }
 
     let ignore = false;
     setAuditLoading(true);
+    setAuditMissing(false);
     const loadAuditId = async () => {
       const filteredResp = await adminService.listScriptAudits(
         1,
@@ -113,10 +118,12 @@ export default function ScriptLayout({
       .then((id) => {
         if (ignore) return;
         setAuditId(id ?? null);
+        setAuditMissing(!id);
       })
       .catch((err) => {
         if (ignore) return;
         setAuditId(null);
+        setAuditMissing(false);
         if (err instanceof APIError) {
           message.error(err.msg);
         }
@@ -221,7 +228,16 @@ export default function ScriptLayout({
                 className="font-medium"
               >
                 {t('alerts.audit_logs_link')}
-              </Link>
+              </Link>{' '}
+              {t('alerts.audit_feedback_hint')}{' '}
+              <a
+                href={COMMUNITY_FEEDBACK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium"
+              >
+                {t('alerts.audit_feedback_link')}
+              </a>
             </span>
           }
           type="warning"
