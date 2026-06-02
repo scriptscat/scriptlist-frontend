@@ -2,6 +2,8 @@
   "admin": {
     "audit_logs": {
       "actions": {
+        "script_audit_approved": "Prüfung genehmigt",
+        "script_audit_rejected": "Prüfung abgelehnt",
         "script_create": "Skript erstellen",
         "script_delete": "Skript löschen",
         "script_update": "Skript aktualisieren"
@@ -855,6 +857,7 @@
       "audit_approve_reason_placeholder": "Wenn dies ein AI-Fehlalarm war, können Sie die manuelle Prüfung begründen; leer lassen zum direkten Freigeben",
       "audit_approve_success": "Freigegeben",
       "audit_description": "Dieses Skript wird geprüft und ist für normale Nutzer vorübergehend nicht zugänglich. Sie können die Details weiterhin ansehen; der öffentliche Zugriff wird nach der Freigabe wiederhergestellt.",
+      "audit_description_no_record": "Dieses Skript wird geprüft, aber es wurde kein passender ausstehender Prüfeintrag gefunden. Prüfen Sie, ob der Backend-Dienst aktualisiert und neu gestartet wurde, oder ob der Eintrag in der Admin-Prüfliste noch ausstehend ist.",
       "audit_reject_button": "Ablehnen",
       "audit_reject_failed": "Ablehnen fehlgeschlagen",
       "audit_reject_modal_title": "Prüfung ablehnen",
@@ -1985,7 +1988,16 @@
       "profile_update_success": "Persönliche Informationen erfolgreich aktualisiert!",
       "report": "Melden",
       "unfollow_success": "Nicht mehr gefolgt",
-      "verified": "Verifiziert"
+      "verified": "Verifiziert",
+      "previously_processed_scripts": "Für diesen Benutzer verarbeitete Skripte",
+      "processed_empty": "Keine Verarbeitungsprotokolle",
+      "processed_action_delete": "Admin-Löschung",
+      "processed_action_rejected": "Prüfung abgelehnt",
+      "processed_col_action": "Aktion",
+      "processed_col_script": "Skript",
+      "processed_col_operator": "Bearbeiter",
+      "processed_col_time": "Zeit",
+      "processed_col_reason": "Grund"
     },
     "save": "Speichern",
     "script_list": {

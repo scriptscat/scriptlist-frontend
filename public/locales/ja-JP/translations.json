@@ -2,6 +2,8 @@
   "admin": {
     "audit_logs": {
       "actions": {
+        "script_audit_approved": "審査承認",
+        "script_audit_rejected": "審査却下",
         "script_create": "スクリプト作成",
         "script_delete": "スクリプト削除",
         "script_update": "スクリプト更新"
@@ -855,6 +857,7 @@
       "audit_approve_reason_placeholder": "AI の誤判定の場合は手動確認の根拠を記入できます。空欄でも承認できます",
       "audit_approve_success": "承認しました",
       "audit_description": "このスクリプトは審査中のため、一般ユーザーは一時的にアクセスできません。詳細は引き続き閲覧できます。承認後に公開アクセスが再開されます。",
+      "audit_description_no_record": "このスクリプトは審査中ですが、対応する保留中の審査記録が見つかりません。バックエンドが更新され再起動されているか、管理画面の審査一覧でこの記録がまだ保留中か確認してください。",
       "audit_reject_button": "拒否",
       "audit_reject_failed": "拒否に失敗しました",
       "audit_reject_modal_title": "審査を拒否",
@@ -2057,7 +2060,16 @@
       "profile_update_success": "プロフィールの更新が完了しました！",
       "report": "報告",
       "unfollow_success": "フォローを解除しました",
-      "verified": "認証済み"
+      "verified": "認証済み",
+      "previously_processed_scripts": "このユーザーで処理されたスクリプト",
+      "processed_empty": "処理記録はありません",
+      "processed_action_delete": "管理者による削除",
+      "processed_action_rejected": "審査却下",
+      "processed_col_action": "操作",
+      "processed_col_script": "スクリプト",
+      "processed_col_operator": "処理者",
+      "processed_col_time": "時間",
+      "processed_col_reason": "理由"
     },
     "save": "保存",
     "script_list": {

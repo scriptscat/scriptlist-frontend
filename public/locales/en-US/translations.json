@@ -28,6 +28,8 @@
     },
     "audit_logs": {
       "actions": {
+        "script_audit_approved": "Audit Approved",
+        "script_audit_rejected": "Audit Rejected",
         "script_create": "Create Script",
         "script_delete": "Delete Script",
         "script_update": "Update Script"
@@ -138,6 +140,7 @@
       "status_rejected": "Rejected",
       "filter_status": "Status",
       "filter_all": "All",
+      "filter_script_name_placeholder": "Search script name",
       "refresh": "Refresh",
       "action_review": "Review",
       "action_approve": "Approve",
@@ -943,6 +946,7 @@
       "audit_approve_reason_placeholder": "If this was an AI false positive, note the manual review basis; leave blank to approve directly",
       "audit_approve_success": "Approved",
       "audit_description": "This script is under review and is temporarily inaccessible to regular users. You can still view its details; public access will resume after approval.",
+      "audit_description_no_record": "This script is under review, but no matching pending audit record was found. Confirm that the backend service has been updated and restarted, or check the admin audit list to see whether this record is still pending.",
       "audit_reject_button": "Reject",
       "audit_reject_failed": "Reject failed",
       "audit_reject_modal_title": "Reject Audit",

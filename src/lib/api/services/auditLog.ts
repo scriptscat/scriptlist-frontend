@@ -25,7 +25,7 @@ class AuditLogService {
   private readonly basePath = '/audit-logs';
 
   /**
-   * 全局管理日志（公开）
+   * 全局管理日志（登录用户）
    */
   async list(params?: AuditLogListParams) {
     return apiClient.getWithCookie<AuditLogListResponse>(this.basePath, params);

@@ -37,6 +37,8 @@ export default function ScriptAuditsClient() {
   const [size] = useState(20);
   const [statusFilter, setStatusFilter] =
     useState<StatusFilter>(STATUS_PENDING);
+  const [scriptNameInput, setScriptNameInput] = useState('');
+  const [scriptNameFilter, setScriptNameFilter] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [detailOpen, setDetailOpen] = useState(false);
@@ -59,6 +61,9 @@ export default function ScriptAuditsClient() {
           p,
           size,
           statusFilterParam,
+          undefined,
+          undefined,
+          scriptNameFilter || undefined,
         );
         setData(resp.list || []);
         setTotal(resp.total);
@@ -68,12 +73,12 @@ export default function ScriptAuditsClient() {
         setLoading(false);
       }
     },
-    [page, size, statusFilterParam],
+    [page, size, statusFilterParam, scriptNameFilter],
   );
 
   useEffect(() => {
     fetchList(page);
-  }, [page, statusFilter, fetchList]);
+  }, [page, statusFilter, scriptNameFilter, fetchList]);
 
   const openDetail = async (id: number) => {
     setDetailOpen(true);
@@ -148,6 +153,11 @@ export default function ScriptAuditsClient() {
     { text: t('status_approved'), value: STATUS_APPROVED },
     { text: t('status_rejected'), value: STATUS_REJECTED },
   ];
+
+  const handleScriptNameSearch = (value: string) => {
+    setPage(1);
+    setScriptNameFilter(value.trim());
+  };
 
   const handleTableChange: TableProps<ScriptAuditItem>['onChange'] = (
     pagination,
@@ -242,6 +252,20 @@ export default function ScriptAuditsClient() {
             { value: STATUS_REJECTED, label: t('status_rejected') },
           ]}
         />
+        <Input.Search
+          allowClear
+          value={scriptNameInput}
+          onChange={(e) => {
+            setScriptNameInput(e.target.value);
+            if (e.target.value === '' && scriptNameFilter !== '') {
+              setPage(1);
+              setScriptNameFilter('');
+            }
+          }}
+          onSearch={handleScriptNameSearch}
+          placeholder={t('filter_script_name_placeholder')}
+          style={{ width: 260 }}
+        />
         <Button onClick={() => fetchList(page)}>{t('refresh')}</Button>
       </Space>
       <Table<ScriptAuditItem>
@@ -270,11 +294,15 @@ export default function ScriptAuditsClient() {
         destroyOnHidden
         loading={detailLoading}
         extra={
-          detail && detail.status === STATUS_PENDING ? (
+          detail &&
+          (detail.status === STATUS_PENDING ||
+            detail.status === STATUS_REJECTED) ? (
             <Space>
-              <Button danger onClick={openReject} disabled={submitting}>
-                {t('action_reject')}
-              </Button>
+              {detail.status === STATUS_PENDING && (
+                <Button danger onClick={openReject} disabled={submitting}>
+                  {t('action_reject')}
+                </Button>
+              )}
               <Button type="primary" onClick={openApprove} loading={submitting}>
                 {t('action_approve')}
               </Button>

@@ -14,6 +14,8 @@ const { Title, Text } = Typography;
 const PAGE_SIZE = 20;
 
 const ACTION_COLORS: Record<string, string> = {
+  script_audit_approved: 'green',
+  script_audit_rejected: 'orange',
   script_delete: 'red',
   script_update: 'blue',
   script_create: 'green',
@@ -50,9 +52,13 @@ export default function LogsPage() {
       dataIndex: 'username',
       key: 'username',
       width: 150,
-      render: (username: string, record) => (
-        <Link href={`/users/${record.user_id}`}>{username}</Link>
-      ),
+      render: (username: string, record) => {
+        const displayName = username || (record.user_id === 0 ? 'system' : '-');
+        if (record.user_id === 0) {
+          return <Text>{displayName}</Text>;
+        }
+        return <Link href={`/users/${record.user_id}`}>{displayName}</Link>;
+      },
     },
     {
       title: tAudit('table.action'),

@@ -22,6 +22,7 @@ import { APIError } from '@/types/api';
 const STATUS_DELETED = 2;
 const STATUS_AUDIT = 3;
 const AUDIT_STATUS_PENDING = 1;
+const AUDIT_FALLBACK_PAGE_SIZE = 100;
 
 interface ScriptLayoutProps {
   script: ScriptInfoMeta;
@@ -80,11 +81,34 @@ export default function ScriptLayout({
 
     let ignore = false;
     setAuditLoading(true);
-    adminService
-      .listScriptAudits(1, 1, AUDIT_STATUS_PENDING, undefined, script.id)
-      .then((resp) => {
+    const loadAuditId = async () => {
+      const filteredResp = await adminService.listScriptAudits(
+        1,
+        1,
+        AUDIT_STATUS_PENDING,
+        undefined,
+        script.id,
+      );
+      const filteredAudit = filteredResp.list?.find(
+        (item) => item.script_id === script.id,
+      );
+      if (filteredAudit) {
+        return filteredAudit.id;
+      }
+
+      const fallbackResp = await adminService.listScriptAudits(
+        1,
+        AUDIT_FALLBACK_PAGE_SIZE,
+        AUDIT_STATUS_PENDING,
+      );
+      return fallbackResp.list?.find((item) => item.script_id === script.id)
+        ?.id;
+    };
+
+    loadAuditId()
+      .then((id) => {
         if (ignore) return;
-        setAuditId(resp.list?.[0]?.id ?? null);
+        setAuditId(id ?? null);
       })
       .catch((err) => {
         if (ignore) return;
@@ -185,7 +209,11 @@ export default function ScriptLayout({
       {showAuditAlert && (
         <Alert
           message={t('alerts.audit_title')}
-          description={t('alerts.audit_description')}
+          description={t(
+            isAdmin && !auditLoading && !auditId
+              ? 'alerts.audit_description_no_record'
+              : 'alerts.audit_description',
+          )}
           type="warning"
           className="!mb-3"
           showIcon

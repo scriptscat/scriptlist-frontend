@@ -2,6 +2,8 @@
   "admin": {
     "audit_logs": {
       "actions": {
+        "script_audit_approved": "Аудит одобрен",
+        "script_audit_rejected": "Аудит отклонён",
         "script_create": "Создание скрипта",
         "script_delete": "Удаление скрипта",
         "script_update": "Обновление скрипта"
@@ -855,6 +857,7 @@
       "audit_approve_reason_placeholder": "Если это было ложное срабатывание AI, укажите основание ручной проверки; можно оставить пустым",
       "audit_approve_success": "Одобрено",
       "audit_description": "Этот скрипт находится на проверке и временно недоступен обычным пользователям. Вы всё ещё можете просматривать его детали; публичный доступ вернётся после одобрения.",
+      "audit_description_no_record": "Этот скрипт находится на проверке, но подходящая ожидающая запись проверки не найдена. Убедитесь, что backend обновлён и перезапущен, или проверьте список проверок администратора.",
       "audit_reject_button": "Отклонить",
       "audit_reject_failed": "Не удалось отклонить",
       "audit_reject_modal_title": "Отклонить проверку",
@@ -2057,7 +2060,16 @@
       "profile_update_success": "Личная информация успешно обновлена!",
       "report": "Пожаловаться",
       "unfollow_success": "Отписка выполнена",
-      "verified": "Проверено"
+      "verified": "Проверено",
+      "previously_processed_scripts": "Скрипты, обработанные для этого пользователя",
+      "processed_empty": "Нет записей обработки",
+      "processed_action_delete": "Удалено администратором",
+      "processed_action_rejected": "Аудит отклонён",
+      "processed_col_action": "Действие",
+      "processed_col_script": "Скрипт",
+      "processed_col_operator": "Оператор",
+      "processed_col_time": "Время",
+      "processed_col_reason": "Причина"
     },
     "save": "Сохранить",
     "script_list": {
