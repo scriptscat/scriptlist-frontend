@@ -15,7 +15,7 @@ import type { ScriptInfoMeta } from '../types';
 import ScriptNavigation from './ScriptNavigation';
 import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { adminService } from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
 
@@ -55,6 +55,10 @@ export default function ScriptLayout({
   const isOwner = !!user && user.user_id === script.user_id;
   const showDeletedAlert = isDeleted && (isAdmin || isOwner);
   const showAuditAlert = isAudit;
+  const auditDescriptionKey =
+    isAdmin && !auditLoading && !auditId
+      ? 'alerts.audit_description_no_record'
+      : 'alerts.audit_description';
 
   const handleRestore = async () => {
     setRestoring(true);
@@ -209,11 +213,17 @@ export default function ScriptLayout({
       {showAuditAlert && (
         <Alert
           message={t('alerts.audit_title')}
-          description={t(
-            isAdmin && !auditLoading && !auditId
-              ? 'alerts.audit_description_no_record'
-              : 'alerts.audit_description',
-          )}
+          description={
+            <span>
+              {t(auditDescriptionKey)}{' '}
+              <Link
+                href={`/script-show-page/${script.id}/manage/logs`}
+                className="font-medium"
+              >
+                {t('alerts.audit_logs_link')}
+              </Link>
+            </span>
+          }
           type="warning"
           className="!mb-3"
           showIcon

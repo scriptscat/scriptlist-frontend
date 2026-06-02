@@ -363,20 +363,33 @@ export default React.memo(function ScriptCard({
                 </Tag>
               </Tooltip>
             )}
-            {script.tags.map((tag) => (
+            {script.tags.slice(0, 3).map((tag) => (
               <Tooltip
                 title={t('tag_label', { name: tag.name })}
                 placement="bottom"
                 key={tag.id}
               >
-                <Tag
-                  color={hashColor(tag.name)}
-                  className="text-xs px-1 py-0 max-w-[80px] truncate"
-                >
-                  {'#' + tag.name}
+                <Tag color={hashColor(tag.name)} className="text-xs px-1 py-0">
+                  {'#' +
+                    (tag.name.length > 4
+                      ? tag.name.slice(0, 4) + '…'
+                      : tag.name)}
                 </Tag>
               </Tooltip>
             ))}
+            {script.tags.length > 3 && (
+              <Tooltip
+                title={script.tags
+                  .slice(3)
+                  .map((tag) => '#' + tag.name)
+                  .join(' ')}
+                placement="bottom"
+              >
+                <Tag className="text-xs px-1 py-0">
+                  {'+' + (script.tags.length - 3)}
+                </Tag>
+              </Tooltip>
+            )}
           </div>
         </div>
       </Card>

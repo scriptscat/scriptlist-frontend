@@ -723,7 +723,8 @@
     "alerts": {
       "archived_description": "This script has been archived by the author. The script may malfunction and the author is no longer maintaining it, so you cannot provide feedback.",
       "archived_title": "Script archived",
-      "audit_description": "This script is under review and is temporarily inaccessible to regular users. You can still view its details; public access will resume after approval.",
+      "audit_description": "This script is under review and is temporarily inaccessible to regular users. Review reasons, progress, and results are recorded in the management logs.",
+      "audit_logs_link": "View management logs",
       "audit_title": "Script under review",
       "deleted_description": "This script has been deleted and is not accessible to regular users. You are viewing it as an administrator and can restore it with the button on the right.",
       "deleted_owner_description": "This script has been deleted and is not accessible to regular users. You are viewing the script details as its author.",
