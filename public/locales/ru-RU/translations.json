@@ -4,6 +4,7 @@
       "actions": {
         "script_audit_approved": "Аудит одобрен",
         "script_audit_rejected": "Аудит отклонён",
+        "script_audit_pending": "Ожидает проверки",
         "script_create": "Создание скрипта",
         "script_delete": "Удаление скрипта",
         "script_update": "Обновление скрипта"

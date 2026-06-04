@@ -4,6 +4,7 @@
       "actions": {
         "script_audit_approved": "審査承認",
         "script_audit_rejected": "審査却下",
+        "script_audit_pending": "レビュー待ち",
         "script_create": "スクリプト作成",
         "script_delete": "スクリプト削除",
         "script_update": "スクリプト更新"

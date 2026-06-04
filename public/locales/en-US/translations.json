@@ -30,6 +30,7 @@
       "actions": {
         "script_audit_approved": "Audit Approved",
         "script_audit_rejected": "Audit Rejected",
+        "script_audit_pending": "Pending Review",
         "script_create": "Create Script",
         "script_delete": "Delete Script",
         "script_update": "Update Script"

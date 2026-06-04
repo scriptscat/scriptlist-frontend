@@ -4,6 +4,7 @@
       "actions": {
         "script_audit_approved": "Prüfung genehmigt",
         "script_audit_rejected": "Prüfung abgelehnt",
+        "script_audit_pending": "Prüfung ausstehend",
         "script_create": "Skript erstellen",
         "script_delete": "Skript löschen",
         "script_update": "Skript aktualisieren"

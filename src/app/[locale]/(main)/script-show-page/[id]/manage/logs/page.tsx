@@ -16,6 +16,7 @@ const PAGE_SIZE = 20;
 const ACTION_COLORS: Record<string, string> = {
   script_audit_approved: 'green',
   script_audit_rejected: 'orange',
+  script_audit_pending: 'gold',
   script_delete: 'red',
   script_update: 'blue',
   script_create: 'green',

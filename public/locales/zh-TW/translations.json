@@ -4,6 +4,7 @@
       "actions": {
         "script_audit_approved": "審核通過",
         "script_audit_rejected": "審核拒絕",
+        "script_audit_pending": "待人工複核",
         "script_create": "創建腳本",
         "script_delete": "刪除腳本",
         "script_update": "更新腳本"

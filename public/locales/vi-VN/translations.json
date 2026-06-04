@@ -2,6 +2,7 @@
   "admin": {
     "audit_logs": {
       "actions": {
+        "script_audit_pending": "Chờ duyệt",
         "script_create": "Tạo script",
         "script_delete": "Xóa script",
         "script_update": "Cập nhật script"

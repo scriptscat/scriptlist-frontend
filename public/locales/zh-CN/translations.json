@@ -30,6 +30,7 @@
       "actions": {
         "script_audit_approved": "审核通过",
         "script_audit_rejected": "审核拒绝",
+        "script_audit_pending": "待人工复核",
         "script_create": "创建脚本",
         "script_delete": "删除脚本",
         "script_update": "更新脚本"
