@@ -518,7 +518,8 @@
     "system_settings": "System Settings",
     "tampermonkey_chinese_website": "Tampermonkey Chinese Website",
     "user_profile": "User Profile",
-    "user_setting": "User Settings"
+    "user_setting": "User Settings",
+    "code_search": "Tìm mã nguồn"
   },
   "login": {
     "account_placeholder": "Email or username",
@@ -1667,6 +1668,19 @@
       "version_type_extra": "Prerelease versions are usually for testing new features and may not be stable",
       "version_type_label": "Version Type",
       "view_code_button": "View Code"
+    },
+    "code_search": {
+      "title": "Tìm mã nguồn",
+      "subtitle": "Tìm trong mã nguồn mới nhất của các script bạn có thể xem",
+      "placeholder": "Nhập API, hàm hoặc biến",
+      "button": "Tìm kiếm",
+      "login": "Đăng nhập",
+      "login_required": "Vui lòng đăng nhập trước khi tìm mã nguồn",
+      "keyword_too_short": "Nhập ít nhất 2 ký tự",
+      "rate_limited": "Tìm mã nguồn đang bị giới hạn tần suất. Hãy thử lại sau.",
+      "search_failed": "Tìm mã nguồn thất bại. Hãy thử lại sau.",
+      "empty": "Không tìm thấy mã nguồn phù hợp",
+      "ready": "Nhập từ khóa để bắt đầu tìm kiếm"
     }
   },
   "user": {

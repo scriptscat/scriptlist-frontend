@@ -120,6 +120,24 @@ export interface ScoreStateResponse {
   score_user_count: number;
 }
 
+export interface ScriptCodeSearchRequest {
+  keyword: string;
+  page?: number;
+  size?: number;
+  user_id?: number;
+}
+
+export interface ScriptCodeSearchItem {
+  id: number;
+  user_id: number;
+  username: string;
+  avatar?: string;
+  is_admin?: number;
+  name: string;
+  description: string;
+  snippets: string[];
+}
+
 import { cache } from 'react';
 import type { GrayControlValue } from '@/app/[locale]/(main)/script-show-page/[id]/components/GrayControl';
 
@@ -155,6 +173,22 @@ export class ScriptService {
 
     return apiClient.getWithCookie<ListData<ScriptListItem>>(
       this.basePath,
+      requestParams,
+    );
+  }
+
+  /**
+   * 搜索脚本最新版本源码。后端只返回脚本基本信息与最多 3 条高亮片段，不返回完整源码。
+   */
+  async codeSearch(params: ScriptCodeSearchRequest) {
+    const requestParams = {
+      page: 1,
+      size: 20,
+      ...params,
+    };
+
+    return apiClient.getWithCookie<ListData<ScriptCodeSearchItem>>(
+      `${this.basePath}/code-search`,
       requestParams,
     );
   }

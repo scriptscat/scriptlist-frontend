@@ -3,6 +3,7 @@ export { ScriptService, scriptService } from './scripts';
 export { ScriptAccessService, scriptAccessService } from './access';
 export { ScriptIssueService, scriptIssueService } from './issue';
 export { ScriptFavoriteService, scriptFavoriteService } from './favorites';
+export type { ScriptCodeSearchItem, ScriptCodeSearchRequest } from './scripts';
 export type {
   Issue,
   IssueListParams,

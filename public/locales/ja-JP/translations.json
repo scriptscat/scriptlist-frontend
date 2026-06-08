@@ -645,7 +645,8 @@
     "system_settings": "システム設定",
     "tampermonkey_chinese_website": "Tampermonkey中国サイト",
     "user_profile": "プロフィール",
-    "user_setting": "ユーザー設定"
+    "user_setting": "ユーザー設定",
+    "code_search": "コード検索"
   },
   "login": {
     "account_placeholder": "メールアドレスまたはユーザー名を入力",
@@ -1895,6 +1896,19 @@
       "version_count": "全 {count} バージョン",
       "version_type_label": "バージョンタイプ",
       "view_code_button": "コードを表示"
+    },
+    "code_search": {
+      "title": "コード検索",
+      "subtitle": "閲覧権限のあるスクリプトの最新ソースを検索",
+      "placeholder": "API、関数名、変数名を入力",
+      "button": "検索",
+      "login": "ログイン",
+      "login_required": "ソースコードを検索するにはログインしてください",
+      "keyword_too_short": "2 文字以上入力してください",
+      "rate_limited": "コード検索の回数制限中です。後でもう一度お試しください。",
+      "search_failed": "コード検索に失敗しました。後でもう一度お試しください。",
+      "empty": "一致するソースコードが見つかりません",
+      "ready": "キーワードを入力して検索を開始"
     }
   },
   "user": {

@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
 import { Link, useRouter } from '@/i18n/routing';
+import { getScriptSearchPath } from '@/lib/utils/search-command';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
@@ -240,11 +241,7 @@ export default function HomeClient() {
   const t = useTranslations();
 
   const handleSearch = (value: string) => {
-    if (value.trim()) {
-      router.push(`/search?keyword=${encodeURIComponent(value.trim())}`);
-    } else {
-      router.push('/search');
-    }
+    router.push(getScriptSearchPath(value));
   };
 
   return (

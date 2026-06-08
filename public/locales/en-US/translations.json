@@ -734,7 +734,8 @@
     "system_settings": "System Settings",
     "tampermonkey_chinese_website": "Tampermonkey Chinese Website",
     "user_profile": "User Profile",
-    "user_setting": "User Settings"
+    "user_setting": "User Settings",
+    "code_search": "Code Search"
   },
   "login": {
     "account_placeholder": "Email or username",
@@ -1984,6 +1985,19 @@
       "version_count": "Total {count} versions",
       "version_type_label": "Version Type",
       "view_code_button": "View Code"
+    },
+    "code_search": {
+      "title": "Code Search",
+      "subtitle": "Search the latest source code of scripts you can view",
+      "placeholder": "Enter an API, function, or variable name",
+      "button": "Search",
+      "login": "Log in",
+      "login_required": "Log in before searching source code",
+      "keyword_too_short": "Enter at least 2 characters",
+      "rate_limited": "Code search is rate limited. Try again later.",
+      "search_failed": "Code search failed. Try again later.",
+      "empty": "No matching source code found",
+      "ready": "Enter a keyword to start searching"
     }
   },
   "user": {

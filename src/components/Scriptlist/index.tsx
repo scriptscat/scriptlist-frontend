@@ -6,6 +6,10 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { useCategoryList } from '@/lib/api/hooks';
+import {
+  getScriptSearchPath,
+  isCodeSearchCommand,
+} from '@/lib/utils/search-command';
 import ScriptCard from './ScriptCard';
 import type {
   ScriptListItem,
@@ -63,6 +67,11 @@ export default function ScriptList({
   };
 
   const handleSearch = (value: string) => {
+    if (isCodeSearchCommand(value)) {
+      router.push(getScriptSearchPath(value));
+      return;
+    }
+
     // 允许空搜索，这样用户可以浏览所有脚本
     const newFilters = { ...filters, keyword: value.trim() || '' };
     setFilters(newFilters);

@@ -747,7 +747,8 @@
     "system_settings": "系统设置",
     "tampermonkey_chinese_website": "油猴中文网",
     "user_profile": "个人资料",
-    "user_setting": "用户设置"
+    "user_setting": "用户设置",
+    "code_search": "源码搜索"
   },
   "login": {
     "account_placeholder": "请输入邮箱或用户名",
@@ -2001,6 +2002,19 @@
       "version_count": "共 {count} 个版本",
       "version_type_label": "版本类型",
       "view_code_button": "查看代码"
+    },
+    "code_search": {
+      "title": "源码搜索",
+      "subtitle": "搜索你有权限查看的脚本最新源码",
+      "placeholder": "输入 API、函数名或变量名",
+      "button": "搜索",
+      "login": "登录",
+      "login_required": "请先登录后再搜索源码",
+      "keyword_too_short": "请输入至少 2 个字符",
+      "rate_limited": "源码搜索频率较高，请稍后再试",
+      "search_failed": "源码搜索失败，请稍后重试",
+      "empty": "没有找到匹配源码",
+      "ready": "输入关键词开始搜索"
     }
   },
   "user": {

@@ -11,6 +11,7 @@ import {
 import { Icon } from '@iconify/react';
 import { Link, useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
+import { getScriptSearchPath } from '@/lib/utils/search-command';
 
 interface SearchBarProps {
   initialKeyword?: string;
@@ -42,10 +43,7 @@ export default function SearchBar({ initialKeyword = '' }: SearchBarProps) {
   }, []);
 
   const handleSearch = () => {
-    const trimmed = value.trim();
-    router.push(
-      trimmed ? `/search?keyword=${encodeURIComponent(trimmed)}` : '/search',
-    );
+    router.push(getScriptSearchPath(value));
   };
 
   const chips: QuickChip[] = [

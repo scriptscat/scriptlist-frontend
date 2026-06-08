@@ -645,7 +645,8 @@
     "system_settings": "Systemeinstellungen",
     "tampermonkey_chinese_website": "Tampermonkey Chinese Website",
     "user_profile": "Benutzerprofil",
-    "user_setting": "Benutzereinstellungen"
+    "user_setting": "Benutzereinstellungen",
+    "code_search": "Code-Suche"
   },
   "login": {
     "account_placeholder": "E-Mail oder Benutzername",
@@ -1823,6 +1824,19 @@
       "version_count": "{count} Versionen insgesamt",
       "version_type_label": "Versionstyp",
       "view_code_button": "Code anzeigen"
+    },
+    "code_search": {
+      "title": "Code-Suche",
+      "subtitle": "Durchsuche den neuesten Quellcode sichtbarer Skripte",
+      "placeholder": "API, Funktion oder Variable eingeben",
+      "button": "Suchen",
+      "login": "Anmelden",
+      "login_required": "Bitte melde dich an, um Quellcode zu suchen",
+      "keyword_too_short": "Bitte mindestens 2 Zeichen eingeben",
+      "rate_limited": "Die Code-Suche ist begrenzt. Bitte später erneut versuchen.",
+      "search_failed": "Code-Suche fehlgeschlagen. Bitte später erneut versuchen.",
+      "empty": "Kein passender Quellcode gefunden",
+      "ready": "Keyword eingeben, um zu suchen"
     }
   },
   "user": {
