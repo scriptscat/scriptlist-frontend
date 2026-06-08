@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
   Avatar,
@@ -29,10 +29,68 @@ import {
 
 const { Text, Title } = Typography;
 const PAGE_SIZE = 20;
+const CODE_SEARCH_DEDUPE_MS = 2000;
 
 interface CodeSearchClientProps {
   initialKeyword: string;
   initialPage: number;
+}
+
+interface RunSearchOptions {
+  syncUrl?: boolean;
+}
+
+interface CodeSearchCacheEntry {
+  promise?: Promise<ListData<ScriptCodeSearchItem>>;
+  result?: ListData<ScriptCodeSearchItem>;
+  timestamp: number;
+}
+
+const codeSearchCache = new Map<string, CodeSearchCacheEntry>();
+
+function getSearchKey(keyword: string, page: number) {
+  return `${keyword.trim()}:${page}`;
+}
+
+function getCodeSearchPath(keyword: string, page: number) {
+  const params = new URLSearchParams();
+  params.set('keyword', keyword);
+  if (page > 1) params.set('page', String(page));
+  return `/scripts/code-search?${params.toString()}`;
+}
+
+function getRecentCodeSearchResult(searchKey: string) {
+  const entry = codeSearchCache.get(searchKey);
+  if (!entry?.result) return null;
+  if (Date.now() - entry.timestamp > CODE_SEARCH_DEDUPE_MS) return null;
+  return entry.result;
+}
+
+async function fetchCodeSearch(
+  searchKey: string,
+  keyword: string,
+  page: number,
+) {
+  const cached = codeSearchCache.get(searchKey);
+  if (cached?.promise) {
+    return cached.promise;
+  }
+
+  const promise = scriptService.codeSearch({
+    keyword,
+    page,
+    size: PAGE_SIZE,
+  });
+  codeSearchCache.set(searchKey, { promise, timestamp: Date.now() });
+
+  try {
+    const result = await promise;
+    codeSearchCache.set(searchKey, { result, timestamp: Date.now() });
+    return result;
+  } catch (error) {
+    codeSearchCache.delete(searchKey);
+    throw error;
+  }
 }
 
 function escapeHtml(value: string) {
@@ -120,9 +178,15 @@ export default function CodeSearchClient({
   const [data, setData] = useState<ListData<ScriptCodeSearchItem> | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState('');
+  const lastRequestedSearchRef = useRef('');
 
   const runSearch = useCallback(
-    async (nextKeyword: string, nextPage: number) => {
+    async (
+      nextKeyword: string,
+      nextPage: number,
+      options: RunSearchOptions = {},
+    ) => {
+      const { syncUrl = true } = options;
       const trimmed = nextKeyword.trim();
       if (trimmed.length < 2) {
         message.warning(t('keyword_too_short'));
@@ -133,22 +197,31 @@ export default function CodeSearchClient({
         return;
       }
 
+      const searchKey = getSearchKey(trimmed, nextPage);
+      lastRequestedSearchRef.current = searchKey;
+      const recentResult = getRecentCodeSearchResult(searchKey);
+      if (recentResult) {
+        setData(recentResult);
+        setSearchedKeyword(trimmed);
+        setPage(nextPage);
+        setErrorText('');
+        if (syncUrl) {
+          router.push(getCodeSearchPath(trimmed, nextPage));
+        }
+        return;
+      }
+
       setLoading(true);
       setErrorText('');
       try {
-        const result = await scriptService.codeSearch({
-          keyword: trimmed,
-          page: nextPage,
-          size: PAGE_SIZE,
-        });
+        const result = await fetchCodeSearch(searchKey, trimmed, nextPage);
         setData(result);
         setSearchedKeyword(trimmed);
         setPage(nextPage);
 
-        const params = new URLSearchParams();
-        params.set('keyword', trimmed);
-        if (nextPage > 1) params.set('page', String(nextPage));
-        router.push(`/scripts/code-search?${params.toString()}`);
+        if (syncUrl) {
+          router.push(getCodeSearchPath(trimmed, nextPage));
+        }
       } catch (error) {
         if (error instanceof APIError) {
           setErrorText(
@@ -165,11 +238,19 @@ export default function CodeSearchClient({
   );
 
   useEffect(() => {
+    setKeyword(initialKeyword);
+  }, [initialKeyword]);
+
+  useEffect(() => {
     const trimmed = initialKeyword.trim();
     if (trimmed.length >= 2 && user) {
-      void runSearch(trimmed, initialPage);
+      const searchKey = getSearchKey(trimmed, initialPage);
+      if (lastRequestedSearchRef.current === searchKey) {
+        return;
+      }
+      void runSearch(trimmed, initialPage, { syncUrl: false });
     }
-  }, [initialKeyword, initialPage, user]);
+  }, [initialKeyword, initialPage, runSearch, user]);
 
   const handleSearch = () => {
     void runSearch(keyword, 1);
