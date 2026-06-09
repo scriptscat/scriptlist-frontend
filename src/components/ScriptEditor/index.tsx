@@ -22,7 +22,13 @@ import {
   FileTextOutlined,
   RocketOutlined,
 } from '@ant-design/icons';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react';
 import { useTranslations } from 'next-intl';
 import type { MonacoEditorRef } from '@/components/MonacoEditor';
 import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
@@ -45,6 +51,15 @@ import { useCategoryList } from '@/lib/api/hooks';
 import { APIError } from '@/types/api';
 import IntegrityErrorAlert from '@/components/IntegrityErrorAlert/IntegrityErrorAlert';
 import { ErrorCodes } from '@/lib/api/errorCodes';
+import {
+  LICENSE_DEFS,
+  NO_DERIVATIVE_VALUE,
+  CUSTOM_LICENSE,
+  hasUserScriptHeader,
+  getLicenseFromCode,
+  setLicenseInCode,
+  normalizeKnown,
+} from '@/lib/license';
 
 const { Text, Link } = Typography;
 const EDITABLE_TAG_TYPE = 2;
@@ -69,6 +84,71 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
   const editorRef = useRef<MonacoEditorRef>(null);
   const mkEditorRef = useRef<MarkdownEditorRef>(null);
 
+  // 许可协议（License）：真相源是脚本头部 @license，选择器与之双向同步
+  const [licenseMode, setLicenseMode] = useState<string | undefined>(undefined);
+  const [licenseCustom, setLicenseCustom] = useState('');
+  // 选择器注入代码引发的变化无需重复解析，置位后跳过下一次防抖解析
+  const suppressParseRef = useRef(false);
+  const hasHeader = useMemo(() => hasUserScriptHeader(code || ''), [code]);
+
+  // 从代码头部解析 @license 并回显到选择器
+  const applyLicenseFromCode = useCallback((currentCode: string) => {
+    const lic = getLicenseFromCode(currentCode);
+    if (!lic) {
+      setLicenseMode(undefined);
+      setLicenseCustom('');
+      return;
+    }
+    const known = normalizeKnown(lic);
+    if (known) {
+      setLicenseMode(known);
+      setLicenseCustom('');
+    } else {
+      setLicenseMode(CUSTOM_LICENSE);
+      setLicenseCustom(lic);
+    }
+  }, []);
+
+  // 把选择结果写入代码头部（空字符串表示删除该行）
+  const writeLicenseToCode = useCallback(
+    (license: string) => {
+      const cur = form.getFieldValue('code') || '';
+      const next = setLicenseInCode(cur, license);
+      if (next === cur) {
+        return;
+      }
+      suppressParseRef.current = true;
+      form.setFieldValue('code', next);
+      editorRef.current?.setValue(next);
+    },
+    [form],
+  );
+
+  const handleLicenseSelect = useCallback(
+    (mode?: string) => {
+      setLicenseMode(mode);
+      if (!mode) {
+        setLicenseCustom('');
+        writeLicenseToCode('');
+      } else if (mode === CUSTOM_LICENSE) {
+        writeLicenseToCode(licenseCustom.trim());
+      } else {
+        setLicenseCustom('');
+        writeLicenseToCode(mode);
+      }
+    },
+    [writeLicenseToCode, licenseCustom],
+  );
+
+  const handleLicenseCustomChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const text = e.target.value;
+      setLicenseCustom(text);
+      writeLicenseToCode(text.trim());
+    },
+    [writeLicenseToCode],
+  );
+
   // 初始化表单值
   useEffect(() => {
     form.setFieldsValue({
@@ -86,6 +166,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
       libraryName: '',
       libraryDescription: '',
     });
+    applyLicenseFromCode(script?.script?.code || '');
   }, [script, form]);
 
   // 防抖解析脚本元数据
@@ -93,6 +174,11 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
     (code: string) => {
       const currentScriptType = form.getFieldValue('type');
       if (currentScriptType === 3) {
+        return;
+      }
+      // 选择器注入代码引发的变化跳过解析，避免误弹"解析成功"提示
+      if (suppressParseRef.current) {
+        suppressParseRef.current = false;
         return;
       }
       if (parseTimeoutRef.current) {
@@ -110,12 +196,13 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
             form.setFieldValue('tags', parseTags(metadata));
             message.success(t('messages.metadata_parse_success'));
           }
+          applyLicenseFromCode(code);
         } catch (error) {
           console.error('Parse script metadata error:', error);
         }
       }, 2000);
     },
-    [form],
+    [form, applyLicenseFromCode],
   );
 
   // 处理代码变化
@@ -379,6 +466,79 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                     disabled={scriptType !== 3}
                   />
                 </Form.Item>
+
+                {scriptType !== 3 && (
+                  <Form.Item
+                    label={
+                      <Space size="small">
+                        <span>{t('info_section.license_label')}</span>
+                        <Tooltip title={t('info_section.license_tooltip')}>
+                          <InfoCircleOutlined className="text-gray-400" />
+                        </Tooltip>
+                      </Space>
+                    }
+                  >
+                    <Select
+                      value={licenseMode}
+                      placeholder={t('info_section.license_placeholder')}
+                      onChange={handleLicenseSelect}
+                      allowClear
+                      disabled={!hasHeader}
+                      style={{ width: '100%' }}
+                      options={[
+                        {
+                          label: t('info_section.license_group_opensource'),
+                          options: LICENSE_DEFS.filter(
+                            (d) => d.group === 'opensource',
+                          ).map((d) => ({ value: d.value, label: d.value })),
+                        },
+                        {
+                          label: t('info_section.license_group_other'),
+                          options: [
+                            {
+                              value: NO_DERIVATIVE_VALUE,
+                              label: t('info_section.license_no_derivative'),
+                            },
+                            {
+                              value: CUSTOM_LICENSE,
+                              label: t('info_section.license_custom'),
+                            },
+                          ],
+                        },
+                      ]}
+                    />
+                    {licenseMode === CUSTOM_LICENSE && (
+                      <Input
+                        value={licenseCustom}
+                        onChange={handleLicenseCustomChange}
+                        placeholder={t(
+                          'info_section.license_custom_placeholder',
+                        )}
+                        className="mt-2"
+                      />
+                    )}
+                    {!hasHeader ? (
+                      <Text type="secondary" className="text-xs block mt-1">
+                        {t('info_section.license_need_header')}
+                      </Text>
+                    ) : licenseMode &&
+                      (licenseMode !== CUSTOM_LICENSE ||
+                        licenseCustom.trim()) ? (
+                      <Text type="success" className="text-xs block mt-1">
+                        {t('info_section.license_written', {
+                          license:
+                            licenseMode === CUSTOM_LICENSE
+                              ? licenseCustom.trim()
+                              : licenseMode,
+                        })}
+                      </Text>
+                    ) : (
+                      <Text type="warning" className="text-xs block mt-1">
+                        {t('info_section.license_none_warning')}
+                      </Text>
+                    )}
+                  </Form.Item>
+                )}
 
                 {script && (
                   <Form.Item name="isPreRelease">

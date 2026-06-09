@@ -51,6 +51,7 @@ import { Link, useRouter } from '@/i18n/routing';
 import dynamic from 'next/dynamic';
 const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
 import { ScriptUtils } from '../utils';
+import { getLicenseDisplay } from '@/lib/license';
 import { copyToClipboard, hashColor } from '@/lib/utils/utils';
 import { checkScriptInstalled } from '@/lib/utils/script-manager';
 import { useScriptWatch, useScriptFavorite } from '@/lib/api/hooks';
@@ -143,19 +144,6 @@ function genRequire(
     (sri ? '?' + sri : '')
   );
 }
-
-const licenseMap: { [key: string]: string } = {
-  MIT: 'https://opensource.org/licenses/mit',
-  'APACHE-2.0': 'https://www.apache.org/licenses/LICENSE-2.0',
-  'BSD-2': 'https://opensource.org/license/BSD-2-Clause',
-  'BSD-3': 'https://opensource.org/licenses/BSD-3-Clause',
-  'MPL-2.0': 'http://opensource.org/licenses/MPL-2.0',
-  'GPL-2.0': 'http://opensource.org/licenses/GPL-2.0',
-  'GPL-3.0': 'http://opensource.org/licenses/GPL-3.0',
-  'AGPL-3.0': 'http://opensource.org/licenses/AGPL-3.0',
-  'LGPL-3.0': 'http://opensource.org/licenses/LGPL-3.0',
-  'LGPL-2.1': 'http://opensource.org/licenses/LGPL-2.1',
-};
 
 export default function ScriptDetailClient({
   content,
@@ -1185,23 +1173,59 @@ export default function ScriptDetailClient({
                         </div>
                       )}
 
-                      {script.script.meta_json.license && (
-                        <div className="flex justify-between items-start">
-                          <Text className="text-gray-600 font-medium">
-                            {t('info.license')}
-                          </Text>
-                          <Button
-                            type="link"
-                            href={
-                              licenseMap[script.script.meta_json.license[0]] ||
-                              '#'
-                            }
-                            className="text-right max-w-[120px] font-mono"
-                          >
-                            {script.script.meta_json.license[0]}
-                          </Button>
-                        </div>
-                      )}
+                      {(() => {
+                        const licenseRaw = script.script.meta_json.license?.[0];
+                        if (licenseRaw) {
+                          const ld = getLicenseDisplay(licenseRaw);
+                          const label =
+                            ld.category === 'proprietary'
+                              ? t('info.license_no_derivative')
+                              : ld.canonical;
+                          const tag = (
+                            <Tag color={ld.color} className="font-mono !m-0">
+                              {label}
+                            </Tag>
+                          );
+                          return (
+                            <div className="flex justify-between items-center">
+                              <Text className="text-gray-600 font-medium">
+                                {t('info.license')}
+                              </Text>
+                              {ld.url ? (
+                                <a
+                                  href={ld.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="max-w-[160px] text-right"
+                                >
+                                  {tag}
+                                </a>
+                              ) : (
+                                tag
+                              )}
+                            </div>
+                          );
+                        }
+                        return (
+                          <div className="flex justify-between items-start">
+                            <Text className="text-gray-600 font-medium">
+                              {t('info.license')}
+                            </Text>
+                            <div className="text-right max-w-[180px]">
+                              <Tooltip title={t('info.license_none_warning')}>
+                                <Tag className="!m-0">
+                                  {t('info.license_none')}
+                                </Tag>
+                              </Tooltip>
+                              <div className="mt-1">
+                                <Text type="warning" className="text-xs">
+                                  {t('info.license_none_warning')}
+                                </Text>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
 
                       {script.script.meta_json.compatible && (
                         <div className="flex justify-between items-start">
