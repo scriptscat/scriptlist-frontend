@@ -20,7 +20,7 @@ export default function ScriptCreateWrapper() {
         version: formData.version || '1.0.0', // 库的版本
         tags: formData.tags || [], // 标签
         category_id: formData.category_id || undefined, // 分类ID
-        type: parseInt(formData.type) || 1, // 脚本类型：1 用户脚本 2 脚本引用库 3 订阅脚本
+        type: parseInt(formData.type) || 1, // 脚本类型：1 用户脚本 2 订阅脚本 3 脚本引用库
         public: 1, // 公开类型：1 公开 2 半公开 3 私有 (默认公开)
         unwell: 2, // 不适内容: 1 不适 2 适用 (默认适用)
         changelog: formData.changelog || '', // 更新日志

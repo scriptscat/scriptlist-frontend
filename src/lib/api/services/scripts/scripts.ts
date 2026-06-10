@@ -238,7 +238,7 @@ export class ScriptService {
     version?: string; // 库的版本
     tags?: string[]; // 标签
     category?: number; // 分类ID
-    type: number; // 脚本类型：1 用户脚本 2 脚本引用库 3 订阅脚本
+    type: number; // 脚本类型：1 用户脚本 2 订阅脚本 3 脚本引用库
     public: number; // 公开类型：1 公开 2 半公开 3 私有
     unwell: number; // 不适内容: 1 不适 2 适用
     changelog?: string; // 更新日志
