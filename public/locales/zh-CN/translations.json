@@ -906,6 +906,7 @@
       "description": "{app_name} 请求访问您的账户",
       "error_title": "授权错误",
       "invalid_request": "无效的授权请求",
+      "invalid_redirect": "无效的跳转地址",
       "load_failed": "加载应用信息失败",
       "permission_profile": "读取您的基本资料信息（用户名、邮箱、头像）",
       "permissions_label": "该应用将获得以下权限：",
@@ -1101,6 +1102,7 @@
         "update_script": "更新脚本至 v{version}"
       },
       "installGuide": {
+        "title": "需要脚本管理器",
         "cancel": "取消",
         "description": "安装用户脚本需要先安装一个脚本管理器。推荐使用脚本猫（ScriptCat），安装后即可一键安装并运行本站脚本。",
         "learn_more": "脚本猫是开源的用户脚本管理器。",

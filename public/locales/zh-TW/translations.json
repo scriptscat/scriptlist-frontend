@@ -806,6 +806,7 @@
       "description": "{app_name} 請求存取您的帳戶",
       "error_title": "授權錯誤",
       "invalid_request": "無效的授權請求",
+      "invalid_redirect": "無效的跳轉地址",
       "load_failed": "載入應用資訊失敗",
       "permission_profile": "讀取您的基本資料資訊（使用者名稱、信箱、頭像）",
       "permissions_label": "該應用將獲得以下權限：",
@@ -1001,6 +1002,7 @@
         "update_script": "更新腳本至 v{version}"
       },
       "installGuide": {
+        "title": "需要腳本管理器",
         "cancel": "取消",
         "description": "安裝使用者腳本需要先安裝一個腳本管理器。推薦使用腳本貓（ScriptCat），安裝後即可一鍵安裝並執行本站腳本。",
         "learn_more": "腳本貓是開源的使用者腳本管理器。",

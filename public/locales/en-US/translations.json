@@ -889,6 +889,7 @@
       "description": "{app_name} is requesting access to your account",
       "error_title": "Authorization Error",
       "invalid_request": "Invalid authorization request",
+      "invalid_redirect": "Invalid redirect URL",
       "load_failed": "Failed to load application info",
       "permission_profile": "Read your basic profile information (username, email, avatar)",
       "permissions_label": "This application will have access to:",
@@ -1084,6 +1085,7 @@
         "update_script": "Update Script to v{version}"
       },
       "installGuide": {
+        "title": "Userscript manager required",
         "cancel": "Cancel",
         "description": "Installing a userscript requires a userscript manager. We recommend ScriptCat — once installed, you can install and run scripts from this site with one click.",
         "learn_more": "ScriptCat is an open-source userscript manager.",

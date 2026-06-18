@@ -800,6 +800,7 @@
       "description": "{app_name} があなたのアカウントへのアクセスを要求しています",
       "error_title": "認可エラー",
       "invalid_request": "無効な認可リクエスト",
+      "invalid_redirect": "無効なリダイレクトURLです",
       "load_failed": "アプリケーション情報の読み込みに失敗しました",
       "permission_profile": "基本プロフィール情報の読み取り（ユーザー名、メール、アバター）",
       "permissions_label": "このアプリケーションは以下の権限を取得します：",
@@ -995,6 +996,7 @@
         "update_script": "スクリプトを v{version} に更新"
       },
       "installGuide": {
+        "title": "ユーザースクリプトマネージャーが必要です",
         "cancel": "キャンセル",
         "description": "ユーザースクリプトをインストールするには、スクリプトマネージャーが必要です。ScriptCat（スクリプトキャット）の利用をおすすめします。インストールすると、本サイトのスクリプトをワンクリックでインストール・実行できます。",
         "learn_more": "ScriptCat はオープンソースのユーザースクリプトマネージャーです。",

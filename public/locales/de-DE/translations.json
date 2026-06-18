@@ -800,6 +800,7 @@
       "description": "{app_name} fordert Zugriff auf Ihr Konto an",
       "error_title": "Autorisierungsfehler",
       "invalid_request": "Ungültige Autorisierungsanfrage",
+      "invalid_redirect": "Ungültige Weiterleitungsadresse",
       "load_failed": "Laden der Anwendungsinformationen fehlgeschlagen",
       "permission_profile": "Lesen Ihrer grundlegenden Profilinformationen (Benutzername, E-Mail, Avatar)",
       "permissions_label": "Diese Anwendung erhält die folgenden Berechtigungen:",
@@ -995,6 +996,7 @@
         "update_script": "Skript auf v{version} aktualisieren"
       },
       "installGuide": {
+        "title": "Userscript-Manager erforderlich",
         "cancel": "Abbrechen",
         "description": "Zum Installieren eines Userscripts wird ein Userscript-Manager benötigt. Wir empfehlen ScriptCat — nach der Installation kannst du Skripte von dieser Seite mit einem Klick installieren und ausführen.",
         "learn_more": "ScriptCat ist ein quelloffener Userscript-Manager.",

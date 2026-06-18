@@ -673,6 +673,7 @@
       "description": "{app_name} is requesting access to your account",
       "error_title": "Authorization Error",
       "invalid_request": "Invalid authorization request",
+      "invalid_redirect": "Invalid redirect URL",
       "load_failed": "Failed to load application info",
       "permission_profile": "Read your basic profile information (username, email, avatar)",
       "permissions_label": "This application will have access to:",
@@ -852,6 +853,7 @@
         "update_script": "Update Script to v{version}"
       },
       "installGuide": {
+        "title": "Cần trình quản lý userscript",
         "cancel": "Hủy",
         "description": "Cài đặt userscript cần có trình quản lý userscript. Chúng tôi khuyên dùng ScriptCat — sau khi cài đặt, bạn có thể cài và chạy script từ trang này chỉ với một cú nhấp.",
         "learn_more": "ScriptCat là trình quản lý userscript mã nguồn mở.",
