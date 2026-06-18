@@ -994,6 +994,22 @@
         "reinstall_script": "スクリプト v{version} を再インストール",
         "update_script": "スクリプトを v{version} に更新"
       },
+      "installGuide": {
+        "cancel": "キャンセル",
+        "description": "ユーザースクリプトをインストールするには、スクリプトマネージャーが必要です。ScriptCat（スクリプトキャット）の利用をおすすめします。インストールすると、本サイトのスクリプトをワンクリックでインストール・実行できます。",
+        "learn_more": "ScriptCat はオープンソースのユーザースクリプトマネージャーです。",
+        "learn_more_link": "詳細 / インストール手順",
+        "other_channels": "他のブラウザ / 方法",
+        "primary_chrome": "Chrome に ScriptCat をインストール",
+        "primary_edge": "Edge に ScriptCat をインストール",
+        "primary_firefox": "Firefox に ScriptCat をインストール",
+        "primary_other": "ScriptCat のインストール手順を見る",
+        "proceed": "ScriptCat をインストール済みですか？このまま続行",
+        "subtitle_chrome": "Chrome ウェブストアへ · 無料",
+        "subtitle_edge": "Edge アドオンへ · 無料",
+        "subtitle_firefox": "Firefox アドオンへ · 無料",
+        "subtitle_other": "お使いのブラウザは手動インストールが必要です"
+      },
       "metadata": {
         "empty_description": "このスクリプトには表示できる権限、接続、実行ルールが宣言されていません。",
         "empty_title": "メタデータ説明はありません",
@@ -1981,6 +1997,8 @@
       "no_favorites": "このユーザーはまだスクリプトをお気に入りに追加していません",
       "no_script_manager_content": "ブラウザにScriptCat拡張機能がインストールされていることが検出されませんでした。購読リンクを開きますか？",
       "no_script_manager_title": "スクリプトマネージャーが検出されませんでした",
+      "continue_subscribe": "ScriptCat をインストール済みですか？このまま購読を続行",
+      "subscribe_guide_description": "スクリプトを購読するにはスクリプトマネージャーが必要です。ScriptCat の利用をおすすめします。インストールすると、ワンクリックで購読し、スクリプトを自動更新できます。",
       "no_scripts_in_category": "このカテゴリにはお気に入りのスクリプトがありません",
       "no_scripts_in_folder": "このお気に入りフォルダにはスクリプトがありません",
       "pagination_items": "{start}-{end} 項目、全 {total} 項目",

@@ -994,6 +994,22 @@
         "reinstall_script": "Переустановить скрипт v{version}",
         "update_script": "Обновить скрипт до v{version}"
       },
+      "installGuide": {
+        "cancel": "Отмена",
+        "description": "Для установки пользовательского скрипта нужен менеджер скриптов. Рекомендуем ScriptCat — после установки вы сможете устанавливать и запускать скрипты с этого сайта в один клик.",
+        "learn_more": "ScriptCat — это менеджер пользовательских скриптов с открытым исходным кодом.",
+        "learn_more_link": "Подробнее / инструкция по установке",
+        "other_channels": "Другие браузеры / способы",
+        "primary_chrome": "Установить ScriptCat для Chrome",
+        "primary_edge": "Установить ScriptCat для Edge",
+        "primary_firefox": "Установить ScriptCat для Firefox",
+        "primary_other": "Открыть инструкцию по установке ScriptCat",
+        "proceed": "Уже установили ScriptCat? Всё равно продолжить",
+        "subtitle_chrome": "Перейти в Chrome Web Store · Бесплатно",
+        "subtitle_edge": "Перейти в Edge Add-ons · Бесплатно",
+        "subtitle_firefox": "Перейти в Firefox Add-ons · Бесплатно",
+        "subtitle_other": "Ваш браузер требует ручной установки"
+      },
       "metadata": {
         "empty_description": "Этот скрипт не объявляет отображаемые разрешения, подключения или правила запуска.",
         "empty_title": "Нет сведений о метаданных",
@@ -1981,6 +1997,8 @@
       "no_favorites": "Этот пользователь ещё не добавил ни одного скрипта в избранное",
       "no_script_manager_content": "Расширение ScriptCat не обнаружено в браузере, вы уверены, что хотите открыть ссылку на подписку?",
       "no_script_manager_title": "Менеджер скриптов не обнаружен",
+      "continue_subscribe": "Уже установили ScriptCat? Всё равно подписаться",
+      "subscribe_guide_description": "Для подписки на скрипты нужен менеджер скриптов. Рекомендуем ScriptCat — после установки вы сможете подписаться в один клик и автоматически обновлять скрипты.",
       "no_scripts_in_category": "В этой категории пока нет избранных скриптов",
       "no_scripts_in_folder": "В этой папке избранного пока нет скриптов",
       "pagination_items": "{start}-{end} элементов, всего {total}",

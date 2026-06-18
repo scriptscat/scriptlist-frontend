@@ -23,11 +23,15 @@ import { Link, useRouter } from '@/i18n/routing';
 import { getScriptSearchPath } from '@/lib/utils/search-command';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import {
+  detectBrowserStore,
+  getBrowserStores,
+  SCRIPTCAT_INSTALL_GUIDE_URL,
+} from '@/lib/constants/browserStores';
 
 const { Title, Text } = Typography;
 
 // 常量定义
-const INSTALL_URL = 'https://docs.scriptcat.org/docs/use/use/';
 const DEVELOPER_GUIDE_URL =
   'https://bbs.tampermonkey.net.cn/thread-1234-1-1.html';
 
@@ -60,43 +64,6 @@ const IconButton: React.FC<IconButtonProps> = ({
     </a>
   );
 };
-
-// 浏览器商店配置
-interface BrowserStoreConfig {
-  url: string;
-  icon: string;
-  textKey: string;
-  target?: string;
-}
-
-const getBrowserStores = (): Record<string, BrowserStoreConfig> => ({
-  edge: {
-    url: 'https://microsoftedge.microsoft.com/addons/detail/scriptcat/liilgpjgabokdklappibcjfablkpcekh',
-    icon: 'logos:microsoft-edge',
-    textKey: 'home.browser_stores.add_to_edge',
-  },
-  chrome: {
-    url: 'https://chrome.google.com/webstore/detail/scriptcat/ndcooeababalnlpkfedmmbbbgkljhpjf',
-    icon: 'logos:chrome',
-    textKey: 'home.browser_stores.add_to_chrome',
-  },
-  firefox: {
-    url: 'https://addons.mozilla.org/zh-CN/firefox/addon/scriptcat/',
-    icon: 'logos:firefox',
-    textKey: 'home.browser_stores.add_to_firefox',
-  },
-  crx: {
-    url: 'https://github.com/scriptscat/scriptcat/releases',
-    icon: 'noto:package',
-    textKey: 'home.browser_stores.download_crx_install',
-  },
-  default: {
-    url: './docs/use/use',
-    icon: 'logos:chrome',
-    textKey: 'home.browser_stores.install_extension',
-    target: '_self',
-  },
-});
 
 // 浏览器商店映射
 interface StoreItem {
@@ -140,15 +107,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   onSearch,
 }) => {
   const t = useTranslations();
-  const ua =
-    typeof navigator !== 'undefined' ? navigator.userAgent.toLowerCase() : '';
-  const currentBrowser = ua.includes('edg')
-    ? 'edge'
-    : ua.includes('firefox')
-      ? 'firefox'
-      : ua.includes('chrome')
-        ? 'chrome'
-        : 'default';
+  const currentBrowser = detectBrowserStore();
   const storeMap = getStoreMap(t);
   const browserStore = storeMap[currentBrowser] || storeMap.default;
 
@@ -305,7 +264,7 @@ export default function HomeClient() {
                     <div className="pt-2">
                       <Button
                         type="link"
-                        href={INSTALL_URL}
+                        href={SCRIPTCAT_INSTALL_GUIDE_URL}
                         target="_blank"
                         className="!p-0 !h-auto !text-blue-600 hover:!text-blue-700"
                       >

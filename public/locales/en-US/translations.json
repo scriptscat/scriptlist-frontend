@@ -1083,6 +1083,22 @@
         "reinstall_script": "Reinstall Script v{version}",
         "update_script": "Update Script to v{version}"
       },
+      "installGuide": {
+        "cancel": "Cancel",
+        "description": "Installing a userscript requires a userscript manager. We recommend ScriptCat — once installed, you can install and run scripts from this site with one click.",
+        "learn_more": "ScriptCat is an open-source userscript manager.",
+        "learn_more_link": "Learn more / installation guide",
+        "other_channels": "Other browsers / methods",
+        "primary_chrome": "Install ScriptCat for Chrome",
+        "primary_edge": "Install ScriptCat for Edge",
+        "primary_firefox": "Install ScriptCat for Firefox",
+        "primary_other": "View ScriptCat installation guide",
+        "proceed": "Already installed ScriptCat? Continue anyway",
+        "subtitle_chrome": "Go to Chrome Web Store · Free",
+        "subtitle_edge": "Go to Edge Add-ons · Free",
+        "subtitle_firefox": "Go to Firefox Add-ons · Free",
+        "subtitle_other": "Your browser requires manual installation"
+      },
       "metadata": {
         "empty_description": "This script does not declare displayable permissions, connections, or run rules.",
         "empty_title": "No metadata details",
@@ -2070,6 +2086,8 @@
       "no_favorites": "This user hasn't favorited any scripts yet",
       "no_script_manager_content": "ScriptCat extension is not detected in your browser, confirm to open subscription link?",
       "no_script_manager_title": "No script manager detected",
+      "continue_subscribe": "Already installed ScriptCat? Continue subscribing",
+      "subscribe_guide_description": "Subscribing to scripts requires a userscript manager. We recommend ScriptCat — once installed, you can subscribe with one click and keep scripts updated automatically.",
       "no_scripts_in_category": "No favorite scripts in this category",
       "no_scripts_in_folder": "No scripts in this folder",
       "pagination_items": "{start}-{end}, total {total}",

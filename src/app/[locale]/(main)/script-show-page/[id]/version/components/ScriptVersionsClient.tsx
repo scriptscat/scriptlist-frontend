@@ -45,6 +45,7 @@ const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
+import { useScriptInstallGuide } from '@/components/ScriptInstallGuide';
 
 const { Text, Title, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -116,6 +117,7 @@ export default function ScriptVersionsClient({
   const { script } = useScript();
   const t = useTranslations('script.version');
   const router = useRouter();
+  const { handleInstallClick, guideModal } = useScriptInstallGuide(); // 未检测到脚本管理器时的二次引导
   const [editingVersion, setEditingVersion] = useState<ScriptVersion | null>(
     null,
   );
@@ -364,6 +366,7 @@ export default function ScriptVersionsClient({
 
   const content = (
     <div className="space-y-6">
+      {guideModal}
       {/* 页面标题 */}
       {!embedded && (
         <>
@@ -404,6 +407,9 @@ export default function ScriptVersionsClient({
       <div className="divide-y divide-gray-100 dark:divide-gray-800">
         {versions.map((version: ScriptVersion, index: number) => {
           const globalIndex = (currentPage - 1) * pageSize + index;
+          const versionInstallUrl = `/scripts/code/${script.id}/${encodeURIComponent(
+            script.name,
+          )}.user.js?version=${version.version}`;
           return (
             <div key={version.id} className="space-y-3 py-5 first:pt-0">
               {/* 头部：版本号 + 徽标 / 日期 + 管理按钮 */}
@@ -459,14 +465,9 @@ export default function ScriptVersionsClient({
                     type="primary"
                     size="small"
                     icon={<DownloadOutlined />}
-                    href={
-                      '/scripts/code/' +
-                      script.id +
-                      '/' +
-                      encodeURIComponent(script.name) +
-                      '.user.js?version=' +
-                      version.version
-                    }
+                    href={versionInstallUrl}
+                    target="_blank"
+                    onClick={(e) => handleInstallClick(e, versionInstallUrl)}
                   >
                     {t('install_button')}
                   </Button>

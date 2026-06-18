@@ -1100,6 +1100,22 @@
         "reinstall_script": "重新安装脚本 v{version}",
         "update_script": "更新脚本至 v{version}"
       },
+      "installGuide": {
+        "cancel": "取消",
+        "description": "安装用户脚本需要先安装一个脚本管理器。推荐使用脚本猫（ScriptCat），安装后即可一键安装并运行本站脚本。",
+        "learn_more": "脚本猫是开源的用户脚本管理器。",
+        "learn_more_link": "了解更多 / 安装教程",
+        "other_channels": "其它浏览器 / 方式",
+        "primary_chrome": "在 Chrome 安装脚本猫",
+        "primary_edge": "在 Edge 安装脚本猫",
+        "primary_firefox": "在 Firefox 安装脚本猫",
+        "primary_other": "查看脚本猫安装教程",
+        "proceed": "已安装脚本猫？仍要继续安装",
+        "subtitle_chrome": "前往 Chrome 应用商店 · 免费",
+        "subtitle_edge": "前往 Edge 加载项 · 免费",
+        "subtitle_firefox": "前往 Firefox 附加组件 · 免费",
+        "subtitle_other": "你的浏览器需手动安装"
+      },
       "metadata": {
         "empty_description": "该脚本没有声明可展示的权限、连接或运行规则。",
         "empty_title": "暂无元数据说明",
@@ -2095,6 +2111,8 @@
       "no_favorites": "该用户还没有收藏任何脚本",
       "no_script_manager_content": "未检测到浏览器中安装了 ScriptCat 扩展，确认要打开订阅链接吗？",
       "no_script_manager_title": "未检测到脚本管理器",
+      "continue_subscribe": "已安装脚本猫？仍要继续订阅",
+      "subscribe_guide_description": "订阅脚本需要先安装一个脚本管理器。推荐使用脚本猫（ScriptCat），安装后即可一键订阅并自动更新本站脚本。",
       "no_scripts_in_category": "该分类下暂无收藏的脚本",
       "no_scripts_in_folder": "该收藏夹暂无脚本",
       "pagination_items": "第 {start}-{end} 项，共 {total} 项",

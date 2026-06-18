@@ -1000,6 +1000,22 @@
         "reinstall_script": "重新安裝腳本 v{version}",
         "update_script": "更新腳本至 v{version}"
       },
+      "installGuide": {
+        "cancel": "取消",
+        "description": "安裝使用者腳本需要先安裝一個腳本管理器。推薦使用腳本貓（ScriptCat），安裝後即可一鍵安裝並執行本站腳本。",
+        "learn_more": "腳本貓是開源的使用者腳本管理器。",
+        "learn_more_link": "瞭解更多 / 安裝教學",
+        "other_channels": "其它瀏覽器 / 方式",
+        "primary_chrome": "在 Chrome 安裝腳本貓",
+        "primary_edge": "在 Edge 安裝腳本貓",
+        "primary_firefox": "在 Firefox 安裝腳本貓",
+        "primary_other": "檢視腳本貓安裝教學",
+        "proceed": "已安裝腳本貓？仍要繼續安裝",
+        "subtitle_chrome": "前往 Chrome 線上應用程式商店 · 免費",
+        "subtitle_edge": "前往 Edge 附加元件 · 免費",
+        "subtitle_firefox": "前往 Firefox 附加元件 · 免費",
+        "subtitle_other": "您的瀏覽器需手動安裝"
+      },
       "metadata": {
         "empty_description": "此腳本沒有宣告可展示的權限、連線或執行規則。",
         "empty_title": "暫無元資料說明",
@@ -1987,6 +2003,8 @@
       "no_favorites": "該使用者還沒有收藏任何腳本",
       "no_script_manager_content": "未檢測到瀏覽器中安裝了 ScriptCat 擴充功能，確認要開啟訂閱連結嗎？",
       "no_script_manager_title": "未檢測到腳本管理器",
+      "continue_subscribe": "已安裝腳本貓？仍要繼續訂閱",
+      "subscribe_guide_description": "訂閱腳本需要先安裝一個腳本管理器。推薦使用腳本貓（ScriptCat），安裝後即可一鍵訂閱並自動更新本站腳本。",
       "no_scripts_in_category": "該分類下暫無收藏的腳本",
       "no_scripts_in_folder": "該收藏夾暫無腳本",
       "pagination_items": "第 {start}-{end} 項，共 {total} 項",

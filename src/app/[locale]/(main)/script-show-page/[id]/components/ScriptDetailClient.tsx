@@ -54,6 +54,8 @@ import { ScriptUtils } from '../utils';
 import { getLicenseDisplay } from '@/lib/license';
 import { copyToClipboard, hashColor } from '@/lib/utils/utils';
 import { checkScriptInstalled } from '@/lib/utils/script-manager';
+import { useScriptInstallGuide } from '@/components/ScriptInstallGuide';
+import { SCRIPTCAT_INSTALL_GUIDE_URL } from '@/lib/constants/browserStores';
 import { useScriptWatch, useScriptFavorite } from '@/lib/api/hooks';
 import { WatchLevel } from '../types';
 import { scriptService } from '@/lib/api/services/scripts';
@@ -168,6 +170,17 @@ export default function ScriptDetailClient({
   const isAdmin = !!user && user.is_admin >= 1;
 
   const [installTitle, setInstallTitle] = useState(t('install.install_script')); // 安装按钮文案
+  const { handleInstallClick, guideModal } = useScriptInstallGuide(); // 未检测到脚本管理器时的二次引导
+  const installUrl = useMemo(
+    () =>
+      `/scripts/code/${script.id}/${encodeURIComponent(script.name)}.user.js`,
+    [script.id, script.name],
+  );
+  const preReleaseUrl = useMemo(
+    () =>
+      `/scripts/pre/${script.id}/${encodeURIComponent(script.name)}.user.js`,
+    [script.id, script.name],
+  );
 
   // 解析crontab表达式为更友好的描述
   const parseCrontabDescription = useCallback(
@@ -556,7 +569,7 @@ export default function ScriptDetailClient({
   ]);
 
   const handleOpenInstallGuide = useCallback(() => {
-    window.open('https://bbs.tampermonkey.net.cn/thread-57-1-1.html', '_blank');
+    window.open(SCRIPTCAT_INSTALL_GUIDE_URL, '_blank', 'noopener,noreferrer');
   }, []);
 
   const handleDeleteClick = useCallback(
@@ -689,6 +702,7 @@ export default function ScriptDetailClient({
   return (
     <div>
       {contextHolder}
+      {guideModal}
       {/* 脚本头部信息 */}
       <Badge.Ribbon
         text={ScriptUtils.getRibbonText(script.public)}
@@ -920,13 +934,9 @@ export default function ScriptDetailClient({
                       size="large"
                       icon={<DownloadOutlined />}
                       className="flex-1 bg-gradient-to-r"
-                      href={
-                        '/scripts/code/' +
-                        script.id +
-                        '/' +
-                        encodeURIComponent(script.name) +
-                        '.user.js'
-                      }
+                      href={installUrl}
+                      target="_blank"
+                      onClick={(e) => handleInstallClick(e, installUrl)}
                     >
                       {installTitle}
                     </Button>
@@ -947,13 +957,9 @@ export default function ScriptDetailClient({
                         <Button
                           type="primary"
                           size="large"
-                          href={
-                            '/scripts/pre/' +
-                            script.id +
-                            '/' +
-                            encodeURIComponent(script.name) +
-                            '.user.js'
-                          }
+                          href={preReleaseUrl}
+                          target="_blank"
+                          onClick={(e) => handleInstallClick(e, preReleaseUrl)}
                           icon={<ExperimentOutlined />}
                           style={{
                             background: '#f98116',

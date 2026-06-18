@@ -851,6 +851,22 @@
         "reinstall_script": "Reinstall Script v{version}",
         "update_script": "Update Script to v{version}"
       },
+      "installGuide": {
+        "cancel": "Hủy",
+        "description": "Cài đặt userscript cần có trình quản lý userscript. Chúng tôi khuyên dùng ScriptCat — sau khi cài đặt, bạn có thể cài và chạy script từ trang này chỉ với một cú nhấp.",
+        "learn_more": "ScriptCat là trình quản lý userscript mã nguồn mở.",
+        "learn_more_link": "Tìm hiểu thêm / hướng dẫn cài đặt",
+        "other_channels": "Trình duyệt / cách khác",
+        "primary_chrome": "Cài ScriptCat cho Chrome",
+        "primary_edge": "Cài ScriptCat cho Edge",
+        "primary_firefox": "Cài ScriptCat cho Firefox",
+        "primary_other": "Xem hướng dẫn cài đặt ScriptCat",
+        "proceed": "Đã cài ScriptCat? Vẫn tiếp tục cài",
+        "subtitle_chrome": "Đến Chrome Web Store · Miễn phí",
+        "subtitle_edge": "Đến Edge Add-ons · Miễn phí",
+        "subtitle_firefox": "Đến Firefox Add-ons · Miễn phí",
+        "subtitle_other": "Trình duyệt của bạn cần cài đặt thủ công"
+      },
       "require": {
         "compatible_version": "(Compatible Version) ",
         "copy_tooltip": "Copy reference code",
@@ -1739,6 +1755,8 @@
       "no_favorites": "This user hasn't favorited any scripts yet",
       "no_script_manager_content": "ScriptCat extension is not detected in your browser, confirm to open subscription link?",
       "no_script_manager_title": "No script manager detected",
+      "continue_subscribe": "Đã cài ScriptCat? Vẫn tiếp tục đăng ký",
+      "subscribe_guide_description": "Đăng ký script cần có trình quản lý userscript. Chúng tôi khuyên dùng ScriptCat — sau khi cài đặt, bạn có thể đăng ký chỉ với một cú nhấp và tự động cập nhật script.",
       "no_scripts_in_category": "No favorite scripts in this category",
       "no_scripts_in_folder": "No scripts in this folder",
       "pagination_items": "{start}-{end}, total {total}",

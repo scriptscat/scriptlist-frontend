@@ -994,6 +994,22 @@
         "reinstall_script": "Skript v{version} neu installieren",
         "update_script": "Skript auf v{version} aktualisieren"
       },
+      "installGuide": {
+        "cancel": "Abbrechen",
+        "description": "Zum Installieren eines Userscripts wird ein Userscript-Manager benötigt. Wir empfehlen ScriptCat — nach der Installation kannst du Skripte von dieser Seite mit einem Klick installieren und ausführen.",
+        "learn_more": "ScriptCat ist ein quelloffener Userscript-Manager.",
+        "learn_more_link": "Mehr erfahren / Installationsanleitung",
+        "other_channels": "Andere Browser / Methoden",
+        "primary_chrome": "ScriptCat für Chrome installieren",
+        "primary_edge": "ScriptCat für Edge installieren",
+        "primary_firefox": "ScriptCat für Firefox installieren",
+        "primary_other": "Installationsanleitung für ScriptCat ansehen",
+        "proceed": "ScriptCat bereits installiert? Trotzdem fortfahren",
+        "subtitle_chrome": "Zum Chrome Web Store · Kostenlos",
+        "subtitle_edge": "Zu Edge-Add-ons · Kostenlos",
+        "subtitle_firefox": "Zu Firefox-Add-ons · Kostenlos",
+        "subtitle_other": "Dein Browser erfordert eine manuelle Installation"
+      },
       "require": {
         "compatible_version": "(Kompatible Version) ",
         "copy_tooltip": "Referenzcode kopieren",
@@ -1909,6 +1925,8 @@
       "no_favorites": "Dieser Benutzer hat noch keine Skripte favorisiert",
       "no_script_manager_content": "Es wurde keine ScriptCat-Erweiterung im Browser erkannt. Möchten Sie den Abonnement-Link trotzdem öffnen?",
       "no_script_manager_title": "Kein Skript-Manager erkannt",
+      "continue_subscribe": "ScriptCat bereits installiert? Trotzdem abonnieren",
+      "subscribe_guide_description": "Zum Abonnieren von Skripten wird ein Userscript-Manager benötigt. Wir empfehlen ScriptCat — nach der Installation kannst du mit einem Klick abonnieren und Skripte automatisch aktuell halten.",
       "no_scripts_in_category": "Keine favorisierten Skripte in dieser Kategorie",
       "no_scripts_in_folder": "Dieser Favoritenordner enthält noch keine Skripte",
       "pagination_items": "Element {start}-{end} von insgesamt {total}",
