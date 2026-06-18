@@ -587,6 +587,7 @@
     "welcome_title": "ScriptCat AI Assistant"
   },
   "common": {
+    "share": "Share",
     "admin_delete_content": "All data will be permanently deleted. Please proceed with caution!",
     "admin_delete_reason_copyright": "Copyright/Infringement",
     "admin_delete_reason_custom": "Custom Reason",
@@ -1082,7 +1083,9 @@
         "install_check_failed": "Failed to check script installation status",
         "install_script": "Install Script",
         "reinstall_script": "Reinstall Script v{version}",
-        "update_script": "Update Script to v{version}"
+        "update_script": "Update Script to v{version}",
+        "updated_at": "Updated {time}",
+        "changelog": "Changelog"
       },
       "installGuide": {
         "title": "Userscript manager required",
@@ -1179,12 +1182,30 @@
         "patch_version": "(Patch Version) ",
         "usage_guide": "Usage Guide"
       },
+      "permissions": {
+        "title": "Permissions & access",
+        "connect": "Cross-origin access",
+        "grants": "Capabilities",
+        "more": "+{count}",
+        "high_risk": "High-risk permission — install with caution",
+        "cap": {
+          "net": "Network requests",
+          "notify": "Notifications",
+          "clipboard": "Clipboard",
+          "storage": "Storage",
+          "tab": "Open tab",
+          "download": "Download",
+          "cookie": "Cookies",
+          "menu": "Menu command"
+        }
+      },
       "sites": {
         "collapse": "Collapse",
         "more": "+{count} more"
       },
       "stats": {
         "current_version": "Current Version",
+        "title": "Statistics",
         "today_installs": "Today's New",
         "total_installs": "Total Installs",
         "user_rating": "User Rating"

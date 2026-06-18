@@ -501,6 +501,7 @@
     "welcome_title": "ScriptCat AI アシスタント"
   },
   "common": {
+    "share": "共有",
     "admin_delete_content": "削除するとすべてのデータが復元できなくなります。慎重に操作してください！",
     "admin_delete_reason_copyright": "著作権侵害",
     "admin_delete_reason_custom": "カスタム理由",
@@ -993,7 +994,9 @@
         "install_check_failed": "スクリプトインストール状態の検出に失敗しました",
         "install_script": "スクリプトをインストール",
         "reinstall_script": "スクリプト v{version} を再インストール",
-        "update_script": "スクリプトを v{version} に更新"
+        "update_script": "スクリプトを v{version} に更新",
+        "updated_at": "{time} に更新",
+        "changelog": "更新履歴"
       },
       "installGuide": {
         "title": "ユーザースクリプトマネージャーが必要です",
@@ -1090,12 +1093,30 @@
         "patch_version": "（パッチバージョン）",
         "usage_guide": "使用ガイド"
       },
+      "permissions": {
+        "title": "権限とアクセス",
+        "connect": "クロスオリジンアクセス",
+        "grants": "使用する機能",
+        "more": "+{count}",
+        "high_risk": "高リスクの権限です。インストールにご注意ください",
+        "cap": {
+          "net": "ネットワークリクエスト",
+          "notify": "通知",
+          "clipboard": "クリップボード",
+          "storage": "ストレージ",
+          "tab": "タブを開く",
+          "download": "ダウンロード",
+          "cookie": "Cookie",
+          "menu": "メニューコマンド"
+        }
+      },
       "sites": {
         "collapse": "折りたたむ",
         "more": "+{count} その他"
       },
       "stats": {
         "current_version": "現在のバージョン",
+        "title": "統計",
         "today_installs": "今日の新規",
         "total_installs": "総インストール数",
         "user_rating": "ユーザー評価"

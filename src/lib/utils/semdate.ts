@@ -27,3 +27,11 @@ export function useSemDateTime() {
 export function formatNumber(num: number): string {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
+
+// 紧凑数字：1234 → 1.2K，1200000 → 1.2M（用于侧栏窄列统计，避免换行）
+export function formatCompactNumber(num: number): string {
+  return new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(num);
+}

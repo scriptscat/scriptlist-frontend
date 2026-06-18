@@ -501,6 +501,7 @@
     "welcome_title": "ScriptCat AI Ассистент"
   },
   "common": {
+    "share": "Поделиться",
     "admin_delete_content": "Все данные будут безвозвратно удалены. Действуйте осторожно!",
     "admin_delete_reason_copyright": "Нарушение авторских прав",
     "admin_delete_reason_custom": "Другая причина",
@@ -993,7 +994,9 @@
         "install_check_failed": "Не удалось проверить статус установки скрипта",
         "install_script": "Установить скрипт",
         "reinstall_script": "Переустановить скрипт v{version}",
-        "update_script": "Обновить скрипт до v{version}"
+        "update_script": "Обновить скрипт до v{version}",
+        "updated_at": "Обновлено {time}",
+        "changelog": "История изменений"
       },
       "installGuide": {
         "title": "Требуется менеджер userscript",
@@ -1090,12 +1093,30 @@
         "patch_version": "(патч версия) ",
         "usage_guide": "Руководство по использованию"
       },
+      "permissions": {
+        "title": "Разрешения и доступ",
+        "connect": "Межсайтовые запросы",
+        "grants": "Возможности",
+        "more": "+{count}",
+        "high_risk": "Разрешение высокого риска — устанавливайте с осторожностью",
+        "cap": {
+          "net": "Сетевые запросы",
+          "notify": "Уведомления",
+          "clipboard": "Буфер обмена",
+          "storage": "Хранилище",
+          "tab": "Открытие вкладок",
+          "download": "Загрузка файлов",
+          "cookie": "Cookie",
+          "menu": "Команды меню"
+        }
+      },
       "sites": {
         "collapse": "Свернуть",
         "more": "+{count} ещё"
       },
       "stats": {
         "current_version": "Текущая версия",
+        "title": "Статистика",
         "today_installs": "Сегодня добавлено",
         "total_installs": "Общее количество установок",
         "user_rating": "Рейтинг пользователей"

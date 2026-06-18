@@ -6,6 +6,7 @@ import {
   ExclamationCircleOutlined,
   FileExclamationOutlined,
   RobotOutlined,
+  ShareAltOutlined,
 } from '@ant-design/icons';
 import { Dropdown, Modal, Select, Space, Input, message } from 'antd';
 import { useUser } from '@/contexts/UserContext';
@@ -29,6 +30,8 @@ export interface ActionMenuProps {
   // 举报
   scriptId?: number;
   onReportClick?: () => void;
+  // 分享（移动端将分享收进更多菜单）
+  onShareClick?: () => void;
   // AI 审核
   allowAIReview?: boolean;
   aiReviewLoading?: boolean;
@@ -48,6 +51,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   allowAIReview,
   aiReviewLoading,
   onAIReviewClick,
+  onShareClick,
 }) => {
   const user = useUser();
   const t = useTranslations('common');
@@ -75,6 +79,18 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   }, [user.user, authorMap]);
 
   const items = [];
+
+  if (onShareClick) {
+    items.push({
+      label: (
+        <Space className="anticon-middle">
+          <ShareAltOutlined />
+          <span>{t('share')}</span>
+        </Space>
+      ),
+      key: 'share',
+    });
+  }
 
   if (allowAIReview && user.user?.is_admin && user.user.is_admin >= 1) {
     items.push({
@@ -166,7 +182,9 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
         menu={{
           items: items,
           onClick: (value) => {
-            if (value.key === 'ai-review') {
+            if (value.key === 'share') {
+              onShareClick?.();
+            } else if (value.key === 'ai-review') {
               modal.confirm({
                 title: adminScriptsT('ai_review_confirm'),
                 icon: <RobotOutlined />,

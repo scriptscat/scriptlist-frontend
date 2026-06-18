@@ -374,6 +374,7 @@
     "welcome_title": "ScriptCat AI Assistant"
   },
   "common": {
+    "share": "Chia sẻ",
     "admin_delete_content": "Tất cả dữ liệu sẽ bị xóa vĩnh viễn. Vui lòng thao tác cẩn thận!",
     "admin_delete_reason_copyright": "Vi phạm bản quyền",
     "admin_delete_reason_custom": "Lý do tùy chỉnh",

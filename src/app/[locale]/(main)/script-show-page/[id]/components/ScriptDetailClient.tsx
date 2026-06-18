@@ -24,7 +24,6 @@ import {
 import {
   DownloadOutlined,
   CodeOutlined,
-  ShareAltOutlined,
   CalendarOutlined,
   UserOutlined,
   MoreOutlined,
@@ -43,10 +42,9 @@ import {
 } from '@ant-design/icons';
 import React, { useState, useCallback, useMemo } from 'react';
 import { Icon } from '@iconify/react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useScript, useScriptState } from './ScriptContext';
 import { useUser } from '@/contexts/UserContext';
-import { useSemDateTime } from '@/lib/utils/semdate';
+import { useSemDateTime, formatCompactNumber } from '@/lib/utils/semdate';
 import { Link, useRouter } from '@/i18n/routing';
 import dynamic from 'next/dynamic';
 const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
@@ -66,6 +64,7 @@ import GoogleAd from '@/components/GoogleAd';
 import ScriptVersionsClient from '../version/components/ScriptVersionsClient';
 import ScriptRatingClient from '../comment/components/ScriptRatingClient';
 import ScriptMetadataExplainer from './ScriptMetadataExplainer';
+import ScriptPermissionsCard from './overview/ScriptPermissionsCard';
 import type {
   ScoreListItem,
   VersionListResponse,
@@ -457,6 +456,12 @@ export default function ScriptDetailClient({
     return shareText;
   }, [scriptName, router.locale, script.id]);
 
+  // 移动端：将分享收进“更多”菜单，复制分享内容到剪贴板
+  const handleShareCopy = useCallback(() => {
+    copyToClipboard(handleShare);
+    message.success(t('copy.share_copied'));
+  }, [handleShare, t]);
+
   const handleFollowChange = useCallback(
     async (value: string) => {
       const watchLevelMap: { [key: string]: WatchLevel } = {
@@ -629,6 +634,62 @@ export default function ScriptDetailClient({
     [t, handleFollowChange, watchLevel],
   );
 
+  // 收藏夹选择弹层（桌面侧栏与移动端操作区共用）
+  const renderFolderPopup = useCallback(
+    () => (
+      <Card
+        size="small"
+        className="shadow-lg border-0 min-w-[220px]"
+        title={
+          <div className="flex items-center space-x-2">
+            <FolderOutlined />
+            <span>{t('folders.select_folders')}</span>
+          </div>
+        }
+      >
+        <div className="space-y-2">
+          <Checkbox.Group
+            value={selectedFolders.map(String)} // 转换为字符串数组用于 Checkbox.Group
+            onChange={handleFoldersChange}
+            className="w-full"
+          >
+            <div className="space-y-2">
+              {folders.map((folder) => (
+                <div
+                  key={folder.id}
+                  className="flex items-center justify-between p-2 hover:bg-gray-50 rounded hover:dark:bg-gray-700"
+                >
+                  <Checkbox
+                    value={String(folder.id)} // 转换为字符串用于 Checkbox
+                    className="flex-1"
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span>{folder.name}</span>
+                      <span className="text-xs text-gray-400 ml-2">
+                        {folder.count}
+                      </span>
+                    </div>
+                  </Checkbox>
+                </div>
+              ))}
+            </div>
+          </Checkbox.Group>
+          <Divider className="my-2" />
+          <Button
+            type="dashed"
+            size="small"
+            icon={<PlusOutlined />}
+            onClick={handleAddFolder}
+            className="w-full"
+          >
+            {t('folders.new_folder')}
+          </Button>
+        </div>
+      </Card>
+    ),
+    [t, selectedFolders, handleFoldersChange, folders, handleAddFolder],
+  );
+
   const detailTabs = useMemo(
     () => [
       {
@@ -714,220 +775,285 @@ export default function ScriptDetailClient({
           top: '-4px',
         }}
       >
-        <Card className="shadow-sm !mb-2">
-          <Row gutter={[24, 24]}>
-            <Col xs={24} lg={16}>
-              <div className="flex flex-col h-full">
-                {/* 脚本基本信息 */}
-                <div className="flex-1">
-                  <div className="flex items-start space-x-4 mb-4">
-                    <Avatar
-                      shape="square"
-                      size={64}
-                      src={icon}
-                      icon={<CodeOutlined />}
-                      className="bg-gradient-to-br from-blue-500 to-purple-600"
-                    />
-                    <div className="flex-1 ml-2">
-                      <Title level={2} className="mb-2">
-                        {scriptName}
-                      </Title>
-                      <Space wrap className="mb-3">
-                        <Link
-                          href={`/users/${script.user_id}`}
-                          target="_blank"
-                          onClick={(e) => e.stopPropagation()}
+        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[1fr_336px]">
+          {/* 左·主内容 */}
+          <div className="min-w-0">
+            <div className="flex flex-col gap-4">
+              {/* 头部卡：头像/标题/作者·创建于/简介/标签 */}
+              <Card className="shadow-sm">
+                <div className="flex items-start space-x-4 mb-4">
+                  <Avatar
+                    shape="square"
+                    size={64}
+                    src={icon}
+                    icon={<CodeOutlined />}
+                    className="bg-gradient-to-br from-blue-500 to-purple-600"
+                  />
+                  <div className="flex-1 ml-2">
+                    <Title level={2} className="mb-2">
+                      {scriptName}
+                    </Title>
+                    <Space wrap className="mb-3">
+                      <Link
+                        href={`/users/${script.user_id}`}
+                        target="_blank"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Space size="small">
+                          <Avatar
+                            size={20}
+                            src={script.avatar}
+                            icon={<UserOutlined />}
+                            className="flex-shrink-0"
+                          />
+                          <Text
+                            type="secondary"
+                            className="hover:!text-[#1677ff]"
+                          >
+                            {script.username}
+                          </Text>
+                        </Space>
+                      </Link>
+                      <Text type="secondary" className="my-2">
+                        {'•'}
+                      </Text>
+                      <Text type="secondary">
+                        <CalendarOutlined className="mr-1" />
+                        {t('info.created_at', {
+                          time: semDateTime(script.createtime),
+                        })}
+                      </Text>
+                    </Space>
+                    <Paragraph className="text-gray-600 mb-3">
+                      {scriptDescription}
+                    </Paragraph>
+                    <Space wrap>
+                      {script.category && (
+                        <Tooltip
+                          title={script.category.name}
+                          placement="bottom"
                         >
-                          <Space size="small">
-                            <Avatar
-                              size={20}
-                              src={script.avatar}
-                              icon={<UserOutlined />}
-                              className="flex-shrink-0"
-                            />
-                            <Text
-                              type="secondary"
-                              className="hover:!text-[#1677ff]"
-                            >
-                              {script.username}
-                            </Text>
-                          </Space>
-                        </Link>
-                        <Text type="secondary" className="my-2">
-                          {'•'}
-                        </Text>
-                        <Text type="secondary">
-                          <CalendarOutlined className="mr-1" />
-                          {t('info.created_at', {
-                            time: semDateTime(script.createtime),
-                          })}
-                        </Text>
-                        <Text type="secondary" className="my-2">
-                          {'•'}
-                        </Text>
-                        <Text type="secondary">
-                          <CalendarOutlined className="mr-1" />
-                          {t('info.updated_at', {
-                            time: semDateTime(script.updatetime),
-                          })}
-                        </Text>
-                      </Space>
-                      <Paragraph className="text-gray-600 mb-3">
-                        {scriptDescription}
-                      </Paragraph>
-                      <Space wrap>
-                        {script.category && (
-                          <Tooltip
-                            title={script.category.name}
-                            placement="bottom"
+                          <Tag
+                            key={script.category.id}
+                            color={hashColor(script.category.name)}
                           >
-                            <Tag
-                              key={script.category.id}
-                              color={hashColor(script.category.name)}
-                            >
-                              {script.category.name}
-                            </Tag>
-                          </Tooltip>
-                        )}
-                        {script.tags.map((tag) => (
-                          <Tooltip
-                            title={t('info.tag_label', { name: tag.name })}
-                            placement="bottom"
+                            {script.category.name}
+                          </Tag>
+                        </Tooltip>
+                      )}
+                      {script.tags.map((tag) => (
+                        <Tooltip
+                          title={t('info.tag_label', { name: tag.name })}
+                          placement="bottom"
+                          key={tag.id}
+                        >
+                          <Tag
                             key={tag.id}
+                            color={hashColor(tag.name)}
+                            variant="filled"
                           >
-                            <Tag
-                              key={tag.id}
-                              color={hashColor(tag.name)}
-                              variant="filled"
-                            >
-                              {'#' + tag.name}
-                            </Tag>
-                          </Tooltip>
-                        ))}
-                      </Space>
-                    </div>
+                            {'#' + tag.name}
+                          </Tag>
+                        </Tooltip>
+                      ))}
+                    </Space>
                   </div>
                 </div>
 
                 <GoogleAd className="mb-2" width="970px" height="100px" />
+              </Card>
 
-                {/* 统计数据 - 移动到底部 */}
-                <div className="mt-auto">
-                  <Row gutter={[16, 16]}>
-                    <Col xs={12} sm={6}>
-                      <Card size="small" className="text-center">
-                        <Statistic
-                          title={t('stats.total_installs')}
-                          value={script.total_install}
-                          valueStyle={{ color: '#1890ff' }}
-                        />
-                      </Card>
-                    </Col>
-                    <Col xs={12} sm={6}>
-                      <Card size="small" className="text-center">
-                        <Statistic
-                          title={t('stats.today_installs')}
-                          value={script.today_install}
-                          valueStyle={{ color: '#52c41a' }}
-                          prefix="+"
-                        />
-                      </Card>
-                    </Col>
-                    <Col xs={12} sm={6}>
-                      <Card size="small" className="text-center">
-                        <Statistic
-                          title={t('stats.user_rating')}
-                          value={
-                            ScriptUtils.score(script.score, script.score_num) ||
-                            '-'
-                          }
-                          precision={1}
-                          valueStyle={{ color: '#faad14' }}
-                          suffix={
-                            <span className="text-sm text-gray-500">
-                              {' / 5.0 (' + script.score_num + ')'}
-                            </span>
-                          }
-                        />
-                      </Card>
-                    </Col>
-                    <Col xs={12} sm={6}>
-                      <Card size="small" className="text-center">
-                        <Statistic
-                          title={t('stats.current_version')}
-                          value={script.script.version}
-                          valueStyle={{ color: '#722ed1' }}
-                        />
-                      </Card>
-                    </Col>
-                  </Row>
-                </div>
-              </div>
-            </Col>
-
-            <Col xs={24} lg={8}>
-              <div className="flex flex-col gap-4">
-                {/* 根据脚本类型显示不同的安装组件 */}
-                {script.type === 3 ? (
-                  // 库模式 - 显示@require组件
-                  <Space.Compact className="flex w-full">
-                    <Select
-                      className="flex-1"
-                      style={{
-                        overflow: 'hidden',
-                      }}
-                      value={requireSelect}
-                      onChange={setRequireSelect}
+              {/* 移动端操作区：信息卡片下方展示安装/关注/收藏/更多（桌面端在右侧栏） */}
+              {script.type !== 3 && (
+                <div className="flex flex-col gap-2 lg:hidden">
+                  <Space.Compact className="w-full">
+                    <Button
+                      type="primary"
+                      size="large"
+                      icon={<DownloadOutlined />}
+                      className="flex-1 bg-gradient-to-r"
+                      href={installUrl}
+                      target="_blank"
+                      onClick={(e) => handleInstallClick(e, installUrl)}
                     >
-                      <Select.Option value={1}>
-                        {genRequire(
-                          script.id,
-                          script.name,
-                          script.script.version,
-                          script.sri,
-                        )}
-                      </Select.Option>
-                      <Select.Option value={2}>
-                        {t('require.compatible_version') +
-                          genRequire(
-                            script.id,
-                            script.name,
-                            '^' + script.script.version,
-                          )}
-                      </Select.Option>
-                      <Select.Option value={3}>
-                        {t('require.patch_version') +
-                          genRequire(
-                            script.id,
-                            script.name,
-                            '~' + script.script.version,
-                          )}
-                      </Select.Option>
-                    </Select>
-                    <Tooltip
-                      placement="bottom"
-                      title={t('require.copy_tooltip')}
+                      {installTitle + ' · v' + script.script.version}
+                    </Button>
+                    <Tooltip title={t('actions.install_guide')}>
+                      <Button
+                        type="primary"
+                        size="large"
+                        icon={<QuestionCircleOutlined />}
+                        onClick={handleOpenInstallGuide}
+                        className="bg-gradient-to-r !px-3"
+                      />
+                    </Tooltip>
+                    {script.enable_pre_release === 1 && (
+                      <Tooltip
+                        title={t('actions.prerelease_tooltip')}
+                        color="orange"
+                      >
+                        <Button
+                          type="primary"
+                          size="large"
+                          href={preReleaseUrl}
+                          target="_blank"
+                          onClick={(e) => handleInstallClick(e, preReleaseUrl)}
+                          icon={<ExperimentOutlined />}
+                          style={{
+                            background: '#f98116',
+                            borderColor: '#f98116',
+                          }}
+                        />
+                      </Tooltip>
+                    )}
+                  </Space.Compact>
+
+                  <div className="flex gap-2">
+                    <Dropdown
+                      trigger={['click']}
+                      placement="bottomLeft"
+                      menu={watchMenuProps}
+                    >
+                      <Button
+                        icon={isWatched ? <EyeFilled /> : <EyeOutlined />}
+                        size="large"
+                        className="flex-1 min-w-0 flex items-center justify-center"
+                        loading={watchLoading}
+                      >
+                        <span className="min-w-0 truncate">
+                          {t('actions.watch')}
+                        </span>
+                        <span className="ml-1 flex-none">
+                          {scriptState.watch_count || 0}
+                        </span>
+                        <DownOutlined className="ml-1 flex-none" />
+                      </Button>
+                    </Dropdown>
+
+                    <Space.Compact className="flex-1 min-w-0">
+                      <Button
+                        icon={isFavorited ? <StarFilled /> : <StarOutlined />}
+                        onClick={handleQuickFavorite}
+                        size="large"
+                        className="flex-1 min-w-0 flex items-center justify-center"
+                        loading={favoriteLoading}
+                      >
+                        <span className="min-w-0 truncate">
+                          {t('actions.favorite')}
+                        </span>
+                        <span className="ml-1 flex-none">
+                          {scriptState.favorite_count || 0}
+                        </span>
+                      </Button>
+                      <Dropdown
+                        trigger={['click']}
+                        placement="bottomRight"
+                        popupRender={renderFolderPopup}
+                      >
+                        <Button
+                          icon={<DownOutlined />}
+                          size="large"
+                          className="!px-2"
+                        />
+                      </Dropdown>
+                    </Space.Compact>
+
+                    <ActionMenu
+                      uid={script.user_id}
+                      deleteLevel="super_moderator"
+                      allowSelfDelete
+                      punish
+                      scriptId={script.id}
+                      onDeleteClick={handleDeleteClick}
+                      allowAIReview={isAdmin}
+                      aiReviewLoading={reviewing}
+                      onAIReviewClick={handleAIReview}
+                      onShareClick={handleShareCopy}
                     >
                       <Button
                         type="default"
-                        icon={<CopyOutlined />}
-                        onClick={handleCopyRequireClick}
-                      ></Button>
-                    </Tooltip>
-                    <Tooltip
-                      placement="bottom"
-                      title={t('require.usage_guide')}
-                    >
-                      <Button
-                        type="primary"
-                        href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
-                        target="_blank"
-                        icon={<QuestionCircleOutlined />}
-                      ></Button>
-                    </Tooltip>
-                  </Space.Compact>
-                ) : (
-                  // 脚本模式 - 显示原来的安装按钮
+                        size="large"
+                        className="!px-2"
+                        icon={<MoreOutlined />}
+                      />
+                    </ActionMenu>
+                  </div>
+                </div>
+              )}
+
+              {/* 内容 Tab 卡 */}
+              <Card className="shadow-sm" classNames={{ body: '!p-0' }}>
+                <Tabs
+                  items={detailTabs}
+                  size="middle"
+                  classNames={{
+                    header: '!mb-0 !px-4 sm:!px-6',
+                    content: '!px-4 !py-5 sm:!px-6 sm:!pb-6',
+                  }}
+                />
+              </Card>
+            </div>
+          </div>
+
+          {/* 右·侧栏（sticky） */}
+          <div className="min-w-0">
+            <div className="lg:sticky lg:top-4 flex flex-col gap-4">
+              {/* 根据脚本类型显示不同的安装组件 */}
+              {script.type === 3 ? (
+                // 库模式 - 显示@require组件
+                <Space.Compact className="flex w-full">
+                  <Select
+                    className="flex-1"
+                    style={{
+                      overflow: 'hidden',
+                    }}
+                    value={requireSelect}
+                    onChange={setRequireSelect}
+                  >
+                    <Select.Option value={1}>
+                      {genRequire(
+                        script.id,
+                        script.name,
+                        script.script.version,
+                        script.sri,
+                      )}
+                    </Select.Option>
+                    <Select.Option value={2}>
+                      {t('require.compatible_version') +
+                        genRequire(
+                          script.id,
+                          script.name,
+                          '^' + script.script.version,
+                        )}
+                    </Select.Option>
+                    <Select.Option value={3}>
+                      {t('require.patch_version') +
+                        genRequire(
+                          script.id,
+                          script.name,
+                          '~' + script.script.version,
+                        )}
+                    </Select.Option>
+                  </Select>
+                  <Tooltip placement="bottom" title={t('require.copy_tooltip')}>
+                    <Button
+                      type="default"
+                      icon={<CopyOutlined />}
+                      onClick={handleCopyRequireClick}
+                    ></Button>
+                  </Tooltip>
+                  <Tooltip placement="bottom" title={t('require.usage_guide')}>
+                    <Button
+                      type="primary"
+                      href="https://bbs.tampermonkey.net.cn/thread-249-1-1.html"
+                      target="_blank"
+                      icon={<QuestionCircleOutlined />}
+                    ></Button>
+                  </Tooltip>
+                </Space.Compact>
+              ) : (
+                // 脚本模式 - 桌面端安装按钮（移动端在头部卡片下方展示）
+                <div className="hidden w-full lg:block">
                   <Space.Compact className="w-full">
                     <Button
                       type="primary"
@@ -969,368 +1095,366 @@ export default function ScriptDetailClient({
                       </Tooltip>
                     )}
                   </Space.Compact>
-                )}
+                </div>
+              )}
 
-                {/* GitHub风格的操作按钮组 */}
-                <div className="flex flex-wrap gap-2 justify-end">
-                  <CopyToClipboard
-                    text={handleShare}
-                    onCopy={() => message.success(t('copy.share_copied'))}
+              {/* 安装信息行（移动端隐藏，操作区已上移） */}
+              <div
+                className={`flex items-center justify-center gap-1.5 text-xs text-gray-500${
+                  script.type !== 3 ? ' hidden lg:flex' : ''
+                }`}
+              >
+                <span className="font-medium text-gray-700 dark:text-gray-200">
+                  {'v' + script.script.version}
+                </span>
+                <span>{'·'}</span>
+                <span>
+                  {t('install.updated_at', {
+                    time: semDateTime(script.updatetime),
+                  })}
+                </span>
+                <span>{'·'}</span>
+                <Link
+                  href={`/script-show-page/${script.id}/version`}
+                  className="text-[#1677ff]"
+                >
+                  {t('install.changelog')}
+                </Link>
+              </div>
+
+              {/* GitHub风格的操作按钮组（移动端隐藏，操作区已上移） */}
+              <div
+                className={`flex gap-1.5${
+                  script.type !== 3 ? ' hidden lg:flex' : ''
+                }`}
+              >
+                {/* 关注按钮组 */}
+                <Dropdown
+                  trigger={['click']}
+                  placement="bottomRight"
+                  menu={watchMenuProps}
+                >
+                  <Button
+                    icon={isWatched ? <EyeFilled /> : <EyeOutlined />}
+                    size="small"
+                    className="flex-1 min-w-0 flex items-center justify-center"
+                    loading={watchLoading}
                   >
-                    <Button icon={<ShareAltOutlined />} size="small">
-                      <span className="hidden sm:inline">
-                        {t('actions.share')}
-                      </span>
-                    </Button>
-                  </CopyToClipboard>
+                    <span className="min-w-0 truncate">
+                      {t('actions.watch')}
+                    </span>
+                    <span className="ml-1 flex-none">
+                      {scriptState.watch_count || 0}
+                    </span>
+                    <DownOutlined className="ml-1 flex-none" />
+                  </Button>
+                </Dropdown>
 
-                  {/* 关注按钮组 */}
+                {/* 收藏按钮组 */}
+                <Space.Compact className="flex-1 min-w-0">
+                  <Button
+                    icon={isFavorited ? <StarFilled /> : <StarOutlined />}
+                    onClick={handleQuickFavorite}
+                    size="small"
+                    className="flex-1 min-w-0 flex items-center justify-center"
+                    loading={favoriteLoading}
+                  >
+                    <span className="min-w-0 truncate">
+                      {t('actions.favorite')}
+                    </span>
+                    <span className="ml-1 flex-none">
+                      {scriptState.favorite_count || 0}
+                    </span>
+                  </Button>
                   <Dropdown
                     trigger={['click']}
                     placement="bottomRight"
-                    menu={watchMenuProps}
+                    popupRender={renderFolderPopup}
                   >
                     <Button
-                      icon={isWatched ? <EyeFilled /> : <EyeOutlined />}
-                      className="flex items-center"
+                      icon={<DownOutlined />}
                       size="small"
-                      loading={watchLoading}
-                    >
-                      <span className="hidden sm:inline">
-                        {t('actions.watch')}
-                      </span>
-                      <span className="ml-1">
-                        {scriptState.watch_count || 0}
-                      </span>
-                      <DownOutlined className="ml-1" />
-                    </Button>
+                      className="!px-1.5"
+                    />
                   </Dropdown>
+                </Space.Compact>
 
-                  {/* 收藏按钮组 */}
-                  <Space.Compact>
-                    <Button
-                      icon={isFavorited ? <StarFilled /> : <StarOutlined />}
-                      onClick={handleQuickFavorite}
-                      className="flex items-center"
-                      size="small"
-                      loading={favoriteLoading}
-                    >
-                      <span className="hidden sm:inline">
-                        {t('actions.favorite')}
-                      </span>
-                      <span className="ml-1">
-                        {scriptState.favorite_count || 0}
-                      </span>
-                    </Button>
-                    <Dropdown
-                      trigger={['click']}
-                      placement="bottomRight"
-                      popupRender={() => (
-                        <Card
-                          size="small"
-                          className="shadow-lg border-0 min-w-[220px]"
-                          title={
-                            <div className="flex items-center space-x-2">
-                              <FolderOutlined />
-                              <span>{t('folders.select_folders')}</span>
-                            </div>
-                          }
-                        >
-                          <div className="space-y-2">
-                            <Checkbox.Group
-                              value={selectedFolders.map(String)} // 转换为字符串数组用于 Checkbox.Group
-                              onChange={handleFoldersChange}
-                              className="w-full"
-                            >
-                              <div className="space-y-2">
-                                {folders.map((folder) => (
-                                  <div
-                                    key={folder.id}
-                                    className="flex items-center justify-between p-2 hover:bg-gray-50 rounded hover:dark:bg-gray-700"
-                                  >
-                                    <Checkbox
-                                      value={String(folder.id)} // 转换为字符串用于 Checkbox
-                                      className="flex-1"
-                                    >
-                                      <div className="flex items-center justify-between w-full">
-                                        <span>{folder.name}</span>
-                                        <span className="text-xs text-gray-400 ml-2">
-                                          {folder.count}
-                                        </span>
-                                      </div>
-                                    </Checkbox>
-                                  </div>
-                                ))}
-                              </div>
-                            </Checkbox.Group>
-                            <Divider className="my-2" />
-                            <Button
-                              type="dashed"
-                              size="small"
-                              icon={<PlusOutlined />}
-                              onClick={handleAddFolder}
-                              className="w-full"
-                            >
-                              {t('folders.new_folder')}
-                            </Button>
-                          </div>
-                        </Card>
-                      )}
-                    >
-                      <Button
-                        icon={<DownOutlined />}
-                        size="small"
-                        className="!px-2"
-                      />
-                    </Dropdown>
-                  </Space.Compact>
-
-                  {/* 更多操作 */}
-                  <ActionMenu
-                    uid={script.user_id}
-                    deleteLevel="super_moderator"
-                    allowSelfDelete
-                    punish
-                    scriptId={script.id}
-                    onDeleteClick={handleDeleteClick}
-                    allowAIReview={isAdmin}
-                    aiReviewLoading={reviewing}
-                    onAIReviewClick={handleAIReview}
-                  >
-                    <Button
-                      type="default"
-                      size="small"
-                      className="!p-0"
-                      icon={<MoreOutlined />}
-                    ></Button>
-                  </ActionMenu>
-                </div>
-
-                {/* 脚本详情 - 推到底部 */}
-                <div>
-                  <Card
+                {/* 更多操作 */}
+                <ActionMenu
+                  uid={script.user_id}
+                  deleteLevel="super_moderator"
+                  allowSelfDelete
+                  punish
+                  scriptId={script.id}
+                  onDeleteClick={handleDeleteClick}
+                  allowAIReview={isAdmin}
+                  aiReviewLoading={reviewing}
+                  onAIReviewClick={handleAIReview}
+                  onShareClick={handleShareCopy}
+                >
+                  <Button
+                    type="default"
                     size="small"
-                    title={
-                      <div className="flex items-center space-x-2">
-                        <span>
-                          {script.type === 3
-                            ? t('info.library_details')
-                            : t('info.script_details')}
-                        </span>
+                    className="!px-2"
+                    icon={<MoreOutlined />}
+                  />
+                </ActionMenu>
+              </div>
+
+              {/* 数据统计卡（3 项） */}
+              <Card
+                size="small"
+                title={t('stats.title')}
+                className="!rounded-xl"
+                classNames={{ body: '!p-4' }}
+              >
+                <Row gutter={16}>
+                  <Col span={8} className="text-center">
+                    <Statistic
+                      title={t('stats.total_installs')}
+                      value={script.total_install}
+                      formatter={(v) => formatCompactNumber(Number(v))}
+                      valueStyle={{ color: '#1890ff' }}
+                    />
+                  </Col>
+                  <Col span={8} className="text-center">
+                    <Statistic
+                      title={t('stats.today_installs')}
+                      value={script.today_install}
+                      formatter={(v) => formatCompactNumber(Number(v))}
+                      valueStyle={{ color: '#52c41a' }}
+                      prefix="+"
+                    />
+                  </Col>
+                  <Col span={8} className="text-center">
+                    <Statistic
+                      title={t('stats.user_rating')}
+                      value={
+                        ScriptUtils.score(script.score, script.score_num) || '-'
+                      }
+                      precision={1}
+                      valueStyle={{ color: '#faad14' }}
+                    />
+                  </Col>
+                </Row>
+              </Card>
+
+              {/* 脚本详情 - 推到底部 */}
+              <div>
+                <Card
+                  size="small"
+                  className="!rounded-xl"
+                  classNames={{ body: '!p-4' }}
+                  title={
+                    <div className="flex items-center space-x-2">
+                      <span>
+                        {script.type === 3
+                          ? t('info.library_details')
+                          : t('info.script_details')}
+                      </span>
+                    </div>
+                  }
+                >
+                  <div className="space-y-3">
+                    {/* 库模式特殊信息 */}
+                    {script.type === 3 && (
+                      <>
+                        <div className="flex justify-between items-center">
+                          <span>{t('info.library_description')}</span>
+                        </div>
+                      </>
+                    )}
+
+                    {/* 通用信息 */}
+                    {supportSites.length > 0 && (
+                      <div className="flex justify-between items-start">
+                        <Text className="text-gray-600 font-medium">
+                          {t('info.applicable_sites')}
+                        </Text>
+                        <div className="text-right max-w-[200px] min-w-[120px]">
+                          {renderSupportSites}
+                        </div>
                       </div>
-                    }
-                  >
-                    <div className="space-y-3">
-                      {/* 库模式特殊信息 */}
-                      {script.type === 3 && (
-                        <>
-                          <div className="flex justify-between items-center">
-                            <span>{t('info.library_description')}</span>
-                          </div>
-                        </>
-                      )}
+                    )}
 
-                      {/* 通用信息 */}
-                      {supportSites.length > 0 && (
-                        <div className="flex justify-between items-start">
-                          <Text className="text-gray-600 font-medium">
-                            {t('info.applicable_sites')}
-                          </Text>
-                          <div className="text-right max-w-[200px] min-w-[120px]">
-                            {renderSupportSites}
-                          </div>
+                    {(script.script.meta_json.background ||
+                      script.script.meta_json.crontab) && (
+                      <div className="flex justify-between items-start">
+                        <Text className="text-gray-600 font-medium">
+                          {t('info.background_script')}
+                        </Text>
+                        <div className="text-right max-w-[200px] min-w-[120px]">
+                          {t('info.background_script_desc')}
                         </div>
-                      )}
+                      </div>
+                    )}
 
-                      {(script.script.meta_json.background ||
-                        script.script.meta_json.crontab) && (
-                        <div className="flex justify-between items-start">
-                          <Text className="text-gray-600 font-medium">
-                            {t('info.background_script')}
-                          </Text>
-                          <div className="text-right max-w-[200px] min-w-[120px]">
-                            {t('info.background_script_desc')}
-                          </div>
-                        </div>
-                      )}
-
-                      {script.script.meta_json.crontab && (
-                        <div className="flex justify-between items-start">
-                          <Text className="text-gray-600 font-medium">
-                            {t('info.scheduled_script')}
-                          </Text>
-                          <div className="text-right max-w-[200px] min-w-[120px]">
-                            <Tooltip
-                              title={t('info.scheduled_script_tooltip', {
-                                cron: script.script.meta_json.crontab[0],
-                              })}
+                    {script.script.meta_json.crontab && (
+                      <div className="flex justify-between items-start">
+                        <Text className="text-gray-600 font-medium">
+                          {t('info.scheduled_script')}
+                        </Text>
+                        <div className="text-right max-w-[200px] min-w-[120px]">
+                          <Tooltip
+                            title={t('info.scheduled_script_tooltip', {
+                              cron: script.script.meta_json.crontab[0],
+                            })}
+                          >
+                            <Tag
+                              color="blue"
+                              icon={<ClockCircleOutlined />}
+                              className="text-xs"
                             >
-                              <Tag
-                                color="blue"
-                                icon={<ClockCircleOutlined />}
-                                className="text-xs"
-                              >
-                                {parseCrontabDescription(
-                                  script.script.meta_json.crontab[0],
-                                )}
-                              </Tag>
-                            </Tooltip>
-                          </div>
-                        </div>
-                      )}
-
-                      {(() => {
-                        const licenseRaw = script.script.meta_json.license?.[0];
-                        if (licenseRaw) {
-                          const ld = getLicenseDisplay(licenseRaw);
-                          const label =
-                            ld.category === 'proprietary'
-                              ? t('info.license_no_derivative')
-                              : ld.canonical;
-                          const tag = (
-                            <Tag color={ld.color} className="font-mono !m-0">
-                              {label}
-                            </Tag>
-                          );
-                          return (
-                            <div className="flex justify-between items-center">
-                              <Text className="text-gray-600 font-medium">
-                                {t('info.license')}
-                              </Text>
-                              {ld.url ? (
-                                <a
-                                  href={ld.url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="max-w-[160px] text-right"
-                                >
-                                  {tag}
-                                </a>
-                              ) : (
-                                tag
+                              {parseCrontabDescription(
+                                script.script.meta_json.crontab[0],
                               )}
-                            </div>
-                          );
-                        }
+                            </Tag>
+                          </Tooltip>
+                        </div>
+                      </div>
+                    )}
+
+                    {(() => {
+                      const licenseRaw = script.script.meta_json.license?.[0];
+                      if (licenseRaw) {
+                        const ld = getLicenseDisplay(licenseRaw);
+                        const label =
+                          ld.category === 'proprietary'
+                            ? t('info.license_no_derivative')
+                            : ld.canonical;
+                        const tag = (
+                          <Tag color={ld.color} className="font-mono !m-0">
+                            {label}
+                          </Tag>
+                        );
                         return (
-                          <div className="flex justify-between items-start">
+                          <div className="flex justify-between items-center">
                             <Text className="text-gray-600 font-medium">
                               {t('info.license')}
                             </Text>
-                            <div className="text-right max-w-[180px]">
-                              <Tooltip title={t('info.license_none_warning')}>
-                                <Tag className="!m-0">
-                                  {t('info.license_none')}
-                                </Tag>
-                              </Tooltip>
-                              <div className="mt-1">
-                                <Text type="warning" className="text-xs">
-                                  {t('info.license_none_warning')}
-                                </Text>
-                              </div>
-                            </div>
+                            {ld.url ? (
+                              <a
+                                href={ld.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="max-w-[160px] text-right"
+                              >
+                                {tag}
+                              </a>
+                            ) : (
+                              tag
+                            )}
                           </div>
                         );
-                      })()}
-
-                      {script.script.meta_json.compatible && (
+                      }
+                      return (
                         <div className="flex justify-between items-start">
                           <Text className="text-gray-600 font-medium">
-                            {t('info.browser_compatibility')}
+                            {t('info.license')}
                           </Text>
-                          <div className="flex space-x-2">
-                            {ScriptUtils.browserCompatible(
-                              script.script.meta_json,
-                            ).map((browser) => (
+                          <div className="text-right max-w-[180px]">
+                            <Tooltip title={t('info.license_none_warning')}>
+                              <Tag className="!m-0">
+                                {t('info.license_none')}
+                              </Tag>
+                            </Tooltip>
+                            <div className="mt-1">
+                              <Text type="warning" className="text-xs">
+                                {t('info.license_none_warning')}
+                              </Text>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {script.script.meta_json.compatible && (
+                      <div className="flex justify-between items-start">
+                        <Text className="text-gray-600 font-medium">
+                          {t('info.browser_compatibility')}
+                        </Text>
+                        <div className="flex space-x-2">
+                          {ScriptUtils.browserCompatible(
+                            script.script.meta_json,
+                          ).map((browser) => (
+                            <Tooltip
+                              key={browser.name}
+                              title={t('info.browser_support', {
+                                browser: browser.name,
+                              })}
+                            >
+                              <Icon
+                                icon={`logos:${browser.logo}`}
+                                className="w-4 h-4"
+                              />
+                            </Tooltip>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {script.script.meta_json.antifeature && (
+                      <div className="flex justify-between items-start">
+                        <Text className="text-gray-600 font-medium">
+                          {t('info.feature_notice')}
+                        </Text>
+                        <div className="flex flex-wrap gap-1 max-w-[200px] justify-end">
+                          {ScriptUtils.antiFeatures(
+                            script.script.meta_json,
+                          ).map((feature) => {
+                            const config = antifeatures[feature.key];
+                            if (!config) return null;
+
+                            return (
                               <Tooltip
-                                key={browser.name}
-                                title={t('info.browser_support', {
-                                  browser: browser.name,
-                                })}
+                                key={feature.key}
+                                title={
+                                  config.description +
+                                  (feature.description
+                                    ? ` - ${feature.description}`
+                                    : '')
+                                }
+                                color={config.color}
                               >
-                                <Icon
-                                  icon={`logos:${browser.logo}`}
-                                  className="w-4 h-4"
-                                />
-                              </Tooltip>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {script.script.meta_json.antifeature && (
-                        <div className="flex justify-between items-start">
-                          <Text className="text-gray-600 font-medium">
-                            {t('info.feature_notice')}
-                          </Text>
-                          <div className="flex flex-wrap gap-1 max-w-[200px] justify-end">
-                            {ScriptUtils.antiFeatures(
-                              script.script.meta_json,
-                            ).map((feature) => {
-                              const config = antifeatures[feature.key];
-                              if (!config) return null;
-
-                              return (
-                                <Tooltip
-                                  key={feature.key}
-                                  title={
-                                    config.description +
-                                    (feature.description
-                                      ? ` - ${feature.description}`
-                                      : '')
-                                  }
+                                <Tag
                                   color={config.color}
+                                  className="text-xs"
+                                  variant="solid"
                                 >
-                                  <Tag
-                                    color={config.color}
-                                    className="text-xs"
-                                    variant="solid"
-                                  >
-                                    {config.title}
-                                  </Tag>
-                                </Tooltip>
-                              );
-                            })}
-                          </div>
+                                  {config.title}
+                                </Tag>
+                              </Tooltip>
+                            );
+                          })}
                         </div>
-                      )}
+                      </div>
+                    )}
 
-                      {/* 社区与支持 - 统一放在底部 */}
-                      {script.post_id !== 0 && (
-                        <div className="pt-2 flex justify-end">
-                          <Button
-                            type="link"
-                            icon={<MessageOutlined />}
-                            href={`https://bbs.tampermonkey.net.cn/thread-${script.post_id}-1-1.html`}
-                            target="_blank"
-                            className="!p-0 !h-auto flex items-center"
-                          >
-                            <span className="text-xs">
-                              {t('info.forum_post')}
-                            </span>
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  </Card>
-                </div>
+                    {/* 社区与支持 - 统一放在底部 */}
+                    {script.post_id !== 0 && (
+                      <div className="pt-2 flex justify-end">
+                        <Button
+                          type="link"
+                          icon={<MessageOutlined />}
+                          href={`https://bbs.tampermonkey.net.cn/thread-${script.post_id}-1-1.html`}
+                          target="_blank"
+                          className="!p-0 !h-auto flex items-center"
+                        >
+                          <span className="text-xs">
+                            {t('info.forum_post')}
+                          </span>
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </Card>
               </div>
-            </Col>
-          </Row>
-        </Card>
-      </Badge.Ribbon>
 
-      {/* 功能介绍 */}
-      <Card className="shadow-sm" classNames={{ body: '!p-0' }}>
-        <Tabs
-          items={detailTabs}
-          size="middle"
-          classNames={{
-            header: '!mb-0 !px-4 sm:!px-6',
-            content: '!px-4 !py-5 sm:!px-6 sm:!pb-6',
-          }}
-        />
-      </Card>
+              <ScriptPermissionsCard meta={script.script.meta_json} />
+            </div>
+          </div>
+        </div>
+      </Badge.Ribbon>
     </div>
   );
 }

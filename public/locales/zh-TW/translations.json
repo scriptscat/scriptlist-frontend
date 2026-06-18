@@ -507,6 +507,7 @@
     "welcome_title": "ScriptCat AI 助手"
   },
   "common": {
+    "share": "分享",
     "admin_delete_content": "刪除後所有數據将無法恢復，請谨慎操作！",
     "admin_delete_reason_copyright": "侵權/版權問題",
     "admin_delete_reason_custom": "自定義原因",
@@ -999,7 +1000,9 @@
         "install_check_failed": "檢測腳本安裝狀態失敗",
         "install_script": "安裝腳本",
         "reinstall_script": "重新安裝腳本 v{version}",
-        "update_script": "更新腳本至 v{version}"
+        "update_script": "更新腳本至 v{version}",
+        "updated_at": "更新於 {time}",
+        "changelog": "更新記錄"
       },
       "installGuide": {
         "title": "需要腳本管理器",
@@ -1096,12 +1099,30 @@
         "patch_version": "(修補版本) ",
         "usage_guide": "使用指南"
       },
+      "permissions": {
+        "title": "權限與存取",
+        "connect": "跨域存取",
+        "grants": "使用能力",
+        "more": "+{count}",
+        "high_risk": "高風險權限，請謹慎安裝",
+        "cap": {
+          "net": "網路請求",
+          "notify": "通知",
+          "clipboard": "剪貼簿",
+          "storage": "儲存空間",
+          "tab": "開啟分頁",
+          "download": "下載",
+          "cookie": "Cookie",
+          "menu": "選單命令"
+        }
+      },
       "sites": {
         "collapse": "收起",
         "more": "+{count} 更多"
       },
       "stats": {
         "current_version": "目前版本",
+        "title": "資料統計",
         "today_installs": "今日新增",
         "total_installs": "總安裝量",
         "user_rating": "使用者評分"
