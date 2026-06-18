@@ -760,6 +760,44 @@ export default function ScriptDetailClient({
     ],
   );
 
+  // 数据统计卡（桌面侧栏与移动端共用，移动端展示在描述上方）
+  const statsCard = (
+    <Card
+      size="small"
+      title={t('stats.title')}
+      className="!rounded-xl"
+      classNames={{ body: '!p-4' }}
+    >
+      <Row gutter={16}>
+        <Col span={8} className="text-center">
+          <Statistic
+            title={t('stats.total_installs')}
+            value={script.total_install}
+            formatter={(v) => formatCompactNumber(Number(v))}
+            valueStyle={{ color: '#1890ff' }}
+          />
+        </Col>
+        <Col span={8} className="text-center">
+          <Statistic
+            title={t('stats.today_installs')}
+            value={script.today_install}
+            formatter={(v) => formatCompactNumber(Number(v))}
+            valueStyle={{ color: '#52c41a' }}
+            prefix="+"
+          />
+        </Col>
+        <Col span={8} className="text-center">
+          <Statistic
+            title={t('stats.user_rating')}
+            value={ScriptUtils.score(script.score, script.score_num) || '-'}
+            precision={1}
+            valueStyle={{ color: '#faad14' }}
+          />
+        </Col>
+      </Row>
+    </Card>
+  );
+
   return (
     <div>
       {contextHolder}
@@ -781,7 +819,7 @@ export default function ScriptDetailClient({
             <div className="flex flex-col gap-4">
               {/* 头部卡：头像/标题/作者·创建于/简介/标签 */}
               <Card className="shadow-sm">
-                <div className="flex items-start space-x-4 mb-4">
+                <div className="flex items-start space-x-4">
                   <Avatar
                     shape="square"
                     size={64}
@@ -821,6 +859,15 @@ export default function ScriptDetailClient({
                         <CalendarOutlined className="mr-1" />
                         {t('info.created_at', {
                           time: semDateTime(script.createtime),
+                        })}
+                      </Text>
+                      <Text type="secondary" className="my-2">
+                        {'•'}
+                      </Text>
+                      <Text type="secondary">
+                        <CalendarOutlined className="mr-1" />
+                        {t('info.updated_at', {
+                          time: semDateTime(script.updatetime),
                         })}
                       </Text>
                     </Space>
@@ -981,6 +1028,9 @@ export default function ScriptDetailClient({
                 </div>
               )}
 
+              {/* 数据统计卡（移动端展示在描述上方；桌面端在右侧栏） */}
+              <div className="lg:hidden">{statsCard}</div>
+
               {/* 内容 Tab 卡 */}
               <Card className="shadow-sm" classNames={{ body: '!p-0' }}>
                 <Tabs
@@ -1064,7 +1114,7 @@ export default function ScriptDetailClient({
                       target="_blank"
                       onClick={(e) => handleInstallClick(e, installUrl)}
                     >
-                      {installTitle}
+                      {installTitle + ' · v' + script.script.version}
                     </Button>
                     <Tooltip title={t('actions.install_guide')}>
                       <Button
@@ -1097,30 +1147,6 @@ export default function ScriptDetailClient({
                   </Space.Compact>
                 </div>
               )}
-
-              {/* 安装信息行（移动端隐藏，操作区已上移） */}
-              <div
-                className={`flex items-center justify-center gap-1.5 text-xs text-gray-500${
-                  script.type !== 3 ? ' hidden lg:flex' : ''
-                }`}
-              >
-                <span className="font-medium text-gray-700 dark:text-gray-200">
-                  {'v' + script.script.version}
-                </span>
-                <span>{'·'}</span>
-                <span>
-                  {t('install.updated_at', {
-                    time: semDateTime(script.updatetime),
-                  })}
-                </span>
-                <span>{'·'}</span>
-                <Link
-                  href={`/script-show-page/${script.id}/version`}
-                  className="text-[#1677ff]"
-                >
-                  {t('install.changelog')}
-                </Link>
-              </div>
 
               {/* GitHub风格的操作按钮组（移动端隐藏，操作区已上移） */}
               <div
@@ -1201,43 +1227,8 @@ export default function ScriptDetailClient({
                 </ActionMenu>
               </div>
 
-              {/* 数据统计卡（3 项） */}
-              <Card
-                size="small"
-                title={t('stats.title')}
-                className="!rounded-xl"
-                classNames={{ body: '!p-4' }}
-              >
-                <Row gutter={16}>
-                  <Col span={8} className="text-center">
-                    <Statistic
-                      title={t('stats.total_installs')}
-                      value={script.total_install}
-                      formatter={(v) => formatCompactNumber(Number(v))}
-                      valueStyle={{ color: '#1890ff' }}
-                    />
-                  </Col>
-                  <Col span={8} className="text-center">
-                    <Statistic
-                      title={t('stats.today_installs')}
-                      value={script.today_install}
-                      formatter={(v) => formatCompactNumber(Number(v))}
-                      valueStyle={{ color: '#52c41a' }}
-                      prefix="+"
-                    />
-                  </Col>
-                  <Col span={8} className="text-center">
-                    <Statistic
-                      title={t('stats.user_rating')}
-                      value={
-                        ScriptUtils.score(script.score, script.score_num) || '-'
-                      }
-                      precision={1}
-                      valueStyle={{ color: '#faad14' }}
-                    />
-                  </Col>
-                </Row>
-              </Card>
+              {/* 数据统计卡（移动端已在描述上方展示，这里仅桌面端） */}
+              <div className="hidden lg:block">{statsCard}</div>
 
               {/* 脚本详情 - 推到底部 */}
               <div>
