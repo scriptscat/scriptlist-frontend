@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { Icon } from '@iconify/react';
 import { useTheme } from '@/contexts/ThemeClientContext';
 import { useAd } from '@/lib/api/hooks/useAd';
+import type { AdSlotItem } from '@/lib/api/services/advertise';
 import { advertiseService } from '@/lib/api/services/advertise';
 import { API_CONFIG } from '@/lib/api/config';
 
@@ -11,19 +13,25 @@ interface AdSlotProps {
   slot: string;
   variant: 'banner' | 'card' | 'rail';
   className?: string;
+  /** 服务端预取的广告数据，用于 SSR 注入 SWR fallbackData。 */
+  initialData?: { ad: AdSlotItem | null };
 }
 
-const SIZE: Record<AdSlotProps['variant'], string> = {
+const SIZE: Record<'banner' | 'rail', string> = {
   banner: 'w-full max-h-[120px]',
-  card: 'w-[300px] h-[250px] mx-auto',
   rail: 'w-[160px] h-[600px]',
 };
 
-export default function AdSlot({ slot, variant, className }: AdSlotProps) {
+export default function AdSlot({
+  slot,
+  variant,
+  className,
+  initialData,
+}: AdSlotProps) {
   const locale = useLocale();
   const t = useTranslations('ads');
   const { themeMode } = useTheme();
-  const { data } = useAd(slot, locale);
+  const { data } = useAd(slot, locale, initialData);
   const ad = data?.ad ?? null;
   const ref = useRef<HTMLDivElement>(null);
   const reportedAdId = useRef<number | null>(null);
@@ -56,6 +64,47 @@ export default function AdSlot({ slot, variant, className }: AdSlotProps) {
   const clickHref = `${API_CONFIG.baseURL}/advertise/${ad.id}/click?slot=${encodeURIComponent(
     slot,
   )}&lang=${encodeURIComponent(locale)}&theme=${encodeURIComponent(themeMode.theme)}`;
+
+  // Sidebar 300×250 slots: wrap the creative in a GitHub-style card so it sits
+  // consistently among the bordered cards around it. The disclosure + a
+  // "learn more" affordance live in a thin footer instead of a badge over the
+  // image (方案 C, docs/superpowers/specs/2026-06-19-ad-slot-card-ui-design.md).
+  if (variant === 'card') {
+    return (
+      <div
+        ref={ref}
+        className={`bg-app-elevated border-app-primary theme-transition mx-auto w-full max-w-[332px] overflow-hidden rounded-lg border ${
+          className ?? ''
+        }`}
+      >
+        <a
+          href={clickHref}
+          target="_blank"
+          rel="nofollow sponsored noopener"
+          className="block transition-shadow hover:shadow-sm"
+        >
+          <div className="p-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={img}
+              alt={ad.title}
+              className="bg-app-tertiary block h-[250px] w-full rounded-md object-contain"
+              onError={() => setFailedSrc(img)}
+            />
+          </div>
+          <div className="border-app-primary flex items-center justify-between border-t px-3 py-2">
+            <span className="text-app-tertiary flex items-center gap-1 text-[11px]">
+              <Icon icon="mdi:bullhorn-outline" className="text-[13px]" />
+              {t('sponsored')}
+            </span>
+            <span className="text-app-secondary text-[11px]">
+              {t('learnMore')}
+            </span>
+          </div>
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div

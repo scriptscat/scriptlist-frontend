@@ -10,10 +10,11 @@ import {
 } from '@/lib/utils/script-slim';
 import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
 import AdSlot from '@/components/AdSlot';
 import SideRails from '@/components/AdSlot/SideRails';
+import { prefetchAd } from '@/lib/api/services/advertise';
 
 interface SearchPageProps {
   searchParams: Promise<ScriptSearchRequest>;
@@ -58,21 +59,28 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const resolvedSearchParams = await searchParams;
   const t = await getTranslations('script.section');
 
+  const locale = await getLocale();
+
   if (isUnfilteredBrowse(resolvedSearchParams)) {
-    const [dailyPick, hot, fresh, longtail] = await Promise.all([
+    const [dailyPick, hot, fresh, longtail, feedBannerAd] = await Promise.all([
       scriptService.search({ size: 12, page: 1, sort: 'daily_pick' }),
       scriptService.search({ size: 12, page: 1, sort: 'today_download' }),
       scriptService.search({ size: 12, page: 1, sort: 'createtime' }),
       scriptService.search({ size: 12, page: 1, sort: 'long_tail' }),
+      prefetchAd('search-feed-banner', locale),
     ]);
 
     return (
       <PageIntlProvider namespaces={['script', 'ads']}>
-        <div className="mb-10">
+        <div className="mb-4">
           <SearchBar />
         </div>
-        <div className="mb-10">
-          <AdSlot slot="search-feed-banner" variant="banner" />
+        <div className="mb-6">
+          <AdSlot
+            slot="search-feed-banner"
+            variant="banner"
+            initialData={feedBannerAd}
+          />
         </div>
         <SideRails />
         <ScriptSection
@@ -121,13 +129,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     script_type: resolvedSearchParams.script_type || 0,
   };
 
-  const [scripts, recentScripts] = await Promise.all([
+  const [scripts, recentScripts, sidebarAd] = await Promise.all([
     scriptService.search(apiParams),
     scriptService.search({
       size: 10,
       page: 1,
       sort: 'createtime',
     }),
+    prefetchAd('search-sidebar', locale),
   ]);
 
   return (
@@ -144,6 +153,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <Col xs={24} lg={6}>
           <Sidebar
             recentScripts={slimScriptListForSidebar(recentScripts.list)}
+            adInitialData={sidebarAd}
           />
         </Col>
       </Row>

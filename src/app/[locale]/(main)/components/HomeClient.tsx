@@ -29,6 +29,7 @@ import {
   SCRIPTCAT_INSTALL_GUIDE_URL,
 } from '@/lib/constants/browserStores';
 import AdSlot from '@/components/AdSlot';
+import type { AdSlotItem } from '@/lib/api/services/advertise';
 
 const { Title, Text } = Typography;
 
@@ -195,7 +196,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   );
 };
 
-export default function HomeClient() {
+interface HomeClientProps {
+  /** 服务端预取的 home-banner 广告数据（SSR）。 */
+  bannerAd?: { ad: AdSlotItem | null };
+}
+
+export default function HomeClient({ bannerAd }: HomeClientProps) {
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
   const t = useTranslations();
@@ -214,7 +220,7 @@ export default function HomeClient() {
       />
 
       <div className="max-w-6xl mx-auto px-4 mt-8">
-        <AdSlot slot="home-banner" variant="banner" />
+        <AdSlot slot="home-banner" variant="banner" initialData={bannerAd} />
       </div>
 
       {/* Features Section */}

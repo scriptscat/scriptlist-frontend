@@ -77,7 +77,34 @@
       "field_weight": "Weight",
       "field_range": "Schedule",
       "field_enabled": "Enabled",
-      "upload": "Upload image"
+      "upload": "Upload image",
+      "recommended_size": "Empfohlene Größe {size}",
+      "slots": {
+        "home-banner": {
+          "name": "Startseiten-Banner",
+          "position": "Zwischen Hero und dem Bereich „Warum ScriptCat\" auf der Startseite, volle Breite"
+        },
+        "search-feed-banner": {
+          "name": "Suchfeed-Banner",
+          "position": "Such-Browsing-Ansicht, zwischen Suchleiste und „Tägliche Auswahl\""
+        },
+        "search-rail-left": {
+          "name": "Linke Suchleiste",
+          "position": "Such-Browsing-Ansicht, linker Rand des zentrierten Inhalts; nur bei Bildschirmen ≥1650px"
+        },
+        "search-rail-right": {
+          "name": "Rechte Suchleiste",
+          "position": "Such-Browsing-Ansicht, rechter Rand des zentrierten Inhalts; nur bei Bildschirmen ≥1650px"
+        },
+        "search-sidebar": {
+          "name": "Such-Seitenleiste",
+          "position": "Seitenleiste der gefilterten Ergebnisse, über „Neueste Skripte\"; auf großen Bildschirmen"
+        },
+        "script-detail-sidebar": {
+          "name": "Detail-Seitenleiste",
+          "position": "Fixierte Seitenleiste der Skript-Detailseite, zwischen Statistik-Karte und Detail-Karte; auf großen Bildschirmen"
+        }
+      }
     },
     "ai_review": {
       "menu_title": "AI Review",
@@ -844,9 +871,9 @@
     "terms_of_service_title": "Nutzungsbedingungen",
     "privacy_policy_title": "Datenschutzrichtlinie",
     "disclaimer_title": "Haftungsausschluss",
-    "last_updated": "Letzte Aktualisierung: 6. März 2026",
+    "last_updated": "Letzte Aktualisierung: 19. Juni 2026",
     "tos_section1_title": "1. General",
-    "tos_section1_content": "Welcome to ScriptCat Script Hub (hereinafter referred to as 'the Platform'). The Platform is a user script sharing community that provides services for publishing, searching, and installing scripts. Please carefully read and understand the entire content of this Terms of Service before using the Platform. By registering or using the Platform, you agree to be bound by this agreement.",
+    "tos_section1_content": "Welcome to ScriptCat Script Hub (hereinafter referred to as 'the Platform'). The Platform is a user script sharing community that provides services for publishing, searching, and installing scripts, and may display advertisements on its pages. Please carefully read and understand the entire content of this Terms of Service before using the Platform. By registering or using the Platform, you agree to be bound by this agreement.",
     "tos_section2_title": "2. Account Registration and Usage",
     "tos_section2_content": "You must provide accurate information when registering and keep your account credentials secure. Each user may register only one account and may not transfer or lend the account to others. Losses resulting from improper account management are the user's responsibility. The Platform reserves the right to restrict or ban accounts suspected of violations.",
     "tos_section3_title": "3. Script Publishing Guidelines",
@@ -858,9 +885,9 @@
     "tos_section6_title": "6. Agreement Changes and Termination",
     "tos_section6_content": "The Platform reserves the right to modify this agreement as needed. Modified agreements will be published on the Platform. Your continued use of the Platform constitutes acceptance of the modified agreement. The Platform may terminate or suspend services within the scope permitted by law, with advance notice provided when possible. The Platform reserves the right of final interpretation of this agreement.",
     "pp_section1_title": "1. Information Collection",
-    "pp_section1_content": "We collect the following types of user information: registration information (email address, username); device and network information (IP address, browser type); usage data (script browsing, installation, ratings, etc.); session information used to maintain your login status.",
+    "pp_section1_content": "We collect the following types of user information: registration information (email address, username); device and network information (IP address, browser type); usage data (script browsing, installation, ratings, ad views and clicks, etc.); session information used to maintain your login status.",
     "pp_section2_title": "2. Information Usage",
-    "pp_section2_content": "We use the collected information for: providing and improving platform services; data statistics such as script installation counts; security measures (preventing malicious registration, abuse, etc.); sending service notifications such as verification codes and password resets. We will not sell your personal information to third parties.",
+    "pp_section2_content": "We use the collected information for: providing and improving platform services; data statistics such as script installation counts; security measures (preventing malicious registration, abuse, etc.); sending service notifications such as verification codes and password resets; displaying advertisements and measuring their performance, such as views and clicks (our ads are operated by the Platform itself and do not rely on third-party ad networks). We will not sell your personal information to third parties.",
     "pp_section3_title": "3. Third-Party Services",
     "pp_section3_content": "The Platform may use third-party services to provide certain features, such as third-party account login and human verification. When using third-party login, we only obtain the basic information you authorize (such as username, email, avatar). Data processing by third-party services is governed by their respective privacy policies.",
     "pp_section4_title": "4. Cookies and Sessions",
@@ -878,7 +905,7 @@
     "dc_section3_title": "3. Service Availability",
     "dc_section3_content": "The Platform provides services on an 'as-is' basis and does not guarantee uninterrupted, error-free service or that it will meet your specific needs. The Platform is not liable for service interruptions caused by system maintenance, upgrades, network failures, or force majeure. The Platform reserves the right to modify, suspend, or terminate some or all services at any time.",
     "dc_section4_title": "4. Limitation of Liability",
-    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption.",
+    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption. The Platform makes no warranties and assumes no responsibility for any goods or services promoted by advertisers through the Platform; any transaction between you and an advertiser is at your own discretion and risk.",
     "dc_section5_title": "5. Disclaimer Updates",
     "dc_section5_content": "We may update this Disclaimer in response to changes in applicable laws or product features. The updated disclaimer will be published on the Platform. We recommend that you review it periodically. Your continued use of the Platform constitutes acceptance of the updated disclaimer. The Platform reserves the right of final interpretation of this disclaimer."
   },
@@ -2224,7 +2251,8 @@
   },
   "ads": {
     "label": "Anzeige",
-    "close": "Schließen"
+    "sponsored": "Gesponsert",
+    "learnMore": "Mehr erfahren"
   },
   "utils": {
     "time_format": "DD.MM.YYYY"

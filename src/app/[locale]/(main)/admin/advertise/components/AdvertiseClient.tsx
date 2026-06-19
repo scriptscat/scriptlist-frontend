@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import {
+  Alert,
   Button,
   DatePicker,
   Form,
@@ -28,15 +29,8 @@ import type {
 import { resourceService } from '@/lib/api/services/resource';
 import { API_CONFIG } from '@/lib/api/config';
 import { APIError } from '@/types/api';
+import { AD_SLOT_KEYS, getAdSlotMeta } from '@/components/AdSlot/slots';
 
-const SLOTS = [
-  'home-banner',
-  'search-feed-banner',
-  'search-rail-left',
-  'search-rail-right',
-  'search-sidebar',
-  'script-detail-sidebar',
-];
 const LANGS = ['en', 'zh-CN', 'zh-TW', 'ru', 'ja', 'de', 'vi'];
 
 export default function AdvertiseClient() {
@@ -50,6 +44,10 @@ export default function AdvertiseClient() {
   const [lightUrl, setLightUrl] = useState('');
   const [darkUrl, setDarkUrl] = useState('');
   const [form] = Form.useForm();
+  const selectedSlot = Form.useWatch('slot_key', form) as string | undefined;
+  const selectedMeta = selectedSlot ? getAdSlotMeta(selectedSlot) : undefined;
+  const slotName = (key: string) => t(`slots.${key}.name`);
+  const slotPosition = (key: string) => t(`slots.${key}.position`);
 
   const fetchData = useCallback(
     async (p: number = page) => {
@@ -168,7 +166,20 @@ export default function AdvertiseClient() {
 
   const columns: ColumnsType<AdminAdvertise> = [
     { title: 'ID', dataIndex: 'id', width: 70 },
-    { title: t('col_slot'), dataIndex: 'slot_key' },
+    {
+      title: t('col_slot'),
+      dataIndex: 'slot_key',
+      render: (v: string) => {
+        const meta = getAdSlotMeta(v);
+        if (!meta) return v;
+        return (
+          <div>
+            <div>{slotName(v)}</div>
+            <div className="text-xs text-gray-400">{`${v} · ${meta.size}`}</div>
+          </div>
+        );
+      },
+    },
     { title: t('col_title'), dataIndex: 'title', ellipsis: true },
     {
       title: t('col_enabled'),
@@ -238,8 +249,29 @@ export default function AdvertiseClient() {
             label={t('field_slot')}
             rules={[{ required: true }]}
           >
-            <Select options={SLOTS.map((s) => ({ value: s, label: s }))} />
+            <Select
+              options={AD_SLOT_KEYS.map((s) => ({
+                value: s,
+                label: `${slotName(s)} · ${getAdSlotMeta(s)?.size ?? ''}`,
+              }))}
+            />
           </Form.Item>
+          {selectedMeta && selectedSlot && (
+            <Alert
+              type="info"
+              showIcon
+              className="!mb-4"
+              title={slotName(selectedSlot)}
+              description={
+                <div className="text-xs">
+                  <div>{slotPosition(selectedSlot)}</div>
+                  <div className="mt-1 font-medium">
+                    {t('recommended_size', { size: selectedMeta.size })}
+                  </div>
+                </div>
+              }
+            />
+          )}
           <Form.Item
             name="title"
             label={t('field_title')}
@@ -254,7 +286,15 @@ export default function AdvertiseClient() {
               options={LANGS.map((l) => ({ value: l, label: l }))}
             />
           </Form.Item>
-          <Form.Item label={t('field_light')} required>
+          <Form.Item
+            label={t('field_light')}
+            required
+            extra={
+              selectedMeta
+                ? t('recommended_size', { size: selectedMeta.size })
+                : undefined
+            }
+          >
             <Upload
               accept="image/*"
               showUploadList={false}
@@ -268,7 +308,14 @@ export default function AdvertiseClient() {
             </Upload>
             {lightUrl && <Input className="mt-2" value={lightUrl} readOnly />}
           </Form.Item>
-          <Form.Item label={t('field_dark')}>
+          <Form.Item
+            label={t('field_dark')}
+            extra={
+              selectedMeta
+                ? t('recommended_size', { size: selectedMeta.size })
+                : undefined
+            }
+          >
             <Upload
               accept="image/*"
               showUploadList={false}

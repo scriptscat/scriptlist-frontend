@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import type { ListData } from '@/types/api';
 import { apiClient } from '../client';
 
@@ -82,3 +83,25 @@ class AdvertiseService {
 }
 
 export const advertiseService = new AdvertiseService();
+
+/**
+ * 服务端预取某广告位的广告，供 SSR 注入 SWR fallbackData 使用。
+ * 用 React cache() 在同一次请求内对相同 (slot, lang) 去重。
+ */
+export const getAdCache = cache((slot: string, lang: string) =>
+  advertiseService.getAd(slot, lang),
+);
+
+/**
+ * SSR 安全预取：失败时返回 undefined（退化为客户端拉取），不阻断页面渲染。
+ */
+export async function prefetchAd(
+  slot: string,
+  lang: string,
+): Promise<{ ad: AdSlotItem | null } | undefined> {
+  try {
+    return await getAdCache(slot, lang);
+  } catch {
+    return undefined;
+  }
+}

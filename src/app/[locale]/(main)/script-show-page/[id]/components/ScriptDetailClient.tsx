@@ -61,6 +61,7 @@ import { aiReviewService } from '@/lib/api/services/aiReview';
 import { useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
 import AdSlot from '@/components/AdSlot';
+import type { AdSlotItem } from '@/lib/api/services/advertise';
 import ScriptVersionsClient from '../version/components/ScriptVersionsClient';
 import ScriptRatingClient from '../comment/components/ScriptRatingClient';
 import ScriptMetadataExplainer from './ScriptMetadataExplainer';
@@ -83,6 +84,8 @@ interface ScriptDetailClientProps {
   versionError?: string;
   initialScoreList: ListData<ScoreListItem> | null;
   initialRatingStats: RatingStats;
+  /** 服务端预取的 script-detail-sidebar 广告数据（SSR）。 */
+  sidebarAd?: { ad: AdSlotItem | null };
 }
 
 function CountChip({ value }: { value: number }) {
@@ -153,6 +156,7 @@ export default function ScriptDetailClient({
   versionError,
   initialScoreList,
   initialRatingStats,
+  sidebarAd,
 }: ScriptDetailClientProps) {
   const { script } = useScript();
   const scriptState = useScriptState();
@@ -1229,7 +1233,11 @@ export default function ScriptDetailClient({
               <div className="hidden lg:block">{statsCard}</div>
 
               <div className="hidden lg:block">
-                <AdSlot slot="script-detail-sidebar" variant="card" />
+                <AdSlot
+                  slot="script-detail-sidebar"
+                  variant="card"
+                  initialData={sidebarAd}
+                />
               </div>
 
               {/* 脚本详情 - 推到底部 */}

@@ -225,7 +225,7 @@ export default function ScriptSection({
   const rows = scripts.slice(4, 12);
 
   return (
-    <section className="mb-10">
+    <section className="mb-6">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-[10px] flex items-center justify-center !bg-[rgb(var(--bg-tertiary))] border !border-[rgb(var(--border-primary))]">
           <div

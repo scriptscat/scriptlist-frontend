@@ -4,12 +4,13 @@ import { headers } from 'next/headers';
 import ScriptDetailClient from './components/ScriptDetailClient';
 import { generateScriptMetadata } from './metadata';
 import scriptService from '@/lib/api/services/scripts';
+import { prefetchAd } from '@/lib/api/services/advertise';
 import { calculateRatingStats } from './comment/components/rating/utils';
 
 export default async function ScriptDetailPage({
   params,
 }: ScriptDetailPageProps) {
-  const { id } = await params;
+  const { id, locale } = await params;
   // Fetch content separately - React.cache deduplicates with layout's call
   const script = await scriptService.infoCached(id);
   const scriptId = parseInt(id, 10);
@@ -19,6 +20,7 @@ export default async function ScriptDetailPage({
     versionStatResult,
     scoreStateResult,
     scoreListResult,
+    sidebarAdResult,
   ] = await Promise.allSettled([
     scriptService.getVersionListCached(scriptId, { page: 1, size: 10 }),
     scriptService.getVersionStatCached(scriptId),
@@ -29,7 +31,11 @@ export default async function ScriptDetailPage({
       sort: 'createtime',
       order: 'desc',
     }),
+    prefetchAd('script-detail-sidebar', locale),
   ]);
+
+  const sidebarAd =
+    sidebarAdResult.status === 'fulfilled' ? sidebarAdResult.value : undefined;
 
   const initialVersionData =
     versionListResult.status === 'fulfilled' ? versionListResult.value : null;
@@ -77,6 +83,7 @@ export default async function ScriptDetailPage({
       versionError={versionError}
       initialScoreList={initialScoreList}
       initialRatingStats={ratingStats}
+      sidebarAd={sidebarAd}
     />
   );
 }
