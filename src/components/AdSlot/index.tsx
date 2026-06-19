@@ -7,7 +7,6 @@ import { useTheme } from '@/contexts/ThemeClientContext';
 import { useAd } from '@/lib/api/hooks/useAd';
 import type { AdSlotItem } from '@/lib/api/services/advertise';
 import { advertiseService } from '@/lib/api/services/advertise';
-import { API_CONFIG } from '@/lib/api/config';
 
 interface AdSlotProps {
   slot: string;
@@ -61,9 +60,13 @@ export default function AdSlot({
 
   if (img === failedSrc) return null;
 
-  const clickHref = `${API_CONFIG.baseURL}/advertise/${ad.id}/click?slot=${encodeURIComponent(
+  const clickHref = advertiseService.getClickHref(
+    ad.id,
     slot,
-  )}&lang=${encodeURIComponent(locale)}&theme=${encodeURIComponent(themeMode.theme)}`;
+    locale,
+    themeMode.theme,
+  );
+  const adTitle = ad.title.trim() || t('sponsored');
 
   // Sidebar 300×250 slots: wrap the creative in a GitHub-style card so it sits
   // consistently among the bordered cards around it. The disclosure + a
@@ -87,7 +90,7 @@ export default function AdSlot({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={img}
-              alt={ad.title}
+              alt={adTitle}
               className="bg-app-tertiary block h-[250px] w-full rounded-md object-contain"
               onError={() => setFailedSrc(img)}
             />
@@ -95,7 +98,7 @@ export default function AdSlot({
           <div className="border-app-primary flex items-center justify-between border-t px-3 py-2">
             <span className="text-app-tertiary flex items-center gap-1 text-[11px]">
               <Icon icon="mdi:bullhorn-outline" className="text-[13px]" />
-              {t('sponsored')}
+              {adTitle}
             </span>
             <span className="text-app-secondary text-[11px]">
               {t('learnMore')}
@@ -118,7 +121,7 @@ export default function AdSlot({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={img}
-          alt={ad.title}
+          alt={adTitle}
           className="block h-full w-full object-contain"
           onError={() => setFailedSrc(img)}
         />

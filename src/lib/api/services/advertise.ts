@@ -80,6 +80,15 @@ class AdvertiseService {
   async adminDelete(id: number) {
     return apiClient.delete<void>(`${this.basePath}/admin/${id}`);
   }
+
+  getClickHref(id: number, slot: string, lang: string, theme: string) {
+    const params = new URLSearchParams({
+      slot,
+      lang,
+      theme,
+    });
+    return `/api/v2${this.basePath}/${id}/click?${params.toString()}`;
+  }
 }
 
 export const advertiseService = new AdvertiseService();
