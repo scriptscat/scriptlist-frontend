@@ -67,6 +67,12 @@ export default function AdSlot({
     themeMode.theme,
   );
   const adTitle = ad.title.trim() || t('sponsored');
+  // Footer disclosure: always lead with the「广告」label, then the creative's
+  // title (「广告 · {title}」). When the ad has no title, fall back to the
+  // ready-made sponsored phrase so we don't double up the label.
+  const sponsoredLabel = ad.title.trim()
+    ? `${t('label')} · ${ad.title.trim()}`
+    : t('sponsored');
 
   // Sidebar 300×250 slots: wrap the creative in a GitHub-style card so it sits
   // consistently among the bordered cards around it. The disclosure + a
@@ -98,7 +104,7 @@ export default function AdSlot({
           <div className="border-app-primary flex items-center justify-between border-t px-3 py-2">
             <span className="text-app-tertiary flex items-center gap-1 text-[11px]">
               <Icon icon="mdi:bullhorn-outline" className="text-[13px]" />
-              {adTitle}
+              {sponsoredLabel}
             </span>
             <span className="text-app-secondary text-[11px]">
               {t('learnMore')}
