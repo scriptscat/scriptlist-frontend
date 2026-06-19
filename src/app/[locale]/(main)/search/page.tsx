@@ -12,6 +12,8 @@ import type { ScriptSearchRequest } from '../script-show-page/[id]/types';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
+import AdSlot from '@/components/AdSlot';
+import SideRails from '@/components/AdSlot/SideRails';
 
 interface SearchPageProps {
   searchParams: Promise<ScriptSearchRequest>;
@@ -65,10 +67,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     ]);
 
     return (
-      <PageIntlProvider namespaces={['script']}>
+      <PageIntlProvider namespaces={['script', 'ads']}>
         <div className="mb-10">
           <SearchBar />
         </div>
+        <div className="mb-10">
+          <AdSlot slot="search-feed-banner" variant="banner" />
+        </div>
+        <SideRails />
         <ScriptSection
           icon="mdi:sparkles"
           chipClass="bg-blue-100 dark:bg-blue-500/25"
@@ -125,7 +131,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   ]);
 
   return (
-    <PageIntlProvider namespaces={['script']}>
+    <PageIntlProvider namespaces={['script', 'ads']}>
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={18}>
           <ScriptList

@@ -28,6 +28,7 @@ import {
   getBrowserStores,
   SCRIPTCAT_INSTALL_GUIDE_URL,
 } from '@/lib/constants/browserStores';
+import AdSlot from '@/components/AdSlot';
 
 const { Title, Text } = Typography;
 
@@ -211,6 +212,10 @@ export default function HomeClient() {
         onSearchChange={setSearchValue}
         onSearch={handleSearch}
       />
+
+      <div className="max-w-6xl mx-auto px-4 mt-8">
+        <AdSlot slot="home-banner" variant="banner" />
+      </div>
 
       {/* Features Section */}
       <div className="py-10">

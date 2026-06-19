@@ -3,7 +3,6 @@ import type { ScriptDetailLayoutProps, ScriptState } from './types';
 import ScriptLayoutProvider from './components/ScriptLayoutProvider';
 import ScriptBreadcrumb from './components/ScriptBreadcrumb';
 import scriptService from '@/lib/api/services/scripts';
-import GoogleAdScript from '@/components/GoogleAd/script';
 import ErrorPage from '@/components/ErrorPage';
 import { APIError } from '@/types/api';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
@@ -48,8 +47,7 @@ export default async function ScriptDetailLayout({
   const { content: _content, ...scriptMeta } = script;
 
   return (
-    <PageIntlProvider namespaces={['script', 'admin']}>
-      <GoogleAdScript />
+    <PageIntlProvider namespaces={['script', 'admin', 'ads']}>
       <ScriptBreadcrumb scriptName={script.name} locale={locale} />
       <ScriptLayoutProvider script={scriptMeta} scriptState={scriptState}>
         {children}

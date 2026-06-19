@@ -13,6 +13,7 @@ import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
 import { Link } from '@/i18n/routing';
 import ScriptListCard from './ScriptListCard';
+import AdSlot from '@/components/AdSlot';
 import type { ScriptListItem } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 const { Text } = Typography;
@@ -65,6 +66,8 @@ export default function Sidebar({
           }
         ></Card.Meta>
       </Card>
+
+      <AdSlot slot="search-sidebar" variant="card" />
 
       {/* 最新脚本 */}
       <ScriptListCard

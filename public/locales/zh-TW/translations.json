@@ -35,6 +35,7 @@
       "title": "反饋管理"
     },
     "navigation": {
+      "advertise": "廣告管理",
       "feedbacks": "反饋管理",
       "oauth_apps": "OAuth 應用管理",
       "oidc_providers": "OIDC 提供商管理",
@@ -46,6 +47,37 @@
       "ai_review": "AI 審核",
       "ai_review_records": "審核記錄",
       "ai_review_fullscan": "全站掃描"
+    },
+    "advertise": {
+      "title": "廣告管理",
+      "action_create": "新建廣告",
+      "create_title": "新建廣告",
+      "edit_title": "編輯廣告",
+      "col_slot": "廣告位",
+      "col_title": "標題",
+      "col_enabled": "狀態",
+      "col_stats": "曝光/點擊 (CTR)",
+      "col_actions": "操作",
+      "action_edit": "編輯",
+      "action_delete": "刪除",
+      "delete_confirm": "確認刪除該廣告？",
+      "delete_success": "刪除成功",
+      "create_success": "創建成功",
+      "update_success": "更新成功",
+      "upload_success": "上傳成功",
+      "light_required": "請上傳淺色圖片",
+      "enabled": "啟用",
+      "disabled": "禁用",
+      "field_slot": "廣告位",
+      "field_title": "標題",
+      "field_languages": "投放語言（留空=全部）",
+      "field_light": "淺色圖片",
+      "field_dark": "深色圖片（可選）",
+      "field_link": "跳轉連結",
+      "field_weight": "權重",
+      "field_range": "排期",
+      "field_enabled": "啟用",
+      "upload": "上傳圖片"
     },
     "ai_review": {
       "menu_title": "AI 審核",
@@ -2267,6 +2299,10 @@
       "applied_at": "申請時間",
       "effective_at": "生效時間"
     }
+  },
+  "ads": {
+    "label": "廣告",
+    "close": "關閉"
   },
   "utils": {
     "time_format": "YYYY年MM月DD日"

@@ -3,7 +3,7 @@ import HomeClient from './components/HomeClient';
 
 export default function HomePage() {
   return (
-    <PageIntlProvider namespaces={['home', 'script']}>
+    <PageIntlProvider namespaces={['home', 'script', 'ads']}>
       <HomeClient />
     </PageIntlProvider>
   );

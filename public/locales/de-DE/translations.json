@@ -35,6 +35,7 @@
       "title": "Feedback-Verwaltung"
     },
     "navigation": {
+      "advertise": "Anzeigenverwaltung",
       "feedbacks": "Feedback-Verwaltung",
       "oauth_apps": "OAuth-App-Verwaltung",
       "oidc_providers": "OIDC-Anbieterverwaltung",
@@ -46,6 +47,37 @@
       "ai_review": "AI Review",
       "ai_review_records": "Review Records",
       "ai_review_fullscan": "Full Scan"
+    },
+    "advertise": {
+      "title": "Anzeigenverwaltung",
+      "action_create": "New Ad",
+      "create_title": "New Ad",
+      "edit_title": "Edit Ad",
+      "col_slot": "Slot",
+      "col_title": "Title",
+      "col_enabled": "Status",
+      "col_stats": "Impressions/Clicks (CTR)",
+      "col_actions": "Actions",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "delete_confirm": "Confirm delete this ad?",
+      "delete_success": "Deleted successfully",
+      "create_success": "Created successfully",
+      "update_success": "Updated successfully",
+      "upload_success": "Uploaded successfully",
+      "light_required": "Please upload a light-mode image",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "field_slot": "Ad Slot",
+      "field_title": "Title",
+      "field_languages": "Target languages (leave empty = all)",
+      "field_light": "Light-mode image",
+      "field_dark": "Dark-mode image (optional)",
+      "field_link": "Destination URL",
+      "field_weight": "Weight",
+      "field_range": "Schedule",
+      "field_enabled": "Enabled",
+      "upload": "Upload image"
     },
     "ai_review": {
       "menu_title": "AI Review",
@@ -2189,6 +2221,10 @@
       "applied_at": "Beantragt am",
       "effective_at": "Wirksam am"
     }
+  },
+  "ads": {
+    "label": "Anzeige",
+    "close": "Schließen"
   },
   "utils": {
     "time_format": "DD.MM.YYYY"

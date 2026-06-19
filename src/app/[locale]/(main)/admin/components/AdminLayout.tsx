@@ -8,6 +8,7 @@ import {
   DiffOutlined,
   LoginOutlined,
   NotificationOutlined,
+  SoundOutlined,
   UserOutlined,
   FileTextOutlined,
   MessageOutlined,
@@ -39,6 +40,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname.includes('/admin/feedbacks')) return 'feedbacks';
     if (pathname.includes('/admin/reports')) return 'reports';
     if (pathname.includes('/admin/scores')) return 'scores';
+    if (pathname.includes('/admin/advertise')) return 'advertise';
     if (pathname.includes('/admin/announcements')) return 'announcements';
     if (pathname.includes('/admin/system-config')) return 'system-config';
     if (pathname.includes('/admin/oidc-providers')) return 'oidc-providers';
@@ -110,6 +112,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       key: 'announcements',
       icon: <NotificationOutlined />,
       label: <Link href="/admin/announcements">{t('announcements')}</Link>,
+    },
+    {
+      key: 'advertise',
+      icon: <SoundOutlined />,
+      label: <Link href="/admin/advertise">{t('advertise')}</Link>,
     },
     {
       key: 'oauth-apps',

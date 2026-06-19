@@ -60,7 +60,7 @@ import { scriptService } from '@/lib/api/services/scripts';
 import { aiReviewService } from '@/lib/api/services/aiReview';
 import { useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
-import GoogleAd from '@/components/GoogleAd';
+import AdSlot from '@/components/AdSlot';
 import ScriptVersionsClient from '../version/components/ScriptVersionsClient';
 import ScriptRatingClient from '../comment/components/ScriptRatingClient';
 import ScriptMetadataExplainer from './ScriptMetadataExplainer';
@@ -906,8 +906,6 @@ export default function ScriptDetailClient({
                     </Space>
                   </div>
                 </div>
-
-                <GoogleAd className="mb-2" width="970px" height="100px" />
               </Card>
 
               {/* 移动端操作区：信息卡片下方展示安装/关注/收藏/更多（桌面端在右侧栏） */}
@@ -1229,6 +1227,10 @@ export default function ScriptDetailClient({
 
               {/* 数据统计卡（移动端已在描述上方展示，这里仅桌面端） */}
               <div className="hidden lg:block">{statsCard}</div>
+
+              <div className="hidden lg:block">
+                <AdSlot slot="script-detail-sidebar" variant="card" />
+              </div>
 
               {/* 脚本详情 - 推到底部 */}
               <div>
