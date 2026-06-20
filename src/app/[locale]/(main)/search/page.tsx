@@ -72,49 +72,51 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
     return (
       <PageIntlProvider namespaces={['script', 'ads']}>
-        <div className="mb-4">
-          <SearchBar />
-        </div>
-        <div className="mb-6">
-          <AdSlot
-            slot="search-feed-banner"
-            variant="banner"
-            initialData={feedBannerAd}
+        <div className="mx-auto w-full max-w-7xl min-[1500px]:max-w-[1240px] min-[1600px]:max-w-7xl">
+          <div className="mb-4">
+            <SearchBar />
+          </div>
+          <div className="mb-6">
+            <AdSlot
+              slot="search-feed-banner"
+              variant="banner"
+              initialData={feedBannerAd}
+            />
+          </div>
+          <SideRails />
+          <ScriptSection
+            icon="mdi:sparkles"
+            chipClass="bg-blue-100 dark:bg-blue-500/25"
+            iconClass="text-blue-500 dark:text-blue-400"
+            title={t('daily_pick.title')}
+            moreHref="/search?sort=daily_pick"
+            scripts={slimScriptList(dailyPick.list)}
+          />
+          <ScriptSection
+            icon="mdi:fire"
+            chipClass="bg-amber-100 dark:bg-amber-500/25"
+            iconClass="text-amber-500 dark:text-amber-400"
+            title={t('hot.title')}
+            moreHref="/search?sort=today_download"
+            scripts={slimScriptList(hot.list)}
+          />
+          <ScriptSection
+            icon="mdi:new-box"
+            chipClass="bg-emerald-100 dark:bg-emerald-500/25"
+            iconClass="text-emerald-500 dark:text-emerald-400"
+            title={t('new.title')}
+            moreHref="/search?sort=createtime"
+            scripts={slimScriptList(fresh.list)}
+          />
+          <ScriptSection
+            icon="mdi:trending-up"
+            chipClass="bg-purple-100 dark:bg-purple-500/25"
+            iconClass="text-purple-500 dark:text-purple-400"
+            title={t('longtail.title')}
+            moreHref="/search?sort=long_tail"
+            scripts={slimScriptList(longtail.list)}
           />
         </div>
-        <SideRails />
-        <ScriptSection
-          icon="mdi:sparkles"
-          chipClass="bg-blue-100 dark:bg-blue-500/25"
-          iconClass="text-blue-500 dark:text-blue-400"
-          title={t('daily_pick.title')}
-          moreHref="/search?sort=daily_pick"
-          scripts={slimScriptList(dailyPick.list)}
-        />
-        <ScriptSection
-          icon="mdi:fire"
-          chipClass="bg-amber-100 dark:bg-amber-500/25"
-          iconClass="text-amber-500 dark:text-amber-400"
-          title={t('hot.title')}
-          moreHref="/search?sort=today_download"
-          scripts={slimScriptList(hot.list)}
-        />
-        <ScriptSection
-          icon="mdi:new-box"
-          chipClass="bg-emerald-100 dark:bg-emerald-500/25"
-          iconClass="text-emerald-500 dark:text-emerald-400"
-          title={t('new.title')}
-          moreHref="/search?sort=createtime"
-          scripts={slimScriptList(fresh.list)}
-        />
-        <ScriptSection
-          icon="mdi:trending-up"
-          chipClass="bg-purple-100 dark:bg-purple-500/25"
-          iconClass="text-purple-500 dark:text-purple-400"
-          title={t('longtail.title')}
-          moreHref="/search?sort=long_tail"
-          scripts={slimScriptList(longtail.list)}
-        />
       </PageIntlProvider>
     );
   }
