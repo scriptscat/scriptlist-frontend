@@ -41,6 +41,28 @@ export interface AdminAdvertiseInput {
   end_at: number;
 }
 
+export interface AdDailyClick {
+  date: string; // YYYY-MM-DD
+  clicks: number;
+}
+
+export interface AdClickStats {
+  daily: AdDailyClick[];
+  total_clicks: number; // 区间内真实点击（非空 referer）
+  empty_referer_clicks: number; // 区间内被过滤的空 referer 点击
+  days: number; // 实际统计窗口天数
+}
+
+export interface AdClickItem {
+  id: number;
+  referer: string;
+  locale: string;
+  theme: string;
+  ip: string;
+  uid: number;
+  createtime: number;
+}
+
 class AdvertiseService {
   private readonly basePath = '/advertise';
 
@@ -61,12 +83,32 @@ class AdvertiseService {
     );
   }
 
-  async adminList(page: number = 1, size: number = 20, slot?: string) {
+  async adminList(
+    page: number = 1,
+    size: number = 20,
+    slot?: string,
+    enabled?: boolean,
+  ) {
     return apiClient.get<ListData<AdminAdvertise>>(`${this.basePath}/admin`, {
       page,
       size,
       slot,
+      enabled,
     });
+  }
+
+  async adminClickStats(id: number, days: number = 30) {
+    return apiClient.get<AdClickStats>(
+      `${this.basePath}/admin/${id}/click-stats`,
+      { days },
+    );
+  }
+
+  async adminClickList(id: number, page: number = 1, size: number = 20) {
+    return apiClient.get<ListData<AdClickItem>>(
+      `${this.basePath}/admin/${id}/clicks`,
+      { page, size },
+    );
   }
 
   async adminCreate(data: AdminAdvertiseInput) {
