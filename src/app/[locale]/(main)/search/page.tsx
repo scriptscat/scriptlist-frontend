@@ -72,7 +72,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
     return (
       <PageIntlProvider namespaces={['script', 'ads']}>
-        <div className="mx-auto w-full max-w-7xl min-[1500px]:max-w-[1240px] min-[1600px]:max-w-7xl">
+        <div className="mx-auto w-full max-w-7xl min-[1500px]:max-w-[1240px] min-[1632px]:max-w-7xl">
           <div className="mb-4">
             <SearchBar />
           </div>

@@ -134,6 +134,7 @@ export default function MainLayout({
     >
       <AnnouncementBanner />
       <Header
+        data-layout-header="true"
         style={{
           background: token.colorBgContainer,
           borderBottom: `1px solid ${token.colorBorder}`,

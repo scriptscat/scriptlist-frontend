@@ -73,6 +73,7 @@ export default function AnnouncementBanner() {
 
   return (
     <div
+      data-layout-announcement="true"
       className="w-full py-2 px-4 text-center text-white text-sm relative"
       style={{
         background: 'linear-gradient(135deg, #1890ff, #722ed1)',
