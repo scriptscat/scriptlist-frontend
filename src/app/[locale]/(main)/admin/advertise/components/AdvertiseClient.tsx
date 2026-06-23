@@ -448,18 +448,26 @@ export default function AdvertiseClient() {
                 : undefined
             }
           >
-            <Upload
-              accept="image/*"
-              showUploadList={false}
-              maxCount={1}
-              beforeUpload={(file) => {
-                upload(file as File, setLightUrl);
-                return false;
-              }}
-            >
-              <Button icon={<UploadOutlined />}>{t('upload')}</Button>
-            </Upload>
-            {lightUrl && <Input className="mt-2" value={lightUrl} readOnly />}
+            <div className="flex gap-2">
+              <Input
+                className="flex-1"
+                value={lightUrl}
+                onChange={(e) => setLightUrl(e.target.value)}
+                placeholder={t('image_url_placeholder')}
+                allowClear
+              />
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                maxCount={1}
+                beforeUpload={(file) => {
+                  upload(file as File, setLightUrl);
+                  return false;
+                }}
+              >
+                <Button icon={<UploadOutlined />}>{t('upload')}</Button>
+              </Upload>
+            </div>
           </Form.Item>
           <Form.Item
             label={t('field_dark')}
@@ -469,18 +477,26 @@ export default function AdvertiseClient() {
                 : undefined
             }
           >
-            <Upload
-              accept="image/*"
-              showUploadList={false}
-              maxCount={1}
-              beforeUpload={(file) => {
-                upload(file as File, setDarkUrl);
-                return false;
-              }}
-            >
-              <Button icon={<UploadOutlined />}>{t('upload')}</Button>
-            </Upload>
-            {darkUrl && <Input className="mt-2" value={darkUrl} readOnly />}
+            <div className="flex gap-2">
+              <Input
+                className="flex-1"
+                value={darkUrl}
+                onChange={(e) => setDarkUrl(e.target.value)}
+                placeholder={t('image_url_placeholder')}
+                allowClear
+              />
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                maxCount={1}
+                beforeUpload={(file) => {
+                  upload(file as File, setDarkUrl);
+                  return false;
+                }}
+              >
+                <Button icon={<UploadOutlined />}>{t('upload')}</Button>
+              </Upload>
+            </div>
           </Form.Item>
           <Form.Item
             name="link_url"
@@ -497,7 +513,24 @@ export default function AdvertiseClient() {
             <InputNumber min={1} className="!w-full" />
           </Form.Item>
           <Form.Item name="range" label={t('field_range')}>
-            <DatePicker.RangePicker showTime className="!w-full" />
+            <DatePicker.RangePicker
+              showTime
+              className="!w-full"
+              presets={[
+                {
+                  label: t('preset_week'),
+                  value: [dayjs(), dayjs().add(1, 'week')],
+                },
+                {
+                  label: t('preset_month'),
+                  value: [dayjs(), dayjs().add(1, 'month')],
+                },
+                {
+                  label: t('preset_quarter'),
+                  value: [dayjs(), dayjs().add(3, 'month')],
+                },
+              ]}
+            />
           </Form.Item>
           <Form.Item
             name="enabled"

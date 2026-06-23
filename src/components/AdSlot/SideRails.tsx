@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import AdSlot from './index';
 
-const MIN_WIDTH = 1500;
+const MIN_WIDTH = 1400;
+const CONTENT_WIDTH_ULTRA_COMPACT = 1180;
 const CONTENT_WIDTH_COMPACT = 1240;
 const CONTENT_WIDTH_DEFAULT = 1280;
+const COMPACT_LAYOUT_MIN_WIDTH = 1500;
 const DEFAULT_LAYOUT_MIN_WIDTH = 1632;
 const RAIL_WIDTH = 160;
 const RAIL_HEIGHT = 600;
@@ -34,9 +36,9 @@ function measureTopOffset() {
 }
 
 function getContentWidth(viewportWidth: number) {
-  return viewportWidth >= DEFAULT_LAYOUT_MIN_WIDTH
-    ? CONTENT_WIDTH_DEFAULT
-    : CONTENT_WIDTH_COMPACT;
+  if (viewportWidth >= DEFAULT_LAYOUT_MIN_WIDTH) return CONTENT_WIDTH_DEFAULT;
+  if (viewportWidth >= COMPACT_LAYOUT_MIN_WIDTH) return CONTENT_WIDTH_COMPACT;
+  return CONTENT_WIDTH_ULTRA_COMPACT;
 }
 
 function getRailGap(viewportWidth: number) {
@@ -105,7 +107,9 @@ export default function SideRails() {
   const scaledWidth = RAIL_WIDTH * layout.scale;
   const scaledHeight = RAIL_HEIGHT * layout.scale;
 
-  // 1500-1631px 时搜索浏览页内容区临时收窄到 1240px；空间足够后恢复原 1280px 和 16px 间隔。
+  // 内容区随视口分三档收窄，给两侧广告位让出空间：
+  // 1400-1499px → 1180px（最紧凑，广告按比例缩到约 0.64）；
+  // 1500-1631px → 1240px（紧凑，间隔 8px）；≥1632px → 1280px（默认，间隔 16px）。
   // 1500px 阈值用于覆盖 1536px 物理屏扣除浏览器边框后的常见 viewport。
   const railStyle = (side: 'left' | 'right'): CSSProperties => ({
     position: 'fixed',

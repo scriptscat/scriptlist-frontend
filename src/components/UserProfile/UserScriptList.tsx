@@ -3,8 +3,8 @@
 import { useState, useTransition } from 'react';
 import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { useLocale, useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/routing';
 import ScriptCard from '../Scriptlist/ScriptCard';
 import type {
   ScriptListItem,
@@ -28,7 +28,6 @@ export default function UserScriptList({
   initialFilters,
   initialPage = 1,
 }: UserScriptListProps) {
-  const locale = useLocale();
   const router = useRouter();
   const userT = useTranslations('user.script_list');
   const typeT = useTranslations('script.types');
@@ -63,7 +62,7 @@ export default function UserScriptList({
       if (page > 1) params.set('page', page.toString());
 
       const paramString = params.toString();
-      const newURL = `/${locale}/users/${userId}${paramString ? `?${paramString}` : ''}`;
+      const newURL = `/users/${userId}${paramString ? `?${paramString}` : ''}`;
       router.push(newURL);
     });
   };

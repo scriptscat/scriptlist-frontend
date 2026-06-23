@@ -1,4 +1,5 @@
 import EvidencePageClient from './components/EvidencePageClient';
+import { PageIntlProvider } from '@/components/PageIntlProvider';
 
 export default async function EvidencePage({
   params,
@@ -6,5 +7,9 @@ export default async function EvidencePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <EvidencePageClient pairID={Number(id)} />;
+  return (
+    <PageIntlProvider namespaces={['similarity', 'admin']}>
+      <EvidencePageClient pairID={Number(id)} />
+    </PageIntlProvider>
+  );
 }

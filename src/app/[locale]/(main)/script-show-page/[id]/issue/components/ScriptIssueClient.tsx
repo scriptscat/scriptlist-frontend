@@ -244,87 +244,92 @@ export default function ScriptIssueClient({
                   e.currentTarget.style.backgroundColor = 'transparent';
                 }}
               >
-                <Link
-                  href={`/script-show-page/${scriptId}/issue/${issue.id}`}
-                  target="_blank"
-                >
-                  <div className="flex items-start gap-3">
-                    {/* 主要内容 */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          {/* 标题和标签 */}
-                          <div className="mb-2">
-                            <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-start gap-3">
+                  {/* 主要内容 */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        {/* 标题和标签 */}
+                        <div className="mb-2">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Link
+                              href={`/script-show-page/${scriptId}/issue/${issue.id}`}
+                              target="_blank"
+                            >
                               <Typography.Title level={5}>
                                 {issue.title}
                               </Typography.Title>
-
-                              <Tag
-                                color={
-                                  issue.status === 1 ? 'warning' : 'success'
-                                }
-                                className="text-xs"
-                              >
-                                {issue.status === 1
-                                  ? t('status_pending')
-                                  : t('status_resolved')}
-                              </Tag>
-                            </div>
-                            <div className="mt-1 flex flex-wrap gap-1">
-                              {issue.labels.slice(0, 4).map((label) => (
-                                <IssueLabel key={label} label={label} />
-                              ))}
-                              {issue.labels.length > 4 && (
-                                <Tag color="default" className="text-xs">
-                                  {'+' + (issue.labels.length - 4)}
-                                </Tag>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* 用户和时间信息 */}
-                          <div
-                            className="flex items-center gap-1 text-sm"
-                            style={{ color: token.colorTextSecondary }}
-                          >
-                            <Link
-                              href={'/users/' + issue.user_id}
-                              target="_blank"
-                            >
-                              <div className="flex items-center gap-1">
-                                <Avatar size={20} src={issue.avatar} />
-                                <span>{issue.username}</span>
-                              </div>
                             </Link>
-                            <span>{'#' + issue.id}</span>
-                            <span>{semDateTime(issue.createtime)}</span>
-                            {issue.updatetime > 0 &&
-                              issue.updatetime !== issue.createtime && (
-                                <span>
-                                  {'• ' +
-                                    t('updated_at', {
-                                      time: semDateTime(issue.updatetime),
-                                    })}
-                                </span>
-                              )}
+
+                            <Tag
+                              color={issue.status === 1 ? 'warning' : 'success'}
+                              className="text-xs"
+                            >
+                              {issue.status === 1
+                                ? t('status_pending')
+                                : t('status_resolved')}
+                            </Tag>
+                          </div>
+                          <div className="mt-1 flex flex-wrap gap-1">
+                            {issue.labels.slice(0, 4).map((label) => (
+                              <IssueLabel key={label} label={label} />
+                            ))}
+                            {issue.labels.length > 4 && (
+                              <Tag color="default" className="text-xs">
+                                {'+' + (issue.labels.length - 4)}
+                              </Tag>
+                            )}
                           </div>
                         </div>
 
-                        {/* 右侧信息 */}
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                          <div
-                            className="flex items-center gap-1 text-base"
-                            style={{ color: token.colorTextSecondary }}
+                        {/* 用户和时间信息 */}
+                        <div
+                          className="flex items-center gap-1 text-sm"
+                          style={{ color: token.colorTextSecondary }}
+                        >
+                          <Link
+                            href={'/users/' + issue.user_id}
+                            target="_blank"
                           >
-                            <MessageOutlined style={{ fontSize: '16px' }} />
-                            <span>{issue.comment_count || 0}</span>
-                          </div>
+                            <span className="inline-flex items-center gap-1">
+                              <Avatar size={20} src={issue.avatar} />
+                              <span>{issue.username}</span>
+                            </span>
+                          </Link>
+                          <Link
+                            href={`/script-show-page/${scriptId}/issue/${issue.id}`}
+                            target="_blank"
+                          >
+                            <Tag className="!mr-0 cursor-pointer">
+                              {'#' + issue.id}
+                            </Tag>
+                          </Link>
+                          <span>{semDateTime(issue.createtime)}</span>
+                          {issue.updatetime > 0 &&
+                            issue.updatetime !== issue.createtime && (
+                              <span>
+                                {'• ' +
+                                  t('updated_at', {
+                                    time: semDateTime(issue.updatetime),
+                                  })}
+                              </span>
+                            )}
+                        </div>
+                      </div>
+
+                      {/* 右侧信息 */}
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <div
+                          className="flex items-center gap-1 text-base"
+                          style={{ color: token.colorTextSecondary }}
+                        >
+                          <MessageOutlined style={{ fontSize: '16px' }} />
+                          <span>{issue.comment_count || 0}</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               </div>
             ))}
           </div>

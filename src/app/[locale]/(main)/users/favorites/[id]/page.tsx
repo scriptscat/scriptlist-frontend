@@ -87,7 +87,7 @@ export default async function FolderDetailPage({
   }
 
   return (
-    <PageIntlProvider namespaces={['user']}>
+    <PageIntlProvider namespaces={['user', 'script']}>
       <div>
         <Suspense
           fallback={

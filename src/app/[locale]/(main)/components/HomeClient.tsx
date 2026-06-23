@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { MenuProps } from 'antd';
 import {
   Input,
@@ -27,6 +27,7 @@ import {
   detectBrowserStore,
   getBrowserStores,
   SCRIPTCAT_INSTALL_GUIDE_URL,
+  type BrowserStoreKey,
 } from '@/lib/constants/browserStores';
 import AdSlot from '@/components/AdSlot';
 import type { AdSlotItem } from '@/lib/api/services/advertise';
@@ -109,9 +110,18 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   onSearch,
 }) => {
   const t = useTranslations();
-  const currentBrowser = detectBrowserStore();
+  const [currentBrowser, setCurrentBrowser] =
+    useState<BrowserStoreKey>('default');
   const storeMap = getStoreMap(t);
   const browserStore = storeMap[currentBrowser] || storeMap.default;
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      setCurrentBrowser(detectBrowserStore());
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   // 构建商店列表
   const storeList: MenuProps['items'] = [];
