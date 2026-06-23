@@ -72,7 +72,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
     return (
       <PageIntlProvider namespaces={['script', 'ads']}>
-        <div className="mx-auto w-full max-w-7xl min-[1400px]:max-w-[1180px] min-[1500px]:max-w-[1240px] min-[1632px]:max-w-7xl">
+        {/* ≥1400px 时内容区流式收窄（每侧给侧栏广告预留约 160px），让广告完整展示且与内容拉开距离；详见 SideRails。 */}
+        <div
+          data-search-content
+          className="mx-auto w-full max-w-7xl min-[1400px]:max-w-[min(80rem,calc(100vw_-_320px))]"
+        >
           <div className="mb-4">
             <SearchBar />
           </div>

@@ -4,26 +4,33 @@ import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import AdSlot from './index';
 
-const MIN_WIDTH = 1400;
-const CONTENT_WIDTH_ULTRA_COMPACT = 1180;
-const CONTENT_WIDTH_COMPACT = 1240;
-const CONTENT_WIDTH_DEFAULT = 1280;
-const COMPACT_LAYOUT_MIN_WIDTH = 1500;
-const DEFAULT_LAYOUT_MIN_WIDTH = 1632;
 const RAIL_WIDTH = 160;
 const RAIL_HEIGHT = 600;
-const RAIL_GAP_COMPACT = 8;
-const RAIL_GAP_DEFAULT = 16;
-const MIN_SCALE = 0.625;
+const CONTENT_GAP = 24; // 广告与中间内容之间的距离
+const EDGE_GAP = 16; // 广告与屏幕边缘之间的距离
+const MIN_SCALE = 0.625; // 广告最小缩放：160px → 100px
 const TOP_SAFE_GAP = 16;
+// 一侧留白不足以放下（缩放后的）广告 + 两侧间距时，隐藏侧栏广告。
+const MIN_GUTTER = CONTENT_GAP + EDGE_GAP + RAIL_WIDTH * MIN_SCALE; // 140
+
+// 搜索浏览页的内容容器，宽度由 CSS 流式控制；这里实测它的真实位置来摆放广告。
+const CONTENT_SELECTOR = '[data-search-content]';
 
 interface RailLayout {
-  contentWidth: number;
-  gap: number;
+  visible: boolean;
+  contentLeft: number;
+  contentRight: number;
   scale: number;
   top: number;
-  wideEnough: boolean;
 }
+
+const HIDDEN_LAYOUT: RailLayout = {
+  visible: false,
+  contentLeft: 0,
+  contentRight: 0,
+  scale: 1,
+  top: 0,
+};
 
 function measureTopOffset() {
   const header = document.querySelector<HTMLElement>('[data-layout-header]');
@@ -35,27 +42,20 @@ function measureTopOffset() {
   return Math.max(headerBottom, announcementBottom, 0) + TOP_SAFE_GAP;
 }
 
-function getContentWidth(viewportWidth: number) {
-  if (viewportWidth >= DEFAULT_LAYOUT_MIN_WIDTH) return CONTENT_WIDTH_DEFAULT;
-  if (viewportWidth >= COMPACT_LAYOUT_MIN_WIDTH) return CONTENT_WIDTH_COMPACT;
-  return CONTENT_WIDTH_ULTRA_COMPACT;
-}
-
-function getRailGap(viewportWidth: number) {
-  return viewportWidth >= DEFAULT_LAYOUT_MIN_WIDTH
-    ? RAIL_GAP_DEFAULT
-    : RAIL_GAP_COMPACT;
-}
-
 function getRailLayout(): RailLayout {
+  const content = document.querySelector<HTMLElement>(CONTENT_SELECTOR);
+  if (!content) return HIDDEN_LAYOUT;
+
+  const rect = content.getBoundingClientRect();
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
-  const contentWidth = getContentWidth(viewportWidth);
-  const gap = getRailGap(viewportWidth);
-  const availableGutter = Math.max(0, (viewportWidth - contentWidth) / 2);
+
+  // 取较窄一侧的留白，保证左右广告对称且都放得下。
+  const gutter = Math.min(rect.left, viewportWidth - rect.right);
+  // 留白越小广告缩得越小，正好让出 CONTENT_GAP（距内容）和 EDGE_GAP（距边缘）。
   const scale = Math.min(
     1,
-    Math.max(MIN_SCALE, (availableGutter - gap) / RAIL_WIDTH),
+    Math.max(MIN_SCALE, (gutter - CONTENT_GAP - EDGE_GAP) / RAIL_WIDTH),
   );
   const scaledHeight = RAIL_HEIGHT * scale;
   const topOffset = measureTopOffset();
@@ -63,62 +63,50 @@ function getRailLayout(): RailLayout {
   const top = topOffset + Math.max(0, (availableHeight - scaledHeight) / 2);
 
   return {
-    contentWidth,
-    gap,
+    visible: gutter >= MIN_GUTTER,
+    contentLeft: rect.left,
+    contentRight: rect.right,
     scale,
     top,
-    wideEnough: viewportWidth >= MIN_WIDTH,
   };
 }
 
 export default function SideRails() {
-  const [layout, setLayout] = useState<RailLayout>({
-    contentWidth: CONTENT_WIDTH_DEFAULT,
-    gap: RAIL_GAP_DEFAULT,
-    scale: 1,
-    top: 0,
-    wideEnough: false,
-  });
+  const [layout, setLayout] = useState<RailLayout>(HIDDEN_LAYOUT);
 
   useEffect(() => {
-    const mq = window.matchMedia(`(min-width: ${MIN_WIDTH}px)`);
     const update = () => setLayout(getRailLayout());
     const resizeObserver = new ResizeObserver(update);
     const mutationObserver = new MutationObserver(update);
 
     update();
-    mq.addEventListener('change', update);
     window.addEventListener('resize', update);
     document
-      .querySelectorAll('[data-layout-header], [data-layout-announcement]')
+      .querySelectorAll(
+        `${CONTENT_SELECTOR}, [data-layout-header], [data-layout-announcement]`,
+      )
       .forEach((el) => resizeObserver.observe(el));
     mutationObserver.observe(document.body, { childList: true, subtree: true });
 
     return () => {
-      mq.removeEventListener('change', update);
       window.removeEventListener('resize', update);
       resizeObserver.disconnect();
       mutationObserver.disconnect();
     };
   }, []);
 
-  if (!layout.wideEnough) return null;
+  if (!layout.visible) return null;
 
   const scaledWidth = RAIL_WIDTH * layout.scale;
   const scaledHeight = RAIL_HEIGHT * layout.scale;
 
-  // 内容区随视口分三档收窄，给两侧广告位让出空间：
-  // 1400-1499px → 1180px（最紧凑，广告按比例缩到约 0.64）；
-  // 1500-1631px → 1240px（紧凑，间隔 8px）；≥1632px → 1280px（默认，间隔 16px）。
-  // 1500px 阈值用于覆盖 1536px 物理屏扣除浏览器边框后的常见 viewport。
-  const railStyle = (side: 'left' | 'right'): CSSProperties => ({
+  // 广告固定在内容两侧留白里：距内容 CONTENT_GAP，按留白缩放，并保证距屏幕边缘约 EDGE_GAP。
+  const railStyle = (left: number): CSSProperties => ({
     position: 'fixed',
     top: layout.top,
+    left,
     width: scaledWidth,
     height: scaledHeight,
-    [side]: `calc((100vw - ${layout.contentWidth}px) / 2 - ${
-      scaledWidth + layout.gap
-    }px)`,
     zIndex: 20,
   });
 
@@ -131,12 +119,12 @@ export default function SideRails() {
 
   return (
     <>
-      <div style={railStyle('left')}>
+      <div style={railStyle(layout.contentLeft - CONTENT_GAP - scaledWidth)}>
         <div style={innerStyle}>
           <AdSlot slot="search-rail-left" variant="rail" />
         </div>
       </div>
-      <div style={railStyle('right')}>
+      <div style={railStyle(layout.contentRight + CONTENT_GAP)}>
         <div style={innerStyle}>
           <AdSlot slot="search-rail-right" variant="rail" />
         </div>
