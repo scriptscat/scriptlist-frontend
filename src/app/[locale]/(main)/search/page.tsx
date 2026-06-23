@@ -15,6 +15,8 @@ import { PageIntlProvider } from '@/components/PageIntlProvider';
 import AdSlot from '@/components/AdSlot';
 import SideRails from '@/components/AdSlot/SideRails';
 import { prefetchAd } from '@/lib/api/services/advertise';
+import { redirect } from '@/i18n/routing';
+import { domainToASCII } from 'node:url';
 
 interface SearchPageProps {
   searchParams: Promise<ScriptSearchRequest>;
@@ -55,11 +57,49 @@ function isUnfilteredBrowse(params: ScriptSearchRequest): boolean {
   );
 }
 
+function isValidDomain(domain: string): boolean {
+  const value = domain.trim().replace(/\.$/, '');
+
+  if (
+    !value ||
+    value.includes('://') ||
+    value.includes('/') ||
+    value.includes(':') ||
+    value.includes('@')
+  ) {
+    return false;
+  }
+
+  const asciiDomain = domainToASCII(value);
+
+  if (!asciiDomain || asciiDomain.length > 253 || !asciiDomain.includes('.')) {
+    return false;
+  }
+
+  const labels = asciiDomain.split('.');
+  const topLevelDomain = labels[labels.length - 1];
+
+  if (/^\d+$/.test(topLevelDomain)) {
+    return false;
+  }
+
+  return labels.every((label) =>
+    /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i.test(label),
+  );
+}
+
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const resolvedSearchParams = await searchParams;
   const t = await getTranslations('script.section');
 
   const locale = await getLocale();
+
+  if (
+    resolvedSearchParams.domain &&
+    !isValidDomain(resolvedSearchParams.domain)
+  ) {
+    redirect({ href: '/search', locale });
+  }
 
   if (isUnfilteredBrowse(resolvedSearchParams)) {
     const [dailyPick, hot, fresh, longtail, feedBannerAd] = await Promise.all([
