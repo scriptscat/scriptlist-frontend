@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
 import CodeSearchClient from './components/CodeSearchClient';
+import { noindexRobots } from '@/lib/seo/robots';
 
 interface CodeSearchPageProps {
   searchParams: Promise<{
@@ -21,6 +22,7 @@ export async function generateMetadata({
     title: keyword
       ? `${keyword} - ${t('title')} | ScriptCat`
       : `${t('title')} | ScriptCat`,
+    robots: noindexRobots,
   };
 }
 

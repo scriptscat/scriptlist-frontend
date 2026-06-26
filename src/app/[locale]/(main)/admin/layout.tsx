@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
 import { userService } from '@/lib/api';
 import AdminRootLayoutClient from './components/AdminRootLayoutClient';
+export { noindexMetadata as metadata } from '@/lib/seo/robots';
 
 export default async function AdminRootLayout({
   children,

@@ -27,6 +27,7 @@ export async function generateMetadata({
 
   return {
     title: `${user.username} - ${t('user_homepage')}` + ' | ScriptCat',
+    description: t('user_homepage_description', { username: user.username }),
   };
 }
 

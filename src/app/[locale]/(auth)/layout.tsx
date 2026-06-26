@@ -1,5 +1,6 @@
 import AuthLayout from '@/components/layout/AuthLayout';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
+export { noindexMetadata as metadata } from '@/lib/seo/robots';
 
 export default function AuthGroupLayout({
   children,

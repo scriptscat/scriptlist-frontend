@@ -7,6 +7,7 @@ import { userService } from '@/lib/api';
 import { redirect } from '@/i18n/routing';
 import AuditLogList from './components/AuditLogList';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
+export { noindexMetadata as metadata } from '@/lib/seo/robots';
 
 interface PageProps {
   params: Promise<{

@@ -6,6 +6,7 @@ import { generateScriptMetadata } from '../metadata';
 import type { Metadata } from 'next';
 import type { ScriptDetailPageProps } from '../types';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
+import { noindexRobots } from '@/lib/seo/robots';
 
 interface ManageLayoutProps {
   children: ReactNode;
@@ -16,7 +17,8 @@ export async function generateMetadata({
   params,
 }: ScriptDetailPageProps): Promise<Metadata> {
   const { id, locale } = await params;
-  return generateScriptMetadata(id, 'manage', locale);
+  const metadata = await generateScriptMetadata(id, 'manage', locale);
+  return { ...metadata, robots: noindexRobots };
 }
 
 export default async function ManageLayout({
