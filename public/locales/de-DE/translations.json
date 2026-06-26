@@ -1652,7 +1652,13 @@
       },
       "search": {
         "page_number": "Seite {page}",
-        "title": "Skriptsuche"
+        "title": "Skriptsuche",
+        "domain_subject": "{domain}-Userscripts",
+        "description": "Durchsuche Tampermonkey/ScriptCat-Userscripts auf ScriptCat. Finde Skripte nach Website, Kategorie und Beliebtheit.",
+        "keyword_description": "Suche Userscripts zum Thema „{keyword}“ und entdecke Tampermonkey/ScriptCat-Skripte zur Installation auf ScriptCat.",
+        "domain_description": "Durchsuche Userscripts für {domain} (Tampermonkey/ScriptCat-Skripte). Entdecke und installiere weitere {domain}-Skripte auf ScriptCat.",
+        "domain_typed_subject": "{type} für {domain}",
+        "type_description": "Durchsuche den Bereich „{type}“ auf ScriptCat. Entdecke und installiere Tampermonkey/ScriptCat-Skripte."
       }
     },
     "navigation": {

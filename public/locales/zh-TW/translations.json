@@ -1730,7 +1730,13 @@
       },
       "search": {
         "page_number": "第 {page} 頁",
-        "title": "腳本搜尋"
+        "title": "腳本搜尋",
+        "domain_subject": "{domain} 相關腳本",
+        "description": "在 ScriptCat 搜尋油猴/腳本貓使用者腳本，依網站、分類、熱度找到適合你的腳本。",
+        "keyword_description": "搜尋與「{keyword}」相關的使用者腳本，在 ScriptCat 探索並安裝油猴/腳本貓腳本。",
+        "domain_description": "瀏覽適用於 {domain} 的使用者腳本（油猴/腳本貓腳本），在 ScriptCat 探索並安裝更多 {domain} 腳本。",
+        "domain_typed_subject": "{domain} 相關{type}",
+        "type_description": "在 ScriptCat 瀏覽全部{type}，探索並安裝油猴/腳本貓腳本。"
       }
     },
     "navigation": {

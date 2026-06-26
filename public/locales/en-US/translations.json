@@ -1818,7 +1818,13 @@
       },
       "search": {
         "page_number": "Page {page}",
-        "title": "Script Search"
+        "title": "Script Search",
+        "domain_subject": "{domain} Userscripts",
+        "description": "Search Tampermonkey/ScriptCat userscripts on ScriptCat. Discover scripts by website, category, and popularity.",
+        "keyword_description": "Search userscripts for {keyword} and discover Tampermonkey/ScriptCat scripts to install on ScriptCat.",
+        "domain_description": "Browse userscripts for {domain} (Tampermonkey/ScriptCat scripts). Discover and install more {domain} scripts on ScriptCat.",
+        "domain_typed_subject": "{domain} {type}",
+        "type_description": "Browse all {type} listings on ScriptCat. Discover and install Tampermonkey/ScriptCat scripts."
       }
     },
     "navigation": {

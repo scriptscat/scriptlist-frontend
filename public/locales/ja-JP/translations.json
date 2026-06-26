@@ -1724,7 +1724,13 @@
       },
       "search": {
         "page_number": "{page} ページ目",
-        "title": "スクリプト検索"
+        "title": "スクリプト検索",
+        "domain_subject": "{domain} 向けスクリプト",
+        "description": "ScriptCat で Tampermonkey/ScriptCat のユーザースクリプトを検索。サイト・カテゴリ・人気順であなたに合うスクリプトを見つけよう。",
+        "keyword_description": "「{keyword}」に関連するユーザースクリプトを検索。ScriptCat で Tampermonkey/ScriptCat スクリプトを見つけてインストールしよう。",
+        "domain_description": "{domain} 向けのユーザースクリプト（Tampermonkey/ScriptCat スクリプト）を閲覧。ScriptCat で {domain} 向けスクリプトをさらに見つけてインストールしよう。",
+        "domain_typed_subject": "{domain} 向け{type}",
+        "type_description": "ScriptCat ですべての{type}を閲覧。Tampermonkey/ScriptCat スクリプトを見つけてインストールしよう。"
       }
     },
     "navigation": {

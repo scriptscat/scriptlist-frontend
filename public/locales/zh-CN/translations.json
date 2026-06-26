@@ -1835,7 +1835,13 @@
       },
       "search": {
         "page_number": "第 {page} 页",
-        "title": "脚本搜索"
+        "title": "脚本搜索",
+        "domain_subject": "{domain} 相关脚本",
+        "description": "在 ScriptCat 搜索油猴/脚本猫用户脚本，按网站、分类、热度发现适合你的脚本。",
+        "keyword_description": "搜索与「{keyword}」相关的用户脚本，在 ScriptCat 发现并安装油猴/脚本猫脚本。",
+        "domain_description": "浏览适用于 {domain} 的用户脚本（油猴/脚本猫脚本），在 ScriptCat 发现并安装更多 {domain} 脚本。",
+        "domain_typed_subject": "{domain} 相关{type}",
+        "type_description": "在 ScriptCat 浏览全部{type}，发现并安装油猴/脚本猫脚本。"
       }
     },
     "navigation": {

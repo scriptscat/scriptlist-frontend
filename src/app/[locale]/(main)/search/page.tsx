@@ -26,22 +26,63 @@ export async function generateMetadata({
   searchParams,
 }: SearchPageProps): Promise<Metadata> {
   const t = await getTranslations('script.metadata');
+  const tType = await getTranslations('script.types');
   const resolvedSearchParams = await searchParams;
 
-  let title = t('search.title');
+  const keyword = resolvedSearchParams.keyword?.trim();
+  const rawDomain = resolvedSearchParams.domain?.trim();
+  const domain = rawDomain && isValidDomain(rawDomain) ? rawDomain : undefined;
+  const page = resolvedSearchParams.page;
 
-  if (resolvedSearchParams.keyword) {
-    title = `${resolvedSearchParams.keyword} - ${t('search.title')}`;
+  const typeKeyMap: Record<
+    number,
+    'script' | 'library' | 'background_script' | 'scheduled_script'
+  > = {
+    1: 'script',
+    2: 'library',
+    3: 'background_script',
+    4: 'scheduled_script',
+  };
+  const typeKey = typeKeyMap[Number(resolvedSearchParams.script_type)];
+  const typeLabel = typeKey ? tType(typeKey) : undefined;
+
+  // Build the most specific noun phrase from the domain/type facets,
+  // then let an explicit keyword lead it. This composes cleanly for every
+  // combination (keyword / domain / type and any mix of them).
+  let subject: string | undefined;
+  if (domain && typeLabel) {
+    subject = t('search.domain_typed_subject', { domain, type: typeLabel });
+  } else if (domain) {
+    subject = t('search.domain_subject', { domain });
+  } else if (typeLabel) {
+    subject = typeLabel;
   }
 
-  if (resolvedSearchParams.page && resolvedSearchParams.page > 1) {
-    title = `${title} - ${t('search.page_number', { page: resolvedSearchParams.page })}`;
+  if (keyword) {
+    subject = subject ? `${keyword} - ${subject}` : keyword;
+  }
+
+  // Description follows the primary facet (keyword > domain > type).
+  let description = t('search.description');
+  if (keyword) {
+    description = t('search.keyword_description', { keyword });
+  } else if (domain) {
+    description = t('search.domain_description', { domain });
+  } else if (typeLabel) {
+    description = t('search.type_description', { type: typeLabel });
+  }
+
+  let title = subject ? `${subject} - ${t('search.title')}` : t('search.title');
+
+  if (page && page > 1) {
+    title = `${title} - ${t('search.page_number', { page })}`;
   }
 
   title += ' | ScriptCat';
 
   return {
     title,
+    description,
   };
 }
 

@@ -1724,7 +1724,13 @@
       },
       "search": {
         "page_number": "Страница {page}",
-        "title": "Поиск скриптов"
+        "title": "Поиск скриптов",
+        "domain_subject": "Скрипты для {domain}",
+        "description": "Поиск пользовательских скриптов Tampermonkey/ScriptCat на ScriptCat. Находите скрипты по сайту, категории и популярности.",
+        "keyword_description": "Поиск пользовательских скриптов по запросу «{keyword}». Находите и устанавливайте скрипты Tampermonkey/ScriptCat на ScriptCat.",
+        "domain_description": "Просматривайте пользовательские скрипты для {domain} (скрипты Tampermonkey/ScriptCat). Находите и устанавливайте больше скриптов для {domain} на ScriptCat.",
+        "domain_typed_subject": "{type} для {domain}",
+        "type_description": "Просматривайте раздел «{type}» на ScriptCat. Находите и устанавливайте скрипты Tampermonkey/ScriptCat."
       }
     },
     "navigation": {
