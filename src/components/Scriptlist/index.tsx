@@ -161,7 +161,6 @@ export default function ScriptList({
               <Option value="2">{t('types.library')}</Option>
               <Option value="3">{t('types.background_script')}</Option>
               <Option value="4">{t('types.scheduled_script')}</Option>
-              <Option value="5">{t('types.subscribe_script')}</Option>
             </Select>
 
             <Select

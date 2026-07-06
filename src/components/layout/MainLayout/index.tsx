@@ -11,7 +11,7 @@ import {
   message,
 } from 'antd';
 const { Header, Content, Footer } = Layout;
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { languageMap, Link, usePathname, useRouter } from '@/i18n/routing';
 import { ThemeToggle } from './ThemeToggle';
 import UserAuth from '@/components/UserAuth';
@@ -37,6 +37,9 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const t = useTranslations('layout');
+  const locale = useLocale();
+  // 社区（油猴中文网）为纯中文论坛，仅对中文区（zh-CN / zh-TW）展示
+  const isChineseRegion = locale.startsWith('zh-');
   const { token } = theme.useToken();
   const pathname = usePathname();
   const router = useRouter();
@@ -264,10 +267,14 @@ export default function MainLayout({
           }}
         >
           <div>
-            <a href="https://bbs.tampermonkey.net.cn/" target="_blank">
-              {t('tampermonkey_chinese_website')}
-            </a>
-            <Divider type="vertical" />
+            {isChineseRegion && (
+              <>
+                <a href="https://bbs.tampermonkey.net.cn/" target="_blank">
+                  {t('tampermonkey_chinese_website')}
+                </a>
+                <Divider type="vertical" />
+              </>
+            )}
             <a href="https://docs.scriptcat.org/" target="_blank">
               {t('scriptcat')}
             </a>

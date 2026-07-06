@@ -1912,7 +1912,7 @@
         "quick_actions": "クイックアクション",
         "settings": "設定",
         "upload_script": "スクリプトをアップロード",
-        "visit_community": "<a>Tampermonkey中国サイト</a>へ"
+        "visit_community": "<a>Community</a>へ"
       },
       "sort": {
         "createtime": "最新公開",
