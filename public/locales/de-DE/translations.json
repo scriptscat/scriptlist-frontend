@@ -1901,7 +1901,8 @@
       "background_script": "Hintergrundskript",
       "library": "Skriptbibliothek",
       "scheduled_script": "Geplantes Skript",
-      "script": "Benutzerskript"
+      "script": "Benutzerskript",
+      "subscribe_script": "Abonnement-Skript"
     },
     "user_modal": {
       "add": "Hinzufügen",

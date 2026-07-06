@@ -1973,7 +1973,8 @@
       "background_script": "バックグラウンドスクリプト",
       "library": "スクリプトライブラリ",
       "scheduled_script": "スケジュールスクリプト",
-      "script": "ユーザースクリプト"
+      "script": "ユーザースクリプト",
+      "subscribe_script": "購読スクリプト"
     },
     "user_modal": {
       "add": "追加",

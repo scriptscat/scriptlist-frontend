@@ -1979,7 +1979,8 @@
       "background_script": "背景腳本",
       "library": "腳本庫",
       "scheduled_script": "定時腳本",
-      "script": "使用者腳本"
+      "script": "使用者腳本",
+      "subscribe_script": "訂閱腳本"
     },
     "user_modal": {
       "add": "新增",

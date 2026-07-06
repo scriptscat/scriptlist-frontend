@@ -36,12 +36,17 @@ export async function generateMetadata({
 
   const typeKeyMap: Record<
     number,
-    'script' | 'library' | 'background_script' | 'scheduled_script'
+    | 'script'
+    | 'library'
+    | 'background_script'
+    | 'scheduled_script'
+    | 'subscribe_script'
   > = {
     1: 'script',
     2: 'library',
     3: 'background_script',
     4: 'scheduled_script',
+    5: 'subscribe_script',
   };
   const typeKey = typeKeyMap[Number(resolvedSearchParams.script_type)];
   const typeLabel = typeKey ? tType(typeKey) : undefined;

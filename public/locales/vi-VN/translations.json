@@ -1707,7 +1707,8 @@
       "background_script": "Background Script",
       "library": "Script Library",
       "scheduled_script": "Scheduled Script",
-      "script": "Userscript"
+      "script": "Userscript",
+      "subscribe_script": "Subscribe Script"
     },
     "user_modal": {
       "add": "Add",

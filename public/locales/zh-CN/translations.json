@@ -2084,7 +2084,8 @@
       "background_script": "后台脚本",
       "library": "脚本库",
       "scheduled_script": "定时脚本",
-      "script": "用户脚本"
+      "script": "用户脚本",
+      "subscribe_script": "订阅脚本"
     },
     "user_modal": {
       "add": "添加",
