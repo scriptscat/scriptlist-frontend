@@ -2376,6 +2376,9 @@
     }
   },
   "errors": {
+    "api": {
+      "access_not_found": "權限不存在"
+    },
     "integrity_rejected": {
       "title": "程式碼未通過完整性檢查",
       "help": "如為誤判，請透過網站 FAQ 中的「管理員聯絡方式」申請豁免。"

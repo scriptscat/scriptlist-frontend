@@ -2298,6 +2298,9 @@
     }
   },
   "errors": {
+    "api": {
+      "access_not_found": "Berechtigung existiert nicht"
+    },
     "integrity_rejected": {
       "title": "Code Failed Integrity Check",
       "help": "If this is a false positive, please apply for an exemption via the admin contact listed in the site FAQ."

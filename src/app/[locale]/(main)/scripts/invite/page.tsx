@@ -4,7 +4,7 @@ export { noindexMetadata as metadata } from '@/lib/seo/robots';
 
 export default function InvitePage() {
   return (
-    <PageIntlProvider namespaces={['script']}>
+    <PageIntlProvider namespaces={['script', 'errors']}>
       <InviteConfirm />
     </PageIntlProvider>
   );

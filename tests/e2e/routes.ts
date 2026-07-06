@@ -16,6 +16,7 @@ const routeQueries: Record<string, string> = {
   '/oauth/authorize':
     '?client_id=e2e-client&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&response_type=code&scope=read',
   '/script-show-page/1/diff': '?version1=1.0.0&version2=1.0.1',
+  '/script/invite': '?code=e2e-invite',
   '/scripts/invite': '?code=e2e-invite',
 };
 

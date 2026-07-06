@@ -30,6 +30,7 @@ import { scriptAccessService } from '@/lib/api/services/scripts';
 import type { InviteMessage } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 import type { APIError } from '@/types/api';
 import { Link } from '@/i18n/routing';
+import { ErrorCodes } from '@/lib/api/errorCodes';
 
 const { Title, Text } = Typography;
 
@@ -38,6 +39,7 @@ export default function InviteConfirm() {
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
   const t = useTranslations('script.invite');
+  const tApiError = useTranslations('errors.api');
 
   // 获取邀请信息
   const {
@@ -61,13 +63,18 @@ export default function InviteConfirm() {
 
   // 错误处理
   if (error) {
+    const errorMessage =
+      error.code === ErrorCodes.AccessNotFound
+        ? tApiError('access_not_found')
+        : error.message || t('check_invite_link');
+
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <Card className="w-full max-w-md shadow-lg">
           <Result
             status="error"
             title={t('get_invite_info_failed')}
-            subTitle={error.message || t('check_invite_link')}
+            subTitle={errorMessage}
             extra={[
               <Button
                 type="primary"

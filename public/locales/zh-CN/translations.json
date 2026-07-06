@@ -2510,6 +2510,9 @@
     }
   },
   "errors": {
+    "api": {
+      "access_not_found": "权限不存在"
+    },
     "integrity_rejected": {
       "title": "代码未通过完整性检查",
       "help": "如为误判，请通过站点 FAQ 的「管理员联系方式」申请豁免。"
