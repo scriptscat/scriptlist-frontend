@@ -1650,7 +1650,6 @@
       },
       "sort": {
         "createtime": "Mới nhất",
-        "daily_pick": "Lựa chọn hàng ngày",
         "score": "Đánh giá cao nhất",
         "today_download": "Xu hướng",
         "total_download": "Tải nhiều nhất"
@@ -1658,9 +1657,6 @@
     },
     "section": {
       "more": "Xem thêm",
-      "daily_pick": {
-        "title": "Lựa chọn hàng ngày"
-      },
       "hot": {
         "title": "Phổ biến"
       },

@@ -153,7 +153,7 @@ export interface ScriptSearchRequest extends PageRequest {
     | 'createtime'
     | 'updatetime'
     | 'today_update'
-    | 'daily_pick'
+    | 'trending'
     | 'long_tail';
 }
 

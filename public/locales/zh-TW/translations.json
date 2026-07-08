@@ -1922,7 +1922,6 @@
       },
       "sort": {
         "createtime": "最新發佈",
-        "daily_pick": "每日精選",
         "score": "評分最高",
         "today_download": "熱度排序",
         "total_download": "下載最多"
@@ -1930,9 +1929,6 @@
     },
     "section": {
       "more": "更多",
-      "daily_pick": {
-        "title": "每日精選"
-      },
       "hot": {
         "title": "熱門腳本"
       },

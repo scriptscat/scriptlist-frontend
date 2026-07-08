@@ -1844,7 +1844,6 @@
       },
       "sort": {
         "createtime": "Neueste Veröffentlichung",
-        "daily_pick": "Tägliche Auswahl",
         "score": "Höchste Bewertung",
         "today_download": "Nach Popularität sortieren",
         "total_download": "Meist heruntergeladen"
@@ -1852,9 +1851,6 @@
     },
     "section": {
       "more": "Mehr",
-      "daily_pick": {
-        "title": "Tägliche Auswahl"
-      },
       "hot": {
         "title": "Beliebte Skripte"
       },

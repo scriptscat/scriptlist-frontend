@@ -143,9 +143,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   if (isUnfilteredBrowse(resolvedSearchParams)) {
-    const [dailyPick, hot, fresh, longtail, feedBannerAd] = await Promise.all([
-      scriptService.search({ size: 12, page: 1, sort: 'daily_pick' }),
-      scriptService.search({ size: 12, page: 1, sort: 'today_download' }),
+    const [trending, fresh, longtail, feedBannerAd] = await Promise.all([
+      scriptService.search({ size: 12, page: 1, sort: 'trending' }),
       scriptService.search({ size: 12, page: 1, sort: 'createtime' }),
       scriptService.search({ size: 12, page: 1, sort: 'long_tail' }),
       prefetchAd('search-feed-banner', locale),
@@ -170,20 +169,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </div>
           <SideRails />
           <ScriptSection
-            icon="mdi:sparkles"
-            chipClass="bg-blue-100 dark:bg-blue-500/25"
-            iconClass="text-blue-500 dark:text-blue-400"
-            title={t('daily_pick.title')}
-            moreHref="/search?sort=daily_pick"
-            scripts={slimScriptList(dailyPick.list)}
-          />
-          <ScriptSection
             icon="mdi:fire"
             chipClass="bg-amber-100 dark:bg-amber-500/25"
             iconClass="text-amber-500 dark:text-amber-400"
             title={t('hot.title')}
             moreHref="/search?sort=today_download"
-            scripts={slimScriptList(hot.list)}
+            scripts={slimScriptList(trending.list)}
           />
           <ScriptSection
             icon="mdi:new-box"

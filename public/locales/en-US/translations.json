@@ -2010,7 +2010,6 @@
       },
       "sort": {
         "createtime": "Latest",
-        "daily_pick": "Daily Picks",
         "score": "Highest Rated",
         "today_download": "Trending",
         "total_download": "Most Downloaded"
@@ -2018,9 +2017,6 @@
     },
     "section": {
       "more": "More",
-      "daily_pick": {
-        "title": "Daily Picks"
-      },
       "hot": {
         "title": "Trending"
       },

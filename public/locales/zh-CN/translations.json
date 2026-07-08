@@ -2027,7 +2027,6 @@
       },
       "sort": {
         "createtime": "最新发布",
-        "daily_pick": "每日精选",
         "score": "评分最高",
         "today_download": "热度排序",
         "total_download": "下载最多"
@@ -2035,9 +2034,6 @@
     },
     "section": {
       "more": "更多",
-      "daily_pick": {
-        "title": "每日精选"
-      },
       "hot": {
         "title": "热门脚本"
       },

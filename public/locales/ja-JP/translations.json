@@ -1916,7 +1916,6 @@
       },
       "sort": {
         "createtime": "最新公開",
-        "daily_pick": "今日のおすすめ",
         "score": "評価順",
         "today_download": "人気順",
         "total_download": "ダウンロード数順"
@@ -1924,9 +1923,6 @@
     },
     "section": {
       "more": "もっと見る",
-      "daily_pick": {
-        "title": "今日のおすすめ"
-      },
       "hot": {
         "title": "人気のスクリプト"
       },
