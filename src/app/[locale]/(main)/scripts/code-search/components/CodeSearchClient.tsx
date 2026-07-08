@@ -125,7 +125,10 @@ function CodeSnippet({ snippet }: { snippet: string }) {
 }
 
 function CodeSearchResult({ item }: { item: ScriptCodeSearchItem }) {
-  const snippets = item.snippets.slice(0, 3);
+  // 命中但无高亮片段(如匹配位置超出后端 highlight 分析上限)时后端可能返回
+  // null/缺失,直接 .slice 会抛 TypeError 崩溃整页。兜底成空数组,优雅降级为
+  // 只展示脚本名/描述/作者、不显示代码片段。
+  const snippets = (item.snippets ?? []).slice(0, 3);
 
   return (
     <article className="rounded-lg border border-app-primary bg-app-elevated p-4 transition-colors hover:border-[rgb(var(--primary-400))]">
