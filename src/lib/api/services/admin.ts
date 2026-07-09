@@ -83,6 +83,7 @@ export interface FeedbackItem {
   reason: string;
   content: string;
   client_ip: string;
+  ip_location: string;
   createtime: number;
 }
 
