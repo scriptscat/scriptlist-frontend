@@ -12,9 +12,11 @@ import {
   Tooltip,
 } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
 import type { FeedbackItem } from '@/lib/api/services/admin';
+import { copyToClipboard } from '@/lib/utils/utils';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 
@@ -70,6 +72,12 @@ export default function FeedbacksClient() {
     }
   };
 
+  const handleCopy = (val: string) => {
+    copyToClipboard(val)
+      .then(() => message.success(t('copy_success')))
+      .catch(() => message.error(t('copy_failed')));
+  };
+
   const reasonLabel = (code: string) =>
     (REASON_CODES as readonly string[]).includes(code)
       ? t(`reasons.${code}`)
@@ -92,12 +100,22 @@ export default function FeedbacksClient() {
       title: t('col_content'),
       dataIndex: 'content',
       key: 'content',
-      ellipsis: { showTitle: false },
       render: (val: string) =>
         val ? (
-          <Tooltip title={val}>
-            <span>{val}</span>
-          </Tooltip>
+          <div className="flex items-center gap-1">
+            <Tooltip title={val}>
+              <span className="block max-w-xs truncate">{val}</span>
+            </Tooltip>
+            <Tooltip title={t('copy')}>
+              <Button
+                type="text"
+                size="small"
+                className="flex-none"
+                icon={<CopyOutlined />}
+                onClick={() => handleCopy(val)}
+              />
+            </Tooltip>
+          </div>
         ) : (
           <span className="text-neutral-400">—</span>
         ),
@@ -106,6 +124,14 @@ export default function FeedbacksClient() {
       title: t('col_client_ip'),
       dataIndex: 'client_ip',
       key: 'client_ip',
+      render: (ip: string, record: FeedbackItem) =>
+        record.ip_location ? (
+          <Tooltip title={record.ip_location}>
+            <span>{ip}</span>
+          </Tooltip>
+        ) : (
+          ip
+        ),
     },
     {
       title: t('col_createtime'),
