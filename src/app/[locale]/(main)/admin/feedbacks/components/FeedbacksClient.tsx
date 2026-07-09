@@ -1,25 +1,46 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Button, message, Popconfirm, Table } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Input,
+  message,
+  Popconfirm,
+  Select,
+  Table,
+  Tooltip,
+} from 'antd';
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
 import type { FeedbackItem } from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 
+const REASON_CODES = ['bug', 'unused', 'feature', 'better', 'other'] as const;
+
 export default function FeedbacksClient() {
   const t = useTranslations('admin.feedbacks');
   const [data, setData] = useState<FeedbackItem[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState('');
+  const [reason, setReason] = useState('');
+  const [hideEmpty, setHideEmpty] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const fetchData = useCallback(
     async (p: number = page) => {
       setLoading(true);
       try {
-        const resp = await adminService.listFeedbacks(p);
+        const resp = await adminService.listFeedbacks(
+          p,
+          20,
+          keyword || undefined,
+          reason || undefined,
+          hideEmpty || undefined,
+        );
         setData(resp.list || []);
         setTotal(resp.total);
       } catch (err) {
@@ -30,12 +51,12 @@ export default function FeedbacksClient() {
         setLoading(false);
       }
     },
-    [page],
+    [page, keyword, reason, hideEmpty],
   );
 
   useEffect(() => {
     fetchData(page);
-  }, [page]);
+  }, [page, keyword, reason, hideEmpty]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -49,6 +70,11 @@ export default function FeedbacksClient() {
     }
   };
 
+  const reasonLabel = (code: string) =>
+    (REASON_CODES as readonly string[]).includes(code)
+      ? t(`reasons.${code}`)
+      : code;
+
   const columns: ColumnsType<FeedbackItem> = [
     {
       title: 'ID',
@@ -60,12 +86,21 @@ export default function FeedbacksClient() {
       title: t('col_reason'),
       dataIndex: 'reason',
       key: 'reason',
+      render: (code: string) => reasonLabel(code),
     },
     {
       title: t('col_content'),
       dataIndex: 'content',
       key: 'content',
-      ellipsis: true,
+      ellipsis: { showTitle: false },
+      render: (val: string) =>
+        val ? (
+          <Tooltip title={val}>
+            <span>{val}</span>
+          </Tooltip>
+        ) : (
+          <span className="text-neutral-400">—</span>
+        ),
     },
     {
       title: t('col_client_ip'),
@@ -98,6 +133,43 @@ export default function FeedbacksClient() {
     <div>
       <div className="mb-4">
         <h2 className="text-lg font-semibold">{t('title')}</h2>
+      </div>
+
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <Input.Search
+          className="w-60"
+          allowClear
+          placeholder={t('search_content_placeholder')}
+          defaultValue={keyword}
+          onSearch={(value) => {
+            setKeyword(value);
+            setPage(1);
+          }}
+        />
+        <Select
+          className="w-40"
+          value={reason}
+          onChange={(value) => {
+            setReason(value);
+            setPage(1);
+          }}
+          options={[
+            { value: '', label: t('reason_filter_all') },
+            ...REASON_CODES.map((code) => ({
+              value: code,
+              label: t(`reasons.${code}`),
+            })),
+          ]}
+        />
+        <Checkbox
+          checked={hideEmpty}
+          onChange={(e: CheckboxChangeEvent) => {
+            setHideEmpty(e.target.checked);
+            setPage(1);
+          }}
+        >
+          {t('hide_empty')}
+        </Checkbox>
       </div>
 
       <Table
