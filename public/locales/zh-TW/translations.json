@@ -123,6 +123,10 @@
           "name": "搜尋頁側欄",
           "position": "搜尋/篩選結果頁側欄,「最新腳本」上方,大螢幕顯示"
         },
+        "search-results-banner": {
+          "name": "搜尋結果頁橫幅",
+          "position": "搜尋/篩選結果頁,篩選卡片與結果列表之間,整寬顯示"
+        },
         "script-detail-sidebar": {
           "name": "詳情頁側欄",
           "position": "腳本詳情頁右側 sticky 側欄,資料統計卡與腳本詳情卡之間,大螢幕顯示"

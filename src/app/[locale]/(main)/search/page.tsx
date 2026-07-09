@@ -207,15 +207,17 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     script_type: resolvedSearchParams.script_type || 0,
   };
 
-  const [scripts, recentScripts, sidebarAd] = await Promise.all([
-    scriptService.search(apiParams),
-    scriptService.search({
-      size: 10,
-      page: 1,
-      sort: 'createtime',
-    }),
-    prefetchAd('search-sidebar', locale),
-  ]);
+  const [scripts, recentScripts, sidebarAd, resultsBannerAd] =
+    await Promise.all([
+      scriptService.search(apiParams),
+      scriptService.search({
+        size: 10,
+        page: 1,
+        sort: 'createtime',
+      }),
+      prefetchAd('search-sidebar', locale),
+      prefetchAd('search-results-banner', locale),
+    ]);
 
   return (
     <PageIntlProvider namespaces={['script', 'ads']}>
@@ -226,6 +228,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             totalCount={scripts.total}
             initialFilters={apiParams}
             initialPage={apiParams.page || 1}
+            banner={
+              <AdSlot
+                slot="search-results-banner"
+                variant="banner"
+                initialData={resultsBannerAd}
+                className="mb-6"
+              />
+            }
           />
         </Col>
         <Col xs={24} lg={6}>

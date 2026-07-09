@@ -151,6 +151,10 @@
           "name": "Search sidebar",
           "position": "Filtered results sidebar, above \"Latest scripts\"; large screens"
         },
+        "search-results-banner": {
+          "name": "Search results banner",
+          "position": "Search/filter results page, between the filter card and the result list; full width"
+        },
         "script-detail-sidebar": {
           "name": "Detail sidebar",
           "position": "Script detail sticky sidebar, between the stats card and the detail card; large screens"

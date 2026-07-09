@@ -123,6 +123,10 @@
           "name": "Such-Seitenleiste",
           "position": "Seitenleiste der gefilterten Ergebnisse, über „Neueste Skripte\"; auf großen Bildschirmen"
         },
+        "search-results-banner": {
+          "name": "Banner der Suchergebnisse",
+          "position": "Such-/Filterergebnisseite, zwischen Filterkarte und Ergebnisliste; volle Breite"
+        },
         "script-detail-sidebar": {
           "name": "Detail-Seitenleiste",
           "position": "Fixierte Seitenleiste der Skript-Detailseite, zwischen Statistik-Karte und Detail-Karte; auf großen Bildschirmen"

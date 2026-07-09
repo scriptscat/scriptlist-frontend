@@ -152,6 +152,10 @@
           "name": "搜索页侧栏",
           "position": "搜索/筛选结果页侧栏,「最新脚本」上方,大屏显示"
         },
+        "search-results-banner": {
+          "name": "搜索结果页横幅",
+          "position": "搜索/筛选结果页,筛选卡片与结果列表之间,整宽展示"
+        },
         "script-detail-sidebar": {
           "name": "详情页侧栏",
           "position": "脚本详情页右侧 sticky 侧栏,数据统计卡与脚本详情卡之间,大屏显示"

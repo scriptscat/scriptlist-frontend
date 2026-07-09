@@ -120,6 +120,10 @@
           "name": "Thanh bên trang tìm kiếm",
           "position": "Thanh bên kết quả lọc, phía trên „Tập lệnh mới nhất\"; trên màn hình lớn"
         },
+        "search-results-banner": {
+          "name": "Banner trang kết quả tìm kiếm",
+          "position": "Trang kết quả tìm kiếm/lọc, giữa thẻ bộ lọc và danh sách kết quả; toàn chiều rộng"
+        },
         "script-detail-sidebar": {
           "name": "Thanh bên trang chi tiết",
           "position": "Thanh bên cố định của trang chi tiết tập lệnh, giữa thẻ thống kê và thẻ chi tiết; trên màn hình lớn"

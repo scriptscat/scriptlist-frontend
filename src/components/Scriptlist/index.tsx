@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import type { ReactNode } from 'react';
 import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
@@ -23,6 +24,8 @@ interface ScriptListProps {
   totalCount: number;
   initialFilters?: ScriptSearchRequest;
   initialPage?: number;
+  /** 可选插槽，渲染在筛选卡片与结果列表之间（如广告横幅）。无内容时不占位。 */
+  banner?: ReactNode;
 }
 
 export default function ScriptList({
@@ -30,6 +33,7 @@ export default function ScriptList({
   totalCount,
   initialFilters,
   initialPage = 1,
+  banner,
 }: ScriptListProps) {
   const router = useRouter();
   const t = useTranslations('script');
@@ -181,6 +185,9 @@ export default function ScriptList({
           </Space>
         </Space>
       </Card>
+
+      {/* 广告等插槽：筛选卡片与结果列表之间，无内容时不占位 */}
+      {banner}
 
       {/* 脚本列表 */}
       <Spin spinning={isPending} tip={t('search.loading')}>
