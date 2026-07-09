@@ -32,6 +32,16 @@
       "col_reason": "原因",
       "delete_confirm": "確定要刪除此反饋吗？",
       "delete_success": "反饋刪除成功",
+      "hide_empty": "隱藏空內容回饋",
+      "reason_filter_all": "全部原因",
+      "reasons": {
+        "better": "找到了更好的替代品",
+        "bug": "遇到了錯誤或 bug",
+        "feature": "缺少我需要的功能",
+        "other": "其他原因",
+        "unused": "不再需要腳本貓"
+      },
+      "search_content_placeholder": "搜尋內容",
       "title": "反饋管理"
     },
     "navigation": {

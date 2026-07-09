@@ -32,6 +32,16 @@
       "col_reason": "Grund",
       "delete_confirm": "Möchten Sie dieses Feedback wirklich löschen?",
       "delete_success": "Feedback erfolgreich gelöscht",
+      "hide_empty": "Leere Inhalte ausblenden",
+      "reason_filter_all": "Alle Gründe",
+      "reasons": {
+        "better": "Bessere Alternative gefunden",
+        "bug": "Fehler oder Bug aufgetreten",
+        "feature": "Eine benötigte Funktion fehlt",
+        "other": "Sonstiges",
+        "unused": "ScriptCat nicht mehr benötigt"
+      },
+      "search_content_placeholder": "Inhalt suchen",
       "title": "Feedback-Verwaltung"
     },
     "navigation": {

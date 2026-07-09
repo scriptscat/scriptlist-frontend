@@ -359,10 +359,19 @@ class AdminService {
   }
 
   // Feedback Management
-  async listFeedbacks(page: number = 1, size: number = 20) {
+  async listFeedbacks(
+    page: number = 1,
+    size: number = 20,
+    keyword?: string,
+    reason?: string,
+    hideEmpty?: boolean,
+  ) {
     return apiClient.get<ListData<FeedbackItem>>(`${this.basePath}/feedbacks`, {
       page,
       size,
+      ...(keyword ? { keyword } : {}),
+      ...(reason ? { reason } : {}),
+      ...(hideEmpty ? { hide_empty: true } : {}),
     });
   }
 

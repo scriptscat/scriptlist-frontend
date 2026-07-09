@@ -32,6 +32,16 @@
       "col_reason": "理由",
       "delete_confirm": "このフィードバックを削除してもよろしいですか？",
       "delete_success": "フィードバックを削除しました",
+      "hide_empty": "内容が空の項目を隠す",
+      "reason_filter_all": "すべての理由",
+      "reasons": {
+        "better": "より良い代替品を見つけた",
+        "bug": "エラーやバグが発生した",
+        "feature": "必要な機能が不足している",
+        "other": "その他",
+        "unused": "ScriptCat が不要になった"
+      },
+      "search_content_placeholder": "内容を検索",
       "title": "フィードバック管理"
     },
     "navigation": {

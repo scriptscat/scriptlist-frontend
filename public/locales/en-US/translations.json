@@ -58,6 +58,16 @@
       "col_reason": "Reason",
       "delete_confirm": "Are you sure you want to delete this feedback?",
       "delete_success": "Feedback deleted successfully",
+      "hide_empty": "Hide empty content",
+      "reason_filter_all": "All reasons",
+      "reasons": {
+        "better": "Found a better alternative",
+        "bug": "Encountered an error or bug",
+        "feature": "Missing a feature I need",
+        "other": "Other",
+        "unused": "No longer need ScriptCat"
+      },
+      "search_content_placeholder": "Search content",
       "title": "Feedback Management"
     },
     "navigation": {
