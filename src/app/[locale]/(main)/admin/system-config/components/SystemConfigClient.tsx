@@ -167,6 +167,7 @@ export default function SystemConfigClient() {
   ];
   const ucenterKeys = ['ucenter.api', 'ucenter.key', 'ucenter.appid'];
   const aiKeys = ['ai.base_url', 'ai.api_key', 'ai.model', 'ai.system_prompt'];
+  const githubKeys = ['github.pat'];
 
   const migrateRunning = migrateStatus?.running ?? false;
   const migrateTotal = migrateStatus?.total ?? 0;
@@ -357,6 +358,25 @@ export default function SystemConfigClient() {
               type="primary"
               loading={saving === 'ai'}
               onClick={() => handleSave('ai', aiKeys)}
+            >
+              {t('save_button')}
+            </Button>
+          </Form>
+        </Card>
+
+        {/* GitHub */}
+        <Card title={t('github_title')} size="small">
+          <Form layout="vertical">
+            <Form.Item label={t('github_pat')} extra={t('github_pat_hint')}>
+              <Input.Password
+                value={configs['github.pat'] || ''}
+                onChange={(e) => updateConfig('github.pat', e.target.value)}
+              />
+            </Form.Item>
+            <Button
+              type="primary"
+              loading={saving === 'github'}
+              onClick={() => handleSave('github', githubKeys)}
             >
               {t('save_button')}
             </Button>
