@@ -10,7 +10,7 @@
       "col_title": "Title",
       "col_level": "Level",
       "col_status": "Status",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_actions": "Actions",
       "field_title": "Title",
       "field_content": "Content",
@@ -54,7 +54,7 @@
       "col_actions": "Actions",
       "col_client_ip": "Client IP",
       "col_content": "Content",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_reason": "Reason",
       "copy": "Copy",
       "copy_failed": "Copy failed",
@@ -351,7 +351,7 @@
     "scores": {
       "action_delete": "Delete",
       "col_actions": "Actions",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_message": "Review",
       "col_score": "Score",
       "col_script": "Script",
@@ -389,7 +389,7 @@
       "action_visibility": "Change Visibility",
       "col_actions": "Actions",
       "col_author": "Author",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_name": "Script Name",
       "col_score_multiplier": "Score Multiplier",
       "col_status": "Status",
@@ -477,7 +477,7 @@
       "ban_success": "User banned successfully",
       "col_actions": "Actions",
       "col_admin_level": "Admin Level",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_email": "Email",
       "col_register_ip": "Register IP",
       "col_status": "Status",
@@ -1173,7 +1173,7 @@
         "background_script_desc": "It runs in the browser background",
         "browser_compatibility": "Browser Compatibility",
         "browser_support": "Supports {browser}",
-        "created_at": "Created at {time}",
+        "created_at": "Created {time}",
         "feature_notice": "Feature Notice",
         "forum_post": "Forum Post",
         "library_description": "This is a library used by userscripts, you can reference it directly in your scripts.",
@@ -1187,7 +1187,7 @@
         "scheduled_script_tooltip": "This script supports scheduled execution and will run automatically at set intervals: {cron}",
         "script_details": "Script Details",
         "tag_label": "Tag: {name}",
-        "updated_at": "Updated at {time}"
+        "updated_at": "Updated {time}"
       },
       "install": {
         "install_check_failed": "Failed to check script installation status",
@@ -1506,7 +1506,7 @@
         "comment_placeholder": "Please enter comment content...",
         "copy_link": "Copy Link",
         "copy_success": "Copied successfully",
-        "created_at": "Created at {time}",
+        "created_at": "Created {time}",
         "delete_failed": "Delete failed",
         "delete_success": "Deleted successfully",
         "feedback_closed": "Feedback closed",
@@ -1567,7 +1567,7 @@
       "search_placeholder": "Search issues...",
       "status_pending": "Pending",
       "status_resolved": "Resolved",
-      "updated_at": "Updated at {time}"
+      "updated_at": "Updated {time}"
     },
     "manage": {
       "access": {
@@ -1963,7 +1963,7 @@
       "content_required": "Please enter report content",
       "copy_link": "Copy Link",
       "copy_success": "Copied successfully",
-      "created_at": "Created at {time}",
+      "created_at": "Created {time}",
       "delete_failed": "Delete failed",
       "delete_success": "Deleted successfully",
       "detail_description": "View report details for {scriptName}",
