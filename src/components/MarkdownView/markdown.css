@@ -22,3 +22,12 @@ object {
     display: inline;
     vertical-align: baseline;
 }
+
+/* 让内联 <img height> 属性生效（issue #64）。Tailwind preflight 的
+   `img { height: auto }` 位于 @layer base，会盖过 HTML height 属性；
+   必须同处 @layer base 内用 revert-layer 才能回滚该层、露出属性值。 */
+@layer base {
+    .markdown-body img[height] {
+        height: revert-layer;
+    }
+}
