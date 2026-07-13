@@ -287,7 +287,9 @@ export function parseMarkdown(content: string, baseUrl = ''): string {
     marked(content, {
       gfm: true,
       renderer: createRenderer(baseUrl),
-      breaks: true,
+      // Match GitHub Flavored Markdown: a soft source newline is whitespace,
+      // while explicit Markdown/HTML hard breaks still render as <br>.
+      breaks: false,
     }) as string,
     {
       whiteList: xssWhiteList,
