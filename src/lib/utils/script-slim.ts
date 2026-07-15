@@ -5,12 +5,13 @@ import type {
 
 /**
  * 裁剪 meta_json，只保留列表渲染需要的字段：
- * - icon / iconURL（图标）— 值一律替换为后端代理 URL
+ * - icon / iconURL（图标）— 值一律替换为后端代理 URL，无原始值留存
  * - name:* / description:*（i18n 本地化名称和描述）
  *
  * 图标原始值(尤其是 base64 data URI)可能很大，而前端只需要知道「有没有
  * 图标」——URL 由 ScriptUtils.icon 从 id 重建。所以这里无条件替换掉原始值，
- * SSR 载荷里不再出现内联图标数据。
+ * SSR 载荷里不再出现内联图标数据。同时删除未被选中的图标字段，防止另一个
+ * 字段的原始值被序列化到 HTML 中。
  *
  * @param scriptId 脚本 ID，用于生成 icon 代理 URL
  * @param updatetime 脚本更新时间，附加到 icon URL 用于缓存失效
@@ -39,6 +40,9 @@ function slimMetaJson(
     if (iconKey && slim[iconKey]?.[0]) {
       const t = updatetime ? `?t=${updatetime}` : '';
       slim[iconKey] = [`/api/v2/scripts/${scriptId}/icon${t}`];
+      // Delete the other icon field to avoid serializing raw icon data (which may be large base64)
+      const otherIconKey = iconKey === 'icon' ? 'iconURL' : 'icon';
+      delete slim[otherIconKey];
     }
   }
 
