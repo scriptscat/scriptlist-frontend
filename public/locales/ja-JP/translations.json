@@ -995,7 +995,7 @@
       "library_tooltip": "これはスクリプトが使用するライブラリです",
       "share_link": "共有リンク",
       "tag_label": "タグ：{name}",
-      "today_installs": "今日 +{count}",
+      "today_installs": "24時間 +{count}",
       "view_detail": "詳細を見る"
     },
     "detail": {
@@ -1222,7 +1222,7 @@
       "stats": {
         "current_version": "現在のバージョン",
         "title": "統計",
-        "today_installs": "今日の新規",
+        "today_installs": "直近24時間",
         "total_installs": "総インストール数",
         "user_rating": "ユーザー評価"
       },

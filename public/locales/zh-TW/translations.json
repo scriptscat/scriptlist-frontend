@@ -1001,7 +1001,7 @@
       "library_tooltip": "這是一個腳本使用的庫",
       "share_link": "分享連結",
       "tag_label": "標籤：{name}",
-      "today_installs": "今日 +{count}",
+      "today_installs": "24 小時 +{count}",
       "view_detail": "查看詳情"
     },
     "detail": {
@@ -1228,7 +1228,7 @@
       "stats": {
         "current_version": "目前版本",
         "title": "資料統計",
-        "today_installs": "今日新增",
+        "today_installs": "近 24 小時",
         "total_installs": "總安裝量",
         "user_rating": "使用者評分"
       },

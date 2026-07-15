@@ -995,7 +995,7 @@
       "library_tooltip": "Это библиотека, используемая скриптом",
       "share_link": "Поделиться ссылкой",
       "tag_label": "Тег: {name}",
-      "today_installs": "Сегодня +{count}",
+      "today_installs": "24 ч. +{count}",
       "view_detail": "Подробней"
     },
     "detail": {
@@ -1222,7 +1222,7 @@
       "stats": {
         "current_version": "Текущая версия",
         "title": "Статистика",
-        "today_installs": "Сегодня добавлено",
+        "today_installs": "За 24 часа",
         "total_installs": "Общее количество установок",
         "user_rating": "Рейтинг пользователей"
       },

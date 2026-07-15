@@ -995,7 +995,7 @@
       "library_tooltip": "Dies ist eine Bibliothek, die von Skripten verwendet wird",
       "share_link": "Link teilen",
       "tag_label": "Tag: {name}",
-      "today_installs": "Heute +{count}",
+      "today_installs": "24 Std. +{count}",
       "view_detail": "Details anzeigen"
     },
     "detail": {
@@ -1150,7 +1150,7 @@
       "stats": {
         "current_version": "Aktuelle Version",
         "title": "Statistiken",
-        "today_installs": "Heute neu",
+        "today_installs": "Letzte 24 Std.",
         "total_installs": "Gesamtinstallationen",
         "user_rating": "Benutzerbewertung"
       },

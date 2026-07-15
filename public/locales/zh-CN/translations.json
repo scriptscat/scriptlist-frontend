@@ -1106,7 +1106,7 @@
       "library_tooltip": "这是一个脚本使用的库",
       "share_link": "分享链接",
       "tag_label": "标签：{name}",
-      "today_installs": "今日 +{count}",
+      "today_installs": "24 小时 +{count}",
       "view_detail": "查看详情"
     },
     "detail": {
@@ -1333,7 +1333,7 @@
       "stats": {
         "current_version": "当前版本",
         "title": "数据统计",
-        "today_installs": "今日新增",
+        "today_installs": "近 24 小时",
         "total_installs": "总安装量",
         "user_rating": "用户评分"
       },

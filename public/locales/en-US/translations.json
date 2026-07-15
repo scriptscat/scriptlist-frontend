@@ -1089,7 +1089,7 @@
       "library_tooltip": "This is a library used by scripts",
       "share_link": "Share Link",
       "tag_label": "Tag: {name}",
-      "today_installs": "Today +{count}",
+      "today_installs": "24h +{count}",
       "view_detail": "View Details"
     },
     "detail": {
@@ -1316,7 +1316,7 @@
       "stats": {
         "current_version": "Current Version",
         "title": "Statistics",
-        "today_installs": "Today's New",
+        "today_installs": "Last 24h",
         "total_installs": "Total Installs",
         "user_rating": "User Rating"
       },
