@@ -5,8 +5,12 @@ import type {
 
 /**
  * 裁剪 meta_json，只保留列表渲染需要的字段：
- * - icon / iconURL（图标）— base64 data URI 替换为后端代理 URL
+ * - icon / iconURL（图标）— 值一律替换为后端代理 URL
  * - name:* / description:*（i18n 本地化名称和描述）
+ *
+ * 图标原始值(尤其是 base64 data URI)可能很大，而前端只需要知道「有没有
+ * 图标」——URL 由 ScriptUtils.icon 从 id 重建。所以这里无条件替换掉原始值，
+ * SSR 载荷里不再出现内联图标数据。
  *
  * @param scriptId 脚本 ID，用于生成 icon 代理 URL
  * @param updatetime 脚本更新时间，附加到 icon URL 用于缓存失效
@@ -30,10 +34,9 @@ function slimMetaJson(
     }
   }
 
-  // 将 base64 data URI 替换为后端 icon 代理接口 URL
   if (scriptId) {
     const iconKey = slim['icon'] ? 'icon' : slim['iconURL'] ? 'iconURL' : null;
-    if (iconKey && slim[iconKey]?.[0]?.startsWith('data:')) {
+    if (iconKey && slim[iconKey]?.[0]) {
       const t = updatetime ? `?t=${updatetime}` : '';
       slim[iconKey] = [`/api/v2/scripts/${scriptId}/icon${t}`];
     }
@@ -83,6 +86,7 @@ export function slimScriptList(list: ScriptListItem[]): ScriptListItem[] {
 /**
  * 裁剪 ScriptListItem 列表，只保留侧边栏 ScriptListCard 所需的最少字段：
  * - id, name（标题和链接）
+ * - updatetime（ScriptUtils.icon 重建代理 URL 时的缓存失效参数）
  * - script.meta_json 中的 icon/iconURL（图标）
  */
 export function slimScriptListForSidebar(
@@ -93,6 +97,7 @@ export function slimScriptListForSidebar(
       ({
         id: item.id,
         name: item.name,
+        updatetime: item.updatetime,
         script: {
           meta_json: slimMetaJson(
             item.script.meta_json,

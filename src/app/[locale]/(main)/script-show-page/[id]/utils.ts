@@ -17,6 +17,15 @@ const superBrowserMap: Record<string, Browser> = {
   opera: { logo: 'opera', name: 'Opera' },
 };
 
+/**
+ * ScriptUtils.icon 需要的最小结构。ScriptListItem 与 ScriptInfo 都满足它。
+ */
+export type ScriptIconSource = {
+  id: number;
+  updatetime?: number;
+  script?: { meta_json?: Metadata };
+};
+
 export class ScriptUtils {
   static score(score: number, score_num: number): string | null {
     return score ? (score / score_num / 10).toFixed(1) : null;
@@ -63,14 +72,23 @@ export class ScriptUtils {
     });
   }
 
-  static icon(metaJson: MetaJson): string | null {
-    if (metaJson.icon) {
-      return metaJson.icon[0];
+  /**
+   * 返回图标的后端代理 URL。
+   *
+   * 图标一律经 /api/v2/scripts/:id/icon 走 scriptcat.org,浏览器不再直连
+   * 作者填的第三方站点。meta_json 里的原始值只用来判断「有没有图标」,
+   * URL 由 id + updatetime 重建,因此对已 slim 过的数据同样幂等。
+   *
+   * 没有图标时返回 null,调用方渲染兜底(不必请求接口)。
+   */
+  static icon(script: ScriptIconSource): string | null {
+    const meta = script.script?.meta_json;
+    const raw = meta?.icon?.[0] ?? meta?.iconURL?.[0];
+    if (!raw) {
+      return null;
     }
-    if (metaJson.iconURL) {
-      return metaJson.iconURL[0];
-    }
-    return null;
+    const t = script.updatetime ? `?t=${script.updatetime}` : '';
+    return `/api/v2/scripts/${script.id}/icon${t}`;
   }
 
   static getRibbonText(publicStatus: number): string | null {
