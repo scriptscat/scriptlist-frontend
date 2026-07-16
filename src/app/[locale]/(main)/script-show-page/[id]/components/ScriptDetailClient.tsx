@@ -23,7 +23,6 @@ import {
 } from 'antd';
 import {
   DownloadOutlined,
-  CodeOutlined,
   CalendarOutlined,
   UserOutlined,
   MoreOutlined,
@@ -61,6 +60,7 @@ import { aiReviewService } from '@/lib/api/services/aiReview';
 import { useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
 import AdSlot from '@/components/AdSlot';
+import ScriptIcon from '@/components/ScriptIcon';
 import type { AdSlotItem } from '@/lib/api/services/advertise';
 import ScriptVersionsClient from '../version/components/ScriptVersionsClient';
 import ScriptRatingClient from '../comment/components/ScriptRatingClient';
@@ -555,11 +555,6 @@ export default function ScriptDetailClient({
     }
   }, [quickFavorite, t]);
 
-  const icon = useMemo(
-    () => ScriptUtils.icon(script.script.meta_json),
-    [script.script.meta_json],
-  );
-
   const handleCopyRequireClick = useCallback(() => {
     const requireLink =
       requireSelect == 1
@@ -824,12 +819,12 @@ export default function ScriptDetailClient({
               {/* 头部卡：头像/标题/作者·创建于/简介/标签 */}
               <Card className="shadow-sm">
                 <div className="flex items-start space-x-4">
-                  <Avatar
-                    shape="square"
+                  <ScriptIcon
+                    script={script}
+                    name={scriptName}
                     size={64}
-                    src={icon}
-                    icon={<CodeOutlined />}
-                    className="bg-gradient-to-br from-blue-500 to-purple-600"
+                    radius={8}
+                    textSize="text-2xl"
                   />
                   <div className="flex-1 ml-2">
                     <Title level={2} className="mb-2">
