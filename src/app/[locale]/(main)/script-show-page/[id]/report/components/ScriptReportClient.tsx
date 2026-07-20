@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import React, { useState, useCallback } from 'react';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import type { Report } from '@/lib/api/services/scripts/report';
 import { useSemDateTime } from '@/lib/utils/semdate';
@@ -47,6 +47,7 @@ export default function ScriptReportClient({
   const { token } = theme.useToken();
   const semDateTime = useSemDateTime();
   const t = useTranslations('script.report');
+  const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [currentStatus, setCurrentStatus] = useState<
@@ -105,6 +106,13 @@ export default function ScriptReportClient({
       syncURL(page, currentStatus);
     },
     [syncURL, currentStatus],
+  );
+
+  const openReport = useCallback(
+    (reportId: number) => {
+      router.push(`/script-show-page/${scriptId}/report/${reportId}`);
+    },
+    [router, scriptId],
   );
 
   return (
@@ -174,6 +182,8 @@ export default function ScriptReportClient({
               <div
                 key={report.id}
                 className="px-4 py-3 transition-colors duration-200 cursor-pointer"
+                role="link"
+                tabIndex={0}
                 style={{
                   borderBottom:
                     index !== displayReports.length - 1
@@ -186,6 +196,16 @@ export default function ScriptReportClient({
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                onClick={(event) => {
+                  if ((event.target as HTMLElement).closest('a')) return;
+                  openReport(report.id);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openReport(report.id);
+                  }
                 }}
               >
                 <div className="flex items-start gap-3">
