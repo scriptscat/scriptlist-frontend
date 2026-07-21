@@ -8,6 +8,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { formatNumber, useSemDateTime } from '@/lib/utils/semdate';
 import { ScriptUtils } from '@/app/[locale]/(main)/script-show-page/[id]/utils';
 import type { ScriptListItem } from '@/app/[locale]/(main)/script-show-page/[id]/types';
+import ScriptIcon from '@/components/ScriptIcon';
 
 const { Text } = Typography;
 
@@ -18,70 +19,6 @@ interface ScriptSectionProps {
   title: string;
   moreHref: string;
   scripts: ScriptListItem[];
-}
-
-const iconPalette = [
-  '#ef4444',
-  '#f97316',
-  '#f59e0b',
-  '#10b981',
-  '#06b6d4',
-  '#0d6efd',
-  '#8b5cf6',
-  '#a855f7',
-  '#ec4899',
-  '#0891b2',
-];
-
-function pickIconColor(id: number): string {
-  return iconPalette[Math.abs(id) % iconPalette.length];
-}
-
-function firstChar(name: string): string {
-  const trimmed = name.trim();
-  if (!trimmed) return '?';
-  const ch = trimmed.charAt(0);
-  return /[a-zA-Z]/.test(ch) ? ch.toUpperCase() : ch;
-}
-
-function ScriptIcon({
-  script,
-  size,
-  radius,
-  textSize,
-}: {
-  script: ScriptListItem;
-  size: number;
-  radius: number;
-  textSize: string;
-}) {
-  const iconUrl = ScriptUtils.icon(script.script.meta_json);
-  if (iconUrl) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-      <img
-        src={iconUrl}
-        width={size}
-        height={size}
-        loading="lazy"
-        className="flex-shrink-0 object-cover"
-        style={{ borderRadius: radius }}
-      />
-    );
-  }
-  return (
-    <div
-      style={{
-        background: pickIconColor(script.id),
-        width: size,
-        height: size,
-        borderRadius: radius,
-      }}
-      className={`flex-shrink-0 flex items-center justify-center text-white font-bold leading-none ${textSize}`}
-    >
-      {firstChar(script.name)}
-    </div>
-  );
 }
 
 function CompactCard({ script }: { script: ScriptListItem }) {
@@ -101,6 +38,7 @@ function CompactCard({ script }: { script: ScriptListItem }) {
         <div className="flex items-center gap-3">
           <ScriptIcon
             script={script}
+            name={name}
             size={44}
             radius={10}
             textSize="text-xl"
@@ -162,7 +100,13 @@ function ListRow({ script }: { script: ScriptListItem }) {
       target="_blank"
       className="flex items-center gap-4 px-4 py-2 hover:bg-[rgb(var(--primary-50))] dark:hover:bg-[rgb(33,38,45)] transition-colors"
     >
-      <ScriptIcon script={script} size={24} radius={6} textSize="text-xs" />
+      <ScriptIcon
+        script={script}
+        name={name}
+        size={24}
+        radius={6}
+        textSize="text-xs"
+      />
       <div className="w-[260px] flex-shrink-0 min-w-0">
         <Text
           strong
@@ -225,7 +169,7 @@ export default function ScriptSection({
   const rows = scripts.slice(4, 12);
 
   return (
-    <section className="mb-10">
+    <section className="mb-6">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-[10px] flex items-center justify-center !bg-[rgb(var(--bg-tertiary))] border !border-[rgb(var(--border-primary))]">
           <div

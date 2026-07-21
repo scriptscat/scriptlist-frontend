@@ -10,7 +10,7 @@
       "col_title": "Title",
       "col_level": "Level",
       "col_status": "Status",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_actions": "Actions",
       "field_title": "Title",
       "field_content": "Content",
@@ -28,6 +28,9 @@
     },
     "audit_logs": {
       "actions": {
+        "script_audit_approved": "Audit Approved",
+        "script_audit_rejected": "Audit Rejected",
+        "script_audit_pending": "Pending Review",
         "script_create": "Create Script",
         "script_delete": "Delete Script",
         "script_update": "Update Script"
@@ -51,14 +54,28 @@
       "col_actions": "Actions",
       "col_client_ip": "Client IP",
       "col_content": "Content",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_reason": "Reason",
+      "copy": "Copy",
+      "copy_failed": "Copy failed",
+      "copy_success": "Copied to clipboard",
       "delete_confirm": "Are you sure you want to delete this feedback?",
       "delete_success": "Feedback deleted successfully",
+      "hide_empty": "Hide empty content",
+      "reason_filter_all": "All reasons",
+      "reasons": {
+        "better": "Found a better alternative",
+        "bug": "Encountered an error or bug",
+        "feature": "Missing a feature I need",
+        "other": "Other",
+        "unused": "No longer need ScriptCat"
+      },
+      "search_content_placeholder": "Search content",
       "title": "Feedback Management"
     },
     "navigation": {
       "announcements": "Announcements",
+      "advertise": "Ad Management",
       "feedbacks": "Feedback Management",
       "oauth_apps": "OAuth App Management",
       "oidc_providers": "OIDC Provider Management",
@@ -67,7 +84,148 @@
       "system_config": "System Config",
       "users": "User Management",
       "similarity": "Similarity Detection",
-      "script_audits": "Script Audit"
+      "script_audits": "Script Audit",
+      "ai_review": "AI Review",
+      "ai_review_records": "Review Records",
+      "ai_review_fullscan": "Full Scan"
+    },
+    "advertise": {
+      "title": "Ad Management",
+      "action_create": "New Ad",
+      "create_title": "New Ad",
+      "edit_title": "Edit Ad",
+      "col_slot": "Slot",
+      "col_title": "Title",
+      "col_enabled": "Status",
+      "col_stats": "Impressions/Clicks (CTR)",
+      "col_actions": "Actions",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "delete_confirm": "Confirm delete this ad?",
+      "delete_success": "Deleted successfully",
+      "create_success": "Created successfully",
+      "update_success": "Updated successfully",
+      "upload_success": "Uploaded successfully",
+      "light_required": "Please upload a light-mode image",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "field_slot": "Ad Slot",
+      "field_title": "Title",
+      "field_languages": "Target languages (leave empty = all)",
+      "field_light": "Light-mode image",
+      "field_dark": "Dark-mode image (optional)",
+      "field_link": "Destination URL",
+      "field_weight": "Weight",
+      "field_range": "Schedule",
+      "preset_week": "1 week",
+      "preset_month": "1 month",
+      "preset_quarter": "1 quarter",
+      "field_enabled": "Enabled",
+      "upload": "Upload image",
+      "image_url_placeholder": "Enter or paste an image URL, or click to upload",
+      "recommended_size": "Recommended size {size}",
+      "col_weight": "Weight",
+      "col_schedule": "Schedule",
+      "schedule_forever": "Always",
+      "schedule_unbounded": "Unbounded",
+      "click_detail_title": "Click details · {title}",
+      "stat_total_clicks": "Real clicks",
+      "stat_filtered_empty": "Filtered (empty referer)",
+      "trend_title": "Click trend",
+      "trend_empty": "No click data",
+      "clicks_title": "Raw clicks",
+      "click_col_time": "Time",
+      "click_col_referer": "Referer",
+      "click_col_locale": "Locale",
+      "click_col_theme": "Theme",
+      "click_col_ip": "IP",
+      "click_col_uid": "User ID",
+      "range_7d": "7 days",
+      "range_30d": "30 days",
+      "range_90d": "90 days",
+      "slots": {
+        "home-banner": {
+          "name": "Home banner",
+          "position": "Between the home Hero and the \"Why ScriptCat\" feature section, full width"
+        },
+        "search-feed-banner": {
+          "name": "Search feed banner",
+          "position": "Search browse view, between the search bar and \"Daily picks\""
+        },
+        "search-rail-left": {
+          "name": "Search left rail",
+          "position": "Search browse view, left gutter of the centered content; only on screens ≥1650px"
+        },
+        "search-rail-right": {
+          "name": "Search right rail",
+          "position": "Search browse view, right gutter of the centered content; only on screens ≥1650px"
+        },
+        "search-sidebar": {
+          "name": "Search sidebar",
+          "position": "Filtered results sidebar, above \"Latest scripts\"; large screens"
+        },
+        "search-results-banner": {
+          "name": "Search results banner",
+          "position": "Search/filter results page, between the filter card and the result list; full width"
+        },
+        "script-detail-sidebar": {
+          "name": "Detail sidebar",
+          "position": "Script detail sticky sidebar, between the stats card and the detail card; large screens"
+        }
+      }
+    },
+    "ai_review": {
+      "menu_title": "AI Review",
+      "menu_records": "Review Records",
+      "menu_fullscan": "Full Scan",
+      "title": "AI Review Records",
+      "filter_status": "Status",
+      "view_detail": "Detail",
+      "col_id": "ID",
+      "col_script": "Script",
+      "col_status": "Status",
+      "col_model": "Model",
+      "col_tokens": "Tokens",
+      "col_latency": "Latency",
+      "col_reason": "Reason",
+      "col_time": "Time",
+      "col_action": "Action",
+      "status_0": "Processing",
+      "status_1": "Passed",
+      "status_2": "AI Rejected",
+      "status_3": "AI Uncertain",
+      "status_4": "Failed (Human Review)",
+      "status_5": "Skipped",
+      "tags_title": "Tags",
+      "risk_signals_title": "Risk Signals",
+      "noisy_lines_title": "Noisy Lines",
+      "detail_audit_id": "Linked Human Review ID",
+      "detail_last_error": "Last Error",
+      "detail_load_failed": "Failed to load detail",
+      "evidence_line": "Evidence line: {line}",
+      "evidence_line_none": "No evidence line",
+      "fullscan": {
+        "title": "Full-site AI Rescan",
+        "running": "Running",
+        "yes": "Yes",
+        "no": "No",
+        "processed": "Processed",
+        "last_id": "Last cursor",
+        "scope": "Scan scope",
+        "scope_all": "All scripts",
+        "scope_value": "Start ID: {start}, End ID: {end}, Limit: {limit}",
+        "start_id": "Start script ID",
+        "end_id": "End script ID",
+        "limit": "Max scripts",
+        "started_at": "Started at",
+        "recent_errs": "Recent errors",
+        "only_missing": "Only scripts without terminal records",
+        "reset_cursor": "Reset cursor",
+        "trigger": "Start",
+        "cancel": "Cancel",
+        "triggered": "Triggered",
+        "cancelled": "Cancel signal sent"
+      }
     },
     "script_audits": {
       "title": "Script Audit",
@@ -82,6 +240,7 @@
       "status_rejected": "Rejected",
       "filter_status": "Status",
       "filter_all": "All",
+      "filter_script_name_placeholder": "Search script name",
       "refresh": "Refresh",
       "action_review": "Review",
       "action_approve": "Approve",
@@ -91,10 +250,13 @@
       "drawer_title": "Audit Detail",
       "detail_script": "Script",
       "detail_submitter": "Submitter",
-      "detail_credit": "Credit",
       "detail_changelog": "Changelog",
+      "detail_reason": "Audit Reason / Note",
       "detail_reject_reason": "Reject Reason",
       "detail_code": "Code",
+      "approve_modal_title": "Approve Audit",
+      "approve_reason_label": "Approval note (optional, for AI false-positive correction or audit basis)",
+      "approve_reason_placeholder": "If this was an AI false positive, note the manual review basis; leave blank to approve directly",
       "reject_modal_title": "Reject Audit",
       "reject_reason_label": "Reject reason (sent to author via in-app notification)",
       "reject_reason_required": "Please provide a reject reason",
@@ -189,7 +351,7 @@
     "scores": {
       "action_delete": "Delete",
       "col_actions": "Actions",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_message": "Review",
       "col_score": "Score",
       "col_script": "Script",
@@ -220,19 +382,22 @@
     },
     "scripts": {
       "action_delete": "Delete",
+      "action_ai_review": "AI Review",
       "action_restore": "Restore",
       "action_set_multiplier": "Set Score Multiplier",
       "action_trending_score": "Edit Trend Score",
       "action_visibility": "Change Visibility",
       "col_actions": "Actions",
       "col_author": "Author",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_name": "Script Name",
       "col_score_multiplier": "Score Multiplier",
       "col_status": "Status",
       "col_trending_score": "Trend Score",
       "col_type": "Type",
       "col_visibility": "Visibility",
+      "ai_review_confirm": "Submit an AI review task for the latest version of this script?",
+      "ai_review_success": "AI review task submitted",
       "delete_confirm": "Are you sure you want to delete this script?",
       "delete_success": "Script deleted successfully",
       "delete_reason": "Reason (optional)",
@@ -272,26 +437,9 @@
       "ai_model": "Model",
       "ai_system_prompt": "System Prompt",
       "ai_title": "AI Configuration",
-      "audit_credit_title": "Script Audit and Credit",
-      "audit_enabled": "Enable low-credit script audit",
-      "audit_enabled_help": "When disabled, users with credit above 0 but below the audit threshold publish directly; credit at or below 0 is still blocked.",
-      "audit_max_pending": "Low-credit pending limit",
-      "audit_max_pending_help": "Maximum number of pending script audits allowed for users below the audit threshold.",
-      "credit_review_threshold": "Audit threshold",
-      "credit_review_threshold_help": "Users with credit below this value and above 0 enter the audit queue.",
-      "credit_signal_register": "Registration base score",
-      "credit_signal_register_help": "Base score granted when a user credit snapshot is initialized.",
-      "credit_signal_register_7d": "Registration 7-day bonus",
-      "credit_signal_register_30d": "Registration 30-day bonus",
-      "credit_signal_register_180d": "Registration 180-day bonus",
-      "credit_signal_oauth_bind": "OAuth binding bonus",
-      "credit_signal_oauth_bind_help": "One-time bonus granted after binding any OAuth account.",
-      "credit_event_audit_approved": "Audit approved delta",
-      "credit_event_audit_rejected": "Audit rejected delta",
-      "credit_event_force_deleted": "Force-delete active script delta",
-      "credit_event_help": "Positive, negative, and zero values are allowed.",
-      "credit_max_admin_adjust_delta": "Admin adjustment limit",
-      "credit_max_admin_adjust_delta_help": "Absolute maximum allowed for a single manual admin credit delta.",
+      "github_title": "GitHub Configuration",
+      "github_pat": "GitHub Personal Access Token",
+      "github_pat_hint": "Authenticates GitHub script synchronization requests to increase the rate limit. Use a fine-grained PAT with minimum permissions.",
       "save_button": "Save",
       "save_success": "Saved successfully",
       "title": "System Configuration",
@@ -329,7 +477,7 @@
       "ban_success": "User banned successfully",
       "col_actions": "Actions",
       "col_admin_level": "Admin Level",
-      "col_createtime": "Created At",
+      "col_createtime": "Created",
       "col_email": "Email",
       "col_register_ip": "Register IP",
       "col_status": "Status",
@@ -541,6 +689,7 @@
     "welcome_title": "ScriptCat AI Assistant"
   },
   "common": {
+    "share": "Share",
     "admin_delete_content": "All data will be permanently deleted. Please proceed with caution!",
     "admin_delete_reason_copyright": "Copyright/Infringement",
     "admin_delete_reason_custom": "Custom Reason",
@@ -601,6 +750,11 @@
     "try_refresh": "Refresh the current page",
     "what_can_do": "You can try:",
     "what_happened": "What happened?"
+  },
+  "ads": {
+    "label": "Ad",
+    "sponsored": "Sponsored",
+    "learnMore": "Learn more"
   },
   "announcements": {
     "title": "Announcements"
@@ -688,7 +842,8 @@
     "system_settings": "System Settings",
     "tampermonkey_chinese_website": "Tampermonkey Chinese Website",
     "user_profile": "User Profile",
-    "user_setting": "User Settings"
+    "user_setting": "User Settings",
+    "code_search": "Code Search"
   },
   "login": {
     "account_placeholder": "Email or username",
@@ -805,6 +960,17 @@
       }
     },
     "script": {
+      "audit": {
+        "approved": {
+          "content": "Your script <link>{name}</link> passed review and was published. Version: {version}"
+        },
+        "rejected": {
+          "content": "Your script <link>{name}</link> did not pass review. Reason: {reason}"
+        },
+        "submitted": {
+          "content": "Your script <link>{name}</link> has entered the review queue. Version: {version}"
+        }
+      },
       "delete": {
         "content": "Your script {name} has been deleted by admin, reason: {reason}"
       },
@@ -820,7 +986,8 @@
     },
     "type_system": "System Notification",
     "unread": "Unread",
-    "status_label": "Status:"
+    "status_label": "Status:",
+    "total": "{total} total"
   },
   "oauth": {
     "authorize": {
@@ -830,6 +997,7 @@
       "description": "{app_name} is requesting access to your account",
       "error_title": "Authorization Error",
       "invalid_request": "Invalid authorization request",
+      "invalid_redirect": "Invalid redirect URL",
       "load_failed": "Failed to load application info",
       "permission_profile": "Read your basic profile information (username, email, avatar)",
       "permissions_label": "This application will have access to:",
@@ -838,11 +1006,14 @@
   },
   "policy": {
     "terms_of_service_title": "Terms of Service",
+    "terms_of_service_description": "Read the terms of service and usage rules for the ScriptCat userscript platform.",
     "privacy_policy_title": "Privacy Policy",
+    "privacy_policy_description": "Learn how ScriptCat collects, uses, and protects your personal information.",
     "disclaimer_title": "Disclaimer",
-    "last_updated": "Last updated: March 6, 2026",
+    "disclaimer_description": "Read ScriptCat's disclaimer regarding userscript content and usage risks.",
+    "last_updated": "Last updated: June 19, 2026",
     "tos_section1_title": "1. General",
-    "tos_section1_content": "Welcome to ScriptCat Script Hub (hereinafter referred to as 'the Platform'). The Platform is a user script sharing community that provides services for publishing, searching, and installing scripts. Please carefully read and understand the entire content of this Terms of Service before using the Platform. By registering or using the Platform, you agree to be bound by this agreement.",
+    "tos_section1_content": "Welcome to ScriptCat Script Hub (hereinafter referred to as 'the Platform'). The Platform is a user script sharing community that provides services for publishing, searching, and installing scripts, and may display advertisements on its pages. Please carefully read and understand the entire content of this Terms of Service before using the Platform. By registering or using the Platform, you agree to be bound by this agreement.",
     "tos_section2_title": "2. Account Registration and Usage",
     "tos_section2_content": "You must provide accurate information when registering and keep your account credentials secure. Each user may register only one account and may not transfer or lend the account to others. Losses resulting from improper account management are the user's responsibility. The Platform reserves the right to restrict or ban accounts suspected of violations.",
     "tos_section3_title": "3. Script Publishing Guidelines",
@@ -854,9 +1025,9 @@
     "tos_section6_title": "6. Agreement Changes and Termination",
     "tos_section6_content": "The Platform reserves the right to modify this agreement as needed. Modified agreements will be published on the Platform. Your continued use of the Platform constitutes acceptance of the modified agreement. The Platform may terminate or suspend services within the scope permitted by law, with advance notice provided when possible. The Platform reserves the right of final interpretation of this agreement.",
     "pp_section1_title": "1. Information Collection",
-    "pp_section1_content": "We collect the following types of user information: registration information (email address, username); device and network information (IP address, browser type); usage data (script browsing, installation, ratings, etc.); session information used to maintain your login status.",
+    "pp_section1_content": "We collect the following types of user information: registration information (email address, username); device and network information (IP address, browser type); usage data (script browsing, installation, ratings, ad views and clicks, etc.); session information used to maintain your login status.",
     "pp_section2_title": "2. Information Usage",
-    "pp_section2_content": "We use the collected information for: providing and improving platform services; data statistics such as script installation counts; security measures (preventing malicious registration, abuse, etc.); sending service notifications such as verification codes and password resets. We will not sell your personal information to third parties.",
+    "pp_section2_content": "We use the collected information for: providing and improving platform services; data statistics such as script installation counts; security measures (preventing malicious registration, abuse, etc.); sending service notifications such as verification codes and password resets; displaying advertisements and measuring their performance, such as views and clicks (our ads are operated by the Platform itself and do not rely on third-party ad networks). We will not sell your personal information to third parties.",
     "pp_section3_title": "3. Third-Party Services",
     "pp_section3_content": "The Platform may use third-party services to provide certain features, such as third-party account login and human verification. When using third-party login, we only obtain the basic information you authorize (such as username, email, avatar). Data processing by third-party services is governed by their respective privacy policies.",
     "pp_section4_title": "4. Cookies and Sessions",
@@ -874,7 +1045,7 @@
     "dc_section3_title": "3. Service Availability",
     "dc_section3_content": "The Platform provides services on an 'as-is' basis and does not guarantee uninterrupted, error-free service or that it will meet your specific needs. The Platform is not liable for service interruptions caused by system maintenance, upgrades, network failures, or force majeure. The Platform reserves the right to modify, suspend, or terminate some or all services at any time.",
     "dc_section4_title": "4. Limitation of Liability",
-    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption.",
+    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption. The Platform makes no warranties and assumes no responsibility for any goods or services promoted by advertisers through the Platform; any transaction between you and an advertiser is at your own discretion and risk.",
     "dc_section5_title": "5. Disclaimer Updates",
     "dc_section5_content": "We may update this Disclaimer in response to changes in applicable laws or product features. The updated disclaimer will be published on the Platform. We recommend that you review it periodically. Your continued use of the Platform constitutes acceptance of the updated disclaimer. The Platform reserves the right of final interpretation of this disclaimer."
   },
@@ -882,7 +1053,27 @@
     "alerts": {
       "archived_description": "This script has been archived by the author. The script may malfunction and the author is no longer maintaining it, so you cannot provide feedback.",
       "archived_title": "Script archived",
+      "audit_approve_button": "Approve",
+      "audit_approve_failed": "Approve failed",
+      "audit_approve_modal_title": "Approve Audit",
+      "audit_approve_reason_label": "Approval note (optional)",
+      "audit_approve_reason_placeholder": "If this was an AI false positive, note the manual review basis; leave blank to approve directly",
+      "audit_approve_success": "Approved",
+      "audit_description": "This script is under review and is temporarily inaccessible to regular users. Review reasons, progress, and results are recorded in the management logs.",
+      "audit_description_no_record": "This script is under review, but there is no pending audit record that can be handled directly. Check the management logs for the review reason, progress, and result.",
+      "audit_feedback_hint": "Do not publish the same script again; if it remains unreviewed for a long time, you can also report it in the community.",
+      "audit_feedback_link": "Go to community feedback",
+      "audit_logs_link": "View management logs",
+      "audit_reject_button": "Reject",
+      "audit_reject_failed": "Reject failed",
+      "audit_reject_modal_title": "Reject Audit",
+      "audit_reject_reason_label": "Reject reason (sent to author via in-app notification)",
+      "audit_reject_reason_placeholder": "Explain why this script is rejected, such as malicious code, policy violation, or copyright issue",
+      "audit_reject_reason_required": "Please provide a reject reason",
+      "audit_reject_success": "Rejected",
+      "audit_title": "Script under review",
       "deleted_description": "This script has been deleted and is not accessible to regular users. You are viewing it as an administrator and can restore it with the button on the right.",
+      "deleted_owner_description": "This script has been deleted and is not accessible to regular users. You are viewing the script details as its author.",
       "deleted_restore_button": "Restore script",
       "deleted_restore_confirm": "Restore this script?",
       "deleted_restore_failed": "Restore failed",
@@ -898,7 +1089,7 @@
       "library_tooltip": "This is a library used by scripts",
       "share_link": "Share Link",
       "tag_label": "Tag: {name}",
-      "today_installs": "Today +{count}",
+      "today_installs": "24h +{count}",
       "view_detail": "View Details"
     },
     "detail": {
@@ -982,23 +1173,118 @@
         "background_script_desc": "It runs in the browser background",
         "browser_compatibility": "Browser Compatibility",
         "browser_support": "Supports {browser}",
-        "created_at": "Created at {time}",
+        "created_at": "Created {time}",
         "feature_notice": "Feature Notice",
         "forum_post": "Forum Post",
         "library_description": "This is a library used by userscripts, you can reference it directly in your scripts.",
         "library_details": "Library Details",
         "license": "License",
+        "license_no_derivative": "No Derivatives",
+        "license_none": "Not declared",
+        "license_none_warning": "No license declared — reuse with caution",
+        "permissions_title": "Script Permissions",
         "scheduled_script": "Scheduled Script",
         "scheduled_script_tooltip": "This script supports scheduled execution and will run automatically at set intervals: {cron}",
         "script_details": "Script Details",
         "tag_label": "Tag: {name}",
-        "updated_at": "Updated at {time}"
+        "updated_at": "Updated {time}"
       },
       "install": {
         "install_check_failed": "Failed to check script installation status",
         "install_script": "Install Script",
         "reinstall_script": "Reinstall Script v{version}",
-        "update_script": "Update Script to v{version}"
+        "update_script": "Update Script to v{version}",
+        "updated_at": "Updated {time}",
+        "changelog": "Changelog"
+      },
+      "installGuide": {
+        "title": "Userscript manager required",
+        "cancel": "Cancel",
+        "description": "Installing a userscript requires a userscript manager. We recommend ScriptCat — once installed, you can install and run scripts from this site with one click.",
+        "learn_more": "ScriptCat is an open-source userscript manager.",
+        "learn_more_link": "Learn more / installation guide",
+        "other_channels": "Other browsers / methods",
+        "primary_chrome": "Install ScriptCat for Chrome",
+        "primary_edge": "Install ScriptCat for Edge",
+        "primary_firefox": "Install ScriptCat for Firefox",
+        "primary_other": "View ScriptCat installation guide",
+        "proceed": "Already installed ScriptCat? Continue anyway",
+        "subtitle_chrome": "Go to Chrome Web Store · Free",
+        "subtitle_edge": "Go to Edge Add-ons · Free",
+        "subtitle_firefox": "Go to Firefox Add-ons · Free",
+        "subtitle_other": "Your browser requires manual installation"
+      },
+      "metadata": {
+        "empty_description": "This script does not declare displayable permissions, connections, or run rules.",
+        "empty_title": "No metadata details",
+        "fields": {
+          "author": "Author",
+          "connect": "Network access",
+          "exclude": "Exclude rules",
+          "grant": "Permissions",
+          "include": "Include rules",
+          "license": "License",
+          "match": "Match rules",
+          "namespace": "Namespace",
+          "require": "External dependencies",
+          "resource": "External resources",
+          "run_at": "Run timing"
+        },
+        "grants": {
+          "addElement": "Allows the script to create and insert elements into the page.",
+          "addStyle": "Allows the script to inject CSS into the page.",
+          "deleteValue": "Allows the script to delete data stored by the userscript manager.",
+          "download": "Allows the script to trigger file downloads.",
+          "getResourceText": "Allows the script to read text resources declared with @resource.",
+          "getResourceUrl": "Allows the script to read URLs for resources declared with @resource.",
+          "getValue": "Allows the script to read data stored by the userscript manager.",
+          "info": "Allows the script to read script and manager runtime information.",
+          "listValues": "Allows the script to list stored data keys.",
+          "none": "The script declares that it needs no extra userscript-manager permissions.",
+          "notification": "Allows the script to show system or browser notifications.",
+          "openInTab": "Allows the script to open new browser tabs.",
+          "registerMenuCommand": "Allows the script to add commands to the userscript manager menu.",
+          "setClipboard": "Allows the script to write to the clipboard.",
+          "setValue": "Allows the script to save data in the userscript manager.",
+          "unknown": "An extended permission requested by the script; behavior depends on manager support.",
+          "unregisterMenuCommand": "Allows the script to remove registered menu commands.",
+          "unsafeWindow": "Allows access to the page window object and direct interaction with page scripts.",
+          "xmlhttpRequest": "Allows network requests proxied by the userscript manager."
+        },
+        "intro": "These details come from the userscript metadata block and help explain declared permissions, run scope, and external dependencies.",
+        "run_at": {
+          "context_menu": "Runs only when triggered from the context menu.",
+          "document_body": "Runs after the page body is available.",
+          "document_end": "Runs around DOM load completion.",
+          "document_idle": "Runs when the page is mostly loaded and idle.",
+          "document_start": "Runs as early as possible while the page starts loading.",
+          "unknown": "A declared run timing whose behavior depends on the userscript manager."
+        },
+        "sections": {
+          "author": "Author information declared by the script.",
+          "connect": "Domains the script may connect to, usually used with network request permissions.",
+          "exclude": "URL rules excluded from the run scope.",
+          "grant": "Capabilities or API permissions requested from the userscript manager.",
+          "include": "URL rules where the script declares it can run.",
+          "license": "Open source or usage license declared by the script.",
+          "match": "URL rules matched by the script.",
+          "namespace": "Namespace used to distinguish the script identity or source.",
+          "require": "External JavaScript dependencies loaded before the script runs.",
+          "resource": "External resources declared for script access.",
+          "run_at": "The page lifecycle stage where the script prefers to run."
+        },
+        "values": {
+          "author": "Declared author value.",
+          "connect": "Allowed domain or wildcard connection rule.",
+          "exclude": "URL rule excluded from execution.",
+          "include": "URL rule included for execution.",
+          "license": "License identifier.",
+          "match": "URL rule matched for execution.",
+          "namespace": "Namespace identifier.",
+          "require": "External script dependency URL.",
+          "resource": "External resource declaration.",
+          "unknown": "Metadata declaration value."
+        }
       },
       "require": {
         "compatible_version": "(Compatible Version) ",
@@ -1006,15 +1292,42 @@
         "patch_version": "(Patch Version) ",
         "usage_guide": "Usage Guide"
       },
+      "permissions": {
+        "title": "Permissions & access",
+        "connect": "Cross-origin access",
+        "grants": "Capabilities",
+        "more": "+{count}",
+        "high_risk": "High-risk permission — install with caution",
+        "cap": {
+          "net": "Network requests",
+          "notify": "Notifications",
+          "clipboard": "Clipboard",
+          "storage": "Storage",
+          "tab": "Open tab",
+          "download": "Download",
+          "cookie": "Cookies",
+          "menu": "Menu command"
+        }
+      },
       "sites": {
         "collapse": "Collapse",
         "more": "+{count} more"
       },
       "stats": {
         "current_version": "Current Version",
-        "today_installs": "Today's New",
+        "title": "Statistics",
+        "today_installs": "Last 24h",
         "total_installs": "Total Installs",
         "user_rating": "User Rating"
+      },
+      "summary": {
+        "label": "AI Summary"
+      },
+      "tabs": {
+        "description": "Description",
+        "metadata": "Permissions",
+        "ratings": "Ratings",
+        "versions": "Versions"
       }
     },
     "diff": {
@@ -1045,6 +1358,17 @@
         "update_button": "Publish Update"
       },
       "info_section": {
+        "license_custom": "Custom",
+        "license_custom_placeholder": "Enter a license name, e.g. CC-BY-NC-4.0",
+        "license_group_opensource": "Common open-source licenses",
+        "license_group_other": "Other",
+        "license_label": "License",
+        "license_need_header": "Write the script header (==UserScript==) first to choose a license",
+        "license_no_derivative": "No Derivatives",
+        "license_none_warning": "No license declared — reuse with caution",
+        "license_placeholder": "Select a license",
+        "license_tooltip": "Writes @license into the script header and ships with the script, giving others a clear reference",
+        "license_written": "Written to script header // @license {license}",
         "prerelease_label": "Prerelease Version",
         "prerelease_tooltip": "Set as prerelease version, stable version will not update to this version. You can enable prerelease installation link in script management page",
         "script_category_label": "Script Category",
@@ -1182,7 +1506,7 @@
         "comment_placeholder": "Please enter comment content...",
         "copy_link": "Copy Link",
         "copy_success": "Copied successfully",
-        "created_at": "Created at {time}",
+        "created_at": "Created {time}",
         "delete_failed": "Delete failed",
         "delete_success": "Deleted successfully",
         "feedback_closed": "Feedback closed",
@@ -1243,7 +1567,7 @@
       "search_placeholder": "Search issues...",
       "status_pending": "Pending",
       "status_resolved": "Resolved",
-      "updated_at": "Updated at {time}"
+      "updated_at": "Updated {time}"
     },
     "manage": {
       "access": {
@@ -1517,7 +1841,13 @@
       },
       "search": {
         "page_number": "Page {page}",
-        "title": "Script Search"
+        "title": "Script Search",
+        "domain_subject": "{domain} Userscripts",
+        "description": "Search Tampermonkey/ScriptCat userscripts on ScriptCat. Discover scripts by website, category, and popularity.",
+        "keyword_description": "Search userscripts for {keyword} and discover Tampermonkey/ScriptCat scripts to install on ScriptCat.",
+        "domain_description": "Browse userscripts for {domain} (Tampermonkey/ScriptCat scripts). Discover and install more {domain} scripts on ScriptCat.",
+        "domain_typed_subject": "{domain} {type}",
+        "type_description": "Browse all {type} listings on ScriptCat. Discover and install Tampermonkey/ScriptCat scripts."
       }
     },
     "navigation": {
@@ -1601,6 +1931,8 @@
       "update_success": "Rating updated successfully!",
       "user_form": {
         "cancel_button": "Cancel",
+        "collapsed_hint": "Tap a star to start",
+        "collapsed_prompt": "Rate this script",
         "edit_button": "Edit",
         "edit_review_title": "Edit Review",
         "login_prompt_button": "Login Now",
@@ -1631,7 +1963,7 @@
       "content_required": "Please enter report content",
       "copy_link": "Copy Link",
       "copy_success": "Copied successfully",
-      "created_at": "Created at {time}",
+      "created_at": "Created {time}",
       "delete_failed": "Delete failed",
       "delete_success": "Deleted successfully",
       "detail_description": "View report details for {scriptName}",
@@ -1698,7 +2030,6 @@
       },
       "sort": {
         "createtime": "Latest",
-        "daily_pick": "Daily Picks",
         "score": "Highest Rated",
         "today_download": "Trending",
         "total_download": "Most Downloaded"
@@ -1706,9 +2037,6 @@
     },
     "section": {
       "more": "More",
-      "daily_pick": {
-        "title": "Daily Picks"
-      },
       "hot": {
         "title": "Trending"
       },
@@ -1755,7 +2083,8 @@
       "background_script": "Background Script",
       "library": "Script Library",
       "scheduled_script": "Scheduled Script",
-      "script": "Userscript"
+      "script": "Userscript",
+      "subscribe_script": "Subscribe Script"
     },
     "user_modal": {
       "add": "Add",
@@ -1781,6 +2110,7 @@
       "changelog_label": "Update Notes",
       "changelog_placeholder": "e.g.:\n✨ New Feature: Added UI optimization\n🐛 Bug Fix: Resolved browser compatibility issues\n⚡ Performance: Optimized script execution speed\n📦 Dependencies: Updated to latest version",
       "changelog_subtitle": "(Supports Markdown syntax)",
+      "collapse_changelog": "Collapse",
       "compare_button": "Compare",
       "confirm_delete_cancel": "Cancel",
       "confirm_delete_description": "Are you sure you want to delete this version? This action cannot be undone.",
@@ -1792,6 +2122,7 @@
       "delete_version_failed": "Delete version failed:",
       "edit_button": "Edit",
       "edit_modal_title": "Edit Version {version}",
+      "expand_changelog": "Show all",
       "history_description": "View all published versions, including stable and prerelease versions. You can install any version or view its source code.",
       "history_title": "Version History",
       "install_button": "Install This Version",
@@ -1804,9 +2135,11 @@
       "pagination_info": "Showing {start}-{end}, total {total}",
       "pagination_total": "{start}-{end}, total {total} versions",
       "prerelease_badge": "Prerelease Version",
+      "prerelease_chip": "Pre-release {count}",
       "prerelease_checked": "Prerelease Version",
       "prerelease_unchecked": "Stable Version",
       "prerelease_versions": "Prerelease Versions",
+      "release_chip": "Stable {count}",
       "release_versions": "Stable Versions",
       "retry": "Retry",
       "save_changes": "Save Changes",
@@ -1815,8 +2148,22 @@
       "update_success": "Version information updated successfully",
       "update_version_failed": "Update version failed:",
       "version_type_extra": "Prerelease versions are usually for testing new features and may not be stable",
+      "version_count": "Total {count} versions",
       "version_type_label": "Version Type",
       "view_code_button": "View Code"
+    },
+    "code_search": {
+      "title": "Code Search",
+      "subtitle": "Search the latest source code of scripts you can view",
+      "placeholder": "Enter an API, function, or variable name",
+      "button": "Search",
+      "login": "Log in",
+      "login_required": "Log in before searching source code",
+      "keyword_too_short": "Enter at least 2 characters",
+      "rate_limited": "Code search is rate limited. Try again later.",
+      "search_failed": "Code search failed. Try again later.",
+      "empty": "No matching source code found",
+      "ready": "Enter a keyword to start searching"
     }
   },
   "user": {
@@ -1875,6 +2222,8 @@
       "no_favorites": "This user hasn't favorited any scripts yet",
       "no_script_manager_content": "ScriptCat extension is not detected in your browser, confirm to open subscription link?",
       "no_script_manager_title": "No script manager detected",
+      "continue_subscribe": "Already installed ScriptCat? Continue subscribing",
+      "subscribe_guide_description": "Subscribing to scripts requires a userscript manager. We recommend ScriptCat — once installed, you can subscribe with one click and keep scripts updated automatically.",
       "no_scripts_in_category": "No favorite scripts in this category",
       "no_scripts_in_folder": "No scripts in this folder",
       "pagination_items": "{start}-{end}, total {total}",
@@ -1987,8 +2336,6 @@
       "report": "Report",
       "unfollow_success": "Unfollowed",
       "verified": "Verified",
-      "credit_score": "Credit Score",
-      "credit_pending": "{count} pending review",
       "previously_processed_scripts": "Scripts processed for this user",
       "processed_empty": "No processed records",
       "processed_action_delete": "Admin Delete",
@@ -2006,6 +2353,10 @@
       "pagination_total": "{start}-{end} / Total {total} scripts",
       "search_button": "Search",
       "search_placeholder": "Search this user's scripts",
+      "all_status_placeholder": "All Statuses",
+      "status_active": "Published",
+      "status_all": "All Statuses",
+      "status_audit": "Pending Review",
       "sort_by_downloads": "Most Downloaded",
       "sort_by_hot": "Trending",
       "sort_by_latest": "Latest",
@@ -2029,6 +2380,7 @@
     "update_failed": "Update failed, please try again",
     "update_success": "User information updated successfully!",
     "user_homepage": "User Homepage",
+    "user_homepage_description": "Browse userscripts published by {username} on ScriptCat.",
     "user_not_found": "User not found",
     "username": "Username",
     "username_placeholder": "Please enter username",
@@ -2123,6 +2475,9 @@
     }
   },
   "errors": {
+    "api": {
+      "access_not_found": "Permission does not exist"
+    },
     "integrity_rejected": {
       "title": "Code Failed Integrity Check",
       "help": "If this is a false positive, please apply for an exemption via the admin contact listed in the site FAQ."

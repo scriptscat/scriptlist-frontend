@@ -12,7 +12,6 @@ import { pickMessages } from '@/i18n/pickMessages';
 import { userService, systemService } from '@/lib/api';
 import type { GlobalConfig } from '@/lib/api/services/system';
 import { GlobalConfigProvider } from '@/contexts/GlobalConfigContext';
-import GoogleAdScript from './GoogleAd/script';
 import Script from 'next/script';
 
 // 服务端 cookie 读取函数
@@ -67,8 +66,6 @@ export async function LocalizedServerThemeWrapper({
         {serverTheme.theme === 'dark' && (
           <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         )}
-        <GoogleAdScript />
-
         {serverTheme.mode === 'auto' && (
           <script
             dangerouslySetInnerHTML={{
@@ -106,6 +103,7 @@ export async function LocalizedServerThemeWrapper({
                 'components',
                 'error',
                 'utils',
+                'ads',
               ])}
             >
               <DayjsLocaleProvider>

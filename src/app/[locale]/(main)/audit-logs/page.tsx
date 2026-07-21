@@ -3,8 +3,11 @@ import {
   type AuditLogListParams,
   type AuditLogItem,
 } from '@/lib/api/services/auditLog';
+import { userService } from '@/lib/api';
+import { redirect } from '@/i18n/routing';
 import AuditLogList from './components/AuditLogList';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
+export { noindexMetadata as metadata } from '@/lib/seo/robots';
 
 interface PageProps {
   params: Promise<{
@@ -15,7 +18,19 @@ interface PageProps {
   }>;
 }
 
-export default async function AuditLogsPage({ searchParams }: PageProps) {
+export default async function AuditLogsPage({
+  params,
+  searchParams,
+}: PageProps) {
+  const { locale } = await params;
+  const currentUser = await userService.getCurrentUser();
+  if (!currentUser) {
+    redirect({
+      href: `/login?redirect=${encodeURIComponent('/audit-logs')}`,
+      locale,
+    });
+  }
+
   const resolvedSearchParams = await searchParams;
 
   const initialPage = resolvedSearchParams.page

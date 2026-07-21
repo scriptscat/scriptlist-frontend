@@ -28,6 +28,9 @@
     },
     "audit_logs": {
       "actions": {
+        "script_audit_approved": "审核通过",
+        "script_audit_rejected": "审核拒绝",
+        "script_audit_pending": "待人工复核",
         "script_create": "创建脚本",
         "script_delete": "删除脚本",
         "script_update": "更新脚本"
@@ -53,12 +56,26 @@
       "col_content": "内容",
       "col_createtime": "创建时间",
       "col_reason": "原因",
+      "copy": "复制",
+      "copy_failed": "复制失败",
+      "copy_success": "已复制到剪贴板",
       "delete_confirm": "确定要删除此反馈吗？",
       "delete_success": "反馈删除成功",
+      "hide_empty": "隐藏空内容反馈",
+      "reason_filter_all": "全部原因",
+      "reasons": {
+        "better": "找到了更好的替代品",
+        "bug": "遇到了错误或 bug",
+        "feature": "缺少我需要的功能",
+        "other": "其他原因",
+        "unused": "不再需要脚本猫"
+      },
+      "search_content_placeholder": "搜索内容",
       "title": "反馈管理"
     },
     "navigation": {
       "announcements": "公告管理",
+      "advertise": "广告管理",
       "feedbacks": "反馈管理",
       "reports": "举报管理",
       "oauth_apps": "OAuth 应用管理",
@@ -68,7 +85,148 @@
       "system_config": "系统配置",
       "users": "用户管理",
       "similarity": "相似度检测",
-      "script_audits": "脚本审核"
+      "script_audits": "脚本审核",
+      "ai_review": "AI 审核",
+      "ai_review_records": "审核记录",
+      "ai_review_fullscan": "全站扫描"
+    },
+    "advertise": {
+      "title": "广告管理",
+      "action_create": "新建广告",
+      "create_title": "新建广告",
+      "edit_title": "编辑广告",
+      "col_slot": "广告位",
+      "col_title": "标题",
+      "col_enabled": "状态",
+      "col_stats": "曝光/点击 (CTR)",
+      "col_actions": "操作",
+      "action_edit": "编辑",
+      "action_delete": "删除",
+      "delete_confirm": "确认删除该广告？",
+      "delete_success": "删除成功",
+      "create_success": "创建成功",
+      "update_success": "更新成功",
+      "upload_success": "上传成功",
+      "light_required": "请上传浅色图片",
+      "enabled": "启用",
+      "disabled": "禁用",
+      "field_slot": "广告位",
+      "field_title": "标题",
+      "field_languages": "投放语言（留空=全部）",
+      "field_light": "浅色图片",
+      "field_dark": "深色图片（可选）",
+      "field_link": "跳转链接",
+      "field_weight": "权重",
+      "field_range": "排期",
+      "preset_week": "一周",
+      "preset_month": "一月",
+      "preset_quarter": "一季度",
+      "field_enabled": "启用",
+      "upload": "上传图片",
+      "image_url_placeholder": "输入或粘贴图片链接，也可点击上传",
+      "recommended_size": "推荐尺寸 {size}",
+      "col_weight": "权重",
+      "col_schedule": "排期时间",
+      "schedule_forever": "长期",
+      "schedule_unbounded": "不限",
+      "click_detail_title": "点击详情 · {title}",
+      "stat_total_clicks": "真实点击",
+      "stat_filtered_empty": "已过滤空 referer",
+      "trend_title": "点击趋势",
+      "trend_empty": "暂无点击数据",
+      "clicks_title": "原始点击明细",
+      "click_col_time": "时间",
+      "click_col_referer": "来源 Referer",
+      "click_col_locale": "语言",
+      "click_col_theme": "主题",
+      "click_col_ip": "IP",
+      "click_col_uid": "用户 ID",
+      "range_7d": "近 7 天",
+      "range_30d": "近 30 天",
+      "range_90d": "近 90 天",
+      "slots": {
+        "home-banner": {
+          "name": "首页横幅",
+          "position": "首页 Hero 与「为什么选择」功能区之间,整宽展示"
+        },
+        "search-feed-banner": {
+          "name": "搜索页信息流横幅",
+          "position": "搜索页浏览态,搜索框与「每日精选」之间"
+        },
+        "search-rail-left": {
+          "name": "搜索页左竖栏",
+          "position": "搜索页浏览态,内容区左侧留白,仅 ≥1650px 宽屏显示"
+        },
+        "search-rail-right": {
+          "name": "搜索页右竖栏",
+          "position": "搜索页浏览态,内容区右侧留白,仅 ≥1650px 宽屏显示"
+        },
+        "search-sidebar": {
+          "name": "搜索页侧栏",
+          "position": "搜索/筛选结果页侧栏,「最新脚本」上方,大屏显示"
+        },
+        "search-results-banner": {
+          "name": "搜索结果页横幅",
+          "position": "搜索/筛选结果页,筛选卡片与结果列表之间,整宽展示"
+        },
+        "script-detail-sidebar": {
+          "name": "详情页侧栏",
+          "position": "脚本详情页右侧 sticky 侧栏,数据统计卡与脚本详情卡之间,大屏显示"
+        }
+      }
+    },
+    "ai_review": {
+      "menu_title": "AI 审核",
+      "menu_records": "审核记录",
+      "menu_fullscan": "全站扫描",
+      "title": "AI 审核记录",
+      "filter_status": "状态",
+      "view_detail": "详情",
+      "col_id": "ID",
+      "col_script": "脚本",
+      "col_status": "状态",
+      "col_model": "模型",
+      "col_tokens": "Tokens",
+      "col_latency": "耗时",
+      "col_reason": "理由",
+      "col_time": "时间",
+      "col_action": "操作",
+      "status_0": "处理中",
+      "status_1": "通过",
+      "status_2": "AI 拒绝",
+      "status_3": "AI 不确定",
+      "status_4": "AI 失败转人工",
+      "status_5": "跳过",
+      "tags_title": "标签",
+      "risk_signals_title": "风险信号",
+      "noisy_lines_title": "噪声行",
+      "detail_audit_id": "关联人工审核 ID",
+      "detail_last_error": "最后错误",
+      "detail_load_failed": "详情加载失败",
+      "evidence_line": "证据行：{line}",
+      "evidence_line_none": "无证据行",
+      "fullscan": {
+        "title": "全站 AI 重新扫描",
+        "running": "运行中",
+        "yes": "是",
+        "no": "否",
+        "processed": "已处理",
+        "last_id": "末游标",
+        "scope": "扫描范围",
+        "scope_all": "全部脚本",
+        "scope_value": "起始 ID：{start}，结束 ID：{end}，最多：{limit}",
+        "start_id": "起始脚本 ID",
+        "end_id": "结束脚本 ID",
+        "limit": "最多扫描数量",
+        "started_at": "开始时间",
+        "recent_errs": "最近错误",
+        "only_missing": "只跑无终态记录的脚本",
+        "reset_cursor": "重置游标",
+        "trigger": "开始",
+        "cancel": "取消",
+        "triggered": "已触发",
+        "cancelled": "已发送取消信号"
+      }
     },
     "script_audits": {
       "title": "脚本审核",
@@ -83,6 +241,7 @@
       "status_rejected": "已拒绝",
       "filter_status": "状态",
       "filter_all": "全部",
+      "filter_script_name_placeholder": "搜索脚本名",
       "refresh": "刷新",
       "action_review": "审核",
       "action_approve": "通过",
@@ -92,10 +251,13 @@
       "drawer_title": "审核详情",
       "detail_script": "脚本",
       "detail_submitter": "提交者",
-      "detail_credit": "信用分",
       "detail_changelog": "更新说明",
+      "detail_reason": "审核原因 / 说明",
       "detail_reject_reason": "拒绝原因",
       "detail_code": "脚本代码",
+      "approve_modal_title": "通过该审核",
+      "approve_reason_label": "通过说明（可选，用于记录 AI 误判纠正或审核依据）",
+      "approve_reason_placeholder": "如本次是 AI 误判，可说明人工复核依据；留空则直接通过",
       "reject_modal_title": "拒绝该审核",
       "reject_reason_label": "拒绝原因（将通过站内信告知作者）",
       "reject_reason_required": "请填写拒绝原因",
@@ -233,6 +395,7 @@
     },
     "scripts": {
       "action_delete": "删除",
+      "action_ai_review": "AI 审核",
       "action_restore": "恢复",
       "action_set_multiplier": "设置评分系数",
       "action_trending_score": "修改趋势分",
@@ -246,6 +409,8 @@
       "col_trending_score": "趋势分",
       "col_type": "类型",
       "col_visibility": "可见性",
+      "ai_review_confirm": "确定要提交该脚本最新版本的 AI 审核任务吗？",
+      "ai_review_success": "AI 审核任务已提交",
       "delete_confirm": "确定要删除此脚本吗？",
       "delete_success": "脚本删除成功",
       "delete_reason": "删除原因（可选）",
@@ -285,26 +450,9 @@
       "ai_model": "模型",
       "ai_system_prompt": "系统提示词",
       "ai_title": "AI 配置",
-      "audit_credit_title": "脚本审核与信用分",
-      "audit_enabled": "启用低分脚本审核",
-      "audit_enabled_help": "关闭后，信用分大于 0 但低于审核阈值的用户将直接发布；信用分小于等于 0 仍禁止发布。",
-      "audit_max_pending": "低分用户待审上限",
-      "audit_max_pending_help": "低于审核阈值的用户最多允许同时存在的待审脚本数。",
-      "credit_review_threshold": "审核阈值",
-      "credit_review_threshold_help": "信用分低于该值且大于 0 时进入审核队列。",
-      "credit_signal_register": "注册基础分",
-      "credit_signal_register_help": "用户首次初始化信用分快照时获得的基础分。",
-      "credit_signal_register_7d": "注册满 7 天加分",
-      "credit_signal_register_30d": "注册满 30 天加分",
-      "credit_signal_register_180d": "注册满 180 天加分",
-      "credit_signal_oauth_bind": "绑定 OAuth 加分",
-      "credit_signal_oauth_bind_help": "绑定任意 OAuth 账号后获得的一次性加分。",
-      "credit_event_audit_approved": "审核通过加分",
-      "credit_event_audit_rejected": "审核拒绝扣分",
-      "credit_event_force_deleted": "强删已上线脚本扣分",
-      "credit_event_help": "可填写正数、负数或 0。",
-      "credit_max_admin_adjust_delta": "管理员单次调分上限",
-      "credit_max_admin_adjust_delta_help": "管理员手动调分时，单次 delta 的绝对值不能超过该值。",
+      "github_title": "GitHub 配置",
+      "github_pat": "GitHub Personal Access Token",
+      "github_pat_hint": "用于 GitHub 脚本同步的认证请求，可提高请求限额。建议使用最小权限的 fine-grained PAT。",
       "save_button": "保存",
       "save_success": "保存成功",
       "title": "系统配置",
@@ -554,6 +702,7 @@
     "welcome_title": "ScriptCat AI 助手"
   },
   "common": {
+    "share": "分享",
     "admin_delete_content": "删除后所有数据将无法恢复，请谨慎操作！",
     "admin_delete_reason_copyright": "侵权/版权问题",
     "admin_delete_reason_custom": "自定义原因",
@@ -614,6 +763,11 @@
     "try_refresh": "刷新当前页面",
     "what_can_do": "您可以尝试：",
     "what_happened": "发生了什么？"
+  },
+  "ads": {
+    "label": "广告",
+    "sponsored": "广告 · 赞助内容",
+    "learnMore": "了解更多"
   },
   "announcements": {
     "title": "公告"
@@ -701,7 +855,8 @@
     "system_settings": "系统设置",
     "tampermonkey_chinese_website": "油猴中文网",
     "user_profile": "个人资料",
-    "user_setting": "用户设置"
+    "user_setting": "用户设置",
+    "code_search": "源码搜索"
   },
   "login": {
     "account_placeholder": "请输入邮箱或用户名",
@@ -822,6 +977,17 @@
       }
     },
     "script": {
+      "audit": {
+        "approved": {
+          "content": "您的脚本 <link>{name}</link> 已通过审核并发布，版本：{version}"
+        },
+        "rejected": {
+          "content": "您的脚本 <link>{name}</link> 审核未通过，原因：{reason}"
+        },
+        "submitted": {
+          "content": "您的脚本 <link>{name}</link> 已进入审核队列，版本：{version}"
+        }
+      },
       "delete": {
         "content": "您的脚本 {name} 已被管理员删除，原因：{reason}"
       },
@@ -837,7 +1003,8 @@
     },
     "type_system": "系统通知",
     "unread": "未读",
-    "status_label": "状态:"
+    "status_label": "状态:",
+    "total": "共 {total} 条"
   },
   "oauth": {
     "authorize": {
@@ -847,6 +1014,7 @@
       "description": "{app_name} 请求访问您的账户",
       "error_title": "授权错误",
       "invalid_request": "无效的授权请求",
+      "invalid_redirect": "无效的跳转地址",
       "load_failed": "加载应用信息失败",
       "permission_profile": "读取您的基本资料信息（用户名、邮箱、头像）",
       "permissions_label": "该应用将获得以下权限：",
@@ -855,11 +1023,14 @@
   },
   "policy": {
     "terms_of_service_title": "服务协议",
+    "terms_of_service_description": "阅读使用 ScriptCat 用户脚本分享平台的服务条款与使用规则。",
     "privacy_policy_title": "隐私政策",
+    "privacy_policy_description": "了解 ScriptCat 如何收集、使用和保护你的个人信息。",
     "disclaimer_title": "免责声明",
-    "last_updated": "最后更新日期：2026年3月6日",
+    "disclaimer_description": "了解 ScriptCat 关于用户脚本内容与使用风险的免责声明。",
+    "last_updated": "最后更新日期：2026年6月19日",
     "tos_section1_title": "一、总则",
-    "tos_section1_content": "欢迎使用 ScriptCat 脚本站（以下简称「本平台」）。本平台是一个用户脚本分享社区，为用户提供脚本的发布、搜索、安装等服务。请您在使用本平台服务前，仔细阅读并理解本服务协议的全部内容。注册或使用本平台即表示您同意受本协议的约束。",
+    "tos_section1_content": "欢迎使用 ScriptCat 脚本站（以下简称「本平台」）。本平台是一个用户脚本分享社区，为用户提供脚本的发布、搜索、安装等服务，并可能在平台页面中展示广告。请您在使用本平台服务前，仔细阅读并理解本服务协议的全部内容。注册或使用本平台即表示您同意受本协议的约束。",
     "tos_section2_title": "二、账号注册与使用",
     "tos_section2_content": "您注册时应提供真实、准确的信息，并妥善保管账号和密码。每个用户限注册一个账号，不得将账号转让、出借给他人使用。因账号管理不善导致的损失由用户自行承担。本平台有权对涉嫌违规的账号采取限制、封禁等措施。",
     "tos_section3_title": "三、脚本发布规范",
@@ -871,9 +1042,9 @@
     "tos_section6_title": "六、协议变更与终止",
     "tos_section6_content": "本平台有权根据需要修改本协议内容，修改后的协议将在平台公布。您继续使用本平台服务即表示接受修改后的协议。本平台有权在法律允许的范围内终止或暂停服务，并尽可能提前通知用户。本协议的最终解释权归本平台所有。",
     "pp_section1_title": "一、信息收集",
-    "pp_section1_content": "我们收集以下类型的用户信息：注册信息（邮箱地址、用户名）；设备与网络信息（IP 地址、浏览器类型）；使用数据（脚本浏览、安装、评分等）；用于维持登录状态的会话信息。",
+    "pp_section1_content": "我们收集以下类型的用户信息：注册信息（邮箱地址、用户名）；设备与网络信息（IP 地址、浏览器类型）；使用数据（脚本浏览、安装、评分、广告浏览与点击等）；用于维持登录状态的会话信息。",
     "pp_section2_title": "二、信息使用",
-    "pp_section2_content": "我们将收集的信息用于：提供和改进平台服务；脚本安装量等数据统计；安全保障（防止恶意注册、滥用等）；发送验证码、密码重置等服务通知。我们不会将您的个人信息出售给第三方。",
+    "pp_section2_content": "我们将收集的信息用于：提供和改进平台服务；脚本安装量等数据统计；安全保障（防止恶意注册、滥用等）；发送验证码、密码重置等服务通知；展示广告并统计广告的展示、点击等效果（本平台广告均为自营，不接入第三方广告联盟）。我们不会将您的个人信息出售给第三方。",
     "pp_section3_title": "三、第三方服务",
     "pp_section3_content": "本平台可能使用第三方服务实现部分功能，如第三方账号登录和人机验证等。使用第三方登录时，我们仅获取您授权的基本信息（如用户名、邮箱、头像）。第三方服务的数据处理受其各自隐私政策约束。",
     "pp_section4_title": "四、Cookie 与会话",
@@ -891,7 +1062,7 @@
     "dc_section3_title": "三、服务可用性",
     "dc_section3_content": "本平台按「现状」提供服务，不保证服务不中断、无错误或满足您的特定需求。因系统维护、升级、网络故障或不可抗力等原因导致的服务中断，本平台不承担责任。本平台保留随时修改、暂停或终止部分或全部服务的权利。",
     "dc_section4_title": "四、责任限制",
-    "dc_section4_content": "在法律允许的最大范围内，本平台及其运营者不对因使用或无法使用本平台服务而导致的任何直接、间接、附带、特殊或后果性损害承担责任，包括但不限于数据丢失、利润损失或业务中断。",
+    "dc_section4_content": "在法律允许的最大范围内，本平台及其运营者不对因使用或无法使用本平台服务而导致的任何直接、间接、附带、特殊或后果性损害承担责任，包括但不限于数据丢失、利润损失或业务中断。对于广告主通过本平台所推广的商品或服务，本平台不作任何担保，亦不承担相关责任，您与广告主之间的交易请自行判断并承担风险。",
     "dc_section5_title": "五、声明更新",
     "dc_section5_content": "我们可能会根据法律法规要求或产品功能变化对本免责声明进行更新。更新后的声明将在本平台上发布，建议您定期查看以了解最新内容。继续使用本平台即表示您接受更新后的声明。本免责声明的最终解释权归本平台所有。"
   },
@@ -899,7 +1070,27 @@
     "alerts": {
       "archived_description": "该脚本已经被作者归档，脚本可能失效并且作者不再维护，你无法再进行问题反馈。",
       "archived_title": "脚本已归档",
+      "audit_approve_button": "通过",
+      "audit_approve_failed": "通过失败",
+      "audit_approve_modal_title": "通过该审核",
+      "audit_approve_reason_label": "通过说明（可选）",
+      "audit_approve_reason_placeholder": "如本次是 AI 误判，可说明人工复核依据；留空则直接通过",
+      "audit_approve_success": "已通过",
+      "audit_description": "该脚本正在审核中，普通用户暂时无法访问。审核原因、处理进度和结果会记录在管理日志中，可前往查看详情。",
+      "audit_description_no_record": "该脚本正在审核中，但当前没有可直接处理的待审核记录。请前往管理日志查看审核原因、处理进度和结果。",
+      "audit_feedback_hint": "请勿重复发布该脚本；如果长时间没有进行审核，也可以前往社区反馈。",
+      "audit_feedback_link": "前往社区反馈",
+      "audit_logs_link": "查看管理日志",
+      "audit_reject_button": "拒绝",
+      "audit_reject_failed": "拒绝失败",
+      "audit_reject_modal_title": "拒绝该审核",
+      "audit_reject_reason_label": "拒绝原因（将通过站内信告知作者）",
+      "audit_reject_reason_placeholder": "请说明拒绝原因，比如：含有恶意代码、违反平台规则、版权问题等",
+      "audit_reject_reason_required": "请填写拒绝原因",
+      "audit_reject_success": "已拒绝",
+      "audit_title": "脚本正在审核中",
       "deleted_description": "该脚本已被删除，普通用户无法访问。你正在以管理员身份查看，可点击右侧按钮将其恢复。",
+      "deleted_owner_description": "该脚本已被删除，普通用户无法访问。你正在以作者身份查看脚本详情。",
       "deleted_restore_button": "恢复脚本",
       "deleted_restore_confirm": "确认恢复该脚本？",
       "deleted_restore_failed": "恢复失败",
@@ -915,7 +1106,7 @@
       "library_tooltip": "这是一个脚本使用的库",
       "share_link": "分享链接",
       "tag_label": "标签：{name}",
-      "today_installs": "今日 +{count}",
+      "today_installs": "24 小时 +{count}",
       "view_detail": "查看详情"
     },
     "detail": {
@@ -1005,6 +1196,10 @@
         "library_description": "这是一个用户脚本使用的库，你可以在你的脚本中直接引用它。",
         "library_details": "库详情",
         "license": "许可协议",
+        "license_no_derivative": "禁止二开",
+        "license_none": "未声明",
+        "license_none_warning": "未声明协议，他人引用需谨慎",
+        "permissions_title": "脚本权限说明",
         "scheduled_script": "定时脚本",
         "scheduled_script_tooltip": "此脚本支持定时执行，会按照设定的时间间隔自动运行：{cron}",
         "script_details": "脚本详情",
@@ -1015,7 +1210,98 @@
         "install_check_failed": "检测脚本安装状态失败",
         "install_script": "安装脚本",
         "reinstall_script": "重新安装脚本 v{version}",
-        "update_script": "更新脚本至 v{version}"
+        "update_script": "更新脚本至 v{version}",
+        "updated_at": "更新于 {time}",
+        "changelog": "更新日志"
+      },
+      "installGuide": {
+        "title": "需要脚本管理器",
+        "cancel": "取消",
+        "description": "安装用户脚本需要先安装一个脚本管理器。推荐使用脚本猫（ScriptCat），安装后即可一键安装并运行本站脚本。",
+        "learn_more": "脚本猫是开源的用户脚本管理器。",
+        "learn_more_link": "了解更多 / 安装教程",
+        "other_channels": "其它浏览器 / 方式",
+        "primary_chrome": "在 Chrome 安装脚本猫",
+        "primary_edge": "在 Edge 安装脚本猫",
+        "primary_firefox": "在 Firefox 安装脚本猫",
+        "primary_other": "查看脚本猫安装教程",
+        "proceed": "已安装脚本猫？仍要继续安装",
+        "subtitle_chrome": "前往 Chrome 应用商店 · 免费",
+        "subtitle_edge": "前往 Edge 加载项 · 免费",
+        "subtitle_firefox": "前往 Firefox 附加组件 · 免费",
+        "subtitle_other": "你的浏览器需手动安装"
+      },
+      "metadata": {
+        "empty_description": "该脚本没有声明可展示的权限、连接或运行规则。",
+        "empty_title": "暂无元数据说明",
+        "fields": {
+          "author": "作者",
+          "connect": "跨域连接",
+          "exclude": "排除规则",
+          "grant": "权限申请",
+          "include": "包含规则",
+          "license": "许可协议",
+          "match": "匹配规则",
+          "namespace": "命名空间",
+          "require": "外部依赖",
+          "resource": "外部资源",
+          "run_at": "运行时机"
+        },
+        "grants": {
+          "addElement": "允许脚本向页面创建并插入元素。",
+          "addStyle": "允许脚本向页面注入 CSS 样式。",
+          "deleteValue": "允许脚本删除脚本管理器保存的数据。",
+          "download": "允许脚本触发文件下载。",
+          "getResourceText": "允许脚本读取 @resource 声明的文本资源。",
+          "getResourceUrl": "允许脚本读取 @resource 声明资源的 URL。",
+          "getValue": "允许脚本读取脚本管理器保存的数据。",
+          "info": "允许脚本读取脚本和脚本管理器的运行信息。",
+          "listValues": "允许脚本列出已保存的数据键名。",
+          "none": "脚本声明不申请额外的脚本管理器权限。",
+          "notification": "允许脚本显示系统或浏览器通知。",
+          "openInTab": "允许脚本打开新的浏览器标签页。",
+          "registerMenuCommand": "允许脚本在脚本管理器菜单中注册命令。",
+          "setClipboard": "允许脚本写入剪贴板。",
+          "setValue": "允许脚本在脚本管理器中保存数据。",
+          "unknown": "脚本请求的扩展权限，具体行为取决于脚本管理器支持。",
+          "unregisterMenuCommand": "允许脚本移除已注册的菜单命令。",
+          "unsafeWindow": "允许脚本访问页面自身的 window 对象，可能与页面脚本直接交互。",
+          "xmlhttpRequest": "允许脚本发起由脚本管理器代理的网络请求。"
+        },
+        "intro": "这些说明来自脚本头部的 userscript 元数据，用于帮助理解脚本声明的权限、运行范围和外部依赖。",
+        "run_at": {
+          "context_menu": "仅在用户通过上下文菜单触发时运行。",
+          "document_body": "在页面 body 可用后运行。",
+          "document_end": "在 DOM 加载完成附近运行。",
+          "document_idle": "在页面主要内容加载后空闲时运行。",
+          "document_start": "在页面开始加载时尽早运行。",
+          "unknown": "脚本声明的运行时机，具体行为取决于脚本管理器。"
+        },
+        "sections": {
+          "author": "脚本声明的作者信息。",
+          "connect": "脚本可连接的域名范围，通常配合网络请求权限使用。",
+          "exclude": "这些 URL 规则会从运行范围中排除。",
+          "grant": "脚本向脚本管理器申请的能力或 API 权限。",
+          "include": "脚本声明会运行的 URL 规则。",
+          "license": "脚本声明的开源或使用许可。",
+          "match": "脚本声明会匹配并运行的 URL 规则。",
+          "namespace": "脚本用于区分来源或身份的命名空间。",
+          "require": "脚本运行前加载的外部 JavaScript 依赖。",
+          "resource": "脚本声明可读取的外部资源。",
+          "run_at": "脚本希望在页面生命周期中的哪个阶段运行。"
+        },
+        "values": {
+          "author": "作者声明值。",
+          "connect": "允许连接的域名或通配规则。",
+          "exclude": "排除运行的 URL 规则。",
+          "include": "包含运行的 URL 规则。",
+          "license": "许可协议标识。",
+          "match": "匹配运行的 URL 规则。",
+          "namespace": "命名空间标识。",
+          "require": "外部脚本依赖地址。",
+          "resource": "外部资源声明。",
+          "unknown": "元数据声明值。"
+        }
       },
       "require": {
         "compatible_version": "(兼容版本) ",
@@ -1023,15 +1309,42 @@
         "patch_version": "(补丁版本) ",
         "usage_guide": "使用指南"
       },
+      "permissions": {
+        "title": "权限与访问",
+        "connect": "跨域访问",
+        "grants": "使用能力",
+        "more": "+{count}",
+        "high_risk": "高风险权限，请谨慎安装",
+        "cap": {
+          "net": "网络请求",
+          "notify": "通知",
+          "clipboard": "剪贴板",
+          "storage": "存储",
+          "tab": "打开标签页",
+          "download": "下载",
+          "cookie": "Cookie",
+          "menu": "菜单命令"
+        }
+      },
       "sites": {
         "collapse": "收起",
         "more": "+{count} 更多"
       },
       "stats": {
         "current_version": "当前版本",
-        "today_installs": "今日新增",
+        "title": "数据统计",
+        "today_installs": "近 24 小时",
         "total_installs": "总安装量",
         "user_rating": "用户评分"
+      },
+      "summary": {
+        "label": "AI 摘要"
+      },
+      "tabs": {
+        "description": "描述",
+        "metadata": "权限说明",
+        "ratings": "评分",
+        "versions": "版本"
       }
     },
     "diff": {
@@ -1062,6 +1375,17 @@
         "update_button": "发布更新"
       },
       "info_section": {
+        "license_custom": "自定义",
+        "license_custom_placeholder": "输入协议名称，如 CC-BY-NC-4.0",
+        "license_group_opensource": "常见开源协议",
+        "license_group_other": "其他",
+        "license_label": "许可协议",
+        "license_need_header": "请先编写脚本头部（==UserScript==）后再选择协议",
+        "license_no_derivative": "禁止二开",
+        "license_none_warning": "未声明协议，他人引用需谨慎",
+        "license_placeholder": "选择许可协议",
+        "license_tooltip": "选择后会写入脚本头部 @license，随脚本一起分发，他人引用时有据可依",
+        "license_written": "已写入脚本头部 // @license {license}",
         "prerelease_label": "预发布版本",
         "prerelease_tooltip": "设置为预发布版本，正式版本不会更新至此版本，可在脚本管理页开启脚本预发布安装链接",
         "script_category_label": "脚本分类",
@@ -1534,7 +1858,13 @@
       },
       "search": {
         "page_number": "第 {page} 页",
-        "title": "脚本搜索"
+        "title": "脚本搜索",
+        "domain_subject": "{domain} 相关脚本",
+        "description": "在 ScriptCat 搜索油猴/脚本猫用户脚本，按网站、分类、热度发现适合你的脚本。",
+        "keyword_description": "搜索与「{keyword}」相关的用户脚本，在 ScriptCat 发现并安装油猴/脚本猫脚本。",
+        "domain_description": "浏览适用于 {domain} 的用户脚本（油猴/脚本猫脚本），在 ScriptCat 发现并安装更多 {domain} 脚本。",
+        "domain_typed_subject": "{domain} 相关{type}",
+        "type_description": "在 ScriptCat 浏览全部{type}，发现并安装油猴/脚本猫脚本。"
       }
     },
     "navigation": {
@@ -1618,6 +1948,8 @@
       "update_success": "评分更新成功！",
       "user_form": {
         "cancel_button": "取消",
+        "collapsed_hint": "点击星标开始评价",
+        "collapsed_prompt": "为这个脚本评分",
         "edit_button": "编辑",
         "edit_review_title": "编辑评价",
         "login_prompt_button": "立即登录",
@@ -1715,7 +2047,6 @@
       },
       "sort": {
         "createtime": "最新发布",
-        "daily_pick": "每日精选",
         "score": "评分最高",
         "today_download": "热度排序",
         "total_download": "下载最多"
@@ -1723,9 +2054,6 @@
     },
     "section": {
       "more": "更多",
-      "daily_pick": {
-        "title": "每日精选"
-      },
       "hot": {
         "title": "热门脚本"
       },
@@ -1772,7 +2100,8 @@
       "background_script": "后台脚本",
       "library": "脚本库",
       "scheduled_script": "定时脚本",
-      "script": "用户脚本"
+      "script": "用户脚本",
+      "subscribe_script": "订阅脚本"
     },
     "user_modal": {
       "add": "添加",
@@ -1798,6 +2127,7 @@
       "changelog_label": "更新说明",
       "changelog_placeholder": "例如：\n✨ 新增功能：添加了用户界面优化\n🐛 修复问题：解决了浏览器兼容性问题\n⚡ 性能提升：优化了脚本执行速度\n📦 依赖更新：升级到最新版本",
       "changelog_subtitle": "(支持Markdown语法)",
+      "collapse_changelog": "收起",
       "compare_button": "对比",
       "confirm_delete_cancel": "取消",
       "confirm_delete_description": "确定要删除这个版本吗？此操作不可撤销。",
@@ -1809,6 +2139,7 @@
       "delete_version_failed": "删除版本失败:",
       "edit_button": "编辑",
       "edit_modal_title": "编辑版本 {version}",
+      "expand_changelog": "展开全部",
       "history_description": "查看所有已发布的版本，包括正式版本和预发布版本。您可以安装任何版本或查看其源代码。",
       "history_title": "版本历史",
       "install_button": "安装此版本",
@@ -1821,9 +2152,11 @@
       "pagination_info": "显示第 {start}-{end} 项，共 {total} 项",
       "pagination_total": "第 {start}-{end} 项，共 {total} 个版本",
       "prerelease_badge": "预发布版本",
+      "prerelease_chip": "预发布 {count}",
       "prerelease_checked": "预发布版本",
       "prerelease_unchecked": "正式版本",
       "prerelease_versions": "预发布版本",
+      "release_chip": "正式 {count}",
       "release_versions": "正式版本",
       "retry": "重试",
       "save_changes": "保存更改",
@@ -1832,8 +2165,22 @@
       "update_success": "版本信息更新成功",
       "update_version_failed": "更新版本失败:",
       "version_type_extra": "预发布版本通常用于测试新功能，可能不够稳定",
+      "version_count": "共 {count} 个版本",
       "version_type_label": "版本类型",
       "view_code_button": "查看代码"
+    },
+    "code_search": {
+      "title": "源码搜索",
+      "subtitle": "搜索你有权限查看的脚本最新源码",
+      "placeholder": "输入 API、函数名或变量名",
+      "button": "搜索",
+      "login": "登录",
+      "login_required": "请先登录后再搜索源码",
+      "keyword_too_short": "请输入至少 2 个字符",
+      "rate_limited": "源码搜索频率较高，请稍后再试",
+      "search_failed": "源码搜索失败，请稍后重试",
+      "empty": "没有找到匹配源码",
+      "ready": "输入关键词开始搜索"
     }
   },
   "user": {
@@ -1900,6 +2247,8 @@
       "no_favorites": "该用户还没有收藏任何脚本",
       "no_script_manager_content": "未检测到浏览器中安装了 ScriptCat 扩展，确认要打开订阅链接吗？",
       "no_script_manager_title": "未检测到脚本管理器",
+      "continue_subscribe": "已安装脚本猫？仍要继续订阅",
+      "subscribe_guide_description": "订阅脚本需要先安装一个脚本管理器。推荐使用脚本猫（ScriptCat），安装后即可一键订阅并自动更新本站脚本。",
       "no_scripts_in_category": "该分类下暂无收藏的脚本",
       "no_scripts_in_folder": "该收藏夹暂无脚本",
       "pagination_items": "第 {start}-{end} 项，共 {total} 项",
@@ -2038,8 +2387,6 @@
       "register_ip": "注册IP",
       "ip_location": "IP归属地",
       "register_email": "注册邮箱",
-      "credit_score": "信用分",
-      "credit_pending": "{count} 条待审",
       "previously_processed_scripts": "该用户被处理过的脚本",
       "processed_empty": "暂无处理记录",
       "processed_action_delete": "管理员删除",
@@ -2057,6 +2404,10 @@
       "pagination_total": "{start}-{end} / 共 {total} 个脚本",
       "search_button": "搜索",
       "search_placeholder": "搜索该用户的脚本",
+      "all_status_placeholder": "所有状态",
+      "status_active": "已发布",
+      "status_all": "全部状态",
+      "status_audit": "审核中",
       "sort_by_downloads": "下载最多",
       "sort_by_hot": "热度排序",
       "sort_by_latest": "最新发布",
@@ -2080,6 +2431,7 @@
     "update_failed": "更新失败，请重试",
     "update_success": "用户信息更新成功！",
     "user_homepage": "用户主页",
+    "user_homepage_description": "查看 {username} 在 ScriptCat 发布的用户脚本与个人主页。",
     "user_not_found": "用户不存在",
     "username": "用户名",
     "username_placeholder": "请输入用户名",
@@ -2174,6 +2526,9 @@
     }
   },
   "errors": {
+    "api": {
+      "access_not_found": "权限不存在"
+    },
     "integrity_rejected": {
       "title": "代码未通过完整性检查",
       "help": "如为误判，请通过站点 FAQ 的「管理员联系方式」申请豁免。"

@@ -11,11 +11,11 @@ import {
   Switch,
   message,
   Popconfirm,
-  Divider,
   Empty,
   Spin,
   Pagination,
   Alert,
+  Tooltip,
 } from 'antd';
 import {
   EditOutlined,
@@ -23,9 +23,10 @@ import {
   DownloadOutlined,
   CodeOutlined,
   CalendarOutlined,
-  TagOutlined,
   HistoryOutlined,
   DiffOutlined,
+  UpOutlined,
+  DownOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { useScript } from '../../components/ScriptContext';
@@ -44,9 +45,52 @@ const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
+import { useScriptInstallGuide } from '@/components/ScriptInstallGuide';
 
 const { Text, Title, Paragraph } = Typography;
 const { TextArea } = Input;
+
+function VersionChangelog({ changelog }: { changelog: string }) {
+  const t = useTranslations('script.version');
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [overflowing, setOverflowing] = useState(false);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    setExpanded(false);
+    const measure = () => setOverflowing(el.scrollHeight > el.clientHeight + 4);
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    const raf = requestAnimationFrame(measure);
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+  }, [changelog]);
+  return (
+    <div className="border-l-[3px] border-gray-200 pl-3 dark:border-gray-700">
+      <div ref={ref} className={expanded ? '' : 'line-clamp-2 overflow-hidden'}>
+        <MarkdownView content={changelog} />
+      </div>
+      {(overflowing || expanded) && (
+        <button
+          type="button"
+          aria-expanded={expanded}
+          onClick={() => setExpanded((v) => !v)}
+          className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400"
+        >
+          {expanded ? t('collapse_changelog') : t('expand_changelog')}
+          {expanded ? (
+            <UpOutlined className="text-xs" />
+          ) : (
+            <DownOutlined className="text-xs" />
+          )}
+        </button>
+      )}
+    </div>
+  );
+}
 
 interface EditVersionForm {
   changelog: string;
@@ -54,10 +98,12 @@ interface EditVersionForm {
 }
 
 interface ScriptVersionsClientProps {
-  initialVersionData: VersionListResponse;
-  versionStat: VersionStatResponse;
+  initialVersionData: VersionListResponse | null;
+  versionStat: VersionStatResponse | null;
   initialPage?: number;
   initialPageSize?: number;
+  embedded?: boolean;
+  initialError?: string;
 }
 
 export default function ScriptVersionsClient({
@@ -65,10 +111,13 @@ export default function ScriptVersionsClient({
   versionStat,
   initialPage = 1,
   initialPageSize = 10,
+  embedded = false,
+  initialError,
 }: ScriptVersionsClientProps) {
   const { script } = useScript();
   const t = useTranslations('script.version');
   const router = useRouter();
+  const { handleInstallClick, guideModal } = useScriptInstallGuide(); // 未检测到脚本管理器时的二次引导
   const [editingVersion, setEditingVersion] = useState<ScriptVersion | null>(
     null,
   );
@@ -83,14 +132,19 @@ export default function ScriptVersionsClient({
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 
   // 使用传入的版本数据
-  const [versionData, setVersionData] =
-    useState<VersionListResponse>(initialVersionData);
+  const [versionData, setVersionData] = useState<VersionListResponse>(
+    initialVersionData || { list: [], total: 0 },
+  );
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<Error | null>(
+    initialError ? new Error(initialError) : null,
+  );
   const semDateTime = useSemDateTime();
 
   const versions = versionData?.list || [];
   const totalVersions = versionData?.total || 0;
+  const releaseCount = versionStat?.release_num || 0;
+  const preReleaseCount = versionStat?.pre_release_num || 0;
 
   // 刷新数据的函数
   const mutate = async () => {
@@ -233,39 +287,69 @@ export default function ScriptVersionsClient({
 
   // 处理加载状态
   if (isLoading) {
-    return (
+    const loadingContent = (
       <Card className="shadow-sm !mb-4">
         <div className="flex justify-center items-center py-12">
           <Spin size="large" />
         </div>
       </Card>
     );
+    return embedded ? (
+      <div className="flex justify-center items-center py-12">
+        <Spin size="large" />
+      </div>
+    ) : (
+      loadingContent
+    );
   }
 
   // 处理错误状态
   if (error) {
-    return (
-      <Card className="shadow-sm !mb-4">
-        <Alert
-          message={t('load_failed')}
-          description={error.message || t('load_failed_description')}
-          type="error"
-          showIcon
-          action={
-            <Button size="small" onClick={() => mutate()}>
-              {t('retry')}
-            </Button>
-          }
-        />
-      </Card>
+    const errorContent = (
+      <Alert
+        message={t('load_failed')}
+        description={error.message || t('load_failed_description')}
+        type="error"
+        showIcon
+        action={
+          <Button size="small" onClick={() => mutate()}>
+            {t('retry')}
+          </Button>
+        }
+      />
+    );
+    return embedded ? (
+      errorContent
+    ) : (
+      <Card className="shadow-sm !mb-4">{errorContent}</Card>
     );
   }
 
   // 如果没有版本数据，显示空状态
   if (!versions || versions.length === 0) {
-    return (
+    const emptyContent = (
       <div className="space-y-6">
-        {/* 页面标题 */}
+        <Empty
+          image={
+            <HistoryOutlined style={{ fontSize: '64px', color: '#d9d9d9' }} />
+          }
+          description={
+            <div>
+              <p className="text-gray-500 dark:text-gray-400 text-base mb-2">
+                {t('no_history_title')}
+              </p>
+              <p className="text-gray-400 dark:text-gray-500 text-sm">
+                {t('no_history_description')}
+              </p>
+            </div>
+          }
+        />
+      </div>
+    );
+    return embedded ? (
+      emptyContent
+    ) : (
+      <div className="space-y-6">
         <div className="mb-6">
           <Title level={2} className="!mb-2">
             {t('history_title')}
@@ -275,316 +359,264 @@ export default function ScriptVersionsClient({
           </Paragraph>
         </div>
 
-        <Card className="shadow-sm">
-          <Empty
-            image={
-              <HistoryOutlined style={{ fontSize: '64px', color: '#d9d9d9' }} />
-            }
-            description={
-              <div>
-                <p className="text-gray-500 dark:text-gray-400 text-base mb-2">
-                  {t('no_history_title')}
-                </p>
-                <p className="text-gray-400 dark:text-gray-500 text-sm">
-                  {t('no_history_description')}
-                </p>
-              </div>
-            }
-          />
-        </Card>
+        <Card className="shadow-sm">{emptyContent}</Card>
       </div>
     );
   }
 
-  return (
-    <Card className="shadow-sm !mb-4">
-      <div className="space-y-6">
-        {/* 页面标题 */}
-        <Title level={2} className="!mb-2">
-          {t('history_title')}
-        </Title>
-        <Paragraph className="text-gray-600 dark:text-gray-400">
-          {t('history_description')}
-        </Paragraph>
+  const content = (
+    <div className="space-y-6">
+      {guideModal}
+      {/* 页面标题 */}
+      {!embedded && (
+        <>
+          <Title level={2} className="!mb-2">
+            {t('history_title')}
+          </Title>
+          <Paragraph className="text-gray-600 dark:text-gray-400">
+            {t('history_description')}
+          </Paragraph>
+        </>
+      )}
 
-        {/* 版本统计信息 */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <div className="flex items-center space-x-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">
-                {totalVersions}
-              </div>
-              <div className="text-sm text-gray-500">{t('total_versions')}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">
-                {versionStat.release_num}
-              </div>
-              <div className="text-sm text-gray-500">
-                {t('release_versions')}
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">
-                {versionStat.pre_release_num}
-              </div>
-              <div className="text-sm text-gray-500">
-                {t('prerelease_versions')}
-              </div>
-            </div>
-          </div>
-
-          <div className="text-right">
-            <div className="text-sm text-gray-500">
-              {t('pagination_info', {
-                start: (currentPage - 1) * pageSize + 1,
-                end: Math.min(currentPage * pageSize, totalVersions),
-                total: totalVersions,
-              })}
-            </div>
-          </div>
+      {/* 版本统计信息 */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-800/50">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="font-semibold text-gray-900 dark:text-gray-100">
+            {t('version_count', { count: totalVersions })}
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+            {t('release_chip', { count: releaseCount })}
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+            {t('prerelease_chip', { count: preReleaseCount })}
+          </span>
         </div>
+        <span className="text-sm text-gray-500">
+          {t('pagination_info', {
+            start: (currentPage - 1) * pageSize + 1,
+            end: Math.min(currentPage * pageSize, totalVersions),
+            total: totalVersions,
+          })}
+        </span>
+      </div>
 
-        {/* 版本列表 */}
-        <div className="flex flex-col gap-4 space-y-4">
-          {versions.map((version: ScriptVersion, index: number) => {
-            const globalIndex = (currentPage - 1) * pageSize + index; // 计算全局索引
-            return (
-              <Card
-                key={version.id}
-                className="shadow-sm hover:shadow-md transition-shadow duration-200"
-                size="small"
-              >
-                {/* 头部区域 */}
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center space-x-2">
-                      <TagOutlined className="text-gray-500" />
-                      <Title level={4} className="!mb-0 !text-lg">
-                        {version.version}
-                      </Title>
-                      {getVersionBadge(version, globalIndex)}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-2">
+      {/* 版本列表 */}
+      <div className="divide-y divide-gray-100 dark:divide-gray-800">
+        {versions.map((version: ScriptVersion, index: number) => {
+          const globalIndex = (currentPage - 1) * pageSize + index;
+          const versionInstallUrl = `/scripts/code/${script.id}/${encodeURIComponent(
+            script.name,
+          )}.user.js?version=${version.version}`;
+          return (
+            <div key={version.id} className="space-y-3 py-5 first:pt-0">
+              {/* 头部：版本号 + 徽标 / 日期 + 管理按钮 */}
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <span className="rounded-md bg-gray-100 px-2.5 py-1 font-mono text-sm font-semibold text-gray-800 dark:bg-gray-800 dark:text-gray-200">
+                    {version.version}
+                  </span>
+                  {getVersionBadge(version, globalIndex)}
+                </div>
+                <div className="flex items-center gap-1 text-sm text-gray-500">
+                  <CalendarOutlined />
+                  <span className="text-xs">
+                    {semDateTime(version.createtime)}
+                  </span>
+                  <Tooltip title={t('edit_button')}>
                     <Button
+                      type="text"
                       size="small"
                       icon={<EditOutlined />}
                       onClick={() => handleEdit(version)}
-                      className="flex items-center"
-                    >
-                      <span className="hidden sm:inline">
-                        {t('edit_button')}
-                      </span>
-                    </Button>
-                    <Popconfirm
-                      title={t('confirm_delete_title')}
-                      description={t('confirm_delete_description')}
-                      onConfirm={() => handleDelete(version)}
-                      okText={t('confirm_delete_ok')}
-                      cancelText={t('confirm_delete_cancel')}
-                      okType="danger"
-                    >
-                      <Button
-                        size="small"
-                        icon={<DeleteOutlined />}
-                        danger
-                        className="flex items-center"
-                      >
-                        <span className="hidden sm:inline">
-                          {t('delete_button')}
-                        </span>
-                      </Button>
-                    </Popconfirm>
-                  </div>
-                </div>
-
-                {/* 版本信息区域 */}
-                <div className="mb-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-500 mb-3">
-                    <div className="flex items-center space-x-1">
-                      <CalendarOutlined />
-                      <span className="text-xs">
-                        {semDateTime(version.createtime)}
-                      </span>
-                    </div>
-                  </div>
-
-                  {version.changelog && (
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-                      <MarkdownView content={version.changelog} />
-                    </div>
-                  )}
-                </div>
-
-                <Divider className="!my-3" />
-
-                {/* 操作区域 */}
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <Button
-                      type="primary"
-                      size="small"
-                      icon={<DownloadOutlined />}
-                      href={
-                        '/scripts/code/' +
-                        script.id +
-                        '/' +
-                        encodeURIComponent(script.name) +
-                        '.user.js?version=' +
-                        version.version
-                      }
-                      className="w-full sm:w-auto"
-                    >
-                      {t('install_button')}
-                    </Button>
-                    <Link
-                      href={`/script-show-page/${script.id}/code?version=${version.version}`}
-                    >
-                      <Button
-                        size="small"
-                        icon={<CodeOutlined />}
-                        className="w-full sm:w-auto"
-                      >
-                        {t('view_code_button')}
-                      </Button>
-                    </Link>
-                    <Button
-                      size="small"
-                      color={
-                        selectedVersions.includes(version.version)
-                          ? 'primary'
-                          : 'default'
-                      }
-                      variant="outlined"
-                      icon={<DiffOutlined />}
-                      onClick={() => handleVersionSelect(version)}
-                      disabled={
-                        selectedVersions.length >= 2 &&
-                        !selectedVersions.includes(version.version)
-                      }
-                      className="w-full sm:w-auto"
-                    >
-                      {t('compare_button')}
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-
-        {/* 分页组件 */}
-        {totalVersions > pageSize && (
-          <div className="flex justify-center pt-4">
-            <Pagination
-              current={currentPage}
-              total={totalVersions}
-              pageSize={pageSize}
-              onChange={handlePageChange}
-              onShowSizeChange={handlePageChange}
-              showSizeChanger
-              showQuickJumper
-              showTotal={(total, range) =>
-                t('pagination_total', {
-                  start: range[0],
-                  end: range[1],
-                  total: total,
-                })
-              }
-              pageSizeOptions={['5', '10', '20', '50']}
-              className="!mb-0"
-            />
-          </div>
-        )}
-
-        {/* 编辑模态框 */}
-        <Modal
-          title={
-            <div className="flex items-center space-x-2">
-              <EditOutlined />
-              <span>
-                {t('edit_modal_title', {
-                  version: editingVersion?.version || '',
-                })}
-              </span>
-            </div>
-          }
-          open={isEditModalVisible}
-          onCancel={() => {
-            setIsEditModalVisible(false);
-            setEditingVersion(null);
-            form.resetFields();
-          }}
-          footer={null}
-          width={600}
-          className="max-w-[90vw]"
-        >
-          <Spin spinning={loading}>
-            <Form
-              form={form}
-              layout="vertical"
-              onFinish={handleEditSubmit}
-              className="mt-4"
-            >
-              <Form.Item
-                name="changelog"
-                label={
-                  <div className="flex items-center space-x-1">
-                    <span>{t('changelog_label')}</span>
-                    <Text type="secondary" className="text-xs">
-                      {t('changelog_subtitle')}
-                    </Text>
-                  </div>
-                }
-              >
-                <TextArea
-                  rows={8}
-                  placeholder={t('changelog_placeholder')}
-                  showCount
-                  maxLength={2000}
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="is_pre_release"
-                valuePropName="checked"
-                label={t('version_type_label')}
-                extra={t('version_type_extra')}
-              >
-                <Switch
-                  className={
-                    isPreRelease
-                      ? '[&_>.ant-switch-inner]:bg-[#f97316]'
-                      : '[&_>.ant-switch-inner]:bg-[#10b981]'
-                  }
-                  checkedChildren={t('prerelease_checked')}
-                  unCheckedChildren={t('prerelease_unchecked')}
-                />
-              </Form.Item>
-
-              <Form.Item className="!mb-0">
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    onClick={() => {
-                      setIsEditModalVisible(false);
-                      setEditingVersion(null);
-                      form.resetFields();
-                    }}
-                    disabled={loading}
+                      className="!text-gray-500"
+                    />
+                  </Tooltip>
+                  <Popconfirm
+                    title={t('confirm_delete_title')}
+                    description={t('confirm_delete_description')}
+                    onConfirm={() => handleDelete(version)}
+                    okText={t('confirm_delete_ok')}
+                    cancelText={t('confirm_delete_cancel')}
+                    okType="danger"
                   >
-                    {t('confirm_delete_cancel')}
-                  </Button>
-                  <Button type="primary" htmlType="submit" loading={loading}>
-                    {t('save_changes')}
-                  </Button>
+                    <Button
+                      type="text"
+                      size="small"
+                      danger
+                      icon={<DeleteOutlined />}
+                      aria-label={t('delete_button')}
+                    />
+                  </Popconfirm>
                 </div>
-              </Form.Item>
-            </Form>
-          </Spin>
-        </Modal>
+              </div>
+
+              {/* changelog（可折叠） */}
+              {version.changelog && (
+                <VersionChangelog changelog={version.changelog} />
+              )}
+
+              {/* 操作：安装/查看代码 左，对比 图标 右 */}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="primary"
+                    size="small"
+                    icon={<DownloadOutlined />}
+                    href={versionInstallUrl}
+                    target="_blank"
+                    onClick={(e) => handleInstallClick(e, versionInstallUrl)}
+                  >
+                    {t('install_button')}
+                  </Button>
+                  <Link
+                    href={`/script-show-page/${script.id}/code?version=${version.version}`}
+                  >
+                    <Button size="small" icon={<CodeOutlined />}>
+                      {t('view_code_button')}
+                    </Button>
+                  </Link>
+                </div>
+                <Tooltip title={t('compare_button')}>
+                  <Button
+                    size="small"
+                    color={
+                      selectedVersions.includes(version.version)
+                        ? 'primary'
+                        : 'default'
+                    }
+                    variant="outlined"
+                    icon={<DiffOutlined />}
+                    onClick={() => handleVersionSelect(version)}
+                    disabled={
+                      selectedVersions.length >= 2 &&
+                      !selectedVersions.includes(version.version)
+                    }
+                  />
+                </Tooltip>
+              </div>
+            </div>
+          );
+        })}
       </div>
-    </Card>
+
+      {/* 分页组件 */}
+      {totalVersions > pageSize && (
+        <div className="flex justify-center pt-4">
+          <Pagination
+            current={currentPage}
+            total={totalVersions}
+            pageSize={pageSize}
+            onChange={handlePageChange}
+            onShowSizeChange={handlePageChange}
+            showSizeChanger
+            showQuickJumper
+            showTotal={(total, range) =>
+              t('pagination_total', {
+                start: range[0],
+                end: range[1],
+                total: total,
+              })
+            }
+            pageSizeOptions={['5', '10', '20', '50']}
+            className="!mb-0"
+          />
+        </div>
+      )}
+
+      {/* 编辑模态框 */}
+      <Modal
+        title={
+          <div className="flex items-center space-x-2">
+            <EditOutlined />
+            <span>
+              {t('edit_modal_title', {
+                version: editingVersion?.version || '',
+              })}
+            </span>
+          </div>
+        }
+        open={isEditModalVisible}
+        onCancel={() => {
+          setIsEditModalVisible(false);
+          setEditingVersion(null);
+          form.resetFields();
+        }}
+        footer={null}
+        width={600}
+        className="max-w-[90vw]"
+      >
+        <Spin spinning={loading}>
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleEditSubmit}
+            className="mt-4"
+          >
+            <Form.Item
+              name="changelog"
+              label={
+                <div className="flex items-center space-x-1">
+                  <span>{t('changelog_label')}</span>
+                  <Text type="secondary" className="text-xs">
+                    {t('changelog_subtitle')}
+                  </Text>
+                </div>
+              }
+            >
+              <TextArea
+                rows={8}
+                placeholder={t('changelog_placeholder')}
+                showCount
+                maxLength={2000}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="is_pre_release"
+              valuePropName="checked"
+              label={t('version_type_label')}
+              extra={t('version_type_extra')}
+            >
+              <Switch
+                className={
+                  isPreRelease
+                    ? '[&_>.ant-switch-inner]:bg-[#f97316]'
+                    : '[&_>.ant-switch-inner]:bg-[#10b981]'
+                }
+                checkedChildren={t('prerelease_checked')}
+                unCheckedChildren={t('prerelease_unchecked')}
+              />
+            </Form.Item>
+
+            <Form.Item className="!mb-0">
+              <div className="flex justify-end space-x-2">
+                <Button
+                  onClick={() => {
+                    setIsEditModalVisible(false);
+                    setEditingVersion(null);
+                    form.resetFields();
+                  }}
+                  disabled={loading}
+                >
+                  {t('confirm_delete_cancel')}
+                </Button>
+                <Button type="primary" htmlType="submit" loading={loading}>
+                  {t('save_changes')}
+                </Button>
+              </div>
+            </Form.Item>
+          </Form>
+        </Spin>
+      </Modal>
+    </div>
+  );
+
+  return embedded ? (
+    content
+  ) : (
+    <Card className="shadow-sm !mb-4">{content}</Card>
   );
 }

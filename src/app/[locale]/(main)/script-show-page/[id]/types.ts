@@ -55,6 +55,8 @@ export interface ScriptInfo {
   content: string;
   role: string;
   sri?: string; //库才有
+  // AI 审核结果（后端可能返回字符串 JSON 或对象）
+  summary?: string;
 }
 
 // ScriptInfo without the heavy `content` field, used in layout context
@@ -65,6 +67,7 @@ export interface Category {
   name: string;
   num: number;
   sort: number;
+  type: number; // 1 分类 2 用户可编辑标签 3 AI 生成标签
   createtime: number;
   updatetime: number;
 }
@@ -142,6 +145,7 @@ export interface ScriptSearchRequest extends PageRequest {
   category?: string;
   user_id?: number;
   script_type?: 0 | 1 | 2 | 3 | 4; // 0:全部 1: 脚本 2: 库 3: 后台脚本 4: 定时脚本
+  status?: 0 | 1 | 3; // 0:全部 1:已发布 3:审核中
   sort?:
     | 'today_download'
     | 'total_download'
@@ -149,7 +153,7 @@ export interface ScriptSearchRequest extends PageRequest {
     | 'createtime'
     | 'updatetime'
     | 'today_update'
-    | 'daily_pick'
+    | 'trending'
     | 'long_tail';
 }
 

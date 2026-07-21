@@ -52,10 +52,15 @@ export default function RatingList({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-          {t('title_with_count', { count: ratings.length })}
-        </h2>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-baseline gap-2">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            {t('title')}
+          </h2>
+          <span className="font-mono text-sm text-gray-500">
+            {ratings.length}
+          </span>
+        </div>
 
         {/* 排序选择器 */}
         <div className="flex items-center gap-3">
@@ -98,7 +103,7 @@ export default function RatingList({
           />
         </Card>
       ) : (
-        <div className="flex flex-col space-y-4 gap-4">
+        <div className="divide-y divide-gray-100 dark:divide-gray-800">
           {ratings.map((rating) => (
             <RatingItem
               key={rating.id}

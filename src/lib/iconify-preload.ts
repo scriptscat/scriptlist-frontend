@@ -36,6 +36,9 @@ import mdiLibrary from '@iconify-icons/mdi/library';
 import mdiCog from '@iconify-icons/mdi/cog';
 import mdiTrendingUp from '@iconify-icons/mdi/trending-up';
 
+// mdi - ad slot disclosure
+import mdiBullhornOutline from '@iconify-icons/mdi/bullhorn-outline';
+
 // Register all icons
 addIcon('mingcute:qq-fill', qqFill);
 
@@ -58,3 +61,5 @@ addIcon('mdi:new-box', mdiNewBox);
 addIcon('mdi:library', mdiLibrary);
 addIcon('mdi:cog', mdiCog);
 addIcon('mdi:trending-up', mdiTrendingUp);
+
+addIcon('mdi:bullhorn-outline', mdiBullhornOutline);

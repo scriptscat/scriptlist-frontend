@@ -26,8 +26,8 @@ import type { ScriptListItem } from '@/app/[locale]/(main)/script-show-page/[id]
 import { ScriptUtils } from '@/app/[locale]/(main)/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
 import React, { useCallback, useMemo, type ReactNode } from 'react';
-import { useState } from 'react';
 import ActionMenu from '@/components/ActionMenu';
+import ScriptIcon from '@/components/ScriptIcon';
 import { scriptService } from '@/lib/api/services/scripts';
 
 const { Text } = Typography;
@@ -38,36 +38,6 @@ const descriptionStyle: React.CSSProperties = {
   WebkitBoxOrient: 'vertical',
   overflow: 'hidden',
 };
-
-interface ScriptIconProps {
-  script: ScriptListItem;
-  size?: number;
-}
-
-const ScriptIcon = React.memo(function ScriptIcon({
-  script,
-  size = 20,
-}: ScriptIconProps) {
-  const [hasError, setHasError] = useState(false);
-  const iconUrl = ScriptUtils.icon(script.script.meta_json);
-
-  if (!iconUrl || hasError) {
-    return null;
-  }
-
-  return (
-    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-    <img
-      src={iconUrl}
-      loading="lazy"
-      width={size}
-      height={size}
-      className="flex-shrink-0 rounded"
-      onError={() => setHasError(true)}
-      onLoad={() => setHasError(false)}
-    />
-  );
-});
 
 interface ActionButton {
   key: string;
@@ -158,11 +128,9 @@ export default React.memo(function ScriptCard({
           <div className="flex-1">
             {/* 主标题区域 - 脚本图标 + 标题 + 版本 */}
             <div className="flex items-start gap-3 mb-3">
-              {ScriptUtils.icon(script.script.meta_json) && (
-                <div className="flex-shrink-0 mt-1">
-                  <ScriptIcon script={script} size={40} />
-                </div>
-              )}
+              <div className="flex-shrink-0 mt-1">
+                <ScriptIcon script={script} name={script.name} size={40} />
+              </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <Link
@@ -363,20 +331,33 @@ export default React.memo(function ScriptCard({
                 </Tag>
               </Tooltip>
             )}
-            {script.tags.map((tag) => (
+            {script.tags.slice(0, 3).map((tag) => (
               <Tooltip
                 title={t('tag_label', { name: tag.name })}
                 placement="bottom"
                 key={tag.id}
               >
-                <Tag
-                  color={hashColor(tag.name)}
-                  className="text-xs px-1 py-0 max-w-[80px] truncate"
-                >
-                  {'#' + tag.name}
+                <Tag color={hashColor(tag.name)} className="text-xs px-1 py-0">
+                  {'#' +
+                    (tag.name.length > 4
+                      ? tag.name.slice(0, 4) + '…'
+                      : tag.name)}
                 </Tag>
               </Tooltip>
             ))}
+            {script.tags.length > 3 && (
+              <Tooltip
+                title={script.tags
+                  .slice(3)
+                  .map((tag) => '#' + tag.name)
+                  .join(' ')}
+                placement="bottom"
+              >
+                <Tag className="text-xs px-1 py-0">
+                  {'+' + (script.tags.length - 3)}
+                </Tag>
+              </Tooltip>
+            )}
           </div>
         </div>
       </Card>

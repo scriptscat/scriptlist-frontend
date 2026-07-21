@@ -178,7 +178,7 @@ const StatsCard: React.FC<{
   yesterday: number;
   week: number;
   color: string;
-  t: (key: string) => string;
+  t: (key: string, values?: Record<string, string>) => string;
 }> = ({ title, icon, today, yesterday, week, color, t }) => {
   const growth =
     yesterday > 0 ? (((today - yesterday) / yesterday) * 100).toFixed(1) : '0';
@@ -195,12 +195,10 @@ const StatsCard: React.FC<{
             </Text>
           </div>
           <Tooltip
-            title={`${t('growth_tooltip')
-              .replace(
-                '{type}',
-                isPositive ? t('growth_increase') : t('growth_decrease'),
-              )
-              .replace('{value}', Math.abs(parseFloat(growth)).toString())}`}
+            title={t('growth_tooltip', {
+              type: isPositive ? t('growth_increase') : t('growth_decrease'),
+              value: Math.abs(parseFloat(growth)).toString(),
+            })}
           >
             <Tag
               color={isPositive ? 'green' : 'red'}

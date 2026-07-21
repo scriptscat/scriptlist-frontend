@@ -21,12 +21,14 @@ interface ScriptRatingClientProps {
   initialData: ListData<ScoreListItem> | null;
   initialRatingStats: RatingStats;
   scriptId: number;
+  embedded?: boolean;
 }
 
 export default function ScriptRatingClient({
   initialData,
   initialRatingStats,
   scriptId,
+  embedded = false,
 }: ScriptRatingClientProps) {
   const { user } = useUser();
   const t = useTranslations('script.rating');
@@ -344,34 +346,34 @@ export default function ScriptRatingClient({
     console.error(t('fetch_error'), error);
   }
 
-  return (
-    <Card className="shadow-sm">
-      <Space direction="vertical" className="w-full" size={16}>
-        {/* 评分概览 */}
-        <RatingOverview ratingStats={ratingStats} />
+  const content = (
+    <Space direction="vertical" className="w-full" size={16}>
+      {/* 评分概览 */}
+      <RatingOverview ratingStats={ratingStats} />
 
-        {/* 用户评分表单 */}
-        <UserRatingForm
-          onSubmitRating={handleSubmitRating}
-          submitting={submitting}
-          existingRating={myScore}
-          onUpdateRating={handleUpdateRating}
-          onDeleteRating={handleDeleteMyRating}
-        />
+      {/* 用户评分表单 */}
+      <UserRatingForm
+        onSubmitRating={handleSubmitRating}
+        submitting={submitting}
+        existingRating={myScore}
+        onUpdateRating={handleUpdateRating}
+        onDeleteRating={handleDeleteMyRating}
+      />
 
-        {/* 用户评论列表 */}
-        <RatingList
-          ratings={allRatings}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-          onLoadMore={loadMoreRatings}
-          loading={loading || isLoading}
-          hasMore={hasMore}
-          onReply={handleReply}
-          onDeleteRating={handleDeleteRating}
-          onDeleteReply={handleDeleteReply}
-        />
-      </Space>
-    </Card>
+      {/* 用户评论列表 */}
+      <RatingList
+        ratings={allRatings}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+        onLoadMore={loadMoreRatings}
+        loading={loading || isLoading}
+        hasMore={hasMore}
+        onReply={handleReply}
+        onDeleteRating={handleDeleteRating}
+        onDeleteReply={handleDeleteReply}
+      />
+    </Space>
   );
+
+  return embedded ? content : <Card className="shadow-sm">{content}</Card>;
 }

@@ -2,6 +2,7 @@
   "admin": {
     "audit_logs": {
       "actions": {
+        "script_audit_pending": "Chờ duyệt",
         "script_create": "Tạo script",
         "script_delete": "Xóa script",
         "script_update": "Cập nhật script"
@@ -32,13 +33,155 @@
       "title": "Quản lý phản hồi"
     },
     "navigation": {
+      "advertise": "Quản lý quảng cáo",
       "feedbacks": "Quản lý phản hồi",
       "oauth_apps": "Quản lý ứng dụng OAuth",
       "oidc_providers": "Quản lý nhà cung cấp OIDC",
       "scores": "Quản lý đánh giá",
       "scripts": "Quản lý script",
       "system_config": "Cấu hình hệ thống",
-      "users": "Quản lý người dùng"
+      "users": "Quản lý người dùng",
+      "ai_review": "AI Review",
+      "ai_review_records": "Review Records",
+      "ai_review_fullscan": "Full Scan"
+    },
+    "advertise": {
+      "title": "Quản lý quảng cáo",
+      "action_create": "New Ad",
+      "create_title": "New Ad",
+      "edit_title": "Edit Ad",
+      "col_slot": "Slot",
+      "col_title": "Title",
+      "col_enabled": "Status",
+      "col_stats": "Impressions/Clicks (CTR)",
+      "col_actions": "Actions",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "delete_confirm": "Confirm delete this ad?",
+      "delete_success": "Deleted successfully",
+      "create_success": "Created successfully",
+      "update_success": "Updated successfully",
+      "upload_success": "Uploaded successfully",
+      "light_required": "Please upload a light-mode image",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "field_slot": "Ad Slot",
+      "field_title": "Title",
+      "field_languages": "Target languages (leave empty = all)",
+      "field_light": "Light-mode image",
+      "field_dark": "Dark-mode image (optional)",
+      "field_link": "Destination URL",
+      "field_weight": "Weight",
+      "field_range": "Schedule",
+      "preset_week": "1 week",
+      "preset_month": "1 month",
+      "preset_quarter": "1 quarter",
+      "field_enabled": "Enabled",
+      "upload": "Upload image",
+      "image_url_placeholder": "Enter or paste an image URL, or click to upload",
+      "recommended_size": "Kích thước đề xuất {size}",
+      "col_weight": "Trọng số",
+      "col_schedule": "Lịch chạy",
+      "schedule_forever": "Vô thời hạn",
+      "schedule_unbounded": "Không giới hạn",
+      "click_detail_title": "Chi tiết nhấp · {title}",
+      "stat_total_clicks": "Nhấp thực",
+      "stat_filtered_empty": "Đã lọc (referer trống)",
+      "trend_title": "Xu hướng nhấp",
+      "trend_empty": "Chưa có dữ liệu nhấp",
+      "clicks_title": "Nhấp gốc",
+      "click_col_time": "Thời gian",
+      "click_col_referer": "Referer",
+      "click_col_locale": "Ngôn ngữ",
+      "click_col_theme": "Giao diện",
+      "click_col_ip": "IP",
+      "click_col_uid": "ID người dùng",
+      "range_7d": "7 ngày",
+      "range_30d": "30 ngày",
+      "range_90d": "90 ngày",
+      "slots": {
+        "home-banner": {
+          "name": "Banner trang chủ",
+          "position": "Giữa Hero và khu vực „Vì sao chọn ScriptCat\" trên trang chủ, toàn chiều rộng"
+        },
+        "search-feed-banner": {
+          "name": "Banner luồng tìm kiếm",
+          "position": "Chế độ duyệt tìm kiếm, giữa ô tìm kiếm và „Tuyển chọn hằng ngày\""
+        },
+        "search-rail-left": {
+          "name": "Cột trái trang tìm kiếm",
+          "position": "Chế độ duyệt tìm kiếm, lề trái của nội dung trung tâm; chỉ với màn hình ≥1650px"
+        },
+        "search-rail-right": {
+          "name": "Cột phải trang tìm kiếm",
+          "position": "Chế độ duyệt tìm kiếm, lề phải của nội dung trung tâm; chỉ với màn hình ≥1650px"
+        },
+        "search-sidebar": {
+          "name": "Thanh bên trang tìm kiếm",
+          "position": "Thanh bên kết quả lọc, phía trên „Tập lệnh mới nhất\"; trên màn hình lớn"
+        },
+        "search-results-banner": {
+          "name": "Banner trang kết quả tìm kiếm",
+          "position": "Trang kết quả tìm kiếm/lọc, giữa thẻ bộ lọc và danh sách kết quả; toàn chiều rộng"
+        },
+        "script-detail-sidebar": {
+          "name": "Thanh bên trang chi tiết",
+          "position": "Thanh bên cố định của trang chi tiết tập lệnh, giữa thẻ thống kê và thẻ chi tiết; trên màn hình lớn"
+        }
+      }
+    },
+    "ai_review": {
+      "menu_title": "AI Review",
+      "menu_records": "Review Records",
+      "menu_fullscan": "Full Scan",
+      "title": "AI Review Records",
+      "filter_status": "Status",
+      "view_detail": "Detail",
+      "col_id": "ID",
+      "col_script": "Script",
+      "col_status": "Status",
+      "col_model": "Model",
+      "col_tokens": "Tokens",
+      "col_latency": "Latency",
+      "col_reason": "Reason",
+      "col_time": "Time",
+      "col_action": "Action",
+      "status_0": "Processing",
+      "status_1": "Passed",
+      "status_2": "AI Rejected",
+      "status_3": "AI Uncertain",
+      "status_4": "Failed (Human Review)",
+      "status_5": "Skipped",
+      "tags_title": "Tags",
+      "risk_signals_title": "Risk Signals",
+      "noisy_lines_title": "Noisy Lines",
+      "detail_audit_id": "Linked Human Review ID",
+      "detail_last_error": "Last Error",
+      "detail_load_failed": "Failed to load detail",
+      "evidence_line": "Evidence line: {line}",
+      "evidence_line_none": "No evidence line",
+      "fullscan": {
+        "title": "Full-site AI Rescan",
+        "running": "Running",
+        "yes": "Yes",
+        "no": "No",
+        "processed": "Processed",
+        "last_id": "Last cursor",
+        "scope": "Scan scope",
+        "scope_all": "All scripts",
+        "scope_value": "Start ID: {start}, End ID: {end}, Limit: {limit}",
+        "start_id": "Start script ID",
+        "end_id": "End script ID",
+        "limit": "Max scripts",
+        "started_at": "Started at",
+        "recent_errs": "Recent errors",
+        "only_missing": "Only scripts without terminal records",
+        "reset_cursor": "Reset cursor",
+        "trigger": "Start",
+        "cancel": "Cancel",
+        "triggered": "Triggered",
+        "cancelled": "Cancel signal sent"
+      }
     },
     "no_permission": "Bạn không có quyền quản trị để truy cập trang này.",
     "oauth_apps": {
@@ -137,6 +280,7 @@
     },
     "scripts": {
       "action_delete": "Xóa",
+      "action_ai_review": "Duyệt AI",
       "action_restore": "Khôi phục",
       "action_trending_score": "Sửa Trend Score",
       "action_visibility": "Thay đổi hiển thị",
@@ -148,6 +292,8 @@
       "col_trending_score": "Trend Score",
       "col_type": "Loại",
       "col_visibility": "Hiển thị",
+      "ai_review_confirm": "Gửi tác vụ duyệt AI cho phiên bản mới nhất của script này?",
+      "ai_review_success": "Đã gửi tác vụ duyệt AI",
       "delete_confirm": "Bạn có chắc muốn xóa script này?",
       "delete_success": "Đã xóa script thành công",
       "field_public": "Trạng thái công khai",
@@ -182,26 +328,9 @@
       "ai_model": "Mô hình",
       "ai_system_prompt": "Lời nhắc hệ thống",
       "ai_title": "Cấu hình AI",
-      "audit_credit_title": "Script Audit and Credit",
-      "audit_enabled": "Enable low-credit script audit",
-      "audit_enabled_help": "When disabled, users with credit above 0 but below the audit threshold publish directly; credit at or below 0 is still blocked.",
-      "audit_max_pending": "Low-credit pending limit",
-      "audit_max_pending_help": "Maximum number of pending script audits allowed for users below the audit threshold.",
-      "credit_review_threshold": "Audit threshold",
-      "credit_review_threshold_help": "Users with credit below this value and above 0 enter the audit queue.",
-      "credit_signal_register": "Registration base score",
-      "credit_signal_register_help": "Base score granted when a user credit snapshot is initialized.",
-      "credit_signal_register_7d": "Registration 7-day bonus",
-      "credit_signal_register_30d": "Registration 30-day bonus",
-      "credit_signal_register_180d": "Registration 180-day bonus",
-      "credit_signal_oauth_bind": "OAuth binding bonus",
-      "credit_signal_oauth_bind_help": "One-time bonus granted after binding any OAuth account.",
-      "credit_event_audit_approved": "Audit approved delta",
-      "credit_event_audit_rejected": "Audit rejected delta",
-      "credit_event_force_deleted": "Force-delete active script delta",
-      "credit_event_help": "Positive, negative, and zero values are allowed.",
-      "credit_max_admin_adjust_delta": "Admin adjustment limit",
-      "credit_max_admin_adjust_delta_help": "Absolute maximum allowed for a single manual admin credit delta.",
+      "github_title": "Cấu hình GitHub",
+      "github_pat": "GitHub Personal Access Token",
+      "github_pat_hint": "Xác thực các yêu cầu đồng bộ tập lệnh GitHub để tăng giới hạn yêu cầu. Hãy dùng fine-grained PAT với quyền tối thiểu.",
       "save_button": "Lưu",
       "save_success": "Đã lưu thành công",
       "title": "Cấu hình hệ thống",
@@ -334,6 +463,7 @@
     "welcome_title": "ScriptCat AI Assistant"
   },
   "common": {
+    "share": "Chia sẻ",
     "admin_delete_content": "Tất cả dữ liệu sẽ bị xóa vĩnh viễn. Vui lòng thao tác cẩn thận!",
     "admin_delete_reason_copyright": "Vi phạm bản quyền",
     "admin_delete_reason_custom": "Lý do tùy chỉnh",
@@ -478,7 +608,8 @@
     "system_settings": "System Settings",
     "tampermonkey_chinese_website": "Tampermonkey Chinese Website",
     "user_profile": "User Profile",
-    "user_setting": "User Settings"
+    "user_setting": "User Settings",
+    "code_search": "Tìm mã nguồn"
   },
   "login": {
     "account_placeholder": "Email or username",
@@ -595,6 +726,17 @@
       }
     },
     "script": {
+      "audit": {
+        "approved": {
+          "content": "Script <link>{name}</link> của bạn đã được duyệt và xuất bản. Phiên bản: {version}"
+        },
+        "rejected": {
+          "content": "Script <link>{name}</link> của bạn không được duyệt. Lý do: {reason}"
+        },
+        "submitted": {
+          "content": "Script <link>{name}</link> của bạn đã vào hàng đợi xét duyệt. Phiên bản: {version}"
+        }
+      },
       "delete": {
         "content": "Script {name} của bạn đã bị quản trị viên xóa, lý do: {reason}"
       },
@@ -610,7 +752,8 @@
     },
     "type_system": "System Notification",
     "unread": "Unread",
-    "status_label": "Trạng thái:"
+    "status_label": "Trạng thái:",
+    "total": "{total} tổng cộng"
   },
   "oauth": {
     "authorize": {
@@ -620,6 +763,7 @@
       "description": "{app_name} is requesting access to your account",
       "error_title": "Authorization Error",
       "invalid_request": "Invalid authorization request",
+      "invalid_redirect": "Invalid redirect URL",
       "load_failed": "Failed to load application info",
       "permission_profile": "Read your basic profile information (username, email, avatar)",
       "permissions_label": "This application will have access to:",
@@ -630,9 +774,9 @@
     "terms_of_service_title": "Điều khoản dịch vụ",
     "privacy_policy_title": "Chính sách bảo mật",
     "disclaimer_title": "Tuyên bố miễn trừ",
-    "last_updated": "Cập nhật lần cuối: Ngày 6 tháng 3 năm 2026",
+    "last_updated": "Cập nhật lần cuối: Ngày 19 tháng 6 năm 2026",
     "tos_section1_title": "1. General",
-    "tos_section1_content": "Welcome to ScriptCat Script Hub (hereinafter referred to as 'the Platform'). The Platform is a user script sharing community that provides services for publishing, searching, and installing scripts. Please carefully read and understand the entire content of this Terms of Service before using the Platform. By registering or using the Platform, you agree to be bound by this agreement.",
+    "tos_section1_content": "Welcome to ScriptCat Script Hub (hereinafter referred to as 'the Platform'). The Platform is a user script sharing community that provides services for publishing, searching, and installing scripts, and may display advertisements on its pages. Please carefully read and understand the entire content of this Terms of Service before using the Platform. By registering or using the Platform, you agree to be bound by this agreement.",
     "tos_section2_title": "2. Account Registration and Usage",
     "tos_section2_content": "You must provide accurate information when registering and keep your account credentials secure. Each user may register only one account and may not transfer or lend the account to others. Losses resulting from improper account management are the user's responsibility. The Platform reserves the right to restrict or ban accounts suspected of violations.",
     "tos_section3_title": "3. Script Publishing Guidelines",
@@ -644,9 +788,9 @@
     "tos_section6_title": "6. Agreement Changes and Termination",
     "tos_section6_content": "The Platform reserves the right to modify this agreement as needed. Modified agreements will be published on the Platform. Your continued use of the Platform constitutes acceptance of the modified agreement. The Platform may terminate or suspend services within the scope permitted by law, with advance notice provided when possible. The Platform reserves the right of final interpretation of this agreement.",
     "pp_section1_title": "1. Information Collection",
-    "pp_section1_content": "We collect the following types of user information: registration information (email address, username); device and network information (IP address, browser type); usage data (script browsing, installation, ratings, etc.); session information used to maintain your login status.",
+    "pp_section1_content": "We collect the following types of user information: registration information (email address, username); device and network information (IP address, browser type); usage data (script browsing, installation, ratings, ad views and clicks, etc.); session information used to maintain your login status.",
     "pp_section2_title": "2. Information Usage",
-    "pp_section2_content": "We use the collected information for: providing and improving platform services; data statistics such as script installation counts; security measures (preventing malicious registration, abuse, etc.); sending service notifications such as verification codes and password resets. We will not sell your personal information to third parties.",
+    "pp_section2_content": "We use the collected information for: providing and improving platform services; data statistics such as script installation counts; security measures (preventing malicious registration, abuse, etc.); sending service notifications such as verification codes and password resets; displaying advertisements and measuring their performance, such as views and clicks (our ads are operated by the Platform itself and do not rely on third-party ad networks). We will not sell your personal information to third parties.",
     "pp_section3_title": "3. Third-Party Services",
     "pp_section3_content": "The Platform may use third-party services to provide certain features, such as third-party account login and human verification. When using third-party login, we only obtain the basic information you authorize (such as username, email, avatar). Data processing by third-party services is governed by their respective privacy policies.",
     "pp_section4_title": "4. Cookies and Sessions",
@@ -664,7 +808,7 @@
     "dc_section3_title": "3. Service Availability",
     "dc_section3_content": "The Platform provides services on an 'as-is' basis and does not guarantee uninterrupted, error-free service or that it will meet your specific needs. The Platform is not liable for service interruptions caused by system maintenance, upgrades, network failures, or force majeure. The Platform reserves the right to modify, suspend, or terminate some or all services at any time.",
     "dc_section4_title": "4. Limitation of Liability",
-    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption.",
+    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption. The Platform makes no warranties and assumes no responsibility for any goods or services promoted by advertisers through the Platform; any transaction between you and an advertiser is at your own discretion and risk.",
     "dc_section5_title": "5. Disclaimer Updates",
     "dc_section5_content": "We may update this Disclaimer in response to changes in applicable laws or product features. The updated disclaimer will be published on the Platform. We recommend that you review it periodically. Your continued use of the Platform constitutes acceptance of the updated disclaimer. The Platform reserves the right of final interpretation of this disclaimer."
   },
@@ -672,7 +816,14 @@
     "alerts": {
       "archived_description": "This script has been archived by the author. The script may malfunction and the author is no longer maintaining it, so you cannot provide feedback.",
       "archived_title": "Script archived",
+      "audit_description": "This script is under review and is temporarily inaccessible to regular users. Review reasons, progress, and results are recorded in the management logs.",
+      "audit_description_no_record": "This script is under review, but there is no pending audit record that can be handled directly. Check the management logs for the review reason, progress, and result.",
+      "audit_feedback_hint": "Do not publish the same script again; if it remains unreviewed for a long time, you can also report it in the community.",
+      "audit_feedback_link": "Go to community feedback",
+      "audit_logs_link": "View management logs",
+      "audit_title": "Script under review",
       "deleted_description": "This script has been deleted and is not accessible to regular users. You are viewing it as an administrator and can restore it with the button on the right.",
+      "deleted_owner_description": "This script has been deleted and is not accessible to regular users. You are viewing the script details as its author.",
       "deleted_restore_button": "Restore script",
       "deleted_restore_confirm": "Restore this script?",
       "deleted_restore_failed": "Restore failed",
@@ -688,7 +839,7 @@
       "library_tooltip": "This is a library used by scripts",
       "share_link": "Share Link",
       "tag_label": "Tag: {name}",
-      "today_installs": "Today +{count}",
+      "today_installs": "24h +{count}",
       "view_detail": "View Details"
     },
     "detail": {
@@ -778,6 +929,7 @@
         "library_description": "This is a library used by userscripts, you can reference it directly in your scripts.",
         "library_details": "Library Details",
         "license": "License",
+        "permissions_title": "Script Permissions",
         "scheduled_script": "Scheduled Script",
         "scheduled_script_tooltip": "This script supports scheduled execution and will run automatically at set intervals: {cron}",
         "script_details": "Script Details",
@@ -789,6 +941,23 @@
         "install_script": "Install Script",
         "reinstall_script": "Reinstall Script v{version}",
         "update_script": "Update Script to v{version}"
+      },
+      "installGuide": {
+        "title": "Cần trình quản lý userscript",
+        "cancel": "Hủy",
+        "description": "Cài đặt userscript cần có trình quản lý userscript. Chúng tôi khuyên dùng ScriptCat — sau khi cài đặt, bạn có thể cài và chạy script từ trang này chỉ với một cú nhấp.",
+        "learn_more": "ScriptCat là trình quản lý userscript mã nguồn mở.",
+        "learn_more_link": "Tìm hiểu thêm / hướng dẫn cài đặt",
+        "other_channels": "Trình duyệt / cách khác",
+        "primary_chrome": "Cài ScriptCat cho Chrome",
+        "primary_edge": "Cài ScriptCat cho Edge",
+        "primary_firefox": "Cài ScriptCat cho Firefox",
+        "primary_other": "Xem hướng dẫn cài đặt ScriptCat",
+        "proceed": "Đã cài ScriptCat? Vẫn tiếp tục cài",
+        "subtitle_chrome": "Đến Chrome Web Store · Miễn phí",
+        "subtitle_edge": "Đến Edge Add-ons · Miễn phí",
+        "subtitle_firefox": "Đến Firefox Add-ons · Miễn phí",
+        "subtitle_other": "Trình duyệt của bạn cần cài đặt thủ công"
       },
       "require": {
         "compatible_version": "(Compatible Version) ",
@@ -802,7 +971,7 @@
       },
       "stats": {
         "current_version": "Current Version",
-        "today_installs": "Today's New",
+        "today_installs": "24 giờ qua",
         "total_installs": "Total Installs",
         "user_rating": "User Rating"
       }
@@ -1488,7 +1657,6 @@
       },
       "sort": {
         "createtime": "Mới nhất",
-        "daily_pick": "Lựa chọn hàng ngày",
         "score": "Đánh giá cao nhất",
         "today_download": "Xu hướng",
         "total_download": "Tải nhiều nhất"
@@ -1496,9 +1664,6 @@
     },
     "section": {
       "more": "Xem thêm",
-      "daily_pick": {
-        "title": "Lựa chọn hàng ngày"
-      },
       "hot": {
         "title": "Phổ biến"
       },
@@ -1545,7 +1710,8 @@
       "background_script": "Background Script",
       "library": "Script Library",
       "scheduled_script": "Scheduled Script",
-      "script": "Userscript"
+      "script": "Userscript",
+      "subscribe_script": "Subscribe Script"
     },
     "user_modal": {
       "add": "Add",
@@ -1607,6 +1773,19 @@
       "version_type_extra": "Prerelease versions are usually for testing new features and may not be stable",
       "version_type_label": "Version Type",
       "view_code_button": "View Code"
+    },
+    "code_search": {
+      "title": "Tìm mã nguồn",
+      "subtitle": "Tìm trong mã nguồn mới nhất của các script bạn có thể xem",
+      "placeholder": "Nhập API, hàm hoặc biến",
+      "button": "Tìm kiếm",
+      "login": "Đăng nhập",
+      "login_required": "Vui lòng đăng nhập trước khi tìm mã nguồn",
+      "keyword_too_short": "Nhập ít nhất 2 ký tự",
+      "rate_limited": "Tìm mã nguồn đang bị giới hạn tần suất. Hãy thử lại sau.",
+      "search_failed": "Tìm mã nguồn thất bại. Hãy thử lại sau.",
+      "empty": "Không tìm thấy mã nguồn phù hợp",
+      "ready": "Nhập từ khóa để bắt đầu tìm kiếm"
     }
   },
   "user": {
@@ -1665,6 +1844,8 @@
       "no_favorites": "This user hasn't favorited any scripts yet",
       "no_script_manager_content": "ScriptCat extension is not detected in your browser, confirm to open subscription link?",
       "no_script_manager_title": "No script manager detected",
+      "continue_subscribe": "Đã cài ScriptCat? Vẫn tiếp tục đăng ký",
+      "subscribe_guide_description": "Đăng ký script cần có trình quản lý userscript. Chúng tôi khuyên dùng ScriptCat — sau khi cài đặt, bạn có thể đăng ký chỉ với một cú nhấp và tự động cập nhật script.",
       "no_scripts_in_category": "No favorite scripts in this category",
       "no_scripts_in_folder": "No scripts in this folder",
       "pagination_items": "{start}-{end}, total {total}",
@@ -1785,6 +1966,10 @@
       "pagination_total": "{start}-{end} / Total {total} scripts",
       "search_button": "Search",
       "search_placeholder": "Search this user's scripts",
+      "all_status_placeholder": "All Statuses",
+      "status_active": "Published",
+      "status_all": "All Statuses",
+      "status_audit": "Pending Review",
       "sort_by_downloads": "Most Downloaded",
       "sort_by_hot": "Trending",
       "sort_by_latest": "Latest",
@@ -1892,7 +2077,17 @@
       "effective_at": "Thời gian hiệu lực"
     }
   },
+  "ads": {
+    "label": "Quảng cáo",
+    "sponsored": "Được tài trợ",
+    "learnMore": "Tìm hiểu thêm"
+  },
   "utils": {
     "time_format": "YYYY-MM-DD"
+  },
+  "errors": {
+    "api": {
+      "access_not_found": "Quyền không tồn tại"
+    }
   }
 }

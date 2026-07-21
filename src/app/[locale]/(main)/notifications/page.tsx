@@ -2,6 +2,7 @@ import NotificationsClient from './components/NotificationsClient';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
+import { noindexRobots } from '@/lib/seo/robots';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('notifications.metadata');
@@ -9,6 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t('title') + ' | ScriptCat',
     description: t('description'),
+    robots: noindexRobots,
   };
 }
 

@@ -8,9 +8,11 @@ import {
   DiffOutlined,
   LoginOutlined,
   NotificationOutlined,
+  SoundOutlined,
   UserOutlined,
   FileTextOutlined,
   MessageOutlined,
+  RobotOutlined,
   StarOutlined,
   SettingOutlined,
   WarningOutlined,
@@ -38,11 +40,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname.includes('/admin/feedbacks')) return 'feedbacks';
     if (pathname.includes('/admin/reports')) return 'reports';
     if (pathname.includes('/admin/scores')) return 'scores';
+    if (pathname.includes('/admin/advertise')) return 'advertise';
     if (pathname.includes('/admin/announcements')) return 'announcements';
     if (pathname.includes('/admin/system-config')) return 'system-config';
     if (pathname.includes('/admin/oidc-providers')) return 'oidc-providers';
     if (pathname.includes('/admin/oauth-apps')) return 'oauth-apps';
     if (pathname.includes('/admin/similarity')) return 'similarity';
+    if (pathname.includes('/admin/ai-review/full-scan'))
+      return 'ai-review-fullscan';
+    if (pathname.includes('/admin/ai-review')) return 'ai-review-records';
     if (pathname.includes('/admin/script-audits')) return 'script-audits';
     return 'users';
   };
@@ -69,6 +75,25 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       label: <Link href="/admin/script-audits">{t('script_audits')}</Link>,
     },
     {
+      key: 'ai-review',
+      icon: <RobotOutlined />,
+      label: t('ai_review'),
+      children: [
+        {
+          key: 'ai-review-records',
+          label: <Link href="/admin/ai-review">{t('ai_review_records')}</Link>,
+        },
+        {
+          key: 'ai-review-fullscan',
+          label: (
+            <Link href="/admin/ai-review/full-scan">
+              {t('ai_review_fullscan')}
+            </Link>
+          ),
+        },
+      ],
+    },
+    {
       key: 'feedbacks',
       icon: <MessageOutlined />,
       label: <Link href="/admin/feedbacks">{t('feedbacks')}</Link>,
@@ -87,6 +112,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       key: 'announcements',
       icon: <NotificationOutlined />,
       label: <Link href="/admin/announcements">{t('announcements')}</Link>,
+    },
+    {
+      key: 'advertise',
+      icon: <SoundOutlined />,
+      label: <Link href="/admin/advertise">{t('advertise')}</Link>,
     },
     {
       key: 'oauth-apps',

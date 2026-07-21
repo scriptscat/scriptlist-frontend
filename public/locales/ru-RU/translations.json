@@ -2,6 +2,9 @@
   "admin": {
     "audit_logs": {
       "actions": {
+        "script_audit_approved": "Аудит одобрен",
+        "script_audit_rejected": "Аудит отклонён",
+        "script_audit_pending": "Ожидает проверки",
         "script_create": "Создание скрипта",
         "script_delete": "Удаление скрипта",
         "script_update": "Обновление скрипта"
@@ -27,11 +30,25 @@
       "col_content": "Содержание",
       "col_createtime": "Дата создания",
       "col_reason": "Причина",
+      "copy": "Копировать",
+      "copy_failed": "Не удалось скопировать",
+      "copy_success": "Скопировано в буфер обмена",
       "delete_confirm": "Вы уверены, что хотите удалить этот отзыв?",
       "delete_success": "Отзыв успешно удалён",
+      "hide_empty": "Скрыть без содержимого",
+      "reason_filter_all": "Все причины",
+      "reasons": {
+        "better": "Нашёл лучшую альтернативу",
+        "bug": "Столкнулся с ошибкой или багом",
+        "feature": "Не хватает нужной мне функции",
+        "other": "Другое",
+        "unused": "Больше не нужен ScriptCat"
+      },
+      "search_content_placeholder": "Поиск по содержимому",
       "title": "Управление отзывами"
     },
     "navigation": {
+      "advertise": "Управление рекламой",
       "feedbacks": "Управление отзывами",
       "oauth_apps": "Управление OAuth-приложениями",
       "oidc_providers": "Управление OIDC-провайдерами",
@@ -39,7 +56,148 @@
       "scripts": "Управление скриптами",
       "system_config": "Настройки системы",
       "users": "Управление пользователями",
-      "similarity": "Similarity Detection"
+      "similarity": "Similarity Detection",
+      "ai_review": "AI Review",
+      "ai_review_records": "Review Records",
+      "ai_review_fullscan": "Full Scan"
+    },
+    "advertise": {
+      "title": "Управление рекламой",
+      "action_create": "New Ad",
+      "create_title": "New Ad",
+      "edit_title": "Edit Ad",
+      "col_slot": "Slot",
+      "col_title": "Title",
+      "col_enabled": "Status",
+      "col_stats": "Impressions/Clicks (CTR)",
+      "col_actions": "Actions",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "delete_confirm": "Confirm delete this ad?",
+      "delete_success": "Deleted successfully",
+      "create_success": "Created successfully",
+      "update_success": "Updated successfully",
+      "upload_success": "Uploaded successfully",
+      "light_required": "Please upload a light-mode image",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "field_slot": "Ad Slot",
+      "field_title": "Title",
+      "field_languages": "Target languages (leave empty = all)",
+      "field_light": "Light-mode image",
+      "field_dark": "Dark-mode image (optional)",
+      "field_link": "Destination URL",
+      "field_weight": "Weight",
+      "field_range": "Schedule",
+      "preset_week": "1 week",
+      "preset_month": "1 month",
+      "preset_quarter": "1 quarter",
+      "field_enabled": "Enabled",
+      "upload": "Upload image",
+      "image_url_placeholder": "Enter or paste an image URL, or click to upload",
+      "recommended_size": "Рекомендуемый размер {size}",
+      "col_weight": "Вес",
+      "col_schedule": "Расписание",
+      "schedule_forever": "Постоянно",
+      "schedule_unbounded": "Без ограничения",
+      "click_detail_title": "Детали кликов · {title}",
+      "stat_total_clicks": "Реальные клики",
+      "stat_filtered_empty": "Отфильтровано (пустой referer)",
+      "trend_title": "Динамика кликов",
+      "trend_empty": "Нет данных о кликах",
+      "clicks_title": "Исходные клики",
+      "click_col_time": "Время",
+      "click_col_referer": "Referer",
+      "click_col_locale": "Язык",
+      "click_col_theme": "Тема",
+      "click_col_ip": "IP",
+      "click_col_uid": "ID пользователя",
+      "range_7d": "7 дней",
+      "range_30d": "30 дней",
+      "range_90d": "90 дней",
+      "slots": {
+        "home-banner": {
+          "name": "Баннер на главной",
+          "position": "Между Hero и блоком «Почему ScriptCat» на главной, во всю ширину"
+        },
+        "search-feed-banner": {
+          "name": "Баннер ленты поиска",
+          "position": "Режим просмотра поиска, между строкой поиска и «Ежедневной подборкой»"
+        },
+        "search-rail-left": {
+          "name": "Левая колонка поиска",
+          "position": "Режим просмотра поиска, левое поле центрального блока; только при ширине ≥1650px"
+        },
+        "search-rail-right": {
+          "name": "Правая колонка поиска",
+          "position": "Режим просмотра поиска, правое поле центрального блока; только при ширине ≥1650px"
+        },
+        "search-sidebar": {
+          "name": "Боковая панель поиска",
+          "position": "Боковая панель результатов фильтрации, над «Последними скриптами»; на больших экранах"
+        },
+        "search-results-banner": {
+          "name": "Баннер результатов поиска",
+          "position": "Страница результатов поиска/фильтрации, между карточкой фильтров и списком результатов; во всю ширину"
+        },
+        "script-detail-sidebar": {
+          "name": "Боковая панель страницы скрипта",
+          "position": "Закреплённая боковая панель страницы скрипта, между карточкой статистики и карточкой деталей; на больших экранах"
+        }
+      }
+    },
+    "ai_review": {
+      "menu_title": "AI Review",
+      "menu_records": "Review Records",
+      "menu_fullscan": "Full Scan",
+      "title": "AI Review Records",
+      "filter_status": "Status",
+      "view_detail": "Detail",
+      "col_id": "ID",
+      "col_script": "Script",
+      "col_status": "Status",
+      "col_model": "Model",
+      "col_tokens": "Tokens",
+      "col_latency": "Latency",
+      "col_reason": "Reason",
+      "col_time": "Time",
+      "col_action": "Action",
+      "status_0": "Processing",
+      "status_1": "Passed",
+      "status_2": "AI Rejected",
+      "status_3": "AI Uncertain",
+      "status_4": "Failed (Human Review)",
+      "status_5": "Skipped",
+      "tags_title": "Tags",
+      "risk_signals_title": "Risk Signals",
+      "noisy_lines_title": "Noisy Lines",
+      "detail_audit_id": "Linked Human Review ID",
+      "detail_last_error": "Last Error",
+      "detail_load_failed": "Failed to load detail",
+      "evidence_line": "Evidence line: {line}",
+      "evidence_line_none": "No evidence line",
+      "fullscan": {
+        "title": "Full-site AI Rescan",
+        "running": "Running",
+        "yes": "Yes",
+        "no": "No",
+        "processed": "Processed",
+        "last_id": "Last cursor",
+        "scope": "Scan scope",
+        "scope_all": "All scripts",
+        "scope_value": "Start ID: {start}, End ID: {end}, Limit: {limit}",
+        "start_id": "Start script ID",
+        "end_id": "End script ID",
+        "limit": "Max scripts",
+        "started_at": "Started at",
+        "recent_errs": "Recent errors",
+        "only_missing": "Only scripts without terminal records",
+        "reset_cursor": "Reset cursor",
+        "trigger": "Start",
+        "cancel": "Cancel",
+        "triggered": "Triggered",
+        "cancelled": "Cancel signal sent"
+      }
     },
     "no_permission": "У вас нет прав администратора для доступа к этой странице.",
     "oauth_apps": {
@@ -155,6 +313,7 @@
     },
     "scripts": {
       "action_delete": "Удалить",
+      "action_ai_review": "AI-проверка",
       "action_restore": "Восстановить",
       "action_set_multiplier": "Установить множитель",
       "action_trending_score": "Изменить Trend Score",
@@ -168,6 +327,8 @@
       "col_trending_score": "Trend Score",
       "col_type": "Тип",
       "col_visibility": "Видимость",
+      "ai_review_confirm": "Отправить задачу AI-проверки для последней версии этого скрипта?",
+      "ai_review_success": "Задача AI-проверки отправлена",
       "delete_confirm": "Вы уверены, что хотите удалить этот скрипт?",
       "delete_success": "Скрипт успешно удалён",
       "field_public": "Статус публикации",
@@ -202,26 +363,9 @@
       "ai_model": "Модель",
       "ai_system_prompt": "Системный промпт",
       "ai_title": "Настройка ИИ",
-      "audit_credit_title": "Script Audit and Credit",
-      "audit_enabled": "Enable low-credit script audit",
-      "audit_enabled_help": "When disabled, users with credit above 0 but below the audit threshold publish directly; credit at or below 0 is still blocked.",
-      "audit_max_pending": "Low-credit pending limit",
-      "audit_max_pending_help": "Maximum number of pending script audits allowed for users below the audit threshold.",
-      "credit_review_threshold": "Audit threshold",
-      "credit_review_threshold_help": "Users with credit below this value and above 0 enter the audit queue.",
-      "credit_signal_register": "Registration base score",
-      "credit_signal_register_help": "Base score granted when a user credit snapshot is initialized.",
-      "credit_signal_register_7d": "Registration 7-day bonus",
-      "credit_signal_register_30d": "Registration 30-day bonus",
-      "credit_signal_register_180d": "Registration 180-day bonus",
-      "credit_signal_oauth_bind": "OAuth binding bonus",
-      "credit_signal_oauth_bind_help": "One-time bonus granted after binding any OAuth account.",
-      "credit_event_audit_approved": "Audit approved delta",
-      "credit_event_audit_rejected": "Audit rejected delta",
-      "credit_event_force_deleted": "Force-delete active script delta",
-      "credit_event_help": "Positive, negative, and zero values are allowed.",
-      "credit_max_admin_adjust_delta": "Admin adjustment limit",
-      "credit_max_admin_adjust_delta_help": "Absolute maximum allowed for a single manual admin credit delta.",
+      "github_title": "Настройки GitHub",
+      "github_pat": "GitHub Personal Access Token",
+      "github_pat_hint": "Используется для аутентификации синхронизации скриптов с GitHub и повышения лимита запросов. Используйте fine-grained PAT с минимальными правами.",
       "save_button": "Сохранить",
       "save_success": "Успешно сохранено",
       "title": "Настройки системы",
@@ -459,6 +603,7 @@
     "welcome_title": "ScriptCat AI Ассистент"
   },
   "common": {
+    "share": "Поделиться",
     "admin_delete_content": "Все данные будут безвозвратно удалены. Действуйте осторожно!",
     "admin_delete_reason_copyright": "Нарушение авторских прав",
     "admin_delete_reason_custom": "Другая причина",
@@ -603,7 +748,8 @@
     "system_settings": "Системные настройки",
     "tampermonkey_chinese_website": "Китайский сайт Tampermonkey",
     "user_profile": "Профиль пользователя",
-    "user_setting": "Настройки пользователя"
+    "user_setting": "Настройки пользователя",
+    "code_search": "Поиск по коду"
   },
   "login": {
     "account_placeholder": "Email или имя пользователя",
@@ -720,6 +866,17 @@
       }
     },
     "script": {
+      "audit": {
+        "approved": {
+          "content": "Ваш скрипт <link>{name}</link> прошёл проверку и был опубликован. Версия: {version}"
+        },
+        "rejected": {
+          "content": "Ваш скрипт <link>{name}</link> не прошёл проверку. Причина: {reason}"
+        },
+        "submitted": {
+          "content": "Ваш скрипт <link>{name}</link> отправлен в очередь проверки. Версия: {version}"
+        }
+      },
       "delete": {
         "content": "Ваш скрипт {name} был удалён администратором, причина: {reason}"
       },
@@ -735,7 +892,8 @@
     },
     "type_system": "Системное уведомление",
     "unread": "Непрочитанные",
-    "status_label": "Статус:"
+    "status_label": "Статус:",
+    "total": "Всего: {total}"
   },
   "oauth": {
     "authorize": {
@@ -745,6 +903,7 @@
       "description": "{app_name} запрашивает доступ к вашей учётной записи",
       "error_title": "Ошибка авторизации",
       "invalid_request": "Недействительный запрос авторизации",
+      "invalid_redirect": "Недействительный URL перенаправления",
       "load_failed": "Не удалось загрузить информацию о приложении",
       "permission_profile": "Чтение основной информации профиля (имя пользователя, электронная почта, аватар)",
       "permissions_label": "Это приложение получит следующие разрешения:",
@@ -753,8 +912,11 @@
   },
   "policy": {
     "terms_of_service_title": "Условия использования",
+    "terms_of_service_description": "Ознакомьтесь с условиями обслуживания и правилами использования платформы ScriptCat.",
     "privacy_policy_title": "Политика конфиденциальности",
+    "privacy_policy_description": "Узнайте, как ScriptCat собирает, использует и защищает вашу личную информацию.",
     "disclaimer_title": "Отказ от ответственности",
+    "disclaimer_description": "Ознакомьтесь с отказом от ответственности ScriptCat в отношении содержимого скриптов и рисков использования.",
     "last_updated": "Последнее обновление: 6 марта 2026 г.",
     "tos_section1_title": "1. General",
     "tos_section1_content": "Welcome to ScriptCat Script Hub (hereinafter referred to as 'the Platform'). The Platform is a user script sharing community that provides services for publishing, searching, and installing scripts. Please carefully read and understand the entire content of this Terms of Service before using the Platform. By registering or using the Platform, you agree to be bound by this agreement.",
@@ -797,7 +959,27 @@
     "alerts": {
       "archived_description": "Этот скрипт был архивирован автором, скрипт может не работать и автор больше не поддерживает его, вы не можете отправлять отчёты о проблемах.",
       "archived_title": "Скрипт архивирован",
+      "audit_approve_button": "Одобрить",
+      "audit_approve_failed": "Не удалось одобрить",
+      "audit_approve_modal_title": "Одобрить проверку",
+      "audit_approve_reason_label": "Примечание к одобрению (необязательно)",
+      "audit_approve_reason_placeholder": "Если это было ложное срабатывание AI, укажите основание ручной проверки; можно оставить пустым",
+      "audit_approve_success": "Одобрено",
+      "audit_description": "Этот скрипт находится на проверке и временно недоступен обычным пользователям. Причины проверки, ход обработки и результаты записываются в журнал управления.",
+      "audit_description_no_record": "Этот скрипт находится на проверке, но нет ожидающей записи проверки, которую можно обработать напрямую. Проверьте журнал управления, чтобы увидеть причину, ход обработки и результат.",
+      "audit_feedback_hint": "Не публикуйте этот же скрипт повторно; если проверка долго не выполняется, вы также можете сообщить об этом в сообществе.",
+      "audit_feedback_link": "Перейти к отзывам сообщества",
+      "audit_logs_link": "Открыть журнал управления",
+      "audit_reject_button": "Отклонить",
+      "audit_reject_failed": "Не удалось отклонить",
+      "audit_reject_modal_title": "Отклонить проверку",
+      "audit_reject_reason_label": "Причина отклонения (будет отправлена автору)",
+      "audit_reject_reason_placeholder": "Опишите причину отклонения, например вредоносный код, нарушение правил или проблему с авторскими правами",
+      "audit_reject_reason_required": "Укажите причину отклонения",
+      "audit_reject_success": "Отклонено",
+      "audit_title": "Скрипт на проверке",
       "deleted_description": "Этот скрипт удалён и недоступен обычным пользователям. Вы просматриваете его как администратор и можете восстановить его кнопкой справа.",
+      "deleted_owner_description": "Этот скрипт удалён и недоступен обычным пользователям. Вы просматриваете детали скрипта как его автор.",
       "deleted_restore_button": "Восстановить скрипт",
       "deleted_restore_confirm": "Восстановить этот скрипт?",
       "deleted_restore_failed": "Не удалось восстановить",
@@ -813,7 +995,7 @@
       "library_tooltip": "Это библиотека, используемая скриптом",
       "share_link": "Поделиться ссылкой",
       "tag_label": "Тег: {name}",
-      "today_installs": "Сегодня +{count}",
+      "today_installs": "24 ч. +{count}",
       "view_detail": "Подробней"
     },
     "detail": {
@@ -903,6 +1085,10 @@
         "library_description": "Это библиотека, используемая пользовательскими скриптами, вы можете напрямую ссылаться на неё в своих скриптах.",
         "library_details": "Детали библиотеки",
         "license": "Лицензионное соглашение",
+        "license_no_derivative": "Без производных",
+        "license_none": "Не указана",
+        "license_none_warning": "Лицензия не указана — используйте с осторожностью",
+        "permissions_title": "Script Permissions",
         "scheduled_script": "Запланированный скрипт",
         "scheduled_script_tooltip": "Этот скрипт поддерживает запланированное выполнение, будет автоматически работать по установленным интервалам времени: {cron}",
         "script_details": "Детали скрипта",
@@ -913,7 +1099,98 @@
         "install_check_failed": "Не удалось проверить статус установки скрипта",
         "install_script": "Установить скрипт",
         "reinstall_script": "Переустановить скрипт v{version}",
-        "update_script": "Обновить скрипт до v{version}"
+        "update_script": "Обновить скрипт до v{version}",
+        "updated_at": "Обновлено {time}",
+        "changelog": "История изменений"
+      },
+      "installGuide": {
+        "title": "Требуется менеджер userscript",
+        "cancel": "Отмена",
+        "description": "Для установки пользовательского скрипта нужен менеджер скриптов. Рекомендуем ScriptCat — после установки вы сможете устанавливать и запускать скрипты с этого сайта в один клик.",
+        "learn_more": "ScriptCat — это менеджер пользовательских скриптов с открытым исходным кодом.",
+        "learn_more_link": "Подробнее / инструкция по установке",
+        "other_channels": "Другие браузеры / способы",
+        "primary_chrome": "Установить ScriptCat для Chrome",
+        "primary_edge": "Установить ScriptCat для Edge",
+        "primary_firefox": "Установить ScriptCat для Firefox",
+        "primary_other": "Открыть инструкцию по установке ScriptCat",
+        "proceed": "Уже установили ScriptCat? Всё равно продолжить",
+        "subtitle_chrome": "Перейти в Chrome Web Store · Бесплатно",
+        "subtitle_edge": "Перейти в Edge Add-ons · Бесплатно",
+        "subtitle_firefox": "Перейти в Firefox Add-ons · Бесплатно",
+        "subtitle_other": "Ваш браузер требует ручной установки"
+      },
+      "metadata": {
+        "empty_description": "Этот скрипт не объявляет отображаемые разрешения, подключения или правила запуска.",
+        "empty_title": "Нет сведений о метаданных",
+        "fields": {
+          "author": "Автор",
+          "connect": "Сетевой доступ",
+          "exclude": "Правила исключения",
+          "grant": "Разрешения",
+          "include": "Правила включения",
+          "license": "Лицензия",
+          "match": "Правила совпадения",
+          "namespace": "Пространство имён",
+          "require": "Внешние зависимости",
+          "resource": "Внешние ресурсы",
+          "run_at": "Время запуска"
+        },
+        "grants": {
+          "addElement": "Позволяет скрипту создавать и вставлять элементы на страницу.",
+          "addStyle": "Позволяет скрипту добавлять CSS на страницу.",
+          "deleteValue": "Позволяет скрипту удалять данные, сохранённые менеджером скриптов.",
+          "download": "Позволяет скрипту запускать загрузку файлов.",
+          "getResourceText": "Позволяет читать текстовые ресурсы, объявленные через @resource.",
+          "getResourceUrl": "Позволяет читать URL ресурсов, объявленных через @resource.",
+          "getValue": "Позволяет читать данные, сохранённые менеджером скриптов.",
+          "info": "Позволяет читать сведения о скрипте и менеджере скриптов.",
+          "listValues": "Позволяет перечислять ключи сохранённых данных.",
+          "none": "Скрипт объявляет, что не требует дополнительных разрешений менеджера скриптов.",
+          "notification": "Позволяет показывать системные или браузерные уведомления.",
+          "openInTab": "Позволяет открывать новые вкладки браузера.",
+          "registerMenuCommand": "Позволяет добавлять команды в меню менеджера скриптов.",
+          "setClipboard": "Позволяет записывать данные в буфер обмена.",
+          "setValue": "Позволяет сохранять данные в менеджере скриптов.",
+          "unknown": "Расширенное разрешение, запрошенное скриптом; поведение зависит от поддержки менеджера.",
+          "unregisterMenuCommand": "Позволяет удалять зарегистрированные команды меню.",
+          "unsafeWindow": "Позволяет обращаться к объекту window страницы и напрямую взаимодействовать со скриптами страницы.",
+          "xmlhttpRequest": "Позволяет выполнять сетевые запросы через менеджер скриптов."
+        },
+        "intro": "Эти сведения взяты из блока userscript-метаданных и помогают понять разрешения, область запуска и внешние зависимости.",
+        "run_at": {
+          "context_menu": "Запускается только при вызове из контекстного меню.",
+          "document_body": "Запускается после появления body страницы.",
+          "document_end": "Запускается около завершения загрузки DOM.",
+          "document_idle": "Запускается после загрузки основного содержимого страницы в режиме ожидания.",
+          "document_start": "Запускается как можно раньше при начале загрузки страницы.",
+          "unknown": "Объявленное время запуска; поведение зависит от менеджера скриптов."
+        },
+        "sections": {
+          "author": "Информация об авторе, объявленная скриптом.",
+          "connect": "Домены, к которым скрипт может подключаться, обычно вместе с сетевыми разрешениями.",
+          "exclude": "URL-правила, исключённые из области запуска.",
+          "grant": "Возможности или API-разрешения, запрошенные у менеджера скриптов.",
+          "include": "URL-правила, где скрипт объявляет возможность запуска.",
+          "license": "Лицензия использования, объявленная скриптом.",
+          "match": "URL-правила, по которым запускается скрипт.",
+          "namespace": "Пространство имён для различения источника или идентичности скрипта.",
+          "require": "Внешние JavaScript-зависимости, загружаемые перед запуском скрипта.",
+          "resource": "Внешние ресурсы, объявленные для доступа скрипта.",
+          "run_at": "Этап жизненного цикла страницы, на котором скрипт предпочитает запускаться."
+        },
+        "values": {
+          "author": "Объявленное значение автора.",
+          "connect": "Разрешённый домен или wildcard-правило подключения.",
+          "exclude": "URL-правило, исключённое из выполнения.",
+          "include": "URL-правило, включённое для выполнения.",
+          "license": "Идентификатор лицензии.",
+          "match": "URL-правило для выполнения.",
+          "namespace": "Идентификатор пространства имён.",
+          "require": "URL внешней зависимости скрипта.",
+          "resource": "Объявление внешнего ресурса.",
+          "unknown": "Значение объявления метаданных."
+        }
       },
       "require": {
         "compatible_version": "(совместимая версия) ",
@@ -921,15 +1198,42 @@
         "patch_version": "(патч версия) ",
         "usage_guide": "Руководство по использованию"
       },
+      "permissions": {
+        "title": "Разрешения и доступ",
+        "connect": "Межсайтовые запросы",
+        "grants": "Возможности",
+        "more": "+{count}",
+        "high_risk": "Разрешение высокого риска — устанавливайте с осторожностью",
+        "cap": {
+          "net": "Сетевые запросы",
+          "notify": "Уведомления",
+          "clipboard": "Буфер обмена",
+          "storage": "Хранилище",
+          "tab": "Открытие вкладок",
+          "download": "Загрузка файлов",
+          "cookie": "Cookie",
+          "menu": "Команды меню"
+        }
+      },
       "sites": {
         "collapse": "Свернуть",
         "more": "+{count} ещё"
       },
       "stats": {
         "current_version": "Текущая версия",
-        "today_installs": "Сегодня добавлено",
+        "title": "Статистика",
+        "today_installs": "За 24 часа",
         "total_installs": "Общее количество установок",
         "user_rating": "Рейтинг пользователей"
+      },
+      "summary": {
+        "label": "AI-резюме"
+      },
+      "tabs": {
+        "description": "Описание",
+        "metadata": "Разрешения",
+        "ratings": "Оценки",
+        "versions": "Версии"
       }
     },
     "diff": {
@@ -960,6 +1264,17 @@
         "update_button": "Опубликовать обновление"
       },
       "info_section": {
+        "license_custom": "Своя",
+        "license_custom_placeholder": "Введите название лицензии, напр. CC-BY-NC-4.0",
+        "license_group_opensource": "Распространённые open-source лицензии",
+        "license_group_other": "Другое",
+        "license_label": "Лицензия",
+        "license_need_header": "Сначала добавьте заголовок скрипта (==UserScript==), затем выберите лицензию",
+        "license_no_derivative": "Без производных",
+        "license_none_warning": "Лицензия не указана — используйте с осторожностью",
+        "license_placeholder": "Выберите лицензию",
+        "license_tooltip": "Записывается в заголовок скрипта как @license и распространяется вместе со скриптом, давая другим чёткий ориентир",
+        "license_written": "Записано в заголовок скрипта // @license {license}",
         "prerelease_label": "Предварительная версия",
         "prerelease_tooltip": "Установить как предварительную версию, официальная версия не будет обновлена до этой версии, можно включить ссылку для установки предварительной версии скрипта на странице управления скриптом",
         "script_category_label": "Категория скрипта",
@@ -1432,7 +1747,13 @@
       },
       "search": {
         "page_number": "Страница {page}",
-        "title": "Поиск скриптов"
+        "title": "Поиск скриптов",
+        "domain_subject": "Скрипты для {domain}",
+        "description": "Поиск пользовательских скриптов Tampermonkey/ScriptCat на ScriptCat. Находите скрипты по сайту, категории и популярности.",
+        "keyword_description": "Поиск пользовательских скриптов по запросу «{keyword}». Находите и устанавливайте скрипты Tampermonkey/ScriptCat на ScriptCat.",
+        "domain_description": "Просматривайте пользовательские скрипты для {domain} (скрипты Tampermonkey/ScriptCat). Находите и устанавливайте больше скриптов для {domain} на ScriptCat.",
+        "domain_typed_subject": "{type} для {domain}",
+        "type_description": "Просматривайте раздел «{type}» на ScriptCat. Находите и устанавливайте скрипты Tampermonkey/ScriptCat."
       }
     },
     "navigation": {
@@ -1516,6 +1837,8 @@
       "update_success": "Рейтинг успешно обновлён!",
       "user_form": {
         "cancel_button": "Отменить",
+        "collapsed_hint": "Нажмите на звезду, чтобы начать",
+        "collapsed_prompt": "Оцените этот скрипт",
         "edit_button": "Редактировать",
         "edit_review_title": "Редактировать отзыв",
         "login_prompt_button": "Войти сейчас",
@@ -1609,11 +1932,10 @@
         "quick_actions": "Быстрые действия",
         "settings": "Настройки",
         "upload_script": "Загрузить скрипт",
-        "visit_community": "посетите <a>Китайский сайт Tampermonkey</a>"
+        "visit_community": "посетите <a>Community</a>"
       },
       "sort": {
         "createtime": "Последние опубликованные",
-        "daily_pick": "Выбор дня",
         "score": "Самый высокий рейтинг",
         "today_download": "Сортировка по популярности",
         "total_download": "Наиболее загружаемые"
@@ -1621,9 +1943,6 @@
     },
     "section": {
       "more": "Ещё",
-      "daily_pick": {
-        "title": "Выбор дня"
-      },
       "hot": {
         "title": "Популярные"
       },
@@ -1670,7 +1989,8 @@
       "background_script": "Фоновый скрипт",
       "library": "Библиотека скриптов",
       "scheduled_script": "Запланированный скрипт",
-      "script": "Пользовательский скрипт"
+      "script": "Пользовательский скрипт",
+      "subscribe_script": "Скрипт подписки"
     },
     "user_modal": {
       "add": "Добавить",
@@ -1696,6 +2016,7 @@
       "changelog_label": "Описание обновления",
       "changelog_placeholder": "Например:\n✨ Новая функция: добавлена оптимизация пользовательского интерфейса\n🐛 Исправление проблемы: решена проблема совместимости с браузером\n⚡ Повышение производительности: оптимизирована скорость выполнения скрипта\n📦 Обновление зависимостей: обновлено до последней версии",
       "changelog_subtitle": "(поддерживается синтаксис Markdown)",
+      "collapse_changelog": "Свернуть",
       "compare_button": "Сравнить",
       "confirm_delete_cancel": "Отменить",
       "confirm_delete_description": "Вы уверены, что хотите удалить эту версию? Это действие нельзя отменить.",
@@ -1707,6 +2028,7 @@
       "delete_version_failed": "Не удалось удалить версию:",
       "edit_button": "Редактировать",
       "edit_modal_title": "Редактировать версию {version}",
+      "expand_changelog": "Показать всё",
       "history_description": "Просмотреть все опубликованные версии, включая официальные версии и предварительные версии. Вы можете установить любую версию или просмотреть её исходный код.",
       "history_title": "История версий",
       "install_button": "Установить эту версию",
@@ -1719,9 +2041,11 @@
       "pagination_info": "Показаны элементы {start}-{end}, всего {total}",
       "pagination_total": "Элементы {start}-{end}, всего {total} версий",
       "prerelease_badge": "Предварительная версия",
+      "prerelease_chip": "Предрелизные {count}",
       "prerelease_checked": "Предварительная версия",
       "prerelease_unchecked": "Официальная версия",
       "prerelease_versions": "Предварительные версии",
+      "release_chip": "Стабильные {count}",
       "release_versions": "Официальные версии",
       "retry": "Повторить",
       "save_changes": "Сохранить изменения",
@@ -1730,8 +2054,22 @@
       "update_success": "Информация о версии успешно обновлена",
       "update_version_failed": "Не удалось обновить версию:",
       "version_type_extra": "Предварительные версии обычно используются для тестирования новых функций, могут быть недостаточно стабильными",
+      "version_count": "Всего версий: {count}",
       "version_type_label": "Тип версии",
       "view_code_button": "Просмотреть код"
+    },
+    "code_search": {
+      "title": "Поиск по коду",
+      "subtitle": "Поиск по последнему исходному коду доступных скриптов",
+      "placeholder": "Введите API, функцию или переменную",
+      "button": "Искать",
+      "login": "Войти",
+      "login_required": "Войдите, чтобы искать по исходному коду",
+      "keyword_too_short": "Введите не менее 2 символов",
+      "rate_limited": "Поиск по коду ограничен. Попробуйте позже.",
+      "search_failed": "Не удалось выполнить поиск по коду. Попробуйте позже.",
+      "empty": "Подходящий исходный код не найден",
+      "ready": "Введите ключевое слово для поиска"
     }
   },
   "user": {
@@ -1790,6 +2128,8 @@
       "no_favorites": "Этот пользователь ещё не добавил ни одного скрипта в избранное",
       "no_script_manager_content": "Расширение ScriptCat не обнаружено в браузере, вы уверены, что хотите открыть ссылку на подписку?",
       "no_script_manager_title": "Менеджер скриптов не обнаружен",
+      "continue_subscribe": "Уже установили ScriptCat? Всё равно подписаться",
+      "subscribe_guide_description": "Для подписки на скрипты нужен менеджер скриптов. Рекомендуем ScriptCat — после установки вы сможете подписаться в один клик и автоматически обновлять скрипты.",
       "no_scripts_in_category": "В этой категории пока нет избранных скриптов",
       "no_scripts_in_folder": "В этой папке избранного пока нет скриптов",
       "pagination_items": "{start}-{end} элементов, всего {total}",
@@ -1901,7 +2241,16 @@
       "profile_update_success": "Личная информация успешно обновлена!",
       "report": "Пожаловаться",
       "unfollow_success": "Отписка выполнена",
-      "verified": "Проверено"
+      "verified": "Проверено",
+      "previously_processed_scripts": "Скрипты, обработанные для этого пользователя",
+      "processed_empty": "Нет записей обработки",
+      "processed_action_delete": "Удалено администратором",
+      "processed_action_rejected": "Аудит отклонён",
+      "processed_col_action": "Действие",
+      "processed_col_script": "Скрипт",
+      "processed_col_operator": "Оператор",
+      "processed_col_time": "Время",
+      "processed_col_reason": "Причина"
     },
     "save": "Сохранить",
     "script_list": {
@@ -1910,6 +2259,10 @@
       "pagination_total": "{start}-{end} / всего {total} скриптов",
       "search_button": "Поиск",
       "search_placeholder": "Поиск скриптов этого пользователя",
+      "all_status_placeholder": "Все статусы",
+      "status_active": "Опубликовано",
+      "status_all": "Все статусы",
+      "status_audit": "На проверке",
       "sort_by_downloads": "Наиболее загружаемые",
       "sort_by_hot": "Сортировка по популярности",
       "sort_by_latest": "Последние опубликованные",
@@ -1933,6 +2286,7 @@
     "update_failed": "Обновление не удалось, попробуйте ещё раз",
     "update_success": "Информация пользователя успешно обновлена!",
     "user_homepage": "Главная страница пользователя",
+    "user_homepage_description": "Просматривайте пользовательские скрипты, опубликованные {username} на ScriptCat.",
     "user_not_found": "Пользователь не найден",
     "username": "Имя пользователя",
     "username_placeholder": "Пожалуйста, введите имя пользователя",
@@ -2017,6 +2371,11 @@
       "effective_at": "Дата вступления в силу"
     }
   },
+  "ads": {
+    "label": "Реклама",
+    "sponsored": "Реклама",
+    "learnMore": "Подробнее"
+  },
   "utils": {
     "time_format": "DD.MM.YYYY"
   },
@@ -2027,6 +2386,9 @@
     }
   },
   "errors": {
+    "api": {
+      "access_not_found": "Разрешение не существует"
+    },
     "integrity_rejected": {
       "title": "Code Failed Integrity Check",
       "help": "If this is a false positive, please apply for an exemption via the admin contact listed in the site FAQ."

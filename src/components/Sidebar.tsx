@@ -13,6 +13,8 @@ import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
 import { Link } from '@/i18n/routing';
 import ScriptListCard from './ScriptListCard';
+import AdSlot from '@/components/AdSlot';
+import type { AdSlotItem } from '@/lib/api/services/advertise';
 import type { ScriptListItem } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
 const { Text } = Typography;
@@ -20,11 +22,14 @@ const { Text } = Typography;
 interface SidebarProps {
   recentScripts?: ScriptListItem[];
   // ratingScripts?: ScriptListItem[];
+  /** 服务端预取的 search-sidebar 广告数据（SSR）。 */
+  adInitialData?: { ad: AdSlotItem | null };
 }
 
 export default function Sidebar({
   recentScripts = [],
   // ratingScripts = [],
+  adInitialData,
 }: SidebarProps) {
   const { user } = useUser();
   const t = useTranslations('script.search.sidebar');
@@ -65,6 +70,12 @@ export default function Sidebar({
           }
         ></Card.Meta>
       </Card>
+
+      <AdSlot
+        slot="search-sidebar"
+        variant="card"
+        initialData={adInitialData}
+      />
 
       {/* 最新脚本 */}
       <ScriptListCard

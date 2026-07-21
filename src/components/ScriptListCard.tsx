@@ -1,9 +1,9 @@
 'use client';
 
-import { Card, Avatar, Tag, Typography, Space } from 'antd';
+import { Card, Tag, Typography, Space } from 'antd';
 import { Link } from '@/i18n/routing';
-import { ScriptUtils } from '@/app/[locale]/(main)/script-show-page/[id]/utils';
 import { hashColor } from '@/lib/utils/utils';
+import ScriptIcon from '@/components/ScriptIcon';
 import type { ReactNode } from 'react';
 import type { ScriptListItem } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
@@ -36,9 +36,6 @@ export default function ScriptListCard({
     >
       <div>
         {data.map((item, index) => {
-          const scriptIcon = item.script?.meta_json
-            ? ScriptUtils.icon(item.script.meta_json)
-            : null;
           const itemTitle = item.name;
           const itemId = item.id;
 
@@ -50,17 +47,22 @@ export default function ScriptListCard({
               target="_blank"
             >
               <div className="flex items-center gap-3 w-full px-2">
-                {scriptIcon ? (
-                  <Avatar size={24} src={scriptIcon} shape="square" />
-                ) : (
-                  <Tag
-                    className="!m-0"
-                    color={hashColor((index + 1).toString())}
-                    style={index === 9 ? { padding: '0 3px' } : {}}
-                  >
-                    {index + 1}
-                  </Tag>
-                )}
+                <ScriptIcon
+                  script={item}
+                  name={itemTitle}
+                  size={24}
+                  radius={4}
+                  textSize="text-xs"
+                  fallback={
+                    <Tag
+                      className="!m-0"
+                      color={hashColor((index + 1).toString())}
+                      style={index === 9 ? { padding: '0 3px' } : {}}
+                    >
+                      {index + 1}
+                    </Tag>
+                  }
+                />
                 <div className="flex-1 min-w-0">
                   <Text
                     className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors block"

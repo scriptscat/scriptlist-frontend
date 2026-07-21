@@ -28,10 +28,16 @@ export const ThemeToggle: React.FC = () => {
       menu={{
         selectedKeys: [themeMode.mode],
         onClick: ({ key }) => {
-          setThemeMode({
-            mode: key as 'light' | 'dark' | 'auto',
-            theme: key === 'dark' ? 'dark' : 'light',
-          });
+          const mode = key as 'light' | 'dark' | 'auto';
+          // auto（跟随系统）需读取当前系统主题，而不是固定为 light，
+          // 否则在深色系统上切到「跟随系统」会错误地显示为浅色。
+          const theme: 'light' | 'dark' =
+            mode === 'auto'
+              ? window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+              : mode;
+          setThemeMode({ mode, theme });
         },
         items: [
           {

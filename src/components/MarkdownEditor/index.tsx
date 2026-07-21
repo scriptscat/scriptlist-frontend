@@ -9,13 +9,17 @@ import {
   useCallback,
 } from 'react';
 import { useTheme } from '@/contexts/ThemeClientContext';
+import { usePathname } from '@/i18n/routing';
 import { resourceService } from '@/lib/api';
 import { message } from 'antd';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import './toast-ui-theme.css'; // 自定义主题样式
 import Prism from 'prismjs';
+import { parseMarkdown } from '../MarkdownView/parseMarkdown';
+import '../MarkdownView/markdown.css';
+import '../MarkdownView/github-markdown-css.css';
 import '../MarkdownView/prism.css';
 
 // 类型定义
@@ -70,6 +74,9 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
     ref,
   ) => {
     const t = useTranslations('components.markdown_editor');
+    const locale = useLocale();
+    const pathname = usePathname();
+    const currentBaseUrl = `/${locale}${pathname === '/' ? '' : pathname}`;
     const editorRef = useRef<HTMLDivElement>(null);
     const editorInstanceRef = useRef<ToastUIEditor | null>(null);
     const { themeMode } = useTheme();
@@ -136,7 +143,8 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
             // 继续创建编辑器，但不使用语法高亮插件
           }
 
-          const editor = new Editor({
+          let editor: ToastUIEditor | null = null;
+          editor = new Editor({
             el: editorRef.current,
             height: editorHeight,
             initialEditType: 'markdown',
@@ -173,6 +181,19 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
               },
             },
             events: {
+              // Toast UI uses a different Markdown renderer by default. Reuse
+              // the published-view pipeline so preview and display stay equal.
+              beforePreviewRender: () => {
+                const markdown = editor?.getMarkdown() ?? initialValue;
+                return `<div class="markdown-body">${parseMarkdown(markdown, currentBaseUrl)}</div>`;
+              },
+              afterPreviewRender: () => {
+                requestAnimationFrame(() => {
+                  if (editorRef.current) {
+                    Prism.highlightAllUnder(editorRef.current, false);
+                  }
+                });
+              },
               change: () => {
                 // 当编辑器内容变化时，触发 onChange 回调
                 if (onChange && editor) {
@@ -188,7 +209,7 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
           console.error('Failed to create editor:', error);
         }
       },
-      [isClient, editorRef],
+      [isClient, editorRef, currentBaseUrl],
     );
 
     // 初始化编辑器

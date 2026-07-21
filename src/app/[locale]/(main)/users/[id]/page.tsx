@@ -9,6 +9,11 @@ interface UserPageProps {
   searchParams: Promise<ScriptSearchRequest>;
 }
 
+function toNumber<T extends number>(value: unknown, allowed: readonly T[]) {
+  const numericValue = Number(value);
+  return allowed.includes(numericValue as T) ? (numericValue as T) : undefined;
+}
+
 export default async function UserPage({
   params,
   searchParams,
@@ -25,7 +30,8 @@ export default async function UserPage({
     sort: resolvedSearchParams.sort || 'today_download',
     domain: resolvedSearchParams.domain || undefined,
     category: resolvedSearchParams.category || undefined,
-    script_type: resolvedSearchParams.script_type || undefined, // 默认搜索所有类型
+    script_type: toNumber(resolvedSearchParams.script_type, [0, 1, 2, 3, 4]), // 默认搜索所有类型
+    status: toNumber(resolvedSearchParams.status, [0, 1, 3]),
     user_id: userId, // 指定用户ID
   };
 

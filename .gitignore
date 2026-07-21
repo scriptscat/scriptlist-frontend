@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/test-results
 
 # next.js
 /.next/
@@ -48,5 +49,3 @@ next-env.d.ts
 
 .claude
 .omc
-CLAUDE.md
-

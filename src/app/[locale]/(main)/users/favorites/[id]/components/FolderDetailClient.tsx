@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import type { MouseEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Card,
@@ -12,7 +13,6 @@ import {
   Breadcrumb,
   message,
   Pagination,
-  Modal,
 } from 'antd';
 import {
   HomeOutlined,
@@ -30,7 +30,7 @@ import { useUser } from '@/contexts/UserContext';
 import ScriptCard from '@/components/Scriptlist/ScriptCard';
 import FavoriteEditModal from '@/components/FavoriteEditModal';
 import { scriptFavoriteService } from '@/lib/api/services/scripts/favorites';
-import { getScriptManagerAPI } from '@/lib/utils/script-manager';
+import { useScriptInstallGuide } from '@/components/ScriptInstallGuide';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
 import type { ScriptInfo } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
@@ -62,7 +62,10 @@ export default function FolderDetailClient({
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentFolder] = useState(folderDetail);
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
-  const [modal, contextHolder] = Modal.useModal();
+  const { handleInstallClick, guideModal } = useScriptInstallGuide({
+    description: t('subscribe_guide_description'),
+    proceedLabel: t('continue_subscribe'),
+  });
 
   // 判断当前用户是否为收藏夹的所有者
   const isOwner =
@@ -120,33 +123,15 @@ export default function FolderDetailClient({
     setEditModalVisible(false);
   };
 
-  // 处理订阅链接点击
-  const handleSubscribeClick = () => {
+  // 处理订阅链接点击：未检测到脚本管理器时复用安装引导弹窗（订阅文案）
+  const handleSubscribeClick = (e: MouseEvent<HTMLElement>) => {
     const subscribeUrl = `${window.location.origin}/scripts/subscribe/${folderId}/${encodeURIComponent(currentFolder.name)}.user.sub.js`;
-
-    // 检查是否安装了脚本管理器
-    const scriptManager = getScriptManagerAPI();
-
-    if (!scriptManager) {
-      // 没有安装脚本管理器，显示二次确认提示
-      modal.confirm({
-        title: t('no_script_manager_title'),
-        content: t('no_script_manager_content'),
-        okText: t('confirm_open'),
-        cancelText: t('cancel'),
-        onOk: () => {
-          window.open(subscribeUrl, '_blank');
-        },
-      });
-    } else {
-      // 有脚本管理器，直接打开链接
-      window.open(subscribeUrl, '_blank');
-    }
+    handleInstallClick(e, subscribeUrl);
   };
 
   return (
     <div>
-      {contextHolder}
+      {guideModal}
       {/* 面包屑导航 */}
       <div className="mb-3">
         <Breadcrumb

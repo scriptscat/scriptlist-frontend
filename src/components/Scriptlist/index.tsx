@@ -1,11 +1,16 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import type { ReactNode } from 'react';
 import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { useCategoryList } from '@/lib/api/hooks';
+import {
+  getScriptSearchPath,
+  isCodeSearchCommand,
+} from '@/lib/utils/search-command';
 import ScriptCard from './ScriptCard';
 import type {
   ScriptListItem,
@@ -19,6 +24,8 @@ interface ScriptListProps {
   totalCount: number;
   initialFilters?: ScriptSearchRequest;
   initialPage?: number;
+  /** 可选插槽，渲染在筛选卡片与结果列表之间（如广告横幅）。无内容时不占位。 */
+  banner?: ReactNode;
 }
 
 export default function ScriptList({
@@ -26,6 +33,7 @@ export default function ScriptList({
   totalCount,
   initialFilters,
   initialPage = 1,
+  banner,
 }: ScriptListProps) {
   const router = useRouter();
   const t = useTranslations('script');
@@ -63,6 +71,11 @@ export default function ScriptList({
   };
 
   const handleSearch = (value: string) => {
+    if (isCodeSearchCommand(value)) {
+      router.push(getScriptSearchPath(value));
+      return;
+    }
+
     // 允许空搜索，这样用户可以浏览所有脚本
     const newFilters = { ...filters, keyword: value.trim() || '' };
     setFilters(newFilters);
@@ -164,7 +177,6 @@ export default function ScriptList({
                 {t('search.sort.today_download')}
               </Option>
               <Option value="createtime">{t('search.sort.createtime')}</Option>
-              <Option value="daily_pick">{t('search.sort.daily_pick')}</Option>
               <Option value="score">{t('search.sort.score')}</Option>
               <Option value="total_download">
                 {t('search.sort.total_download')}
@@ -173,6 +185,9 @@ export default function ScriptList({
           </Space>
         </Space>
       </Card>
+
+      {/* 广告等插槽：筛选卡片与结果列表之间，无内容时不占位 */}
+      {banner}
 
       {/* 脚本列表 */}
       <Spin spinning={isPending} tip={t('search.loading')}>

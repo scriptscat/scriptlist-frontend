@@ -16,6 +16,7 @@ import AccountSettings from './AccountSettings';
 const { Text } = Typography;
 
 interface SettingsClientProps {
+  initialTab?: string;
   initialWebhookToken?: string;
   initialNotificationConfig?: {
     [key: string]: number;
@@ -50,14 +51,21 @@ const NAV_ITEMS = [
 
 type SettingsKey = (typeof NAV_ITEMS)[number]['key'];
 
+function isSettingsKey(value?: string): value is SettingsKey {
+  return NAV_ITEMS.some((item) => item.key === value);
+}
+
 export default function SettingsClient({
+  initialTab,
   initialWebhookToken,
   initialNotificationConfig,
   userStatus,
   deactivateAt,
 }: SettingsClientProps) {
   const t = useTranslations('user.settings');
-  const [activeKey, setActiveKey] = useState<SettingsKey>('webhook');
+  const [activeKey, setActiveKey] = useState<SettingsKey>(() =>
+    isSettingsKey(initialTab) ? initialTab : 'webhook',
+  );
 
   const labelMap: Record<SettingsKey, string> = {
     webhook: t('webhook_settings'),

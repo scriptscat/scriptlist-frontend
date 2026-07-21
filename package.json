@@ -7,6 +7,9 @@
     "dev": "pnpm run predev && next dev",
     "build": "pnpm run prebuild && next build",
     "start": "next start",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:mock-api": "ts-node --project ./tsconfig.node.json ./tests/e2e/mock-api.ts",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "predev": "ts-node --project ./tsconfig.node.json ./scripts/prebuild.tsx",
@@ -33,7 +36,7 @@
     "github-markdown-css": "^5.8.1",
     "marked": "^16.1.1",
     "monaco-editor": "^0.52.2",
-    "next": "16.2.3",
+    "next": "16.2.6",
     "next-intl": "^4.9.2",
     "nextjs-toploader": "^3.8.16",
     "prismjs": "^1.30.0",
@@ -45,6 +48,7 @@
     "xss": "^1.0.15"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/prismjs": "^1.26.5",

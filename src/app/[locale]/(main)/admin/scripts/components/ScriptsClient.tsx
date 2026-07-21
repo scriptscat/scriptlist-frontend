@@ -18,6 +18,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
 import type { ScriptItem } from '@/lib/api/services/admin';
+import { aiReviewService } from '@/lib/api/services/aiReview';
 import { scriptService } from '@/lib/api/services/scripts/scripts';
 import { APIError } from '@/types/api';
 import type { ColumnsType, TableProps } from 'antd/es/table';
@@ -28,6 +29,10 @@ import ScoreMultiplierModal from './ScoreMultiplierModal';
 
 type ScriptSortField = 'trending_score';
 type ScriptSortOrder = 'asc' | 'desc';
+type ScriptStatusFilter = 1 | 2;
+
+const STATUS_ACTIVE = 1;
+const STATUS_DELETED = 2;
 
 export default function ScriptsClient() {
   const t = useTranslations('admin.scripts');
@@ -43,9 +48,9 @@ export default function ScriptsClient() {
   const [appliedSearchField, setAppliedSearchField] = useState<
     'name' | 'description' | 'content'
   >('name');
-  const [statusFilter, setStatusFilter] = useState<number | undefined>(
-    undefined,
-  );
+  const [statusFilter, setStatusFilter] = useState<
+    ScriptStatusFilter | undefined
+  >(undefined);
   const [visibilityModalOpen, setVisibilityModalOpen] = useState(false);
   const [editingScript, setEditingScript] = useState<ScriptItem | null>(null);
   const [newPublic, setNewPublic] = useState(1);
@@ -58,6 +63,9 @@ export default function ScriptsClient() {
   const [newTrendingScore, setNewTrendingScore] = useState<number | null>(0);
   const [updatingTrendingScore, setUpdatingTrendingScore] = useState(false);
   const [deletingScript, setDeletingScript] = useState<ScriptItem | null>(null);
+  const [reviewingScriptId, setReviewingScriptId] = useState<number | null>(
+    null,
+  );
   const [multiplierTarget, setMultiplierTarget] = useState<{
     id: number;
     name: string;
@@ -69,7 +77,7 @@ export default function ScriptsClient() {
     async (
       p: number,
       kw: string,
-      st: number | undefined,
+      st: ScriptStatusFilter | undefined,
       field: 'name' | 'description' | 'content',
       sf: ScriptSortField | undefined,
       so: ScriptSortOrder | undefined,
@@ -231,11 +239,33 @@ export default function ScriptsClient() {
     }
   };
 
+  const handleAIReview = async (script: ScriptItem) => {
+    setReviewingScriptId(script.id);
+    try {
+      await aiReviewService.triggerScriptReview(script.id);
+      message.success(t('ai_review_success'));
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      }
+    } finally {
+      setReviewingScriptId(null);
+    }
+  };
+
   const handleTableChange: TableProps<ScriptItem>['onChange'] = (
     pagination,
-    _filters,
+    filters,
     sorter,
   ) => {
+    const nextStatus = filters.status?.[0];
+    const parsedStatus =
+      nextStatus === undefined ? undefined : Number(nextStatus);
+    setStatusFilter(
+      parsedStatus !== undefined && Number.isFinite(parsedStatus)
+        ? (parsedStatus as ScriptStatusFilter)
+        : undefined,
+    );
     const currentSorter = Array.isArray(sorter) ? sorter[0] : sorter;
     if (currentSorter?.field === 'trending_score' && currentSorter.order) {
       setSortField('trending_score');
@@ -279,9 +309,15 @@ export default function ScriptsClient() {
   };
 
   const getStatusTag = (status: number) => {
-    if (status === 1) return <Tag color="green">{t('status_active')}</Tag>;
+    if (status === STATUS_ACTIVE)
+      return <Tag color="green">{t('status_active')}</Tag>;
     return <Tag color="red">{t('status_deleted')}</Tag>;
   };
+
+  const statusFilterOptions = [
+    { text: t('status_active'), value: STATUS_ACTIVE },
+    { text: t('status_deleted'), value: STATUS_DELETED },
+  ];
 
   const columns: ColumnsType<ScriptItem> = [
     {
@@ -325,6 +361,9 @@ export default function ScriptsClient() {
       dataIndex: 'status',
       key: 'status',
       render: (val: number) => getStatusTag(val),
+      filters: statusFilterOptions,
+      filterMultiple: false,
+      filteredValue: statusFilter === undefined ? null : [statusFilter],
     },
     {
       title: t('col_trending_score'),
@@ -375,7 +414,7 @@ export default function ScriptsClient() {
       key: 'actions',
       render: (_: unknown, record: ScriptItem) => (
         <Space>
-          {record.status === 1 ? (
+          {record.status === STATUS_ACTIVE ? (
             <Button
               type="link"
               size="small"
@@ -408,6 +447,18 @@ export default function ScriptsClient() {
           >
             {t('action_trending_score')}
           </Button>
+          <Popconfirm
+            title={t('ai_review_confirm')}
+            onConfirm={() => handleAIReview(record)}
+          >
+            <Button
+              type="link"
+              size="small"
+              loading={reviewingScriptId === record.id}
+            >
+              {t('action_ai_review')}
+            </Button>
+          </Popconfirm>
           <Button
             type="link"
             size="small"
@@ -432,7 +483,7 @@ export default function ScriptsClient() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">{t('title')}</h2>
         <Space>
-          <Select
+          <Select<ScriptStatusFilter>
             placeholder={t('filter_status')}
             allowClear
             style={{ width: 120 }}
@@ -442,8 +493,8 @@ export default function ScriptsClient() {
               setPage(1);
             }}
             options={[
-              { value: 1, label: t('status_active') },
-              { value: 0, label: t('status_deleted') },
+              { value: STATUS_ACTIVE, label: t('status_active') },
+              { value: STATUS_DELETED, label: t('status_deleted') },
             ]}
           />
           <Select

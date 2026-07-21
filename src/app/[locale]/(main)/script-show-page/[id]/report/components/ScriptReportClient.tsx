@@ -188,67 +188,65 @@ export default function ScriptReportClient({
                   e.currentTarget.style.backgroundColor = 'transparent';
                 }}
               >
-                <Link
-                  href={`/script-show-page/${scriptId}/report/${report.id}`}
-                  target="_blank"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="mb-2">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Tag
-                                color={
-                                  REASON_COLORS[report.reason] || 'default'
-                                }
-                              >
-                                {t(`reasons.${report.reason}`)}
-                              </Tag>
-                              <Tag
-                                color={
-                                  report.status === 1 ? 'error' : 'success'
-                                }
-                                className="text-xs"
-                              >
-                                {report.status === 1
-                                  ? t('status_pending')
-                                  : t('status_resolved')}
-                              </Tag>
-                            </div>
-                          </div>
-
-                          <div
-                            className="flex items-center gap-1 text-sm"
-                            style={{ color: token.colorTextSecondary }}
-                          >
-                            <Link
-                              href={'/users/' + report.user_id}
-                              target="_blank"
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="mb-2">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Tag
+                              color={REASON_COLORS[report.reason] || 'default'}
                             >
-                              <div className="flex items-center gap-1">
-                                <Avatar size={20} src={report.avatar} />
-                                <span>{report.username}</span>
-                              </div>
-                            </Link>
-                            <span>{'#' + report.id}</span>
-                            <span>{semDateTime(report.createtime)}</span>
+                              {t(`reasons.${report.reason}`)}
+                            </Tag>
+                            <Tag
+                              color={report.status === 1 ? 'error' : 'success'}
+                              className="text-xs"
+                            >
+                              {report.status === 1
+                                ? t('status_pending')
+                                : t('status_resolved')}
+                            </Tag>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                          <div
-                            className="flex items-center gap-1 text-base"
-                            style={{ color: token.colorTextSecondary }}
+                        <div
+                          className="flex items-center gap-1 text-sm"
+                          style={{ color: token.colorTextSecondary }}
+                        >
+                          <Link
+                            href={`/script-show-page/${scriptId}/report/${report.id}`}
+                            target="_blank"
                           >
-                            <MessageOutlined style={{ fontSize: '16px' }} />
-                            <span>{report.comment_count || 0}</span>
-                          </div>
+                            <Tag className="!mr-0 cursor-pointer">
+                              {'#' + report.id}
+                            </Tag>
+                          </Link>
+                          <Link
+                            href={'/users/' + report.user_id}
+                            target="_blank"
+                          >
+                            <span className="inline-flex items-center gap-1">
+                              <Avatar size={20} src={report.avatar} />
+                              <span>{report.username}</span>
+                            </span>
+                          </Link>
+                          <span>{semDateTime(report.createtime)}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <div
+                          className="flex items-center gap-1 text-base"
+                          style={{ color: token.colorTextSecondary }}
+                        >
+                          <MessageOutlined style={{ fontSize: '16px' }} />
+                          <span>{report.comment_count || 0}</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               </div>
             ))}
           </div>
