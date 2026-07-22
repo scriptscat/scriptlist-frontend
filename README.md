@@ -41,7 +41,7 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-访问 http://localhost:3000
+访问 http://localhost:3000+51/5.0
 
 ### 环境变量
 
