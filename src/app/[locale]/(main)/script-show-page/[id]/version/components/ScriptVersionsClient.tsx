@@ -50,6 +50,23 @@ import { useScriptInstallGuide } from '@/components/ScriptInstallGuide';
 const { Text, Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
+// Marker written by the backend auto-sync process for versions that have no
+// author-written release notes. Rendered as a localized note instead of raw
+// text. Must stay in sync with script_entity.AutoSyncChangelog on the backend.
+const AUTO_SYNC_CHANGELOG = '$auto-sync$';
+
+// Localized note shown for auto-synced versions (no per-version changelog exists,
+// so we display a translated "automatically synced" line rather than the raw
+// marker or an untranslated sentence).
+function AutoSyncNote() {
+  const t = useTranslations('script.version');
+  return (
+    <div className="border-l-[3px] border-gray-200 pl-3 text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+      {t('auto_synced_changelog')}
+    </div>
+  );
+}
+
 function VersionChangelog({ changelog }: { changelog: string }) {
   const t = useTranslations('script.version');
   const ref = React.useRef<HTMLDivElement>(null);
@@ -453,9 +470,13 @@ export default function ScriptVersionsClient({
                 </div>
               </div>
 
-              {/* changelog（可折叠） */}
-              {version.changelog && (
-                <VersionChangelog changelog={version.changelog} />
+              {/* changelog（可折叠）；自动同步的版本显示本地化提示 */}
+              {version.changelog === AUTO_SYNC_CHANGELOG ? (
+                <AutoSyncNote />
+              ) : (
+                version.changelog && (
+                  <VersionChangelog changelog={version.changelog} />
+                )
               )}
 
               {/* 操作：安装/查看代码 左，对比 图标 右 */}

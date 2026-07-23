@@ -1941,6 +1941,7 @@
       "username": "Benutzername"
     },
     "version": {
+      "auto_synced_changelog": "Diese Version wurde vom System automatisch synchronisiert.",
       "changelog_label": "Update-Beschreibung",
       "changelog_placeholder": "z.B.:\n✨ Neue Funktion: Benutzeroberflächen-Optimierung hinzugefügt\n🐛 Problem behoben: Browser-Kompatibilitätsproblem gelöst\n⚡ Leistungsverbesserung: Skript-Ausführungsgeschwindigkeit optimiert\n📦 Abhängigkeits-Update: Auf neueste Version aktualisiert",
       "changelog_subtitle": "(Unterstützt Markdown-Syntax)",

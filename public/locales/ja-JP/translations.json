@@ -2013,6 +2013,7 @@
       "username": "ユーザー名"
     },
     "version": {
+      "auto_synced_changelog": "このバージョンはシステムによって自動的に同期されました。",
       "changelog_label": "更新説明",
       "changelog_placeholder": "例：\n✨ 新機能：ユーザーインターフェースの最適化を追加\n🐛 問題修正：ブラウザ互換性の問題を解決\n⚡ パフォーマンス向上：スクリプト実行速度を最適化\n📦 依存関係更新：最新バージョンにアップグレード",
       "changelog_subtitle": "（Markdown構文をサポート）",

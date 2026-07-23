@@ -2019,6 +2019,7 @@
       "username": "使用者名稱"
     },
     "version": {
+      "auto_synced_changelog": "此版本由系統自動同步更新",
       "changelog_label": "更新說明",
       "changelog_placeholder": "例如：\n✨ 新增功能：新增了使用者介面最佳化\n🐛 修復問題：解決了瀏覽器相容性問題\n⚡ 效能提升：最佳化了腳本執行速度\n📦 相依性更新：升級到最新版本",
       "changelog_subtitle": "(支援Markdown語法)",

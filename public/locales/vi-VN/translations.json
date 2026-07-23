@@ -1734,6 +1734,7 @@
       "username": "Username"
     },
     "version": {
+      "auto_synced_changelog": "Phiên bản này được hệ thống tự động đồng bộ.",
       "changelog_label": "Update Notes",
       "changelog_placeholder": "e.g.:\n✨ New Feature: Added UI optimization\n🐛 Bug Fix: Resolved browser compatibility issues\n⚡ Performance: Optimized script execution speed\n📦 Dependencies: Updated to latest version",
       "changelog_subtitle": "(Supports Markdown syntax)",

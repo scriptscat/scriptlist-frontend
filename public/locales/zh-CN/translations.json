@@ -2124,6 +2124,7 @@
       "username": "用户名"
     },
     "version": {
+      "auto_synced_changelog": "该版本为系统自动同步更新",
       "changelog_label": "更新说明",
       "changelog_placeholder": "例如：\n✨ 新增功能：添加了用户界面优化\n🐛 修复问题：解决了浏览器兼容性问题\n⚡ 性能提升：优化了脚本执行速度\n📦 依赖更新：升级到最新版本",
       "changelog_subtitle": "(支持Markdown语法)",
