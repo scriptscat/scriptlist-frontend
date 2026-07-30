@@ -82,6 +82,8 @@ export default async function ScriptDetailPage({
   return (
     <ScriptDetailClient
       content={script.content}
+      contentBaseUrl={script.content_base_url}
+      contentRootUrl={script.content_root_url}
       initialVersionData={initialVersionData}
       versionStat={versionStat}
       versionError={versionError}

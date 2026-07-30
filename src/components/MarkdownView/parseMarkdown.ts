@@ -1,5 +1,8 @@
 import { marked } from 'marked';
-import xss, { whiteList as defaultWhiteList } from 'xss';
+import xss, {
+  whiteList as defaultWhiteList,
+  safeAttrValue as defaultSafeAttrValue,
+} from 'xss';
 
 // ---------------------------------------------------------------------------
 // HTML sanitization allowlist.
@@ -230,15 +233,86 @@ const stripIgnoreTagBody = [
   'xmp',
 ];
 
+// ---------------------------------------------------------------------------
+// Relative resource resolution.
+//
+// A script description synced from a remote README keeps that README's relative
+// paths (`./assets/x.png`, `/assets/x.png`), which resolve to nothing here. Given
+// the bases derived from the sync URL we rewrite them back to absolute URLs.
+//
+// This runs on sanitizer attributes rather than in the marked renderer on
+// purpose: relative paths appear both in Markdown syntax (`![a](./x.png)`) and in
+// raw HTML passed straight through (`<p align="center"><img src="./x.png">`), and
+// only the attribute layer sees both. It also runs after Markdown parsing, so a
+// `src="./x.png"` inside a fenced code block is already escaped text and is left
+// alone.
+// ---------------------------------------------------------------------------
+
+export interface ResourceBase {
+  /** Directory of the source document — resolves `./x`, `../x`, `x`. */
+  base: string;
+  /**
+   * Repository + ref root — resolves `/x`. GitHub resolves root-relative README
+   * paths against the repository root rather than the host root. Empty when the
+   * root cannot be determined, in which case `/x` keeps standard URL semantics.
+   */
+  root?: string;
+}
+
+// Attributes carrying a single URL. `srcset` is a list and is left untouched.
+const RESOLVE_ATTRS: Record<string, string[]> = {
+  img: ['src'],
+  a: ['href'],
+  video: ['src', 'poster'],
+  source: ['src'],
+};
+
+const HAS_SCHEME = /^[a-z][a-z0-9+.-]*:/i;
+
+const withTrailingSlash = (url: string) =>
+  url.endsWith('/') ? url : url + '/';
+
+const absolutizeUrl = (value: string, resourceBase: ResourceBase): string => {
+  if (
+    !value ||
+    HAS_SCHEME.test(value) || // already absolute, or mailto:/data:
+    value.startsWith('//') || // protocol-relative
+    value.startsWith('#') // in-page anchor
+  ) {
+    return value;
+  }
+  const rootRelative = value.startsWith('/');
+  const base = rootRelative ? resourceBase.root : resourceBase.base;
+  if (!base) {
+    return value;
+  }
+  try {
+    // Root-relative paths are resolved against the repository root, so the
+    // leading slash is dropped — keeping it would resolve against the host root.
+    return new URL(
+      rootRelative ? value.replace(/^\/+/, '') : value,
+      withTrailingSlash(base),
+    ).href;
+  } catch {
+    return value;
+  }
+};
+
 // Custom renderer configuration
-const createRenderer = (baseUrl = '') => {
+const createRenderer = (baseUrl = '', resolveViaResourceBase = false) => {
   const renderer = new marked.Renderer();
 
   // Override link rendering
   renderer.link = ({ href, title, tokens }) => {
     let url = href || '';
 
-    if (!(url.startsWith('http://') || url.startsWith('https://'))) {
+    // With a resource base, relative URLs are resolved once in safeAttrValue.
+    // Joining here as well would turn `./x` into `/x`, i.e. reinterpret a
+    // document-relative path as a repository-root-relative one.
+    if (
+      !resolveViaResourceBase &&
+      !(url.startsWith('http://') || url.startsWith('https://'))
+    ) {
       if (url.startsWith('.')) {
         url = baseUrl + url.substring(1);
       } else if (
@@ -278,15 +352,24 @@ const createRenderer = (baseUrl = '') => {
 /**
  * Parse markdown to sanitized HTML.
  *
- * @param content  Raw markdown string
- * @param baseUrl  Base URL for resolving relative links (optional)
- * @returns        Sanitized HTML string
+ * @param content       Raw markdown string
+ * @param baseUrl       Base URL for resolving relative links (optional)
+ * @param resourceBase  Bases for resolving the relative paths of a document
+ *                      synced from a remote source, e.g. a GitHub README
+ *                      (optional). Takes over relative URL resolution from
+ *                      `baseUrl` when provided.
+ * @returns             Sanitized HTML string
  */
-export function parseMarkdown(content: string, baseUrl = ''): string {
+export function parseMarkdown(
+  content: string,
+  baseUrl = '',
+  resourceBase?: ResourceBase,
+): string {
+  const resolveBase = resourceBase?.base ? resourceBase : undefined;
   return xss(
     marked(content, {
       gfm: true,
-      renderer: createRenderer(baseUrl),
+      renderer: createRenderer(baseUrl, !!resolveBase),
       // Match GitHub Flavored Markdown: a soft source newline is whitespace,
       // while explicit Markdown/HTML hard breaks still render as <br>.
       breaks: false,
@@ -295,6 +378,15 @@ export function parseMarkdown(content: string, baseUrl = ''): string {
       whiteList: xssWhiteList,
       stripIgnoreTag: true,
       stripIgnoreTagBody,
+      // Resolve after the default filter has run, so a hostile value (e.g.
+      // `javascript:`) is already dropped and never reaches URL resolution.
+      safeAttrValue: (tag, name, value, cssFilter) => {
+        const safe = defaultSafeAttrValue(tag, name, value, cssFilter);
+        if (!resolveBase || !safe || !RESOLVE_ATTRS[tag]?.includes(name)) {
+          return safe;
+        }
+        return absolutizeUrl(safe, resolveBase);
+      },
     },
   );
 }

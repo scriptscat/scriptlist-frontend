@@ -53,6 +53,10 @@ export interface ScriptInfo {
   createtime: number;
   updatetime: number;
   content: string;
+  // 说明同步自远端 README 时，其中相对路径的解析基准：文档目录与仓库 + ref 根。
+  // 由后端从同步地址派生，判定不出仓库根时 content_root_url 为空。
+  content_base_url?: string;
+  content_root_url?: string;
   role: string;
   sri?: string; //库才有
   // AI 审核结果（后端可能返回字符串 JSON 或对象）

@@ -80,6 +80,9 @@ const { Title, Text, Paragraph } = Typography;
 
 interface ScriptDetailClientProps {
   content: string;
+  /** 说明同步自远端 README 时，其中相对路径的解析基准（文档目录 / 仓库根）。 */
+  contentBaseUrl?: string;
+  contentRootUrl?: string;
   initialVersionData: VersionListResponse | null;
   versionStat: VersionStatResponse | null;
   versionError?: string;
@@ -154,6 +157,8 @@ function genRequire(
 
 export default function ScriptDetailClient({
   content,
+  contentBaseUrl,
+  contentRootUrl,
   initialVersionData,
   versionStat,
   versionError,
@@ -714,7 +719,12 @@ export default function ScriptDetailClient({
           <div>
             {script.summary && <AISummary summary={script.summary} />}
             <div className="prose prose-sm max-w-3xl dark:prose-invert">
-              <MarkdownView id="readme" content={content} />
+              <MarkdownView
+                id="readme"
+                content={content}
+                resourceBaseUrl={contentBaseUrl}
+                resourceRootUrl={contentRootUrl}
+              />
             </div>
           </div>
         ),
