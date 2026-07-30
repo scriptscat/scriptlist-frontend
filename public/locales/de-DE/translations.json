@@ -143,6 +143,10 @@
         "script-detail-sidebar": {
           "name": "Detail-Seitenleiste",
           "position": "Fixierte Seitenleiste der Skript-Detailseite, zwischen Statistik-Karte und Detail-Karte; auf großen Bildschirmen"
+        },
+        "script-detail-banner": {
+          "name": "Banner der Detailseite",
+          "position": "Hauptspalte der Skript-Detailseite, zwischen Info-Karte und Inhalts-Tabs; volle Breite, alle Breakpoints"
         }
       }
     },

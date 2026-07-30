@@ -171,6 +171,10 @@
         "script-detail-sidebar": {
           "name": "Detail sidebar",
           "position": "Script detail sticky sidebar, between the stats card and the detail card; large screens"
+        },
+        "script-detail-banner": {
+          "name": "Detail page banner",
+          "position": "Script detail main column, between the info card and the content tabs; full width, all breakpoints"
         }
       }
     },

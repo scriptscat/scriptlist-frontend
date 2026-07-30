@@ -127,6 +127,10 @@
         "script-detail-sidebar": {
           "name": "Thanh bên trang chi tiết",
           "position": "Thanh bên cố định của trang chi tiết tập lệnh, giữa thẻ thống kê và thẻ chi tiết; trên màn hình lớn"
+        },
+        "script-detail-banner": {
+          "name": "Băng-rôn trang chi tiết",
+          "position": "Cột nội dung chính của trang chi tiết tập lệnh, giữa thẻ thông tin và các tab nội dung; toàn chiều rộng, mọi điểm ngắt"
         }
       }
     },

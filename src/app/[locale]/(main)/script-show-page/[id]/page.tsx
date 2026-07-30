@@ -21,6 +21,7 @@ export default async function ScriptDetailPage({
     scoreStateResult,
     scoreListResult,
     sidebarAdResult,
+    bannerAdResult,
   ] = await Promise.allSettled([
     scriptService.getVersionListCached(scriptId, { page: 1, size: 10 }),
     scriptService.getVersionStatCached(scriptId),
@@ -32,10 +33,13 @@ export default async function ScriptDetailPage({
       order: 'desc',
     }),
     prefetchAd('script-detail-sidebar', locale),
+    prefetchAd('script-detail-banner', locale),
   ]);
 
   const sidebarAd =
     sidebarAdResult.status === 'fulfilled' ? sidebarAdResult.value : undefined;
+  const bannerAd =
+    bannerAdResult.status === 'fulfilled' ? bannerAdResult.value : undefined;
 
   const initialVersionData =
     versionListResult.status === 'fulfilled' ? versionListResult.value : null;
@@ -84,6 +88,7 @@ export default async function ScriptDetailPage({
       initialScoreList={initialScoreList}
       initialRatingStats={ratingStats}
       sidebarAd={sidebarAd}
+      bannerAd={bannerAd}
     />
   );
 }

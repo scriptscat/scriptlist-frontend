@@ -143,6 +143,10 @@
         "script-detail-sidebar": {
           "name": "詳情頁側欄",
           "position": "腳本詳情頁右側 sticky 側欄,資料統計卡與腳本詳情卡之間,大螢幕顯示"
+        },
+        "script-detail-banner": {
+          "name": "詳情頁橫幅",
+          "position": "腳本詳情頁主內容區,資訊卡與內容 Tab 卡之間,整寬顯示,全部斷點"
         }
       }
     },

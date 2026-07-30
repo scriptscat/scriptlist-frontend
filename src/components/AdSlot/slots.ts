@@ -25,6 +25,7 @@ export const AD_SLOT_META: readonly AdSlotMeta[] = [
   { key: 'search-sidebar', variant: 'card', size: '300×250' },
   { key: 'search-results-banner', variant: 'banner', size: '970×90' },
   { key: 'script-detail-sidebar', variant: 'card', size: '300×250' },
+  { key: 'script-detail-banner', variant: 'banner', size: '970×90' },
 ] as const;
 
 export const AD_SLOT_KEYS: readonly string[] = AD_SLOT_META.map((s) => s.key);

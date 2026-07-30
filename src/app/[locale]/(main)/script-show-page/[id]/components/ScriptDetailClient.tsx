@@ -86,6 +86,8 @@ interface ScriptDetailClientProps {
   initialRatingStats: RatingStats;
   /** 服务端预取的 script-detail-sidebar 广告数据（SSR）。 */
   sidebarAd?: { ad: AdSlotItem | null };
+  /** 服务端预取的 script-detail-banner 广告数据（SSR）。 */
+  bannerAd?: { ad: AdSlotItem | null };
 }
 
 function CountChip({ value }: { value: number }) {
@@ -157,6 +159,7 @@ export default function ScriptDetailClient({
   initialScoreList,
   initialRatingStats,
   sidebarAd,
+  bannerAd,
 }: ScriptDetailClientProps) {
   const { script } = useScript();
   const scriptState = useScriptState();
@@ -1027,6 +1030,13 @@ export default function ScriptDetailClient({
 
               {/* 数据统计卡（移动端展示在描述上方；桌面端在右侧栏） */}
               <div className="lg:hidden">{statsCard}</div>
+
+              {/* 详情页横幅广告：主内容列内，Tab 卡上方；无广告时不渲染、不占位 */}
+              <AdSlot
+                slot="script-detail-banner"
+                variant="banner"
+                initialData={bannerAd}
+              />
 
               {/* 内容 Tab 卡 */}
               <Card className="shadow-sm" classNames={{ body: '!p-0' }}>

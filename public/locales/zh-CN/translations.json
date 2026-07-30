@@ -172,6 +172,10 @@
         "script-detail-sidebar": {
           "name": "详情页侧栏",
           "position": "脚本详情页右侧 sticky 侧栏,数据统计卡与脚本详情卡之间,大屏显示"
+        },
+        "script-detail-banner": {
+          "name": "详情页横幅",
+          "position": "脚本详情页主内容区,信息卡与内容 Tab 卡之间,整宽展示,全部断点"
         }
       }
     },
