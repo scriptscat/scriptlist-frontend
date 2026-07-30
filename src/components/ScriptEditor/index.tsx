@@ -420,9 +420,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
                     <Select.Option value={1}>
                       {t('script_types.user_script')}
                     </Select.Option>
-                    <Select.Option value={2}>
-                      {t('script_types.subscribe_script')}
-                    </Select.Option>
+                    {/* 订阅脚本(type=2)暂不支持发布，不提供该选项 */}
                     <Select.Option value={3}>
                       {t('script_types.library')}
                     </Select.Option>
