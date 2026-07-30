@@ -117,6 +117,25 @@ test.describe('accepting a script invite lands somewhere actionable', () => {
     });
   });
 
+  // Rejecting a *link* invite also lands the invite row on status 2: the backend sets
+  // the access row to Reject and then marks the invite Used (access_invite.go, the
+  // InviteCodeTypeLink branch). So status 2 alone does not mean "accepted", and the
+  // redirect must additionally be gated on the user having pressed 同意 — without that
+  // guard, declining an invite would walk the user into the script.
+  test('rejecting an invite does not redirect', async ({ page }) => {
+    await stubInvite(page, {
+      role: 'manager',
+      statusAfterAccept: STATUS_ACCEPTED,
+    });
+    await page.goto(INVITE_URL);
+
+    await page.getByRole('button', { name: '拒绝' }).click();
+
+    await expect(page.locator('body')).toContainText('提交成功');
+    await page.waitForTimeout(3_000);
+    await expect(page).toHaveURL(new RegExp(`/scripts/invite\\?code=${CODE}$`));
+  });
+
   test('invite awaiting admin audit stays on the invite page', async ({
     page,
   }) => {
