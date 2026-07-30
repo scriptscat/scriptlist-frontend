@@ -26,6 +26,10 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import ScriptCard from '@/components/Scriptlist/ScriptCard';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
+import {
+  folderDisplayDescription,
+  folderDisplayName,
+} from '@/lib/utils/favorite-folder';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
 import type { ScriptListItem } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 
@@ -46,6 +50,7 @@ export default function UserFavorites({
   currentPage,
 }: UserFavoritesProps) {
   const t = useTranslations('user.favorites');
+  const commonT = useTranslations('common');
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
@@ -106,7 +111,10 @@ export default function UserFavorites({
             {/* 标题和状态 */}
             <div className="flex items-start justify-between">
               <h4 className="text-base font-medium truncate flex-1 mr-2">
-                {folder.name}
+                {folderDisplayName(
+                  folder,
+                  commonT('default_favorite_folder_name'),
+                )}
               </h4>
               {folder.private === 1 ? (
                 <LockOutlined className="text-sm !text-orange-500" />
@@ -117,7 +125,10 @@ export default function UserFavorites({
 
             {/* 描述 */}
             <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2 min-h-[2.5rem]">
-              {folder.description || t('no_description')}
+              {folderDisplayDescription(
+                folder,
+                commonT('default_favorite_folder_description'),
+              ) || t('no_description')}
             </p>
 
             {/* 统计信息 */}

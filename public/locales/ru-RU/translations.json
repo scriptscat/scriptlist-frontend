@@ -631,7 +631,9 @@
     "punish": "Наказать",
     "punish_reason": "Причина наказания",
     "report": "Пожаловаться",
-    "select_punish_option": "Выберите вариант наказания"
+    "select_punish_option": "Выберите вариант наказания",
+    "default_favorite_folder_name": "Избранное по умолчанию",
+    "default_favorite_folder_description": "Это папка избранного по умолчанию"
   },
   "components": {
     "markdown_editor": {

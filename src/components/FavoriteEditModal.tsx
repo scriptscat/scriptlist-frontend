@@ -9,6 +9,10 @@ import {
   type FavoriteFolderItem,
   type UpdateFolderRequest,
 } from '@/lib/api/services/scripts/favorites';
+import {
+  folderDisplayDescription,
+  folderDisplayName,
+} from '@/lib/utils/favorite-folder';
 
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -27,18 +31,26 @@ export default function FavoriteEditModal({
   onSuccess,
 }: FavoriteEditModalProps) {
   const t = useTranslations('user.favorites.edit_modal');
+  const commonT = useTranslations('common');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (visible) {
+      // 默认收藏夹预填当前语言的文案，保存后就以作者填的为准
       form.setFieldsValue({
-        name: folder.name,
-        description: folder.description || '',
+        name: folderDisplayName(
+          folder,
+          commonT('default_favorite_folder_name'),
+        ),
+        description: folderDisplayDescription(
+          folder,
+          commonT('default_favorite_folder_description'),
+        ),
         private: folder.private === 1, // 1私密，2公开，Switch组件使用boolean
       });
     }
-  }, [visible, folder, form]);
+  }, [visible, folder, form, commonT]);
 
   const handleSubmit = async (values: any) => {
     try {

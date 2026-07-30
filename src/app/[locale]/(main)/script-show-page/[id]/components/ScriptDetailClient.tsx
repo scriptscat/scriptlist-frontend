@@ -51,6 +51,7 @@ import { ScriptUtils } from '../utils';
 import { getLicenseDisplay } from '@/lib/license';
 import { copyToClipboard, hashColor } from '@/lib/utils/utils';
 import { checkScriptInstalled } from '@/lib/utils/script-manager';
+import { folderDisplayName } from '@/lib/utils/favorite-folder';
 import { useScriptInstallGuide } from '@/components/ScriptInstallGuide';
 import { SCRIPTCAT_INSTALL_GUIDE_URL } from '@/lib/constants/browserStores';
 import { useScriptWatch, useScriptFavorite } from '@/lib/api/hooks';
@@ -666,7 +667,12 @@ export default function ScriptDetailClient({
                     className="flex-1"
                   >
                     <div className="flex items-center justify-between w-full">
-                      <span>{folder.name}</span>
+                      <span>
+                        {folderDisplayName(
+                          folder,
+                          commonT('default_favorite_folder_name'),
+                        )}
+                      </span>
                       <span className="text-xs text-gray-400 ml-2">
                         {folder.count}
                       </span>
@@ -689,7 +695,14 @@ export default function ScriptDetailClient({
         </div>
       </Card>
     ),
-    [t, selectedFolders, handleFoldersChange, folders, handleAddFolder],
+    [
+      t,
+      commonT,
+      selectedFolders,
+      handleFoldersChange,
+      folders,
+      handleAddFolder,
+    ],
   );
 
   const detailTabs = useMemo(

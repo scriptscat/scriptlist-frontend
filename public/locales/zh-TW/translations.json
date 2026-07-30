@@ -637,7 +637,9 @@
     "punish": "處罰",
     "punish_reason": "處罰原因",
     "report": "舉報",
-    "select_punish_option": "選擇處罰選項"
+    "select_punish_option": "選擇處罰選項",
+    "default_favorite_folder_name": "預設收藏夾",
+    "default_favorite_folder_description": "這是一個預設的收藏夾"
   },
   "components": {
     "markdown_editor": {

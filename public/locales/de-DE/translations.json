@@ -631,7 +631,9 @@
     "punish": "Bestrafen",
     "punish_reason": "Grund für Bestrafung",
     "report": "Melden",
-    "select_punish_option": "Bestrafungsoption auswählen"
+    "select_punish_option": "Bestrafungsoption auswählen",
+    "default_favorite_folder_name": "Standard-Favoriten",
+    "default_favorite_folder_description": "Dies ist dein Standard-Favoritenordner"
   },
   "components": {
     "markdown_editor": {

@@ -491,7 +491,9 @@
     "punish": "Punish",
     "punish_reason": "Punishment reason",
     "report": "Report",
-    "select_punish_option": "Select punishment option"
+    "select_punish_option": "Select punishment option",
+    "default_favorite_folder_name": "Bộ sưu tập mặc định",
+    "default_favorite_folder_description": "Đây là bộ sưu tập mặc định của bạn"
   },
   "components": {
     "markdown_editor": {

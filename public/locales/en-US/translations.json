@@ -717,7 +717,9 @@
     "punish": "Punish",
     "punish_reason": "Punishment reason",
     "report": "Report",
-    "select_punish_option": "Select punishment option"
+    "select_punish_option": "Select punishment option",
+    "default_favorite_folder_name": "Default favorites",
+    "default_favorite_folder_description": "This is your default favorites folder"
   },
   "components": {
     "markdown_editor": {

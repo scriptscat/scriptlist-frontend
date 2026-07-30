@@ -631,7 +631,9 @@
     "punish": "処罰",
     "punish_reason": "処罰理由",
     "report": "報告",
-    "select_punish_option": "処罰オプションを選択"
+    "select_punish_option": "処罰オプションを選択",
+    "default_favorite_folder_name": "デフォルトのお気に入り",
+    "default_favorite_folder_description": "これはデフォルトのお気に入りフォルダーです"
   },
   "components": {
     "markdown_editor": {

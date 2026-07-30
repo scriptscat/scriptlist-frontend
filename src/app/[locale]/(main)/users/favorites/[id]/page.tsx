@@ -5,6 +5,10 @@ import FolderDetailClient from './components/FolderDetailClient';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
 import { userService } from '@/lib/api/services/user';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
+import {
+  folderDisplayDescription,
+  folderDisplayName,
+} from '@/lib/utils/favorite-folder';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
 import type { ScriptInfo } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
@@ -21,6 +25,7 @@ export async function generateMetadata({
   const { id, locale } = await params;
   const folderId = parseInt(id);
   const t = await getTranslations({ locale, namespace: 'user.favorites' });
+  const commonT = await getTranslations({ locale, namespace: 'common' });
 
   try {
     // 获取收藏夹详情
@@ -32,16 +37,24 @@ export async function generateMetadata({
       folderDetail.user_id,
     );
 
+    const folderName = folderDisplayName(
+      folderDetail,
+      commonT('default_favorite_folder_name'),
+    );
+
     const title =
       t('folder_title', {
-        folderName: folderDetail.name,
+        folderName,
         username: userDetail.username,
       }) + ' | ScriptCat';
     const description =
-      folderDetail.description ||
+      folderDisplayDescription(
+        folderDetail,
+        commonT('default_favorite_folder_description'),
+      ) ||
       t('folder_description', {
         username: userDetail.username,
-        folderName: folderDetail.name,
+        folderName,
         count: folderDetail.count,
       });
 

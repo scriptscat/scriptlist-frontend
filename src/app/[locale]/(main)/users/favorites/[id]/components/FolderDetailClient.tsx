@@ -26,6 +26,10 @@ import {
 } from '@ant-design/icons';
 import { useRouter } from '@/i18n/routing';
 import { formatNumber } from '@/lib/utils/semdate';
+import {
+  folderDisplayDescription,
+  folderDisplayName,
+} from '@/lib/utils/favorite-folder';
 import { useUser } from '@/contexts/UserContext';
 import ScriptCard from '@/components/Scriptlist/ScriptCard';
 import FavoriteEditModal from '@/components/FavoriteEditModal';
@@ -59,6 +63,7 @@ export default function FolderDetailClient({
   const router = useRouter();
   const { user } = useUser();
   const t = useTranslations('user.favorites');
+  const commonT = useTranslations('common');
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentFolder] = useState(folderDetail);
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
@@ -86,6 +91,15 @@ export default function FolderDetailClient({
       </div>
     );
   }
+
+  const folderName = folderDisplayName(
+    currentFolder,
+    commonT('default_favorite_folder_name'),
+  );
+  const folderDescription = folderDisplayDescription(
+    currentFolder,
+    commonT('default_favorite_folder_description'),
+  );
 
   const handlePageChange = (page: number) => {
     router.push(`/users/favorites/${folderId}?page=${page}`);
@@ -125,7 +139,7 @@ export default function FolderDetailClient({
 
   // 处理订阅链接点击：未检测到脚本管理器时复用安装引导弹窗（订阅文案）
   const handleSubscribeClick = (e: MouseEvent<HTMLElement>) => {
-    const subscribeUrl = `${window.location.origin}/scripts/subscribe/${folderId}/${encodeURIComponent(currentFolder.name)}.user.sub.js`;
+    const subscribeUrl = `${window.location.origin}/scripts/subscribe/${folderId}/${encodeURIComponent(folderName)}.user.sub.js`;
     handleInstallClick(e, subscribeUrl);
   };
 
@@ -170,7 +184,7 @@ export default function FolderDetailClient({
               ),
             },
             {
-              title: currentFolder.name,
+              title: folderName,
             },
           ]}
         />
@@ -182,7 +196,7 @@ export default function FolderDetailClient({
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-3">
               <Title level={2} className="!mb-0">
-                {currentFolder.name}
+                {folderName}
               </Title>
               <Tag
                 icon={
@@ -200,9 +214,9 @@ export default function FolderDetailClient({
               </Tag>
             </div>
 
-            {currentFolder.description && (
+            {folderDescription && (
               <Paragraph className="text-gray-600 dark:text-gray-400 mb-3">
-                {currentFolder.description}
+                {folderDescription}
               </Paragraph>
             )}
 
