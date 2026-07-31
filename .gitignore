@@ -43,7 +43,7 @@ yarn-error.log*
 next-env.d.ts
 
 /public/build
-/public/styles/*
+/src/app/antd.generated.css
 /public/assets/monaco-editor/*
 /public/assets/prismjs/*
 

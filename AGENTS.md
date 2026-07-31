@@ -34,7 +34,7 @@ pnpm test:watch       # vitest in watch mode
 pnpm e2e              # Playwright end-to-end tests (tests/e2e/)
 ```
 
-The prebuild step (`scripts/prebuild.tsx`) extracts Ant Design CSS statically and copies Monaco editor files to `public/`.
+The prebuild step (`scripts/prebuild.tsx`) statically extracts and validates the Ant Design stylesheet before Next.js emits it as a content-hashed CSS asset; it also copies Monaco editor files to `public/`.
 
 ## Architecture
 
@@ -106,7 +106,7 @@ APP_API_URL           # Server-side API base URL
 APP_API_PROXY         # API proxy destination (used in next.config.ts rewrites)
 ```
 
-Frontend proxies API calls via Next.js rewrites: `/api/v2/:path*` → `APP_API_PROXY/:path*`. `next.config.ts` also sets global security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`), immutable long-cache headers for `/assets`, `/styles`, `/monaco`, and `optimizePackageImports` for `antd` / `@ant-design/*` / `@iconify/react`. `pnpm` is pinned via `packageManager` (`pnpm@10.x`); use it rather than npm/yarn.
+Frontend proxies API calls via Next.js rewrites: `/api/v2/:path*` → `APP_API_PROXY/:path*`. `next.config.ts` also sets global security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`), immutable long-cache headers for `/assets` and `/monaco`, and `optimizePackageImports` for `antd` / `@ant-design/*` / `@iconify/react`. `pnpm` is pinned via `packageManager` (`pnpm@10.x`); use it rather than npm/yarn.
 
 ## Key Conventions
 

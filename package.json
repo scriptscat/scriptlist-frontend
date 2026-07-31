@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "predev": "ts-node --project ./tsconfig.node.json ./scripts/prebuild.tsx",
-    "prebuild": "cross-env NODE_ENV=production ts-node --project ./tsconfig.node.json ./scripts/prebuild.tsx"
+    "prebuild": "cross-env NODE_ENV=production ts-node --project ./tsconfig.node.json ./scripts/prebuild.tsx",
+    "verify:antd-css": "ts-node --project ./tsconfig.node.json ./scripts/verify-antd-css.ts"
   },
   "dependencies": {
     "@ant-design/charts": "^2.6.7",
@@ -65,6 +66,8 @@
     "eslint-config-next": "16.2.12",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.3",
+    "postcss": "^8.5.25",
+    "postcss-selector-parser": "^7.1.4",
     "prettier": "^3.9.6",
     "tailwindcss": "^4.3.3",
     "ts-node": "^10.9.2",
