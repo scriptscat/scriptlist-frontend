@@ -252,8 +252,7 @@ export default function AdvertiseClient() {
         return;
       }
       const range = v.range as
-        | [dayjs.Dayjs | null, dayjs.Dayjs | null]
-        | undefined;
+        [dayjs.Dayjs | null, dayjs.Dayjs | null] | undefined;
       const input: AdminAdvertiseInput = {
         slot_key: v.slot_key,
         title: v.title,

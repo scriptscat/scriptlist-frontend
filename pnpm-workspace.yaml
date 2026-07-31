@@ -1,0 +1,6 @@
+overrides:
+  '@toast-ui/editor>dompurify': 3.4.12
+  '@ant-design/charts>lodash': 4.18.1
+  'ajv>fast-uri': 3.1.4
+  'workerize-loader>webpack': 5.104.1
+  'styled-components>postcss': 8.5.25

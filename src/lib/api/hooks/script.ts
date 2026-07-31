@@ -196,9 +196,8 @@ export function useScriptStatistics(scriptId: number) {
   return useSWR<Statistics, APIError>(
     key,
     async () => {
-      const { scriptStatisticsService } = await import(
-        '../services/scripts/statistics'
-      );
+      const { scriptStatisticsService } =
+        await import('../services/scripts/statistics');
       return scriptStatisticsService.getStatistics(scriptId);
     },
     {
@@ -221,9 +220,8 @@ export function useScriptRealtime(scriptId: number, enabled: boolean = true) {
   return useSWR<Realtime, APIError>(
     key,
     async () => {
-      const { scriptStatisticsService } = await import(
-        '../services/scripts/statistics'
-      );
+      const { scriptStatisticsService } =
+        await import('../services/scripts/statistics');
       return scriptStatisticsService.getRealtime(scriptId);
     },
     {

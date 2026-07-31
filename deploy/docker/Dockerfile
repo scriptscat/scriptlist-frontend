@@ -18,8 +18,8 @@ ARG NPM_REGISTRY=""
 # 设置工作目录
 WORKDIR /app
 
-# 复制 package.json 和 pnpm-lock.yaml（仅依赖相关文件）
-COPY package.json pnpm-lock.yaml ./
+# 复制依赖清单、锁文件和 pnpm overrides 配置
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # 安装所有依赖（包括开发依赖，构建时需要）
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
@@ -42,7 +42,7 @@ ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL} \
 
 # 从 deps 阶段复制 node_modules
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # 复制源代码
 COPY . .

@@ -118,12 +118,7 @@ export interface Script {
 
 export interface ScriptAntiFeature {
   type:
-    | 'ads'
-    | 'tracking'
-    | 'miner'
-    | 'payment'
-    | 'membership'
-    | 'referral-link';
+    'ads' | 'tracking' | 'miner' | 'payment' | 'membership' | 'referral-link';
   description: string;
 }
 

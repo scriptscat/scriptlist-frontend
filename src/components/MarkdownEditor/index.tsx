@@ -129,9 +129,8 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
           // 尝试加载代码语法高亮插件
           let plugins: any[] = [];
           try {
-            const codeSyntaxHighlight = await import(
-              '@toast-ui/editor-plugin-code-syntax-highlight'
-            );
+            const codeSyntaxHighlight =
+              await import('@toast-ui/editor-plugin-code-syntax-highlight');
 
             // 确保 Prism 在全局可用
             if (typeof window !== 'undefined') {

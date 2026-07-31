@@ -47,12 +47,10 @@ export async function LocalizedServerThemeWrapper({
     getThemeFromServerCookies(),
     getMessages(),
     userService.getCurrentUser(),
-    systemService.getGlobalConfig().catch(
-      (): GlobalConfig => ({
-        turnstile_site_key: '',
-        qq_migrate_enabled: false,
-      }),
-    ),
+    systemService.getGlobalConfig().catch((): GlobalConfig => ({
+      turnstile_site_key: '',
+      qq_migrate_enabled: false,
+    })),
   ]);
 
   return (
