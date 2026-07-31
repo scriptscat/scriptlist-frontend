@@ -32,7 +32,7 @@ import {
   type Message,
 } from '@cago-frame/agents-client';
 import { useTranslations } from 'next-intl';
-import { parseMarkdown } from '@/components/MarkdownView/parseMarkdown';
+import { useMarkdownParser } from '@/components/MarkdownView/useMarkdownParser';
 import { useChatSessionList, useChatMessages } from '@/lib/api/hooks/chat';
 import { chatService } from '@/lib/api/services/chat';
 import type { ChatSession as ChatSessionType } from '@/lib/api/services/chat';
@@ -161,6 +161,7 @@ function ClearButton() {
 // 聊天气泡组件
 function ChatBubble({ message }: { message: Message }) {
   const isUser = message.role === 'user';
+  const parseMarkdown = useMarkdownParser();
 
   return (
     <MessageItem message={message} markdownParser={parseMarkdown}>

@@ -49,3 +49,11 @@ next-env.d.ts
 
 .claude
 .omc
+
+# dev-kit working files (plans, artifacts, worktrees)
+.dev-kit
+
+# runtime-verification scratch (reports, screenshots, logs).
+# Repo root, not next to the Playwright specs in tests/e2e/: that is where the
+# verification flow actually writes, and tests/e2e/scratch never existed.
+/e2e/scratch/

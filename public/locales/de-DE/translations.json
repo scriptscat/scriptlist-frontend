@@ -636,6 +636,15 @@
     "default_favorite_folder_description": "Dies ist dein Standard-Favoritenordner"
   },
   "components": {
+    "markdown": {
+      "note": "Notiz",
+      "tip": "Tipp",
+      "important": "Wichtig",
+      "warning": "Warnung",
+      "caution": "Vorsicht",
+      "footnotes_heading": "Fußnoten",
+      "footnote_backref": "Zurück zur Referenz {0}"
+    },
     "markdown_editor": {
       "image_upload_failed": "Bild-Upload fehlgeschlagen",
       "loading_editor": "Editor wird geladen...",
@@ -1137,7 +1146,7 @@
         "connect": "Ursprungsübergreifender Zugriff",
         "grants": "Fähigkeiten",
         "more": "+{count}",
-        "high_risk": "Hochriskante Berechtigung – mit Vorsicht installieren",
+        "high_risk": "Dieses Skript verfügt über eine sensible Berechtigung zum Zugriff auf und Ändern von Cookies.",
         "cap": {
           "net": "Netzwerkanfragen",
           "notify": "Benachrichtigungen",

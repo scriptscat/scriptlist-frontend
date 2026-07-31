@@ -735,6 +735,15 @@
     "default_favorite_folder_description": "这是一个默认的收藏夹"
   },
   "components": {
+    "markdown": {
+      "note": "说明",
+      "tip": "提示",
+      "important": "重要",
+      "warning": "警告",
+      "caution": "注意",
+      "footnotes_heading": "脚注",
+      "footnote_backref": "返回引用 {0}"
+    },
     "markdown_editor": {
       "image_upload_failed": "图片上传失败",
       "loading_editor": "加载编辑器中...",
@@ -1320,7 +1329,7 @@
         "connect": "跨域访问",
         "grants": "使用能力",
         "more": "+{count}",
-        "high_risk": "高风险权限，请谨慎安装",
+        "high_risk": "此脚本具有访问和修改 Cookie 的敏感权限",
         "cap": {
           "net": "网络请求",
           "notify": "通知",

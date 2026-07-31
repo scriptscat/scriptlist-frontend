@@ -636,6 +636,15 @@
     "default_favorite_folder_description": "これはデフォルトのお気に入りフォルダーです"
   },
   "components": {
+    "markdown": {
+      "note": "メモ",
+      "tip": "ヒント",
+      "important": "重要",
+      "warning": "警告",
+      "caution": "注意",
+      "footnotes_heading": "脚注",
+      "footnote_backref": "参照 {0} に戻る"
+    },
     "markdown_editor": {
       "image_upload_failed": "画像のアップロードに失敗しました",
       "loading_editor": "エディターを読み込み中...",
@@ -1209,7 +1218,7 @@
         "connect": "クロスオリジンアクセス",
         "grants": "使用する機能",
         "more": "+{count}",
-        "high_risk": "高リスクの権限です。インストールにご注意ください",
+        "high_risk": "このスクリプトには、Cookie へのアクセスと変更を許可する機密性の高い権限があります。",
         "cap": {
           "net": "ネットワークリクエスト",
           "notify": "通知",

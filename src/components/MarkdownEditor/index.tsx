@@ -17,7 +17,7 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import '@toast-ui/editor/dist/theme/toastui-editor-dark.css';
 import './toast-ui-theme.css'; // 自定义主题样式
 import Prism from 'prismjs';
-import { parseMarkdown } from '../MarkdownView/parseMarkdown';
+import { useMarkdownParser } from '../MarkdownView/useMarkdownParser';
 import '../MarkdownView/markdown.css';
 import '../MarkdownView/github-markdown-css.css';
 import '../MarkdownView/prism.css';
@@ -77,6 +77,17 @@ const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>(
     const locale = useLocale();
     const pathname = usePathname();
     const currentBaseUrl = `/${locale}${pathname === '/' ? '' : pathname}`;
+    const parseMarkdown = useMarkdownParser();
+    // Closed over directly, no ref: `useMarkdownParser` keys the returned
+    // parser on the locale (see the module-level map in
+    // useMarkdownParser.ts), so its identity is stable across an RSC
+    // re-render such as `router.refresh()` and changes only when the locale
+    // does. `currentBaseUrl` below already embeds the locale and is already a
+    // dependency of `createEditor`, so a locale change destroys and rebuilds
+    // the editor (and its `beforePreviewRender` closure) regardless — there is
+    // no case left where `parseMarkdown` changes identity without
+    // `createEditor` being rebuilt around it, so nothing needs to read it
+    // through a ref.
     const editorRef = useRef<HTMLDivElement>(null);
     const editorInstanceRef = useRef<ToastUIEditor | null>(null);
     const { themeMode } = useTheme();

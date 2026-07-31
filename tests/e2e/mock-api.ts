@@ -57,8 +57,26 @@ const script = {
   total_install: 120,
   createtime: now - 10_000,
   updatetime: now,
+  // GFM extensions exercised end-to-end by markdown-gfm.spec.ts (alerts,
+  // footnotes, heading anchors) — see
+  // docs/superpowers/specs/2026-07-31-markdown-gfm-extensions-design.md.
   content:
-    '## E2E Userscript\n\nThis content is served by the Playwright mock API.',
+    '## E2E Userscript\n\n' +
+    'This content is served by the Playwright mock API.\n\n' +
+    '## 安装说明\n\n' +
+    '跳转到 [安装说明](#安装说明) 查看详情。\n\n' +
+    '> [!IMPORTANT]\n' +
+    '> 有且仅有以上3种分发渠道由仓库维护者直接管理。\n\n' +
+    '> [!NOTE]\n' +
+    '> 这是来自 GitHub Flavored Markdown 的提示。\n\n' +
+    '支持脚注引用[^1]。\n\n' +
+    // Author-written raw HTML wearing the footnotes section's own shape. Both
+    // `section` and `class="footnotes"` survive sanitization (see
+    // parseMarkdown.ts STRUCTURE_CLASSES), so the CSS that visually hides the
+    // *generated* footnotes heading must not hide this one — markdown-gfm.spec
+    // asserts it stays at full height.
+    '<section class="footnotes"><h2>作者自己写的脚注标题</h2><p>作者自己写的脚注正文。</p></section>\n\n' +
+    '[^1]: 这是脚注的详细说明内容。\n',
   role: 'owner',
   script: {
     id: 1,

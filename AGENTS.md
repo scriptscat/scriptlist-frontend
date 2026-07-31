@@ -15,11 +15,11 @@ ScriptList Frontend — a userscript sharing platform ([scriptcat.org](https://s
 Apply these rules to every change here:
 
 - **Confirm a bug exists before fixing it.** Reproduce it in the running app (`pnpm dev`) or trace the relevant component → hook (`src/lib/api/hooks`) → service (`src/lib/api/services`) → API path first. Do not change code on suspicion alone.
-- **TDD/BDD mindset.** There is currently **no automated test runner** configured in this project (no test deps or scripts in `package.json`). So define the expected behavior up front, reproduce the failing case manually, then implement and re-verify that exact case. If you introduce tests, wire the runner into `package.json` rather than leaving orphan test files.
+- **TDD/BDD mindset.** Unit tests run on **vitest** (`pnpm test`); specs live next to their subject as `src/**/*.test.ts` (`vitest.config.mts` scopes the runner to `src/`, so Playwright's `tests/e2e/*.spec.ts` stay with `pnpm e2e`). Write the failing test first, then make it pass. Where a change is not reachable from a unit test (visual/CSS, editor integration), define the expected behavior up front, reproduce the failing case manually, then implement and re-verify that exact case.
 - **Follow SOLID and the existing architecture.** Keep server components server-side, isolate interactivity in `'use client'` components, put data access in `src/lib/api/services`, and consume it through the SWR hooks — don't bypass the layers.
 - **高内聚低耦合 (high cohesion, low coupling).** One responsibility per layer: presentation in components, fetching in SWR hooks (`src/lib/api/hooks`), HTTP in service classes (`src/lib/api/services`), shared shapes in `src/types/api.ts`. Components depend on hooks/services, not on `apiClient` directly; navigate via `@/i18n/routing`, not `next/navigation`. Keep server vs `'use client'` boundaries clean so a change in one doesn't ripple into the other.
 - **Keep changes scoped.** Touch only files the task requires — no opportunistic refactors, reformatting, or unrelated edits — and never revert the user's own changes unless explicitly asked.
-- Verify with `pnpm lint` and `pnpm build` before considering the work done.
+- Verify with `pnpm test`, `pnpm lint`, and `pnpm build` before considering the work done.
 
 ## Commands
 
@@ -29,6 +29,9 @@ pnpm build            # Production build (runs prebuild automatically)
 pnpm start            # Start production server
 pnpm lint             # ESLint check
 pnpm lint-fix         # ESLint auto-fix
+pnpm test             # vitest unit tests (src/**/*.test.ts), single run
+pnpm test:watch       # vitest in watch mode
+pnpm e2e              # Playwright end-to-end tests (tests/e2e/)
 ```
 
 The prebuild step (`scripts/prebuild.tsx`) extracts Ant Design CSS statically and copies Monaco editor files to `public/`.

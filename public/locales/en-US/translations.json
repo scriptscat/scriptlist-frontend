@@ -722,6 +722,15 @@
     "default_favorite_folder_description": "This is your default favorites folder"
   },
   "components": {
+    "markdown": {
+      "note": "Note",
+      "tip": "Tip",
+      "important": "Important",
+      "warning": "Warning",
+      "caution": "Caution",
+      "footnotes_heading": "Footnotes",
+      "footnote_backref": "Back to reference {0}"
+    },
     "markdown_editor": {
       "image_upload_failed": "Image upload failed",
       "loading_editor": "Loading editor...",
@@ -1303,7 +1312,7 @@
         "connect": "Cross-origin access",
         "grants": "Capabilities",
         "more": "+{count}",
-        "high_risk": "High-risk permission — install with caution",
+        "high_risk": "This script has a sensitive permission that allows it to access and modify cookies.",
         "cap": {
           "net": "Network requests",
           "notify": "Notifications",

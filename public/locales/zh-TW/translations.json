@@ -642,6 +642,15 @@
     "default_favorite_folder_description": "這是一個預設的收藏夾"
   },
   "components": {
+    "markdown": {
+      "note": "說明",
+      "tip": "提示",
+      "important": "重要",
+      "warning": "警告",
+      "caution": "注意",
+      "footnotes_heading": "註腳",
+      "footnote_backref": "返回引用 {0}"
+    },
     "markdown_editor": {
       "image_upload_failed": "圖片上傳失敗",
       "loading_editor": "載入編輯器中...",
@@ -1215,7 +1224,7 @@
         "connect": "跨域存取",
         "grants": "使用能力",
         "more": "+{count}",
-        "high_risk": "高風險權限，請謹慎安裝",
+        "high_risk": "此腳本具有存取及修改 Cookie 的敏感權限",
         "cap": {
           "net": "網路請求",
           "notify": "通知",

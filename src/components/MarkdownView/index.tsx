@@ -9,7 +9,7 @@ import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min';
 import './markdown.css';
 import './github-markdown-css.css';
 import './prism.css';
-import { parseMarkdown } from './parseMarkdown';
+import { useMarkdownParser } from './useMarkdownParser';
 
 interface MarkdownViewProps {
   id?: string;
@@ -24,8 +24,14 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
   ({ content, resourceBaseUrl, resourceRootUrl }) => {
     const pathname = usePathname();
     const currentBaseUrl = pathname;
+    const parseMarkdown = useMarkdownParser();
 
-    // 使用 useMemo 来确保服务器端和客户端渲染一致的内容
+    // 使用 useMemo 来确保服务器端和客户端渲染一致的内容。
+    // `parseMarkdown` is safe as a dependency: `useMarkdownParser` keys it on
+    // the locale, so it changes when the labels change and not when a
+    // `router.refresh()` replaces the `next-intl` context (ScriptLayout does
+    // one after routine user actions, and re-parsing a whole description on
+    // each of those is exactly what this memo exists to avoid).
     const html = React.useMemo(() => {
       return parseMarkdown(
         content,
@@ -34,7 +40,13 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
           ? { base: resourceBaseUrl, root: resourceRootUrl }
           : undefined,
       );
-    }, [content, currentBaseUrl, resourceBaseUrl, resourceRootUrl]);
+    }, [
+      parseMarkdown,
+      content,
+      currentBaseUrl,
+      resourceBaseUrl,
+      resourceRootUrl,
+    ]);
 
     const ref = useRef<HTMLDivElement>(null);
 

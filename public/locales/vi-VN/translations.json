@@ -496,6 +496,15 @@
     "default_favorite_folder_description": "Đây là bộ sưu tập mặc định của bạn"
   },
   "components": {
+    "markdown": {
+      "note": "Lưu ý",
+      "tip": "Mẹo",
+      "important": "Quan trọng",
+      "warning": "Cảnh báo",
+      "caution": "Thận trọng",
+      "footnotes_heading": "Chú thích cuối trang",
+      "footnote_backref": "Quay lại tham chiếu {0}"
+    },
     "markdown_editor": {
       "image_upload_failed": "Image upload failed",
       "loading_editor": "Loading editor...",
