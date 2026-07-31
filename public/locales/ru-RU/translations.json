@@ -1113,8 +1113,8 @@
       "install": {
         "install_check_failed": "Не удалось проверить статус установки скрипта",
         "install_script": "Установить скрипт",
-        "reinstall_script": "Переустановить скрипт v{version}",
-        "update_script": "Обновить скрипт до v{version}",
+        "reinstall_script": "Переустановить скрипт",
+        "update_script": "Обновить скрипт",
         "updated_at": "Обновлено {time}",
         "changelog": "История изменений"
       },

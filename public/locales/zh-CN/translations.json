@@ -1224,8 +1224,8 @@
       "install": {
         "install_check_failed": "检测脚本安装状态失败",
         "install_script": "安装脚本",
-        "reinstall_script": "重新安装脚本 v{version}",
-        "update_script": "更新脚本至 v{version}",
+        "reinstall_script": "重新安装脚本",
+        "update_script": "更新脚本",
         "updated_at": "更新于 {time}",
         "changelog": "更新日志"
       },

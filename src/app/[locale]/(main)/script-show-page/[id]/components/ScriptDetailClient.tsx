@@ -310,13 +310,9 @@ export default function ScriptDetailClient({
       .then((status) => {
         if (status.installed) {
           if (status.version === script.script.version) {
-            setInstallTitle(
-              t('install.reinstall_script', { version: status.version }),
-            );
+            setInstallTitle(t('install.reinstall_script'));
           } else {
-            setInstallTitle(
-              t('install.update_script', { version: script.script.version }),
-            );
+            setInstallTitle(t('install.update_script'));
           }
         }
       })

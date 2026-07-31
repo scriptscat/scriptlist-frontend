@@ -954,8 +954,8 @@
       "install": {
         "install_check_failed": "Failed to check script installation status",
         "install_script": "Install Script",
-        "reinstall_script": "Reinstall Script v{version}",
-        "update_script": "Update Script to v{version}"
+        "reinstall_script": "Reinstall Script",
+        "update_script": "Update Script"
       },
       "installGuide": {
         "title": "Cần trình quản lý userscript",

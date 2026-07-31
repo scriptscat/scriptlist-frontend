@@ -1113,8 +1113,8 @@
       "install": {
         "install_check_failed": "スクリプトインストール状態の検出に失敗しました",
         "install_script": "スクリプトをインストール",
-        "reinstall_script": "スクリプト v{version} を再インストール",
-        "update_script": "スクリプトを v{version} に更新",
+        "reinstall_script": "スクリプトを再インストール",
+        "update_script": "スクリプトを更新",
         "updated_at": "{time} に更新",
         "changelog": "更新履歴"
       },

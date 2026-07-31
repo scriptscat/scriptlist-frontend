@@ -1119,8 +1119,8 @@
       "install": {
         "install_check_failed": "檢測腳本安裝狀態失敗",
         "install_script": "安裝腳本",
-        "reinstall_script": "重新安裝腳本 v{version}",
-        "update_script": "更新腳本至 v{version}",
+        "reinstall_script": "重新安裝腳本",
+        "update_script": "更新腳本",
         "updated_at": "更新於 {time}",
         "changelog": "更新記錄"
       },

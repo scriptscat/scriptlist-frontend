@@ -1113,8 +1113,8 @@
       "install": {
         "install_check_failed": "Überprüfung des Skriptinstallationsstatus fehlgeschlagen",
         "install_script": "Skript installieren",
-        "reinstall_script": "Skript v{version} neu installieren",
-        "update_script": "Skript auf v{version} aktualisieren",
+        "reinstall_script": "Skript neu installieren",
+        "update_script": "Skript aktualisieren",
         "updated_at": "Aktualisiert am {time}",
         "changelog": "Änderungsprotokoll"
       },

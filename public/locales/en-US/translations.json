@@ -1207,8 +1207,8 @@
       "install": {
         "install_check_failed": "Failed to check script installation status",
         "install_script": "Install Script",
-        "reinstall_script": "Reinstall Script v{version}",
-        "update_script": "Update Script to v{version}",
+        "reinstall_script": "Reinstall Script",
+        "update_script": "Update Script",
         "updated_at": "Updated {time}",
         "changelog": "Changelog"
       },
