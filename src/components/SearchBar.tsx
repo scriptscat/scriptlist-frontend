@@ -94,7 +94,7 @@ export default function SearchBar({ initialKeyword = '' }: SearchBarProps) {
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           onPressEnter={handleSearch}
-          className="flex-1 !text-base !bg-transparent !px-0 !shadow-none"
+          className="flex-1 !text-base !bg-transparent !px-0 !shadow-none !outline-none"
         />
         {value ? (
           <button
