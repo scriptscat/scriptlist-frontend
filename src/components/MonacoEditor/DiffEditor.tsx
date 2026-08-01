@@ -2,6 +2,7 @@
 
 import { DiffEditor, loader } from '@monaco-editor/react';
 import { useTheme } from '@/contexts/ThemeClientContext';
+import { MONACO_ASSET_ROOT } from './config';
 
 interface MonacoDiffEditorProps {
   original: string;
@@ -13,7 +14,7 @@ interface MonacoDiffEditorProps {
 
 loader.config({
   paths: {
-    vs: '/assets/monaco-editor/min/vs',
+    vs: MONACO_ASSET_ROOT,
   },
 });
 

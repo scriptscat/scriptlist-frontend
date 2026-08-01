@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 
-const MONACO_ASSET_PREFIX = '/assets/monaco-editor/min/vs/';
+const MONACO_ASSET_PREFIX = '/assets/monaco-editor/0.56.0/min/vs/';
 
 type MonacoRuntime = {
   editor: {
@@ -99,7 +99,7 @@ test.beforeEach(async ({ context }) => {
 
 test('loads the code editor and its JavaScript and JSON workers from same-origin assets', async ({
   page,
-}) => {
+}, testInfo) => {
   const runtime = watchMonacoRuntime(page);
 
   await page.goto('/zh-CN/script-show-page/1/code', { waitUntil: 'commit' });
@@ -109,6 +109,7 @@ test('loads the code editor and its JavaScript and JSON workers from same-origin
   await expect(editor.locator('.view-lines')).toContainText(
     'console.log("e2e");',
   );
+  await expect(editor.locator('textarea.inputarea:visible')).toHaveCount(0);
 
   await page.evaluate(async () => {
     const monaco = (
@@ -142,6 +143,10 @@ test('loads the code editor and its JavaScript and JSON workers from same-origin
   );
   await expectSuccessfulAsset(
     runtime.successfulAssets,
+    /\/editor\/editor\.main\.css$/,
+  );
+  await expectSuccessfulAsset(
+    runtime.successfulAssets,
     /\/assets\/editor\.worker-[^/]+\.js$/,
   );
   await expectSuccessfulAsset(
@@ -153,6 +158,13 @@ test('loads the code editor and its JavaScript and JSON workers from same-origin
     /\/assets\/json\.worker-[^/]+\.js$/,
   );
   expect(runtime.issues).toEqual([]);
+
+  const screenshotPath = testInfo.outputPath('monaco-code-page.png');
+  await page.screenshot({ path: screenshotPath, fullPage: true });
+  await testInfo.attach('monaco-code-page', {
+    path: screenshotPath,
+    contentType: 'image/png',
+  });
 });
 
 test('loads the side-by-side diff editor from the same Monaco asset root', async ({

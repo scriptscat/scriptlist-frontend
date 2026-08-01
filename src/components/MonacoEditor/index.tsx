@@ -3,6 +3,7 @@
 import Editor, { loader } from '@monaco-editor/react';
 import { useTheme } from '@/contexts/ThemeClientContext';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
+import { MONACO_ASSET_ROOT } from './config';
 
 interface MonacoEditorProps {
   value: string;
@@ -20,7 +21,7 @@ export interface MonacoEditorRef {
 
 loader.config({
   paths: {
-    vs: '/assets/monaco-editor/min/vs',
+    vs: MONACO_ASSET_ROOT,
   },
 });
 

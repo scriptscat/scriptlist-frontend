@@ -19,8 +19,9 @@ console.log(
 // 无法再按旧版 base/editor/language 固定目录安全裁剪。复制官方 min/vs 发布树，
 // 并先清理旧输出，避免已删除或改名的资源被上一次构建残留掩盖。
 const monacoSrc = './node_modules/monaco-editor/min/vs';
-const monacoDst = './public/assets/monaco-editor/min/vs';
+const monacoRoot = './public/assets/monaco-editor';
+const monacoDst = path.join(monacoRoot, '0.56.0/min/vs');
 
-fs.rmSync(monacoDst, { recursive: true, force: true });
+fs.rmSync(monacoRoot, { recursive: true, force: true });
 fs.mkdirSync(path.dirname(monacoDst), { recursive: true });
 fs.cpSync(monacoSrc, monacoDst, { recursive: true });
