@@ -563,7 +563,7 @@ function route(
       completion_tokens: 1,
       latency_ms: 1,
       reason: '',
-      summary: 'ok',
+      summary: { zh: '正常', en: 'ok' },
       tags: [],
       createtime: now,
       updatetime: now,

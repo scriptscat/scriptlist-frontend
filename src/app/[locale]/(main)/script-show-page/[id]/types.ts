@@ -1,4 +1,4 @@
-import type { PageRequest } from '@/types/api';
+import type { LocalizedSummary, PageRequest } from '@/types/api';
 
 export interface ScriptListItem {
   script: Script;
@@ -59,8 +59,7 @@ export interface ScriptInfo {
   content_root_url?: string;
   role: string;
   sri?: string; //库才有
-  // AI 审核结果（后端可能返回字符串 JSON 或对象）
-  summary?: string;
+  summary: LocalizedSummary;
 }
 
 // ScriptInfo without the heavy `content` field, used in layout context

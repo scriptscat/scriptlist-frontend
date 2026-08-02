@@ -10,6 +10,11 @@ export interface APIResponse<T> {
   data: T;
 }
 
+export interface LocalizedSummary {
+  zh: string;
+  en: string;
+}
+
 // 分页请求参数
 export interface PageRequest {
   page?: number;

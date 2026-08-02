@@ -58,7 +58,7 @@ import { useScriptWatch, useScriptFavorite } from '@/lib/api/hooks';
 import { WatchLevel } from '../types';
 import { scriptService } from '@/lib/api/services/scripts';
 import { aiReviewService } from '@/lib/api/services/aiReview';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
 import AdSlot from '@/components/AdSlot';
 import ScriptIcon from '@/components/ScriptIcon';
@@ -73,8 +73,9 @@ import type {
   VersionStatResponse,
 } from '@/lib/api/services/scripts/scripts';
 import { APIError } from '@/types/api';
-import type { ListData } from '@/types/api';
+import type { ListData, LocalizedSummary } from '@/types/api';
 import type { RatingStats } from '../comment/components/rating';
+import { selectLocalizedSummary } from '../localizedSummary';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -102,9 +103,12 @@ function CountChip({ value }: { value: number }) {
   );
 }
 
-function AISummary({ summary }: { summary: string }) {
+function AISummary({ summary }: { summary: LocalizedSummary }) {
   const t = useTranslations('script.detail');
+  const locale = useLocale();
   const [expanded, setExpanded] = useState(true);
+  const text = selectLocalizedSummary(summary, locale);
+  if (!text.trim()) return null;
   return (
     <div className="mb-4 rounded-md border-l-[3px] border-indigo-500 bg-indigo-50 px-3.5 py-2.5 dark:border-indigo-400 dark:bg-indigo-950/40">
       <button
@@ -129,7 +133,7 @@ function AISummary({ summary }: { summary: string }) {
       </button>
       {expanded && (
         <div className="mt-1.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-          {summary}
+          {text}
         </div>
       )}
     </div>
