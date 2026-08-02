@@ -514,7 +514,12 @@
         "dean_edwards_packer": "Обнаружен упаковщик Dean Edwards",
         "aa_encode": "Обнаружена кодировка AAEncode",
         "jj_encode": "Обнаружена кодировка JJEncode",
-        "eval_density": "Плотность вызовов eval/динамического выполнения слишком высока"
+        "eval_density": "Плотность вызовов eval/динамического выполнения слишком высока",
+        "gm_cookie_unrecognized_usage": "Обнаружено нераспознанное или не полностью интерпретированное использование GM_cookie",
+        "gm_cookie_unused_sensitive_permission": "Объявлено чувствительное разрешение GM_cookie, но допустимое использование не обнаружено",
+        "gm_cookie_data_exfiltration": "Данные GM_cookie могут отправляться в сеть или во внешний контекст",
+        "gm_cookie_data_injection": "Данные GM_cookie могут внедряться в код, страницу или постоянное хранилище",
+        "gm_cookie_analysis_incomplete": "Анализ потока данных GM_cookie не завершён и требует ручной проверки"
       }
     }
   },

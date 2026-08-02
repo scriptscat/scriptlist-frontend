@@ -514,7 +514,12 @@
         "dean_edwards_packer": "Dean Edwardsパッカーを検出",
         "aa_encode": "AAEncodeエンコーディングを検出",
         "jj_encode": "JJEncodeエンコーディングを検出",
-        "eval_density": "eval/動的実行呼び出し密度が高すぎます"
+        "eval_density": "eval/動的実行呼び出し密度が高すぎます",
+        "gm_cookie_unrecognized_usage": "認識できない、または完全に解釈できない GM_cookie の使用を検出しました",
+        "gm_cookie_unused_sensitive_permission": "機密性の高い GM_cookie 権限が宣言されていますが、正当な用途を確認できませんでした",
+        "gm_cookie_data_exfiltration": "GM_cookie データがネットワークまたは外部コンテキストに送信される可能性があります",
+        "gm_cookie_data_injection": "GM_cookie データがコード、ページ、または永続ストレージに注入される可能性があります",
+        "gm_cookie_analysis_incomplete": "GM_cookie のデータフロー分析が不完全なため、手動レビューが必要です"
       }
     }
   },

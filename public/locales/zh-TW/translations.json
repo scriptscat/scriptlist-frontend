@@ -520,7 +520,12 @@
         "dean_edwards_packer": "偵測到 Dean Edwards 打包器",
         "aa_encode": "偵測到 AAEncode 編碼",
         "jj_encode": "偵測到 JJEncode 編碼",
-        "eval_density": "eval/動態執行呼叫密度過高"
+        "eval_density": "eval/動態執行呼叫密度過高",
+        "gm_cookie_unrecognized_usage": "偵測到無法識別或無法完整解釋的 GM_cookie 用法",
+        "gm_cookie_unused_sensitive_permission": "宣告了 GM_cookie 敏感權限，但未識別到合法用途",
+        "gm_cookie_data_exfiltration": "偵測到 GM_cookie 資料可能被傳送至網路或外部環境",
+        "gm_cookie_data_injection": "偵測到 GM_cookie 資料可能被注入程式碼、頁面或持久化儲存空間",
+        "gm_cookie_analysis_incomplete": "GM_cookie 資料流分析不完整，需要人工審查"
       }
     }
   },

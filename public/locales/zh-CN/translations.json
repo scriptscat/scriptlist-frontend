@@ -583,7 +583,12 @@
         "dean_edwards_packer": "检测到 Dean Edwards 打包器",
         "aa_encode": "检测到 AAEncode 编码",
         "jj_encode": "检测到 JJEncode 编码",
-        "eval_density": "eval/动态执行调用密度过高"
+        "eval_density": "eval/动态执行调用密度过高",
+        "gm_cookie_unrecognized_usage": "检测到无法识别或无法完整解释的 GM_cookie 用法",
+        "gm_cookie_unused_sensitive_permission": "声明了 GM_cookie 敏感权限，但未识别到合法用途",
+        "gm_cookie_data_exfiltration": "检测到 GM_cookie 数据可能被发送到网络或外部上下文",
+        "gm_cookie_data_injection": "检测到 GM_cookie 数据可能被注入代码、页面或持久化存储",
+        "gm_cookie_analysis_incomplete": "GM_cookie 数据路径分析不完整，需要人工审核"
       },
       "backfill": {
         "help_title": "历史脚本回填",

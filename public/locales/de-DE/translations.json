@@ -514,7 +514,12 @@
         "dean_edwards_packer": "Dean Edwards Packer erkannt",
         "aa_encode": "AAEncode-Kodierung erkannt",
         "jj_encode": "JJEncode-Kodierung erkannt",
-        "eval_density": "eval/dynamische Ausführungsdichte zu hoch"
+        "eval_density": "eval/dynamische Ausführungsdichte zu hoch",
+        "gm_cookie_unrecognized_usage": "Nicht erkannte oder nicht vollständig nachvollziehbare GM_cookie-Nutzung erkannt",
+        "gm_cookie_unused_sensitive_permission": "Die sensible GM_cookie-Berechtigung ist deklariert, aber es wurde keine legitime Nutzung erkannt",
+        "gm_cookie_data_exfiltration": "GM_cookie-Daten werden möglicherweise an das Netzwerk oder einen externen Kontext gesendet",
+        "gm_cookie_data_injection": "GM_cookie-Daten werden möglicherweise in Code, die Seite oder persistenten Speicher eingeschleust",
+        "gm_cookie_analysis_incomplete": "Die GM_cookie-Datenflussanalyse ist unvollständig und erfordert eine manuelle Prüfung"
       }
     }
   },
