@@ -2424,6 +2424,7 @@
       "status_active": "已发布",
       "status_all": "全部状态",
       "status_audit": "审核中",
+      "status_deleted": "已删除",
       "sort_by_downloads": "下载最多",
       "sort_by_hot": "热度排序",
       "sort_by_latest": "最新发布",

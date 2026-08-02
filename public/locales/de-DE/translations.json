@@ -2207,6 +2207,7 @@
       "status_active": "Veröffentlicht",
       "status_all": "Alle Status",
       "status_audit": "In Prüfung",
+      "status_deleted": "Gelöscht",
       "sort_by_downloads": "Meist heruntergeladen",
       "sort_by_hot": "Nach Popularität sortieren",
       "sort_by_latest": "Neueste Veröffentlichung",

@@ -2285,6 +2285,7 @@
       "status_active": "已發佈",
       "status_all": "全部狀態",
       "status_audit": "審核中",
+      "status_deleted": "已刪除",
       "sort_by_downloads": "下載最多",
       "sort_by_hot": "熱度排序",
       "sort_by_latest": "最新發佈",

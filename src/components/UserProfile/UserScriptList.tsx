@@ -5,7 +5,9 @@ import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
+import { useUser } from '@/contexts/UserContext';
 import ScriptCard from '../Scriptlist/ScriptCard';
+import { canViewDeletedScripts } from './script-status-policy';
 import type {
   ScriptListItem,
   ScriptSearchRequest,
@@ -29,6 +31,7 @@ export default function UserScriptList({
   initialPage = 1,
 }: UserScriptListProps) {
   const router = useRouter();
+  const { user: currentUser } = useUser();
   const userT = useTranslations('user.script_list');
   const typeT = useTranslations('script.types');
   const [isPending, startTransition] = useTransition();
@@ -43,6 +46,7 @@ export default function UserScriptList({
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   const pageSize = 20;
+  const showDeletedFilter = canViewDeletedScripts(userId, currentUser);
 
   // 更新URL参数 - 修改为用户页面的路径
   const updateURL = (newFilters: ScriptSearchRequest, page: number) => {
@@ -150,6 +154,9 @@ export default function UserScriptList({
             >
               <Option value={0}>{userT('status_all')}</Option>
               <Option value={1}>{userT('status_active')}</Option>
+              {showDeletedFilter && (
+                <Option value={2}>{userT('status_deleted')}</Option>
+              )}
               <Option value={3}>{userT('status_audit')}</Option>
             </Select>
 

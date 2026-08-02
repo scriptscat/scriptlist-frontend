@@ -1986,6 +1986,7 @@
       "status_active": "Published",
       "status_all": "All Statuses",
       "status_audit": "Pending Review",
+      "status_deleted": "Deleted",
       "sort_by_downloads": "Most Downloaded",
       "sort_by_hot": "Trending",
       "sort_by_latest": "Latest",

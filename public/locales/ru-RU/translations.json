@@ -2279,6 +2279,7 @@
       "status_active": "Опубликовано",
       "status_all": "Все статусы",
       "status_audit": "На проверке",
+      "status_deleted": "Удалено",
       "sort_by_downloads": "Наиболее загружаемые",
       "sort_by_hot": "Сортировка по популярности",
       "sort_by_latest": "Последние опубликованные",

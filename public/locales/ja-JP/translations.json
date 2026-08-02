@@ -2279,6 +2279,7 @@
       "status_active": "公開済み",
       "status_all": "すべての状態",
       "status_audit": "審査中",
+      "status_deleted": "削除済み",
       "sort_by_downloads": "ダウンロード数順",
       "sort_by_hot": "人気順",
       "sort_by_latest": "最新公開",

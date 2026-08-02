@@ -31,7 +31,7 @@ export default async function UserPage({
     domain: resolvedSearchParams.domain || undefined,
     category: resolvedSearchParams.category || undefined,
     script_type: toNumber(resolvedSearchParams.script_type, [0, 1, 2, 3, 4]), // 默认搜索所有类型
-    status: toNumber(resolvedSearchParams.status, [0, 1, 3]),
+    status: toNumber(resolvedSearchParams.status, [0, 1, 2, 3]),
     user_id: userId, // 指定用户ID
   };
 
