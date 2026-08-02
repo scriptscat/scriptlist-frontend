@@ -1479,7 +1479,10 @@ export default function ScriptDetailClient({
                 </Card>
               </div>
 
-              <ScriptPermissionsCard meta={script.script.meta_json} />
+              <ScriptPermissionsCard
+                meta={script.script.meta_json}
+                cookieRisk={script.cookie_risk}
+              />
             </div>
           </div>
         </div>

@@ -60,6 +60,7 @@ export interface ScriptInfo {
   role: string;
   sri?: string; //库才有
   summary: LocalizedSummary;
+  cookie_risk?: boolean;
 }
 
 // ScriptInfo without the heavy `content` field, used in layout context

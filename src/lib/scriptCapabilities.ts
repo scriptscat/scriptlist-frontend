@@ -20,14 +20,15 @@ const GRANT_TO_CAP: Record<string, string> = {
   GM_registerMenuCommand: 'menu',
 };
 
-const HIGH_RISK = new Set(['cookie']);
-
 export function getConnectDomains(meta: Meta | undefined): string[] {
   const list = meta?.connect ?? [];
   return Array.from(new Set(list.map((d) => d.trim()).filter(Boolean)));
 }
 
-export function getCapabilities(meta: Meta | undefined): ScriptCapability[] {
+export function getCapabilities(
+  meta: Meta | undefined,
+  cookieRisk = false,
+): ScriptCapability[] {
   const grants = meta?.grant ?? [];
   const keys: string[] = [];
   for (const g of grants) {
@@ -35,6 +36,6 @@ export function getCapabilities(meta: Meta | undefined): ScriptCapability[] {
     if (key && !keys.includes(key)) keys.push(key);
   }
   return keys.map((key) =>
-    HIGH_RISK.has(key) ? { key, risk: 'high' as const } : { key },
+    key === 'cookie' && cookieRisk ? { key, risk: 'high' as const } : { key },
   );
 }
