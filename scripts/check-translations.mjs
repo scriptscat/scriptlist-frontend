@@ -6,7 +6,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
-const REFERENCE_LOCALE = 'zh-CN';
+const REFERENCE_LOCALE = 'en-US';
 
 function flattenKeys(value, prefix = '', keys = new Set()) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -43,13 +43,11 @@ function changedFiles(baseRef, root, staged) {
   }
 }
 
-function readReferenceKeys(baseRef, relativePath, root) {
-  try {
-    return flattenKeys(JSON.parse(execFileSync('git', ['show', `${baseRef}:${relativePath}`], { cwd: root, encoding: 'utf8' })));
-  } catch (error) {
-    if (error.status === 128) return new Set();
-    throw new Error(`Unable to read ${relativePath} from ${baseRef}: ${error.message}`);
-  }
+function diffKeys(referenceKeys, localeKeys) {
+  return {
+    missing: [...referenceKeys].filter((key) => !localeKeys.has(key)).sort(),
+    extra: [...localeKeys].filter((key) => !referenceKeys.has(key)).sort(),
+  };
 }
 
 export function runCheck(root = process.cwd(), baseRef, staged = false, repoRoot = process.cwd()) {
@@ -110,31 +108,20 @@ export function runCheck(root = process.cwd(), baseRef, staged = false, repoRoot
     }
 
     for (const relativePath of files) {
-      const filePath = path.join(root, relativePath);
-      const oldKeys = readReferenceKeys(baseRef, relativePath, repoRoot);
-      const newKeys = existsSync(filePath) ? readTranslation(filePath) : new Set();
-      const added = [...newKeys].filter((key) => !oldKeys.has(key)).sort();
-      const removed = [...oldKeys].filter((key) => !newKeys.has(key)).sort();
+      const locale = relativePath.split('/')[2];
+      if (locale === REFERENCE_LOCALE) continue;
 
-      for (const key of added) {
-        const missingLocales = localeDirs.filter((name) => !localeKeysByName.get(name)?.has(key));
-        if (missingLocales.length > 0) {
-          errors.push(
-            `${relativePath} added "${key}", but it is missing from: ${missingLocales
-              .map((name) => `public/locales/${name}/translations.json`)
-              .join(', ')}`
-          );
-        }
+      const filePath = path.join(root, relativePath);
+      const newKeys = existsSync(filePath) ? readTranslation(filePath) : new Set();
+      const referenceKeys = localeKeysByName.get(REFERENCE_LOCALE);
+      if (!referenceKeys) continue;
+      const { missing, extra } = diffKeys(referenceKeys, newKeys);
+
+      if (missing.length > 0) {
+        errors.push(`${relativePath} is missing ${missing.length} key(s) from ${REFERENCE_LOCALE}:\n  ${missing.join('\n  ')}`);
       }
-      for (const key of removed) {
-        const remainingLocales = localeDirs.filter((name) => localeKeysByName.get(name)?.has(key));
-        if (remainingLocales.length > 0) {
-          errors.push(
-            `${relativePath} removed "${key}", but it is still present in: ${remainingLocales
-              .map((name) => `public/locales/${name}/translations.json`)
-              .join(', ')}`
-          );
-        }
+      if (extra.length > 0) {
+        errors.push(`${relativePath} has ${extra.length} key(s) not present in ${REFERENCE_LOCALE}:\n  ${extra.join('\n  ')}`);
       }
     }
   }
