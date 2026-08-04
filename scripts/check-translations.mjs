@@ -50,7 +50,7 @@ function diffKeys(referenceKeys, localeKeys) {
   };
 }
 
-export function runCheck(root = process.cwd(), baseRef, staged = false, repoRoot = process.cwd()) {
+export function runCheck(root = process.cwd(), baseRef, staged = false, repoRoot = process.cwd(), allLocales = false) {
   const localesRoot = path.join(root, 'public/locales');
   const errors = [];
 
@@ -98,7 +98,34 @@ export function runCheck(root = process.cwd(), baseRef, staged = false, repoRoot
     localeKeysByName.set(locale, localeKeys);
   }
 
-  if (baseRef) {
+  if (allLocales) {
+    console.log(`✅ ${REFERENCE_LOCALE} is the reference locale.`);
+    const referenceKeys = localeKeysByName.get(REFERENCE_LOCALE);
+    if (referenceKeys) {
+      for (const locale of localeDirs) {
+        if (locale === REFERENCE_LOCALE) continue;
+        const localeKeys = localeKeysByName.get(locale);
+        if (!localeKeys) {
+          console.log(`❌ ${locale} could not be checked because translations.json is missing or invalid.`);
+          continue;
+        }
+        const { missing, extra } = diffKeys(referenceKeys, localeKeys);
+        if (missing.length === 0 && extra.length === 0) {
+          console.log(`✅ ${locale} matches ${REFERENCE_LOCALE}.`);
+          continue;
+        }
+        console.log(`❌ ${locale} does not match ${REFERENCE_LOCALE}.`);
+        if (missing.length > 0) {
+          errors.push(`public/locales/${locale}/translations.json is missing ${missing.length} key(s) from ${REFERENCE_LOCALE}:\n  ${missing.join('\n  ')}`);
+        }
+        if (extra.length > 0) {
+          errors.push(`public/locales/${locale}/translations.json has ${extra.length} key(s) not present in ${REFERENCE_LOCALE}:\n  ${extra.join('\n  ')}`);
+        }
+      }
+    }
+  }
+
+  if (baseRef && !allLocales) {
     let files;
     try {
       files = changedFiles(baseRef, repoRoot, staged);
@@ -133,10 +160,11 @@ function main() {
   const rootArg = process.argv.find((arg) => arg.startsWith('--root='));
   const baseRefArg = process.argv.find((arg) => arg.startsWith('--base-ref='));
   const staged = process.argv.includes('--staged');
+  const allLocales = process.argv.includes('--all');
   const repoRoot = process.cwd();
   const root = rootArg ? path.resolve(rootArg.slice('--root='.length)) : process.cwd();
   const baseRef = baseRefArg?.slice('--base-ref='.length) || resolveDefaultBaseRef(repoRoot);
-  const errors = runCheck(root, baseRef, staged, repoRoot);
+  const errors = runCheck(root, baseRef, staged, repoRoot, allLocales);
 
   if (errors.length > 0) {
     console.error('Translation consistency check failed.');

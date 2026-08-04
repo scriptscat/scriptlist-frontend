@@ -17,4 +17,4 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run check:i18n -- --base-ref=origin/main
+      - run: pnpm run check:i18n -- --all
