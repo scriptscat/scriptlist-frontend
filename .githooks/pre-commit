@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -eu
+
+if git diff --cached --quiet -- 'public/locales/*/translations.json'; then
+  exit 0
+fi
+
+snapshot_dir=$(mktemp -d)
+trap 'rm -rf "$snapshot_dir"' EXIT
+
+node scripts/git-staged-snapshot.mjs "$(pwd)" "$snapshot_dir"
+pnpm run check:i18n -- --root="$snapshot_dir" --base-ref=HEAD --staged
