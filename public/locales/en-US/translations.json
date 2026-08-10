@@ -87,7 +87,8 @@
       "script_audits": "Script Audit",
       "ai_review": "AI Review",
       "ai_review_records": "Review Records",
-      "ai_review_fullscan": "Full Scan"
+      "ai_review_fullscan": "Full Scan",
+      "reports": "Report management"
     },
     "advertise": {
       "title": "Ad Management",
@@ -598,6 +599,18 @@
         "jj_encode": "JJEncode encoding detected",
         "eval_density": "eval/dynamic execution call density too high"
       }
+    },
+    "reports": {
+      "title": "Report management",
+      "col_script": "Script",
+      "col_reporter": "Reporter",
+      "col_reason": "Reason",
+      "col_status": "Status",
+      "col_comments": "Comments",
+      "col_createtime": "Created at",
+      "col_actions": "Actions",
+      "action_view": "View",
+      "filter_status": "Filter by status"
     }
   },
   "auth": {
@@ -910,7 +923,11 @@
     "error_qq_migrate_unavailable": "QQ login migration service is currently unavailable, please use another login method",
     "error_invalid_params": "Invalid parameters, please try again",
     "error_qq_migrate_failed": "QQ login migration failed, please try again later",
-    "error_unknown": "An error occurred during login, please try again"
+    "error_unknown": "An error occurred during login, please try again",
+    "qq_migrate_deprecation_title": "QQ sign-in will soon be discontinued",
+    "qq_migrate_deprecation_content": "QQ sign-in will soon be discontinued. After signing in, please bind another sign-in method on the settings page to avoid losing access in the future.",
+    "qq_migrate_deprecation_continue": "Continue signing in",
+    "qq_migrate_deprecation_cancel": "Cancel"
   },
   "notifications": {
     "access": {
@@ -2344,7 +2361,33 @@
       "processed_col_script": "Script",
       "processed_col_operator": "Operator",
       "processed_col_time": "Time",
-      "processed_col_reason": "Reason"
+      "processed_col_reason": "Reason",
+      "account_deactivated": "This account has been deactivated",
+      "ban_user": "Ban user",
+      "unban_user": "Unban user",
+      "ban_reason": "Ban reason",
+      "ban_reason_placeholder": "Enter a reason for the ban",
+      "ban_duration": "Ban duration",
+      "ban_permanent": "Permanent ban",
+      "ban_1_day": "1 day",
+      "ban_3_days": "3 days",
+      "ban_7_days": "7 days",
+      "ban_30_days": "30 days",
+      "ban_90_days": "90 days",
+      "ban_custom": "Custom",
+      "ban_clean_options": "Cleanup options",
+      "ban_clean_scores": "Remove user ratings",
+      "ban_clean_scripts": "Remove user scripts",
+      "ban_success": "User banned",
+      "unban_success": "User unbanned",
+      "ban_confirm_title": "Confirm ban",
+      "unban_confirm": "Are you sure you want to unban this user?",
+      "user_banned": "Banned",
+      "ban_expire_at": "Ban expires at",
+      "ban_permanent_label": "Permanent",
+      "register_ip": "Registration IP",
+      "ip_location": "IP location",
+      "register_email": "Registration email"
     },
     "save": "Save",
     "script_list": {
@@ -2463,7 +2506,15 @@
       "cancel_failed": "Failed to cancel deletion",
       "applied_at": "Applied at",
       "effective_at": "Effective at"
-    }
+    },
+    "contact_email": "Contact email",
+    "email_code_placeholder": "Enter the 6-digit verification code",
+    "email_code_required": "Send and enter the email verification code first",
+    "email_code_resend": "Resend",
+    "email_code_sent": "Verification code sent",
+    "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
+    "email_send_code": "Send verification code",
+    "email_send_code_countdown": "Resend in {{seconds}}s"
   },
   "utils": {
     "time_format": "YYYY-MM-DD"

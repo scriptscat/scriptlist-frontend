@@ -59,7 +59,10 @@
       "similarity": "Similarity Detection",
       "ai_review": "AI Review",
       "ai_review_records": "Review Records",
-      "ai_review_fullscan": "Full Scan"
+      "ai_review_fullscan": "Full Scan",
+      "announcements": "Announcements",
+      "script_audits": "Script Audit",
+      "reports": "Report management"
     },
     "advertise": {
       "title": "広告管理",
@@ -277,7 +280,13 @@
       "title": "OIDCプロバイダー管理",
       "type_oauth2": "OAuth2 (GitHub)",
       "type_oidc": "OIDC",
-      "update_success": "更新しました"
+      "update_success": "更新しました",
+      "col_icon": "Icon",
+      "discover_button": "Auto Discover",
+      "discover_failed": "OIDC discovery failed. Please check the URL.",
+      "discover_success": "OIDC configuration discovered successfully",
+      "icon_upload": "Upload Icon",
+      "icon_upload_success": "Icon uploaded successfully"
     },
     "scores": {
       "action_delete": "削除",
@@ -355,7 +364,12 @@
       "unwell_no": "適切",
       "unwell_yes": "不適切",
       "visibility_success": "公開設定を更新しました",
-      "visibility_title": "スクリプトの公開設定を変更"
+      "visibility_title": "スクリプトの公開設定を変更",
+      "delete_reason": "Reason (optional)",
+      "delete_reason_placeholder": "Record the reason for this deletion (saved with the audit log)",
+      "search_field_content": "Content",
+      "search_field_description": "Description",
+      "search_field_name": "Name"
     },
     "system_config": {
       "ai_api_key": "APIキー",
@@ -380,7 +394,18 @@
       "es_index_hint": "バックグラウンドでスクリプト検索インデックスを全件再構築します。APIの応答はタスク開始のみを示します。完了状況はバックエンドログで確認してください。",
       "es_index_button": "ESインデックスを再構築",
       "es_index_confirm": "ES検索インデックスの再構築を開始しますか？大きなデータベースでは時間がかかる場合があります。",
-      "es_index_started": "ES検索インデックスの再構築を開始しました"
+      "es_index_started": "ES検索インデックスの再構築を開始しました",
+      "migrate_avatar_title": "Avatar Migration",
+      "migrate_avatar_button": "Start Migration",
+      "migrate_avatar_confirm": "Are you sure you want to start avatar migration? This will download user avatars from UCenter and save them locally.",
+      "migrate_avatar_started": "Avatar migration started",
+      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}",
+      "ranking_title": "Ranking Recompute",
+      "recompute_trending_hint": "The daily pick (trending_score) is recomputed automatically every day at 03:10. After changing ranking parameters, trigger a full recompute here to see the effect immediately.",
+      "recompute_trending_button": "Recompute trending_score",
+      "recompute_trending_confirm": "Recompute trending_score for all scripts now? Large databases may take a few seconds to tens of seconds.",
+      "recompute_trending_started": "trending_score recompute started",
+      "recompute_trending_running": "A recompute is already running; not retriggered"
     },
     "users": {
       "action_admin_level": "レベルを変更",
@@ -406,7 +431,8 @@
       "status_banned": "禁止済み",
       "title": "ユーザー管理",
       "unban_confirm": "このユーザーの禁止を解除してもよろしいですか？",
-      "unban_success": "ユーザーの禁止を解除しました"
+      "unban_success": "ユーザーの禁止を解除しました",
+      "col_register_ip": "Register IP"
     },
     "similarity": {
       "tab_pairs": "Pairs",
@@ -512,6 +538,79 @@
         "jj_encode": "JJEncodeエンコーディングを検出",
         "eval_density": "eval/動的実行呼び出し密度が高すぎます"
       }
+    },
+    "announcements": {
+      "title": "Announcement Management",
+      "action_create": "Create",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "create_title": "Create Announcement",
+      "edit_title": "Edit Announcement",
+      "col_title": "Title",
+      "col_level": "Level",
+      "col_status": "Status",
+      "col_createtime": "Created",
+      "col_actions": "Actions",
+      "field_title": "Title",
+      "field_content": "Content",
+      "field_level": "Level",
+      "field_status": "Status",
+      "level_normal": "Normal",
+      "level_important": "Important",
+      "status_enabled": "Enabled",
+      "status_disabled": "Disabled",
+      "create_success": "Announcement created successfully",
+      "update_success": "Announcement updated successfully",
+      "delete_success": "Announcement deleted successfully",
+      "delete_confirm": "Are you sure you want to delete this announcement?",
+      "at_least_one_language": "Please fill in the title for at least one language"
+    },
+    "script_audits": {
+      "title": "Script Audit",
+      "col_script": "Script",
+      "col_version": "Version",
+      "col_submitter": "Submitter",
+      "col_status": "Status",
+      "col_createtime": "Submitted At",
+      "col_actions": "Actions",
+      "status_pending": "Pending",
+      "status_approved": "Approved",
+      "status_rejected": "Rejected",
+      "filter_status": "Status",
+      "filter_all": "All",
+      "filter_script_name_placeholder": "Search script name",
+      "refresh": "Refresh",
+      "action_review": "Review",
+      "action_approve": "Approve",
+      "action_reject": "Reject",
+      "approve_success": "Approved",
+      "reject_success": "Rejected",
+      "drawer_title": "Audit Detail",
+      "detail_script": "Script",
+      "detail_submitter": "Submitter",
+      "detail_changelog": "Changelog",
+      "detail_reason": "Audit Reason / Note",
+      "detail_reject_reason": "Reject Reason",
+      "detail_code": "Code",
+      "approve_modal_title": "Approve Audit",
+      "approve_reason_label": "Approval note (optional, for AI false-positive correction or audit basis)",
+      "approve_reason_placeholder": "If this was an AI false positive, note the manual review basis; leave blank to approve directly",
+      "reject_modal_title": "Reject Audit",
+      "reject_reason_label": "Reject reason (sent to author via in-app notification)",
+      "reject_reason_required": "Please provide a reject reason",
+      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)"
+    },
+    "reports": {
+      "title": "Report management",
+      "col_script": "Script",
+      "col_reporter": "Reporter",
+      "col_reason": "Reason",
+      "col_status": "Status",
+      "col_comments": "Comments",
+      "col_createtime": "Created at",
+      "col_actions": "Actions",
+      "action_view": "View",
+      "filter_status": "Filter by status"
     }
   },
   "auth": {
@@ -816,7 +915,11 @@
     "error_qq_migrate_unavailable": "QQログイン移行サービスは現在利用できません。別のログイン方法をご利用ください",
     "error_invalid_params": "パラメータが無効です。もう一度お試しください",
     "error_qq_migrate_failed": "QQログイン移行に失敗しました。しばらくしてからもう一度お試しください",
-    "error_unknown": "ログイン中にエラーが発生しました。もう一度お試しください"
+    "error_unknown": "ログイン中にエラーが発生しました。もう一度お試しください",
+    "qq_migrate_deprecation_title": "QQ sign-in will soon be discontinued",
+    "qq_migrate_deprecation_content": "QQ sign-in will soon be discontinued. After signing in, please bind another sign-in method on the settings page to avoid losing access in the future.",
+    "qq_migrate_deprecation_continue": "Continue signing in",
+    "qq_migrate_deprecation_cancel": "Cancel"
   },
   "notifications": {
     "access": {
@@ -2250,7 +2353,33 @@
       "processed_col_script": "スクリプト",
       "processed_col_operator": "処理者",
       "processed_col_time": "時間",
-      "processed_col_reason": "理由"
+      "processed_col_reason": "理由",
+      "account_deactivated": "This account has been deactivated",
+      "ban_user": "Ban user",
+      "unban_user": "Unban user",
+      "ban_reason": "Ban reason",
+      "ban_reason_placeholder": "Enter a reason for the ban",
+      "ban_duration": "Ban duration",
+      "ban_permanent": "Permanent ban",
+      "ban_1_day": "1 day",
+      "ban_3_days": "3 days",
+      "ban_7_days": "7 days",
+      "ban_30_days": "30 days",
+      "ban_90_days": "90 days",
+      "ban_custom": "Custom",
+      "ban_clean_options": "Cleanup options",
+      "ban_clean_scores": "Remove user ratings",
+      "ban_clean_scripts": "Remove user scripts",
+      "ban_success": "User banned",
+      "unban_success": "User unbanned",
+      "ban_confirm_title": "Confirm ban",
+      "unban_confirm": "Are you sure you want to unban this user?",
+      "user_banned": "Banned",
+      "ban_expire_at": "Ban expires at",
+      "ban_permanent_label": "Permanent",
+      "register_ip": "Registration IP",
+      "ip_location": "IP location",
+      "register_email": "Registration email"
     },
     "save": "保存",
     "script_list": {
@@ -2369,7 +2498,15 @@
       "cancel_failed": "キャンセルに失敗しました",
       "applied_at": "申請日時",
       "effective_at": "有効日時"
-    }
+    },
+    "contact_email": "Contact email",
+    "email_code_placeholder": "Enter the 6-digit verification code",
+    "email_code_required": "Send and enter the email verification code first",
+    "email_code_resend": "Resend",
+    "email_code_sent": "Verification code sent",
+    "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
+    "email_send_code": "Send verification code",
+    "email_send_code_countdown": "Resend in {{seconds}}s"
   },
   "ads": {
     "label": "広告",
@@ -2393,5 +2530,8 @@
       "title": "Code Failed Integrity Check",
       "help": "If this is a false positive, please apply for an exemption via the admin contact listed in the site FAQ."
     }
+  },
+  "announcements": {
+    "title": "Announcements"
   }
 }
