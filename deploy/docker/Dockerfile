@@ -21,6 +21,9 @@ WORKDIR /app
 # 复制依赖清单、锁文件和 pnpm overrides 配置
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
+# pnpm install 会执行 package.json 中的 prepare 脚本
+COPY scripts/install-git-hooks.mjs ./scripts/install-git-hooks.mjs
+
 # 安装所有依赖（包括开发依赖，构建时需要）
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
     if [ -n "$NPM_REGISTRY" ]; then pnpm config set registry "$NPM_REGISTRY"; fi && \
