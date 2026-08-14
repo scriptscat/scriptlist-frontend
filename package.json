@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "pnpm@10.33.0",
   "scripts": {
+    "prepare": "node scripts/install-git-hooks.mjs",
     "dev": "pnpm run predev && next dev",
     "build": "pnpm run prebuild && next build",
     "start": "next start",
@@ -14,6 +15,7 @@
     "e2e:mock-api": "ts-node --project ./tsconfig.node.json ./tests/e2e/mock-api.ts",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
+    "check:i18n": "node ./scripts/check-translations.mjs",
     "predev": "ts-node --project ./tsconfig.node.json ./scripts/prebuild.tsx",
     "prebuild": "cross-env NODE_ENV=production ts-node --project ./tsconfig.node.json ./scripts/prebuild.tsx",
     "verify:antd-css": "ts-node --project ./tsconfig.node.json ./scripts/verify-antd-css.ts"

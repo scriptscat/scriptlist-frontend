@@ -59,7 +59,10 @@
       "similarity": "Similarity Detection",
       "ai_review": "AI Review",
       "ai_review_records": "Review Records",
-      "ai_review_fullscan": "Full Scan"
+      "ai_review_fullscan": "Full Scan",
+      "announcements": "Announcements",
+      "script_audits": "Script Audit",
+      "reports": "Report management"
     },
     "advertise": {
       "title": "Anzeigenverwaltung",
@@ -281,7 +284,13 @@
       "title": "OIDC-Anbieterverwaltung",
       "type_oauth2": "OAuth2 (GitHub)",
       "type_oidc": "OIDC",
-      "update_success": "Erfolgreich aktualisiert"
+      "update_success": "Erfolgreich aktualisiert",
+      "col_icon": "Icon",
+      "discover_button": "Auto Discover",
+      "discover_failed": "OIDC discovery failed. Please check the URL.",
+      "discover_success": "OIDC configuration discovered successfully",
+      "icon_upload": "Upload Icon",
+      "icon_upload_success": "Icon uploaded successfully"
     },
     "scores": {
       "action_delete": "Löschen",
@@ -359,7 +368,12 @@
       "unwell_no": "Angemessen",
       "unwell_yes": "Unangemessen",
       "visibility_success": "Sichtbarkeit erfolgreich aktualisiert",
-      "visibility_title": "Skript-Sichtbarkeit ändern"
+      "visibility_title": "Skript-Sichtbarkeit ändern",
+      "delete_reason": "Reason (optional)",
+      "delete_reason_placeholder": "Record the reason for this deletion (saved with the audit log)",
+      "search_field_content": "Content",
+      "search_field_description": "Description",
+      "search_field_name": "Name"
     },
     "system_config": {
       "ai_api_key": "API-Schlüssel",
@@ -384,7 +398,18 @@
       "es_index_hint": "Startet im Hintergrund einen vollständigen Neuaufbau des Skript-Suchindex. Die API-Antwort bedeutet nur, dass die Aufgabe gestartet wurde; den Fortschritt bitte in den Backend-Logs prüfen.",
       "es_index_button": "ES-Index neu aufbauen",
       "es_index_confirm": "ES-Suchindex jetzt neu aufbauen? Bei großen Datenbanken kann das länger dauern.",
-      "es_index_started": "Neuaufbau des ES-Suchindex gestartet"
+      "es_index_started": "Neuaufbau des ES-Suchindex gestartet",
+      "migrate_avatar_title": "Avatar Migration",
+      "migrate_avatar_button": "Start Migration",
+      "migrate_avatar_confirm": "Are you sure you want to start avatar migration? This will download user avatars from UCenter and save them locally.",
+      "migrate_avatar_started": "Avatar migration started",
+      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}",
+      "ranking_title": "Ranking Recompute",
+      "recompute_trending_hint": "The daily pick (trending_score) is recomputed automatically every day at 03:10. After changing ranking parameters, trigger a full recompute here to see the effect immediately.",
+      "recompute_trending_button": "Recompute trending_score",
+      "recompute_trending_confirm": "Recompute trending_score for all scripts now? Large databases may take a few seconds to tens of seconds.",
+      "recompute_trending_started": "trending_score recompute started",
+      "recompute_trending_running": "A recompute is already running; not retriggered"
     },
     "users": {
       "action_admin_level": "Stufe ändern",
@@ -410,7 +435,8 @@
       "status_banned": "Gesperrt",
       "title": "Benutzerverwaltung",
       "unban_confirm": "Möchten Sie diesen Benutzer wirklich entsperren?",
-      "unban_success": "Benutzer erfolgreich entsperrt"
+      "unban_success": "Benutzer erfolgreich entsperrt",
+      "col_register_ip": "Register IP"
     },
     "similarity": {
       "tab_pairs": "Pairs",
@@ -521,6 +547,79 @@
         "gm_cookie_data_injection": "GM_cookie-Daten werden möglicherweise in Code, die Seite oder persistenten Speicher eingeschleust",
         "gm_cookie_analysis_incomplete": "Die GM_cookie-Datenflussanalyse ist unvollständig und erfordert eine manuelle Prüfung"
       }
+    },
+    "announcements": {
+      "title": "Announcement Management",
+      "action_create": "Create",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "create_title": "Create Announcement",
+      "edit_title": "Edit Announcement",
+      "col_title": "Title",
+      "col_level": "Level",
+      "col_status": "Status",
+      "col_createtime": "Created",
+      "col_actions": "Actions",
+      "field_title": "Title",
+      "field_content": "Content",
+      "field_level": "Level",
+      "field_status": "Status",
+      "level_normal": "Normal",
+      "level_important": "Important",
+      "status_enabled": "Enabled",
+      "status_disabled": "Disabled",
+      "create_success": "Announcement created successfully",
+      "update_success": "Announcement updated successfully",
+      "delete_success": "Announcement deleted successfully",
+      "delete_confirm": "Are you sure you want to delete this announcement?",
+      "at_least_one_language": "Please fill in the title for at least one language"
+    },
+    "script_audits": {
+      "title": "Script Audit",
+      "col_script": "Script",
+      "col_version": "Version",
+      "col_submitter": "Submitter",
+      "col_status": "Status",
+      "col_createtime": "Submitted At",
+      "col_actions": "Actions",
+      "status_pending": "Pending",
+      "status_approved": "Approved",
+      "status_rejected": "Rejected",
+      "filter_status": "Status",
+      "filter_all": "All",
+      "filter_script_name_placeholder": "Search script name",
+      "refresh": "Refresh",
+      "action_review": "Review",
+      "action_approve": "Approve",
+      "action_reject": "Reject",
+      "approve_success": "Approved",
+      "reject_success": "Rejected",
+      "drawer_title": "Audit Detail",
+      "detail_script": "Script",
+      "detail_submitter": "Submitter",
+      "detail_changelog": "Changelog",
+      "detail_reason": "Audit Reason / Note",
+      "detail_reject_reason": "Reject Reason",
+      "detail_code": "Code",
+      "approve_modal_title": "Approve Audit",
+      "approve_reason_label": "Approval note (optional, for AI false-positive correction or audit basis)",
+      "approve_reason_placeholder": "If this was an AI false positive, note the manual review basis; leave blank to approve directly",
+      "reject_modal_title": "Reject Audit",
+      "reject_reason_label": "Reject reason (sent to author via in-app notification)",
+      "reject_reason_required": "Please provide a reject reason",
+      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)"
+    },
+    "reports": {
+      "title": "Report management",
+      "col_script": "Script",
+      "col_reporter": "Reporter",
+      "col_reason": "Reason",
+      "col_status": "Status",
+      "col_comments": "Comments",
+      "col_createtime": "Created at",
+      "col_actions": "Actions",
+      "action_view": "View",
+      "filter_status": "Filter by status"
     }
   },
   "auth": {
@@ -836,7 +935,11 @@
     "error_qq_migrate_unavailable": "Der QQ-Login-Migrationsdienst ist derzeit nicht verfügbar, bitte verwenden Sie eine andere Anmeldemethode",
     "error_invalid_params": "Ungültige Parameter, bitte versuchen Sie es erneut",
     "error_qq_migrate_failed": "QQ-Login-Migration fehlgeschlagen, bitte versuchen Sie es später erneut",
-    "error_unknown": "Beim Anmelden ist ein Fehler aufgetreten, bitte versuchen Sie es erneut"
+    "error_unknown": "Beim Anmelden ist ein Fehler aufgetreten, bitte versuchen Sie es erneut",
+    "qq_migrate_deprecation_title": "QQ sign-in will soon be discontinued",
+    "qq_migrate_deprecation_content": "QQ sign-in will soon be discontinued. After signing in, please bind another sign-in method on the settings page to avoid losing access in the future.",
+    "qq_migrate_deprecation_continue": "Continue signing in",
+    "qq_migrate_deprecation_cancel": "Cancel"
   },
   "notifications": {
     "access": {
@@ -1182,6 +1285,78 @@
         "metadata": "Berechtigungen",
         "ratings": "Bewertungen",
         "versions": "Versionen"
+      },
+      "metadata": {
+        "empty_description": "This script does not declare displayable permissions, connections, or run rules.",
+        "empty_title": "No metadata details",
+        "fields": {
+          "author": "Author",
+          "connect": "Network access",
+          "exclude": "Exclude rules",
+          "grant": "Permissions",
+          "include": "Include rules",
+          "license": "License",
+          "match": "Match rules",
+          "namespace": "Namespace",
+          "require": "External dependencies",
+          "resource": "External resources",
+          "run_at": "Run timing"
+        },
+        "grants": {
+          "addElement": "Allows the script to create and insert elements into the page.",
+          "addStyle": "Allows the script to inject CSS into the page.",
+          "deleteValue": "Allows the script to delete data stored by the userscript manager.",
+          "download": "Allows the script to trigger file downloads.",
+          "getResourceText": "Allows the script to read text resources declared with @resource.",
+          "getResourceUrl": "Allows the script to read URLs for resources declared with @resource.",
+          "getValue": "Allows the script to read data stored by the userscript manager.",
+          "info": "Allows the script to read script and manager runtime information.",
+          "listValues": "Allows the script to list stored data keys.",
+          "none": "The script declares that it needs no extra userscript-manager permissions.",
+          "notification": "Allows the script to show system or browser notifications.",
+          "openInTab": "Allows the script to open new browser tabs.",
+          "registerMenuCommand": "Allows the script to add commands to the userscript manager menu.",
+          "setClipboard": "Allows the script to write to the clipboard.",
+          "setValue": "Allows the script to save data in the userscript manager.",
+          "unknown": "An extended permission requested by the script; behavior depends on manager support.",
+          "unregisterMenuCommand": "Allows the script to remove registered menu commands.",
+          "unsafeWindow": "Allows access to the page window object and direct interaction with page scripts.",
+          "xmlhttpRequest": "Allows network requests proxied by the userscript manager."
+        },
+        "intro": "These details come from the userscript metadata block and help explain declared permissions, run scope, and external dependencies.",
+        "run_at": {
+          "context_menu": "Runs only when triggered from the context menu.",
+          "document_body": "Runs after the page body is available.",
+          "document_end": "Runs around DOM load completion.",
+          "document_idle": "Runs when the page is mostly loaded and idle.",
+          "document_start": "Runs as early as possible while the page starts loading.",
+          "unknown": "A declared run timing whose behavior depends on the userscript manager."
+        },
+        "sections": {
+          "author": "Author information declared by the script.",
+          "connect": "Domains the script may connect to, usually used with network request permissions.",
+          "exclude": "URL rules excluded from the run scope.",
+          "grant": "Capabilities or API permissions requested from the userscript manager.",
+          "include": "URL rules where the script declares it can run.",
+          "license": "Open source or usage license declared by the script.",
+          "match": "URL rules matched by the script.",
+          "namespace": "Namespace used to distinguish the script identity or source.",
+          "require": "External JavaScript dependencies loaded before the script runs.",
+          "resource": "External resources declared for script access.",
+          "run_at": "The page lifecycle stage where the script prefers to run."
+        },
+        "values": {
+          "author": "Declared author value.",
+          "connect": "Allowed domain or wildcard connection rule.",
+          "exclude": "URL rule excluded from execution.",
+          "include": "URL rule included for execution.",
+          "license": "License identifier.",
+          "match": "URL rule matched for execution.",
+          "namespace": "Namespace identifier.",
+          "require": "External script dependency URL.",
+          "resource": "External resource declaration.",
+          "unknown": "Metadata declaration value."
+        }
       }
     },
     "diff": {
@@ -2199,7 +2374,33 @@
       "processed_col_script": "Skript",
       "processed_col_operator": "Bearbeiter",
       "processed_col_time": "Zeit",
-      "processed_col_reason": "Grund"
+      "processed_col_reason": "Grund",
+      "account_deactivated": "This account has been deactivated",
+      "ban_user": "Ban user",
+      "unban_user": "Unban user",
+      "ban_reason": "Ban reason",
+      "ban_reason_placeholder": "Enter a reason for the ban",
+      "ban_duration": "Ban duration",
+      "ban_permanent": "Permanent ban",
+      "ban_1_day": "1 day",
+      "ban_3_days": "3 days",
+      "ban_7_days": "7 days",
+      "ban_30_days": "30 days",
+      "ban_90_days": "90 days",
+      "ban_custom": "Custom",
+      "ban_clean_options": "Cleanup options",
+      "ban_clean_scores": "Remove user ratings",
+      "ban_clean_scripts": "Remove user scripts",
+      "ban_success": "User banned",
+      "unban_success": "User unbanned",
+      "ban_confirm_title": "Confirm ban",
+      "unban_confirm": "Are you sure you want to unban this user?",
+      "user_banned": "Banned",
+      "ban_expire_at": "Ban expires at",
+      "ban_permanent_label": "Permanent",
+      "register_ip": "Registration IP",
+      "ip_location": "IP location",
+      "register_email": "Registration email"
     },
     "save": "Speichern",
     "script_list": {
@@ -2319,7 +2520,15 @@
       "cancel_failed": "Abbruch fehlgeschlagen",
       "applied_at": "Beantragt am",
       "effective_at": "Wirksam am"
-    }
+    },
+    "contact_email": "Contact email",
+    "email_code_placeholder": "Enter the 6-digit verification code",
+    "email_code_required": "Send and enter the email verification code first",
+    "email_code_resend": "Resend",
+    "email_code_sent": "Verification code sent",
+    "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
+    "email_send_code": "Send verification code",
+    "email_send_code_countdown": "Resend in {{seconds}}s"
   },
   "ads": {
     "label": "Anzeige",
@@ -2343,5 +2552,8 @@
       "title": "Code Failed Integrity Check",
       "help": "If this is a false positive, please apply for an exemption via the admin contact listed in the site FAQ."
     }
+  },
+  "announcements": {
+    "title": "Announcements"
   }
 }
