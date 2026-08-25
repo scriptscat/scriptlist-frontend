@@ -21,6 +21,7 @@ import type { Issue } from '@/lib/api/services/scripts/issue';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useIssueList } from '@/lib/api/hooks/issue';
 import IssueLabel from './IssueLabel';
+import { openIssueDetail } from './issueNavigation';
 
 const PAGE_SIZE = 15;
 
@@ -230,6 +231,9 @@ export default function ScriptIssueClient({
               <div
                 key={issue.id}
                 className="px-4 py-3 transition-colors duration-200 cursor-pointer"
+                role="link"
+                tabIndex={0}
+                aria-label={issue.title}
                 style={{
                   borderBottom:
                     index !== displayIssues.length - 1
@@ -242,6 +246,17 @@ export default function ScriptIssueClient({
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+                onClick={(e) => {
+                  if ((e.target as HTMLElement).closest('a, button')) return;
+                  openIssueDetail(scriptId, issue.id);
+                }}
+                onKeyDown={(e) => {
+                  if (e.target !== e.currentTarget) return;
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openIssueDetail(scriptId, issue.id);
+                  }
                 }}
               >
                 <div className="flex items-start gap-3">
