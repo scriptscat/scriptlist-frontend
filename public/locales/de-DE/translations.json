@@ -2453,7 +2453,8 @@
       "deactivate_settings": "Konto löschen",
       "passkey_settings": "Passkeys",
       "account_settings": "Kontoverwaltung",
-      "account_settings_description": "Passwörter, Passkeys, Drittanbieter-Verknüpfungen und Kontosicherheitseinstellungen verwalten"
+      "account_settings_description": "Passwörter, Passkeys, Drittanbieter-Verknüpfungen und Kontosicherheitseinstellungen verwalten",
+      "install_link_settings": "Installationslink"
     },
     "update_failed": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es erneut",
     "update_success": "Benutzerinformationen erfolgreich aktualisiert!",
@@ -2549,7 +2550,19 @@
     "email_code_sent": "Verification code sent",
     "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
     "email_send_code": "Send verification code",
-    "email_send_code_countdown": "Resend in {{seconds}}s"
+    "email_send_code_countdown": "Resend in {{seconds}}s",
+    "install_link": {
+      "title": "Installationslink",
+      "description": "Installationslinks für private Skripte enthalten ein eigenes Token. Der Skriptmanager nutzt es zum Installieren und für Update-Prüfungen, eine angemeldete Sitzung ist daher nicht nötig. Der Link ist an dein Konto gebunden — gib ihn nicht an Unbefugte weiter.",
+      "reset": "Installationslink zurücksetzen",
+      "reset_warning_title": "Ein Zurücksetzen macht bestehende Links sofort ungültig",
+      "reset_warning_content": "Nach dem Zurücksetzen erhalten alle bereits auf deinen Geräten installierten privaten Skripte keine Updates mehr und müssen erneut installiert werden. Setze nur zurück, wenn ein Link möglicherweise durchgesickert ist. Das Webhook-Secret bleibt unberührt.",
+      "reset_confirm_title": "Installationslink zurücksetzen?",
+      "reset_confirm_content": "Alle bereits auf deinen Geräten installierten privaten Skripte müssen erneut installiert werden.",
+      "reset_confirm_ok": "Zurücksetzen",
+      "reset_success": "Installationslink zurückgesetzt",
+      "reset_failed": "Zurücksetzen fehlgeschlagen, bitte später erneut versuchen"
+    }
   },
   "ads": {
     "label": "Anzeige",

@@ -2453,7 +2453,8 @@
       "deactivate_settings": "Xóa tài khoản",
       "passkey_settings": "Passkeys",
       "account_settings": "Quản lý tài khoản",
-      "account_settings_description": "Quản lý mật khẩu, passkey, liên kết bên thứ ba và cài đặt bảo mật tài khoản"
+      "account_settings_description": "Quản lý mật khẩu, passkey, liên kết bên thứ ba và cài đặt bảo mật tài khoản",
+      "install_link_settings": "Liên kết cài đặt"
     },
     "update_failed": "Update failed, please try again",
     "update_success": "User information updated successfully!",
@@ -2549,7 +2550,19 @@
     "email_code_sent": "Verification code sent",
     "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
     "email_send_code": "Send verification code",
-    "email_send_code_countdown": "Resend in {{seconds}}s"
+    "email_send_code_countdown": "Resend in {{seconds}}s",
+    "install_link": {
+      "title": "Liên kết cài đặt",
+      "description": "Liên kết cài đặt của script riêng tư mang theo một token riêng. Trình quản lý script dùng token này để cài đặt và kiểm tra cập nhật, nên bạn không cần duy trì trạng thái đăng nhập trên trang web. Liên kết gắn với tài khoản của bạn — đừng chia sẻ cho người chưa được cấp quyền.",
+      "reset": "Đặt lại liên kết cài đặt",
+      "reset_warning_title": "Đặt lại sẽ vô hiệu hoá ngay các liên kết hiện có",
+      "reset_warning_content": "Sau khi đặt lại, mọi script riêng tư đã cài trên tất cả thiết bị của bạn sẽ không nhận được cập nhật nữa và phải cài lại. Chỉ đặt lại khi liên kết có khả năng bị lộ. Thao tác này không ảnh hưởng đến khoá bí mật Webhook.",
+      "reset_confirm_title": "Xác nhận đặt lại liên kết cài đặt?",
+      "reset_confirm_content": "Mọi script riêng tư đã cài trên các thiết bị của bạn sẽ cần được cài lại.",
+      "reset_confirm_ok": "Đặt lại",
+      "reset_success": "Đã đặt lại liên kết cài đặt",
+      "reset_failed": "Đặt lại thất bại, vui lòng thử lại sau"
+    }
   },
   "ads": {
     "label": "Quảng cáo",

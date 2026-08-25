@@ -2461,7 +2461,8 @@
       "user_settings": "User Settings",
       "webhook_settings": "Webhook Settings",
       "deactivate_settings": "Delete Account",
-      "passkey_settings": "Passkeys"
+      "passkey_settings": "Passkeys",
+      "install_link_settings": "Install link"
     },
     "update_failed": "Update failed, please try again",
     "update_success": "User information updated successfully!",
@@ -2557,7 +2558,19 @@
     "email_code_sent": "Verification code sent",
     "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
     "email_send_code": "Send verification code",
-    "email_send_code_countdown": "Resend in {{seconds}}s"
+    "email_send_code_countdown": "Resend in {{seconds}}s",
+    "install_link": {
+      "title": "Install link",
+      "description": "Install links for private scripts carry a token of their own. Your script manager uses it to install and check for updates, so it does not need you to stay signed in. The link is tied to your account — do not share it with people who are not authorised.",
+      "reset": "Reset install link",
+      "reset_warning_title": "Resetting invalidates existing links immediately",
+      "reset_warning_content": "After a reset, every private script already installed on any of your devices stops receiving updates and has to be installed again. Only reset if a link may have leaked. This does not affect your webhook secret.",
+      "reset_confirm_title": "Reset the install link?",
+      "reset_confirm_content": "Every private script already installed on your devices will need to be installed again.",
+      "reset_confirm_ok": "Reset",
+      "reset_success": "Install link reset",
+      "reset_failed": "Reset failed, please try again later"
+    }
   },
   "utils": {
     "time_format": "YYYY-MM-DD"

@@ -1,5 +1,10 @@
 'use client';
 
+import { useScriptInstallToken } from '@/lib/api/hooks/script';
+import {
+  SCRIPT_PUBLIC_PRIVATE,
+  withInstallToken,
+} from '../../components/installUrl';
 import {
   Button,
   Card,
@@ -135,6 +140,11 @@ export default function ScriptVersionsClient({
   const t = useTranslations('script.version');
   const router = useRouter();
   const { handleInstallClick, guideModal } = useScriptInstallGuide(); // 未检测到脚本管理器时的二次引导
+  // 私有脚本的历史版本安装链接同样需要令牌。
+  const { data: installToken } = useScriptInstallToken(
+    script.id,
+    script.public === SCRIPT_PUBLIC_PRIVATE,
+  );
   const [editingVersion, setEditingVersion] = useState<ScriptVersion | null>(
     null,
   );
@@ -424,9 +434,13 @@ export default function ScriptVersionsClient({
       <div className="divide-y divide-gray-100 dark:divide-gray-800">
         {versions.map((version: ScriptVersion, index: number) => {
           const globalIndex = (currentPage - 1) * pageSize + index;
-          const versionInstallUrl = `/scripts/code/${script.id}/${encodeURIComponent(
-            script.name,
-          )}.user.js?version=${version.version}`;
+          // 这条链接本来就带 ?version=，withInstallToken 会据此改用 & 拼接。
+          const versionInstallUrl = withInstallToken(
+            `/scripts/code/${script.id}/${encodeURIComponent(
+              script.name,
+            )}.user.js?version=${version.version}`,
+            installToken?.token,
+          );
           return (
             <div key={version.id} className="space-y-3 py-5 first:pt-0">
               {/* 头部：版本号 + 徽标 / 日期 + 管理按钮 */}

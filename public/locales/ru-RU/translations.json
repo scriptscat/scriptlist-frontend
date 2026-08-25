@@ -2453,7 +2453,8 @@
       "deactivate_settings": "Удалить аккаунт",
       "passkey_settings": "Passkeys",
       "account_settings": "Управление аккаунтом",
-      "account_settings_description": "Управление паролями, ключами доступа, привязками сторонних сервисов и настройками безопасности аккаунта"
+      "account_settings_description": "Управление паролями, ключами доступа, привязками сторонних сервисов и настройками безопасности аккаунта",
+      "install_link_settings": "Ссылка для установки"
     },
     "update_failed": "Обновление не удалось, попробуйте ещё раз",
     "update_success": "Информация пользователя успешно обновлена!",
@@ -2549,7 +2550,19 @@
     "email_code_sent": "Verification code sent",
     "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
     "email_send_code": "Send verification code",
-    "email_send_code_countdown": "Resend in {{seconds}}s"
+    "email_send_code_countdown": "Resend in {{seconds}}s",
+    "install_link": {
+      "title": "Ссылка для установки",
+      "description": "Ссылки для установки приватных скриптов содержат собственный токен. Менеджер скриптов использует его для установки и проверки обновлений, поэтому вход на сайт не требуется. Ссылка привязана к вашей учётной записи — не передавайте её посторонним.",
+      "reset": "Сбросить ссылку для установки",
+      "reset_warning_title": "Сброс немедленно делает существующие ссылки недействительными",
+      "reset_warning_content": "После сброса все приватные скрипты, уже установленные на ваших устройствах, перестанут получать обновления, и их придётся установить заново. Сбрасывайте только если ссылка могла утечь. На секрет вебхука это не влияет.",
+      "reset_confirm_title": "Сбросить ссылку для установки?",
+      "reset_confirm_content": "Все приватные скрипты, уже установленные на ваших устройствах, придётся установить заново.",
+      "reset_confirm_ok": "Сбросить",
+      "reset_success": "Ссылка для установки сброшена",
+      "reset_failed": "Не удалось сбросить, попробуйте позже"
+    }
   },
   "ads": {
     "label": "Реклама",

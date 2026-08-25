@@ -2453,7 +2453,8 @@
       "deactivate_settings": "註銷帳號",
       "passkey_settings": "Passkeys",
       "account_settings": "帳號管理",
-      "account_settings_description": "管理密碼、通行金鑰、第三方綁定等帳號安全設定"
+      "account_settings_description": "管理密碼、通行金鑰、第三方綁定等帳號安全設定",
+      "install_link_settings": "安裝連結"
     },
     "update_failed": "更新失敗，請重試",
     "update_success": "使用者資訊更新成功！",
@@ -2549,7 +2550,19 @@
     "email_code_sent": "Verification code sent",
     "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
     "email_send_code": "Send verification code",
-    "email_send_code_countdown": "Resend in {{seconds}}s"
+    "email_send_code_countdown": "Resend in {{seconds}}s",
+    "install_link": {
+      "title": "安裝連結",
+      "description": "私有腳本的安裝連結帶有一枚專屬權杖，腳本管理器憑它安裝與檢查更新，因此不需要保持網站登入狀態。連結與你的帳號綁定，請勿分享給未經授權的人。",
+      "reset": "重設安裝連結",
+      "reset_warning_title": "重設會使現有連結立即失效",
+      "reset_warning_content": "重設後，你在所有裝置上已安裝的私有腳本都將無法再檢查更新，需要重新安裝一次。僅在連結可能已外洩時才需要重設。此操作不影響 Webhook 密鑰。",
+      "reset_confirm_title": "確認重設安裝連結？",
+      "reset_confirm_content": "所有裝置上已安裝的私有腳本都需要重新安裝。",
+      "reset_confirm_ok": "確認重設",
+      "reset_success": "安裝連結已重設",
+      "reset_failed": "重設失敗，請稍後再試"
+    }
   },
   "ads": {
     "label": "廣告",

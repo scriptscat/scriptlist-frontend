@@ -1,5 +1,7 @@
 'use client';
 
+import { useScriptInstallToken } from '@/lib/api/hooks/script';
+import { SCRIPT_PUBLIC_PRIVATE, withInstallToken } from './installUrl';
 import {
   Button,
   Card,
@@ -187,15 +189,25 @@ export default function ScriptDetailClient({
 
   const [installTitle, setInstallTitle] = useState(t('install.install_script')); // 安装按钮文案
   const { handleInstallClick, guideModal } = useScriptInstallGuide(); // 未检测到脚本管理器时的二次引导
+  // 私有脚本的安装链接必须带令牌：脚本管理器的更新检查不带站点 cookie。
+  const isPrivate = script.public === SCRIPT_PUBLIC_PRIVATE;
+  const { data: installToken } = useScriptInstallToken(script.id, isPrivate);
+  const token = installToken?.token;
   const installUrl = useMemo(
     () =>
-      `/scripts/code/${script.id}/${encodeURIComponent(script.name)}.user.js`,
-    [script.id, script.name],
+      withInstallToken(
+        `/scripts/code/${script.id}/${encodeURIComponent(script.name)}.user.js`,
+        token,
+      ),
+    [script.id, script.name, token],
   );
   const preReleaseUrl = useMemo(
     () =>
-      `/scripts/pre/${script.id}/${encodeURIComponent(script.name)}.user.js`,
-    [script.id, script.name],
+      withInstallToken(
+        `/scripts/pre/${script.id}/${encodeURIComponent(script.name)}.user.js`,
+        token,
+      ),
+    [script.id, script.name, token],
   );
 
   // 解析crontab表达式为更友好的描述

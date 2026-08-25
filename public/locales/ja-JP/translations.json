@@ -2453,7 +2453,8 @@
       "deactivate_settings": "アカウント削除",
       "passkey_settings": "Passkeys",
       "account_settings": "アカウント管理",
-      "account_settings_description": "パスワード、パスキー、サードパーティ連携などのアカウントセキュリティ設定を管理"
+      "account_settings_description": "パスワード、パスキー、サードパーティ連携などのアカウントセキュリティ設定を管理",
+      "install_link_settings": "インストールリンク"
     },
     "update_failed": "更新に失敗しました。再試行してください",
     "update_success": "ユーザー情報の更新が完了しました！",
@@ -2549,7 +2550,19 @@
     "email_code_sent": "Verification code sent",
     "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
     "email_send_code": "Send verification code",
-    "email_send_code_countdown": "Resend in {{seconds}}s"
+    "email_send_code_countdown": "Resend in {{seconds}}s",
+    "install_link": {
+      "title": "インストールリンク",
+      "description": "非公開スクリプトのインストールリンクには専用のトークンが含まれます。スクリプトマネージャーはそれを使ってインストールと更新確認を行うため、サイトへのログイン状態は不要です。リンクはアカウントに紐づいています。許可していない相手には共有しないでください。",
+      "reset": "インストールリンクをリセット",
+      "reset_warning_title": "リセットすると既存のリンクは直ちに無効になります",
+      "reset_warning_content": "リセット後、すべての端末にインストール済みの非公開スクリプトは更新を受け取れなくなり、再インストールが必要になります。リンクが漏れた可能性がある場合にのみリセットしてください。Webhook シークレットには影響しません。",
+      "reset_confirm_title": "インストールリンクをリセットしますか？",
+      "reset_confirm_content": "端末にインストール済みの非公開スクリプトはすべて再インストールが必要になります。",
+      "reset_confirm_ok": "リセット",
+      "reset_success": "インストールリンクをリセットしました",
+      "reset_failed": "リセットに失敗しました。しばらくしてからお試しください"
+    }
   },
   "ads": {
     "label": "広告",

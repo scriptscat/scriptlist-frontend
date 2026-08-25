@@ -104,6 +104,23 @@ export function useScriptGroupList(id: number, page: number = 1) {
 }
 
 /**
+ * 取私有脚本的安装令牌。
+ *
+ * enabled 为 false 时不发请求：公开脚本的安装链接不带令牌，
+ * 未登录用户也拿不到。
+ */
+export function useScriptInstallToken(scriptId: number, enabled: boolean) {
+  return useSWR<{ token: string }, APIError>(
+    enabled ? ['script-install-token', scriptId] : null,
+    () => scriptService.getInstallToken(scriptId),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
+  );
+}
+
+/**
  * 用户组成员列表Hook
  * @param id - 脚本ID
  * @param gid - 用户组ID
