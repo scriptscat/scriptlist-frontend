@@ -6,6 +6,13 @@
 // where the slot renders). Keep this list in sync with the backend slot enum
 // and the design doc (docs/superpowers/specs/2026-06-18-ad-slots-design.md §2).
 
+/**
+ * rail 披露行（「广告」标签）的固定高度（px）。AdSense 的披露行排在广告单元
+ * 上方而不是盖在上面（遮挡广告违反政策），所以它会实打实占掉高度；这里定死一个
+ * 值，让 SideRails 能精确预留「披露行 + 160×600 广告单元」的整块高度。
+ */
+export const RAIL_DISCLOSURE_HEIGHT = 16;
+
 export type AdSlotVariant = 'banner' | 'card' | 'rail';
 
 export interface AdSlotMeta {

@@ -47,9 +47,11 @@ export async function LocalizedServerThemeWrapper({
     getThemeFromServerCookies(),
     getMessages(),
     userService.getCurrentUser(),
+    // 配置读取失败时降级为「全部关闭」：AdSense 不加载，图片广告不受影响。
     systemService.getGlobalConfig().catch((): GlobalConfig => ({
       turnstile_site_key: '',
       qq_migrate_enabled: false,
+      adsense_publisher_id: '',
     })),
   ]);
 
@@ -91,6 +93,16 @@ export async function LocalizedServerThemeWrapper({
   gtag('config', 'G-N2X6MNVRL3');`,
           }}
         />
+        {/* 仅在配置了发布商 ID 时加载 AdSense 脚本；未配置则完全不加载。 */}
+        {globalConfig.adsense_publisher_id ? (
+          <Script
+            async
+            crossOrigin="anonymous"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(
+              globalConfig.adsense_publisher_id,
+            )}`}
+          />
+        ) : null}
         <NavigationProgress />
         <ThemeProvider initialMode={serverTheme}>
           <SWRProvider>

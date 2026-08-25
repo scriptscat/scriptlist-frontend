@@ -2,8 +2,18 @@ import { cache } from 'react';
 import type { ListData } from '@/types/api';
 import { apiClient } from '../client';
 
+/**
+ * 广告类型。后端 ServeItem / AdminAdvertise 的 `ad_type` 字段；
+ * 历史条目（该字段缺失或为空）一律按图片类型处理。
+ */
+export type AdType = 'image' | 'adsense';
+
 export interface AdSlotItem {
   id: number;
+  /** image = 站内图片素材；adsense = 由 Google 广告单元渲染。 */
+  ad_type: AdType;
+  /** AdSense 广告单元 ID（data-ad-slot），仅 adsense 类型有值。 */
+  ad_unit_id: string;
   image_url_light: string;
   image_url_dark: string;
   link_url: string;
@@ -13,6 +23,8 @@ export interface AdSlotItem {
 export interface AdminAdvertise {
   id: number;
   slot_key: string;
+  ad_type: AdType;
+  ad_unit_id: string;
   title: string;
   languages: string; // comma-separated
   image_url_light: string;
@@ -30,6 +42,10 @@ export interface AdminAdvertise {
 
 export interface AdminAdvertiseInput {
   slot_key: string;
+  /** 省略或留空时后端按 image 处理（与 AdminCreateRequest 的可选 binding 一致）。 */
+  ad_type?: AdType;
+  /** adsense 类型必填，image 类型忽略。 */
+  ad_unit_id?: string;
   title: string;
   languages: string;
   image_url_light: string;
@@ -63,6 +79,11 @@ export interface AdClickItem {
   createtime: number;
 }
 
+/** 归一化广告类型：后端历史数据可能没有该字段，按图片处理。 */
+export function resolveAdType(ad: { ad_type?: string }): AdType {
+  return ad.ad_type === 'adsense' ? 'adsense' : 'image';
+}
+
 class AdvertiseService {
   private readonly basePath = '/advertise';
 
@@ -88,13 +109,24 @@ class AdvertiseService {
     size: number = 20,
     slot?: string,
     enabled?: boolean,
+    adType?: AdType,
   ) {
     return apiClient.get<ListData<AdminAdvertise>>(`${this.basePath}/admin`, {
       page,
       size,
       slot,
       enabled,
+      ad_type: adType,
     });
+  }
+
+  /**
+   * 全站某类型的广告条数。取后端返回的 total，而不是拉一页自己数——
+   * 后端分页 size 上限是 100（超过会回落到 20），扫一页数不出真实条数。
+   */
+  async adminCountByType(adType: AdType): Promise<number> {
+    const resp = await this.adminList(1, 1, undefined, undefined, adType);
+    return resp.total;
   }
 
   async adminClickStats(id: number, days: number = 30) {
