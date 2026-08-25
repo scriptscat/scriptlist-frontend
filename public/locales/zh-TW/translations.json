@@ -2059,6 +2059,7 @@
       },
       "sort": {
         "createtime": "最新發佈",
+        "long_tail": "可能感興趣",
         "score": "評分最高",
         "today_download": "熱度排序",
         "total_download": "下載最多"

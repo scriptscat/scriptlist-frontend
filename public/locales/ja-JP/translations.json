@@ -2059,6 +2059,7 @@
       },
       "sort": {
         "createtime": "最新公開",
+        "long_tail": "おすすめ",
         "score": "評価順",
         "today_download": "人気順",
         "total_download": "ダウンロード数順"

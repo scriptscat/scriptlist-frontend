@@ -2059,6 +2059,7 @@
       },
       "sort": {
         "createtime": "Neueste Veröffentlichung",
+        "long_tail": "Könnte dich interessieren",
         "score": "Höchste Bewertung",
         "today_download": "Nach Popularität sortieren",
         "total_download": "Meist heruntergeladen"

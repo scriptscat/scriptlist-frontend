@@ -2067,6 +2067,7 @@
       },
       "sort": {
         "createtime": "Latest",
+        "long_tail": "You Might Like",
         "score": "Highest Rated",
         "today_download": "Trending",
         "total_download": "Most Downloaded"

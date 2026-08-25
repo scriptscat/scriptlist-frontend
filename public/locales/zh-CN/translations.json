@@ -2067,6 +2067,7 @@
       },
       "sort": {
         "createtime": "最新发布",
+        "long_tail": "可能感兴趣",
         "score": "评分最高",
         "today_download": "热度排序",
         "total_download": "下载最多"

@@ -181,6 +181,8 @@ export default function ScriptList({
               <Option value="total_download">
                 {t('search.sort.total_download')}
               </Option>
+              {/* 首页「可能感兴趣」板块的「更多」指向 /search?sort=long_tail，须在下拉中有对应选项，否则 Select 会直接显示原始值 */}
+              <Option value="long_tail">{t('search.sort.long_tail')}</Option>
             </Select>
           </Space>
         </Space>
