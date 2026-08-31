@@ -184,6 +184,7 @@ export interface ScriptAuditItem {
   script_name: string;
   version: string;
   status: number; // 1=pending, 2=approved, 3=rejected
+  script_status: number; // current script entity status; 3=audit
   reason: string;
   createtime: number;
 }

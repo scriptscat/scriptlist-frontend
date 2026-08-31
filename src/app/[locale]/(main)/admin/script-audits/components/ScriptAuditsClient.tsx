@@ -9,6 +9,7 @@ import {
   Modal,
   Select,
   Space,
+  Switch,
   Table,
   Tag,
   message,
@@ -25,6 +26,7 @@ import { APIError } from '@/types/api';
 const STATUS_PENDING = 1;
 const STATUS_APPROVED = 2;
 const STATUS_REJECTED = 3;
+const SCRIPT_STATUS_AUDIT = 3;
 const ACTION_MODAL_Z_INDEX = 1200;
 
 type StatusFilter = 0 | 1 | 2 | 3; // 0 = all
@@ -211,6 +213,22 @@ export default function ScriptAuditsClient() {
       filters: statusFilterOptions,
       filterMultiple: false,
       filteredValue: statusFilter === 0 ? null : [statusFilter],
+    },
+    {
+      title: t('col_script_audit_status'),
+      dataIndex: 'script_status',
+      key: 'script_status',
+      width: 120,
+      align: 'center',
+      render: (status: number) => (
+        <Switch
+          checked={status === SCRIPT_STATUS_AUDIT}
+          checkedChildren={t('script_auditing')}
+          unCheckedChildren={t('script_not_auditing')}
+          aria-label={t('col_script_audit_status')}
+          disabled
+        />
+      ),
     },
     {
       title: t('col_createtime'),

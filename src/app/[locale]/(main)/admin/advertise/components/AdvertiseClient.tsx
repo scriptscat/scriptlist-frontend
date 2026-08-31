@@ -539,6 +539,7 @@ export default function AdvertiseClient() {
         rowKey="id"
         loading={loading}
         onChange={handleTableChange}
+        scroll={{ x: 1200 }}
         pagination={{
           current: page,
           total,
