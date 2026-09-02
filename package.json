@@ -14,6 +14,7 @@
     "prepare": "node scripts/install-git-hooks.mjs",
     "dev": "pnpm run predev && next dev",
     "build": "pnpm run prebuild && next build",
+    "analyze": "pnpm run prebuild && next build --experimental-analyze",
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",

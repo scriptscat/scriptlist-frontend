@@ -1,4 +1,5 @@
-import { Row, Col } from 'antd';
+// 深层导入：服务端组件若从 'antd' barrel 具名导入，整个 barrel 会变成客户端引用。
+import { Row, Col } from 'antd/es/grid';
 import Sidebar from '@/components/Sidebar';
 import ScriptList from '@/components/Scriptlist';
 import ScriptSection from '@/components/ScriptSection';

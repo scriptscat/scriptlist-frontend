@@ -29,6 +29,8 @@ import {
   SCRIPTCAT_INSTALL_GUIDE_URL,
   type BrowserStoreKey,
 } from '@/lib/constants/browserStores';
+// 首页安装按钮渲染浏览器商店 logo，这几个图标不在全局预注册里。
+import '@/lib/iconify-preload-browser-stores';
 import AdSlot from '@/components/AdSlot';
 import type { AdSlotItem } from '@/lib/api/services/advertise';
 

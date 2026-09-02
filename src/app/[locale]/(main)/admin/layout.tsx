@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { Result } from 'antd';
+// 深层导入：服务端组件若从 'antd' barrel 具名导入，整个 barrel 会变成客户端引用。
+import Result from 'antd/es/result';
 import { getTranslations } from 'next-intl/server';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
 import { userService } from '@/lib/api';

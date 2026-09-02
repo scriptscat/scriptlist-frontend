@@ -32,9 +32,14 @@ pnpm lint-fix         # ESLint auto-fix
 pnpm test             # vitest unit tests (src/**/*.test.ts), single run
 pnpm test:watch       # vitest in watch mode
 pnpm e2e              # Playwright end-to-end tests (tests/e2e/)
+pnpm analyze          # Production build + Turbopack bundle analysis report
 ```
 
+`pnpm analyze` runs `next build --experimental-analyze` and writes a browsable report to `.next/diagnostics/analyze/index.html`. It reports the Turbopack production output; `@next/bundle-analyzer` is webpack-only and is not used here.
+
 The prebuild step (`scripts/prebuild.tsx`) statically extracts and validates the Ant Design stylesheet before Next.js emits it as a content-hashed CSS asset; it also copies Monaco editor files to `public/`.
+
+That stylesheet is render-blocking on every page, so it is extracted for the explicit component allowlist in `src/lib/antd-components.ts` rather than for all of antd. Directly imported components go in `ANTD_IMPORTED_COMPONENTS`; components only rendered indirectly (a popup owned by another component) go in `ANTD_IMPLICIT_COMPONENTS` with the reason. `src/lib/antd-components.test.ts` scans `src/` and fails when the allowlist is out of date; `assertAntdCssIntegrity` enforces a size bound plus required and forbidden selectors.
 
 ## Architecture
 
@@ -107,6 +112,13 @@ APP_API_PROXY         # API proxy destination (used in next.config.ts rewrites)
 ```
 
 Frontend proxies API calls via Next.js rewrites: `/api/v2/:path*` → `APP_API_PROXY/:path*`. `next.config.ts` also sets global security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`), immutable long-cache headers for `/assets` and `/monaco`, and `optimizePackageImports` for `antd` / `@ant-design/*` / `@iconify/react`. `pnpm` is pinned via `packageManager` (`pnpm@10.x`); use it rather than npm/yarn.
+
+## Bundle Size
+
+- **antd in Server Components** — server-reachable modules import antd by deep path (`import Spin from 'antd/es/spin'`), not from the `'antd'` barrel; a barrel import there makes the whole barrel a client reference and ships every antd component on that route. Client components (`'use client'`) use the barrel normally. `src/lib/antd-server-imports.test.ts` walks the import graph from each `page`/`layout` and stops at `'use client'` boundaries; `src/lib/antd-deep-imports.test.tsx` renders the deep paths in use.
+- **Iconify preload** — `src/lib/iconify-preload.ts` is imported by the root layout and lands on every route, so it holds only small icons used in persistent UI (nav, search bar, ad slot) or supplied as backend-provided names (`BACKEND_PROVIDED_ICONS`). Large multi-path logos live in scoped modules such as `src/lib/iconify-preload-browser-stores.ts`, imported by the components that render them; unregistered icons fall back to the Iconify CDN. `src/lib/iconify-preload.test.ts` fails on an unused registration or an over-budget global module.
+
+Use `pnpm analyze` to check first-load impact.
 
 ## Key Conventions
 
