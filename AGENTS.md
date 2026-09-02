@@ -45,7 +45,7 @@ That stylesheet is render-blocking on every page, so it is extracted for the exp
 
 ### Routing & i18n
 
-All routes are locale-prefixed: `/[locale]/...` (e.g., `/en/scripts`, `/zh-CN/scripts`). Locales: `en`, `zh-CN`, `zh-TW`, `ru`, `ja`, `de` (6 locales). Default locale is `en` with `localePrefix: 'always'`. Locale detection runs through `src/proxy.ts` — this is the `next-intl` middleware; Next.js 16 renamed the `middleware.ts` convention file to `proxy.ts`, so edit `src/proxy.ts` (not `middleware.ts`) to change matcher/locale-detection behavior.
+All routes are locale-prefixed: `/[locale]/...` (e.g., `/en/scripts`, `/zh-CN/scripts`). Locales: `en`, `zh-CN`, `zh-TW`, `ru`, `ja`, `de`, `vi` (7 locales). Default locale is `en` with `localePrefix: 'always'`. Locale detection runs through `src/proxy.ts` — this is the `next-intl` middleware; Next.js 16 renamed the `middleware.ts` convention file to `proxy.ts`, so edit `src/proxy.ts` (not `middleware.ts`) to change matcher/locale-detection behavior.
 
 Note: routing uses short keys (`en`, `de`) while `public/locales/` uses full tags (`en-US`, `de-DE`). The mapping is defined in `src/i18n/routing.ts` via `languageMap`.
 
