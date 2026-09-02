@@ -72,12 +72,12 @@ export type BoundMarkdownParser = (
  * depend on. It is also plain enough to unit-test without a React renderer (see
  * useMarkdownParser.test.ts).
  *
- * Bounded by the number of routing locales (6: the keys of `languageMap` in
- * `src/i18n/routing.ts` — `en`, `zh-CN`, `zh-TW`, `ru`, `ja`, `de`), because
- * `useLocale()` only ever returns one of those short keys. A full tag like
- * `vi-VN` is never a cache key here, even though `public/locales/vi-VN` ships
- * as a translation pack — `vi` is not in `languageMap`, so routing never
- * produces it.
+ * Bounded by the number of routing locales (7: the keys of `languageMap` in
+ * `src/i18n/routing.ts` — `en`, `zh-CN`, `zh-TW`, `ru`, `ja`, `de`, `vi`),
+ * because `useLocale()` only ever returns one of those short keys. A full tag
+ * like `vi-VN` is never a cache key here, even though that is the directory
+ * `public/locales` ships the pack under — `languageMap` maps the short routing
+ * key to the directory name, and routing only ever produces the short key.
  *
  * Safe to share across requests on the server as long as `components` stays in
  * the root layout's namespace list: `LocalizedServerThemeWrapper.tsx`'s

@@ -147,8 +147,7 @@ const REQUIRED_KEYS = (() => {
   return reads;
 })();
 
-// Every locale pack, including `vi-VN`, which ships translations even though
-// `src/i18n/routing.ts` does not currently route to it.
+// Every locale pack `src/i18n/routing.ts` routes to, by directory name.
 const LOCALES = [
   'zh-CN',
   'zh-TW',

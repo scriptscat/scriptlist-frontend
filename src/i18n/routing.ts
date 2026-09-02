@@ -33,6 +33,10 @@ export const languageMap: {
     label: 'Deutsch',
     locale: 'de-DE',
   },
+  vi: {
+    label: 'Tiếng Việt',
+    locale: 'vi-VN',
+  },
   // {
   //   key: 'ach-UG',
   //   label: 'Acholi',
