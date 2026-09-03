@@ -11,7 +11,7 @@ import {
   Avatar,
   Space,
   theme,
-  Skeleton,
+  Spin,
 } from 'antd';
 import { PlusOutlined, MessageOutlined } from '@ant-design/icons';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -20,10 +20,12 @@ import { useTranslations } from 'next-intl';
 import type { Issue } from '@/lib/api/services/scripts/issue';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useIssueList } from '@/lib/api/hooks/issue';
+import { useResource } from '@/lib/api/hooks/useResource';
 import IssueLabel from './IssueLabel';
+import { ISSUE_PAGE_SIZE, IssueListSkeleton } from './IssueRowSkeleton';
 import { openIssueDetail } from './issueNavigation';
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = ISSUE_PAGE_SIZE;
 
 interface ScriptIssueClientProps {
   scriptId: number;
@@ -45,6 +47,7 @@ export default function ScriptIssueClient({
   const { token } = theme.useToken();
   const semDateTime = useSemDateTime();
   const t = useTranslations('script.issue');
+  const tLoading = useTranslations('components.loading');
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [currentStatus, setCurrentStatus] = useState<
@@ -74,11 +77,14 @@ export default function ScriptIssueClient({
       }
     : null;
 
-  const { data, isLoading } = useIssueList(scriptId, swrParams);
+  const swr = useIssueList(scriptId, swrParams);
+  const { data, isInitialLoading, isRefreshing, error } = useResource(swr);
 
   const displayIssues = paramsChanged ? (data?.list ?? []) : initialIssues;
-  const totalCount = paramsChanged ? (data?.total ?? 0) : initialTotal;
-  const loading = paramsChanged && isLoading;
+  // 加载中 / 失败时不要把 total 掉回 0，否则 Pagination 会整块卸载再挂回来。
+  const totalCount = data?.total ?? initialTotal;
+  // 搜索防抖窗口内输入框已经变了但请求还没发，这段时间也要给反馈。
+  const searchPending = searchValue !== currentKeyword;
 
   // Sync URL without triggering navigation
   const syncURL = useCallback(
@@ -162,6 +168,7 @@ export default function ScriptIssueClient({
               onChange={handleSearchInputChange}
               onSearch={handleSearch}
               allowClear
+              loading={searchPending || (isRefreshing && !!currentKeyword)}
               className="flex-1 w-full"
             />
             <Space.Compact>
@@ -196,9 +203,23 @@ export default function ScriptIssueClient({
         </div>
 
         {/* 问题列表 */}
-        {loading ? (
-          <div className="p-4">
-            <Skeleton active paragraph={{ rows: 6 }} />
+        {isInitialLoading ? (
+          <IssueListSkeleton />
+        ) : error && !data ? (
+          <div
+            role="alert"
+            style={{
+              border: `1px solid ${token.colorBorder}`,
+              backgroundColor: token.colorBgContainer,
+              borderRadius: token.borderRadius,
+            }}
+          >
+            <div className="flex flex-col items-center gap-3 py-12 text-center">
+              <span style={{ color: token.colorTextSecondary }}>
+                {tLoading('failed')}
+              </span>
+              <Button onClick={() => swr.mutate()}>{tLoading('retry')}</Button>
+            </div>
           </div>
         ) : displayIssues.length === 0 ? (
           <div
@@ -220,134 +241,138 @@ export default function ScriptIssueClient({
             </div>
           </div>
         ) : (
-          <div
-            style={{
-              border: `1px solid ${token.colorBorder}`,
-              backgroundColor: token.colorBgContainer,
-              borderRadius: token.borderRadius,
-            }}
-          >
-            {displayIssues.map((issue, index) => (
-              <div
-                key={issue.id}
-                className="px-4 py-3 transition-colors duration-200 cursor-pointer"
-                role="link"
-                tabIndex={0}
-                aria-label={issue.title}
-                style={{
-                  borderBottom:
-                    index !== displayIssues.length - 1
-                      ? `1px solid ${token.colorBorder}`
-                      : 'none',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    token.colorBgTextHover;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={(e) => {
-                  if ((e.target as HTMLElement).closest('a, button')) return;
-                  openIssueDetail(scriptId, issue.id);
-                }}
-                onKeyDown={(e) => {
-                  if (e.target !== e.currentTarget) return;
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
+          <Spin spinning={isRefreshing}>
+            <div
+              style={{
+                border: `1px solid ${token.colorBorder}`,
+                backgroundColor: token.colorBgContainer,
+                borderRadius: token.borderRadius,
+              }}
+            >
+              {displayIssues.map((issue, index) => (
+                <div
+                  key={issue.id}
+                  className="px-4 py-3 transition-colors duration-200 cursor-pointer"
+                  role="link"
+                  tabIndex={0}
+                  aria-label={issue.title}
+                  style={{
+                    borderBottom:
+                      index !== displayIssues.length - 1
+                        ? `1px solid ${token.colorBorder}`
+                        : 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      token.colorBgTextHover;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                  onClick={(e) => {
+                    if ((e.target as HTMLElement).closest('a, button')) return;
                     openIssueDetail(scriptId, issue.id);
-                  }
-                }}
-              >
-                <div className="flex items-start gap-3">
-                  {/* 主要内容 */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        {/* 标题和标签 */}
-                        <div className="mb-2">
-                          <div className="flex items-center gap-2 mb-1">
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.target !== e.currentTarget) return;
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openIssueDetail(scriptId, issue.id);
+                    }
+                  }}
+                >
+                  <div className="flex items-start gap-3">
+                    {/* 主要内容 */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          {/* 标题和标签 */}
+                          <div className="mb-2">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Link
+                                href={`/script-show-page/${scriptId}/issue/${issue.id}`}
+                                target="_blank"
+                              >
+                                <Typography.Title level={5}>
+                                  {issue.title}
+                                </Typography.Title>
+                              </Link>
+
+                              <Tag
+                                color={
+                                  issue.status === 1 ? 'warning' : 'success'
+                                }
+                                className="text-xs"
+                              >
+                                {issue.status === 1
+                                  ? t('status_pending')
+                                  : t('status_resolved')}
+                              </Tag>
+                            </div>
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {issue.labels.slice(0, 4).map((label) => (
+                                <IssueLabel key={label} label={label} />
+                              ))}
+                              {issue.labels.length > 4 && (
+                                <Tag color="default" className="text-xs">
+                                  {'+' + (issue.labels.length - 4)}
+                                </Tag>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* 用户和时间信息 */}
+                          <div
+                            className="flex items-center gap-1 text-sm"
+                            style={{ color: token.colorTextSecondary }}
+                          >
+                            <Link
+                              href={'/users/' + issue.user_id}
+                              target="_blank"
+                            >
+                              <span className="inline-flex items-center gap-1">
+                                <Avatar size={20} src={issue.avatar} />
+                                <span>{issue.username}</span>
+                              </span>
+                            </Link>
                             <Link
                               href={`/script-show-page/${scriptId}/issue/${issue.id}`}
                               target="_blank"
                             >
-                              <Typography.Title level={5}>
-                                {issue.title}
-                              </Typography.Title>
-                            </Link>
-
-                            <Tag
-                              color={issue.status === 1 ? 'warning' : 'success'}
-                              className="text-xs"
-                            >
-                              {issue.status === 1
-                                ? t('status_pending')
-                                : t('status_resolved')}
-                            </Tag>
-                          </div>
-                          <div className="mt-1 flex flex-wrap gap-1">
-                            {issue.labels.slice(0, 4).map((label) => (
-                              <IssueLabel key={label} label={label} />
-                            ))}
-                            {issue.labels.length > 4 && (
-                              <Tag color="default" className="text-xs">
-                                {'+' + (issue.labels.length - 4)}
+                              <Tag className="!mr-0 cursor-pointer">
+                                {'#' + issue.id}
                               </Tag>
-                            )}
+                            </Link>
+                            <span>{semDateTime(issue.createtime)}</span>
+                            {issue.updatetime > 0 &&
+                              issue.updatetime !== issue.createtime && (
+                                <span>
+                                  {'• ' +
+                                    t('updated_at', {
+                                      time: semDateTime(issue.updatetime),
+                                    })}
+                                </span>
+                              )}
                           </div>
                         </div>
 
-                        {/* 用户和时间信息 */}
-                        <div
-                          className="flex items-center gap-1 text-sm"
-                          style={{ color: token.colorTextSecondary }}
-                        >
-                          <Link
-                            href={'/users/' + issue.user_id}
-                            target="_blank"
+                        {/* 右侧信息 */}
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          <div
+                            className="flex items-center gap-1 text-base"
+                            style={{ color: token.colorTextSecondary }}
                           >
-                            <span className="inline-flex items-center gap-1">
-                              <Avatar size={20} src={issue.avatar} />
-                              <span>{issue.username}</span>
-                            </span>
-                          </Link>
-                          <Link
-                            href={`/script-show-page/${scriptId}/issue/${issue.id}`}
-                            target="_blank"
-                          >
-                            <Tag className="!mr-0 cursor-pointer">
-                              {'#' + issue.id}
-                            </Tag>
-                          </Link>
-                          <span>{semDateTime(issue.createtime)}</span>
-                          {issue.updatetime > 0 &&
-                            issue.updatetime !== issue.createtime && (
-                              <span>
-                                {'• ' +
-                                  t('updated_at', {
-                                    time: semDateTime(issue.updatetime),
-                                  })}
-                              </span>
-                            )}
-                        </div>
-                      </div>
-
-                      {/* 右侧信息 */}
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <div
-                          className="flex items-center gap-1 text-base"
-                          style={{ color: token.colorTextSecondary }}
-                        >
-                          <MessageOutlined style={{ fontSize: '16px' }} />
-                          <span>{issue.comment_count || 0}</span>
+                            <MessageOutlined style={{ fontSize: '16px' }} />
+                            <span>{issue.comment_count || 0}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </Spin>
         )}
 
         {/* 分页 */}

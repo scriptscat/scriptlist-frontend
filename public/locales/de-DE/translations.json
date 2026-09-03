@@ -90,6 +90,7 @@
       "type_adsense": "AdSense",
       "stats_adsense_placeholder": "—",
       "stats_adsense_note": "Impressions / clicks are tracked by Google",
+      "stats_multi_slot_note": "Summe über {count} Platzierungen",
       "field_type": "Ad Type",
       "field_slot": "Ad Slot",
       "field_title": "Title",
@@ -147,11 +148,11 @@
         },
         "search-rail-left": {
           "name": "Linke Suchleiste",
-          "position": "Such-Browsing-Ansicht, linker Rand des zentrierten Inhalts; nur bei Bildschirmen ≥1650px"
+          "position": "Such-Browse-Ansicht, linker Rand des Inhaltsbereichs; bei Auslieferung wird der Inhalt schmaler, bei zu wenig Rand ausgeblendet"
         },
         "search-rail-right": {
           "name": "Rechte Suchleiste",
-          "position": "Such-Browsing-Ansicht, rechter Rand des zentrierten Inhalts; nur bei Bildschirmen ≥1650px"
+          "position": "Such-Browse-Ansicht, rechter Rand des Inhaltsbereichs; bei Auslieferung wird der Inhalt schmaler, bei zu wenig Rand ausgeblendet"
         },
         "search-sidebar": {
           "name": "Such-Seitenleiste",
@@ -168,7 +169,35 @@
         "script-detail-banner": {
           "name": "Banner der Detailseite",
           "position": "Hauptspalte der Skript-Detailseite, zwischen Info-Karte und Inhalts-Tabs; volle Breite, alle Breakpoints"
+        },
+        "search-results-rail-left": {
+          "name": "Suchergebnisse linker Vertikalplatz",
+          "position": "Linker Rand des Inhaltsbereichs der Suchergebnisse; bei Auslieferung wird der Inhalt schmaler, bei zu wenig Rand ausgeblendet"
+        },
+        "search-results-rail-right": {
+          "name": "Suchergebnisse rechter Vertikalplatz",
+          "position": "Rechter Rand des Inhaltsbereichs der Suchergebnisse, neben der Sidebar-Karte; bei zu wenig Rand ausgeblendet"
+        },
+        "script-detail-rail-left": {
+          "name": "Detailseite linker Vertikalplatz",
+          "position": "Linker Rand des Inhaltsbereichs der Skript-Detailseite; bei Auslieferung wird der Inhalt schmaler, bei zu wenig Rand ausgeblendet"
+        },
+        "script-detail-rail-right": {
+          "name": "Detailseite rechter Vertikalplatz",
+          "position": "Rechter Rand des Inhaltsbereichs der Skript-Detailseite, neben der Sticky-Sidebar; bei zu wenig Rand ausgeblendet"
         }
+      },
+      "slot_required": "Mindestens einen Werbeplatz auswählen",
+      "slot_placeholder": "Mehrere Werbeplätze möglich",
+      "slot_selected_count": "{count} Werbeplätze ausgewählt",
+      "slot_count_summary": "{count} Platz/Plätze · {sizes}",
+      "slot_mixed_title": "Die Auswahl umfasst {count} Formate; ein Motiv passt nicht auf alle",
+      "slot_mixed_desc": "Bildmotive werden auf unpassenden Plätzen skaliert und mit Rändern versehen; AdSense-Einträge teilen sich eine Ad-Unit-ID, weshalb gemischte Formate die Fill-Rate deutlich senken. Speichern ist trotzdem möglich.",
+      "slot_unknown": "Unbekannte Werbeplätze: {keys}",
+      "slot_variant": {
+        "rail": "Vertikal",
+        "banner": "Banner",
+        "card": "Karte"
       }
     },
     "ai_review": {
@@ -761,6 +790,14 @@
     "default_favorite_folder_description": "Dies ist dein Standard-Favoritenordner"
   },
   "components": {
+    "loading": {
+      "default": "Wird geladen…",
+      "code": "Code-Editor wird geladen…",
+      "chart": "Diagramm wird geladen…",
+      "failed": "Laden fehlgeschlagen",
+      "retry": "Erneut versuchen",
+      "redirecting": "Weiterleitung…"
+    },
     "markdown": {
       "note": "Notiz",
       "tip": "Tipp",
@@ -1649,6 +1686,7 @@
         "stats": {
           "expired": "Abgelaufen:",
           "groups": "Benutzergruppen:",
+          "page_scope_note": "(Benutzer / Gruppen / ausstehend / abgelaufen werden nur für die aktuelle Seite gezählt)",
           "pending": "Wartend auf Bestätigung:",
           "total": "Gesamt:",
           "users": "Benutzer:"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Alert,
   Button,
@@ -20,7 +20,9 @@ import { adminService } from '@/lib/api/services/admin';
 import type { ScriptItem } from '@/lib/api/services/admin';
 import { aiReviewService } from '@/lib/api/services/aiReview';
 import { scriptService } from '@/lib/api/services/scripts/scripts';
+import { useAdminScripts } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
+import { useTableStateLocale } from '../../components/tableState';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
 import dayjs from 'dayjs';
@@ -36,10 +38,7 @@ const STATUS_DELETED = 2;
 
 export default function ScriptsClient() {
   const t = useTranslations('admin.scripts');
-  const [data, setData] = useState<ScriptItem[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [searchField, setSearchField] = useState<
     'name' | 'description' | 'content'
@@ -73,57 +72,26 @@ export default function ScriptsClient() {
     expireAt: number;
   } | null>(null);
 
-  const fetchData = useCallback(
-    async (
-      p: number,
-      kw: string,
-      st: ScriptStatusFilter | undefined,
-      field: 'name' | 'description' | 'content',
-      sf: ScriptSortField | undefined,
-      so: ScriptSortOrder | undefined,
-    ) => {
-      setLoading(true);
-      try {
-        const resp = await adminService.listScripts(
-          p,
-          20,
-          kw || undefined,
-          st,
-          kw ? field : undefined,
-          sf,
-          so,
-        );
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) {
-          message.error(err.msg);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [],
-  );
-
-  useEffect(() => {
-    fetchData(
-      page,
-      appliedKeyword,
-      statusFilter,
-      appliedSearchField,
-      sortField,
-      sortOrder,
-    );
-  }, [
-    fetchData,
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh: refreshList,
+  } = useAdminScripts({
     page,
-    appliedKeyword,
-    statusFilter,
-    appliedSearchField,
+    keyword: appliedKeyword,
+    status: statusFilter,
+    searchField: appliedSearchField,
     sortField,
     sortOrder,
-  ]);
+  });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: refreshList,
+  });
 
   const handleSearch = () => {
     setAppliedKeyword(keyword);
@@ -131,37 +99,11 @@ export default function ScriptsClient() {
     setPage(1);
   };
 
-  const refreshList = useCallback(() => {
-    fetchData(
-      page,
-      appliedKeyword,
-      statusFilter,
-      appliedSearchField,
-      sortField,
-      sortOrder,
-    );
-  }, [
-    fetchData,
-    page,
-    appliedKeyword,
-    statusFilter,
-    appliedSearchField,
-    sortField,
-    sortOrder,
-  ]);
-
   const handleRestore = async (id: number) => {
     try {
       await adminService.restoreScript(id);
       message.success(t('restore_success'));
-      fetchData(
-        page,
-        appliedKeyword,
-        statusFilter,
-        appliedSearchField,
-        sortField,
-        sortOrder,
-      );
+      refreshList();
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -192,14 +134,7 @@ export default function ScriptsClient() {
       message.success(t('visibility_success'));
       setVisibilityModalOpen(false);
       setEditingScript(null);
-      fetchData(
-        page,
-        appliedKeyword,
-        statusFilter,
-        appliedSearchField,
-        sortField,
-        sortOrder,
-      );
+      refreshList();
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -222,14 +157,7 @@ export default function ScriptsClient() {
       message.success(t('trending_score_success'));
       setTrendingModalOpen(false);
       setEditingTrendingScript(null);
-      fetchData(
-        page,
-        appliedKeyword,
-        statusFilter,
-        appliedSearchField,
-        sortField,
-        sortOrder,
-      );
+      refreshList();
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -528,7 +456,8 @@ export default function ScriptsClient() {
         columns={columns}
         dataSource={data}
         rowKey="id"
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         onChange={handleTableChange}
         pagination={{
           current: page,

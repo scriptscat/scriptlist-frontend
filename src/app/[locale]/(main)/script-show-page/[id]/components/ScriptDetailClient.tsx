@@ -48,7 +48,11 @@ import { useUser } from '@/contexts/UserContext';
 import { useSemDateTime, formatCompactNumber } from '@/lib/utils/semdate';
 import { Link, useRouter } from '@/i18n/routing';
 import dynamic from 'next/dynamic';
-const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
+import MarkdownViewLoading from '@/components/MarkdownView/MarkdownViewLoading';
+// 不给 `loading` 的话 fallback 是 `null`，客户端导航时整段正文会塌成 0px。
+const MarkdownView = dynamic(() => import('@/components/MarkdownView'), {
+  loading: () => <MarkdownViewLoading height={360} />,
+});
 import { ScriptUtils } from '../utils';
 import { getLicenseDisplay } from '@/lib/license';
 import { copyToClipboard, hashColor } from '@/lib/utils/utils';
@@ -63,6 +67,8 @@ import { aiReviewService } from '@/lib/api/services/aiReview';
 import { useLocale, useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
 import AdSlot from '@/components/AdSlot';
+import SideRails from '@/components/AdSlot/SideRails';
+import { railContainerProps } from '@/components/AdSlot/railLayout';
 import ScriptIcon from '@/components/ScriptIcon';
 import type { AdSlotItem } from '@/lib/api/services/advertise';
 import ScriptVersionsClient from '../version/components/ScriptVersionsClient';
@@ -95,6 +101,12 @@ interface ScriptDetailClientProps {
   sidebarAd?: { ad: AdSlotItem | null };
   /** 服务端预取的 script-detail-banner 广告数据（SSR）。 */
   bannerAd?: { ad: AdSlotItem | null };
+  /** 服务端预取的左右竖栏广告；hasAd 为假时页面宽度与不含竖栏时完全一致。 */
+  rails?: {
+    left?: { ad: AdSlotItem | null };
+    right?: { ad: AdSlotItem | null };
+    hasAd: boolean;
+  };
 }
 
 function CountChip({ value }: { value: number }) {
@@ -172,7 +184,12 @@ export default function ScriptDetailClient({
   initialRatingStats,
   sidebarAd,
   bannerAd,
+  rails,
 }: ScriptDetailClientProps) {
+  // 有竖栏投放时才收窄内容区并让 SideRails 找得到容器；没投放时两者都不加。
+  const { className: railClassName, ...railMarker } = railContainerProps(
+    rails?.hasAd ?? false,
+  );
   const { script } = useScript();
   const scriptState = useScriptState();
   const { user } = useUser();
@@ -191,8 +208,12 @@ export default function ScriptDetailClient({
   const { handleInstallClick, guideModal } = useScriptInstallGuide(); // 未检测到脚本管理器时的二次引导
   // 私有脚本的安装链接必须带令牌：脚本管理器的更新检查不带站点 cookie。
   const isPrivate = script.public === SCRIPT_PUBLIC_PRIVATE;
-  const { data: installToken } = useScriptInstallToken(script.id, isPrivate);
+  const { data: installToken, isLoading: installTokenLoading } =
+    useScriptInstallToken(script.id, isPrivate);
   const token = installToken?.token;
+  // 私有脚本的安装链接没有令牌就是残的。令牌还在路上时按钮必须是 loading + disabled，
+  // 否则用户点出去的是一条注定 401 的安装链接。
+  const installTokenPending = isPrivate && !token;
   const installUrl = useMemo(
     () =>
       withInstallToken(
@@ -811,7 +832,10 @@ export default function ScriptDetailClient({
             title={t('stats.total_installs')}
             value={script.total_install}
             formatter={(v) => formatCompactNumber(Number(v))}
-            valueStyle={{ color: '#1890ff' }}
+            valueStyle={{
+              color: '#1890ff',
+              fontVariantNumeric: 'tabular-nums',
+            }}
           />
         </Col>
         <Col span={8} className="text-center">
@@ -819,7 +843,10 @@ export default function ScriptDetailClient({
             title={t('stats.today_installs')}
             value={script.today_install}
             formatter={(v) => formatCompactNumber(Number(v))}
-            valueStyle={{ color: '#52c41a' }}
+            valueStyle={{
+              color: '#52c41a',
+              fontVariantNumeric: 'tabular-nums',
+            }}
             prefix="+"
           />
         </Col>
@@ -828,7 +855,10 @@ export default function ScriptDetailClient({
             title={t('stats.user_rating')}
             value={ScriptUtils.score(script.score, script.score_num) || '-'}
             precision={1}
-            valueStyle={{ color: '#faad14' }}
+            valueStyle={{
+              color: '#faad14',
+              fontVariantNumeric: 'tabular-nums',
+            }}
           />
         </Col>
       </Row>
@@ -850,7 +880,18 @@ export default function ScriptDetailClient({
           top: '-4px',
         }}
       >
-        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[1fr_336px]">
+        <div
+          {...railMarker}
+          className={`flex flex-col gap-6 lg:grid lg:grid-cols-[1fr_336px] ${railClassName}`}
+        >
+          {rails?.hasAd && (
+            <SideRails
+              leftSlot="script-detail-rail-left"
+              rightSlot="script-detail-rail-right"
+              initialLeft={rails.left}
+              initialRight={rails.right}
+            />
+          )}
           {/* 左·主内容 */}
           <div className="min-w-0">
             <div className="flex flex-col gap-4">
@@ -956,6 +997,8 @@ export default function ScriptDetailClient({
                       className="flex-1 bg-gradient-to-r"
                       href={installUrl}
                       target="_blank"
+                      loading={installTokenLoading}
+                      disabled={installTokenPending}
                       onClick={(e) => handleInstallClick(e, installUrl)}
                     >
                       {installTitle + ' · v' + script.script.version}
@@ -979,6 +1022,8 @@ export default function ScriptDetailClient({
                           size="large"
                           href={preReleaseUrl}
                           target="_blank"
+                          loading={installTokenLoading}
+                          disabled={installTokenPending}
                           onClick={(e) => handleInstallClick(e, preReleaseUrl)}
                           icon={<ExperimentOutlined />}
                           style={{
@@ -1154,6 +1199,8 @@ export default function ScriptDetailClient({
                       className="flex-1 bg-gradient-to-r"
                       href={installUrl}
                       target="_blank"
+                      loading={installTokenLoading}
+                      disabled={installTokenPending}
                       onClick={(e) => handleInstallClick(e, installUrl)}
                     >
                       {installTitle + ' · v' + script.script.version}
@@ -1177,6 +1224,8 @@ export default function ScriptDetailClient({
                           size="large"
                           href={preReleaseUrl}
                           target="_blank"
+                          loading={installTokenLoading}
+                          disabled={installTokenPending}
                           onClick={(e) => handleInstallClick(e, preReleaseUrl)}
                           icon={<ExperimentOutlined />}
                           style={{

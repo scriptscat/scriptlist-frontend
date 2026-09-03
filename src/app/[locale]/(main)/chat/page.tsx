@@ -34,6 +34,11 @@ import {
 import { useTranslations } from 'next-intl';
 import { useMarkdownParser } from '@/components/MarkdownView/useMarkdownParser';
 import { useChatSessionList, useChatMessages } from '@/lib/api/hooks/chat';
+import { useResource } from '@/lib/api/hooks/useResource';
+import {
+  ChatMessagesSkeleton,
+  ChatSidebarSkeleton,
+} from './components/ChatSkeletons';
 import { chatService } from '@/lib/api/services/chat';
 import type { ChatSession as ChatSessionType } from '@/lib/api/services/chat';
 import '@/components/MarkdownView/markdown.css';
@@ -326,6 +331,7 @@ function WelcomeMessage() {
 function ChatSidebar({
   activeId,
   sessions,
+  loading,
   onSelect,
   onToggle,
   onNew,
@@ -333,12 +339,16 @@ function ChatSidebar({
 }: {
   activeId: number | undefined;
   sessions: ChatSessionType[];
+  /** 会话列表首次加载中。此时不能渲染「暂无历史」，那会让用户以为记录没了。 */
+  loading: boolean;
   onSelect: (id: number) => void;
   onToggle: () => void;
   onNew: () => void;
   onDelete: (id: number) => void;
 }) {
   const t = useTranslations('chat');
+  // components.loading.* 由根 layout 注入，不必为骨架新增 chat 命名空间的 key。
+  const loadingT = useTranslations('components.loading');
   const dateLabels = useMemo(
     () => ({
       today: t('date_today'),
@@ -384,6 +394,7 @@ function ChatSidebar({
       </div>
 
       <div className="flex-1 overflow-y-auto chat-sidebar-scroll px-2 py-2">
+        {loading && <ChatSidebarSkeleton label={loadingT('default')} />}
         {groups.map(([group, items]) => (
           <div key={group} className="mb-3">
             <Text
@@ -450,7 +461,7 @@ function ChatSidebar({
             ))}
           </div>
         ))}
-        {sessions.length === 0 && (
+        {!loading && sessions.length === 0 && (
           <div className="text-center py-8">
             <Text type="secondary" className="!text-xs">
               {t('no_history')}
@@ -464,17 +475,23 @@ function ChatSidebar({
 
 export default function ChatPage() {
   const t = useTranslations('chat');
+  const loadingT = useTranslations('components.loading');
   const [activeSessionId, setActiveSessionId] = useState<number | undefined>();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   // Key to force re-mount ChatProvider when switching sessions
   const [chatKeySeed, setChatKeySeed] = useState(0);
 
   // Fetch session list
-  const { data: sessionsData, mutate: mutateSessions } = useChatSessionList();
+  const sessionsSwr = useChatSessionList();
+  const { mutate: mutateSessions } = sessionsSwr;
+  const { data: sessionsData, isInitialLoading: sessionsLoading } =
+    useResource(sessionsSwr);
   const sessions = sessionsData?.list || [];
 
   // Fetch messages for active session
-  const { data: messagesData } = useChatMessages(activeSessionId);
+  const { data: messagesData, isInitialLoading: messagesLoading } = useResource(
+    useChatMessages(activeSessionId),
+  );
 
   // Build initial messages for ChatProvider from loaded history
   const initialMessages = useMemo(() => {
@@ -558,6 +575,7 @@ export default function ChatPage() {
           <ChatSidebar
             activeId={activeSessionId}
             sessions={sessions}
+            loading={sessionsLoading}
             onSelect={handleSelectSession}
             onToggle={() => setSidebarCollapsed(true)}
             onNew={handleNewChat}
@@ -604,7 +622,11 @@ export default function ChatPage() {
                   >
                     {({ messages, scrollRef, bottomRef, isEmpty }) => (
                       <div ref={scrollRef} className="chat-scroll-area flex-1">
-                        {isEmpty ? (
+                        {messagesLoading ? (
+                          // 历史消息还在飞：这里若走 isEmpty 分支会闪出
+                          // WelcomeMessage 的 4 张建议卡片，看起来像对话被清空了。
+                          <ChatMessagesSkeleton label={loadingT('default')} />
+                        ) : isEmpty ? (
                           <WelcomeMessage />
                         ) : (
                           <div

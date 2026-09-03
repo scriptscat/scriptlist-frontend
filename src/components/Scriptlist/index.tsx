@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import type { ReactNode } from 'react';
-import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
+import { Input, Select, Button, Pagination, Space, Card } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
@@ -12,6 +12,7 @@ import {
   isCodeSearchCommand,
 } from '@/lib/utils/search-command';
 import ScriptCard from './ScriptCard';
+import PendingResults from './PendingResults';
 import type {
   ScriptListItem,
   ScriptSearchRequest,
@@ -192,13 +193,13 @@ export default function ScriptList({
       {banner}
 
       {/* 脚本列表 */}
-      <Spin spinning={isPending} tip={t('search.loading')}>
+      <PendingResults pending={isPending} label={t('search.loading')}>
         <Space direction="vertical" size="large" className="w-full">
           {scripts.map((script) => (
             <ScriptCard key={script.id} script={script} />
           ))}
         </Space>
-      </Spin>
+      </PendingResults>
 
       {/* 分页 */}
       <div className="flex justify-center mt-8">

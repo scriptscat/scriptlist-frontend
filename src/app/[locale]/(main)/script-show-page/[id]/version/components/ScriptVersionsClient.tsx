@@ -46,7 +46,12 @@ import {
 } from '@/lib/api/services/scripts/scripts';
 import { Link } from '@/i18n/routing';
 import dynamic from 'next/dynamic';
-const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
+import MarkdownViewLoading from '@/components/MarkdownView/MarkdownViewLoading';
+import VersionListSkeleton from './VersionListSkeleton';
+// 不给 `loading` 的话 fallback 是 `null`，客户端导航时更新说明会塌成 0px。
+const MarkdownView = dynamic(() => import('@/components/MarkdownView'), {
+  loading: () => <MarkdownViewLoading height={48} />,
+});
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
@@ -92,7 +97,10 @@ function VersionChangelog({ changelog }: { changelog: string }) {
   }, [changelog]);
   return (
     <div className="border-l-[3px] border-gray-200 pl-3 dark:border-gray-700">
-      <div ref={ref} className={expanded ? '' : 'line-clamp-2 overflow-hidden'}>
+      <div
+        ref={ref}
+        className={expanded ? '' : 'line-clamp-2 min-h-[3rem] overflow-hidden'}
+      >
         <MarkdownView content={changelog} />
       </div>
       {(overflowing || expanded) && (
@@ -141,10 +149,11 @@ export default function ScriptVersionsClient({
   const router = useRouter();
   const { handleInstallClick, guideModal } = useScriptInstallGuide(); // 未检测到脚本管理器时的二次引导
   // 私有脚本的历史版本安装链接同样需要令牌。
-  const { data: installToken } = useScriptInstallToken(
-    script.id,
-    script.public === SCRIPT_PUBLIC_PRIVATE,
-  );
+  const isPrivate = script.public === SCRIPT_PUBLIC_PRIVATE;
+  const { data: installToken, isLoading: installTokenLoading } =
+    useScriptInstallToken(script.id, isPrivate);
+  // 令牌没到之前那条安装链接是残的：点下去等于发起一次必然失败的安装。
+  const installTokenPending = isPrivate && !installToken?.token;
   const [editingVersion, setEditingVersion] = useState<ScriptVersion | null>(
     null,
   );
@@ -163,6 +172,9 @@ export default function ScriptVersionsClient({
     initialVersionData || { list: [], total: 0 },
   );
   const [isLoading, setIsLoading] = useState(false);
+  // 每次请求领一个序号，只有最后发出的那个有权改状态。
+  // 否则慢的旧响应后到，会把新一页的结果盖回去。
+  const requestSeqRef = React.useRef(0);
   const [error, setError] = useState<Error | null>(
     initialError ? new Error(initialError) : null,
   );
@@ -175,6 +187,7 @@ export default function ScriptVersionsClient({
 
   // 刷新数据的函数
   const mutate = async () => {
+    const seq = ++requestSeqRef.current;
     try {
       setIsLoading(true);
       setError(null);
@@ -182,17 +195,22 @@ export default function ScriptVersionsClient({
         page: currentPage,
         size: pageSize,
       });
+      if (seq !== requestSeqRef.current) return;
       setVersionData(newData);
     } catch (err) {
+      if (seq !== requestSeqRef.current) return;
       setError(err as Error);
     } finally {
-      setIsLoading(false);
+      if (seq === requestSeqRef.current) {
+        setIsLoading(false);
+      }
     }
   };
 
   // 处理翻页
   const handlePageChange = async (page: number, size?: number) => {
     const newPageSize = size || pageSize;
+    const seq = ++requestSeqRef.current;
 
     try {
       setIsLoading(true);
@@ -209,11 +227,15 @@ export default function ScriptVersionsClient({
         page: page,
         size: newPageSize,
       });
+      if (seq !== requestSeqRef.current) return;
       setVersionData(newData);
     } catch (err) {
+      if (seq !== requestSeqRef.current) return;
       setError(err as Error);
     } finally {
-      setIsLoading(false);
+      if (seq === requestSeqRef.current) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -312,23 +334,8 @@ export default function ScriptVersionsClient({
     return null;
   };
 
-  // 处理加载状态
-  if (isLoading) {
-    const loadingContent = (
-      <Card className="shadow-sm !mb-4">
-        <div className="flex justify-center items-center py-12">
-          <Spin size="large" />
-        </div>
-      </Card>
-    );
-    return embedded ? (
-      <div className="flex justify-center items-center py-12">
-        <Spin size="large" />
-      </div>
-    ) : (
-      loadingContent
-    );
-  }
+  // 加载态不再整块顶替组件：标题、统计条和用户刚点下去的分页器必须留在原地，
+  // 只有列表区换成等高的骨架（见下方 `versionList`）。
 
   // 处理错误状态
   if (error) {
@@ -352,8 +359,8 @@ export default function ScriptVersionsClient({
     );
   }
 
-  // 如果没有版本数据，显示空状态
-  if (!versions || versions.length === 0) {
+  // 如果没有版本数据，显示空状态。加载中不走这里 —— 「空」和「正在加载」是两件事。
+  if (!isLoading && (!versions || versions.length === 0)) {
     const emptyContent = (
       <div className="space-y-6">
         <Empty
@@ -409,19 +416,19 @@ export default function ScriptVersionsClient({
       {/* 版本统计信息 */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-800/50">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="font-semibold text-gray-900 dark:text-gray-100">
+          <span className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
             {t('version_count', { count: totalVersions })}
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium tabular-nums text-green-700 dark:bg-green-900/30 dark:text-green-300">
             <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
             {t('release_chip', { count: releaseCount })}
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium tabular-nums text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
             <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
             {t('prerelease_chip', { count: preReleaseCount })}
           </span>
         </div>
-        <span className="text-sm text-gray-500">
+        <span className="text-sm tabular-nums text-gray-500">
           {t('pagination_info', {
             start: (currentPage - 1) * pageSize + 1,
             end: Math.min(currentPage * pageSize, totalVersions),
@@ -431,111 +438,117 @@ export default function ScriptVersionsClient({
       </div>
 
       {/* 版本列表 */}
-      <div className="divide-y divide-gray-100 dark:divide-gray-800">
-        {versions.map((version: ScriptVersion, index: number) => {
-          const globalIndex = (currentPage - 1) * pageSize + index;
-          // 这条链接本来就带 ?version=，withInstallToken 会据此改用 & 拼接。
-          const versionInstallUrl = withInstallToken(
-            `/scripts/code/${script.id}/${encodeURIComponent(
-              script.name,
-            )}.user.js?version=${version.version}`,
-            installToken?.token,
-          );
-          return (
-            <div key={version.id} className="space-y-3 py-5 first:pt-0">
-              {/* 头部：版本号 + 徽标 / 日期 + 管理按钮 */}
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <span className="rounded-md bg-gray-100 px-2.5 py-1 font-mono text-sm font-semibold text-gray-800 dark:bg-gray-800 dark:text-gray-200">
-                    {version.version}
-                  </span>
-                  {getVersionBadge(version, globalIndex)}
+      {isLoading ? (
+        <VersionListSkeleton count={pageSize} />
+      ) : (
+        <div className="divide-y divide-gray-100 dark:divide-gray-800">
+          {versions.map((version: ScriptVersion, index: number) => {
+            const globalIndex = (currentPage - 1) * pageSize + index;
+            // 这条链接本来就带 ?version=，withInstallToken 会据此改用 & 拼接。
+            const versionInstallUrl = withInstallToken(
+              `/scripts/code/${script.id}/${encodeURIComponent(
+                script.name,
+              )}.user.js?version=${version.version}`,
+              installToken?.token,
+            );
+            return (
+              <div key={version.id} className="space-y-3 py-5 first:pt-0">
+                {/* 头部：版本号 + 徽标 / 日期 + 管理按钮 */}
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <span className="rounded-md bg-gray-100 px-2.5 py-1 font-mono text-sm font-semibold text-gray-800 dark:bg-gray-800 dark:text-gray-200">
+                      {version.version}
+                    </span>
+                    {getVersionBadge(version, globalIndex)}
+                  </div>
+                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                    <CalendarOutlined />
+                    <span className="text-xs">
+                      {semDateTime(version.createtime)}
+                    </span>
+                    <Tooltip title={t('edit_button')}>
+                      <Button
+                        type="text"
+                        size="small"
+                        icon={<EditOutlined />}
+                        onClick={() => handleEdit(version)}
+                        className="!text-gray-500"
+                      />
+                    </Tooltip>
+                    <Popconfirm
+                      title={t('confirm_delete_title')}
+                      description={t('confirm_delete_description')}
+                      onConfirm={() => handleDelete(version)}
+                      okText={t('confirm_delete_ok')}
+                      cancelText={t('confirm_delete_cancel')}
+                      okType="danger"
+                    >
+                      <Button
+                        type="text"
+                        size="small"
+                        danger
+                        icon={<DeleteOutlined />}
+                        aria-label={t('delete_button')}
+                      />
+                    </Popconfirm>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <CalendarOutlined />
-                  <span className="text-xs">
-                    {semDateTime(version.createtime)}
-                  </span>
-                  <Tooltip title={t('edit_button')}>
+
+                {/* changelog（可折叠）；自动同步的版本显示本地化提示 */}
+                {version.changelog === AUTO_SYNC_CHANGELOG ? (
+                  <AutoSyncNote />
+                ) : (
+                  version.changelog && (
+                    <VersionChangelog changelog={version.changelog} />
+                  )
+                )}
+
+                {/* 操作：安装/查看代码 左，对比 图标 右 */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Button
-                      type="text"
+                      type="primary"
                       size="small"
-                      icon={<EditOutlined />}
-                      onClick={() => handleEdit(version)}
-                      className="!text-gray-500"
+                      icon={<DownloadOutlined />}
+                      href={versionInstallUrl}
+                      target="_blank"
+                      loading={installTokenLoading}
+                      disabled={installTokenPending}
+                      onClick={(e) => handleInstallClick(e, versionInstallUrl)}
+                    >
+                      {t('install_button')}
+                    </Button>
+                    <Link
+                      href={`/script-show-page/${script.id}/code?version=${version.version}`}
+                    >
+                      <Button size="small" icon={<CodeOutlined />}>
+                        {t('view_code_button')}
+                      </Button>
+                    </Link>
+                  </div>
+                  <Tooltip title={t('compare_button')}>
+                    <Button
+                      size="small"
+                      color={
+                        selectedVersions.includes(version.version)
+                          ? 'primary'
+                          : 'default'
+                      }
+                      variant="outlined"
+                      icon={<DiffOutlined />}
+                      onClick={() => handleVersionSelect(version)}
+                      disabled={
+                        selectedVersions.length >= 2 &&
+                        !selectedVersions.includes(version.version)
+                      }
                     />
                   </Tooltip>
-                  <Popconfirm
-                    title={t('confirm_delete_title')}
-                    description={t('confirm_delete_description')}
-                    onConfirm={() => handleDelete(version)}
-                    okText={t('confirm_delete_ok')}
-                    cancelText={t('confirm_delete_cancel')}
-                    okType="danger"
-                  >
-                    <Button
-                      type="text"
-                      size="small"
-                      danger
-                      icon={<DeleteOutlined />}
-                      aria-label={t('delete_button')}
-                    />
-                  </Popconfirm>
                 </div>
               </div>
-
-              {/* changelog（可折叠）；自动同步的版本显示本地化提示 */}
-              {version.changelog === AUTO_SYNC_CHANGELOG ? (
-                <AutoSyncNote />
-              ) : (
-                version.changelog && (
-                  <VersionChangelog changelog={version.changelog} />
-                )
-              )}
-
-              {/* 操作：安装/查看代码 左，对比 图标 右 */}
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    type="primary"
-                    size="small"
-                    icon={<DownloadOutlined />}
-                    href={versionInstallUrl}
-                    target="_blank"
-                    onClick={(e) => handleInstallClick(e, versionInstallUrl)}
-                  >
-                    {t('install_button')}
-                  </Button>
-                  <Link
-                    href={`/script-show-page/${script.id}/code?version=${version.version}`}
-                  >
-                    <Button size="small" icon={<CodeOutlined />}>
-                      {t('view_code_button')}
-                    </Button>
-                  </Link>
-                </div>
-                <Tooltip title={t('compare_button')}>
-                  <Button
-                    size="small"
-                    color={
-                      selectedVersions.includes(version.version)
-                        ? 'primary'
-                        : 'default'
-                    }
-                    variant="outlined"
-                    icon={<DiffOutlined />}
-                    onClick={() => handleVersionSelect(version)}
-                    disabled={
-                      selectedVersions.length >= 2 &&
-                      !selectedVersions.includes(version.version)
-                    }
-                  />
-                </Tooltip>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* 分页组件 */}
       {totalVersions > pageSize && (
@@ -546,6 +559,7 @@ export default function ScriptVersionsClient({
             pageSize={pageSize}
             onChange={handlePageChange}
             onShowSizeChange={handlePageChange}
+            disabled={isLoading}
             showSizeChanger
             showQuickJumper
             showTotal={(total, range) =>

@@ -33,6 +33,10 @@ export const AD_SLOT_META: readonly AdSlotMeta[] = [
   { key: 'search-results-banner', variant: 'banner', size: '970×90' },
   { key: 'script-detail-sidebar', variant: 'card', size: '300×250' },
   { key: 'script-detail-banner', variant: 'banner', size: '970×90' },
+  { key: 'search-results-rail-left', variant: 'rail', size: '160×600' },
+  { key: 'search-results-rail-right', variant: 'rail', size: '160×600' },
+  { key: 'script-detail-rail-left', variant: 'rail', size: '160×600' },
+  { key: 'script-detail-rail-right', variant: 'rail', size: '160×600' },
 ] as const;
 
 export const AD_SLOT_KEYS: readonly string[] = AD_SLOT_META.map((s) => s.key);

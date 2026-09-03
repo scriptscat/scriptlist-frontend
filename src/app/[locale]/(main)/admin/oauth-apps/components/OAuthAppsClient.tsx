@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Form,
@@ -21,7 +21,9 @@ import type {
   OAuthAppItem,
   CreateOAuthAppResponse,
 } from '@/lib/api/services/admin';
+import { useAdminOAuthApps } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
+import { useTableStateLocale } from '../../components/tableState';
 import type { ColumnsType } from 'antd/es/table';
 
 const { Paragraph } = Typography;
@@ -47,10 +49,7 @@ function useRedirectUriValidator(t: ReturnType<typeof useTranslations>) {
 export default function OAuthAppsClient() {
   const t = useTranslations('admin.oauth_apps');
   const validateRedirectUri = useRedirectUriValidator(t);
-  const [data, setData] = useState<OAuthAppItem[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<OAuthAppItem | null>(null);
@@ -60,27 +59,28 @@ export default function OAuthAppsClient() {
   const [createForm] = Form.useForm();
   const [editForm] = Form.useForm();
 
-  const fetchData = useCallback(
-    async (p: number = page) => {
-      setLoading(true);
-      try {
-        const resp = await adminService.listOAuthApps(p);
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) {
-          message.error(err.msg);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [page],
-  );
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh,
+  } = useAdminOAuthApps({ page });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: refresh,
+  });
 
-  useEffect(() => {
-    fetchData(page);
-  }, [page]);
+  // 创建成功后回到第一页；已经在第一页时 setPage 不会触发重新拉取，显式刷新一次。
+  const fetchData = (p?: number) => {
+    if (p !== undefined && p !== page) {
+      setPage(p);
+      return;
+    }
+    refresh();
+  };
 
   const handleCreate = async (values: {
     name: string;
@@ -242,7 +242,8 @@ export default function OAuthAppsClient() {
         columns={columns}
         dataSource={data}
         rowKey="id"
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         pagination={{
           current: page,
           total,

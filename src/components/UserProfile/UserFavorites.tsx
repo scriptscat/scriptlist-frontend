@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Card,
@@ -25,6 +25,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import ScriptCard from '@/components/Scriptlist/ScriptCard';
+import PendingResults from '@/components/Scriptlist/PendingResults';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
 import {
   folderDisplayDescription,
@@ -51,9 +52,21 @@ export default function UserFavorites({
 }: UserFavoritesProps) {
   const t = useTranslations('user.favorites');
   const commonT = useTranslations('common');
+  // components.loading.* 由根 layout 提供，任何路由下都可用。
+  const loadingT = useTranslations('components.loading');
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
+  const [isPending, startTransition] = useTransition();
+  // 页码要立刻跟着点击走：服务端的 currentPage 要等导航结束才更新，
+  // 只靠它的话用户点了第 2 页，页码却还停在第 1 页。
+  const [page, setPage] = useState(currentPage);
+  const [syncedPage, setSyncedPage] = useState(currentPage);
+  if (syncedPage !== currentPage) {
+    // 服务端给了新页码（前进/后退、刷新），以它为准。
+    setSyncedPage(currentPage);
+    setPage(currentPage);
+  }
 
   const handleUnfavorite = async (scriptId: number) => {
     // 避免重复操作
@@ -91,10 +104,15 @@ export default function UserFavorites({
     message.info(t('create_folder_coming_soon'));
   };
 
-  const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', page.toString());
-    router.push(`?${params.toString()}`);
+  const handlePageChange = (nextPage: number) => {
+    setPage(nextPage);
+    // 包进 transition：isPending 会撑到新页面渲染完成，
+    // 期间列表变暗、分页禁用，用户不会以为「点了没反应」而重复点击。
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('page', nextPage.toString());
+      router.push(`?${params.toString()}`);
+    });
   };
 
   // 渲染收藏夹卡片
@@ -192,7 +210,11 @@ export default function UserFavorites({
   }
 
   return (
-    <div className="space-y-6">
+    <PendingResults
+      pending={isPending}
+      label={loadingT('default')}
+      className="space-y-6"
+    >
       {/* 收藏夹展示区域 */}
       {folders.length > 0 && (
         <>
@@ -248,12 +270,13 @@ export default function UserFavorites({
         {total > 20 && (
           <div className="flex justify-center pt-6">
             <Pagination
-              current={currentPage}
+              current={page}
               total={total}
               pageSize={20}
               onChange={handlePageChange}
               showSizeChanger={false}
               showQuickJumper
+              disabled={isPending}
               showTotal={(total, range) =>
                 t('pagination_total', { start: range[0], end: range[1], total })
               }
@@ -261,6 +284,6 @@ export default function UserFavorites({
           </div>
         )}
       </div>
-    </div>
+    </PendingResults>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { Menu, Space, theme } from 'antd';
 import {
   BookOutlined,
@@ -30,36 +30,26 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
   const scriptState = useScriptState();
   const { token } = theme.useToken();
   const t = useTranslations('script.navigation');
-  const { locale, id } = params;
+  const { id } = params;
 
   const menuItems = useMemo(() => {
     const items = [
       {
         key: 'overview',
         icon: <BookOutlined />,
-        label: (
-          <Link href={`/${locale}/script-show-page/${id}`}>
-            {t('overview')}
-          </Link>
-        ),
+        label: <Link href={`/script-show-page/${id}`}>{t('overview')}</Link>,
       },
       {
         key: 'code',
         icon: <CodeOutlined />,
-        label: (
-          <Link href={`/${locale}/script-show-page/${id}/code`}>
-            {t('code')}
-          </Link>
-        ),
+        label: <Link href={`/script-show-page/${id}/code`}>{t('code')}</Link>,
       },
       {
         key: 'issue',
         icon: <BugOutlined />,
         label: (
           <Space>
-            <Link href={`/${locale}/script-show-page/${id}/issue`}>
-              {t('issue')}
-            </Link>
+            <Link href={`/script-show-page/${id}/issue`}>{t('issue')}</Link>
             {scriptState?.issue_count > 0 && (
               <span className="inline-block px-2 py-0.5 text-xs font-medium leading-4 bg-gray-300 text-white dark:text-gray-200 dark:bg-gray-600 rounded-full">
                 {scriptState?.issue_count}
@@ -72,18 +62,14 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
         key: 'comment',
         icon: <StarOutlined />,
         label: (
-          <Link href={`/${locale}/script-show-page/${id}/comment`}>
-            {t('comment')}
-          </Link>
+          <Link href={`/script-show-page/${id}/comment`}>{t('comment')}</Link>
         ),
       },
       {
         key: 'version',
         icon: <HistoryOutlined />,
         label: (
-          <Link href={`/${locale}/script-show-page/${id}/version`}>
-            {t('version')}
-          </Link>
+          <Link href={`/script-show-page/${id}/version`}>{t('version')}</Link>
         ),
       },
     ];
@@ -96,9 +82,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
         icon: <AlertOutlined />,
         label: (
           <Space>
-            <Link href={`/${locale}/script-show-page/${id}/report`}>
-              {t('report')}
-            </Link>
+            <Link href={`/script-show-page/${id}/report`}>{t('report')}</Link>
             <span className="inline-block px-2 py-0.5 text-xs font-medium leading-4 bg-red-500 text-white rounded-full">
               {scriptState.report_count}
             </span>
@@ -118,16 +102,14 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
           key: 'update',
           icon: <EditOutlined />,
           label: (
-            <Link href={`/${locale}/script-show-page/${id}/update`}>
-              {t('update')}
-            </Link>
+            <Link href={`/script-show-page/${id}/update`}>{t('update')}</Link>
           ),
         },
         {
           key: 'statistic',
           icon: <BarChartOutlined />,
           label: (
-            <Link href={`/${locale}/script-show-page/${id}/statistic`}>
+            <Link href={`/script-show-page/${id}/statistic`}>
               {t('statistic')}
             </Link>
           ),
@@ -136,9 +118,7 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
           key: 'manage',
           icon: <SettingOutlined />,
           label: (
-            <Link href={`/${locale}/script-show-page/${id}/manage`}>
-              {t('manage')}
-            </Link>
+            <Link href={`/script-show-page/${id}/manage`}>{t('manage')}</Link>
           ),
         },
       );
@@ -146,7 +126,6 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
 
     return items;
   }, [
-    locale,
     id,
     t,
     user.user,

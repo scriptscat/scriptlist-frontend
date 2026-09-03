@@ -31,7 +31,12 @@ export default function SettingsPage() {
   const router = useRouter();
   const { user } = useUser();
   const [modal, contextHolder] = Modal.useModal();
-  const [loading, setLoading] = useState(false);
+  // 五个互不相干的动作各自持有 pending：共用一个 loading 会让「切换可见性」
+  // 顺带把归档、删除按钮也转起来。
+  const [savingBasicInfo, setSavingBasicInfo] = useState(false);
+  const [updatingPublic, setUpdatingPublic] = useState(false);
+  const [updatingUnwell, setUpdatingUnwell] = useState(false);
+  const [archiving, setArchiving] = useState(false);
   const t = useTranslations('script.manage.settings');
 
   // 管理员删除对话框状态
@@ -82,7 +87,7 @@ export default function SettingsPage() {
       return;
     }
 
-    setLoading(true);
+    setSavingBasicInfo(true);
     try {
       await scriptService.updateLibInfo(script.script.id.toString(), {
         name: name.trim(),
@@ -97,12 +102,12 @@ export default function SettingsPage() {
         message.error(t('library_info.save_failed'));
       }
     } finally {
-      setLoading(false);
+      setSavingBasicInfo(false);
     }
   };
 
   const handlePublicChange = async (value: 1 | 2 | 3) => {
-    setLoading(true);
+    setUpdatingPublic(true);
     try {
       await scriptService.updatePublic(script.script.id, value);
       setIsPublic(value);
@@ -115,12 +120,12 @@ export default function SettingsPage() {
         message.error(t('public_settings.update_failed'));
       }
     } finally {
-      setLoading(false);
+      setUpdatingPublic(false);
     }
   };
 
   const handleUnwellChange = async (checked: boolean) => {
-    setLoading(true);
+    setUpdatingUnwell(true);
     try {
       const unwellValue = checked ? 1 : 2;
       await scriptService.updateUnwell(script.script.id, unwellValue);
@@ -134,7 +139,7 @@ export default function SettingsPage() {
         message.error(t('public_settings.update_failed'));
       }
     } finally {
-      setLoading(false);
+      setUpdatingUnwell(false);
     }
   };
 
@@ -152,7 +157,7 @@ export default function SettingsPage() {
       cancelText: t('confirmations.cancel_button'),
       maskClosable: true,
       onOk: async () => {
-        setLoading(true);
+        setArchiving(true);
         try {
           await scriptService.archiveScript(script.script.id, isArchiving);
           setArchive(isArchiving ? 1 : 2);
@@ -169,7 +174,7 @@ export default function SettingsPage() {
             message.error(t('messages.operation_failed'));
           }
         } finally {
-          setLoading(false);
+          setArchiving(false);
         }
       },
     });
@@ -177,12 +182,13 @@ export default function SettingsPage() {
 
   const doDelete = async (reason?: string) => {
     setDeleteLoading(true);
-    setLoading(true);
     try {
       await scriptService.deleteScript(script.script.id, reason || undefined);
       message.success(t('messages.delete_success'));
       setDeleteModalOpen(false);
+      // 跳转前不收起 loading，避免删除按钮先复原、用户以为没删掉又点一次
       router.push('/');
+      return;
     } catch (error) {
       console.error('Delete script failed:', error);
       if (error instanceof APIError) {
@@ -190,9 +196,7 @@ export default function SettingsPage() {
       } else {
         message.error(t('messages.delete_failed'));
       }
-    } finally {
       setDeleteLoading(false);
-      setLoading(false);
     }
   };
 
@@ -264,7 +268,7 @@ export default function SettingsPage() {
             <Form.Item>
               <Button
                 type="primary"
-                loading={loading}
+                loading={savingBasicInfo}
                 onClick={handleSaveBasicInfo}
               >
                 {t('library_info.save_button')}
@@ -296,6 +300,9 @@ export default function SettingsPage() {
             </Text>
             <Radio.Group
               value={isPublic}
+              // 请求在途时不锁住的话，连点会打出并发的 updatePublic，
+              // 而 setIsPublic 只在成功后执行，单选按钮会来回跳。
+              disabled={updatingPublic}
               onChange={(e) => handlePublicChange(e.target.value)}
               options={[
                 { value: 1, label: t('public_settings.public_option') },
@@ -315,6 +322,7 @@ export default function SettingsPage() {
             </Title>
             <Checkbox
               checked={unwell === 1}
+              disabled={updatingUnwell}
               onChange={(e) => handleUnwellChange(e.target.checked)}
             >
               {t('public_settings.unwell_checkbox')}
@@ -349,7 +357,7 @@ export default function SettingsPage() {
                     ? '!bg-orange-400 !border-orange-400 hover:!bg-orange-300 hover:!border-orange-300 !text-white'
                     : '!bg-green-500 !border-green-500 hover:!bg-green-400 hover:!border-green-400'
                 }
-                loading={loading}
+                loading={archiving}
                 onClick={handleArchive}
                 size="large"
               >
@@ -375,7 +383,7 @@ export default function SettingsPage() {
               type="primary"
               danger
               icon={<DeleteOutlined />}
-              loading={loading}
+              loading={deleteLoading}
               onClick={handleDelete}
               size="large"
             >

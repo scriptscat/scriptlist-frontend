@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Input, Select, Button, Pagination, Space, Card, Spin } from 'antd';
+import { Input, Select, Button, Pagination, Space, Card } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { useUser } from '@/contexts/UserContext';
 import ScriptCard from '../Scriptlist/ScriptCard';
+import PendingResults from '../Scriptlist/PendingResults';
 import { canViewDeletedScripts } from './script-status-policy';
 import type {
   ScriptListItem,
@@ -179,13 +180,13 @@ export default function UserScriptList({
       </Card>
 
       {/* 脚本列表 */}
-      <Spin spinning={isPending} tip={userT('loading')}>
+      <PendingResults pending={isPending} label={userT('loading')}>
         <Space direction="vertical" size="large" className="w-full">
           {scripts.map((script) => (
             <ScriptCard key={script.id} script={script} />
           ))}
         </Space>
-      </Spin>
+      </PendingResults>
 
       {/* 分页 */}
       <div className="flex justify-center mt-8">

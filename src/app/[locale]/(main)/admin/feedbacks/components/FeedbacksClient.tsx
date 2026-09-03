@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -16,49 +16,34 @@ import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
 import type { FeedbackItem } from '@/lib/api/services/admin';
+import { useAdminFeedbacks } from '@/lib/api/hooks/admin';
 import { copyToClipboard } from '@/lib/utils/utils';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
+import { useTableStateLocale } from '../../components/tableState';
 
 const REASON_CODES = ['bug', 'unused', 'feature', 'better', 'other'] as const;
 
 export default function FeedbacksClient() {
   const t = useTranslations('admin.feedbacks');
-  const [data, setData] = useState<FeedbackItem[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [reason, setReason] = useState('');
   const [hideEmpty, setHideEmpty] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const fetchData = useCallback(
-    async (p: number = page) => {
-      setLoading(true);
-      try {
-        const resp = await adminService.listFeedbacks(
-          p,
-          20,
-          keyword || undefined,
-          reason || undefined,
-          hideEmpty || undefined,
-        );
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) {
-          message.error(err.msg);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [page, keyword, reason, hideEmpty],
-  );
-
-  useEffect(() => {
-    fetchData(page);
-  }, [page, keyword, reason, hideEmpty]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh: fetchData,
+  } = useAdminFeedbacks({ page, keyword, reason, hideEmpty });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: fetchData,
+  });
 
   const handleDelete = async (id: number) => {
     try {
@@ -202,7 +187,8 @@ export default function FeedbacksClient() {
         columns={columns}
         dataSource={data}
         rowKey="id"
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         pagination={{
           current: page,
           total,

@@ -13,6 +13,7 @@ import {
 import { StarFilled, UserOutlined, EditOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
+import LoadingBlock from '@/components/ui/LoadingBlock';
 import type { UserRatingFormProps } from './types';
 import { getRatingText } from './utils';
 import { useSemDateTime } from '@/lib/utils/semdate';
@@ -26,10 +27,12 @@ export default function UserRatingForm({
   submitting,
   existingRating,
   onUpdateRating,
+  loadingExistingRating = false,
 }: UserRatingFormProps) {
   const { user } = useUser();
   const t = useTranslations('script.rating.user_form');
   const tRating = useTranslations('script.rating');
+  const tLoading = useTranslations('components.loading');
   const tRatingText = useTranslations('script.rating.text');
   const [userRating, setUserRating] = useState<number>(
     existingRating ? existingRating.score / 10 : 0,
@@ -40,6 +43,18 @@ export default function UserRatingForm({
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [expanded, setExpanded] = useState(false);
   const semDateTime = useSemDateTime();
+
+  // 表单状态只在挂载时取过一次初值，而 `existingRating` 是异步到达的：
+  // 等它到了再点「编辑」，看到的会是评分 0 / 空正文。数据变了就同步一次，
+  // 但正在编辑 / 已经展开新建表单时不能覆盖用户已经输入的内容。
+  // 用 render 期间比对的写法（React「You Might Not Need an Effect」的既定做法），
+  // 放进 effect 会多一帧旧值，并触发 react-hooks/set-state-in-effect。
+  const [syncedRating, setSyncedRating] = useState(existingRating);
+  if (existingRating !== syncedRating && !isEditing && !expanded) {
+    setSyncedRating(existingRating);
+    setUserRating(existingRating ? existingRating.score / 10 : 0);
+    setUserComment(existingRating?.message ?? '');
+  }
 
   const handleSubmit = async () => {
     if (!user) {
@@ -70,6 +85,9 @@ export default function UserRatingForm({
   };
 
   const handleEdit = () => {
+    // 进编辑态时把当前评价灌回表单，否则编辑框里是初值（0 / 空）。
+    setUserRating(existingRating ? existingRating.score / 10 : 0);
+    setUserComment(existingRating?.message ?? '');
     setIsEditing(true);
   };
 
@@ -116,6 +134,12 @@ export default function UserRatingForm({
         </div>
       </Card>
     );
+  }
+
+  // 「我的评分」还没回来时，先占住位置。直接往下走会先画出收起态的评分入口，
+  // 数据到了再换成评价卡片，用户看到的是连续两次跳动。
+  if (loadingExistingRating && !existingRating) {
+    return <LoadingBlock height={120} label={tLoading('default')} />;
   }
 
   // 如果存在已有评分且不在编辑模式，显示已有评分

@@ -25,7 +25,7 @@ class FakeResizeObserver {
 /** 造一个内容容器并固定它的实测位置，模拟某个视口宽度下的留白。 */
 function mountContent(left: number, right: number) {
   const el = document.createElement('div');
-  el.setAttribute('data-search-content', '');
+  el.setAttribute('data-rail-content', '');
   el.getBoundingClientRect = () =>
     ({
       left,
@@ -61,7 +61,9 @@ describe('SideRails 布局', () => {
   it('每侧留白 >= 200px 时投放，且按原尺寸摆在内容两侧', () => {
     // 1600px 视口、内容区宽 1200 → 每侧留白 200
     mountContent(200, 1400);
-    render(<SideRails />);
+    render(
+      <SideRails leftSlot="search-rail-left" rightSlot="search-rail-right" />,
+    );
 
     const [leftRail, rightRail] = rails();
     expect(leftRail).toBeTruthy();
@@ -73,7 +75,9 @@ describe('SideRails 布局', () => {
 
   it('预留高度含披露行，广告单元 600px 不被挤出预留区', () => {
     mountContent(200, 1400);
-    render(<SideRails />);
+    render(
+      <SideRails leftSlot="search-rail-left" rightSlot="search-rail-right" />,
+    );
 
     const blockHeight = RAIL_HEIGHT + RAIL_DISCLOSURE_HEIGHT;
     const [leftRail] = rails();
@@ -89,8 +93,52 @@ describe('SideRails 布局', () => {
   it('留白不足以完整容纳广告时整体隐藏', () => {
     // 每侧留白 190 < 24 + 16 + 160
     mountContent(190, 1410);
-    render(<SideRails />);
+    render(
+      <SideRails leftSlot="search-rail-left" rightSlot="search-rail-right" />,
+    );
 
     expect(rails()).toHaveLength(0);
+  });
+});
+
+describe('SideRails 广告位可配置', () => {
+  it('左右竖栏渲染传入的广告位，而不是写死搜索浏览页那两个', () => {
+    mountContent(200, 1400);
+    render(
+      <SideRails
+        leftSlot="script-detail-rail-left"
+        rightSlot="script-detail-rail-right"
+      />,
+    );
+
+    const slots = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-testid="rail-ad"]'),
+    ).map((el) => el.dataset.slot);
+    expect(slots).toEqual([
+      'script-detail-rail-left',
+      'script-detail-rail-right',
+    ]);
+  });
+
+  it('按通用容器标记定位，不再依赖 data-search-content', () => {
+    const el = document.createElement('div');
+    el.setAttribute('data-search-content', '');
+    el.getBoundingClientRect = () =>
+      ({
+        left: 200,
+        right: 1400,
+        top: 0,
+        bottom: 0,
+        width: 1200,
+        height: 0,
+      }) as DOMRect;
+    document.body.appendChild(el);
+
+    render(
+      <SideRails leftSlot="search-rail-left" rightSlot="search-rail-right" />,
+    );
+
+    // 只有旧标记、没有 data-rail-content 时不应该摆出竖栏。
+    expect(document.querySelectorAll('[data-testid="rail-ad"]').length).toBe(0);
   });
 });

@@ -1,13 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { message, Select, Table, Tag } from 'antd';
+import { useState } from 'react';
+import { Select, Table, Tag } from 'antd';
 import { useTranslations } from 'next-intl';
-import { adminService } from '@/lib/api/services/admin';
 import type { AdminReportItem } from '@/lib/api/services/admin';
-import { APIError } from '@/types/api';
+import { useAdminReports } from '@/lib/api/hooks/admin';
 import type { ColumnsType } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
+import { useTableStateLocale } from '../../components/tableState';
 
 const REASON_COLORS: Record<string, string> = {
   malware: 'red',
@@ -20,33 +20,22 @@ const REASON_COLORS: Record<string, string> = {
 export default function ReportsClient() {
   const t = useTranslations('admin.reports');
   const tReport = useTranslations('script.report');
-  const [data, setData] = useState<AdminReportItem[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<number | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
 
-  const fetchData = useCallback(
-    async (p: number = page, s: number | undefined = status) => {
-      setLoading(true);
-      try {
-        const resp = await adminService.listReports(p, 20, s);
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) {
-          message.error(err.msg);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [page, status],
-  );
-
-  useEffect(() => {
-    fetchData(page, status);
-  }, [page, status]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh,
+  } = useAdminReports({ page, status });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: refresh,
+  });
 
   const handleStatusChange = (value: number | undefined) => {
     setStatus(value);
@@ -145,7 +134,8 @@ export default function ReportsClient() {
         columns={columns}
         dataSource={data}
         rowKey="id"
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         pagination={{
           current: page,
           total,

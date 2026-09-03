@@ -90,6 +90,7 @@
       "type_adsense": "AdSense",
       "stats_adsense_placeholder": "—",
       "stats_adsense_note": "Lượt hiển thị / lượt nhấp do Google thống kê",
+      "stats_multi_slot_note": "Tổng của {count} vị trí",
       "field_type": "Loại quảng cáo",
       "field_slot": "Vị trí quảng cáo",
       "field_title": "Tiêu đề",
@@ -147,11 +148,11 @@
         },
         "search-rail-left": {
           "name": "Cột trái trang tìm kiếm",
-          "position": "Chế độ duyệt tìm kiếm, lề trái của nội dung trung tâm; chỉ với màn hình ≥1650px"
+          "position": "Chế độ duyệt trang tìm kiếm, lề trái vùng nội dung; khi có quảng cáo, nội dung thu hẹp để nhường chỗ, không hiển thị khi lề quá hẹp"
         },
         "search-rail-right": {
           "name": "Cột phải trang tìm kiếm",
-          "position": "Chế độ duyệt tìm kiếm, lề phải của nội dung trung tâm; chỉ với màn hình ≥1650px"
+          "position": "Chế độ duyệt trang tìm kiếm, lề phải vùng nội dung; khi có quảng cáo, nội dung thu hẹp để nhường chỗ, không hiển thị khi lề quá hẹp"
         },
         "search-sidebar": {
           "name": "Thanh bên trang tìm kiếm",
@@ -168,7 +169,35 @@
         "script-detail-banner": {
           "name": "Băng-rôn trang chi tiết",
           "position": "Cột nội dung chính của trang chi tiết tập lệnh, giữa thẻ thông tin và các tab nội dung; toàn chiều rộng, mọi điểm ngắt"
+        },
+        "search-results-rail-left": {
+          "name": "Cột dọc trái trang kết quả",
+          "position": "Lề trái vùng nội dung trang kết quả tìm kiếm; khi có quảng cáo, nội dung thu hẹp để nhường chỗ, không hiển thị khi lề quá hẹp"
+        },
+        "search-results-rail-right": {
+          "name": "Cột dọc phải trang kết quả",
+          "position": "Lề phải vùng nội dung trang kết quả tìm kiếm, nằm cạnh thẻ ở thanh bên; không hiển thị khi lề quá hẹp"
+        },
+        "script-detail-rail-left": {
+          "name": "Cột dọc trái trang chi tiết",
+          "position": "Lề trái vùng nội dung trang chi tiết script; khi có quảng cáo, nội dung thu hẹp để nhường chỗ, không hiển thị khi lề quá hẹp"
+        },
+        "script-detail-rail-right": {
+          "name": "Cột dọc phải trang chi tiết",
+          "position": "Lề phải vùng nội dung trang chi tiết script, nằm cạnh thanh bên sticky; không hiển thị khi lề quá hẹp"
         }
+      },
+      "slot_required": "Hãy chọn ít nhất một vị trí quảng cáo",
+      "slot_placeholder": "Có thể chọn nhiều vị trí",
+      "slot_selected_count": "Đã chọn {count} vị trí quảng cáo",
+      "slot_count_summary": "{count} vị trí · {sizes}",
+      "slot_mixed_title": "Các vị trí đã chọn thuộc {count} định dạng; một mẫu quảng cáo không thể vừa tất cả",
+      "slot_mixed_desc": "Ảnh sẽ được co giãn và để lề ở vị trí không khớp; mục AdSense dùng chung một ID đơn vị quảng cáo nên trộn định dạng sẽ giảm rõ rệt tỉ lệ lấp đầy. Vẫn có thể lưu.",
+      "slot_unknown": "Vị trí không xác định: {keys}",
+      "slot_variant": {
+        "rail": "Dọc",
+        "banner": "Băng rôn",
+        "card": "Thẻ"
       }
     },
     "ai_review": {
@@ -761,6 +790,14 @@
     "default_favorite_folder_description": "Đây là bộ sưu tập mặc định của bạn"
   },
   "components": {
+    "loading": {
+      "default": "Đang tải…",
+      "code": "Đang tải trình soạn thảo mã…",
+      "chart": "Đang tải biểu đồ…",
+      "failed": "Tải thất bại",
+      "retry": "Thử lại",
+      "redirecting": "Đang chuyển hướng…"
+    },
     "markdown": {
       "note": "Lưu ý",
       "tip": "Mẹo",
@@ -1649,6 +1686,7 @@
         "stats": {
           "expired": "Đã hết hạn:",
           "groups": "Nhóm người dùng:",
+          "page_scope_note": "(Người dùng / nhóm / đang chờ / đã hết hạn chỉ được tính cho trang hiện tại)",
           "pending": "Chờ xác nhận:",
           "total": "Tổng số:",
           "users": "Người dùng:"

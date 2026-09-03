@@ -705,7 +705,8 @@ function route(
   if (pathname === '/advertise/admin')
     return list({
       id: 1,
-      slot_key: 'home_sidebar',
+      // 多值：管理端列表要渲染 Tag 列表 + 「N 个位」摘要，单值走不到那条分支。
+      slot_keys: 'home-banner,search-sidebar',
       title: 'E2E ad',
       languages: 'zh-CN,en',
       image_url_light: '',

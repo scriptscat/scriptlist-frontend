@@ -24,6 +24,13 @@ export interface RatingOverviewProps {
 export interface UserRatingFormProps {
   onSubmitRating: (rating: number, comment: string) => Promise<void>;
   submitting: boolean;
+  /**
+   * 「我的评分」还在请求中。
+   *
+   * 不区分这个状态的话，已经评过分的用户会先看到「给这个脚本评分」的收起态，
+   * 再被替换成自己的评价卡片 —— 两次跳动、三种高度。
+   */
+  loadingExistingRating?: boolean;
   existingRating?: {
     id: number;
     score: number;

@@ -1,17 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  Button,
-  Card,
-  Form,
-  Input,
-  message,
-  Popconfirm,
-  Progress,
-  Spin,
-} from 'antd';
+import { Button, Card, Form, Input, message, Popconfirm, Progress } from 'antd';
 import { useTranslations } from 'next-intl';
+import { LoadingBlock } from '@/components/ui/LoadingBlock';
 import { adminService } from '@/lib/api/services/admin';
 import { scriptService } from '@/lib/api/services/scripts';
 import type {
@@ -22,6 +14,7 @@ import { APIError } from '@/types/api';
 
 export default function SystemConfigClient() {
   const t = useTranslations('admin.system_config');
+  const tLoading = useTranslations('components.loading');
   const [initialLoading, setInitialLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [configs, setConfigs] = useState<Record<string, string>>({});
@@ -154,10 +147,13 @@ export default function SystemConfigClient() {
   };
 
   if (initialLoading) {
+    // 整页只有一份配置表单，形状未知；用等高的占位块撑住，配置到达时页面高度不跳。
     return (
-      <div className="flex justify-center py-12">
-        <Spin size="large" />
-      </div>
+      <LoadingBlock
+        height={600}
+        variant="spinner"
+        label={tLoading('default')}
+      />
     );
   }
 

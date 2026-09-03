@@ -1,18 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import {
-  Button,
-  Card,
-  Descriptions,
-  message,
-  Skeleton,
-  Space,
-  Tag,
-} from 'antd';
+import { Button, Card, Descriptions, Empty, message, Space, Tag } from 'antd';
 import { useTranslations } from 'next-intl';
+import { usePairDetail } from '@/lib/api/hooks/similarity';
 import { similarityService } from '@/lib/api/services/similarity';
-import type { PairDetail } from '@/lib/api/services/similarity';
+import { ListSkeleton } from '@/components/ui/ListSkeleton';
+import { LoadingBlock } from '@/components/ui/LoadingBlock';
 import { APIError } from '@/types/api';
 import CodeDiffViewer from './CodeDiffViewer';
 
@@ -21,42 +14,56 @@ interface Props {
   source: 'admin' | 'evidence';
 }
 
+/** `CodeDiffViewer` 内部固定 600px 高，加载态按同一高度预留，数据到达时不跳。 */
+const DIFF_VIEWER_HEIGHT = 600;
+
 export default function PairDetailClient({ pairID, source }: Props) {
   const t = useTranslations('admin.similarity');
-  const [detail, setDetail] = useState<PairDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      const resp =
-        source === 'admin'
-          ? await similarityService.getPairDetail(pairID)
-          : await similarityService.getEvidencePair(pairID);
-      setDetail(resp.detail);
-    } catch (err) {
-      if (err instanceof APIError) message.error(err.msg);
-    } finally {
-      setLoading(false);
-    }
-  }, [pairID, source]);
-
-  useEffect(() => {
-    load();
-  }, [load]);
+  const tLoading = useTranslations('components.loading');
+  const { detail, isLoading, error, refresh } = usePairDetail(pairID, source);
 
   const whitelist = async () => {
     try {
       await similarityService.addPairWhitelist(pairID, 'admin whitelist');
       message.success(t('msg_whitelisted'));
-      load();
+      refresh();
     } catch (err) {
       if (err instanceof APIError) message.error(err.msg);
     }
   };
 
-  if (loading) return <Skeleton active />;
-  if (!detail) return null;
+  if (isLoading) {
+    // 真实内容是「一张 Descriptions 卡片 + 一个 600px 的代码 diff」，
+    // 泛泛的三行 Skeleton 会让 diff 落地时整页往下窜一大截。
+    return (
+      <div className="space-y-4">
+        <ListSkeleton count={2} rows={4} />
+        <LoadingBlock
+          height={DIFF_VIEWER_HEIGHT}
+          variant="spinner"
+          label={tLoading('code')}
+        />
+      </div>
+    );
+  }
+
+  // 取数失败时原本 `return null`：免责声明底下整页空白，只有一条 3 秒的 toast。
+  if (error || !detail) {
+    return (
+      <Card>
+        <div role="alert">
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={tLoading('failed')}
+          >
+            <Button type="primary" onClick={refresh}>
+              {tLoading('retry')}
+            </Button>
+          </Empty>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-4">

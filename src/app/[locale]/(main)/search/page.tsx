@@ -15,6 +15,10 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
 import AdSlot from '@/components/AdSlot';
 import SideRails from '@/components/AdSlot/SideRails';
+import {
+  prefetchRails,
+  railContainerProps,
+} from '@/components/AdSlot/railLayout';
 import { prefetchAd } from '@/lib/api/services/advertise';
 import { redirect } from '@/i18n/routing';
 import { domainToASCII } from 'node:url';
@@ -144,20 +148,18 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   if (isUnfilteredBrowse(resolvedSearchParams)) {
-    const [trending, fresh, longtail, feedBannerAd] = await Promise.all([
+    const [trending, fresh, longtail, feedBannerAd, rails] = await Promise.all([
       scriptService.search({ size: 12, page: 1, sort: 'trending' }),
       scriptService.search({ size: 12, page: 1, sort: 'createtime' }),
       scriptService.search({ size: 12, page: 1, sort: 'long_tail' }),
       prefetchAd('search-feed-banner', locale),
+      prefetchRails('search-rail-left', 'search-rail-right', locale),
     ]);
 
     return (
       <PageIntlProvider namespaces={['script', 'ads']}>
-        {/* ≥1400px 时内容区流式收窄（每侧给侧栏广告预留 200px），让广告以原尺寸 160×600 完整展示且与内容拉开距离；详见 SideRails。 */}
-        <div
-          data-search-content
-          className="mx-auto w-full max-w-7xl min-[1400px]:max-w-[min(80rem,calc(100vw_-_400px))]"
-        >
+        {/* 只有真预取到竖栏广告时才收窄内容区（每侧让出 200px）；没投放时版面宽度不变。 */}
+        <div {...railContainerProps(rails.hasAd)}>
           <div className="mb-4">
             <SearchBar />
           </div>
@@ -168,7 +170,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               initialData={feedBannerAd}
             />
           </div>
-          <SideRails />
+          {rails.hasAd && (
+            <SideRails
+              leftSlot="search-rail-left"
+              rightSlot="search-rail-right"
+              initialLeft={rails.left}
+              initialRight={rails.right}
+            />
+          )}
           <ScriptSection
             icon="mdi:fire"
             chipClass="bg-amber-100 dark:bg-amber-500/25"
@@ -208,7 +217,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     script_type: resolvedSearchParams.script_type || 0,
   };
 
-  const [scripts, recentScripts, sidebarAd, resultsBannerAd] =
+  const [scripts, recentScripts, sidebarAd, resultsBannerAd, rails] =
     await Promise.all([
       scriptService.search(apiParams),
       scriptService.search({
@@ -218,34 +227,49 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       }),
       prefetchAd('search-sidebar', locale),
       prefetchAd('search-results-banner', locale),
+      prefetchRails(
+        'search-results-rail-left',
+        'search-results-rail-right',
+        locale,
+      ),
     ]);
 
   return (
     <PageIntlProvider namespaces={['script', 'ads']}>
-      <Row gutter={[24, 24]}>
-        <Col xs={24} lg={18}>
-          <ScriptList
-            scripts={slimScriptList(scripts.list)}
-            totalCount={scripts.total}
-            initialFilters={apiParams}
-            initialPage={apiParams.page || 1}
-            banner={
-              <AdSlot
-                slot="search-results-banner"
-                variant="banner"
-                initialData={resultsBannerAd}
-                className="mb-6"
-              />
-            }
+      <div {...railContainerProps(rails.hasAd)}>
+        {rails.hasAd && (
+          <SideRails
+            leftSlot="search-results-rail-left"
+            rightSlot="search-results-rail-right"
+            initialLeft={rails.left}
+            initialRight={rails.right}
           />
-        </Col>
-        <Col xs={24} lg={6}>
-          <Sidebar
-            recentScripts={slimScriptListForSidebar(recentScripts.list)}
-            adInitialData={sidebarAd}
-          />
-        </Col>
-      </Row>
+        )}
+        <Row gutter={[24, 24]}>
+          <Col xs={24} lg={18}>
+            <ScriptList
+              scripts={slimScriptList(scripts.list)}
+              totalCount={scripts.total}
+              initialFilters={apiParams}
+              initialPage={apiParams.page || 1}
+              banner={
+                <AdSlot
+                  slot="search-results-banner"
+                  variant="banner"
+                  initialData={resultsBannerAd}
+                  className="mb-6"
+                />
+              }
+            />
+          </Col>
+          <Col xs={24} lg={6}>
+            <Sidebar
+              recentScripts={slimScriptListForSidebar(recentScripts.list)}
+              adInitialData={sidebarAd}
+            />
+          </Col>
+        </Row>
+      </div>
     </PageIntlProvider>
   );
 }

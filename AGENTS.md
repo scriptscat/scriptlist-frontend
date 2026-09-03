@@ -8,6 +8,7 @@ ScriptList Frontend — a userscript sharing platform ([scriptcat.org](https://s
 ## Before Editing
 
 - Run git commands from this directory, not from the parent workspace.
+- Touching UI, colours, themes or an async state: read [docs/design.md](docs/design.md) first.
 - Keep changes scoped — touch only files the task requires (no opportunistic refactors, reformatting, or unrelated edits) — and never revert the user's own changes unless explicitly asked.
 
 ## Development Workflow
@@ -128,6 +129,6 @@ Use `pnpm analyze` to check first-load impact.
 - `react-hooks/exhaustive-deps` is disabled
 - Prettier with single quotes
 - Standalone output mode for Docker deployments
-- Tailwind uses a GitHub-style color system (custom primary, neutral, success, warning, error colors) with light/dark mode via CSS variables
+- Colour tokens are the CSS variables in `src/app/globals.css` (`:root` / `[data-theme="dark"]`), mirrored for Ant Design in `src/lib/antd-theme.ts`. There is no Tailwind theme config — Tailwind 4 loads one only through `@config`, and `globals.css` has none, so `neutral-*` and friends are Tailwind's stock palette. [docs/design.md](docs/design.md) owns tokens, themes, async states and accessibility
 - Icons use `@iconify/react` with icon packs: `mdi`, `mingcute`, `logos`, `noto`
 - Server components by default; add `'use client'` only for interactive components

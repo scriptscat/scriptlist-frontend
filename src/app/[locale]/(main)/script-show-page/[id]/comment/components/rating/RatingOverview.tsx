@@ -13,7 +13,8 @@ export default function RatingOverview({ ratingStats }: RatingOverviewProps) {
         {/* 左侧：评分展示 */}
         <div className="text-center lg:text-left">
           <div className="flex items-baseline justify-center lg:justify-start gap-3 mb-4">
-            <span className="text-5xl font-bold text-amber-600 dark:text-amber-400">
+            {/* 等宽数字 + 预留 3 个字宽：4.5 变成 4.75 时不会把右边的「/ 5.0」推走。 */}
+            <span className="inline-block min-w-[3ch] text-5xl font-bold tabular-nums text-amber-600 dark:text-amber-400">
               {ratingStats.averageRating}
             </span>
             <span className="text-lg text-gray-500 dark:text-gray-400">

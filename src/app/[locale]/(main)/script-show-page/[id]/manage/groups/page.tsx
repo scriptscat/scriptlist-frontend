@@ -231,7 +231,10 @@ const ManageModal: React.FC<{
               onChange: (page) => setPage(page),
             }}
             locale={{
-              emptyText: (
+              // 加载中不渲染空状态引导，否则 antd 的 Spin 蒙层底下能读到「暂无成员，去邀请」
+              emptyText: isLoading ? (
+                <div style={{ height: 120 }} />
+              ) : (
                 <Empty
                   description={t('empty.no_members')}
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -524,29 +527,27 @@ export default function GroupsPage() {
         </Button>
       </div>
 
-      {/* 统计信息 */}
-      {total > 0 && (
-        <div className="mb-4 p-4 rounded-lg">
-          <Space size="large">
-            <div>
-              <Text strong>{t('stats.total_label') + ':'}</Text>
-              <Text className="text-blue-600 font-medium">{total}</Text>
-            </div>
-            <div>
-              <Text strong>{t('stats.member_total_label') + ':'}</Text>
-              <Text className="text-green-600 font-medium">
-                {list.reduce((sum, group) => sum + group.member.length, 0)}
-              </Text>
-            </div>
-            <div>
-              <Text strong>{t('stats.active_groups_label') + ':'}</Text>
-              <Text className="text-orange-600 font-medium">
-                {list.filter((group) => group.member.length > 0).length}
-              </Text>
-            </div>
-          </Space>
-        </div>
-      )}
+      {/* 统计信息：始终占位，避免数据到达时突然出现把表格推下去 */}
+      <div className="mb-4 p-4 rounded-lg">
+        <Space size="large" wrap>
+          <div>
+            <Text strong>{t('stats.total_label') + ':'}</Text>
+            <Text className="text-blue-600 font-medium">{total}</Text>
+          </div>
+          <div>
+            <Text strong>{t('stats.member_total_label') + ':'}</Text>
+            <Text className="text-green-600 font-medium">
+              {list.reduce((sum, group) => sum + group.member.length, 0)}
+            </Text>
+          </div>
+          <div>
+            <Text strong>{t('stats.active_groups_label') + ':'}</Text>
+            <Text className="text-orange-600 font-medium">
+              {list.filter((group) => group.member.length > 0).length}
+            </Text>
+          </div>
+        </Space>
+      </div>
 
       {/* 用户组列表表格 */}
       <Table
@@ -569,7 +570,10 @@ export default function GroupsPage() {
           onChange: (page) => setPage(page),
         }}
         locale={{
-          emptyText: (
+          // 加载中不渲染空状态引导，否则 antd 的 Spin 蒙层底下能读到「暂无用户组，去创建」
+          emptyText: isLoading ? (
+            <div style={{ height: 120 }} />
+          ) : (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               description={

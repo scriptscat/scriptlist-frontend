@@ -15,6 +15,8 @@ import {
   Alert,
   Tabs,
   Tag,
+  Skeleton,
+  Spin,
 } from 'antd';
 import {
   DownloadOutlined,
@@ -31,20 +33,33 @@ import React, { useState } from 'react';
 import { useScript } from '../../components/ScriptContext';
 import dynamic from 'next/dynamic';
 
+import { useTheme } from '@/contexts/ThemeClientContext';
+import { useTranslations } from 'next-intl';
+import { useScriptStatistics, useScriptRealtime } from '@/lib/api/hooks/script';
+import LoadingBlock from '@/components/ui/LoadingBlock';
+
+/**
+ * 图表的加载占位。
+ *
+ * `@ant-design/charts` 是整个页面里最大的一块异步 chunk，原来的 fallback 是
+ * `<div style={{ height: 300 }} />` —— 高度对，但屏幕上什么都没有。
+ */
+function ChartLoading() {
+  const t = useTranslations('components.loading');
+  return <LoadingBlock height={300} variant="spinner" label={t('chart')} />;
+}
+
 const Line = dynamic(
   () => import('@ant-design/charts').then((mod) => mod.Line),
   {
     ssr: false,
-    loading: () => <div style={{ height: 300 }} />,
+    loading: () => <ChartLoading />,
   },
 );
 const Column = dynamic(
   () => import('@ant-design/charts').then((mod) => mod.Column),
-  { ssr: false, loading: () => <div style={{ height: 300 }} /> },
+  { ssr: false, loading: () => <ChartLoading /> },
 );
-import { useTheme } from '@/contexts/ThemeClientContext';
-import { useTranslations } from 'next-intl';
-import { useScriptStatistics, useScriptRealtime } from '@/lib/api/hooks/script';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -250,6 +265,88 @@ const StatsCard: React.FC<{
   );
 };
 
+/**
+ * 单张统计卡的骨架，形状与 `StatsCard` 一一对应
+ * （图标 + 标题 + 涨跌标签 / 今日大数字 / 昨日、本周两列）。
+ */
+function StatsCardSkeleton() {
+  return (
+    <Card className="shadow-sm" data-testid="stats-card-skeleton">
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Skeleton.Input
+            active
+            size="small"
+            style={{ width: 96, minWidth: 96, height: 20 }}
+          />
+          <Skeleton.Button
+            active
+            size="small"
+            style={{ width: 56, minWidth: 56 }}
+          />
+        </div>
+        <div className="space-y-3">
+          <div className="space-y-1">
+            <Skeleton.Input
+              active
+              size="small"
+              style={{ width: 40, minWidth: 40, height: 14 }}
+            />
+            <Skeleton.Input
+              active
+              size="small"
+              style={{ width: 120, minWidth: 120, height: 32 }}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4 border-t pt-2">
+            <Skeleton.Input
+              active
+              size="small"
+              style={{ width: 64, minWidth: 64, height: 20 }}
+            />
+            <Skeleton.Input
+              active
+              size="small"
+              style={{ width: 64, minWidth: 64, height: 20 }}
+            />
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+/**
+ * 统计页首屏骨架。
+ *
+ * 原来这里是一个手搓的居中转圈，把 4 张指标卡 + 3 张图表一起挡住，
+ * 数据到达时整页一次性弹出来。改成按真实版式占位：形状先到，数字后到。
+ */
+function StatsSkeleton() {
+  return (
+    <Card>
+      <div
+        role="status"
+        aria-busy="true"
+        data-testid="stats-skeleton"
+        className="flex w-full flex-col gap-5"
+      >
+        <Skeleton active title={false} paragraph={{ rows: 2 }} />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <StatsCardSkeleton />
+          <StatsCardSkeleton />
+          <StatsCardSkeleton />
+          <StatsCardSkeleton />
+        </div>
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <ChartLoading />
+          <ChartLoading />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 export default function ScriptStatsClient() {
   const { script } = useScript();
   const t = useTranslations('script.statistics');
@@ -270,7 +367,6 @@ export default function ScriptStatsClient() {
     isLoading: realtimeLoading,
   } = useScriptRealtime(script.id, isRealtime);
 
-  const loading = statisticsLoading || realtimeLoading;
   const error = statisticsError || realtimeError;
 
   if (error) {
@@ -298,15 +394,10 @@ export default function ScriptStatsClient() {
     );
   }
 
-  if (loading || !statisticsData) {
-    return (
-      <div className="flex items-center justify-center min-h-96">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <Text type="secondary">{t('loading_data')}</Text>
-        </div>
-      </div>
-    );
+  // 只等统计数据：实时数据是另一条独立的请求，它没回来不该挡住整页
+  // （`RealtimeColumn` 自己会用空数据集渲染）。
+  if (statisticsLoading || !statisticsData) {
+    return <StatsSkeleton />;
   }
 
   return (
@@ -408,12 +499,16 @@ export default function ScriptStatsClient() {
                     className="shadow-sm"
                     bordered={false}
                   >
-                    <RealtimeColumn
-                      download={realtimeData?.download || { x: [], y: [] }}
-                      update={realtimeData?.update || { x: [], y: [] }}
-                      isRealtime={isRealtime}
-                      t={t}
-                    />
+                    {/* 实时数据是独立的一条请求，刷新时盖在既有图表上，
+                        而不是把整页顶掉。 */}
+                    <Spin spinning={realtimeLoading}>
+                      <RealtimeColumn
+                        download={realtimeData?.download || { x: [], y: [] }}
+                        update={realtimeData?.update || { x: [], y: [] }}
+                        isRealtime={isRealtime}
+                        t={t}
+                      />
+                    </Spin>
                   </Card>
 
                   {/* 30天趋势分析 */}

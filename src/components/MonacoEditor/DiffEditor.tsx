@@ -2,6 +2,8 @@
 
 import { DiffEditor, loader } from '@monaco-editor/react';
 import { useTheme } from '@/contexts/ThemeClientContext';
+import { useTranslations } from 'next-intl';
+import LoadingBlock from '@/components/ui/LoadingBlock';
 import { MONACO_ASSET_ROOT } from './config';
 
 interface MonacoDiffEditorProps {
@@ -26,6 +28,7 @@ export default function MonacoDiffEditor({
   className = '',
 }: MonacoDiffEditorProps) {
   const { themeMode } = useTheme();
+  const t = useTranslations('components.loading');
 
   return (
     <div className={className}>
@@ -35,6 +38,15 @@ export default function MonacoDiffEditor({
         original={original}
         modified={modified}
         theme={themeMode.theme === 'dark' ? 'vs-dark' : 'vs'}
+        // 不传 loading 会落到 @monaco-editor/react 内置的英文 "Loading..."
+        loading={
+          <LoadingBlock
+            height="100%"
+            variant="spinner"
+            label={t('code')}
+            className="w-full"
+          />
+        }
         options={{
           readOnly: true,
           minimap: { enabled: true },

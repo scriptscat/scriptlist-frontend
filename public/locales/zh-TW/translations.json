@@ -90,6 +90,7 @@
       "type_adsense": "AdSense",
       "stats_adsense_placeholder": "—",
       "stats_adsense_note": "曝光 / 點擊由 Google 統計",
+      "stats_multi_slot_note": "{count} 個廣告位合計",
       "field_type": "廣告類型",
       "field_slot": "廣告位",
       "field_title": "標題",
@@ -147,11 +148,11 @@
         },
         "search-rail-left": {
           "name": "搜尋頁左側欄",
-          "position": "搜尋頁瀏覽態,內容區左側留白,僅 ≥1650px 寬螢幕顯示"
+          "position": "搜尋頁瀏覽態，內容區左側留白，有投放時內容區收窄讓位，留白不足時不顯示"
         },
         "search-rail-right": {
           "name": "搜尋頁右側欄",
-          "position": "搜尋頁瀏覽態,內容區右側留白,僅 ≥1650px 寬螢幕顯示"
+          "position": "搜尋頁瀏覽態，內容區右側留白，有投放時內容區收窄讓位，留白不足時不顯示"
         },
         "search-sidebar": {
           "name": "搜尋頁側欄",
@@ -168,7 +169,35 @@
         "script-detail-banner": {
           "name": "詳情頁橫幅",
           "position": "腳本詳情頁主內容區,資訊卡與內容 Tab 卡之間,整寬顯示,全部斷點"
+        },
+        "search-results-rail-left": {
+          "name": "搜尋結果頁左直欄",
+          "position": "搜尋結果頁內容區左側留白，有投放時內容區收窄讓位，留白不足時不顯示"
+        },
+        "search-results-rail-right": {
+          "name": "搜尋結果頁右直欄",
+          "position": "搜尋結果頁內容區右側留白，與側欄卡片並排，留白不足時不顯示"
+        },
+        "script-detail-rail-left": {
+          "name": "詳情頁左直欄",
+          "position": "腳本詳情頁內容區左側留白，有投放時內容區收窄讓位，留白不足時不顯示"
+        },
+        "script-detail-rail-right": {
+          "name": "詳情頁右直欄",
+          "position": "腳本詳情頁內容區右側留白，與 sticky 側欄並排，留白不足時不顯示"
         }
+      },
+      "slot_required": "請選擇至少一個廣告位",
+      "slot_placeholder": "可選多個廣告位",
+      "slot_selected_count": "已選 {count} 個廣告位",
+      "slot_count_summary": "{count} 個位 · {sizes}",
+      "slot_mixed_title": "所選廣告位跨越 {count} 種形態，同一素材無法同時貼合",
+      "slot_mixed_desc": "圖片素材在不匹配的位上會按比例縮放並留白；AdSense 項目共用一個廣告單元 ID，跨形態會明顯拉低填充率。仍可儲存。",
+      "slot_unknown": "未知廣告位：{keys}",
+      "slot_variant": {
+        "rail": "直欄",
+        "banner": "橫幅",
+        "card": "卡片"
       }
     },
     "ai_review": {
@@ -761,6 +790,14 @@
     "default_favorite_folder_description": "這是一個預設的收藏夾"
   },
   "components": {
+    "loading": {
+      "default": "載入中…",
+      "code": "載入程式碼編輯器中…",
+      "chart": "載入圖表中…",
+      "failed": "載入失敗",
+      "retry": "重試",
+      "redirecting": "跳轉中…"
+    },
     "markdown": {
       "note": "說明",
       "tip": "提示",
@@ -1649,6 +1686,7 @@
         "stats": {
           "expired": "已過期：",
           "groups": "使用者群組：",
+          "page_scope_note": "（使用者 / 使用者群組 / 等待確認 / 已過期為目前頁面統計）",
           "pending": "等待確認：",
           "total": "總數：",
           "users": "使用者："

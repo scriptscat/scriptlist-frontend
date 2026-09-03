@@ -22,7 +22,8 @@ export interface AdSlotItem {
 
 export interface AdminAdvertise {
   id: number;
-  slot_key: string;
+  /** 逗号分隔的一到多个广告位 key。历史单值条目就是单元素列表。 */
+  slot_keys: string;
   ad_type: AdType;
   ad_unit_id: string;
   title: string;
@@ -41,7 +42,8 @@ export interface AdminAdvertise {
 }
 
 export interface AdminAdvertiseInput {
-  slot_key: string;
+  /** 逗号分隔的一到多个广告位 key，至少一个。 */
+  slot_keys: string;
   /** 省略或留空时后端按 image 处理（与 AdminCreateRequest 的可选 binding 一致）。 */
   ad_type?: AdType;
   /** adsense 类型必填，image 类型忽略。 */

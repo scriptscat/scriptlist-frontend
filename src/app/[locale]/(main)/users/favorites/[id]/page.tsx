@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import FolderDetailClient from './components/FolderDetailClient';
@@ -101,27 +100,21 @@ export default async function FolderDetailPage({
 
   return (
     <PageIntlProvider namespaces={['user', 'script']}>
+      {/* 不放 <Suspense>：三个请求已在上面 await 完，FolderDetailClient 不会挂起。
+          冷进入这一页的等待态由同目录的 loading.tsx（路由级）承担。 */}
       <div>
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center min-h-screen">
-              {'Loading folder...'}
-            </div>
-          }
-        >
-          {hasError || !folderDetail || !userDetail || !scriptsData ? (
-            <FolderDetailClient folderId={folderId} error="folder_error" />
-          ) : (
-            <FolderDetailClient
-              folderId={folderId}
-              folderDetail={folderDetail}
-              userDetail={userDetail}
-              scripts={scriptsData.list}
-              total={scriptsData.total}
-              currentPage={currentPage}
-            />
-          )}
-        </Suspense>
+        {hasError || !folderDetail || !userDetail || !scriptsData ? (
+          <FolderDetailClient folderId={folderId} error="folder_error" />
+        ) : (
+          <FolderDetailClient
+            folderId={folderId}
+            folderDetail={folderDetail}
+            userDetail={userDetail}
+            scripts={scriptsData.list}
+            total={scriptsData.total}
+            currentPage={currentPage}
+          />
+        )}
       </div>
     </PageIntlProvider>
   );

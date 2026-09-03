@@ -36,8 +36,16 @@ import type {
 import { resourceService } from '@/lib/api/services/resource';
 import { adminService } from '@/lib/api/services/admin';
 import { API_CONFIG } from '@/lib/api/config';
+import { useAdminAdvertises } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
+import { useTableStateLocale } from '../../components/tableState';
 import { AD_SLOT_KEYS, getAdSlotMeta } from '@/components/AdSlot/slots';
+import {
+  crossSlotAggregateCount,
+  describeSlotSelection,
+  groupSlotOptions,
+  parseSlotKeys,
+} from '../slotSelection';
 import { countUnservableAdsense, getAdFieldRequirements } from '../adTypeRules';
 
 const LANGS = ['en', 'zh-CN', 'zh-TW', 'ru', 'ja', 'de', 'vi'];
@@ -47,10 +55,7 @@ const PUBLISHER_ID_KEY = 'advertise.adsense_publisher_id';
 
 export default function AdvertiseClient() {
   const t = useTranslations('admin.advertise');
-  const [data, setData] = useState<AdminAdvertise[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [slotFilter, setSlotFilter] = useState<string | undefined>();
   const [typeFilter, setTypeFilter] = useState<AdType | undefined>();
   const [enabledFilter, setEnabledFilter] = useState<boolean | undefined>();
@@ -59,8 +64,15 @@ export default function AdvertiseClient() {
   const [lightUrl, setLightUrl] = useState('');
   const [darkUrl, setDarkUrl] = useState('');
   const [form] = Form.useForm();
-  const selectedSlot = Form.useWatch('slot_key', form) as string | undefined;
-  const selectedMeta = selectedSlot ? getAdSlotMeta(selectedSlot) : undefined;
+  const selectedSlots =
+    (Form.useWatch('slot_keys', form) as string[] | undefined) ?? [];
+  const slotSelection = describeSlotSelection(selectedSlots);
+  // 多选后推荐尺寸可能不止一个，图片上传处把所选形态的尺寸都列出来。
+  const recommendedSizeHint = slotSelection.groups.length
+    ? t('recommended_size', {
+        size: slotSelection.groups.map((g) => g.size).join(' / '),
+      })
+    : undefined;
   const selectedAdType =
     (Form.useWatch('ad_type', form) as AdType | undefined) ?? 'image';
   const fieldRequirements = getAdFieldRequirements(selectedAdType);
@@ -138,40 +150,35 @@ export default function AdvertiseClient() {
   const [clicksTotal, setClicksTotal] = useState(0);
   const [clicksPage, setClicksPage] = useState(1);
   const [clicksLoading, setClicksLoading] = useState(false);
+  const [clicksError, setClicksError] = useState<unknown>(null);
+  /** 手动重试用的自增令牌：变化即触发下面的 effect 重新拉取。 */
+  const [clicksReload, setClicksReload] = useState(0);
 
-  const fetchData = useCallback(
-    async (p: number = page) => {
-      setLoading(true);
-      try {
-        const resp = await advertiseService.adminList(
-          p,
-          20,
-          slotFilter,
-          enabledFilter,
-          typeFilter,
-        );
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) {
-          message.error(err.msg);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [page, slotFilter, enabledFilter, typeFilter],
-  );
-
-  useEffect(() => {
-    fetchData(page);
-  }, [page, slotFilter, enabledFilter, typeFilter]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh: fetchData,
+  } = useAdminAdvertises({
+    page,
+    slot: slotFilter,
+    enabled: enabledFilter,
+    adType: typeFilter,
+  });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: fetchData,
+  });
 
   const handleTableChange: TableProps<AdminAdvertise>['onChange'] = (
     pagination,
     filters,
   ) => {
-    const nextSlot = (filters.slot_key?.[0] as string | undefined) ?? undefined;
+    const nextSlot =
+      (filters.slot_keys?.[0] as string | undefined) ?? undefined;
     const nextType = (filters.ad_type?.[0] as AdType | undefined) ?? undefined;
     const rawEnabled = filters.enabled?.[0];
     const nextEnabled =
@@ -192,6 +199,9 @@ export default function AdvertiseClient() {
     setClicksPage(1);
     setStats(null);
     setClicks([]);
+    // 数据清空的同一帧就进入加载态，否则先渲染一次 clicks=[] + loading=false 的空表。
+    setStatsLoading(true);
+    setClicksLoading(true);
   };
 
   const closeClickDetail = () => setDetailAd(null);
@@ -222,6 +232,7 @@ export default function AdvertiseClient() {
     if (!detailAd) return;
     let cancelled = false;
     setClicksLoading(true);
+    setClicksError(null);
     advertiseService
       .adminClickList(detailAd.id, clicksPage, 10)
       .then((r) => {
@@ -230,6 +241,9 @@ export default function AdvertiseClient() {
         setClicksTotal(r.total);
       })
       .catch((err) => {
+        if (cancelled) return;
+        // 断网 / 超时不是 APIError，原来会被整个吞掉，表格永久停在空态。
+        setClicksError(err);
         if (err instanceof APIError) message.error(err.msg);
       })
       .finally(() => {
@@ -238,7 +252,14 @@ export default function AdvertiseClient() {
     return () => {
       cancelled = true;
     };
-  }, [detailAd, clicksPage]);
+  }, [detailAd, clicksPage, clicksReload]);
+
+  const retryClicks = useCallback(() => setClicksReload((n) => n + 1), []);
+  const clicksTableLocale = useTableStateLocale({
+    isLoading: clicksLoading,
+    error: clicksError,
+    onRetry: retryClicks,
+  });
 
   // 按窗口天数把后端返回的稀疏日聚合补齐成连续日期序列（缺失日补 0），便于趋势展示
   const trend = useMemo(() => {
@@ -286,7 +307,7 @@ export default function AdvertiseClient() {
     setLightUrl(r.image_url_light);
     setDarkUrl(r.image_url_dark);
     form.setFieldsValue({
-      slot_key: r.slot_key,
+      slot_keys: parseSlotKeys(r.slot_keys),
       ad_type: resolveAdType(r),
       ad_unit_id: r.ad_unit_id,
       title: r.title,
@@ -342,7 +363,7 @@ export default function AdvertiseClient() {
       const range = v.range as
         [dayjs.Dayjs | null, dayjs.Dayjs | null] | undefined;
       const input: AdminAdvertiseInput = {
-        slot_key: v.slot_key,
+        slot_keys: (v.slot_keys || []).join(','),
         ad_type: adType,
         ad_unit_id: requirements.adUnitId ? v.ad_unit_id : '',
         title: v.title,
@@ -376,24 +397,37 @@ export default function AdvertiseClient() {
     { title: 'ID', dataIndex: 'id', width: 70 },
     {
       title: t('col_slot'),
-      dataIndex: 'slot_key',
+      dataIndex: 'slot_keys',
+      width: 300,
       filters: AD_SLOT_KEYS.map((k) => ({ text: slotName(k), value: k })),
       filterMultiple: false,
       filteredValue: slotFilter ? [slotFilter] : null,
       render: (v: string, r: AdminAdvertise) => {
-        const meta = getAdSlotMeta(v);
+        // 一条广告可投多个位，全部列出：管理员最主要的判断依据就是「投在哪些位」，
+        // 折叠会把它藏起来。曝光/点击是跨位合计，摘要行里写明。
+        const keys = parseSlotKeys(v);
+        const summary = describeSlotSelection(keys);
         return (
           <div>
             <Button
               type="link"
-              className="!p-0 !h-auto"
+              className="!p-0 !h-auto !text-left !whitespace-normal"
               onClick={() => openClickDetail(r)}
             >
-              {meta ? slotName(v) : v}
+              <span className="flex flex-wrap gap-1">
+                {keys.map((k) => (
+                  <Tag key={k} className="!mr-0">
+                    {getAdSlotMeta(k) ? slotName(k) : k}
+                  </Tag>
+                ))}
+              </span>
             </Button>
-            {meta && (
-              <div className="text-xs text-gray-400">{`${v} · ${meta.size}`}</div>
-            )}
+            <div className="text-xs text-gray-400">
+              {t('slot_count_summary', {
+                count: summary.count,
+                sizes: summary.groups.map((g) => g.size).join(' / '),
+              })}
+            </div>
           </div>
         );
       },
@@ -469,7 +503,17 @@ export default function AdvertiseClient() {
             </span>
           </Tooltip>
         ) : (
-          `${r.impressions} / ${r.clicks} (${r.impressions ? ((r.clicks / r.impressions) * 100).toFixed(1) : '0'}%)`
+          <div>
+            <div>{`${r.impressions} / ${r.clicks} (${r.impressions ? ((r.clicks / r.impressions) * 100).toFixed(1) : '0'}%)`}</div>
+            {/* 统计只按 ad_id 累计（spec 决策 1）：多位条目的数字是跨位合计，点明避免被当成单位数据。 */}
+            {crossSlotAggregateCount(r.slot_keys) > 0 && (
+              <div className="text-xs text-gray-400">
+                {t('stats_multi_slot_note', {
+                  count: crossSlotAggregateCount(r.slot_keys),
+                })}
+              </div>
+            )}
+          </div>
         ),
     },
     {
@@ -537,7 +581,8 @@ export default function AdvertiseClient() {
         columns={columns}
         dataSource={data}
         rowKey="id"
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         onChange={handleTableChange}
         scroll={{ x: 1200 }}
         pagination={{
@@ -570,29 +615,68 @@ export default function AdvertiseClient() {
             />
           </Form.Item>
           <Form.Item
-            name="slot_key"
+            name="slot_keys"
             label={t('field_slot')}
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: t('slot_required') }]}
           >
             <Select
-              options={AD_SLOT_KEYS.map((s) => ({
-                value: s,
-                label: `${slotName(s)} · ${getAdSlotMeta(s)?.size ?? ''}`,
+              mode="multiple"
+              allowClear
+              placeholder={t('slot_placeholder')}
+              // 按形态分组：同组内推荐尺寸一致，管理员一眼能看出素材配不配。
+              // 分组从 AD_SLOT_META 推导，任何一个位都不会从下拉里消失。
+              options={groupSlotOptions().map((g) => ({
+                label: `${t(`slot_variant.${g.variant}`)} · ${g.size}`,
+                options: g.keys.map((key) => ({
+                  value: key,
+                  label: slotName(key),
+                })),
               }))}
             />
           </Form.Item>
-          {selectedMeta && selectedSlot && (
+          {/* 跨形态不拦截，只提示后果（spec 决策 2）。 */}
+          {slotSelection.mixed && (
+            <Alert
+              type="warning"
+              showIcon
+              className="!mb-4"
+              title={t('slot_mixed_title', {
+                count: slotSelection.groups.length,
+              })}
+              description={
+                <div className="text-xs">{t('slot_mixed_desc')}</div>
+              }
+            />
+          )}
+          {slotSelection.count > 0 && (
             <Alert
               type="info"
               showIcon
               className="!mb-4"
-              title={slotName(selectedSlot)}
+              title={t('slot_selected_count', { count: slotSelection.count })}
               description={
                 <div className="text-xs">
-                  <div>{slotPosition(selectedSlot)}</div>
-                  <div className="mt-1 font-medium">
-                    {t('recommended_size', { size: selectedMeta.size })}
-                  </div>
+                  {slotSelection.groups.map((g) => (
+                    <div key={g.variant} className="mt-1">
+                      <span className="font-medium">
+                        {t(`slot_variant.${g.variant}`)}
+                        {' · '}
+                        {t('recommended_size', { size: g.size })}
+                      </span>
+                      {g.keys.map((k) => (
+                        <div key={k} className="text-gray-500">
+                          {`${slotName(k)} —— ${slotPosition(k)}`}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                  {slotSelection.unknown.length > 0 && (
+                    <div className="mt-1 text-orange-500">
+                      {t('slot_unknown', {
+                        keys: slotSelection.unknown.join(', '),
+                      })}
+                    </div>
+                  )}
                 </div>
               }
             />
@@ -638,11 +722,7 @@ export default function AdvertiseClient() {
             <Form.Item
               label={t('field_light')}
               required
-              extra={
-                selectedMeta
-                  ? t('recommended_size', { size: selectedMeta.size })
-                  : undefined
-              }
+              extra={recommendedSizeHint}
             >
               <div className="flex gap-2">
                 <Input
@@ -667,14 +747,7 @@ export default function AdvertiseClient() {
             </Form.Item>
           )}
           {fieldRequirements.lightImage && (
-            <Form.Item
-              label={t('field_dark')}
-              extra={
-                selectedMeta
-                  ? t('recommended_size', { size: selectedMeta.size })
-                  : undefined
-              }
-            >
+            <Form.Item label={t('field_dark')} extra={recommendedSizeHint}>
               <div className="flex gap-2">
                 <Input
                   className="flex-1"
@@ -830,6 +903,7 @@ export default function AdvertiseClient() {
                 rowKey="id"
                 size="small"
                 loading={clicksLoading}
+                locale={clicksTableLocale}
                 dataSource={clicks}
                 pagination={{
                   current: clicksPage,

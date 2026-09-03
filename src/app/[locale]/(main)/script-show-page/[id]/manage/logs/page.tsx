@@ -96,7 +96,12 @@ export default function LogsPage() {
         rowKey="id"
         loading={isLoading}
         locale={{
-          emptyText: <Empty description={t('no_logs')} />,
+          // 加载中不渲染空状态，否则 antd 的 Spin 蒙层底下能读到「暂无日志」
+          emptyText: isLoading ? (
+            <div style={{ height: 120 }} />
+          ) : (
+            <Empty description={t('no_logs')} />
+          ),
         }}
         pagination={{
           current: currentPage,

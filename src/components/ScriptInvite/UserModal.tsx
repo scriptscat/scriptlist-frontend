@@ -28,12 +28,16 @@ export const UserModal: React.FC<UserModalProps> = ({
 }) => {
   const t = useTranslations('script.user_modal');
   const [activeKey, setActiveKey] = useState('user');
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [userForm] = Form.useForm();
   const [groupForm] = Form.useForm();
 
+  // 必须把整条 Promise 链交回给 Modal，并自己维护 confirmLoading：
+  // 否则请求期间 OK 按钮既不禁用也不转圈，用户连点会重复发邀请。
   const handleOk = () => {
     const form = activeKey === 'user' ? userForm : groupForm;
-    form
+    setConfirmLoading(true);
+    return form
       .validateFields()
       .then((values) => {
         const type = activeKey;
@@ -65,7 +69,7 @@ export const UserModal: React.FC<UserModalProps> = ({
           });
         }
 
-        promise
+        return promise
           .then((_resp: any) => {
             message.success(t('submit_success'));
             handleCancel();
@@ -77,6 +81,9 @@ export const UserModal: React.FC<UserModalProps> = ({
       })
       .catch((err) => {
         console.error(t('form_validation_failed'), err);
+      })
+      .finally(() => {
+        setConfirmLoading(false);
       });
   };
 
@@ -231,6 +238,7 @@ export const UserModal: React.FC<UserModalProps> = ({
       title={t('select_user_or_group')}
       open={status}
       onOk={handleOk}
+      confirmLoading={confirmLoading}
       onCancel={handleCancel}
       cancelText={t('cancel')}
       okText={t('add')}

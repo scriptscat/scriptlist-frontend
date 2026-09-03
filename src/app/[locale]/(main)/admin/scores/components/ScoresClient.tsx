@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Input,
@@ -13,51 +13,46 @@ import {
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import { adminService } from '@/lib/api/services/admin';
 import type { ScoreItem } from '@/lib/api/services/admin';
+import { useAdminScores } from '@/lib/api/hooks/admin';
 import { scriptService } from '@/lib/api/services/scripts/scripts';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
+import { useTableStateLocale } from '../../components/tableState';
 
 export default function ScoresClient() {
   const t = useTranslations('admin.scores');
-  const [data, setData] = useState<ScoreItem[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [scriptId, setScriptId] = useState<number | undefined>(undefined);
   const [keyword, setKeyword] = useState('');
+  // 筛选条件点「搜索」后才生效，保持原来「翻页才重新拉取」的行为。
+  const [applied, setApplied] = useState<{
+    scriptId?: number;
+    keyword: string;
+  }>({ scriptId: undefined, keyword: '' });
 
-  const fetchData = useCallback(
-    async (
-      p: number = page,
-      sid: number | undefined = scriptId,
-      kw: string = keyword,
-    ) => {
-      setLoading(true);
-      try {
-        const resp = await adminService.listScores(p, 20, sid, kw || undefined);
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) {
-          message.error(err.msg);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [page, scriptId, keyword],
-  );
-
-  useEffect(() => {
-    fetchData(page, scriptId, keyword);
-  }, [page]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh: fetchData,
+  } = useAdminScores({
+    page,
+    scriptId: applied.scriptId,
+    keyword: applied.keyword,
+  });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: fetchData,
+  });
 
   const handleSearch = () => {
     setPage(1);
-    fetchData(1, scriptId, keyword);
+    setApplied({ scriptId, keyword });
   };
 
   const handleDelete = async (scriptId: number, scoreId: number) => {
@@ -170,7 +165,8 @@ export default function ScoresClient() {
         columns={columns}
         dataSource={data}
         rowKey="id"
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         pagination={{
           current: page,
           total,

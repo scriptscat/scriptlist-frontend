@@ -2,7 +2,9 @@
 
 import Editor, { loader } from '@monaco-editor/react';
 import { useTheme } from '@/contexts/ThemeClientContext';
+import { useTranslations } from 'next-intl';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
+import LoadingBlock from '@/components/ui/LoadingBlock';
 import { MONACO_ASSET_ROOT } from './config';
 
 interface MonacoEditorProps {
@@ -38,6 +40,7 @@ const MonacoEditor = forwardRef<MonacoEditorRef, MonacoEditorProps>(
     ref,
   ) => {
     const { themeMode } = useTheme();
+    const t = useTranslations('components.loading');
     const editorRef = useRef<any>(null);
 
     useImperativeHandle(ref, () => ({
@@ -52,6 +55,15 @@ const MonacoEditor = forwardRef<MonacoEditorRef, MonacoEditorProps>(
           language={language}
           value={value}
           theme={themeMode.theme === 'dark' ? 'vs-dark' : 'vs'}
+          // 不传 loading 会落到 @monaco-editor/react 内置的英文 "Loading..."
+          loading={
+            <LoadingBlock
+              height="100%"
+              variant="spinner"
+              label={t('code')}
+              className="w-full"
+            />
+          }
           onChange={onChange}
           onMount={(editor) => {
             editorRef.current = editor;

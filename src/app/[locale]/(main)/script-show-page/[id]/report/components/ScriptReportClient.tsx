@@ -9,7 +9,7 @@ import {
   Avatar,
   Space,
   theme,
-  Skeleton,
+  Spin,
 } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import React, { useState, useCallback } from 'react';
@@ -18,8 +18,10 @@ import { useTranslations } from 'next-intl';
 import type { Report } from '@/lib/api/services/scripts/report';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useReportList } from '@/lib/api/hooks/report';
+import { useResource } from '@/lib/api/hooks/useResource';
+import { REPORT_PAGE_SIZE, ReportListSkeleton } from './ReportRowSkeleton';
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = REPORT_PAGE_SIZE;
 
 const REASON_COLORS: Record<string, string> = {
   malware: 'red',
@@ -47,6 +49,7 @@ export default function ScriptReportClient({
   const { token } = theme.useToken();
   const semDateTime = useSemDateTime();
   const t = useTranslations('script.report');
+  const tLoading = useTranslations('components.loading');
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(initialPage);
@@ -69,11 +72,12 @@ export default function ScriptReportClient({
       }
     : null;
 
-  const { data, isLoading } = useReportList(scriptId, swrParams);
+  const swr = useReportList(scriptId, swrParams);
+  const { data, isInitialLoading, isRefreshing, error } = useResource(swr);
 
   const displayReports = paramsChanged ? (data?.list ?? []) : initialReports;
-  const totalCount = paramsChanged ? (data?.total ?? 0) : initialTotal;
-  const loading = paramsChanged && isLoading;
+  // 加载中 / 失败时不要把 total 掉回 0，否则 Pagination 会整块卸载再挂回来。
+  const totalCount = data?.total ?? initialTotal;
 
   const syncURL = useCallback(
     (page: number, status: string) => {
@@ -147,9 +151,23 @@ export default function ScriptReportClient({
           </div>
         </div>
 
-        {loading ? (
-          <div className="p-4">
-            <Skeleton active paragraph={{ rows: 6 }} />
+        {isInitialLoading ? (
+          <ReportListSkeleton />
+        ) : error && !data ? (
+          <div
+            role="alert"
+            style={{
+              border: `1px solid ${token.colorBorder}`,
+              backgroundColor: token.colorBgContainer,
+              borderRadius: token.borderRadius,
+            }}
+          >
+            <div className="flex flex-col items-center gap-3 py-12 text-center">
+              <span style={{ color: token.colorTextSecondary }}>
+                {tLoading('failed')}
+              </span>
+              <Button onClick={() => swr.mutate()}>{tLoading('retry')}</Button>
+            </div>
           </div>
         ) : displayReports.length === 0 ? (
           <div
@@ -171,105 +189,111 @@ export default function ScriptReportClient({
             </div>
           </div>
         ) : (
-          <div
-            style={{
-              border: `1px solid ${token.colorBorder}`,
-              backgroundColor: token.colorBgContainer,
-              borderRadius: token.borderRadius,
-            }}
-          >
-            {displayReports.map((report, index) => (
-              <div
-                key={report.id}
-                className="px-4 py-3 transition-colors duration-200 cursor-pointer"
-                role="link"
-                tabIndex={0}
-                style={{
-                  borderBottom:
-                    index !== displayReports.length - 1
-                      ? `1px solid ${token.colorBorder}`
-                      : 'none',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    token.colorBgTextHover;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-                onClick={(event) => {
-                  if ((event.target as HTMLElement).closest('a')) return;
-                  openReport(report.id);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
+          <Spin spinning={isRefreshing}>
+            <div
+              style={{
+                border: `1px solid ${token.colorBorder}`,
+                backgroundColor: token.colorBgContainer,
+                borderRadius: token.borderRadius,
+              }}
+            >
+              {displayReports.map((report, index) => (
+                <div
+                  key={report.id}
+                  className="px-4 py-3 transition-colors duration-200 cursor-pointer"
+                  role="link"
+                  tabIndex={0}
+                  style={{
+                    borderBottom:
+                      index !== displayReports.length - 1
+                        ? `1px solid ${token.colorBorder}`
+                        : 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor =
+                      token.colorBgTextHover;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                  onClick={(event) => {
+                    if ((event.target as HTMLElement).closest('a')) return;
                     openReport(report.id);
-                  }
-                }}
-              >
-                <div className="flex items-start gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="mb-2">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Tag
-                              color={REASON_COLORS[report.reason] || 'default'}
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      openReport(report.id);
+                    }
+                  }}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="mb-2">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Tag
+                                color={
+                                  REASON_COLORS[report.reason] || 'default'
+                                }
+                              >
+                                {t(`reasons.${report.reason}`)}
+                              </Tag>
+                              <Tag
+                                color={
+                                  report.status === 1 ? 'error' : 'success'
+                                }
+                                className="text-xs"
+                              >
+                                {report.status === 1
+                                  ? t('status_pending')
+                                  : t('status_resolved')}
+                              </Tag>
+                            </div>
+                          </div>
+
+                          <div
+                            className="flex items-center gap-1 text-sm"
+                            style={{ color: token.colorTextSecondary }}
+                          >
+                            <Link
+                              href={`/script-show-page/${scriptId}/report/${report.id}`}
+                              target="_blank"
                             >
-                              {t(`reasons.${report.reason}`)}
-                            </Tag>
-                            <Tag
-                              color={report.status === 1 ? 'error' : 'success'}
-                              className="text-xs"
+                              <Tag className="!mr-0 cursor-pointer">
+                                {'#' + report.id}
+                              </Tag>
+                            </Link>
+                            <Link
+                              href={'/users/' + report.user_id}
+                              target="_blank"
                             >
-                              {report.status === 1
-                                ? t('status_pending')
-                                : t('status_resolved')}
-                            </Tag>
+                              <span className="inline-flex items-center gap-1">
+                                <Avatar size={20} src={report.avatar} />
+                                <span>{report.username}</span>
+                              </span>
+                            </Link>
+                            <span>{semDateTime(report.createtime)}</span>
                           </div>
                         </div>
 
-                        <div
-                          className="flex items-center gap-1 text-sm"
-                          style={{ color: token.colorTextSecondary }}
-                        >
-                          <Link
-                            href={`/script-show-page/${scriptId}/report/${report.id}`}
-                            target="_blank"
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          <div
+                            className="flex items-center gap-1 text-base"
+                            style={{ color: token.colorTextSecondary }}
                           >
-                            <Tag className="!mr-0 cursor-pointer">
-                              {'#' + report.id}
-                            </Tag>
-                          </Link>
-                          <Link
-                            href={'/users/' + report.user_id}
-                            target="_blank"
-                          >
-                            <span className="inline-flex items-center gap-1">
-                              <Avatar size={20} src={report.avatar} />
-                              <span>{report.username}</span>
-                            </span>
-                          </Link>
-                          <span>{semDateTime(report.createtime)}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <div
-                          className="flex items-center gap-1 text-base"
-                          style={{ color: token.colorTextSecondary }}
-                        >
-                          <MessageOutlined style={{ fontSize: '16px' }} />
-                          <span>{report.comment_count || 0}</span>
+                            <MessageOutlined style={{ fontSize: '16px' }} />
+                            <span>{report.comment_count || 0}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </Spin>
         )}
 
         {totalCount > PAGE_SIZE && (

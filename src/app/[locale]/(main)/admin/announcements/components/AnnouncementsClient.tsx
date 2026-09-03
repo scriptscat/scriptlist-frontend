@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Form,
@@ -21,8 +21,10 @@ import type {
   AdminCreateAnnouncementRequest,
   AdminUpdateAnnouncementRequest,
 } from '@/lib/api/services/announcement';
+import { useAdminAnnouncements } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
+import { useTableStateLocale } from '../../components/tableState';
 
 const LOCALES = ['zh-CN', 'en-US'];
 
@@ -36,35 +38,24 @@ function parseJsonField(val: string): Record<string, string> {
 
 export default function AnnouncementsClient() {
   const t = useTranslations('admin.announcements');
-  const [data, setData] = useState<AdminAnnouncement[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<AdminAnnouncement | null>(null);
   const [form] = Form.useForm();
 
-  const fetchData = useCallback(
-    async (p: number = page) => {
-      setLoading(true);
-      try {
-        const resp = await announcementService.adminGetList(p);
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) {
-          message.error(err.msg);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [page],
-  );
-
-  useEffect(() => {
-    fetchData(page);
-  }, [page]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh: fetchData,
+  } = useAdminAnnouncements({ page });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: fetchData,
+  });
 
   const handleCreate = () => {
     setEditing(null);
@@ -254,7 +245,8 @@ export default function AnnouncementsClient() {
         columns={columns}
         dataSource={data}
         rowKey="id"
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         pagination={{
           current: page,
           total,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import type { MouseEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import {
@@ -32,6 +32,7 @@ import {
 } from '@/lib/utils/favorite-folder';
 import { useUser } from '@/contexts/UserContext';
 import ScriptCard from '@/components/Scriptlist/ScriptCard';
+import PendingResults from '@/components/Scriptlist/PendingResults';
 import FavoriteEditModal from '@/components/FavoriteEditModal';
 import { scriptFavoriteService } from '@/lib/api/services/scripts/favorites';
 import { useScriptInstallGuide } from '@/components/ScriptInstallGuide';
@@ -64,9 +65,19 @@ export default function FolderDetailClient({
   const { user } = useUser();
   const t = useTranslations('user.favorites');
   const commonT = useTranslations('common');
+  // components.loading.* 由根 layout 注入，任何路由下都可用。
+  const loadingT = useTranslations('components.loading');
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentFolder] = useState(folderDetail);
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
+  const [isPending, startTransition] = useTransition();
+  // 页码要立刻跟着点击走：服务端的 currentPage 要等导航完成才更新。
+  const [page, setPage] = useState(currentPage);
+  const [syncedPage, setSyncedPage] = useState(currentPage);
+  if (syncedPage !== currentPage) {
+    setSyncedPage(currentPage);
+    setPage(currentPage);
+  }
   const { handleInstallClick, guideModal } = useScriptInstallGuide({
     description: t('subscribe_guide_description'),
     proceedLabel: t('continue_subscribe'),
@@ -101,8 +112,13 @@ export default function FolderDetailClient({
     commonT('default_favorite_folder_description'),
   );
 
-  const handlePageChange = (page: number) => {
-    router.push(`/users/favorites/${folderId}?page=${page}`);
+  const handlePageChange = (nextPage: number) => {
+    setPage(nextPage);
+    // 编程式跳转没有全局顶部进度条，靠 transition 撑住等待态：
+    // 列表变暗、分页禁用，避免用户以为没点上而反复点击。
+    startTransition(() => {
+      router.push(`/users/favorites/${folderId}?page=${nextPage}`);
+    });
   };
 
   // 处理取消收藏脚本
@@ -256,7 +272,7 @@ export default function FolderDetailClient({
         </Title>
 
         {scripts.length > 0 ? (
-          <>
+          <PendingResults pending={isPending} label={loadingT('default')}>
             <Space direction="vertical" size="large" className="w-full">
               {scripts.map((script) => {
                 const isLoading = loadingScripts.has(script.id);
@@ -291,11 +307,12 @@ export default function FolderDetailClient({
             {total > 20 && (
               <div className="flex justify-center mt-8">
                 <Pagination
-                  current={currentPage}
+                  current={page}
                   total={total}
                   pageSize={20}
                   showSizeChanger={false}
                   showQuickJumper
+                  disabled={isPending}
                   showTotal={(total, range) =>
                     t('pagination_items', {
                       start: range[0],
@@ -307,7 +324,7 @@ export default function FolderDetailClient({
                 />
               </div>
             )}
-          </>
+          </PendingResults>
         ) : (
           <Empty description={t('no_scripts_in_folder')} className="py-16" />
         )}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import type { MenuProps } from 'antd';
 import {
   Input,
@@ -31,8 +31,6 @@ import {
 } from '@/lib/constants/browserStores';
 // 首页安装按钮渲染浏览器商店 logo，这几个图标不在全局预注册里。
 import '@/lib/iconify-preload-browser-stores';
-import AdSlot from '@/components/AdSlot';
-import type { AdSlotItem } from '@/lib/api/services/advertise';
 
 const { Title, Text } = Typography;
 
@@ -104,12 +102,15 @@ interface HeroSectionProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
   onSearch: (value: string) => void;
+  /** 搜索跳转是否进行中。编程式导航没有全局顶部进度条，必须自己给反馈。 */
+  searching: boolean;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({
   searchValue,
   onSearchChange,
   onSearch,
+  searching,
 }) => {
   const t = useTranslations();
   const [currentBrowser, setCurrentBrowser] =
@@ -171,11 +172,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
               onSearch={onSearch}
+              aria-busy={searching}
               enterButton={
                 <Button
                   type="primary"
                   size="large"
                   icon={<SearchOutlined />}
+                  loading={searching}
+                  disabled={searching}
                   className="!bg-gradient-to-r !from-blue-500 !to-purple-500 !border-0 hover:!from-blue-600 hover:!to-purple-600"
                 >
                   {t('home.hero.search_button')}
@@ -209,17 +213,27 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 };
 
 interface HomeClientProps {
-  /** 服务端预取的 home-banner 广告数据（SSR）。 */
-  bannerAd?: { ad: AdSlotItem | null };
+  /**
+   * 横幅广告插槽。由服务端在 `<Suspense>` 里渲染后作为 children 传入，
+   * 这样广告接口的耗时不会阻塞首页首字节。
+   */
+  banner?: React.ReactNode;
 }
 
-export default function HomeClient({ bannerAd }: HomeClientProps) {
+export default function HomeClient({ banner }: HomeClientProps) {
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
   const t = useTranslations();
 
+  // 首屏 hero 的搜索同样是编程式跳转：`nextjs-toploader` 只监听 <a> 点击，
+  // 这里不自己撑住 pending 状态，用户在慢网络下会反复回车。
+  const [isSearching, startSearchTransition] = useTransition();
+
   const handleSearch = (value: string) => {
-    router.push(getScriptSearchPath(value));
+    if (isSearching) return;
+    startSearchTransition(() => {
+      router.push(getScriptSearchPath(value));
+    });
   };
 
   return (
@@ -229,11 +243,10 @@ export default function HomeClient({ bannerAd }: HomeClientProps) {
         searchValue={searchValue}
         onSearchChange={setSearchValue}
         onSearch={handleSearch}
+        searching={isSearching}
       />
 
-      <div className="max-w-6xl mx-auto px-4 mt-8">
-        <AdSlot slot="home-banner" variant="banner" initialData={bannerAd} />
-      </div>
+      <div className="max-w-6xl mx-auto px-4 mt-8">{banner}</div>
 
       {/* Features Section */}
       <div className="py-10">

@@ -14,6 +14,7 @@ import {
   Tooltip,
   Tag,
   Select,
+  Skeleton,
 } from 'antd';
 import {
   UploadOutlined,
@@ -33,14 +34,92 @@ import { useTranslations } from 'next-intl';
 import type { MonacoEditorRef } from '@/components/MonacoEditor';
 import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
 import dynamic from 'next/dynamic';
+import LoadingBlock from '@/components/ui/LoadingBlock';
+
+/** Monaco 实际渲染成 500px；占位必须等高，否则加载完成会把下面的说明区整块顶下去。 */
+const CODE_EDITOR_HEIGHT = 500;
+/** 说明区的 Markdown 编辑器实际渲染成 300px。 */
+const MARKDOWN_EDITOR_HEIGHT = 300;
+/** 代码行宽度循环：40 / 70 / 55 / 85，长短交替才像代码，而不是一张等宽的表格。 */
+const CODE_LINE_WIDTHS = ['40%', '70%', '55%', '85%'];
+/** 画多少行代码。12 行刚好填满 500px 里工具条以下的可视区域。 */
+const CODE_LINE_COUNT = 12;
+
+/**
+ * 代码编辑器的加载占位。
+ *
+ * 原来是 `<div style={{ height: '500px' }} />`：高度是留住了（不产生 CLS），
+ * 但冷缓存下 Monaco 要下载好几百 KB，这期间用户看到的是一整块纯白空洞，
+ * 分不清是在加载还是加载挂了。这里画出编辑器真实的形状：
+ * 顶部 32px 工具条 + 12 行长短不一的代码行，并写明正在加载什么。
+ */
+function CodeEditorLoading() {
+  const t = useTranslations('components.loading');
+
+  return (
+    <div
+      role="status"
+      aria-busy="true"
+      data-testid="script-editor-code-loading"
+      style={{ height: CODE_EDITOR_HEIGHT }}
+      className="flex flex-col overflow-hidden bg-app-elevated theme-transition"
+    >
+      <div className="flex h-8 shrink-0 items-center gap-2 border-b border-app-primary px-3">
+        <Skeleton.Input
+          active
+          size="small"
+          style={{ width: 96, minWidth: 96, height: 14 }}
+        />
+        <Skeleton.Input
+          active
+          size="small"
+          style={{ width: 64, minWidth: 64, height: 14 }}
+        />
+      </div>
+      <div
+        data-testid="script-editor-code-loading-lines"
+        className="flex min-h-0 flex-1 flex-col gap-2 px-3 py-3"
+      >
+        {Array.from({ length: CODE_LINE_COUNT }, (_, index) => (
+          <Skeleton.Input
+            key={index}
+            active
+            size="small"
+            style={{
+              width: CODE_LINE_WIDTHS[index % CODE_LINE_WIDTHS.length],
+              minWidth: 0,
+              height: 12,
+            }}
+          />
+        ))}
+      </div>
+      <div className="shrink-0 px-3 pb-3 text-sm text-app-secondary">
+        {t('code')}
+      </div>
+    </div>
+  );
+}
+
+/** 说明编辑器的加载占位，与 issue / report 页的写法保持一致。 */
+function MarkdownEditorLoading() {
+  const t = useTranslations('components.markdown_editor');
+
+  return (
+    <LoadingBlock
+      height={MARKDOWN_EDITOR_HEIGHT}
+      variant="spinner"
+      label={t('loading_editor')}
+    />
+  );
+}
 
 const MonacoEditor = dynamic(() => import('@/components/MonacoEditor'), {
   ssr: false,
-  loading: () => <div style={{ height: '500px' }} />,
+  loading: () => <CodeEditorLoading />,
 });
 const MarkdownEditor = dynamic(() => import('@/components/MarkdownEditor'), {
   ssr: false,
-  loading: () => <div style={{ height: '300px' }} />,
+  loading: () => <MarkdownEditorLoading />,
 });
 import {
   parseMetadata,
@@ -252,6 +331,12 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
   const handleSubmit = async (values: any) => {
     if (!onSubmit) return;
 
+    // 成功后**不**关掉 loading：`onSubmit` 在 `router.push` 被**调用**的那一刻就
+    // resolve 了，导航还在飞；而编程式跳转没有全局顶部进度条
+    // （`NavigationProgress` 只在 document 上监听 `<a>` 点击），一旦按钮回到可点，
+    // 用户看到的就是一个「提交完却什么也没发生」的表单，只会再点一次。
+    // 按钮保持 loading 直到新页面把这个组件卸载掉。
+    let navigating = false;
     try {
       setLoading(true);
       setIntegrityError(null);
@@ -262,6 +347,7 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
           ? t('messages.script_update_success')
           : t('messages.script_create_success'),
       );
+      navigating = true;
     } catch (error: any) {
       console.error('Submit failed:', error);
       if (error instanceof APIError) {
@@ -280,7 +366,9 @@ export default function ScriptEditor({ script, onSubmit }: ScriptEditorProps) {
         );
       }
     } finally {
-      setLoading(false);
+      if (!navigating) {
+        setLoading(false);
+      }
     }
   };
 

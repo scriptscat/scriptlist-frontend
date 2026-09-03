@@ -7,6 +7,7 @@ import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import type { AuditLogItem } from '@/lib/api/services/auditLog';
 import { useAuditLogList } from '@/lib/api/hooks/auditLog';
+import { useResource } from '@/lib/api/hooks/useResource';
 import { useSemDateTime } from '@/lib/utils/semdate';
 
 const { Title, Text } = Typography;
@@ -37,10 +38,19 @@ export default function AuditLogList({
       }
     : null;
 
-  const { data, isLoading } = useAuditLogList(swrParams);
+  const { data, isInitialLoading, isRefreshing } = useResource(
+    useAuditLogList(swrParams),
+    { hasInitialData: !paramsChanged },
+  );
 
-  const displayList = paramsChanged ? (data?.list ?? []) : initialList;
-  const displayTotal = paramsChanged ? (data?.total ?? 0) : initialTotal;
+  // 旧代码在加载期间把 total 兜底成 0，分页器当场塌成一页、表格闪出「暂无数据」
+  // 插画，用户直接丢失自己所在的位置。改成始终兜底到上一份成功的数据：
+  // key 之间的切换由全局 `keepPreviousData` 兜住，而「null key → 第一个真实 key」
+  // 这一跳的上一份数据正好就是 SSR 传进来的 initialList/initialTotal
+  // （回到 initialPage 时 key 变回 null，兜底值同样正确）。
+  const displayList = data?.list ?? initialList;
+  const displayTotal = data?.total ?? initialTotal;
+  const loading = isInitialLoading || isRefreshing;
 
   const columns: ColumnsType<AuditLogItem> = [
     {
@@ -97,7 +107,7 @@ export default function AuditLogList({
           columns={columns}
           dataSource={displayList}
           rowKey="id"
-          loading={paramsChanged && isLoading}
+          loading={loading}
           pagination={{
             current: currentPage,
             pageSize: PAGE_SIZE,

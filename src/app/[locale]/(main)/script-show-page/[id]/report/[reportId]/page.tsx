@@ -38,40 +38,53 @@ export async function generateMetadata({
   }
 }
 
+type ReportComment = NonNullable<
+  Awaited<ReturnType<typeof scriptReportService.getCommentList>>
+>[number];
+
+/**
+ * 评论加载失败不影响页面展示，但必须把「失败」和「没有评论」区分开——
+ * 一律吞成 `[]` 的话，页面会理直气壮地写着「暂无评论」。
+ */
+async function loadComments(
+  scriptId: number,
+  reportId: number,
+): Promise<{ failed: boolean; comments: ReportComment[] }> {
+  try {
+    const comments = await scriptReportService.getCommentList(
+      scriptId,
+      reportId,
+    );
+    return { failed: false, comments: comments ?? [] };
+  } catch {
+    return { failed: true, comments: [] };
+  }
+}
+
 export default async function ReportDetailPage({ params }: PageProps) {
   const { id, reportId } = await params;
+  const scriptId = parseInt(id);
+  const numericReportId = parseInt(reportId);
 
-  let report;
-  try {
-    report = await scriptReportService.getReportDetail(
-      parseInt(id),
-      parseInt(reportId),
-    );
-  } catch {
-    notFound();
-  }
+  // 举报详情与评论互不依赖，串行 await 等于把两次 RTT 叠在首屏上
+  const [report, commentsResult] = await Promise.all([
+    scriptReportService
+      .getReportDetail(scriptId, numericReportId)
+      .catch(() => null),
+    loadComments(scriptId, numericReportId),
+  ]);
 
   if (!report) {
     notFound();
   }
 
-  let comments: Awaited<ReturnType<typeof scriptReportService.getCommentList>> =
-    [];
-  try {
-    comments = await scriptReportService.getCommentList(
-      parseInt(id),
-      parseInt(reportId),
-    );
-  } catch {
-    // 评论加载失败不影响页面展示
-  }
-
   return (
     <ReportDetailClient
       report={report}
-      comments={comments || []}
-      scriptId={parseInt(id)}
-      reportId={parseInt(reportId)}
+      comments={commentsResult.comments}
+      commentsFailed={commentsResult.failed}
+      scriptId={scriptId}
+      reportId={numericReportId}
     />
   );
 }

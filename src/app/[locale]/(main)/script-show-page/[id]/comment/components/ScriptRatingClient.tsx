@@ -1,7 +1,13 @@
 'use client';
 
 import { Card, Space, message } from 'antd';
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import { useTranslations } from 'next-intl';
 import { useUser } from '@/contexts/UserContext';
 import type { ScoreListItem } from '@/lib/api/services/scripts/scripts';
@@ -38,8 +44,11 @@ export default function ScriptRatingClient({
   const [sortBy, setSortBy] = useState<SortOption>('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(10);
-  const [loading, setLoading] = useState(false);
-  const [allRatings, setAllRatings] = useState<ScoreListItem[]>([]);
+  // 用 SSR 传下来的第一页数据初始化。初始化成 `[]` 的话，
+  // 「暂无评价」会被烤进服务端 HTML，每次进评价 tab 都先闪一下空态。
+  const [allRatings, setAllRatings] = useState<ScoreListItem[]>(
+    initialData?.list ?? [],
+  );
   const [ratingStats, setRatingStats] =
     useState<RatingStats>(initialRatingStats);
 
@@ -86,24 +95,41 @@ export default function ScriptRatingClient({
     error,
     mutate,
     isLoading,
+    isValidating,
   } = useScoreList(
     scriptId,
     queryParams,
     currentPage === 1 ? initialData : undefined,
   );
 
+  // 请求是否真的在飞。原来这里是一个和请求无关的 100ms 定时器，
+  // 既会提前放行下一次翻页，也会在请求还没回来时就说「加载完了」。
+  const isFetching = isLoading || isValidating;
+
   // 获取用户的评分数据
-  const { data: myScore, mutate: mutateMyScore } = useMyScore(scriptId, !!user);
+  const {
+    data: myScore,
+    mutate: mutateMyScore,
+    isLoading: myScoreLoading,
+  } = useMyScore(scriptId, !!user);
+
+  // 已经并入 allRatings 的那一份响应。只有拿到**新的**响应才动列表：
+  // SWR 开了 keepPreviousData，换排序 / 翻页期间 scoreListData 仍是旧对象，
+  // 不做这个判断就会拿旧数据把累积的列表覆盖掉。
+  const appliedDataRef = useRef<ListData<ScoreListItem> | null>(
+    initialData ?? null,
+  );
 
   // 处理数据更新
   useEffect(() => {
-    if (scoreListData?.list) {
-      if (currentPage === 1) {
-        setAllRatings([...scoreListData.list]);
-      } else {
-        setAllRatings((prev) => [...prev, ...scoreListData.list]);
-      }
-    }
+    if (!scoreListData?.list) return;
+    if (appliedDataRef.current === scoreListData) return;
+    appliedDataRef.current = scoreListData;
+    setAllRatings((prev) =>
+      currentPage === 1
+        ? [...scoreListData.list]
+        : [...prev, ...scoreListData.list],
+    );
   }, [scoreListData, currentPage]);
 
   // 计算是否还有更多数据
@@ -112,18 +138,20 @@ export default function ScriptRatingClient({
     return allRatings.length < scoreListData.total;
   }, [scoreListData, allRatings.length]);
 
+  // 已经请求出去的最大页码。滚动监听每帧都可能触发，
+  // 而 `isValidating` 要等 SWR 起飞之后才变 true —— 中间这一小段窗口
+  // 足够把页码推过头，造成跳页和重复页，所以用 ref 记住「已经要过第几页」。
+  const requestedPageRef = useRef(currentPage);
+
   // 加载更多评价
-  const loadMoreRatings = useCallback(async () => {
-    if (loading || !hasMore) return;
+  const loadMoreRatings = useCallback(() => {
+    if (!hasMore || isFetching) return;
 
-    setLoading(true);
-    setCurrentPage((prev) => prev + 1);
-
-    // 等待数据加载完成
-    setTimeout(() => {
-      setLoading(false);
-    }, 100);
-  }, [loading, hasMore]);
+    const nextPage = currentPage + 1;
+    if (requestedPageRef.current >= nextPage) return;
+    requestedPageRef.current = nextPage;
+    setCurrentPage(nextPage);
+  }, [hasMore, isFetching, currentPage]);
 
   // 无限滚动监听（带节流）
   useEffect(() => {
@@ -146,10 +174,11 @@ export default function ScriptRatingClient({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loadMoreRatings]);
 
-  // 排序变化时重置分页
+  // 排序变化时回到第一页。不清空 allRatings：新数据到达时会整体替换，
+  // 中间这段时间保留旧列表，比闪一次「暂无评价」好。
   useEffect(() => {
+    requestedPageRef.current = 1;
     setCurrentPage(1);
-    setAllRatings([]);
   }, [sortBy]);
 
   const handleSubmitRating = async (
@@ -356,6 +385,7 @@ export default function ScriptRatingClient({
         onSubmitRating={handleSubmitRating}
         submitting={submitting}
         existingRating={myScore}
+        loadingExistingRating={myScoreLoading}
         onUpdateRating={handleUpdateRating}
         onDeleteRating={handleDeleteMyRating}
       />
@@ -366,7 +396,7 @@ export default function ScriptRatingClient({
         sortBy={sortBy}
         onSortChange={setSortBy}
         onLoadMore={loadMoreRatings}
-        loading={loading || isLoading}
+        loading={isFetching}
         hasMore={hasMore}
         onReply={handleReply}
         onDeleteRating={handleDeleteRating}

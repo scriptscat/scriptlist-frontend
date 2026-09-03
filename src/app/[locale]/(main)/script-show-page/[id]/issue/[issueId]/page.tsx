@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { scriptIssueService } from '@/lib/api/services/scripts/issue';
 import IssueCommentClient from './components/IssueCommentClient';
@@ -5,6 +6,14 @@ import { scriptService } from '@/lib/api/services/scripts';
 import type { Metadata } from 'next';
 import { ScriptUtils } from '../../utils';
 import { getTranslations } from 'next-intl/server';
+
+/**
+ * `generateMetadata` 与页面都要 issue 详情，不去重就是同一个请求打两次。
+ * 与 `scriptService.infoCached` 一样用 React `cache()` 按请求去重。
+ */
+const getIssueDetailCached = cache(async (scriptId: number, issueId: number) =>
+  scriptIssueService.getIssueDetail(scriptId, issueId),
+);
 
 interface PageProps {
   params: Promise<{ id: string; issueId: string; locale: string }>;
@@ -20,7 +29,7 @@ export async function generateMetadata({
     // 并行获取脚本信息和issue详情
     const [script, issue] = await Promise.all([
       scriptService.infoCached(id),
-      scriptIssueService.getIssueDetail(parseInt(id), parseInt(issueId)),
+      getIssueDetailCached(parseInt(id), parseInt(issueId)),
     ]);
 
     if (!script || !issue) {
@@ -59,29 +68,25 @@ export async function generateMetadata({
 
 export default async function IssueCommentPage({ params }: PageProps) {
   const { id, issueId } = await params;
+  const scriptId = parseInt(id);
+  const numericIssueId = parseInt(issueId);
 
-  // 服务端获取 Issue 详情
-  const issue = await scriptIssueService.getIssueDetail(
-    parseInt(id),
-    parseInt(issueId),
-  );
+  // 详情与评论互不依赖，串行 await 等于把两次 RTT 叠在首屏上
+  const [issue, comments] = await Promise.all([
+    getIssueDetailCached(scriptId, numericIssueId),
+    scriptIssueService.getIssueCommentList(scriptId, numericIssueId),
+  ]);
 
   if (!issue) {
     notFound();
   }
 
-  // 服务端获取评论列表
-  const comments = await scriptIssueService.getIssueCommentList(
-    parseInt(id),
-    parseInt(issueId),
-  );
-
   return (
     <IssueCommentClient
       issue={issue}
       comments={comments || []}
-      scriptId={parseInt(id)}
-      issueId={parseInt(issueId)}
+      scriptId={scriptId}
+      issueId={numericIssueId}
     />
   );
 }

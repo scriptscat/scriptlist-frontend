@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Drawer, message, Space, Table, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
@@ -11,40 +11,33 @@ import type {
   IntegrityReviewDetail,
   IntegrityReviewItem,
 } from '@/lib/api/services/similarity';
+import { useIntegrityReviews } from '@/lib/api/hooks/similarity';
 import { APIError } from '@/types/api';
+import { useTableStateLocale } from '../../components/tableState';
 import ResolveReviewModal from './ResolveReviewModal';
 
 const PAGE_SIZE = 20;
 
 export default function IntegrityReviewTable() {
   const t = useTranslations('admin.similarity');
-  const [data, setData] = useState<IntegrityReviewItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [detail, setDetail] = useState<IntegrityReviewDetail | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [resolveTarget, setResolveTarget] = useState<number | null>(null);
 
-  const load = useCallback(async (p: number) => {
-    setLoading(true);
-    try {
-      const resp = await similarityService.listIntegrityReviews({
-        page: p,
-        size: PAGE_SIZE,
-      });
-      setData(resp.list ?? []);
-      setTotal(resp.total ?? 0);
-    } catch (err) {
-      if (err instanceof APIError) message.error(err.msg);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load(page);
-  }, [page, load]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh,
+  } = useIntegrityReviews({ page, size: PAGE_SIZE });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: refresh,
+  });
 
   const openDetail = async (id: number) => {
     try {
@@ -119,7 +112,8 @@ export default function IntegrityReviewTable() {
         rowKey="id"
         columns={columns}
         dataSource={visibleData}
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         pagination={{
           current: page,
           pageSize: PAGE_SIZE,
@@ -195,7 +189,7 @@ export default function IntegrityReviewTable() {
         reviewID={resolveTarget}
         open={resolveTarget !== null}
         onClose={() => setResolveTarget(null)}
-        onResolved={() => load(page)}
+        onResolved={refresh}
       />
     </>
   );

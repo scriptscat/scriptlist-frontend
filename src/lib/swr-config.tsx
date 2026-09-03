@@ -18,6 +18,7 @@ export const swrConfig = {
   revalidateOnFocus: false, // 窗口聚焦时不自动重新验证
   revalidateOnReconnect: true, // 网络重连时重新验证
   revalidateIfStale: true, // 数据过期时重新验证
+  keepPreviousData: true, // 换 key（翻页/改筛选）时保留上一份数据，列表不会闪成空白
 
   // 错误处理
   onError: (error: any) => {

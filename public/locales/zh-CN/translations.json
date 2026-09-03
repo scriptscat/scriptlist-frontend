@@ -116,6 +116,7 @@
       "type_adsense": "AdSense",
       "stats_adsense_placeholder": "—",
       "stats_adsense_note": "曝光 / 点击由 Google 统计",
+      "stats_multi_slot_note": "{count} 个广告位合计",
       "field_type": "广告类型",
       "field_slot": "广告位",
       "field_title": "标题",
@@ -173,11 +174,11 @@
         },
         "search-rail-left": {
           "name": "搜索页左竖栏",
-          "position": "搜索页浏览态,内容区左侧留白,仅 ≥1650px 宽屏显示"
+          "position": "搜索页浏览态，内容区左侧留白，有投放时内容区收窄让位，留白不足时不展示"
         },
         "search-rail-right": {
           "name": "搜索页右竖栏",
-          "position": "搜索页浏览态,内容区右侧留白,仅 ≥1650px 宽屏显示"
+          "position": "搜索页浏览态，内容区右侧留白，有投放时内容区收窄让位，留白不足时不展示"
         },
         "search-sidebar": {
           "name": "搜索页侧栏",
@@ -194,7 +195,35 @@
         "script-detail-banner": {
           "name": "详情页横幅",
           "position": "脚本详情页主内容区,信息卡与内容 Tab 卡之间,整宽展示,全部断点"
+        },
+        "search-results-rail-left": {
+          "name": "搜索结果页左竖栏",
+          "position": "搜索结果页内容区左侧留白，有投放时内容区收窄让位，留白不足时不展示"
+        },
+        "search-results-rail-right": {
+          "name": "搜索结果页右竖栏",
+          "position": "搜索结果页内容区右侧留白，与侧栏卡片并排，留白不足时不展示"
+        },
+        "script-detail-rail-left": {
+          "name": "详情页左竖栏",
+          "position": "脚本详情页内容区左侧留白，有投放时内容区收窄让位，留白不足时不展示"
+        },
+        "script-detail-rail-right": {
+          "name": "详情页右竖栏",
+          "position": "脚本详情页内容区右侧留白，与 sticky 侧栏并排，留白不足时不展示"
         }
+      },
+      "slot_required": "请选择至少一个广告位",
+      "slot_placeholder": "可选多个广告位",
+      "slot_selected_count": "已选 {count} 个广告位",
+      "slot_count_summary": "{count} 个位 · {sizes}",
+      "slot_mixed_title": "所选广告位跨越 {count} 种形态，同一素材无法同时贴合",
+      "slot_mixed_desc": "图片素材在不匹配的位上会按比例缩放并留白；AdSense 条目共用一个广告单元 ID，跨形态会明显拉低填充率。仍可保存。",
+      "slot_unknown": "未知广告位：{keys}",
+      "slot_variant": {
+        "rail": "竖栏",
+        "banner": "横幅",
+        "card": "卡片"
       }
     },
     "ai_review": {
@@ -761,6 +790,14 @@
     "default_favorite_folder_description": "这是一个默认的收藏夹"
   },
   "components": {
+    "loading": {
+      "default": "加载中…",
+      "code": "加载代码编辑器中…",
+      "chart": "加载图表中…",
+      "failed": "加载失败",
+      "retry": "重试",
+      "redirecting": "跳转中…"
+    },
     "markdown": {
       "note": "说明",
       "tip": "提示",
@@ -1657,6 +1694,7 @@
         "stats": {
           "expired": "已过期：",
           "groups": "用户组：",
+          "page_scope_note": "（用户 / 用户组 / 等待确认 / 已过期为当前页统计）",
           "pending": "等待确认：",
           "total": "总数：",
           "users": "用户："

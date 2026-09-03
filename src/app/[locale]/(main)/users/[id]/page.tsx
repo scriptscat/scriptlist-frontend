@@ -2,7 +2,6 @@ import UserScriptList from '@/components/UserProfile/UserScriptList';
 import scriptService from '@/lib/api/services/scripts';
 import { slimScriptList } from '@/lib/utils/script-slim';
 import type { ScriptSearchRequest } from '../../script-show-page/[id]/types';
-import { Suspense } from 'react';
 
 interface UserPageProps {
   params: Promise<{ locale: string; id: string }>;
@@ -38,15 +37,17 @@ export default async function UserPage({
   // 在服务端获取数据
   const scripts = await scriptService.search(apiParams);
 
+  // 这里不放 <Suspense>：`scripts` 已经在上面 await 完，
+  // UserScriptList 是不会挂起的客户端组件，边界永远不会命中 fallback。
+  // 而且本页的翻页 / 筛选都只改 searchParams，插一个边界反而会把
+  // UserScriptList 自己的 useTransition 变暗效果换成整块 fallback。
   return (
-    <Suspense fallback={<div>{'Loading script...'}</div>}>
-      <UserScriptList
-        userId={userId}
-        scripts={slimScriptList(scripts.list)}
-        totalCount={scripts.total}
-        initialFilters={apiParams}
-        initialPage={apiParams.page || 1}
-      />
-    </Suspense>
+    <UserScriptList
+      userId={userId}
+      scripts={slimScriptList(scripts.list)}
+      totalCount={scripts.total}
+      initialFilters={apiParams}
+      initialPage={apiParams.page || 1}
+    />
   );
 }

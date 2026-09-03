@@ -30,12 +30,32 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
 import dynamic from 'next/dynamic';
+import { useLocale, useTranslations } from 'next-intl';
+import LoadingBlock from '@/components/ui/LoadingBlock';
+import MarkdownViewLoading from '@/components/MarkdownView/MarkdownViewLoading';
+
+/** `MarkdownEditor` 未指定 height 时的默认高度。 */
+const EDITOR_HEIGHT = 400;
+
+/** 占位必须与编辑器实际高度一致，否则加载完提交按钮会窜到光标底下。 */
+function EditorLoading() {
+  const t = useTranslations('components.markdown_editor');
+  return (
+    <LoadingBlock
+      height={EDITOR_HEIGHT}
+      variant="spinner"
+      label={t('loading_editor')}
+    />
+  );
+}
 
 const MarkdownEditor = dynamic(() => import('@/components/MarkdownEditor'), {
   ssr: false,
-  loading: () => <div style={{ height: '200px' }} />,
+  loading: () => <EditorLoading />,
 });
-const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
+const MarkdownView = dynamic(() => import('@/components/MarkdownView'), {
+  loading: () => <MarkdownViewLoading />,
+});
 import ActionMenu from '@/components/ActionMenu';
 import type { IssueComment } from '@/lib/api/services/scripts/issue';
 import {
@@ -45,7 +65,6 @@ import {
 import { useCallback, useRef, useState } from 'react';
 import { useScript } from '../../../components/ScriptContext';
 import { useUser } from '@/contexts/UserContext';
-import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { useIsWatchIssue } from '@/lib/api/hooks/script';
 import IssueLabel from '../../components/IssueLabel';
@@ -95,7 +114,11 @@ export default function IssueCommentClient({
   const script = useScript();
   const user = useUser();
   const editor = useRef<MarkdownEditorRef>(null);
-  const [loading, setLoading] = useState(false);
+  // 每个动作各自的 pending：共用一个 loading 会让关闭反馈、发表评论、改标签、关注互相转圈
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [labelsLoading, setLabelsLoading] = useState(false);
+  const [watchLoading, setWatchLoading] = useState(false);
   const [labels, setLabels] = useState(issue.labels || []);
   const committedLabelsRef = useRef(issue.labels || []);
   const locale = useLocale();
@@ -105,11 +128,11 @@ export default function IssueCommentClient({
   const [commentContent, setCommentContent] = useState('');
 
   // 使用 hook 获取关注状态
-  const { data: isWatch, mutate: mutateIsWatch } = useIsWatchIssue(
-    scriptId,
-    issueId,
-    !!user.user,
-  );
+  const {
+    data: isWatch,
+    isLoading: isWatchLoading,
+    mutate: mutateIsWatch,
+  } = useIsWatchIssue(scriptId, issueId, !!user.user);
 
   const joinMember: { [key: number]: string } = {};
   joinMember[issue.user_id] = issue.avatar;
@@ -212,7 +235,7 @@ export default function IssueCommentClient({
                                 href={`/users/${item.user_id}`}
                                 target="_blank"
                               >
-                                <Avatar src={item.avatar} />
+                                <Avatar size={32} src={item.avatar} />
                               </Link>
                               <div className="flex flex-col">
                                 <Link
@@ -324,7 +347,7 @@ export default function IssueCommentClient({
                               target="_blank"
                             >
                               <Space>
-                                <Avatar src={item.avatar} />
+                                <Avatar size={32} src={item.avatar} />
                                 <span>{item.username}</span>
                               </Space>
                             </Link>
@@ -359,9 +382,9 @@ export default function IssueCommentClient({
                   user.user.is_admin >= 1 ||
                   script.script?.user_id == user.user.user_id) && (
                   <Button
-                    loading={loading}
+                    loading={statusLoading}
                     onClick={async () => {
-                      setLoading(true);
+                      setStatusLoading(true);
                       try {
                         const newStatus = status == 1 ? 3 : 1;
                         const resp = await scriptIssueService.openIssue(
@@ -386,7 +409,7 @@ export default function IssueCommentClient({
                       } catch (error: any) {
                         message.error(error.message || t('operation_failed'));
                       }
-                      setLoading(false);
+                      setStatusLoading(false);
                     }}
                   >
                     {status == 1
@@ -404,18 +427,18 @@ export default function IssueCommentClient({
                 )}
                 <Button
                   type="primary"
-                  loading={loading}
+                  loading={commentLoading}
                   onClick={async () => {
                     if (!editor.current) {
                       message.error(t('system_error'));
                       return;
                     }
-                    setLoading(true);
+                    setCommentLoading(true);
 
                     const content = editor.current.getValue();
                     if (!content.trim()) {
                       message.error(t('comment_content_required'));
-                      setLoading(false);
+                      setCommentLoading(false);
                       return;
                     }
 
@@ -444,7 +467,7 @@ export default function IssueCommentClient({
                     } catch (error: any) {
                       message.error(error.message || t('comment_failed'));
                     }
-                    setLoading(false);
+                    setCommentLoading(false);
                   }}
                 >
                   {t('comment_button')}
@@ -497,10 +520,24 @@ export default function IssueCommentClient({
                 { label: tIssue('labels.bug'), value: 'bug' },
               ]}
               value={labels}
-              loading={loading}
+              loading={labelsLoading}
+              // antd 的 `loading` 不禁用选择器：请求在途时还能继续改，
+              // 会打出并发的 updateLabels。
+              disabled={labelsLoading}
               onChange={(value) => setLabels(value)}
               onBlur={async () => {
-                setLoading(true);
+                const addedLabels = labels.filter(
+                  (l) => !committedLabelsRef.current.includes(l),
+                );
+                const deletedLabels = committedLabelsRef.current.filter(
+                  (l) => !labels.includes(l),
+                );
+                // 没改动就别发请求：否则反复失焦会一直重发同一份标签
+                if (addedLabels.length === 0 && deletedLabels.length === 0) {
+                  return;
+                }
+
+                setLabelsLoading(true);
                 try {
                   // 调用更新标签的API
                   await scriptIssueService.updateLabels(
@@ -509,29 +546,19 @@ export default function IssueCommentClient({
                     labels,
                   );
 
-                  // 创建标签变更的评论项
-                  const addedLabels = labels.filter(
-                    (l) => !committedLabelsRef.current.includes(l),
-                  );
-                  const deletedLabels = committedLabelsRef.current.filter(
-                    (l) => !labels.includes(l),
-                  );
-
-                  if (addedLabels.length > 0 || deletedLabels.length > 0) {
-                    const mockComment: IssueComment = {
-                      id: Date.now(),
-                      content: JSON.stringify({
-                        add: addedLabels,
-                        del: deletedLabels,
-                      }),
-                      type: 3,
-                      user_id: user.user!.user_id,
-                      username: user.user!.username,
-                      avatar: user.user!.avatar || '',
-                      createtime: Date.now() / 1000,
-                    };
-                    setList([...list, mockComment]);
-                  }
+                  const mockComment: IssueComment = {
+                    id: Date.now(),
+                    content: JSON.stringify({
+                      add: addedLabels,
+                      del: deletedLabels,
+                    }),
+                    type: 3,
+                    user_id: user.user!.user_id,
+                    username: user.user!.username,
+                    avatar: user.user!.avatar || '',
+                    createtime: Date.now() / 1000,
+                  };
+                  setList([...list, mockComment]);
 
                   // 记录已提交的labels
                   committedLabelsRef.current = labels;
@@ -539,7 +566,7 @@ export default function IssueCommentClient({
                 } catch (error: any) {
                   message.error(error.message || t('update_failed'));
                 }
-                setLoading(false);
+                setLabelsLoading(false);
               }}
             />
           </Space>
@@ -551,9 +578,11 @@ export default function IssueCommentClient({
                 <Button
                   type="primary"
                   size="small"
-                  loading={loading}
+                  // 关注状态没取回来之前按钮文案是错的（默认显示「关注」），
+                  // 先转圈，别让用户点一个马上要自己翻面的按钮。
+                  loading={watchLoading || isWatchLoading}
                   onClick={async () => {
-                    setLoading(true);
+                    setWatchLoading(true);
                     try {
                       if (isWatch) {
                         await scriptIssueService.unwatchIssue(
@@ -571,7 +600,7 @@ export default function IssueCommentClient({
                     } catch (error: any) {
                       message.error(error.message || t('operation_failed'));
                     }
-                    setLoading(false);
+                    setWatchLoading(false);
                   }}
                 >
                   {isWatch ? t('watched_button') : t('watch_button')}
@@ -585,7 +614,10 @@ export default function IssueCommentClient({
             <Space>
               {Object.keys(joinMember).map((key) => (
                 <Link key={key} href={`/users/${key}`} target="_blank">
-                  <Avatar src={joinMember[key as unknown as number]} />
+                  <Avatar
+                    size={32}
+                    src={joinMember[key as unknown as number]}
+                  />
                 </Link>
               ))}
             </Space>

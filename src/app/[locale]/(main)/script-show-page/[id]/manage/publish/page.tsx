@@ -2,7 +2,7 @@
 
 import { Button, Switch, Card, Divider, Typography, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import GrayControl, {
   type GrayControlValue,
@@ -18,7 +18,6 @@ export default function PublishPage() {
   const { script } = useScript();
   const { scriptSetting } = useScriptSetting();
   const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
   const [enablePreRelease, setEnablePreRelease] = useState<1 | 2>(
     scriptSetting.enable_pre_release || 2,
   ); // 1: enabled, 2: disabled
@@ -26,26 +25,11 @@ export default function PublishPage() {
     scriptSetting.gray_controls || [],
   );
 
-  // Load existing gray release configuration
-  useEffect(() => {
-    const loadGrayControls = async () => {
-      try {
-        const data = await scriptService.getGrayControls(script.id);
-        setEnablePreRelease(data.enable_pre_release as 1 | 2);
-        setGrayControls(data.gray_controls || []);
-      } catch (error) {
-        console.error(ts('publish.load_gray_config_failed'), error);
-        // If loading fails, keep default values
-      } finally {
-        setInitialLoading(false);
-      }
-    };
-
-    loadGrayControls();
-  }, [script.id]);
+  // 灰度配置已经由 manage/layout 的 `getSettingCached` 放进 ScriptSettingContext，
+  // 挂载后再拉一次只是把整张卡片先变成骨架、再显示同一份数据。
 
   return (
-    <Card className="shadow-sm" loading={initialLoading}>
+    <Card className="shadow-sm">
       <div className="flex justify-between items-center mb-6">
         <div>
           <Title level={3} className="!mb-1">

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import AdSlot from './index';
+import type { AdSlotItem } from '@/lib/api/services/advertise';
 import { RAIL_DISCLOSURE_HEIGHT } from './slots';
 
 const RAIL_WIDTH = 160;
@@ -16,8 +17,9 @@ const TOP_SAFE_GAP = 16;
 // 一侧留白不足以放下广告 + 两侧间距时，隐藏侧栏广告。
 const MIN_GUTTER = CONTENT_GAP + EDGE_GAP + RAIL_WIDTH; // 200
 
-// 搜索浏览页的内容容器，宽度由 CSS 流式控制；这里实测它的真实位置来摆放广告。
-const CONTENT_SELECTOR = '[data-search-content]';
+// 承载竖栏的页面内容容器，宽度由 CSS 流式控制；这里实测它的真实位置来摆放广告。
+// 三个页面（搜索浏览态 / 搜索结果态 / 脚本详情页）共用这一个标记。
+const CONTENT_SELECTOR = '[data-rail-content]';
 
 interface RailLayout {
   visible: boolean;
@@ -67,7 +69,23 @@ function getRailLayout(): RailLayout {
   };
 }
 
-export default function SideRails() {
+interface SideRailsProps {
+  /** 左侧竖栏广告位 key。 */
+  leftSlot: string;
+  /** 右侧竖栏广告位 key。 */
+  rightSlot: string;
+  /** 服务端预取的左侧广告数据，用于 SSR 注入 SWR fallbackData。 */
+  initialLeft?: { ad: AdSlotItem | null };
+  /** 服务端预取的右侧广告数据。 */
+  initialRight?: { ad: AdSlotItem | null };
+}
+
+export default function SideRails({
+  leftSlot,
+  rightSlot,
+  initialLeft,
+  initialRight,
+}: SideRailsProps) {
   const [layout, setLayout] = useState<RailLayout>(HIDDEN_LAYOUT);
 
   useEffect(() => {
@@ -112,12 +130,12 @@ export default function SideRails() {
     <>
       <div style={railStyle(layout.contentLeft - CONTENT_GAP - RAIL_WIDTH)}>
         <div style={innerStyle}>
-          <AdSlot slot="search-rail-left" variant="rail" />
+          <AdSlot slot={leftSlot} variant="rail" initialData={initialLeft} />
         </div>
       </div>
       <div style={railStyle(layout.contentRight + CONTENT_GAP)}>
         <div style={innerStyle}>
-          <AdSlot slot="search-rail-right" variant="rail" />
+          <AdSlot slot={rightSlot} variant="rail" initialData={initialRight} />
         </div>
       </div>
     </>

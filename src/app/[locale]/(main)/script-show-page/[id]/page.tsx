@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import type { ScriptDetailPageProps } from './types';
 import { headers } from 'next/headers';
+import { after } from 'next/server';
 import ScriptDetailClient from './components/ScriptDetailClient';
 import { generateScriptMetadata } from './metadata';
 import scriptService from '@/lib/api/services/scripts';
 import { prefetchAd } from '@/lib/api/services/advertise';
+import { prefetchRails } from '@/components/AdSlot/railLayout';
 import { calculateRatingStats } from './comment/components/rating/utils';
 
 export default async function ScriptDetailPage({
@@ -22,6 +24,7 @@ export default async function ScriptDetailPage({
     scoreListResult,
     sidebarAdResult,
     bannerAdResult,
+    railsResult,
   ] = await Promise.allSettled([
     scriptService.getVersionListCached(scriptId, { page: 1, size: 10 }),
     scriptService.getVersionStatCached(scriptId),
@@ -34,12 +37,22 @@ export default async function ScriptDetailPage({
     }),
     prefetchAd('script-detail-sidebar', locale),
     prefetchAd('script-detail-banner', locale),
+    prefetchRails(
+      'script-detail-rail-left',
+      'script-detail-rail-right',
+      locale,
+    ),
   ]);
 
   const sidebarAd =
     sidebarAdResult.status === 'fulfilled' ? sidebarAdResult.value : undefined;
   const bannerAd =
     bannerAdResult.status === 'fulfilled' ? bannerAdResult.value : undefined;
+  // 预取失败按无竖栏投放处理：不收窄、不渲染竖栏。
+  const rails =
+    railsResult.status === 'fulfilled'
+      ? railsResult.value
+      : { left: undefined, right: undefined, hasAd: false };
 
   const initialVersionData =
     versionListResult.status === 'fulfilled' ? versionListResult.value : null;
@@ -65,6 +78,9 @@ export default async function ScriptDetailPage({
         ? versionStatResult.reason?.message
         : undefined;
 
+  // 访问统计是一次写请求，`await` 它等于把 TTFB 押在统计接口上。
+  // 交给 `after()` 在响应发出之后再跑：既不阻塞 JSX 返回，也不会像裸 Promise
+  // 那样在响应结束后被中断。
   try {
     const h = await headers();
     const fwd: Record<string, string> = {};
@@ -74,9 +90,15 @@ export default async function ScriptDetailPage({
     if (xff) fwd['X-Forwarded-For'] = xff;
     if (xri) fwd['X-Real-IP'] = xri;
     if (ua) fwd['User-Agent'] = ua;
-    await scriptService.recordVisit(id, fwd);
+    after(async () => {
+      try {
+        await scriptService.recordVisit(id, fwd);
+      } catch {
+        // 访问统计失败不影响任何用户可见行为
+      }
+    });
   } catch {
-    // 访问统计失败不阻断详情页渲染
+    // 读取请求头失败时直接跳过统计，不阻断详情页渲染
   }
 
   return (
@@ -91,6 +113,7 @@ export default async function ScriptDetailPage({
       initialRatingStats={ratingStats}
       sidebarAd={sidebarAd}
       bannerAd={bannerAd}
+      rails={rails}
     />
   );
 }
