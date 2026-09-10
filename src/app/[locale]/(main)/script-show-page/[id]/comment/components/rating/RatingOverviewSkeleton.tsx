@@ -1,4 +1,4 @@
-import Skeleton from 'antd/es/skeleton';
+import { SkeletonInput } from '@/components/ui/AntdSkeleton';
 
 /**
  * 评分概览（`RatingOverview`）的加载骨架。
@@ -30,17 +30,17 @@ export function RatingOverviewSkeleton({
     >
       <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
         <div className="space-y-4">
-          <Skeleton.Input
+          <SkeletonInput
             active
             size="large"
             style={{ width: 140, minWidth: 140, height: 48 }}
           />
-          <Skeleton.Input
+          <SkeletonInput
             active
             size="small"
             style={{ width: 160, minWidth: 160, height: 24 }}
           />
-          <Skeleton.Input
+          <SkeletonInput
             active
             size="small"
             style={{ width: 120, minWidth: 120, height: 16 }}
@@ -49,19 +49,19 @@ export function RatingOverviewSkeleton({
         <div className="space-y-3">
           {DISTRIBUTION_ROWS.map((star) => (
             <div key={star} className="flex items-center gap-3">
-              <Skeleton.Input
+              <SkeletonInput
                 active
                 size="small"
                 style={{ width: 32, minWidth: 32, height: 12 }}
               />
               <div className="min-w-0 flex-1">
-                <Skeleton.Input
+                <SkeletonInput
                   active
                   size="small"
                   style={{ width: '100%', minWidth: 0, height: 8 }}
                 />
               </div>
-              <Skeleton.Input
+              <SkeletonInput
                 active
                 size="small"
                 style={{ width: 24, minWidth: 24, height: 12 }}

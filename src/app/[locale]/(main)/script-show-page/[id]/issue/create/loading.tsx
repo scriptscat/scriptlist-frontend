@@ -1,5 +1,9 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import {
+  Skeleton,
+  SkeletonButton,
+  SkeletonInput,
+} from '@/components/ui/AntdSkeleton';
 
 /**
  * 新建反馈的路由级加载态。
@@ -14,13 +18,13 @@ export default function CreateIssueLoading() {
     <Card>
       <div className="flex flex-row gap-3">
         <div className="flex basis-3/4 flex-col gap-2">
-          <Skeleton.Input active block style={{ height: 32 }} />
+          <SkeletonInput active block style={{ height: 32 }} />
           <div
             className="rounded-lg border border-app-primary bg-app-elevated theme-transition"
             style={{ height: 400 }}
           />
           <div className="flex justify-end">
-            <Skeleton.Button active style={{ width: 96, minWidth: 96 }} />
+            <SkeletonButton active style={{ width: 96, minWidth: 96 }} />
           </div>
         </div>
         <div className="flex basis-1/4 flex-col">

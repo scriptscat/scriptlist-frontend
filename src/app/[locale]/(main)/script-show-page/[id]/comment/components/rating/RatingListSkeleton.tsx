@@ -1,4 +1,9 @@
-import Skeleton from 'antd/es/skeleton';
+import {
+  Skeleton,
+  SkeletonAvatar,
+  SkeletonButton,
+  SkeletonInput,
+} from '@/components/ui/AntdSkeleton';
 
 /**
  * 评价列表的加载骨架。
@@ -42,17 +47,17 @@ export function RatingListSkeleton({
           className="py-5 first:pt-0"
         >
           <div className="flex items-start gap-4">
-            <Skeleton.Avatar active shape="circle" size={40} />
+            <SkeletonAvatar active shape="circle" size={40} />
             <div className="min-w-0 flex-1 space-y-3">
               <div className="flex items-center gap-3">
-                <Skeleton.Input
+                <SkeletonInput
                   active
                   size="small"
                   style={{ width: 120, minWidth: 120, height: 16 }}
                 />
                 <div className="flex items-center gap-1">
                   {STARS.map((star) => (
-                    <Skeleton.Button
+                    <SkeletonButton
                       key={star}
                       active
                       size="small"

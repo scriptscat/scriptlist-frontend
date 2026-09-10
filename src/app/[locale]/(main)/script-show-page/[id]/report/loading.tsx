@@ -1,5 +1,5 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import { SkeletonButton } from '@/components/ui/AntdSkeleton';
 import { ReportListSkeleton } from './components/ReportRowSkeleton';
 
 /**
@@ -15,7 +15,7 @@ export default function ScriptReportLoading() {
     <Card className="shadow-sm">
       <div className="mx-auto">
         <div className="mb-4 flex justify-end gap-3">
-          <Skeleton.Button active style={{ width: 220, minWidth: 220 }} />
+          <SkeletonButton active style={{ width: 220, minWidth: 220 }} />
         </div>
         <ReportListSkeleton />
       </div>

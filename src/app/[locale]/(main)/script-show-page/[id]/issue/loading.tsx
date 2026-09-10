@@ -1,5 +1,5 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import { SkeletonButton, SkeletonInput } from '@/components/ui/AntdSkeleton';
 import { IssueListSkeleton } from './components/IssueRowSkeleton';
 
 /**
@@ -15,9 +15,9 @@ export default function ScriptIssueLoading() {
     <Card className="shadow-sm">
       <div className="mx-auto">
         <div className="mb-4 flex gap-3">
-          <Skeleton.Input active block style={{ height: 32 }} />
-          <Skeleton.Button active style={{ width: 220, minWidth: 220 }} />
-          <Skeleton.Button active style={{ width: 104, minWidth: 104 }} />
+          <SkeletonInput active block style={{ height: 32 }} />
+          <SkeletonButton active style={{ width: 220, minWidth: 220 }} />
+          <SkeletonButton active style={{ width: 104, minWidth: 104 }} />
         </div>
         <IssueListSkeleton />
       </div>

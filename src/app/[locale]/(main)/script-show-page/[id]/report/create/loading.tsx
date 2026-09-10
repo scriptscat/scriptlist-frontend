@@ -1,5 +1,5 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import { Skeleton, SkeletonButton } from '@/components/ui/AntdSkeleton';
 
 /**
  * 新建举报的路由级加载态。
@@ -18,7 +18,7 @@ export default function CreateReportLoading() {
             style={{ height: 400 }}
           />
           <div className="flex justify-end">
-            <Skeleton.Button active style={{ width: 96, minWidth: 96 }} />
+            <SkeletonButton active style={{ width: 96, minWidth: 96 }} />
           </div>
         </div>
         <div className="flex basis-1/4 flex-col">

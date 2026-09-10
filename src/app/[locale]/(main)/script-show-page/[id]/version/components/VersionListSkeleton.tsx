@@ -1,4 +1,8 @@
-import Skeleton from 'antd/es/skeleton';
+import {
+  Skeleton,
+  SkeletonButton,
+  SkeletonInput,
+} from '@/components/ui/AntdSkeleton';
 
 /**
  * 版本列表的加载骨架。
@@ -8,7 +12,7 @@ import Skeleton from 'antd/es/skeleton';
  * 翻页时列表区不会从 N×150px 塌到 96px。
  *
  * 没有 `'use client'`：`version/loading.tsx`（服务端）与
- * `ScriptVersionsClient`（客户端）共用，所以按深层路径引 antd。
+ * `ScriptVersionsClient`（客户端）共用，所以通过适配层引入 antd。
  */
 export interface VersionListSkeletonProps {
   /** 行数，默认 10（与默认每页条数一致）。 */
@@ -38,12 +42,12 @@ export function VersionListSkeleton({
           className="space-y-3 py-5 first:pt-0"
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 90, minWidth: 90 }}
             />
-            <Skeleton.Input
+            <SkeletonInput
               active
               size="small"
               style={{ width: 60, minWidth: 60, height: 16 }}
@@ -57,7 +61,7 @@ export function VersionListSkeleton({
             />
           </div>
           <div className="flex justify-end">
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 32, minWidth: 32 }}

@@ -1,5 +1,5 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import { Skeleton, SkeletonInput } from '@/components/ui/AntdSkeleton';
 
 /**
  * 管理区的路由级加载态。
@@ -15,7 +15,7 @@ export default function ManageLoading() {
   return (
     <Card className="shadow-sm">
       <div className="mb-6 space-y-2">
-        <Skeleton.Input
+        <SkeletonInput
           active
           size="large"
           style={{ width: 200, minWidth: 200 }}
@@ -25,7 +25,7 @@ export default function ManageLoading() {
       {/* 统计条 */}
       <div className="mb-4 flex flex-wrap gap-6 p-4">
         {[0, 1, 2, 3].map((index) => (
-          <Skeleton.Input
+          <SkeletonInput
             key={index}
             active
             size="small"

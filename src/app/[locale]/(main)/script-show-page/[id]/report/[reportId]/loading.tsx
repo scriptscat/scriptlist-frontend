@@ -1,5 +1,9 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import {
+  Skeleton,
+  SkeletonButton,
+  SkeletonInput,
+} from '@/components/ui/AntdSkeleton';
 
 /**
  * 举报详情的路由级加载态。
@@ -15,24 +19,24 @@ export default function ReportDetailLoading() {
       <div className="flex flex-row gap-3">
         <div className="flex basis-3/4 flex-col gap-3 !w-3/4">
           <div className="flex items-center gap-2">
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 72, minWidth: 72, height: 22 }}
             />
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 56, minWidth: 56, height: 22 }}
             />
           </div>
           <div className="flex items-center gap-2">
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 40, minWidth: 40, height: 20 }}
             />
-            <Skeleton.Input
+            <SkeletonInput
               active
               size="small"
               style={{ width: 200, minWidth: 200, height: 20 }}

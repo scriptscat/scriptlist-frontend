@@ -1,5 +1,5 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import { Skeleton, SkeletonInput } from '@/components/ui/AntdSkeleton';
 import VersionListSkeleton from './components/VersionListSkeleton';
 
 /**
@@ -16,7 +16,7 @@ export default function ScriptVersionsLoading() {
     <Card className="shadow-sm !mb-4">
       <div className="space-y-6">
         <div className="space-y-2">
-          <Skeleton.Input
+          <SkeletonInput
             active
             size="large"
             style={{ width: 180, minWidth: 180 }}
@@ -24,12 +24,12 @@ export default function ScriptVersionsLoading() {
           <Skeleton active title={false} paragraph={{ rows: 1 }} />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-800/50">
-          <Skeleton.Input
+          <SkeletonInput
             active
             size="small"
             style={{ width: 240, minWidth: 240, height: 20 }}
           />
-          <Skeleton.Input
+          <SkeletonInput
             active
             size="small"
             style={{ width: 140, minWidth: 140, height: 20 }}

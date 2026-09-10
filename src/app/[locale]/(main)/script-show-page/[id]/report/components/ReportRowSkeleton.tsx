@@ -1,4 +1,8 @@
-import Skeleton from 'antd/es/skeleton';
+import {
+  SkeletonAvatar,
+  SkeletonButton,
+  SkeletonInput,
+} from '@/components/ui/AntdSkeleton';
 
 /** 举报列表每页 15 条，骨架也要画满 15 行。 */
 export const REPORT_PAGE_SIZE = 15;
@@ -10,7 +14,7 @@ export const REPORT_PAGE_SIZE = 15;
  * 所以比反馈行矮一截 —— 两边不能共用同一个骨架，否则加载完必然跳一次。
  *
  * 没有 `'use client'`：既被 `loading.tsx`（服务端）用，也被列表客户端组件用，
- * 所以 antd 走深层路径。
+ * 所以 antd 骨架元素统一通过适配层引入。
  */
 export default function ReportRowSkeleton() {
   return (
@@ -18,32 +22,32 @@ export default function ReportRowSkeleton() {
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <div className="flex items-center gap-2">
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 72, minWidth: 72, height: 22 }}
             />
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 56, minWidth: 56, height: 22 }}
             />
           </div>
           <div className="flex items-center gap-2">
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 40, minWidth: 40, height: 20 }}
             />
-            <Skeleton.Avatar active size={20} />
-            <Skeleton.Input
+            <SkeletonAvatar active size={20} />
+            <SkeletonInput
               active
               size="small"
               style={{ width: 180, minWidth: 180, height: 20 }}
             />
           </div>
         </div>
-        <Skeleton.Input
+        <SkeletonInput
           active
           size="small"
           style={{ width: 40, minWidth: 40, height: 20 }}

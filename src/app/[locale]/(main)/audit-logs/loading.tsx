@@ -1,5 +1,5 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import { Skeleton, SkeletonInput } from '@/components/ui/AntdSkeleton';
 
 /**
  * 管理日志页的路由级加载态。
@@ -10,7 +10,7 @@ import Skeleton from 'antd/es/skeleton';
  * 列宽与 `AuditLogList` 的 `columns` 一致（180 / 150 / 250 / 自适应），
  * 行数与每页条数一致（20 条里先画 10 行，足够撑住首屏高度）。
  *
- * 服务端组件：antd 走深层路径。
+ * 服务端组件：antd 骨架元素统一通过 AntdSkeleton 适配层引入。
  */
 const ROW_COUNT = 10;
 
@@ -29,7 +29,7 @@ function HeaderCell({ index }: { index: number }) {
       className={column.width ? 'shrink-0' : 'min-w-0 flex-1'}
       style={column.width ? { width: column.width } : undefined}
     >
-      <Skeleton.Input
+      <SkeletonInput
         active
         size="small"
         style={{ width: column.width ? 64 : '35%', minWidth: 48, height: 16 }}
@@ -47,7 +47,7 @@ function BodyCell({ index, row }: { index: number; row: number }) {
       className={column.width ? 'shrink-0' : 'min-w-0 flex-1'}
       style={column.width ? { width: column.width } : undefined}
     >
-      <Skeleton.Input
+      <SkeletonInput
         active
         size="small"
         style={{
@@ -67,7 +67,7 @@ export default function AuditLogsLoading() {
     <div className="max-w-6xl mx-auto py-6 px-4">
       <Card className="shadow-sm">
         <div className="mb-6 space-y-2">
-          <Skeleton.Input
+          <SkeletonInput
             active
             size="large"
             style={{ width: 180, minWidth: 180 }}

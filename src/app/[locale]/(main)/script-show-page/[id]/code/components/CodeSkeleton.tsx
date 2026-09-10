@@ -1,4 +1,4 @@
-import Skeleton from 'antd/es/skeleton';
+import { SkeletonInput } from '@/components/ui/AntdSkeleton';
 
 /**
  * 代码区（Monaco）的加载骨架。
@@ -9,7 +9,7 @@ import Skeleton from 'antd/es/skeleton';
  * 左侧 40px 行号槽 + 右侧长短不一的代码行，等宽高度与真实编辑器一致，不产生 CLS。
  *
  * 没有 `'use client'`：既要被 `loading.tsx`（服务端）直接渲染，
- * 也要被 `ScriptCodeClient`（客户端）当 `dynamic` 占位用，所以按深层路径引 antd。
+ * 也要被 `ScriptCodeClient`（客户端）当 `dynamic` 占位用，所以通过适配层引入 antd。
  */
 export interface CodeSkeletonProps {
   /** 与真实编辑器等高，默认 600px。 */
@@ -47,7 +47,7 @@ export function CodeSkeleton({
       <div className="flex h-full">
         <div className="flex w-10 shrink-0 flex-col gap-2 border-r border-app-primary px-2 py-3">
           {rows.map((i) => (
-            <Skeleton.Input
+            <SkeletonInput
               key={i}
               active
               size="small"
@@ -57,7 +57,7 @@ export function CodeSkeleton({
         </div>
         <div className="flex min-w-0 flex-1 flex-col gap-2 px-3 py-3">
           {rows.map((i) => (
-            <Skeleton.Input
+            <SkeletonInput
               key={i}
               active
               size="small"

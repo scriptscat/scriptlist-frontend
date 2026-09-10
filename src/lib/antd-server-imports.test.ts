@@ -80,11 +80,23 @@ function importsAntdBarrelValue(source: string): boolean {
   });
 }
 
+/**
+ * antd 会在运行时把 Input/Button/Avatar 等挂到 Skeleton 默认导出上。
+ * 经过 RSC 客户端引用边界后这些静态属性不会被保留，最终会把 undefined 交给 React。
+ */
+function usesSkeletonStaticMember(source: string): boolean {
+  const defaultImport = source.match(
+    /import\s+([A-Za-z_$][\w$]*)\s+from\s+'antd\/es\/skeleton'/,
+  );
+  if (!defaultImport) return false;
+  return new RegExp(`<${defaultImport[1]}\\.[A-Z]`).test(source);
+}
+
 function listEntryPoints(dir: string): string[] {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) return listEntryPoints(full);
-    return /^(page|layout|template|default|error|not-found)\.tsx$/.test(
+    return /^(page|layout|loading|template|default|error|not-found)\.tsx$/.test(
       entry.name,
     )
       ? [full]
@@ -134,6 +146,23 @@ describe('服务端组件不得从 antd barrel 导入', () => {
       "服务端组件从 'antd' 具名导入会让整个 antd barrel 变成客户端引用，" +
         '该路由首屏会多出约 89 KB gzip 的未使用组件。' +
         "请改用深层导入，例如 import Spin from 'antd/es/spin'。",
+    ).toEqual([]);
+  });
+
+  it('服务端可达模块不通过 Skeleton 静态属性渲染子组件', () => {
+    const offenders: string[] = [];
+
+    for (const [file, trail] of collectServerModules()) {
+      if (usesSkeletonStaticMember(fs.readFileSync(file, 'utf8'))) {
+        const via = trail.length ? ` ← ${trail[trail.length - 1]}` : ' (入口)';
+        offenders.push(`${path.relative(srcRoot, file)}${via}`);
+      }
+    }
+
+    expect(
+      offenders,
+      '服务端 RSC 引用不会保留 Skeleton.Input/Button/Avatar 等运行时静态属性。' +
+        "请从 '@/components/ui/AntdSkeleton' 导入对应的独立组件。",
     ).toEqual([]);
   });
 });

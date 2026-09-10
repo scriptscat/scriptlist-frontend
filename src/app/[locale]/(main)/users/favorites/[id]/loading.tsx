@@ -1,5 +1,10 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import {
+  Skeleton,
+  SkeletonAvatar,
+  SkeletonButton,
+  SkeletonInput,
+} from '@/components/ui/AntdSkeleton';
 
 /**
  * 收藏夹详情页的路由级加载态。
@@ -10,7 +15,7 @@ import Skeleton from 'antd/es/skeleton';
  * 面包屑 → 收藏夹信息卡（标题 + 公开/私有标签 + 描述 + 脚本数）→ 8 张脚本卡
  * （48px 图标 + 两行文字 + 标签行），高度与真实内容接近，数据到达时不会整页跳动。
  *
- * 服务端组件：antd 走深层路径。
+ * 服务端组件：antd 骨架元素统一通过 AntdSkeleton 适配层引入。
  */
 const SCRIPT_CARD_COUNT = 8;
 
@@ -22,7 +27,7 @@ export default function FolderDetailLoading() {
     <div role="status" aria-busy="true" data-testid="folder-detail-skeleton">
       {/* 面包屑 */}
       <div className="mb-3">
-        <Skeleton.Input
+        <SkeletonInput
           active
           size="small"
           style={{ width: 320, minWidth: 320, height: 18 }}
@@ -34,12 +39,12 @@ export default function FolderDetailLoading() {
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1 space-y-3">
             <div className="flex items-center gap-3">
-              <Skeleton.Input
+              <SkeletonInput
                 active
                 size="large"
                 style={{ width: 240, minWidth: 240 }}
               />
-              <Skeleton.Button
+              <SkeletonButton
                 active
                 size="small"
                 style={{ width: 72, minWidth: 72 }}
@@ -50,13 +55,13 @@ export default function FolderDetailLoading() {
               title={false}
               paragraph={{ rows: 1, width: '72%' }}
             />
-            <Skeleton.Input
+            <SkeletonInput
               active
               size="small"
               style={{ width: 120, minWidth: 120, height: 16 }}
             />
           </div>
-          <Skeleton.Button
+          <SkeletonButton
             active
             style={{ width: 120, minWidth: 120 }}
             className="shrink-0"
@@ -69,9 +74,9 @@ export default function FolderDetailLoading() {
         {Array.from({ length: SCRIPT_CARD_COUNT }, (_, index) => (
           <Card key={index} data-testid="folder-detail-skeleton-card">
             <div className="flex items-start gap-4">
-              <Skeleton.Avatar active shape="square" size={48} />
+              <SkeletonAvatar active shape="square" size={48} />
               <div className="min-w-0 flex-1 space-y-3">
-                <Skeleton.Input
+                <SkeletonInput
                   active
                   size="small"
                   style={{
@@ -86,17 +91,17 @@ export default function FolderDetailLoading() {
                   paragraph={{ rows: 2, width: ['100%', '64%'] }}
                 />
                 <div className="flex flex-wrap items-center gap-2">
-                  <Skeleton.Button
+                  <SkeletonButton
                     active
                     size="small"
                     style={{ width: 56, minWidth: 56 }}
                   />
-                  <Skeleton.Button
+                  <SkeletonButton
                     active
                     size="small"
                     style={{ width: 72, minWidth: 72 }}
                   />
-                  <Skeleton.Button
+                  <SkeletonButton
                     active
                     size="small"
                     style={{ width: 64, minWidth: 64 }}

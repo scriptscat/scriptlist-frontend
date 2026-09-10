@@ -1,5 +1,5 @@
 import Card from 'antd/es/card';
-import Skeleton from 'antd/es/skeleton';
+import { SkeletonButton, SkeletonInput } from '@/components/ui/AntdSkeleton';
 import CodeSkeleton from '../code/components/CodeSkeleton';
 
 /**
@@ -16,18 +16,18 @@ export default function ScriptDiffLoading() {
     <div className="space-y-4">
       <Card className="shadow-sm">
         <div className="mb-4 flex items-center justify-between">
-          <Skeleton.Input
+          <SkeletonInput
             active
             size="small"
             style={{ width: 120, minWidth: 120, height: 24 }}
           />
           <div className="flex items-center gap-2">
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 72, minWidth: 72 }}
             />
-            <Skeleton.Button
+            <SkeletonButton
               active
               size="small"
               style={{ width: 72, minWidth: 72 }}
