@@ -51,7 +51,7 @@
     "marked-footnote": "^1.4.0",
     "marked-gfm-heading-id": "^4.1.4",
     "monaco-editor": "^0.56.0",
-    "next": "16.3.2",
+    "next": "16.3.3",
     "next-intl": "^4.13.7",
     "nextjs-toploader": "^3.9.17",
     "prismjs": "^1.30.0",
