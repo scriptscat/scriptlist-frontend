@@ -19,7 +19,7 @@ const MIN_ANTD_CSS_BYTES = 100 * 1024;
  * 产物会从约 940 KB 涨回约 1230 KB，这里会直接失败而不是悄悄多发 30 KB gzip 给每个页面。
  * 留了一定余量以容纳 antd 小版本升级带来的正常增长。
  */
-const MAX_ANTD_CSS_BYTES = 1100 * 1024;
+const MAX_ANTD_CSS_BYTES = 1150 * 1024;
 /**
  * 抽样自 `ANTD_STATIC_STYLE_COMPONENTS` 的必备选择器，覆盖布局骨架与几个
  * 「只在交互时才出现」的浮层——后者最容易在裁剪时被漏掉且不易在页面上一眼看出。

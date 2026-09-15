@@ -48,6 +48,11 @@ import { Link } from '@/i18n/routing';
 import dynamic from 'next/dynamic';
 import MarkdownViewLoading from '@/components/MarkdownView/MarkdownViewLoading';
 import VersionListSkeleton from './VersionListSkeleton';
+import {
+  deletedVersionCount,
+  findLatestReleaseIndex,
+  isVersionDeleted,
+} from '../versionBadges';
 // 不给 `loading` 的话 fallback 是 `null`，客户端导航时更新说明会塌成 0px。
 const MarkdownView = dynamic(() => import('@/components/MarkdownView'), {
   loading: () => <MarkdownViewLoading height={48} />,
@@ -184,6 +189,14 @@ export default function ScriptVersionsClient({
   const totalVersions = versionData?.total || 0;
   const releaseCount = versionStat?.release_num || 0;
   const preReleaseCount = versionStat?.pre_release_num || 0;
+  // 管理员的版本列表包含已删除版本，而 release/pre-release 计数只数存活的；
+  // 把差额显式标出来，头部三个数字才对得上。
+  const deletedCount = deletedVersionCount(
+    totalVersions,
+    releaseCount,
+    preReleaseCount,
+  );
+  const latestReleaseIndex = findLatestReleaseIndex(versions, currentPage);
 
   // 刷新数据的函数
   const mutate = async () => {
@@ -321,9 +334,13 @@ export default function ScriptVersionsClient({
     }
   };
 
-  const getVersionBadge = (version: ScriptVersion, index: number) => {
+  const getVersionBadge = (
+    version: ScriptVersion,
+    index: number,
+    latestReleaseIndex: number,
+  ) => {
     if (
-      index === 0 &&
+      index === latestReleaseIndex &&
       version.is_pre_release === EnablePreRelease.DisablePreReleaseScript
     ) {
       return <Badge status="success" text={t('latest_version_badge')} />;
@@ -427,6 +444,12 @@ export default function ScriptVersionsClient({
             <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
             {t('prerelease_chip', { count: preReleaseCount })}
           </span>
+          {deletedCount > 0 && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-medium tabular-nums text-red-700 dark:bg-red-900/30 dark:text-red-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+              {t('deleted_chip', { count: deletedCount })}
+            </span>
+          )}
         </div>
         <span className="text-sm tabular-nums text-gray-500">
           {t('pagination_info', {
@@ -452,14 +475,20 @@ export default function ScriptVersionsClient({
               installToken?.token,
             );
             return (
-              <div key={version.id} className="space-y-3 py-5 first:pt-0">
+              <div
+                key={version.id}
+                className={`space-y-3 py-5 first:pt-0 ${isVersionDeleted(version) ? 'rounded-md bg-red-50/60 px-3 dark:bg-red-950/20' : ''}`}
+              >
                 {/* 头部：版本号 + 徽标 / 日期 + 管理按钮 */}
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5">
                     <span className="rounded-md bg-gray-100 px-2.5 py-1 font-mono text-sm font-semibold text-gray-800 dark:bg-gray-800 dark:text-gray-200">
                       {version.version}
                     </span>
-                    {getVersionBadge(version, globalIndex)}
+                    {isVersionDeleted(version) && (
+                      <Badge status="error" text={t('deleted_version_badge')} />
+                    )}
+                    {getVersionBadge(version, globalIndex, latestReleaseIndex)}
                   </div>
                   <div className="flex items-center gap-1 text-sm text-gray-500">
                     <CalendarOutlined />

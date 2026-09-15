@@ -56,7 +56,7 @@ import ActionMenu from '@/components/ActionMenu';
 import type { Report, ReportComment } from '@/lib/api/services/scripts/report';
 import { scriptReportService } from '@/lib/api/services/scripts/report';
 import { useCallback, useRef, useState } from 'react';
-import { useScript } from '../../../components/ScriptContext';
+import { useScriptOptional } from '../../../components/ScriptContext';
 import { useUser } from '@/contexts/UserContext';
 import { Link } from '@/i18n/routing';
 
@@ -87,7 +87,8 @@ export default function ReportDetailClient({
   const [status, setStatus] = useState(report.status);
   const [list, setList] = useState(comments);
   const router = useRouter();
-  const script = useScript();
+  // 脚本被删除时这里的 script 为 undefined：举报历史仍对参与方开放。
+  const script = useScriptOptional();
   const user = useUser();
   const editor = useRef<MarkdownEditorRef>(null);
   // 每个动作各自的 pending：共用一个 loading 会让「解决举报」和「发表评论」互相转圈

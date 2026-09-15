@@ -2218,6 +2218,7 @@
       "install_button": "Cài đặt phiên bản này",
       "install_success": "Bắt đầu cài đặt {version}",
       "latest_version_badge": "Phiên bản mới nhất",
+      "deleted_version_badge": "Đã xóa",
       "load_failed": "Tải thất bại",
       "load_failed_description": "Đã xảy ra lỗi khi lấy danh sách phiên bản, vui lòng làm mới trang và thử lại",
       "no_history_description": "Script này chưa phát hành phiên bản nào",
@@ -2241,6 +2242,7 @@
       "collapse_changelog": "Thu gọn",
       "expand_changelog": "Xem tất cả",
       "prerelease_chip": "Thử nghiệm {count}",
+      "deleted_chip": "Đã xóa {count}",
       "release_chip": "Chính thức {count}",
       "version_count": "Tổng {count} phiên bản"
     },

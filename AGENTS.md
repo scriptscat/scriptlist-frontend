@@ -132,3 +132,13 @@ Use `pnpm analyze` to check first-load impact.
 - Colour tokens are the CSS variables in `src/app/globals.css` (`:root` / `[data-theme="dark"]`), mirrored for Ant Design in `src/lib/antd-theme.ts`. There is no Tailwind theme config — Tailwind 4 loads one only through `@config`, and `globals.css` has none, so `neutral-*` and friends are Tailwind's stock palette. [docs/design.md](docs/design.md) owns tokens, themes, async states and accessibility
 - Icons use `@iconify/react` with icon packs: `mdi`, `mingcute`, `logos`, `noto`
 - Server components by default; add `'use client'` only for interactive components
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
