@@ -17,6 +17,7 @@ import ReplyItem from './ReplyItem';
 import type { RatingItemProps } from './types';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useScript } from '../../../components/ScriptContext';
+import { scoreToRating } from './utils';
 
 const { TextArea } = Input;
 
@@ -84,7 +85,7 @@ export default function RatingItem({
               </Link>
               <Rate
                 disabled
-                value={rating.score / 10}
+                value={scoreToRating(rating.score)}
                 className="text-sm"
                 character={<StarFilled />}
               />
