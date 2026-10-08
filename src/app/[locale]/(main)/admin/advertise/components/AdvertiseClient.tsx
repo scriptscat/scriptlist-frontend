@@ -12,6 +12,7 @@ import {
   message,
   Modal,
   Popconfirm,
+  Progress,
   Segmented,
   Select,
   Spin,
@@ -63,6 +64,11 @@ export default function AdvertiseClient() {
   const [editing, setEditing] = useState<AdminAdvertise | null>(null);
   const [lightUrl, setLightUrl] = useState('');
   const [darkUrl, setDarkUrl] = useState('');
+  // 上传进度（0-100），undefined 表示未在上传
+  const [uploadProgress, setUploadProgress] = useState<{
+    light?: number;
+    dark?: number;
+  }>({});
   const [form] = Form.useForm();
   const selectedSlots =
     (Form.useWatch('slot_keys', form) as string[] | undefined) ?? [];
@@ -339,15 +345,29 @@ export default function AdvertiseClient() {
     }
   };
 
-  const upload = async (file: File, setUrl: (u: string) => void) => {
+  const upload = async (
+    file: File,
+    target: 'light' | 'dark',
+    setUrl: (u: string) => void,
+  ) => {
+    const setProgress = (percent?: number) =>
+      setUploadProgress((prev) => ({ ...prev, [target]: percent }));
+    setProgress(0);
     try {
-      const resp = await resourceService.uploadImage(file, 'advertise', 0);
+      const resp = await resourceService.uploadImage(
+        file,
+        'advertise',
+        0,
+        setProgress,
+      );
       setUrl(`${API_CONFIG.baseURL}/resource/image/${resp.id}`);
       message.success(t('upload_success'));
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
       }
+    } finally {
+      setProgress(undefined);
     }
   };
 
@@ -737,13 +757,21 @@ export default function AdvertiseClient() {
                   showUploadList={false}
                   maxCount={1}
                   beforeUpload={(file) => {
-                    upload(file as File, setLightUrl);
+                    upload(file as File, 'light', setLightUrl);
                     return false;
                   }}
                 >
-                  <Button icon={<UploadOutlined />}>{t('upload')}</Button>
+                  <Button
+                    icon={<UploadOutlined />}
+                    loading={uploadProgress.light !== undefined}
+                  >
+                    {t('upload')}
+                  </Button>
                 </Upload>
               </div>
+              {uploadProgress.light !== undefined && (
+                <Progress percent={uploadProgress.light} size="small" />
+              )}
             </Form.Item>
           )}
           {fieldRequirements.lightImage && (
@@ -761,13 +789,21 @@ export default function AdvertiseClient() {
                   showUploadList={false}
                   maxCount={1}
                   beforeUpload={(file) => {
-                    upload(file as File, setDarkUrl);
+                    upload(file as File, 'dark', setDarkUrl);
                     return false;
                   }}
                 >
-                  <Button icon={<UploadOutlined />}>{t('upload')}</Button>
+                  <Button
+                    icon={<UploadOutlined />}
+                    loading={uploadProgress.dark !== undefined}
+                  >
+                    {t('upload')}
+                  </Button>
                 </Upload>
               </div>
+              {uploadProgress.dark !== undefined && (
+                <Progress percent={uploadProgress.dark} size="small" />
+              )}
             </Form.Item>
           )}
           {fieldRequirements.linkUrl && (
