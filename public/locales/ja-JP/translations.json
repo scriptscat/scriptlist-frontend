@@ -434,6 +434,8 @@
       "save_button": "保存",
       "save_success": "保存しました",
       "title": "システム設定",
+      "turnstile_enabled": "人間確認を有効化",
+      "turnstile_enabled_extra": "オフにすると、ログイン・登録・パスワード再設定で人間確認を行いません",
       "turnstile_site_key": "サイトキー",
       "turnstile_secret_key": "シークレットキー",
       "turnstile_title": "Cloudflare Turnstile",

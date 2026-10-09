@@ -551,6 +551,8 @@
       "save_button": "保存",
       "save_success": "保存成功",
       "title": "系统配置",
+      "turnstile_enabled": "启用人机验证",
+      "turnstile_enabled_extra": "关闭后，登录、注册和找回密码将不再进行人机验证",
       "turnstile_site_key": "站点密钥（Site Key）",
       "turnstile_secret_key": "密钥（Secret Key）",
       "turnstile_title": "Cloudflare Turnstile",

@@ -434,6 +434,8 @@
       "save_button": "Speichern",
       "save_success": "Erfolgreich gespeichert",
       "title": "Systemkonfiguration",
+      "turnstile_enabled": "Verifizierung aktivieren",
+      "turnstile_enabled_extra": "Wenn deaktiviert, entfällt die Menschen-Verifizierung bei Anmeldung, Registrierung und Passwort-Zurücksetzung",
       "turnstile_site_key": "Website-Schlüssel (Site Key)",
       "turnstile_secret_key": "Geheimer Schlüssel",
       "turnstile_title": "Cloudflare Turnstile",

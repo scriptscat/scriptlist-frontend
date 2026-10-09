@@ -417,6 +417,8 @@
       "save_button": "Lưu",
       "save_success": "Đã lưu thành công",
       "title": "Cấu hình hệ thống",
+      "turnstile_enabled": "Bật xác minh",
+      "turnstile_enabled_extra": "Khi tắt, đăng nhập, đăng ký và đặt lại mật khẩu sẽ không yêu cầu xác minh người dùng",
       "turnstile_site_key": "Khóa trang web (Site Key)",
       "turnstile_secret_key": "Khóa bí mật",
       "turnstile_title": "Cloudflare Turnstile",

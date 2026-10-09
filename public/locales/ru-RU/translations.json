@@ -434,6 +434,8 @@
       "save_button": "Сохранить",
       "save_success": "Успешно сохранено",
       "title": "Настройки системы",
+      "turnstile_enabled": "Включить проверку",
+      "turnstile_enabled_extra": "Если выключено, проверка на человека при входе, регистрации и сбросе пароля не выполняется",
       "turnstile_site_key": "Ключ сайта (Site Key)",
       "turnstile_secret_key": "Секретный ключ",
       "turnstile_title": "Cloudflare Turnstile",

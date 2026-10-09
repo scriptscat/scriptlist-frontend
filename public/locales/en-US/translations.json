@@ -498,6 +498,8 @@
       "save_button": "Save",
       "save_success": "Saved successfully",
       "title": "System Configuration",
+      "turnstile_enabled": "Enable verification",
+      "turnstile_enabled_extra": "When off, login, registration and password reset skip the human verification",
       "turnstile_site_key": "Site Key",
       "turnstile_secret_key": "Secret Key",
       "turnstile_title": "Cloudflare Turnstile",
