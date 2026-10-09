@@ -669,7 +669,48 @@
       "col_createtime": "Created at",
       "col_actions": "Actions",
       "action_view": "View",
-      "filter_status": "Filter by status"
+      "filter_status": "Filter by status",
+      "tab_script": "腳本檢舉",
+      "tab_content": "內容檢舉",
+      "content": {
+        "status_all": "全部",
+        "status_1": "待處理",
+        "status_2": "已處理",
+        "status_3": "已駁回",
+        "type_all": "全部類型",
+        "type_score": "評價",
+        "type_issue": "回饋",
+        "type_issue_comment": "回饋回覆",
+        "col_type": "類型",
+        "col_summary": "被檢舉內容",
+        "col_author": "內容作者",
+        "col_times": "次數",
+        "target_deleted": "（內容已刪除）",
+        "action_handle": "處理",
+        "drawer_title": "內容檢舉 #{id}",
+        "view_origin": "在原位置查看",
+        "published_at": "發佈於 {time}",
+        "handler": "處理人",
+        "handle_note": "處理備註",
+        "no_note": "（未填寫）",
+        "result_deleted": "內容已刪除",
+        "result_resolved": "已處理",
+        "result_rejected": "已駁回",
+        "snapshot": "被檢舉內容",
+        "records": "檢舉記錄（{count}）",
+        "load_failed": "載入失敗",
+        "retry": "重試",
+        "action_reject": "駁回",
+        "action_resolve": "標記為已處理",
+        "action_delete": "刪除內容並結案",
+        "action_reopen": "重新開啟",
+        "delete_confirm_title": "確認刪除此內容？",
+        "delete_confirm_desc": "內容將被刪除且無法復原，該內容的所有待處理檢舉也會一併結案。",
+        "note_hint": "僅管理員可見",
+        "note_placeholder": "處理備註（選填）",
+        "action_success": "操作成功",
+        "action_failed": "操作失敗，請重試"
+      }
     }
   },
   "auth": {
@@ -812,6 +853,54 @@
       "loading_editor": "載入編輯器中...",
       "placeholder": "請輸入內容...",
       "uploading_image": "圖片上傳中..."
+    },
+    "contentReport": {
+      "title_score": "檢舉評價",
+      "title_issue": "檢舉回饋",
+      "title_issue_comment": "檢舉回饋回覆",
+      "quote_score": "{name} 的評價",
+      "quote_issue": "{name} 的回饋〈{title}〉",
+      "quote_issue_comment": "{name} 的回覆",
+      "reason_label": "檢舉原因",
+      "reasons": {
+        "spam": {
+          "name": "垃圾廣告",
+          "desc": "引流、推廣、洗版"
+        },
+        "abuse": {
+          "name": "辱罵攻擊",
+          "desc": "人身攻擊、歧視、騷擾"
+        },
+        "porn": {
+          "name": "色情低俗",
+          "desc": "色情、暴力、令人不適"
+        },
+        "illegal": {
+          "name": "違法違規",
+          "desc": "違法資訊、詐騙、惡意連結"
+        },
+        "misleading": {
+          "name": "惡意刷分 / 不實內容",
+          "desc": "與腳本無關、虛假評價"
+        },
+        "other": {
+          "name": "其他",
+          "desc": "需在補充說明中寫明"
+        }
+      },
+      "note_label": "補充說明",
+      "note_optional": "（選填）",
+      "note_required_mark": "（必填）",
+      "note_placeholder": "請描述你遇到的問題",
+      "note_required_error": "選擇「其他」時請填寫說明",
+      "note_too_long_error": "補充說明不能超過 500 字",
+      "privacy": "檢舉內容僅管理員可見，被檢舉人不會知道是誰檢舉的。",
+      "submit": "提交檢舉",
+      "cancel": "取消",
+      "success": "檢舉已提交，感謝你協助維護社群",
+      "duplicate": "你已經檢舉過該內容，管理員會盡快處理",
+      "not_found": "內容不存在或已被刪除",
+      "submit_failed": "檢舉提交失敗，請稍後重試"
     }
   },
   "error": {

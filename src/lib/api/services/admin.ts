@@ -1,4 +1,10 @@
-import type { ListData } from '@/types/api';
+import type {
+  AdminContentReportDetail,
+  AdminContentReportItem,
+  ContentReportHandleBody,
+  ContentReportTargetType,
+  ListData,
+} from '@/types/api';
 import { apiClient } from '../client';
 
 // ==================== OAuth Apps ====================
@@ -491,6 +497,44 @@ class AdminService {
     return apiClient.get<ListData<AdminReportItem>>(
       `${this.basePath}/reports`,
       { page, size, status },
+    );
+  }
+
+  // Content Report Management
+  async listContentReports(params: {
+    page: number;
+    size: number;
+    status?: number;
+    target_type?: ContentReportTargetType;
+  }) {
+    return apiClient.get<ListData<AdminContentReportItem>>(
+      `${this.basePath}/content-reports`,
+      params,
+    );
+  }
+
+  async getContentReportPendingCount() {
+    return apiClient.get<{ count: number }>(
+      `${this.basePath}/content-reports/pending-count`,
+    );
+  }
+
+  async getContentReport(id: number) {
+    return apiClient.get<AdminContentReportDetail>(
+      `${this.basePath}/content-reports/${id}`,
+    );
+  }
+
+  async handleContentReport(id: number, body: ContentReportHandleBody) {
+    return apiClient.post<Record<string, never>>(
+      `${this.basePath}/content-reports/${id}/handle`,
+      body,
+    );
+  }
+
+  async reopenContentReport(id: number) {
+    return apiClient.put<Record<string, never>>(
+      `${this.basePath}/content-reports/${id}/reopen`,
     );
   }
 

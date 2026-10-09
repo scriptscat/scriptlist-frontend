@@ -57,6 +57,7 @@ const MarkdownView = dynamic(() => import('@/components/MarkdownView'), {
   loading: () => <MarkdownViewLoading />,
 });
 import ActionMenu from '@/components/ActionMenu';
+import ContentReportModal from '@/components/ContentReportModal';
 import type { IssueComment } from '@/lib/api/services/scripts/issue';
 import {
   scriptIssueService,
@@ -126,6 +127,14 @@ export default function IssueCommentClient({
   const t = useTranslations('script.issue.comment');
   const tIssue = useTranslations('script.issue');
   const [commentContent, setCommentContent] = useState('');
+  // 举报弹窗：null 关闭；issue = 反馈主楼；number = 回复 id
+  const [reportTarget, setReportTarget] = useState<'issue' | number | null>(
+    null,
+  );
+  const reportComment =
+    typeof reportTarget === 'number'
+      ? list.find((c) => c.id === reportTarget)
+      : undefined;
 
   // 使用 hook 获取关注状态
   const {
@@ -149,6 +158,25 @@ export default function IssueCommentClient({
 
   return (
     <Card>
+      <ContentReportModal
+        open={reportTarget !== null}
+        onClose={() => setReportTarget(null)}
+        scriptId={scriptId}
+        targetType={reportTarget === 'issue' ? 'issue' : 'issue_comment'}
+        targetId={
+          reportTarget === 'issue' ? issue.id : (reportComment?.id ?? 0)
+        }
+        issueId={issue.id}
+        authorName={
+          reportTarget === 'issue'
+            ? issue.username
+            : (reportComment?.username ?? '')
+        }
+        quote={
+          reportTarget === 'issue' ? issue.content : reportComment?.content
+        }
+        issueTitle={issue.title}
+      />
       <div className="flex flex-row gap-3">
         <div className="flex flex-col gap-2 basis-3/4 !w-3/4">
           <div className="flex flex-row justify-between">
@@ -157,6 +185,7 @@ export default function IssueCommentClient({
               uid={[issue.user_id, script.script?.user_id || -1]}
               deleteLevel="moderator"
               allowSelfDelete
+              onReportClick={() => setReportTarget('issue')}
               onDeleteClick={async () => {
                 try {
                   await scriptIssueService.deleteIssue(
@@ -261,6 +290,7 @@ export default function IssueCommentClient({
                               ]}
                               deleteLevel="moderator"
                               allowSelfDelete
+                              onReportClick={() => setReportTarget(item.id)}
                               onDeleteClick={async () => {
                                 try {
                                   await scriptIssueService.deleteComment(

@@ -669,7 +669,48 @@
       "col_createtime": "Thời gian tạo",
       "col_actions": "Thao tác",
       "action_view": "Xem",
-      "filter_status": "Lọc theo trạng thái"
+      "filter_status": "Lọc theo trạng thái",
+      "tab_script": "Báo cáo script",
+      "tab_content": "Báo cáo nội dung",
+      "content": {
+        "status_all": "Tất cả",
+        "status_1": "Chờ xử lý",
+        "status_2": "Đã xử lý",
+        "status_3": "Đã bác bỏ",
+        "type_all": "Tất cả loại",
+        "type_score": "Đánh giá",
+        "type_issue": "Phản hồi",
+        "type_issue_comment": "Trả lời phản hồi",
+        "col_type": "Loại",
+        "col_summary": "Nội dung bị báo cáo",
+        "col_author": "Tác giả",
+        "col_times": "Số lần",
+        "target_deleted": "(Nội dung đã bị xóa)",
+        "action_handle": "Xử lý",
+        "drawer_title": "Báo cáo nội dung #{id}",
+        "view_origin": "Xem tại vị trí gốc",
+        "published_at": "Đăng lúc {time}",
+        "handler": "Người xử lý",
+        "handle_note": "Ghi chú",
+        "no_note": "(không có)",
+        "result_deleted": "Đã xóa nội dung",
+        "result_resolved": "Đã xử lý",
+        "result_rejected": "Đã bác bỏ",
+        "snapshot": "Nội dung bị báo cáo",
+        "records": "Báo cáo ({count})",
+        "load_failed": "Tải thất bại",
+        "retry": "Thử lại",
+        "action_reject": "Từ chối",
+        "action_resolve": "Đánh dấu đã xử lý",
+        "action_delete": "Xóa nội dung và đóng",
+        "action_reopen": "Mở lại",
+        "delete_confirm_title": "Xóa nội dung này?",
+        "delete_confirm_desc": "Nội dung sẽ bị xóa vĩnh viễn và mọi báo cáo đang chờ xử lý về nội dung này sẽ được đóng.",
+        "note_hint": "Chỉ quản trị viên xem được",
+        "note_placeholder": "Ghi chú xử lý (tùy chọn)",
+        "action_success": "Hoàn tất",
+        "action_failed": "Thao tác thất bại, vui lòng thử lại"
+      }
     }
   },
   "auth": {
@@ -812,6 +853,54 @@
       "loading_editor": "Đang tải trình soạn thảo...",
       "placeholder": "Vui lòng nhập nội dung...",
       "uploading_image": "Đang tải ảnh lên..."
+    },
+    "contentReport": {
+      "title_score": "Báo cáo đánh giá",
+      "title_issue": "Báo cáo phản hồi",
+      "title_issue_comment": "Báo cáo trả lời phản hồi",
+      "quote_score": "Đánh giá của {name}",
+      "quote_issue": "Phản hồi của {name}: \"{title}\"",
+      "quote_issue_comment": "Trả lời của {name}",
+      "reason_label": "Lý do báo cáo",
+      "reasons": {
+        "spam": {
+          "name": "Spam / quảng cáo",
+          "desc": "Dẫn dắt người dùng, quảng bá, spam"
+        },
+        "abuse": {
+          "name": "Xúc phạm, công kích",
+          "desc": "Công kích cá nhân, phân biệt đối xử, quấy rối"
+        },
+        "porn": {
+          "name": "Khiêu dâm, thô tục",
+          "desc": "Nội dung khiêu dâm, bạo lực, gây khó chịu"
+        },
+        "illegal": {
+          "name": "Vi phạm pháp luật",
+          "desc": "Thông tin bất hợp pháp, lừa đảo, liên kết độc hại"
+        },
+        "misleading": {
+          "name": "Chấm điểm ảo / sai sự thật",
+          "desc": "Không liên quan đến script, đánh giá giả"
+        },
+        "other": {
+          "name": "Khác",
+          "desc": "Cần ghi rõ trong phần mô tả bổ sung"
+        }
+      },
+      "note_label": "Mô tả bổ sung",
+      "note_optional": "(không bắt buộc)",
+      "note_required_mark": "(bắt buộc)",
+      "note_placeholder": "Hãy mô tả vấn đề bạn gặp phải",
+      "note_required_error": "Vui lòng nhập mô tả khi chọn \"Khác\"",
+      "note_too_long_error": "Mô tả bổ sung không được vượt quá 500 ký tự",
+      "privacy": "Nội dung báo cáo chỉ quản trị viên xem được, người bị báo cáo sẽ không biết ai đã báo cáo.",
+      "submit": "Gửi báo cáo",
+      "cancel": "Hủy",
+      "success": "Đã gửi báo cáo, cảm ơn bạn đã giúp giữ gìn cộng đồng.",
+      "duplicate": "Bạn đã báo cáo nội dung này rồi, quản trị viên sẽ xử lý sớm.",
+      "not_found": "Nội dung không tồn tại hoặc đã bị xóa",
+      "submit_failed": "Gửi báo cáo thất bại, vui lòng thử lại sau"
     }
   },
   "error": {

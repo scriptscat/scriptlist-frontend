@@ -328,7 +328,48 @@
       "col_createtime": "创建时间",
       "col_actions": "操作",
       "action_view": "查看",
-      "filter_status": "筛选状态"
+      "filter_status": "筛选状态",
+      "tab_script": "脚本举报",
+      "tab_content": "内容举报",
+      "content": {
+        "status_all": "全部",
+        "status_1": "待处理",
+        "status_2": "已处理",
+        "status_3": "已驳回",
+        "type_all": "全部类型",
+        "type_score": "评价",
+        "type_issue": "反馈",
+        "type_issue_comment": "反馈回复",
+        "col_type": "类型",
+        "col_summary": "被举报内容",
+        "col_author": "内容作者",
+        "col_times": "次数",
+        "target_deleted": "（内容已删除）",
+        "action_handle": "处理",
+        "drawer_title": "内容举报 #{id}",
+        "view_origin": "在原位置查看",
+        "published_at": "发布于 {time}",
+        "handler": "处理人",
+        "handle_note": "处理备注",
+        "no_note": "（未填写）",
+        "result_deleted": "内容已删除",
+        "result_resolved": "已处理",
+        "result_rejected": "已驳回",
+        "snapshot": "被举报内容",
+        "records": "举报记录（{count}）",
+        "load_failed": "加载失败",
+        "retry": "重试",
+        "action_reject": "驳回",
+        "action_resolve": "标记已处理",
+        "action_delete": "删除内容并结案",
+        "action_reopen": "重新打开",
+        "delete_confirm_title": "确认删除该内容？",
+        "delete_confirm_desc": "内容将被删除且无法恢复，并且该内容的所有待处理举报会一并结案。",
+        "note_hint": "仅管理员可见",
+        "note_placeholder": "处理备注（选填）",
+        "action_success": "操作成功",
+        "action_failed": "操作失败，请重试"
+      }
     },
     "oauth_apps": {
       "action_delete": "删除",
@@ -812,6 +853,54 @@
       "loading_editor": "加载编辑器中...",
       "placeholder": "请输入内容...",
       "uploading_image": "图片上传中..."
+    },
+    "contentReport": {
+      "title_score": "举报评价",
+      "title_issue": "举报反馈",
+      "title_issue_comment": "举报反馈回复",
+      "quote_score": "{name} 的评价",
+      "quote_issue": "{name} 的反馈《{title}》",
+      "quote_issue_comment": "{name} 的回复",
+      "reason_label": "举报原因",
+      "reasons": {
+        "spam": {
+          "name": "垃圾广告",
+          "desc": "引流、推广、刷屏"
+        },
+        "abuse": {
+          "name": "辱骂攻击",
+          "desc": "人身攻击、歧视、骚扰"
+        },
+        "porn": {
+          "name": "色情低俗",
+          "desc": "色情、暴力、令人不适"
+        },
+        "illegal": {
+          "name": "违法违规",
+          "desc": "违法信息、诈骗、恶意链接"
+        },
+        "misleading": {
+          "name": "恶意刷分 / 不实内容",
+          "desc": "与脚本无关、虚假评价"
+        },
+        "other": {
+          "name": "其他",
+          "desc": "需在补充说明中写明"
+        }
+      },
+      "note_label": "补充说明",
+      "note_optional": "（选填）",
+      "note_required_mark": "（必填）",
+      "note_placeholder": "请描述你遇到的问题",
+      "note_required_error": "选择「其他」时请填写说明",
+      "note_too_long_error": "补充说明不能超过 500 字",
+      "privacy": "举报内容仅管理员可见，被举报人不会知道是谁举报的。",
+      "submit": "提交举报",
+      "cancel": "取消",
+      "success": "举报已提交，感谢你帮助维护社区",
+      "duplicate": "你已经举报过该内容，管理员会尽快处理",
+      "not_found": "内容不存在或已被删除",
+      "submit_failed": "举报提交失败，请稍后重试"
     }
   },
   "error": {

@@ -149,6 +149,7 @@ export default function ReportDetailClient({
               <ActionMenu
                 uid={[report.user_id, script.script?.user_id || -1]}
                 deleteLevel="admin"
+                hideReport
                 allowSelfDelete={false}
                 onDeleteClick={async () => {
                   try {
@@ -251,6 +252,7 @@ export default function ReportDetailClient({
                                   script.script?.user_id || -1,
                                 ]}
                                 deleteLevel="admin"
+                                hideReport
                                 allowSelfDelete={false}
                                 onDeleteClick={async () => {
                                   try {
