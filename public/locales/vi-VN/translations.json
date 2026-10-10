@@ -2546,6 +2546,7 @@
       "ban_clean_options": "Tùy chọn dọn dẹp",
       "ban_clean_scores": "Xóa đánh giá của người dùng",
       "ban_clean_scripts": "Xóa script của người dùng",
+      "ban_clean_issues": "Xóa phản hồi và trả lời của người dùng",
       "ban_success": "Đã cấm người dùng",
       "unban_success": "Gỡ cấm thành công",
       "ban_confirm_title": "Xác nhận cấm",

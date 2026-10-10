@@ -288,6 +288,7 @@ class AdminService {
       expire_at?: number;
       clean_scores?: boolean;
       clean_scripts?: boolean;
+      clean_issues?: boolean;
     },
   ) {
     return apiClient.put<void>(`${this.basePath}/users/${id}/status`, {

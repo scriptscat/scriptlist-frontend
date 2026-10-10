@@ -2553,6 +2553,7 @@
       "ban_clean_options": "清理选项",
       "ban_clean_scores": "清理用户评分",
       "ban_clean_scripts": "清理用户脚本",
+      "ban_clean_issues": "清理用户反馈及回复",
       "ban_success": "封禁成功",
       "unban_success": "解封成功",
       "ban_confirm_title": "确认封禁",
