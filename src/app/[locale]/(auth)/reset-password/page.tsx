@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
-import { Spin } from 'antd';
+// 深层导入：服务端组件若从 'antd' barrel 具名导入，整个 barrel 会变成客户端引用。
+import Spin from 'antd/es/spin';
 import ResetPasswordClient from './components/ResetPasswordClient';
 
 export default function ResetPasswordPage() {

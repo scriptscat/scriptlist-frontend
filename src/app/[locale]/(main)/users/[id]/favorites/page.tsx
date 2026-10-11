@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import UserFavorites from '@/components/UserProfile/UserFavorites';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
@@ -33,15 +32,15 @@ export default async function UserFavoritesPage({
       size: 20,
     });
 
+  // 同 users/[id]/page.tsx：数据已在上面 await 完，UserFavorites 不会挂起，
+  // 边界是死代码；翻页也只改 searchParams，UserFavorites 内部已有 useTransition 变暗。
   return (
-    <Suspense fallback={<div>{'Loading favorites...'}</div>}>
-      <UserFavorites
-        userId={userId}
-        folders={foldersData.list}
-        scripts={scriptsData.list}
-        total={scriptsData.total}
-        currentPage={currentPage}
-      />
-    </Suspense>
+    <UserFavorites
+      userId={userId}
+      folders={foldersData.list}
+      scripts={scriptsData.list}
+      total={scriptsData.total}
+      currentPage={currentPage}
+    />
   );
 }

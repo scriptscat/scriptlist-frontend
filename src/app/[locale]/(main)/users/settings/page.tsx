@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import SettingsClient from './components/SettingsClient';
 import { userService } from '@/lib/api/services/user';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
@@ -22,15 +21,15 @@ export default async function SettingsPage({
 
   return (
     <PageIntlProvider namespaces={['user']}>
-      <Suspense fallback={<div>{'Loading...'}</div>}>
-        <SettingsClient
-          initialTab={tab}
-          initialWebhookToken={webhookData.token}
-          initialNotificationConfig={notificationConfig.notify}
-          userStatus={currentUser?.status}
-          deactivateAt={currentUser?.deactivate_at}
-        />
-      </Suspense>
+      {/* 不放 <Suspense>：三个请求已在上面 Promise.all 完成，
+          SettingsClient 是不会挂起的客户端组件，fallback 永远不会渲染。 */}
+      <SettingsClient
+        initialTab={tab}
+        initialWebhookToken={webhookData.token}
+        initialNotificationConfig={notificationConfig.notify}
+        userStatus={currentUser?.status}
+        deactivateAt={currentUser?.deactivate_at}
+      />
     </PageIntlProvider>
   );
 }

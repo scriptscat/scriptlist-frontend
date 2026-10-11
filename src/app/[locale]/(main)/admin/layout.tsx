@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
-import { Result } from 'antd';
+// 深层导入：服务端组件若从 'antd' barrel 具名导入，整个 barrel 会变成客户端引用。
+import Result from 'antd/es/result';
 import { getTranslations } from 'next-intl/server';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
 import { userService } from '@/lib/api';
-import AdminRootLayoutClient from './components/AdminRootLayoutClient';
+import AdminLayout from './components/AdminLayout';
 export { noindexMetadata as metadata } from '@/lib/seo/robots';
 
 export default async function AdminRootLayout({
@@ -27,7 +28,7 @@ export default async function AdminRootLayout({
 
   return (
     <PageIntlProvider namespaces={['admin', 'script']}>
-      <AdminRootLayoutClient>{children}</AdminRootLayoutClient>
+      <AdminLayout>{children}</AdminLayout>
     </PageIntlProvider>
   );
 }

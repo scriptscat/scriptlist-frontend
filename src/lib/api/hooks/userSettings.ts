@@ -19,6 +19,30 @@ export function useWebhook() {
 }
 
 /**
+ * 重置私有脚本安装链接的hook
+ */
+export function useRefreshInstallToken() {
+  const [loading, setLoading] = useState(false);
+
+  const refreshInstallToken = async () => {
+    setLoading(true);
+    try {
+      const data = await userService.refreshInstallToken();
+      setLoading(false);
+      return data;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
+  };
+
+  return {
+    refreshInstallToken,
+    loading,
+  };
+}
+
+/**
  * 刷新Webhook Token的hook
  */
 export function useRefreshWebhookToken() {

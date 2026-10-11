@@ -8,6 +8,7 @@ ScriptList Frontend — a userscript sharing platform ([scriptcat.org](https://s
 ## Before Editing
 
 - Run git commands from this directory, not from the parent workspace.
+- Touching UI, colours, themes or an async state: read [docs/design.md](docs/design.md) first.
 - Keep changes scoped — touch only files the task requires (no opportunistic refactors, reformatting, or unrelated edits) — and never revert the user's own changes unless explicitly asked.
 
 ## Development Workflow
@@ -15,11 +16,11 @@ ScriptList Frontend — a userscript sharing platform ([scriptcat.org](https://s
 Apply these rules to every change here:
 
 - **Confirm a bug exists before fixing it.** Reproduce it in the running app (`pnpm dev`) or trace the relevant component → hook (`src/lib/api/hooks`) → service (`src/lib/api/services`) → API path first. Do not change code on suspicion alone.
-- **TDD/BDD mindset.** There is currently **no automated test runner** configured in this project (no test deps or scripts in `package.json`). So define the expected behavior up front, reproduce the failing case manually, then implement and re-verify that exact case. If you introduce tests, wire the runner into `package.json` rather than leaving orphan test files.
+- **TDD/BDD mindset.** Unit tests run on **vitest** (`pnpm test`); specs live next to their subject as `src/**/*.test.ts` (`vitest.config.mts` scopes the runner to `src/`, so Playwright's `tests/e2e/*.spec.ts` stay with `pnpm e2e`). Write the failing test first, then make it pass. Where a change is not reachable from a unit test (visual/CSS, editor integration), define the expected behavior up front, reproduce the failing case manually, then implement and re-verify that exact case.
 - **Follow SOLID and the existing architecture.** Keep server components server-side, isolate interactivity in `'use client'` components, put data access in `src/lib/api/services`, and consume it through the SWR hooks — don't bypass the layers.
 - **高内聚低耦合 (high cohesion, low coupling).** One responsibility per layer: presentation in components, fetching in SWR hooks (`src/lib/api/hooks`), HTTP in service classes (`src/lib/api/services`), shared shapes in `src/types/api.ts`. Components depend on hooks/services, not on `apiClient` directly; navigate via `@/i18n/routing`, not `next/navigation`. Keep server vs `'use client'` boundaries clean so a change in one doesn't ripple into the other.
 - **Keep changes scoped.** Touch only files the task requires — no opportunistic refactors, reformatting, or unrelated edits — and never revert the user's own changes unless explicitly asked.
-- Verify with `pnpm lint` and `pnpm build` before considering the work done.
+- Verify with `pnpm test`, `pnpm lint`, and `pnpm build` before considering the work done.
 
 ## Commands
 
@@ -29,15 +30,23 @@ pnpm build            # Production build (runs prebuild automatically)
 pnpm start            # Start production server
 pnpm lint             # ESLint check
 pnpm lint-fix         # ESLint auto-fix
+pnpm test             # vitest unit tests (src/**/*.test.ts), single run
+pnpm test:watch       # vitest in watch mode
+pnpm e2e              # Playwright end-to-end tests (tests/e2e/)
+pnpm analyze          # Production build + Turbopack bundle analysis report
 ```
 
-The prebuild step (`scripts/prebuild.tsx`) extracts Ant Design CSS statically and copies Monaco editor files to `public/`.
+`pnpm analyze` runs `next build --experimental-analyze` and writes a browsable report to `.next/diagnostics/analyze/index.html`. It reports the Turbopack production output; `@next/bundle-analyzer` is webpack-only and is not used here.
+
+The prebuild step (`scripts/prebuild.tsx`) statically extracts and validates the Ant Design stylesheet before Next.js emits it as a content-hashed CSS asset; it also copies Monaco editor files to `public/`.
+
+That stylesheet is render-blocking on every page, so it is extracted for the explicit component allowlist in `src/lib/antd-components.ts` rather than for all of antd. Directly imported components go in `ANTD_IMPORTED_COMPONENTS`; components only rendered indirectly (a popup owned by another component) go in `ANTD_IMPLICIT_COMPONENTS` with the reason. `src/lib/antd-components.test.ts` scans `src/` and fails when the allowlist is out of date; `assertAntdCssIntegrity` enforces a size bound plus required and forbidden selectors.
 
 ## Architecture
 
 ### Routing & i18n
 
-All routes are locale-prefixed: `/[locale]/...` (e.g., `/en/scripts`, `/zh-CN/scripts`). Locales: `en`, `zh-CN`, `zh-TW`, `ru`, `ja`, `de` (6 locales). Default locale is `en` with `localePrefix: 'always'`. Locale detection runs through `src/proxy.ts` — this is the `next-intl` middleware; Next.js 16 renamed the `middleware.ts` convention file to `proxy.ts`, so edit `src/proxy.ts` (not `middleware.ts`) to change matcher/locale-detection behavior.
+All routes are locale-prefixed: `/[locale]/...` (e.g., `/en/scripts`, `/zh-CN/scripts`). Locales: `en`, `zh-CN`, `zh-TW`, `ru`, `ja`, `de`, `vi` (7 locales). Default locale is `en` with `localePrefix: 'always'`. Locale detection runs through `src/proxy.ts` — this is the `next-intl` middleware; Next.js 16 renamed the `middleware.ts` convention file to `proxy.ts`, so edit `src/proxy.ts` (not `middleware.ts`) to change matcher/locale-detection behavior.
 
 Note: routing uses short keys (`en`, `de`) while `public/locales/` uses full tags (`en-US`, `de-DE`). The mapping is defined in `src/i18n/routing.ts` via `languageMap`.
 
@@ -103,7 +112,14 @@ APP_API_URL           # Server-side API base URL
 APP_API_PROXY         # API proxy destination (used in next.config.ts rewrites)
 ```
 
-Frontend proxies API calls via Next.js rewrites: `/api/v2/:path*` → `APP_API_PROXY/:path*`. `next.config.ts` also sets global security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`), immutable long-cache headers for `/assets`, `/styles`, `/monaco`, and `optimizePackageImports` for `antd` / `@ant-design/*` / `@iconify/react`. `pnpm` is pinned via `packageManager` (`pnpm@10.x`); use it rather than npm/yarn.
+Frontend proxies API calls via Next.js rewrites: `/api/v2/:path*` → `APP_API_PROXY/:path*`. `next.config.ts` also sets global security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`), immutable long-cache headers for `/assets` and `/monaco`, and `optimizePackageImports` for `antd` / `@ant-design/*` / `@iconify/react`. `pnpm` is pinned via `packageManager` (`pnpm@10.x`); use it rather than npm/yarn.
+
+## Bundle Size
+
+- **antd in Server Components** — server-reachable modules import antd by deep path (`import Spin from 'antd/es/spin'`), not from the `'antd'` barrel; a barrel import there makes the whole barrel a client reference and ships every antd component on that route. Client components (`'use client'`) use the barrel normally. `src/lib/antd-server-imports.test.ts` walks the import graph from each `page`/`layout` and stops at `'use client'` boundaries; `src/lib/antd-deep-imports.test.tsx` renders the deep paths in use.
+- **Iconify preload** — `src/lib/iconify-preload.ts` is imported by the root layout and lands on every route, so it holds only small icons used in persistent UI (nav, search bar, ad slot) or supplied as backend-provided names (`BACKEND_PROVIDED_ICONS`). Large multi-path logos live in scoped modules such as `src/lib/iconify-preload-browser-stores.ts`, imported by the components that render them; unregistered icons fall back to the Iconify CDN. `src/lib/iconify-preload.test.ts` fails on an unused registration or an over-budget global module.
+
+Use `pnpm analyze` to check first-load impact.
 
 ## Key Conventions
 
@@ -113,6 +129,16 @@ Frontend proxies API calls via Next.js rewrites: `/api/v2/:path*` → `APP_API_P
 - `react-hooks/exhaustive-deps` is disabled
 - Prettier with single quotes
 - Standalone output mode for Docker deployments
-- Tailwind uses a GitHub-style color system (custom primary, neutral, success, warning, error colors) with light/dark mode via CSS variables
+- Colour tokens are the CSS variables in `src/app/globals.css` (`:root` / `[data-theme="dark"]`), mirrored for Ant Design in `src/lib/antd-theme.ts`. There is no Tailwind theme config — Tailwind 4 loads one only through `@config`, and `globals.css` has none, so `neutral-*` and friends are Tailwind's stock palette. [docs/design.md](docs/design.md) owns tokens, themes, async states and accessibility
 - Icons use `@iconify/react` with icon packs: `mdi`, `mingcute`, `logos`, `noto`
 - Server components by default; add `'use client'` only for interactive components
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

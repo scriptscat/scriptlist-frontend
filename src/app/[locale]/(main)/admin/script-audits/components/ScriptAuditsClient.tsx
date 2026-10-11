@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Drawer,
@@ -9,6 +9,7 @@ import {
   Modal,
   Select,
   Space,
+  Switch,
   Table,
   Tag,
   message,
@@ -20,26 +21,26 @@ import type {
   ScriptAuditDetail,
   ScriptAuditItem,
 } from '@/lib/api/services/admin';
+import { useAdminScriptAudits } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
+import { useTableStateLocale } from '../../components/tableState';
 
 const STATUS_PENDING = 1;
 const STATUS_APPROVED = 2;
 const STATUS_REJECTED = 3;
+const SCRIPT_STATUS_AUDIT = 3;
 const ACTION_MODAL_Z_INDEX = 1200;
 
 type StatusFilter = 0 | 1 | 2 | 3; // 0 = all
 
 export default function ScriptAuditsClient() {
   const t = useTranslations('admin.script_audits');
-  const [data, setData] = useState<ScriptAuditItem[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [size] = useState(20);
   const [statusFilter, setStatusFilter] =
     useState<StatusFilter>(STATUS_PENDING);
   const [scriptNameInput, setScriptNameInput] = useState('');
   const [scriptNameFilter, setScriptNameFilter] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const [detailOpen, setDetailOpen] = useState(false);
   const [detail, setDetail] = useState<ScriptAuditDetail | null>(null);
@@ -51,34 +52,24 @@ export default function ScriptAuditsClient() {
   const [rejectForm] = Form.useForm<{ reason: string }>();
   const [submitting, setSubmitting] = useState(false);
 
-  const statusFilterParam = useMemo(() => statusFilter, [statusFilter]);
-
-  const fetchList = useCallback(
-    async (p: number = page) => {
-      setLoading(true);
-      try {
-        const resp = await adminService.listScriptAudits(
-          p,
-          size,
-          statusFilterParam,
-          undefined,
-          undefined,
-          scriptNameFilter || undefined,
-        );
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) message.error(err.msg);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [page, size, statusFilterParam, scriptNameFilter],
-  );
-
-  useEffect(() => {
-    fetchList(page);
-  }, [page, statusFilter, scriptNameFilter, fetchList]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh: fetchList,
+  } = useAdminScriptAudits({
+    page,
+    size,
+    status: statusFilter,
+    scriptName: scriptNameFilter,
+  });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: fetchList,
+  });
 
   const openDetail = async (id: number) => {
     setDetailOpen(true);
@@ -108,7 +99,7 @@ export default function ScriptAuditsClient() {
       message.success(t('approve_success'));
       setApproveOpen(false);
       setDetailOpen(false);
-      fetchList(page);
+      fetchList();
     } catch (err) {
       if (err instanceof APIError) message.error(err.msg);
     } finally {
@@ -130,7 +121,7 @@ export default function ScriptAuditsClient() {
       message.success(t('reject_success'));
       setRejectOpen(false);
       setDetailOpen(false);
-      fetchList(page);
+      fetchList();
     } catch (err) {
       if (err instanceof APIError) message.error(err.msg);
     } finally {
@@ -213,6 +204,22 @@ export default function ScriptAuditsClient() {
       filteredValue: statusFilter === 0 ? null : [statusFilter],
     },
     {
+      title: t('col_script_audit_status'),
+      dataIndex: 'script_status',
+      key: 'script_status',
+      width: 120,
+      align: 'center',
+      render: (status: number) => (
+        <Switch
+          checked={status === SCRIPT_STATUS_AUDIT}
+          checkedChildren={t('script_auditing')}
+          unCheckedChildren={t('script_not_auditing')}
+          aria-label={t('col_script_audit_status')}
+          disabled
+        />
+      ),
+    },
+    {
       title: t('col_createtime'),
       dataIndex: 'createtime',
       key: 'createtime',
@@ -266,13 +273,14 @@ export default function ScriptAuditsClient() {
           placeholder={t('filter_script_name_placeholder')}
           style={{ width: 260 }}
         />
-        <Button onClick={() => fetchList(page)}>{t('refresh')}</Button>
+        <Button onClick={fetchList}>{t('refresh')}</Button>
       </Space>
       <Table<ScriptAuditItem>
         rowKey="id"
         columns={columns}
         dataSource={data}
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         onChange={handleTableChange}
         pagination={{
           current: page,

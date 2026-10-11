@@ -59,7 +59,10 @@
       "similarity": "Similarity Detection",
       "ai_review": "AI Review",
       "ai_review_records": "Review Records",
-      "ai_review_fullscan": "Full Scan"
+      "ai_review_fullscan": "Full Scan",
+      "announcements": "Announcements",
+      "script_audits": "Script Audit",
+      "reports": "Report management"
     },
     "advertise": {
       "title": "Anzeigenverwaltung",
@@ -67,10 +70,12 @@
       "create_title": "New Ad",
       "edit_title": "Edit Ad",
       "col_slot": "Slot",
-      "col_title": "Title",
+      "col_type": "Type",
+      "col_title": "Ad / Title",
       "col_enabled": "Status",
       "col_stats": "Impressions/Clicks (CTR)",
       "col_actions": "Actions",
+      "col_ad_unit_value": "Unit {id}",
       "action_edit": "Edit",
       "action_delete": "Delete",
       "delete_confirm": "Confirm delete this ad?",
@@ -81,8 +86,20 @@
       "light_required": "Please upload a light-mode image",
       "enabled": "Enabled",
       "disabled": "Disabled",
+      "type_image": "Image",
+      "type_adsense": "AdSense",
+      "stats_adsense_placeholder": "—",
+      "stats_adsense_note": "Impressions / clicks are tracked by Google",
+      "stats_multi_slot_note": "Summe über {count} Platzierungen",
+      "field_type": "Ad Type",
       "field_slot": "Ad Slot",
       "field_title": "Title",
+      "field_remark_title": "Remark title",
+      "field_remark_title_placeholder": "Admin-only, for your own reference",
+      "field_ad_unit_id": "Ad unit ID",
+      "field_ad_unit_id_placeholder": "data-ad-slot, e.g. 1234567890",
+      "field_ad_unit_id_hint": "The data-ad-slot value from the ad unit code in your AdSense account.",
+      "adsense_stats_note": "AdSense impressions and clicks are tracked by Google; the site's own stats always show 0 for this entry. Check revenue in your AdSense account.",
       "field_languages": "Target languages (leave empty = all)",
       "field_light": "Light-mode image",
       "field_dark": "Dark-mode image (optional)",
@@ -96,6 +113,11 @@
       "upload": "Upload image",
       "image_url_placeholder": "Enter or paste an image URL, or click to upload",
       "recommended_size": "Empfohlene Größe {size}",
+      "publisher_id_hint": "AdSense-type ads won't serve until the publisher id is set.",
+      "publisher_id_placeholder": "ca-pub-…",
+      "publisher_id_save": "Save",
+      "publisher_id_save_success": "Saved successfully",
+      "publisher_id_warning": "The AdSense publisher id isn't set yet — {count} AdSense ad(s) won't serve.",
       "col_weight": "Gewichtung",
       "col_schedule": "Zeitraum",
       "schedule_forever": "Dauerhaft",
@@ -126,11 +148,11 @@
         },
         "search-rail-left": {
           "name": "Linke Suchleiste",
-          "position": "Such-Browsing-Ansicht, linker Rand des zentrierten Inhalts; nur bei Bildschirmen ≥1650px"
+          "position": "Such-Browse-Ansicht, linker Rand des Inhaltsbereichs; bei Auslieferung wird der Inhalt schmaler, bei zu wenig Rand ausgeblendet"
         },
         "search-rail-right": {
           "name": "Rechte Suchleiste",
-          "position": "Such-Browsing-Ansicht, rechter Rand des zentrierten Inhalts; nur bei Bildschirmen ≥1650px"
+          "position": "Such-Browse-Ansicht, rechter Rand des Inhaltsbereichs; bei Auslieferung wird der Inhalt schmaler, bei zu wenig Rand ausgeblendet"
         },
         "search-sidebar": {
           "name": "Such-Seitenleiste",
@@ -143,7 +165,39 @@
         "script-detail-sidebar": {
           "name": "Detail-Seitenleiste",
           "position": "Fixierte Seitenleiste der Skript-Detailseite, zwischen Statistik-Karte und Detail-Karte; auf großen Bildschirmen"
+        },
+        "script-detail-banner": {
+          "name": "Banner der Detailseite",
+          "position": "Hauptspalte der Skript-Detailseite, zwischen Info-Karte und Inhalts-Tabs; volle Breite, alle Breakpoints"
+        },
+        "search-results-rail-left": {
+          "name": "Suchergebnisse linker Vertikalplatz",
+          "position": "Linker Rand des Inhaltsbereichs der Suchergebnisse; bei Auslieferung wird der Inhalt schmaler, bei zu wenig Rand ausgeblendet"
+        },
+        "search-results-rail-right": {
+          "name": "Suchergebnisse rechter Vertikalplatz",
+          "position": "Rechter Rand des Inhaltsbereichs der Suchergebnisse, neben der Sidebar-Karte; bei zu wenig Rand ausgeblendet"
+        },
+        "script-detail-rail-left": {
+          "name": "Detailseite linker Vertikalplatz",
+          "position": "Linker Rand des Inhaltsbereichs der Skript-Detailseite; bei Auslieferung wird der Inhalt schmaler, bei zu wenig Rand ausgeblendet"
+        },
+        "script-detail-rail-right": {
+          "name": "Detailseite rechter Vertikalplatz",
+          "position": "Rechter Rand des Inhaltsbereichs der Skript-Detailseite, neben der Sticky-Sidebar; bei zu wenig Rand ausgeblendet"
         }
+      },
+      "slot_required": "Mindestens einen Werbeplatz auswählen",
+      "slot_placeholder": "Mehrere Werbeplätze möglich",
+      "slot_selected_count": "{count} Werbeplätze ausgewählt",
+      "slot_count_summary": "{count} Platz/Plätze · {sizes}",
+      "slot_mixed_title": "Die Auswahl umfasst {count} Formate; ein Motiv passt nicht auf alle",
+      "slot_mixed_desc": "Bildmotive werden auf unpassenden Plätzen skaliert und mit Rändern versehen; AdSense-Einträge teilen sich eine Ad-Unit-ID, weshalb gemischte Formate die Fill-Rate deutlich senken. Speichern ist trotzdem möglich.",
+      "slot_unknown": "Unbekannte Werbeplätze: {keys}",
+      "slot_variant": {
+        "rail": "Vertikal",
+        "banner": "Banner",
+        "card": "Karte"
       }
     },
     "ai_review": {
@@ -277,7 +331,13 @@
       "title": "OIDC-Anbieterverwaltung",
       "type_oauth2": "OAuth2 (GitHub)",
       "type_oidc": "OIDC",
-      "update_success": "Erfolgreich aktualisiert"
+      "update_success": "Erfolgreich aktualisiert",
+      "col_icon": "Icon",
+      "discover_button": "Auto Discover",
+      "discover_failed": "OIDC discovery failed. Please check the URL.",
+      "discover_success": "OIDC configuration discovered successfully",
+      "icon_upload": "Upload Icon",
+      "icon_upload_success": "Icon uploaded successfully"
     },
     "scores": {
       "action_delete": "Löschen",
@@ -355,7 +415,12 @@
       "unwell_no": "Angemessen",
       "unwell_yes": "Unangemessen",
       "visibility_success": "Sichtbarkeit erfolgreich aktualisiert",
-      "visibility_title": "Skript-Sichtbarkeit ändern"
+      "visibility_title": "Skript-Sichtbarkeit ändern",
+      "delete_reason": "Reason (optional)",
+      "delete_reason_placeholder": "Record the reason for this deletion (saved with the audit log)",
+      "search_field_content": "Content",
+      "search_field_description": "Description",
+      "search_field_name": "Name"
     },
     "system_config": {
       "ai_api_key": "API-Schlüssel",
@@ -380,7 +445,18 @@
       "es_index_hint": "Startet im Hintergrund einen vollständigen Neuaufbau des Skript-Suchindex. Die API-Antwort bedeutet nur, dass die Aufgabe gestartet wurde; den Fortschritt bitte in den Backend-Logs prüfen.",
       "es_index_button": "ES-Index neu aufbauen",
       "es_index_confirm": "ES-Suchindex jetzt neu aufbauen? Bei großen Datenbanken kann das länger dauern.",
-      "es_index_started": "Neuaufbau des ES-Suchindex gestartet"
+      "es_index_started": "Neuaufbau des ES-Suchindex gestartet",
+      "migrate_avatar_title": "Avatar Migration",
+      "migrate_avatar_button": "Start Migration",
+      "migrate_avatar_confirm": "Are you sure you want to start avatar migration? This will download user avatars from UCenter and save them locally.",
+      "migrate_avatar_started": "Avatar migration started",
+      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}",
+      "ranking_title": "Ranking Recompute",
+      "recompute_trending_hint": "The daily pick (trending_score) is recomputed automatically every day at 03:10. After changing ranking parameters, trigger a full recompute here to see the effect immediately.",
+      "recompute_trending_button": "Recompute trending_score",
+      "recompute_trending_confirm": "Recompute trending_score for all scripts now? Large databases may take a few seconds to tens of seconds.",
+      "recompute_trending_started": "trending_score recompute started",
+      "recompute_trending_running": "A recompute is already running; not retriggered"
     },
     "users": {
       "action_admin_level": "Stufe ändern",
@@ -406,7 +482,8 @@
       "status_banned": "Gesperrt",
       "title": "Benutzerverwaltung",
       "unban_confirm": "Möchten Sie diesen Benutzer wirklich entsperren?",
-      "unban_success": "Benutzer erfolgreich entsperrt"
+      "unban_success": "Benutzer erfolgreich entsperrt",
+      "col_register_ip": "Register IP"
     },
     "similarity": {
       "tab_pairs": "Pairs",
@@ -510,8 +587,89 @@
         "dean_edwards_packer": "Dean Edwards Packer erkannt",
         "aa_encode": "AAEncode-Kodierung erkannt",
         "jj_encode": "JJEncode-Kodierung erkannt",
-        "eval_density": "eval/dynamische Ausführungsdichte zu hoch"
+        "eval_density": "eval/dynamische Ausführungsdichte zu hoch",
+        "gm_cookie_unrecognized_usage": "Nicht erkannte oder nicht vollständig nachvollziehbare GM_cookie-Nutzung erkannt",
+        "gm_cookie_unused_sensitive_permission": "Die sensible GM_cookie-Berechtigung ist deklariert, aber es wurde keine legitime Nutzung erkannt",
+        "gm_cookie_data_exfiltration": "GM_cookie-Daten werden möglicherweise an das Netzwerk oder einen externen Kontext gesendet",
+        "gm_cookie_data_injection": "GM_cookie-Daten werden möglicherweise in Code, die Seite oder persistenten Speicher eingeschleust",
+        "gm_cookie_analysis_incomplete": "Die GM_cookie-Datenflussanalyse ist unvollständig und erfordert eine manuelle Prüfung"
       }
+    },
+    "announcements": {
+      "title": "Announcement Management",
+      "action_create": "Create",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "create_title": "Create Announcement",
+      "edit_title": "Edit Announcement",
+      "col_title": "Title",
+      "col_level": "Level",
+      "col_status": "Status",
+      "col_createtime": "Created",
+      "col_actions": "Actions",
+      "field_title": "Title",
+      "field_content": "Content",
+      "field_level": "Level",
+      "field_status": "Status",
+      "level_normal": "Normal",
+      "level_important": "Important",
+      "status_enabled": "Enabled",
+      "status_disabled": "Disabled",
+      "create_success": "Announcement created successfully",
+      "update_success": "Announcement updated successfully",
+      "delete_success": "Announcement deleted successfully",
+      "delete_confirm": "Are you sure you want to delete this announcement?",
+      "at_least_one_language": "Please fill in the title for at least one language"
+    },
+    "script_audits": {
+      "title": "Script Audit",
+      "col_script": "Script",
+      "col_version": "Version",
+      "col_submitter": "Submitter",
+      "col_status": "Status",
+      "col_script_audit_status": "Script Audit State",
+      "script_auditing": "Auditing",
+      "script_not_auditing": "Not auditing",
+      "col_createtime": "Submitted At",
+      "col_actions": "Actions",
+      "status_pending": "Pending",
+      "status_approved": "Approved",
+      "status_rejected": "Rejected",
+      "filter_status": "Status",
+      "filter_all": "All",
+      "filter_script_name_placeholder": "Search script name",
+      "refresh": "Refresh",
+      "action_review": "Review",
+      "action_approve": "Approve",
+      "action_reject": "Reject",
+      "approve_success": "Approved",
+      "reject_success": "Rejected",
+      "drawer_title": "Audit Detail",
+      "detail_script": "Script",
+      "detail_submitter": "Submitter",
+      "detail_changelog": "Changelog",
+      "detail_reason": "Audit Reason / Note",
+      "detail_reject_reason": "Reject Reason",
+      "detail_code": "Code",
+      "approve_modal_title": "Approve Audit",
+      "approve_reason_label": "Approval note (optional, for AI false-positive correction or audit basis)",
+      "approve_reason_placeholder": "If this was an AI false positive, note the manual review basis; leave blank to approve directly",
+      "reject_modal_title": "Reject Audit",
+      "reject_reason_label": "Reject reason (sent to author via in-app notification)",
+      "reject_reason_required": "Please provide a reject reason",
+      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)"
+    },
+    "reports": {
+      "title": "Report management",
+      "col_script": "Script",
+      "col_reporter": "Reporter",
+      "col_reason": "Reason",
+      "col_status": "Status",
+      "col_comments": "Comments",
+      "col_createtime": "Created at",
+      "col_actions": "Actions",
+      "action_view": "View",
+      "filter_status": "Filter by status"
     }
   },
   "auth": {
@@ -627,9 +785,28 @@
     "punish": "Bestrafen",
     "punish_reason": "Grund für Bestrafung",
     "report": "Melden",
-    "select_punish_option": "Bestrafungsoption auswählen"
+    "select_punish_option": "Bestrafungsoption auswählen",
+    "default_favorite_folder_name": "Standard-Favoriten",
+    "default_favorite_folder_description": "Dies ist dein Standard-Favoritenordner"
   },
   "components": {
+    "loading": {
+      "default": "Wird geladen…",
+      "code": "Code-Editor wird geladen…",
+      "chart": "Diagramm wird geladen…",
+      "failed": "Laden fehlgeschlagen",
+      "retry": "Erneut versuchen",
+      "redirecting": "Weiterleitung…"
+    },
+    "markdown": {
+      "note": "Notiz",
+      "tip": "Tipp",
+      "important": "Wichtig",
+      "warning": "Warnung",
+      "caution": "Vorsicht",
+      "footnotes_heading": "Fußnoten",
+      "footnote_backref": "Zurück zur Referenz {0}"
+    },
     "markdown_editor": {
       "image_upload_failed": "Bild-Upload fehlgeschlagen",
       "loading_editor": "Editor wird geladen...",
@@ -816,7 +993,11 @@
     "error_qq_migrate_unavailable": "Der QQ-Login-Migrationsdienst ist derzeit nicht verfügbar, bitte verwenden Sie eine andere Anmeldemethode",
     "error_invalid_params": "Ungültige Parameter, bitte versuchen Sie es erneut",
     "error_qq_migrate_failed": "QQ-Login-Migration fehlgeschlagen, bitte versuchen Sie es später erneut",
-    "error_unknown": "Beim Anmelden ist ein Fehler aufgetreten, bitte versuchen Sie es erneut"
+    "error_unknown": "Beim Anmelden ist ein Fehler aufgetreten, bitte versuchen Sie es erneut",
+    "qq_migrate_deprecation_title": "QQ sign-in will soon be discontinued",
+    "qq_migrate_deprecation_content": "QQ sign-in will soon be discontinued. After signing in, please bind another sign-in method on the settings page to avoid losing access in the future.",
+    "qq_migrate_deprecation_continue": "Continue signing in",
+    "qq_migrate_deprecation_cancel": "Cancel"
   },
   "notifications": {
     "access": {
@@ -917,7 +1098,7 @@
     "privacy_policy_description": "Erfahre, wie ScriptCat deine personenbezogenen Daten erhebt, nutzt und schützt.",
     "disclaimer_title": "Haftungsausschluss",
     "disclaimer_description": "Lies den Haftungsausschluss von ScriptCat zu Userscript-Inhalten und Nutzungsrisiken.",
-    "last_updated": "Letzte Aktualisierung: 19. Juni 2026",
+    "last_updated": "Letzte Aktualisierung: 25. August 2026",
     "tos_section1_title": "1. General",
     "tos_section1_content": "Welcome to ScriptCat Script Hub (hereinafter referred to as 'the Platform'). The Platform is a user script sharing community that provides services for publishing, searching, and installing scripts, and may display advertisements on its pages. Please carefully read and understand the entire content of this Terms of Service before using the Platform. By registering or using the Platform, you agree to be bound by this agreement.",
     "tos_section2_title": "2. Account Registration and Usage",
@@ -930,20 +1111,22 @@
     "tos_section5_content": "For violations of this agreement or applicable laws, the Platform reserves the right to take measures including but not limited to: removing offending scripts, restricting account features, suspending or permanently banning accounts. For serious violations, the Platform reserves the right to pursue legal remedies.",
     "tos_section6_title": "6. Agreement Changes and Termination",
     "tos_section6_content": "The Platform reserves the right to modify this agreement as needed. Modified agreements will be published on the Platform. Your continued use of the Platform constitutes acceptance of the modified agreement. The Platform may terminate or suspend services within the scope permitted by law, with advance notice provided when possible. The Platform reserves the right of final interpretation of this agreement.",
-    "pp_section1_title": "1. Information Collection",
-    "pp_section1_content": "We collect the following types of user information: registration information (email address, username); device and network information (IP address, browser type); usage data (script browsing, installation, ratings, ad views and clicks, etc.); session information used to maintain your login status.",
-    "pp_section2_title": "2. Information Usage",
-    "pp_section2_content": "We use the collected information for: providing and improving platform services; data statistics such as script installation counts; security measures (preventing malicious registration, abuse, etc.); sending service notifications such as verification codes and password resets; displaying advertisements and measuring their performance, such as views and clicks (our ads are operated by the Platform itself and do not rely on third-party ad networks). We will not sell your personal information to third parties.",
-    "pp_section3_title": "3. Third-Party Services",
-    "pp_section3_content": "The Platform may use third-party services to provide certain features, such as third-party account login and human verification. When using third-party login, we only obtain the basic information you authorize (such as username, email, avatar). Data processing by third-party services is governed by their respective privacy policies.",
-    "pp_section4_title": "4. Cookies and Sessions",
-    "pp_section4_content": "The Platform uses cookies and session technology to maintain your login status and preference settings. You can manage cookies through your browser settings, but this may affect the normal use of the Platform.",
-    "pp_section5_title": "5. Data Security and Retention",
-    "pp_section5_content": "We take reasonable technical and administrative measures to protect user data security. User data will be retained during the existence of your account. After account deletion, your personal information will be deleted or anonymized within a reasonable period, except where required by law.",
-    "pp_section6_title": "6. User Rights",
-    "pp_section6_content": "You have the right to: view and modify your personal information; request deletion of your account and related data; understand how we process your personal information. To exercise these rights or if you have any questions, please contact us through the platform's feedback feature.",
-    "pp_section7_title": "7. Policy Updates",
-    "pp_section7_content": "We may update this Privacy Policy in response to changes in applicable laws or product features. The updated policy will be published on the Platform. We recommend that you review it periodically. Your continued use of the Platform constitutes acceptance of the updated policy. The Platform reserves the right of final interpretation of this policy.",
+    "pp_section1_title": "1. Erhebung von Informationen",
+    "pp_section1_content": "Wir erheben: die E-Mail-Adresse, den Benutzernamen und ähnliche Angaben, die Sie bei der Registrierung machen; Ihre IP-Adresse sowie Browser- und Geräteinformationen bei Ihrem Besuch; Ihre Aktivitäten auf der Plattform wie das Ansehen, Installieren und Bewerten von Skripten; sowie Sitzungsdaten, die Sie angemeldet halten.\n\nBei der Registrierung oder beim Absenden von Feedback erfassen wir Ihre IP-Adresse und leiten daraus einen ungefähren Standort ab (etwa Land und Stadt), um missbräuchliche Registrierungen und Missbrauch zu verhindern. Diese Zuordnung erfolgt auf unseren eigenen Servern.",
+    "pp_section2_title": "2. Verwendung von Informationen",
+    "pp_section2_content": "Wir verwenden die erhobenen Informationen, um die Plattform bereitzustellen und zu verbessern, Statistiken zu erstellen, die Sicherheit zu gewährleisten, Servicebenachrichtigungen wie Bestätigungscodes und Passwortzurücksetzungen zu versenden sowie Werbung auszuliefern und deren Wirkung zu messen. Wir verkaufen Ihre personenbezogenen Daten nicht an Dritte.",
+    "pp_section3_title": "3. Dienste Dritter",
+    "pp_section3_content": "Die Plattform nutzt Dienste Dritter, darunter Google Analytics (Zugriffsstatistik), Cloudflare Turnstile (Mensch-Prüfung), die Anmeldung über Drittanbieter-Konten und Google AdSense (Werbung). Bei der Anmeldung über ein Drittanbieter-Konto erhalten wir ausschließlich die von Ihnen freigegebenen Basisdaten, etwa Benutzername und E-Mail-Adresse.\n\nDiese Dienste erheben die von ihnen benötigten Geräte- und Nutzungsinformationen und können eigene Cookies in Ihrem Browser setzen; für deren Verarbeitung gelten die jeweiligen Datenschutzerklärungen.",
+    "pp_section4_title": "4. Werbung",
+    "pp_section4_content": "In den Werbeflächen der Plattform werden zwei Arten von Anzeigen ausgeliefert: Anzeigen, die wir selbst vermitteln, und Anzeigen, die über Google AdSense ausgeliefert werden.\n\nBei selbst vermittelten Anzeigen erfassen wir beim Klick Angaben wie den Zeitpunkt des Klicks und die Position der Anzeige, um die Werbewirkung zu messen und auffällige Klicks zu erkennen.\n\nBei Anzeigen von Google AdSense erfolgen Auslieferung und Messung durch Google; wir können nicht feststellen, wer eine bestimmte Anzeige gesehen oder angeklickt hat. Wie von Google gefordert, weisen wir auf Folgendes hin: Drittanbieter, einschließlich Google, verwenden Cookies, um Anzeigen auf Grundlage früherer Besuche eines Nutzers auf dieser oder anderen Websites auszuliefern; die Verwendung von Werbe-Cookies durch Google ermöglicht es Google und seinen Partnern, Nutzern Anzeigen auf Grundlage ihrer Besuche auf dieser und/oder anderen Websites im Internet auszuliefern.\n\nSie können personalisierte Werbung in den Google-Anzeigeneinstellungen (google.com/settings/ads) deaktivieren oder die Werbe-Cookies einiger Drittanbieter unter aboutads.info abwählen.",
+    "pp_section5_title": "5. Cookies und Sitzungen",
+    "pp_section5_content": "Die Plattform verwendet Cookies, um Sie angemeldet zu halten, Ihre Darstellungs- und Spracheinstellungen zu speichern und für ähnliche Zwecke. Auch die oben genannten Dienste Dritter setzen eigene Cookies für Zugriffsstatistik und Werbung.\n\nSie können Cookies über die Einstellungen Ihres Browsers verwalten oder löschen; das Löschen der anmeldebezogenen Cookies führt jedoch dazu, dass Sie nicht angemeldet bleiben können. Die Plattform zeigt kein Cookie-Einwilligungsbanner an. Wenn Sie keine personalisierte Werbung erhalten möchten, nutzen Sie bitte die im vorherigen Abschnitt beschriebenen Möglichkeiten.",
+    "pp_section6_title": "6. Datensicherheit und Speicherdauer",
+    "pp_section6_content": "Wir treffen angemessene technische und organisatorische Maßnahmen zum Schutz der Nutzerdaten. Daten werden für die Dauer des Bestehens des Kontos gespeichert und nach dessen Löschung innerhalb eines angemessenen Zeitraums gelöscht oder anonymisiert, sofern keine gesetzliche Aufbewahrungspflicht besteht.",
+    "pp_section7_title": "7. Ihre Rechte",
+    "pp_section7_content": "Sie haben das Recht, Ihre personenbezogenen Daten einzusehen und zu ändern, die Löschung Ihres Kontos und der zugehörigen Daten zu verlangen und zu erfahren, wie wir Ihre personenbezogenen Daten verarbeiten. Zur Ausübung dieser Rechte oder bei Fragen kontaktieren Sie uns bitte über die Feedback-Funktion der Plattform.",
+    "pp_section8_title": "8. Aktualisierung der Richtlinie",
+    "pp_section8_content": "Wir können diese Datenschutzerklärung aufgrund gesetzlicher Anforderungen oder Änderungen an der Plattform aktualisieren. Aktualisierte Fassungen werden auf der Plattform veröffentlicht; wir empfehlen, sie regelmäßig zu lesen. Mit der weiteren Nutzung der Plattform erkennen Sie die aktualisierte Fassung an. Das Recht zur endgültigen Auslegung dieser Datenschutzerklärung liegt bei der Plattform.",
     "dc_section1_title": "1. Script Disclaimer",
     "dc_section1_content": "All user scripts published on the Platform are independently created and maintained by script authors and do not represent the position or views of the Platform. The Platform makes no express or implied warranties regarding the functionality, security, legality, or suitability of any user script. Users install and use scripts at their own discretion, and all risks and consequences are borne by the user.",
     "dc_section2_title": "2. Usage Risks",
@@ -951,7 +1134,7 @@
     "dc_section3_title": "3. Service Availability",
     "dc_section3_content": "The Platform provides services on an 'as-is' basis and does not guarantee uninterrupted, error-free service or that it will meet your specific needs. The Platform is not liable for service interruptions caused by system maintenance, upgrades, network failures, or force majeure. The Platform reserves the right to modify, suspend, or terminate some or all services at any time.",
     "dc_section4_title": "4. Limitation of Liability",
-    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption. The Platform makes no warranties and assumes no responsibility for any goods or services promoted by advertisers through the Platform; any transaction between you and an advertiser is at your own discretion and risk.",
+    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption. The Platform makes no warranties and assumes no responsibility for any goods or services promoted by advertisers through the Platform, or for advertisements served by third-party advertising networks such as Google AdSense; the Platform does not select, review, or endorse advertisements served by such networks. Any transaction between you and an advertiser, or arising from an advertisement served by a third-party advertising network, is at your own discretion and risk.",
     "dc_section5_title": "5. Disclaimer Updates",
     "dc_section5_content": "We may update this Disclaimer in response to changes in applicable laws or product features. The updated disclaimer will be published on the Platform. We recommend that you review it periodically. Your continued use of the Platform constitutes acceptance of the updated disclaimer. The Platform reserves the right of final interpretation of this disclaimer."
   },
@@ -1098,8 +1281,8 @@
       "install": {
         "install_check_failed": "Überprüfung des Skriptinstallationsstatus fehlgeschlagen",
         "install_script": "Skript installieren",
-        "reinstall_script": "Skript v{version} neu installieren",
-        "update_script": "Skript auf v{version} aktualisieren",
+        "reinstall_script": "Skript neu installieren",
+        "update_script": "Skript aktualisieren",
         "updated_at": "Aktualisiert am {time}",
         "changelog": "Änderungsprotokoll"
       },
@@ -1131,7 +1314,7 @@
         "connect": "Ursprungsübergreifender Zugriff",
         "grants": "Fähigkeiten",
         "more": "+{count}",
-        "high_risk": "Hochriskante Berechtigung – mit Vorsicht installieren",
+        "high_risk": "Dieses Skript verfügt über eine sensible Berechtigung zum Zugriff auf und Ändern von Cookies.",
         "cap": {
           "net": "Netzwerkanfragen",
           "notify": "Benachrichtigungen",
@@ -1162,6 +1345,78 @@
         "metadata": "Berechtigungen",
         "ratings": "Bewertungen",
         "versions": "Versionen"
+      },
+      "metadata": {
+        "empty_description": "This script does not declare displayable permissions, connections, or run rules.",
+        "empty_title": "No metadata details",
+        "fields": {
+          "author": "Author",
+          "connect": "Network access",
+          "exclude": "Exclude rules",
+          "grant": "Permissions",
+          "include": "Include rules",
+          "license": "License",
+          "match": "Match rules",
+          "namespace": "Namespace",
+          "require": "External dependencies",
+          "resource": "External resources",
+          "run_at": "Run timing"
+        },
+        "grants": {
+          "addElement": "Allows the script to create and insert elements into the page.",
+          "addStyle": "Allows the script to inject CSS into the page.",
+          "deleteValue": "Allows the script to delete data stored by the userscript manager.",
+          "download": "Allows the script to trigger file downloads.",
+          "getResourceText": "Allows the script to read text resources declared with @resource.",
+          "getResourceUrl": "Allows the script to read URLs for resources declared with @resource.",
+          "getValue": "Allows the script to read data stored by the userscript manager.",
+          "info": "Allows the script to read script and manager runtime information.",
+          "listValues": "Allows the script to list stored data keys.",
+          "none": "The script declares that it needs no extra userscript-manager permissions.",
+          "notification": "Allows the script to show system or browser notifications.",
+          "openInTab": "Allows the script to open new browser tabs.",
+          "registerMenuCommand": "Allows the script to add commands to the userscript manager menu.",
+          "setClipboard": "Allows the script to write to the clipboard.",
+          "setValue": "Allows the script to save data in the userscript manager.",
+          "unknown": "An extended permission requested by the script; behavior depends on manager support.",
+          "unregisterMenuCommand": "Allows the script to remove registered menu commands.",
+          "unsafeWindow": "Allows access to the page window object and direct interaction with page scripts.",
+          "xmlhttpRequest": "Allows network requests proxied by the userscript manager."
+        },
+        "intro": "These details come from the userscript metadata block and help explain declared permissions, run scope, and external dependencies.",
+        "run_at": {
+          "context_menu": "Runs only when triggered from the context menu.",
+          "document_body": "Runs after the page body is available.",
+          "document_end": "Runs around DOM load completion.",
+          "document_idle": "Runs when the page is mostly loaded and idle.",
+          "document_start": "Runs as early as possible while the page starts loading.",
+          "unknown": "A declared run timing whose behavior depends on the userscript manager."
+        },
+        "sections": {
+          "author": "Author information declared by the script.",
+          "connect": "Domains the script may connect to, usually used with network request permissions.",
+          "exclude": "URL rules excluded from the run scope.",
+          "grant": "Capabilities or API permissions requested from the userscript manager.",
+          "include": "URL rules where the script declares it can run.",
+          "license": "Open source or usage license declared by the script.",
+          "match": "URL rules matched by the script.",
+          "namespace": "Namespace used to distinguish the script identity or source.",
+          "require": "External JavaScript dependencies loaded before the script runs.",
+          "resource": "External resources declared for script access.",
+          "run_at": "The page lifecycle stage where the script prefers to run."
+        },
+        "values": {
+          "author": "Declared author value.",
+          "connect": "Allowed domain or wildcard connection rule.",
+          "exclude": "URL rule excluded from execution.",
+          "include": "URL rule included for execution.",
+          "license": "License identifier.",
+          "match": "URL rule matched for execution.",
+          "namespace": "Namespace identifier.",
+          "require": "External script dependency URL.",
+          "resource": "External resource declaration.",
+          "unknown": "Metadata declaration value."
+        }
       }
     },
     "diff": {
@@ -1431,6 +1686,7 @@
         "stats": {
           "expired": "Abgelaufen:",
           "groups": "Benutzergruppen:",
+          "page_scope_note": "(Benutzer / Gruppen / ausstehend / abgelaufen werden nur für die aktuelle Seite gezählt)",
           "pending": "Wartend auf Bestätigung:",
           "total": "Gesamt:",
           "users": "Benutzer:"
@@ -1864,6 +2120,7 @@
       },
       "sort": {
         "createtime": "Neueste Veröffentlichung",
+        "long_tail": "Könnte dich interessieren",
         "score": "Höchste Bewertung",
         "today_download": "Nach Popularität sortieren",
         "total_download": "Meist heruntergeladen"
@@ -1941,6 +2198,7 @@
       "username": "Benutzername"
     },
     "version": {
+      "auto_synced_changelog": "Diese Version wurde vom System automatisch synchronisiert.",
       "changelog_label": "Update-Beschreibung",
       "changelog_placeholder": "z.B.:\n✨ Neue Funktion: Benutzeroberflächen-Optimierung hinzugefügt\n🐛 Problem behoben: Browser-Kompatibilitätsproblem gelöst\n⚡ Leistungsverbesserung: Skript-Ausführungsgeschwindigkeit optimiert\n📦 Abhängigkeits-Update: Auf neueste Version aktualisiert",
       "changelog_subtitle": "(Unterstützt Markdown-Syntax)",
@@ -1962,6 +2220,7 @@
       "install_button": "Diese Version installieren",
       "install_success": "Installation von {version} beginnt",
       "latest_version_badge": "Neueste Version",
+      "deleted_version_badge": "Gelöscht",
       "load_failed": "Laden fehlgeschlagen",
       "load_failed_description": "Fehler beim Abrufen der Versionsliste, bitte Seite aktualisieren und erneut versuchen",
       "no_history_description": "Dieses Skript hat noch keine Versionen veröffentlicht",
@@ -1970,6 +2229,7 @@
       "pagination_total": "Element {start}-{end} von insgesamt {total} Versionen",
       "prerelease_badge": "Vorveröffentlichungsversion",
       "prerelease_chip": "Vorabversion {count}",
+      "deleted_chip": "Gelöscht {count}",
       "prerelease_checked": "Vorveröffentlichungsversion",
       "prerelease_unchecked": "Vollversion",
       "prerelease_versions": "Vorveröffentlichungsversionen",
@@ -2178,7 +2438,33 @@
       "processed_col_script": "Skript",
       "processed_col_operator": "Bearbeiter",
       "processed_col_time": "Zeit",
-      "processed_col_reason": "Grund"
+      "processed_col_reason": "Grund",
+      "account_deactivated": "This account has been deactivated",
+      "ban_user": "Ban user",
+      "unban_user": "Unban user",
+      "ban_reason": "Ban reason",
+      "ban_reason_placeholder": "Enter a reason for the ban",
+      "ban_duration": "Ban duration",
+      "ban_permanent": "Permanent ban",
+      "ban_1_day": "1 day",
+      "ban_3_days": "3 days",
+      "ban_7_days": "7 days",
+      "ban_30_days": "30 days",
+      "ban_90_days": "90 days",
+      "ban_custom": "Custom",
+      "ban_clean_options": "Cleanup options",
+      "ban_clean_scores": "Remove user ratings",
+      "ban_clean_scripts": "Remove user scripts",
+      "ban_success": "User banned",
+      "unban_success": "User unbanned",
+      "ban_confirm_title": "Confirm ban",
+      "unban_confirm": "Are you sure you want to unban this user?",
+      "user_banned": "Banned",
+      "ban_expire_at": "Ban expires at",
+      "ban_permanent_label": "Permanent",
+      "register_ip": "Registration IP",
+      "ip_location": "IP location",
+      "register_email": "Registration email"
     },
     "save": "Speichern",
     "script_list": {
@@ -2191,6 +2477,7 @@
       "status_active": "Veröffentlicht",
       "status_all": "Alle Status",
       "status_audit": "In Prüfung",
+      "status_deleted": "Gelöscht",
       "sort_by_downloads": "Meist heruntergeladen",
       "sort_by_hot": "Nach Popularität sortieren",
       "sort_by_latest": "Neueste Veröffentlichung",
@@ -2209,7 +2496,8 @@
       "deactivate_settings": "Konto löschen",
       "passkey_settings": "Passkeys",
       "account_settings": "Kontoverwaltung",
-      "account_settings_description": "Passwörter, Passkeys, Drittanbieter-Verknüpfungen und Kontosicherheitseinstellungen verwalten"
+      "account_settings_description": "Passwörter, Passkeys, Drittanbieter-Verknüpfungen und Kontosicherheitseinstellungen verwalten",
+      "install_link_settings": "Installationslink"
     },
     "update_failed": "Aktualisierung fehlgeschlagen, bitte versuchen Sie es erneut",
     "update_success": "Benutzerinformationen erfolgreich aktualisiert!",
@@ -2297,6 +2585,26 @@
       "cancel_failed": "Abbruch fehlgeschlagen",
       "applied_at": "Beantragt am",
       "effective_at": "Wirksam am"
+    },
+    "contact_email": "Contact email",
+    "email_code_placeholder": "Enter the 6-digit verification code",
+    "email_code_required": "Send and enter the email verification code first",
+    "email_code_resend": "Resend",
+    "email_code_sent": "Verification code sent",
+    "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
+    "email_send_code": "Send verification code",
+    "email_send_code_countdown": "Resend in {{seconds}}s",
+    "install_link": {
+      "title": "Installationslink",
+      "description": "Installationslinks für private Skripte enthalten ein eigenes Token. Der Skriptmanager nutzt es zum Installieren und für Update-Prüfungen, eine angemeldete Sitzung ist daher nicht nötig. Der Link ist an dein Konto gebunden — gib ihn nicht an Unbefugte weiter.",
+      "reset": "Installationslink zurücksetzen",
+      "reset_warning_title": "Ein Zurücksetzen macht bestehende Links sofort ungültig",
+      "reset_warning_content": "Nach dem Zurücksetzen erhalten alle bereits auf deinen Geräten installierten privaten Skripte keine Updates mehr und müssen erneut installiert werden. Setze nur zurück, wenn ein Link möglicherweise durchgesickert ist. Das Webhook-Secret bleibt unberührt.",
+      "reset_confirm_title": "Installationslink zurücksetzen?",
+      "reset_confirm_content": "Alle bereits auf deinen Geräten installierten privaten Skripte müssen erneut installiert werden.",
+      "reset_confirm_ok": "Zurücksetzen",
+      "reset_success": "Installationslink zurückgesetzt",
+      "reset_failed": "Zurücksetzen fehlgeschlagen, bitte später erneut versuchen"
     }
   },
   "ads": {
@@ -2321,5 +2629,8 @@
       "title": "Code Failed Integrity Check",
       "help": "If this is a false positive, please apply for an exemption via the admin contact listed in the site FAQ."
     }
+  },
+  "announcements": {
+    "title": "Announcements"
   }
 }

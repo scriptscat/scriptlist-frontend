@@ -18,43 +18,128 @@ import {
   Switch,
   Table,
   Tag,
+  Tooltip,
   Upload,
 } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { useTranslations } from 'next-intl';
 import type { ColumnsType, TableProps } from 'antd/es/table';
-import { advertiseService } from '@/lib/api/services/advertise';
+import { advertiseService, resolveAdType } from '@/lib/api/services/advertise';
 import type {
   AdClickItem,
   AdClickStats,
   AdminAdvertise,
   AdminAdvertiseInput,
+  AdType,
 } from '@/lib/api/services/advertise';
 import { resourceService } from '@/lib/api/services/resource';
+import { adminService } from '@/lib/api/services/admin';
 import { API_CONFIG } from '@/lib/api/config';
+import { useAdminAdvertises } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
+import { useTableStateLocale } from '../../components/tableState';
 import { AD_SLOT_KEYS, getAdSlotMeta } from '@/components/AdSlot/slots';
+import {
+  crossSlotAggregateCount,
+  describeSlotSelection,
+  groupSlotOptions,
+  parseSlotKeys,
+} from '../slotSelection';
+import { countUnservableAdsense, getAdFieldRequirements } from '../adTypeRules';
 
 const LANGS = ['en', 'zh-CN', 'zh-TW', 'ru', 'ja', 'de', 'vi'];
 
+/** system_config key holding the AdSense publisher id (design doc §3 / §6.3). */
+const PUBLISHER_ID_KEY = 'advertise.adsense_publisher_id';
+
 export default function AdvertiseClient() {
   const t = useTranslations('admin.advertise');
-  const [data, setData] = useState<AdminAdvertise[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [slotFilter, setSlotFilter] = useState<string | undefined>();
+  const [typeFilter, setTypeFilter] = useState<AdType | undefined>();
   const [enabledFilter, setEnabledFilter] = useState<boolean | undefined>();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<AdminAdvertise | null>(null);
   const [lightUrl, setLightUrl] = useState('');
   const [darkUrl, setDarkUrl] = useState('');
   const [form] = Form.useForm();
-  const selectedSlot = Form.useWatch('slot_key', form) as string | undefined;
-  const selectedMeta = selectedSlot ? getAdSlotMeta(selectedSlot) : undefined;
+  const selectedSlots =
+    (Form.useWatch('slot_keys', form) as string[] | undefined) ?? [];
+  const slotSelection = describeSlotSelection(selectedSlots);
+  // 多选后推荐尺寸可能不止一个，图片上传处把所选形态的尺寸都列出来。
+  const recommendedSizeHint = slotSelection.groups.length
+    ? t('recommended_size', {
+        size: slotSelection.groups.map((g) => g.size).join(' / '),
+      })
+    : undefined;
+  const selectedAdType =
+    (Form.useWatch('ad_type', form) as AdType | undefined) ?? 'image';
+  const fieldRequirements = getAdFieldRequirements(selectedAdType);
   const slotName = (key: string) => t(`slots.${key}.name`);
   const slotPosition = (key: string) => t(`slots.${key}.position`);
+
+  // AdSense 发布商 ID：系统配置，读写复用 admin_svc 的通用 key-value 接口。
+  const [publisherId, setPublisherId] = useState('');
+  const [publisherIdInput, setPublisherIdInput] = useState('');
+  const [publisherIdLoading, setPublisherIdLoading] = useState(true);
+  const [publisherIdSaving, setPublisherIdSaving] = useState(false);
+  // 未配置发布商 ID 时受影响的 AdSense 条目数（全站计数，跨全部分页，见 §6.3）。
+  const [adsenseCount, setAdsenseCount] = useState(0);
+
+  const fetchPublisherId = useCallback(async () => {
+    setPublisherIdLoading(true);
+    try {
+      const resp = await adminService.getSystemConfigs('advertise.');
+      const value =
+        resp.configs.find((c) => c.key === PUBLISHER_ID_KEY)?.value ?? '';
+      setPublisherId(value);
+      setPublisherIdInput(value);
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      }
+    } finally {
+      setPublisherIdLoading(false);
+    }
+  }, []);
+
+  const fetchAdsenseCount = useCallback(async () => {
+    try {
+      setAdsenseCount(await advertiseService.adminCountByType('adsense'));
+    } catch {
+      // best-effort only: the warning banner simply omits a count on failure
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPublisherId();
+    fetchAdsenseCount();
+  }, []);
+
+  const handleSavePublisherId = async () => {
+    setPublisherIdSaving(true);
+    try {
+      const value = publisherIdInput.trim();
+      await adminService.updateSystemConfigs([
+        { key: PUBLISHER_ID_KEY, value },
+      ]);
+      setPublisherId(value);
+      setPublisherIdInput(value);
+      message.success(t('publisher_id_save_success'));
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      }
+    } finally {
+      setPublisherIdSaving(false);
+    }
+  };
+
+  const unservableAdsenseCount = countUnservableAdsense(
+    publisherId,
+    adsenseCount,
+  );
 
   // 点击详情弹窗状态
   const [detailAd, setDetailAd] = useState<AdminAdvertise | null>(null);
@@ -65,45 +150,45 @@ export default function AdvertiseClient() {
   const [clicksTotal, setClicksTotal] = useState(0);
   const [clicksPage, setClicksPage] = useState(1);
   const [clicksLoading, setClicksLoading] = useState(false);
+  const [clicksError, setClicksError] = useState<unknown>(null);
+  /** 手动重试用的自增令牌：变化即触发下面的 effect 重新拉取。 */
+  const [clicksReload, setClicksReload] = useState(0);
 
-  const fetchData = useCallback(
-    async (p: number = page) => {
-      setLoading(true);
-      try {
-        const resp = await advertiseService.adminList(
-          p,
-          20,
-          slotFilter,
-          enabledFilter,
-        );
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) {
-          message.error(err.msg);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [page, slotFilter, enabledFilter],
-  );
-
-  useEffect(() => {
-    fetchData(page);
-  }, [page, slotFilter, enabledFilter]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh: fetchData,
+  } = useAdminAdvertises({
+    page,
+    slot: slotFilter,
+    enabled: enabledFilter,
+    adType: typeFilter,
+  });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: fetchData,
+  });
 
   const handleTableChange: TableProps<AdminAdvertise>['onChange'] = (
     pagination,
     filters,
   ) => {
-    const nextSlot = (filters.slot_key?.[0] as string | undefined) ?? undefined;
+    const nextSlot =
+      (filters.slot_keys?.[0] as string | undefined) ?? undefined;
+    const nextType = (filters.ad_type?.[0] as AdType | undefined) ?? undefined;
     const rawEnabled = filters.enabled?.[0];
     const nextEnabled =
       rawEnabled === undefined ? undefined : rawEnabled === 'true';
     const filterChanged =
-      nextSlot !== slotFilter || nextEnabled !== enabledFilter;
+      nextSlot !== slotFilter ||
+      nextType !== typeFilter ||
+      nextEnabled !== enabledFilter;
     setSlotFilter(nextSlot);
+    setTypeFilter(nextType);
     setEnabledFilter(nextEnabled);
     setPage(filterChanged ? 1 : pagination.current || 1);
   };
@@ -114,6 +199,9 @@ export default function AdvertiseClient() {
     setClicksPage(1);
     setStats(null);
     setClicks([]);
+    // 数据清空的同一帧就进入加载态，否则先渲染一次 clicks=[] + loading=false 的空表。
+    setStatsLoading(true);
+    setClicksLoading(true);
   };
 
   const closeClickDetail = () => setDetailAd(null);
@@ -144,6 +232,7 @@ export default function AdvertiseClient() {
     if (!detailAd) return;
     let cancelled = false;
     setClicksLoading(true);
+    setClicksError(null);
     advertiseService
       .adminClickList(detailAd.id, clicksPage, 10)
       .then((r) => {
@@ -152,6 +241,9 @@ export default function AdvertiseClient() {
         setClicksTotal(r.total);
       })
       .catch((err) => {
+        if (cancelled) return;
+        // 断网 / 超时不是 APIError，原来会被整个吞掉，表格永久停在空态。
+        setClicksError(err);
         if (err instanceof APIError) message.error(err.msg);
       })
       .finally(() => {
@@ -160,7 +252,14 @@ export default function AdvertiseClient() {
     return () => {
       cancelled = true;
     };
-  }, [detailAd, clicksPage]);
+  }, [detailAd, clicksPage, clicksReload]);
+
+  const retryClicks = useCallback(() => setClicksReload((n) => n + 1), []);
+  const clicksTableLocale = useTableStateLocale({
+    isLoading: clicksLoading,
+    error: clicksError,
+    onRetry: retryClicks,
+  });
 
   // 按窗口天数把后端返回的稀疏日聚合补齐成连续日期序列（缺失日补 0），便于趋势展示
   const trend = useMemo(() => {
@@ -194,7 +293,12 @@ export default function AdvertiseClient() {
     form.resetFields();
     setLightUrl('');
     setDarkUrl('');
-    form.setFieldsValue({ weight: 1, enabled: true, languages: [] });
+    form.setFieldsValue({
+      weight: 1,
+      enabled: true,
+      languages: [],
+      ad_type: 'image',
+    });
     setModalOpen(true);
   };
 
@@ -203,7 +307,9 @@ export default function AdvertiseClient() {
     setLightUrl(r.image_url_light);
     setDarkUrl(r.image_url_dark);
     form.setFieldsValue({
-      slot_key: r.slot_key,
+      slot_keys: parseSlotKeys(r.slot_keys),
+      ad_type: resolveAdType(r),
+      ad_unit_id: r.ad_unit_id,
       title: r.title,
       languages: r.languages ? r.languages.split(',') : [],
       link_url: r.link_url,
@@ -225,6 +331,7 @@ export default function AdvertiseClient() {
       await advertiseService.adminDelete(id);
       message.success(t('delete_success'));
       fetchData();
+      fetchAdsenseCount();
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -247,20 +354,23 @@ export default function AdvertiseClient() {
   const handleSubmit = async () => {
     try {
       const v = await form.validateFields();
-      if (!lightUrl) {
+      const adType: AdType = v.ad_type === 'adsense' ? 'adsense' : 'image';
+      const requirements = getAdFieldRequirements(adType);
+      if (requirements.lightImage && !lightUrl) {
         message.error(t('light_required'));
         return;
       }
       const range = v.range as
-        | [dayjs.Dayjs | null, dayjs.Dayjs | null]
-        | undefined;
+        [dayjs.Dayjs | null, dayjs.Dayjs | null] | undefined;
       const input: AdminAdvertiseInput = {
-        slot_key: v.slot_key,
+        slot_keys: (v.slot_keys || []).join(','),
+        ad_type: adType,
+        ad_unit_id: requirements.adUnitId ? v.ad_unit_id : '',
         title: v.title,
         languages: (v.languages || []).join(','),
-        image_url_light: lightUrl,
-        image_url_dark: darkUrl,
-        link_url: v.link_url,
+        image_url_light: requirements.lightImage ? lightUrl : '',
+        image_url_dark: requirements.lightImage ? darkUrl : '',
+        link_url: requirements.linkUrl ? v.link_url : '',
         weight: v.weight,
         enabled: v.enabled,
         start_at: range?.[0] ? Math.floor(range[0].valueOf() / 1000) : 0,
@@ -275,6 +385,7 @@ export default function AdvertiseClient() {
       }
       setModalOpen(false);
       fetchData();
+      fetchAdsenseCount();
     } catch (err) {
       if (err instanceof APIError) {
         message.error(err.msg);
@@ -286,29 +397,72 @@ export default function AdvertiseClient() {
     { title: 'ID', dataIndex: 'id', width: 70 },
     {
       title: t('col_slot'),
-      dataIndex: 'slot_key',
+      dataIndex: 'slot_keys',
+      width: 300,
       filters: AD_SLOT_KEYS.map((k) => ({ text: slotName(k), value: k })),
       filterMultiple: false,
       filteredValue: slotFilter ? [slotFilter] : null,
       render: (v: string, r: AdminAdvertise) => {
-        const meta = getAdSlotMeta(v);
+        // 一条广告可投多个位，全部列出：管理员最主要的判断依据就是「投在哪些位」，
+        // 折叠会把它藏起来。曝光/点击是跨位合计，摘要行里写明。
+        const keys = parseSlotKeys(v);
+        const summary = describeSlotSelection(keys);
         return (
           <div>
             <Button
               type="link"
-              className="!p-0 !h-auto"
+              className="!p-0 !h-auto !text-left !whitespace-normal"
               onClick={() => openClickDetail(r)}
             >
-              {meta ? slotName(v) : v}
+              <span className="flex flex-wrap gap-1">
+                {keys.map((k) => (
+                  <Tag key={k} className="!mr-0">
+                    {getAdSlotMeta(k) ? slotName(k) : k}
+                  </Tag>
+                ))}
+              </span>
             </Button>
-            {meta && (
-              <div className="text-xs text-gray-400">{`${v} · ${meta.size}`}</div>
-            )}
+            <div className="text-xs text-gray-400">
+              {t('slot_count_summary', {
+                count: summary.count,
+                sizes: summary.groups.map((g) => g.size).join(' / '),
+              })}
+            </div>
           </div>
         );
       },
     },
-    { title: t('col_title'), dataIndex: 'title', ellipsis: true },
+    {
+      title: t('col_type'),
+      dataIndex: 'ad_type',
+      width: 100,
+      filters: [
+        { text: t('type_image'), value: 'image' },
+        { text: t('type_adsense'), value: 'adsense' },
+      ],
+      filterMultiple: false,
+      filteredValue: typeFilter ? [typeFilter] : null,
+      render: (_: unknown, r: AdminAdvertise) => (
+        <Tag color={resolveAdType(r) === 'adsense' ? 'blue' : 'default'}>
+          {resolveAdType(r) === 'adsense' ? t('type_adsense') : t('type_image')}
+        </Tag>
+      ),
+    },
+    {
+      title: t('col_title'),
+      ellipsis: true,
+      render: (_: unknown, r: AdminAdvertise) =>
+        resolveAdType(r) === 'adsense' ? (
+          <div>
+            <div className="font-mono text-xs">
+              {t('col_ad_unit_value', { id: r.ad_unit_id })}
+            </div>
+            {r.title && <div className="text-xs text-gray-400">{r.title}</div>}
+          </div>
+        ) : (
+          r.title
+        ),
+    },
     {
       title: t('col_weight'),
       dataIndex: 'weight',
@@ -342,7 +496,25 @@ export default function AdvertiseClient() {
       title: t('col_stats'),
       width: 180,
       render: (_: unknown, r: AdminAdvertise) =>
-        `${r.impressions} / ${r.clicks} (${r.impressions ? ((r.clicks / r.impressions) * 100).toFixed(1) : '0'}%)`,
+        resolveAdType(r) === 'adsense' ? (
+          <Tooltip title={t('stats_adsense_note')}>
+            <span className="text-gray-400">
+              {t('stats_adsense_placeholder')}
+            </span>
+          </Tooltip>
+        ) : (
+          <div>
+            <div>{`${r.impressions} / ${r.clicks} (${r.impressions ? ((r.clicks / r.impressions) * 100).toFixed(1) : '0'}%)`}</div>
+            {/* 统计只按 ad_id 累计（spec 决策 1）：多位条目的数字是跨位合计，点明避免被当成单位数据。 */}
+            {crossSlotAggregateCount(r.slot_keys) > 0 && (
+              <div className="text-xs text-gray-400">
+                {t('stats_multi_slot_note', {
+                  count: crossSlotAggregateCount(r.slot_keys),
+                })}
+              </div>
+            )}
+          </div>
+        ),
     },
     {
       title: t('col_actions'),
@@ -374,12 +546,45 @@ export default function AdvertiseClient() {
         </Button>
       </div>
 
+      <Alert
+        className="!mb-4"
+        type={unservableAdsenseCount > 0 ? 'warning' : 'info'}
+        showIcon
+        message={
+          unservableAdsenseCount > 0
+            ? t('publisher_id_warning', { count: unservableAdsenseCount })
+            : t('publisher_id_hint')
+        }
+        description={
+          <div className="mt-1 flex items-center gap-2">
+            <Input
+              className="!max-w-xs font-mono"
+              value={publisherIdInput}
+              onChange={(e) => setPublisherIdInput(e.target.value)}
+              placeholder={t('publisher_id_placeholder')}
+              disabled={publisherIdLoading}
+            />
+            <Button
+              size="small"
+              type="primary"
+              loading={publisherIdSaving}
+              disabled={publisherIdLoading}
+              onClick={handleSavePublisherId}
+            >
+              {t('publisher_id_save')}
+            </Button>
+          </div>
+        }
+      />
+
       <Table
         columns={columns}
         dataSource={data}
         rowKey="id"
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         onChange={handleTableChange}
+        scroll={{ x: 1200 }}
         pagination={{
           current: page,
           total,
@@ -398,39 +603,100 @@ export default function AdvertiseClient() {
       >
         <Form form={form} layout="vertical" preserve={false}>
           <Form.Item
-            name="slot_key"
-            label={t('field_slot')}
+            name="ad_type"
+            label={t('field_type')}
             rules={[{ required: true }]}
           >
+            <Segmented
+              options={[
+                { label: t('type_image'), value: 'image' },
+                { label: t('type_adsense'), value: 'adsense' },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item
+            name="slot_keys"
+            label={t('field_slot')}
+            rules={[{ required: true, message: t('slot_required') }]}
+          >
             <Select
-              options={AD_SLOT_KEYS.map((s) => ({
-                value: s,
-                label: `${slotName(s)} · ${getAdSlotMeta(s)?.size ?? ''}`,
+              mode="multiple"
+              allowClear
+              placeholder={t('slot_placeholder')}
+              // 按形态分组：同组内推荐尺寸一致，管理员一眼能看出素材配不配。
+              // 分组从 AD_SLOT_META 推导，任何一个位都不会从下拉里消失。
+              options={groupSlotOptions().map((g) => ({
+                label: `${t(`slot_variant.${g.variant}`)} · ${g.size}`,
+                options: g.keys.map((key) => ({
+                  value: key,
+                  label: slotName(key),
+                })),
               }))}
             />
           </Form.Item>
-          {selectedMeta && selectedSlot && (
+          {/* 跨形态不拦截，只提示后果（spec 决策 2）。 */}
+          {slotSelection.mixed && (
+            <Alert
+              type="warning"
+              showIcon
+              className="!mb-4"
+              title={t('slot_mixed_title', {
+                count: slotSelection.groups.length,
+              })}
+              description={
+                <div className="text-xs">{t('slot_mixed_desc')}</div>
+              }
+            />
+          )}
+          {slotSelection.count > 0 && (
             <Alert
               type="info"
               showIcon
               className="!mb-4"
-              title={slotName(selectedSlot)}
+              title={t('slot_selected_count', { count: slotSelection.count })}
               description={
                 <div className="text-xs">
-                  <div>{slotPosition(selectedSlot)}</div>
-                  <div className="mt-1 font-medium">
-                    {t('recommended_size', { size: selectedMeta.size })}
-                  </div>
+                  {slotSelection.groups.map((g) => (
+                    <div key={g.variant} className="mt-1">
+                      <span className="font-medium">
+                        {t(`slot_variant.${g.variant}`)}
+                        {' · '}
+                        {t('recommended_size', { size: g.size })}
+                      </span>
+                      {g.keys.map((k) => (
+                        <div key={k} className="text-gray-500">
+                          {`${slotName(k)} —— ${slotPosition(k)}`}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                  {slotSelection.unknown.length > 0 && (
+                    <div className="mt-1 text-orange-500">
+                      {t('slot_unknown', {
+                        keys: slotSelection.unknown.join(', '),
+                      })}
+                    </div>
+                  )}
                 </div>
               }
             />
           )}
           <Form.Item
             name="title"
-            label={t('field_title')}
+            label={
+              selectedAdType === 'adsense'
+                ? t('field_remark_title')
+                : t('field_title')
+            }
             rules={[{ required: true }]}
           >
-            <Input />
+            <Input
+              placeholder={
+                selectedAdType === 'adsense'
+                  ? t('field_remark_title_placeholder')
+                  : undefined
+              }
+            />
           </Form.Item>
           <Form.Item name="languages" label={t('field_languages')}>
             <Select
@@ -439,72 +705,80 @@ export default function AdvertiseClient() {
               options={LANGS.map((l) => ({ value: l, label: l }))}
             />
           </Form.Item>
-          <Form.Item
-            label={t('field_light')}
-            required
-            extra={
-              selectedMeta
-                ? t('recommended_size', { size: selectedMeta.size })
-                : undefined
-            }
-          >
-            <div className="flex gap-2">
+          {fieldRequirements.adUnitId && (
+            <Form.Item
+              name="ad_unit_id"
+              label={t('field_ad_unit_id')}
+              rules={[{ required: true }]}
+              extra={t('field_ad_unit_id_hint')}
+            >
               <Input
-                className="flex-1"
-                value={lightUrl}
-                onChange={(e) => setLightUrl(e.target.value)}
-                placeholder={t('image_url_placeholder')}
-                allowClear
+                className="font-mono"
+                placeholder={t('field_ad_unit_id_placeholder')}
               />
-              <Upload
-                accept="image/*"
-                showUploadList={false}
-                maxCount={1}
-                beforeUpload={(file) => {
-                  upload(file as File, setLightUrl);
-                  return false;
-                }}
-              >
-                <Button icon={<UploadOutlined />}>{t('upload')}</Button>
-              </Upload>
-            </div>
-          </Form.Item>
-          <Form.Item
-            label={t('field_dark')}
-            extra={
-              selectedMeta
-                ? t('recommended_size', { size: selectedMeta.size })
-                : undefined
-            }
-          >
-            <div className="flex gap-2">
-              <Input
-                className="flex-1"
-                value={darkUrl}
-                onChange={(e) => setDarkUrl(e.target.value)}
-                placeholder={t('image_url_placeholder')}
-                allowClear
-              />
-              <Upload
-                accept="image/*"
-                showUploadList={false}
-                maxCount={1}
-                beforeUpload={(file) => {
-                  upload(file as File, setDarkUrl);
-                  return false;
-                }}
-              >
-                <Button icon={<UploadOutlined />}>{t('upload')}</Button>
-              </Upload>
-            </div>
-          </Form.Item>
-          <Form.Item
-            name="link_url"
-            label={t('field_link')}
-            rules={[{ required: true }]}
-          >
-            <Input placeholder="https://" />
-          </Form.Item>
+            </Form.Item>
+          )}
+          {fieldRequirements.lightImage && (
+            <Form.Item
+              label={t('field_light')}
+              required
+              extra={recommendedSizeHint}
+            >
+              <div className="flex gap-2">
+                <Input
+                  className="flex-1"
+                  value={lightUrl}
+                  onChange={(e) => setLightUrl(e.target.value)}
+                  placeholder={t('image_url_placeholder')}
+                  allowClear
+                />
+                <Upload
+                  accept="image/*"
+                  showUploadList={false}
+                  maxCount={1}
+                  beforeUpload={(file) => {
+                    upload(file as File, setLightUrl);
+                    return false;
+                  }}
+                >
+                  <Button icon={<UploadOutlined />}>{t('upload')}</Button>
+                </Upload>
+              </div>
+            </Form.Item>
+          )}
+          {fieldRequirements.lightImage && (
+            <Form.Item label={t('field_dark')} extra={recommendedSizeHint}>
+              <div className="flex gap-2">
+                <Input
+                  className="flex-1"
+                  value={darkUrl}
+                  onChange={(e) => setDarkUrl(e.target.value)}
+                  placeholder={t('image_url_placeholder')}
+                  allowClear
+                />
+                <Upload
+                  accept="image/*"
+                  showUploadList={false}
+                  maxCount={1}
+                  beforeUpload={(file) => {
+                    upload(file as File, setDarkUrl);
+                    return false;
+                  }}
+                >
+                  <Button icon={<UploadOutlined />}>{t('upload')}</Button>
+                </Upload>
+              </div>
+            </Form.Item>
+          )}
+          {fieldRequirements.linkUrl && (
+            <Form.Item
+              name="link_url"
+              label={t('field_link')}
+              rules={[{ required: true }]}
+            >
+              <Input placeholder="https://" />
+            </Form.Item>
+          )}
           <Form.Item
             name="weight"
             label={t('field_weight')}
@@ -539,6 +813,14 @@ export default function AdvertiseClient() {
           >
             <Switch />
           </Form.Item>
+          {selectedAdType === 'adsense' && (
+            <Alert
+              type="info"
+              showIcon
+              className="!mt-2"
+              description={t('adsense_stats_note')}
+            />
+          )}
         </Form>
       </Modal>
 
@@ -621,6 +903,7 @@ export default function AdvertiseClient() {
                 rowKey="id"
                 size="small"
                 loading={clicksLoading}
+                locale={clicksTableLocale}
                 dataSource={clicks}
                 pagination={{
                   current: clicksPage,

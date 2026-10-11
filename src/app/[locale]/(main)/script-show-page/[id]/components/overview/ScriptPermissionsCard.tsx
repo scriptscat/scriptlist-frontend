@@ -10,12 +10,17 @@ const MAX_DOMAINS = 4;
 
 export default function ScriptPermissionsCard({
   meta,
+  cookieRisk = false,
 }: {
   meta: Record<string, string[] | undefined>;
+  cookieRisk?: boolean;
 }) {
   const t = useTranslations('script.detail.permissions');
   const domains = useMemo(() => getConnectDomains(meta), [meta]);
-  const caps = useMemo(() => getCapabilities(meta), [meta]);
+  const caps = useMemo(
+    () => getCapabilities(meta, cookieRisk),
+    [meta, cookieRisk],
+  );
 
   if (domains.length === 0 && caps.length === 0) return null;
 

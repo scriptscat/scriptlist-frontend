@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import type { MouseEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import {
@@ -26,8 +26,13 @@ import {
 } from '@ant-design/icons';
 import { useRouter } from '@/i18n/routing';
 import { formatNumber } from '@/lib/utils/semdate';
+import {
+  folderDisplayDescription,
+  folderDisplayName,
+} from '@/lib/utils/favorite-folder';
 import { useUser } from '@/contexts/UserContext';
 import ScriptCard from '@/components/Scriptlist/ScriptCard';
+import PendingResults from '@/components/Scriptlist/PendingResults';
 import FavoriteEditModal from '@/components/FavoriteEditModal';
 import { scriptFavoriteService } from '@/lib/api/services/scripts/favorites';
 import { useScriptInstallGuide } from '@/components/ScriptInstallGuide';
@@ -59,9 +64,20 @@ export default function FolderDetailClient({
   const router = useRouter();
   const { user } = useUser();
   const t = useTranslations('user.favorites');
+  const commonT = useTranslations('common');
+  // components.loading.* 由根 layout 注入，任何路由下都可用。
+  const loadingT = useTranslations('components.loading');
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [currentFolder] = useState(folderDetail);
   const [loadingScripts, setLoadingScripts] = useState<Set<number>>(new Set());
+  const [isPending, startTransition] = useTransition();
+  // 页码要立刻跟着点击走：服务端的 currentPage 要等导航完成才更新。
+  const [page, setPage] = useState(currentPage);
+  const [syncedPage, setSyncedPage] = useState(currentPage);
+  if (syncedPage !== currentPage) {
+    setSyncedPage(currentPage);
+    setPage(currentPage);
+  }
   const { handleInstallClick, guideModal } = useScriptInstallGuide({
     description: t('subscribe_guide_description'),
     proceedLabel: t('continue_subscribe'),
@@ -87,8 +103,22 @@ export default function FolderDetailClient({
     );
   }
 
-  const handlePageChange = (page: number) => {
-    router.push(`/users/favorites/${folderId}?page=${page}`);
+  const folderName = folderDisplayName(
+    currentFolder,
+    commonT('default_favorite_folder_name'),
+  );
+  const folderDescription = folderDisplayDescription(
+    currentFolder,
+    commonT('default_favorite_folder_description'),
+  );
+
+  const handlePageChange = (nextPage: number) => {
+    setPage(nextPage);
+    // 编程式跳转没有全局顶部进度条，靠 transition 撑住等待态：
+    // 列表变暗、分页禁用，避免用户以为没点上而反复点击。
+    startTransition(() => {
+      router.push(`/users/favorites/${folderId}?page=${nextPage}`);
+    });
   };
 
   // 处理取消收藏脚本
@@ -125,7 +155,7 @@ export default function FolderDetailClient({
 
   // 处理订阅链接点击：未检测到脚本管理器时复用安装引导弹窗（订阅文案）
   const handleSubscribeClick = (e: MouseEvent<HTMLElement>) => {
-    const subscribeUrl = `${window.location.origin}/scripts/subscribe/${folderId}/${encodeURIComponent(currentFolder.name)}.user.sub.js`;
+    const subscribeUrl = `${window.location.origin}/scripts/subscribe/${folderId}/${encodeURIComponent(folderName)}.user.sub.js`;
     handleInstallClick(e, subscribeUrl);
   };
 
@@ -170,7 +200,7 @@ export default function FolderDetailClient({
               ),
             },
             {
-              title: currentFolder.name,
+              title: folderName,
             },
           ]}
         />
@@ -182,7 +212,7 @@ export default function FolderDetailClient({
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-3">
               <Title level={2} className="!mb-0">
-                {currentFolder.name}
+                {folderName}
               </Title>
               <Tag
                 icon={
@@ -200,9 +230,9 @@ export default function FolderDetailClient({
               </Tag>
             </div>
 
-            {currentFolder.description && (
+            {folderDescription && (
               <Paragraph className="text-gray-600 dark:text-gray-400 mb-3">
-                {currentFolder.description}
+                {folderDescription}
               </Paragraph>
             )}
 
@@ -242,7 +272,7 @@ export default function FolderDetailClient({
         </Title>
 
         {scripts.length > 0 ? (
-          <>
+          <PendingResults pending={isPending} label={loadingT('default')}>
             <Space direction="vertical" size="large" className="w-full">
               {scripts.map((script) => {
                 const isLoading = loadingScripts.has(script.id);
@@ -277,11 +307,12 @@ export default function FolderDetailClient({
             {total > 20 && (
               <div className="flex justify-center mt-8">
                 <Pagination
-                  current={currentPage}
+                  current={page}
                   total={total}
                   pageSize={20}
                   showSizeChanger={false}
                   showQuickJumper
+                  disabled={isPending}
                   showTotal={(total, range) =>
                     t('pagination_items', {
                       start: range[0],
@@ -293,7 +324,7 @@ export default function FolderDetailClient({
                 />
               </div>
             )}
-          </>
+          </PendingResults>
         ) : (
           <Empty description={t('no_scripts_in_folder')} className="py-16" />
         )}

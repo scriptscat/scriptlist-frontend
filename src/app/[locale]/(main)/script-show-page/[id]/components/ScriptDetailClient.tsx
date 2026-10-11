@@ -1,5 +1,7 @@
 'use client';
 
+import { useScriptInstallToken } from '@/lib/api/hooks/script';
+import { SCRIPT_PUBLIC_PRIVATE, withInstallToken } from './installUrl';
 import {
   Button,
   Card,
@@ -46,20 +48,27 @@ import { useUser } from '@/contexts/UserContext';
 import { useSemDateTime, formatCompactNumber } from '@/lib/utils/semdate';
 import { Link, useRouter } from '@/i18n/routing';
 import dynamic from 'next/dynamic';
-const MarkdownView = dynamic(() => import('@/components/MarkdownView'));
+import MarkdownViewLoading from '@/components/MarkdownView/MarkdownViewLoading';
+// 不给 `loading` 的话 fallback 是 `null`，客户端导航时整段正文会塌成 0px。
+const MarkdownView = dynamic(() => import('@/components/MarkdownView'), {
+  loading: () => <MarkdownViewLoading height={360} />,
+});
 import { ScriptUtils } from '../utils';
 import { getLicenseDisplay } from '@/lib/license';
 import { copyToClipboard, hashColor } from '@/lib/utils/utils';
 import { checkScriptInstalled } from '@/lib/utils/script-manager';
+import { folderDisplayName } from '@/lib/utils/favorite-folder';
 import { useScriptInstallGuide } from '@/components/ScriptInstallGuide';
 import { SCRIPTCAT_INSTALL_GUIDE_URL } from '@/lib/constants/browserStores';
 import { useScriptWatch, useScriptFavorite } from '@/lib/api/hooks';
 import { WatchLevel } from '../types';
 import { scriptService } from '@/lib/api/services/scripts';
 import { aiReviewService } from '@/lib/api/services/aiReview';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
 import AdSlot from '@/components/AdSlot';
+import SideRails from '@/components/AdSlot/SideRails';
+import { railContainerProps } from '@/components/AdSlot/railLayout';
 import ScriptIcon from '@/components/ScriptIcon';
 import type { AdSlotItem } from '@/lib/api/services/advertise';
 import ScriptVersionsClient from '../version/components/ScriptVersionsClient';
@@ -72,13 +81,17 @@ import type {
   VersionStatResponse,
 } from '@/lib/api/services/scripts/scripts';
 import { APIError } from '@/types/api';
-import type { ListData } from '@/types/api';
+import type { ListData, LocalizedSummary } from '@/types/api';
 import type { RatingStats } from '../comment/components/rating';
+import { selectLocalizedSummary } from '../localizedSummary';
 
 const { Title, Text, Paragraph } = Typography;
 
 interface ScriptDetailClientProps {
   content: string;
+  /** 说明同步自远端 README 时，其中相对路径的解析基准（文档目录 / 仓库根）。 */
+  contentBaseUrl?: string;
+  contentRootUrl?: string;
   initialVersionData: VersionListResponse | null;
   versionStat: VersionStatResponse | null;
   versionError?: string;
@@ -86,6 +99,14 @@ interface ScriptDetailClientProps {
   initialRatingStats: RatingStats;
   /** 服务端预取的 script-detail-sidebar 广告数据（SSR）。 */
   sidebarAd?: { ad: AdSlotItem | null };
+  /** 服务端预取的 script-detail-banner 广告数据（SSR）。 */
+  bannerAd?: { ad: AdSlotItem | null };
+  /** 服务端预取的左右竖栏广告；hasAd 为假时页面宽度与不含竖栏时完全一致。 */
+  rails?: {
+    left?: { ad: AdSlotItem | null };
+    right?: { ad: AdSlotItem | null };
+    hasAd: boolean;
+  };
 }
 
 function CountChip({ value }: { value: number }) {
@@ -96,9 +117,12 @@ function CountChip({ value }: { value: number }) {
   );
 }
 
-function AISummary({ summary }: { summary: string }) {
+function AISummary({ summary }: { summary: LocalizedSummary }) {
   const t = useTranslations('script.detail');
+  const locale = useLocale();
   const [expanded, setExpanded] = useState(true);
+  const text = selectLocalizedSummary(summary, locale);
+  if (!text.trim()) return null;
   return (
     <div className="mb-4 rounded-md border-l-[3px] border-indigo-500 bg-indigo-50 px-3.5 py-2.5 dark:border-indigo-400 dark:bg-indigo-950/40">
       <button
@@ -123,7 +147,7 @@ function AISummary({ summary }: { summary: string }) {
       </button>
       {expanded && (
         <div className="mt-1.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-          {summary}
+          {text}
         </div>
       )}
     </div>
@@ -151,13 +175,21 @@ function genRequire(
 
 export default function ScriptDetailClient({
   content,
+  contentBaseUrl,
+  contentRootUrl,
   initialVersionData,
   versionStat,
   versionError,
   initialScoreList,
   initialRatingStats,
   sidebarAd,
+  bannerAd,
+  rails,
 }: ScriptDetailClientProps) {
+  // 有竖栏投放时才收窄内容区并让 SideRails 找得到容器；没投放时两者都不加。
+  const { className: railClassName, ...railMarker } = railContainerProps(
+    rails?.hasAd ?? false,
+  );
   const { script } = useScript();
   const scriptState = useScriptState();
   const { user } = useUser();
@@ -174,15 +206,29 @@ export default function ScriptDetailClient({
 
   const [installTitle, setInstallTitle] = useState(t('install.install_script')); // 安装按钮文案
   const { handleInstallClick, guideModal } = useScriptInstallGuide(); // 未检测到脚本管理器时的二次引导
+  // 私有脚本的安装链接必须带令牌：脚本管理器的更新检查不带站点 cookie。
+  const isPrivate = script.public === SCRIPT_PUBLIC_PRIVATE;
+  const { data: installToken, isLoading: installTokenLoading } =
+    useScriptInstallToken(script.id, isPrivate);
+  const token = installToken?.token;
+  // 私有脚本的安装链接没有令牌就是残的。令牌还在路上时按钮必须是 loading + disabled，
+  // 否则用户点出去的是一条注定 401 的安装链接。
+  const installTokenPending = isPrivate && !token;
   const installUrl = useMemo(
     () =>
-      `/scripts/code/${script.id}/${encodeURIComponent(script.name)}.user.js`,
-    [script.id, script.name],
+      withInstallToken(
+        `/scripts/code/${script.id}/${encodeURIComponent(script.name)}.user.js`,
+        token,
+      ),
+    [script.id, script.name, token],
   );
   const preReleaseUrl = useMemo(
     () =>
-      `/scripts/pre/${script.id}/${encodeURIComponent(script.name)}.user.js`,
-    [script.id, script.name],
+      withInstallToken(
+        `/scripts/pre/${script.id}/${encodeURIComponent(script.name)}.user.js`,
+        token,
+      ),
+    [script.id, script.name, token],
   );
 
   // 解析crontab表达式为更友好的描述
@@ -301,13 +347,9 @@ export default function ScriptDetailClient({
       .then((status) => {
         if (status.installed) {
           if (status.version === script.script.version) {
-            setInstallTitle(
-              t('install.reinstall_script', { version: status.version }),
-            );
+            setInstallTitle(t('install.reinstall_script'));
           } else {
-            setInstallTitle(
-              t('install.update_script', { version: script.script.version }),
-            );
+            setInstallTitle(t('install.update_script'));
           }
         }
       })
@@ -663,7 +705,12 @@ export default function ScriptDetailClient({
                     className="flex-1"
                   >
                     <div className="flex items-center justify-between w-full">
-                      <span>{folder.name}</span>
+                      <span>
+                        {folderDisplayName(
+                          folder,
+                          commonT('default_favorite_folder_name'),
+                        )}
+                      </span>
                       <span className="text-xs text-gray-400 ml-2">
                         {folder.count}
                       </span>
@@ -686,7 +733,14 @@ export default function ScriptDetailClient({
         </div>
       </Card>
     ),
-    [t, selectedFolders, handleFoldersChange, folders, handleAddFolder],
+    [
+      t,
+      commonT,
+      selectedFolders,
+      handleFoldersChange,
+      folders,
+      handleAddFolder,
+    ],
   );
 
   const detailTabs = useMemo(
@@ -698,7 +752,12 @@ export default function ScriptDetailClient({
           <div>
             {script.summary && <AISummary summary={script.summary} />}
             <div className="prose prose-sm max-w-3xl dark:prose-invert">
-              <MarkdownView id="readme" content={content} />
+              <MarkdownView
+                id="readme"
+                content={content}
+                resourceBaseUrl={contentBaseUrl}
+                resourceRootUrl={contentRootUrl}
+              />
             </div>
           </div>
         ),
@@ -773,7 +832,10 @@ export default function ScriptDetailClient({
             title={t('stats.total_installs')}
             value={script.total_install}
             formatter={(v) => formatCompactNumber(Number(v))}
-            valueStyle={{ color: '#1890ff' }}
+            valueStyle={{
+              color: '#1890ff',
+              fontVariantNumeric: 'tabular-nums',
+            }}
           />
         </Col>
         <Col span={8} className="text-center">
@@ -781,7 +843,10 @@ export default function ScriptDetailClient({
             title={t('stats.today_installs')}
             value={script.today_install}
             formatter={(v) => formatCompactNumber(Number(v))}
-            valueStyle={{ color: '#52c41a' }}
+            valueStyle={{
+              color: '#52c41a',
+              fontVariantNumeric: 'tabular-nums',
+            }}
             prefix="+"
           />
         </Col>
@@ -790,7 +855,10 @@ export default function ScriptDetailClient({
             title={t('stats.user_rating')}
             value={ScriptUtils.score(script.score, script.score_num) || '-'}
             precision={1}
-            valueStyle={{ color: '#faad14' }}
+            valueStyle={{
+              color: '#faad14',
+              fontVariantNumeric: 'tabular-nums',
+            }}
           />
         </Col>
       </Row>
@@ -812,7 +880,18 @@ export default function ScriptDetailClient({
           top: '-4px',
         }}
       >
-        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[1fr_336px]">
+        <div
+          {...railMarker}
+          className={`flex flex-col gap-6 lg:grid lg:grid-cols-[1fr_336px] ${railClassName}`}
+        >
+          {rails?.hasAd && (
+            <SideRails
+              leftSlot="script-detail-rail-left"
+              rightSlot="script-detail-rail-right"
+              initialLeft={rails.left}
+              initialRight={rails.right}
+            />
+          )}
           {/* 左·主内容 */}
           <div className="min-w-0">
             <div className="flex flex-col gap-4">
@@ -918,6 +997,8 @@ export default function ScriptDetailClient({
                       className="flex-1 bg-gradient-to-r"
                       href={installUrl}
                       target="_blank"
+                      loading={installTokenLoading}
+                      disabled={installTokenPending}
                       onClick={(e) => handleInstallClick(e, installUrl)}
                     >
                       {installTitle + ' · v' + script.script.version}
@@ -941,6 +1022,8 @@ export default function ScriptDetailClient({
                           size="large"
                           href={preReleaseUrl}
                           target="_blank"
+                          loading={installTokenLoading}
+                          disabled={installTokenPending}
                           onClick={(e) => handleInstallClick(e, preReleaseUrl)}
                           icon={<ExperimentOutlined />}
                           style={{
@@ -1028,6 +1111,13 @@ export default function ScriptDetailClient({
               {/* 数据统计卡（移动端展示在描述上方；桌面端在右侧栏） */}
               <div className="lg:hidden">{statsCard}</div>
 
+              {/* 详情页横幅广告：主内容列内，Tab 卡上方；无广告时不渲染、不占位 */}
+              <AdSlot
+                slot="script-detail-banner"
+                variant="banner"
+                initialData={bannerAd}
+              />
+
               {/* 内容 Tab 卡 */}
               <Card className="shadow-sm" classNames={{ body: '!p-0' }}>
                 <Tabs
@@ -1109,6 +1199,8 @@ export default function ScriptDetailClient({
                       className="flex-1 bg-gradient-to-r"
                       href={installUrl}
                       target="_blank"
+                      loading={installTokenLoading}
+                      disabled={installTokenPending}
                       onClick={(e) => handleInstallClick(e, installUrl)}
                     >
                       {installTitle + ' · v' + script.script.version}
@@ -1132,6 +1224,8 @@ export default function ScriptDetailClient({
                           size="large"
                           href={preReleaseUrl}
                           target="_blank"
+                          loading={installTokenLoading}
+                          disabled={installTokenPending}
                           onClick={(e) => handleInstallClick(e, preReleaseUrl)}
                           icon={<ExperimentOutlined />}
                           style={{
@@ -1446,7 +1540,10 @@ export default function ScriptDetailClient({
                 </Card>
               </div>
 
-              <ScriptPermissionsCard meta={script.script.meta_json} />
+              <ScriptPermissionsCard
+                meta={script.script.meta_json}
+                cookieRisk={script.cookie_risk}
+              />
             </div>
           </div>
         </div>

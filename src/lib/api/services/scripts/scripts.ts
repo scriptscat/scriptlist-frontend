@@ -280,6 +280,17 @@ export class ScriptService {
   }
 
   /**
+   * 取当前用户安装该脚本用的令牌
+   *
+   * 私有脚本的安装链接靠它携带身份，脚本管理器因此不需要站点登录态。
+   */
+  async getInstallToken(scriptId: number) {
+    return apiClient.get<{ token: string }>(
+      `${this.basePath}/${scriptId}/install-token`,
+    );
+  }
+
+  /**
    * 更新脚本公开状态
    */
   async updatePublic(scriptId: number, public_: number) {

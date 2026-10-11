@@ -31,19 +31,25 @@ export default function RatingItem({
   const t = useTranslations();
   const [replyContent, setReplyContent] = useState<string>('');
   const [showReplyBox, setShowReplyBox] = useState<boolean>(false);
+  // 回复是一次写请求，之前按钮只有 disabled={!content}，
+  // 请求在飞的时候按钮仍然可点 —— 连点就会发出多条回复。
+  const [replying, setReplying] = useState<boolean>(false);
   const semDateTime = useSemDateTime();
 
   const handleReply = async () => {
-    if (!replyContent?.trim()) {
+    if (!replyContent?.trim() || replying) {
       return;
     }
 
+    setReplying(true);
     try {
       await onReply(rating.id, replyContent.trim());
       setReplyContent('');
       setShowReplyBox(false);
     } catch {
       // 错误处理由父组件处理
+    } finally {
+      setReplying(false);
     }
   };
 
@@ -52,10 +58,14 @@ export default function RatingItem({
       {/* 评价头部 */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-start gap-4">
-          <Link href={`/users/${rating.user_id}`} target="_blank">
+          <Link
+            href={`/users/${rating.user_id}`}
+            target="_blank"
+            className="block h-10 w-10 shrink-0"
+          >
             <Avatar
               src={rating.avatar}
-              size="large"
+              size={40}
               className="ring-2 ring-gray-100 dark:ring-gray-700 cursor-pointer hover:opacity-80 transition-opacity"
             >
               <UserOutlined />
@@ -148,7 +158,7 @@ export default function RatingItem({
         <div className="pl-12 mt-4">
           <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
             <div className="flex items-start gap-3 mb-3">
-              <Avatar size="small" src={user.avatar}>
+              <Avatar size={24} src={user.avatar} className="shrink-0">
                 <UserOutlined />
               </Avatar>
               <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -168,7 +178,8 @@ export default function RatingItem({
                 type="primary"
                 size="small"
                 onClick={handleReply}
-                disabled={!replyContent?.trim()}
+                loading={replying}
+                disabled={!replyContent?.trim() || replying}
                 className="rounded-md"
               >
                 {t('script.rating.send_reply')}
@@ -176,6 +187,7 @@ export default function RatingItem({
               <Button
                 size="small"
                 onClick={() => setShowReplyBox(false)}
+                disabled={replying}
                 className="rounded-md"
               >
                 {t('script.rating.cancel')}

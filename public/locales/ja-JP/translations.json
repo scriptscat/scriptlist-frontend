@@ -59,7 +59,10 @@
       "similarity": "Similarity Detection",
       "ai_review": "AI Review",
       "ai_review_records": "Review Records",
-      "ai_review_fullscan": "Full Scan"
+      "ai_review_fullscan": "Full Scan",
+      "announcements": "Announcements",
+      "script_audits": "Script Audit",
+      "reports": "Report management"
     },
     "advertise": {
       "title": "広告管理",
@@ -67,10 +70,12 @@
       "create_title": "New Ad",
       "edit_title": "Edit Ad",
       "col_slot": "Slot",
-      "col_title": "Title",
+      "col_type": "Type",
+      "col_title": "Ad / Title",
       "col_enabled": "Status",
       "col_stats": "Impressions/Clicks (CTR)",
       "col_actions": "Actions",
+      "col_ad_unit_value": "Unit {id}",
       "action_edit": "Edit",
       "action_delete": "Delete",
       "delete_confirm": "Confirm delete this ad?",
@@ -81,8 +86,20 @@
       "light_required": "Please upload a light-mode image",
       "enabled": "Enabled",
       "disabled": "Disabled",
+      "type_image": "Image",
+      "type_adsense": "AdSense",
+      "stats_adsense_placeholder": "—",
+      "stats_adsense_note": "Impressions / clicks are tracked by Google",
+      "stats_multi_slot_note": "{count} 枠の合計",
+      "field_type": "Ad Type",
       "field_slot": "Ad Slot",
       "field_title": "Title",
+      "field_remark_title": "Remark title",
+      "field_remark_title_placeholder": "Admin-only, for your own reference",
+      "field_ad_unit_id": "Ad unit ID",
+      "field_ad_unit_id_placeholder": "data-ad-slot, e.g. 1234567890",
+      "field_ad_unit_id_hint": "The data-ad-slot value from the ad unit code in your AdSense account.",
+      "adsense_stats_note": "AdSense impressions and clicks are tracked by Google; the site's own stats always show 0 for this entry. Check revenue in your AdSense account.",
       "field_languages": "Target languages (leave empty = all)",
       "field_light": "Light-mode image",
       "field_dark": "Dark-mode image (optional)",
@@ -96,6 +113,11 @@
       "upload": "Upload image",
       "image_url_placeholder": "Enter or paste an image URL, or click to upload",
       "recommended_size": "推奨サイズ {size}",
+      "publisher_id_hint": "AdSense-type ads won't serve until the publisher id is set.",
+      "publisher_id_placeholder": "ca-pub-…",
+      "publisher_id_save": "Save",
+      "publisher_id_save_success": "Saved successfully",
+      "publisher_id_warning": "The AdSense publisher id isn't set yet — {count} AdSense ad(s) won't serve.",
       "col_weight": "重み",
       "col_schedule": "配信期間",
       "schedule_forever": "無期限",
@@ -126,11 +148,11 @@
         },
         "search-rail-left": {
           "name": "検索ページ左レール",
-          "position": "検索の閲覧表示、中央コンテンツの左余白。幅 1650px 以上の画面のみ"
+          "position": "検索ページの閲覧状態、コンテンツ左側の余白。配信がある場合はコンテンツ幅を狭めて確保し、余白が足りない場合は表示しません"
         },
         "search-rail-right": {
           "name": "検索ページ右レール",
-          "position": "検索の閲覧表示、中央コンテンツの右余白。幅 1650px 以上の画面のみ"
+          "position": "検索ページの閲覧状態、コンテンツ右側の余白。配信がある場合はコンテンツ幅を狭めて確保し、余白が足りない場合は表示しません"
         },
         "search-sidebar": {
           "name": "検索サイドバー",
@@ -143,7 +165,39 @@
         "script-detail-sidebar": {
           "name": "詳細ページサイドバー",
           "position": "スクリプト詳細ページ右の固定サイドバー、統計カードと詳細カードの間。大画面で表示"
+        },
+        "script-detail-banner": {
+          "name": "詳細ページバナー",
+          "position": "スクリプト詳細ページのメイン列、情報カードとコンテンツタブの間に全幅表示。全ブレークポイント"
+        },
+        "search-results-rail-left": {
+          "name": "検索結果ページ左縦長枠",
+          "position": "検索結果ページのコンテンツ左側の余白。配信がある場合はコンテンツ幅を狭めて確保し、余白が足りない場合は表示しません"
+        },
+        "search-results-rail-right": {
+          "name": "検索結果ページ右縦長枠",
+          "position": "検索結果ページのコンテンツ右側の余白。サイドバーのカードと並びます。余白が足りない場合は表示しません"
+        },
+        "script-detail-rail-left": {
+          "name": "詳細ページ左縦長枠",
+          "position": "スクリプト詳細ページのコンテンツ左側の余白。配信がある場合はコンテンツ幅を狭めて確保し、余白が足りない場合は表示しません"
+        },
+        "script-detail-rail-right": {
+          "name": "詳細ページ右縦長枠",
+          "position": "スクリプト詳細ページのコンテンツ右側の余白。sticky サイドバーと並びます。余白が足りない場合は表示しません"
         }
+      },
+      "slot_required": "広告枠を 1 つ以上選択してください",
+      "slot_placeholder": "複数の広告枠を選択できます",
+      "slot_selected_count": "{count} 件の広告枠を選択中",
+      "slot_count_summary": "{count} 枠 · {sizes}",
+      "slot_mixed_title": "選択した広告枠が {count} 種類の形式にまたがっています。1 つの素材では全てに合いません",
+      "slot_mixed_desc": "画像素材は合わない枠では縮小され余白が出ます。AdSense は 1 つの広告ユニット ID を共有するため、形式をまたぐと表示率が大きく下がります。保存は可能です。",
+      "slot_unknown": "不明な広告枠: {keys}",
+      "slot_variant": {
+        "rail": "縦長",
+        "banner": "バナー",
+        "card": "カード"
       }
     },
     "ai_review": {
@@ -277,7 +331,13 @@
       "title": "OIDCプロバイダー管理",
       "type_oauth2": "OAuth2 (GitHub)",
       "type_oidc": "OIDC",
-      "update_success": "更新しました"
+      "update_success": "更新しました",
+      "col_icon": "Icon",
+      "discover_button": "Auto Discover",
+      "discover_failed": "OIDC discovery failed. Please check the URL.",
+      "discover_success": "OIDC configuration discovered successfully",
+      "icon_upload": "Upload Icon",
+      "icon_upload_success": "Icon uploaded successfully"
     },
     "scores": {
       "action_delete": "削除",
@@ -355,7 +415,12 @@
       "unwell_no": "適切",
       "unwell_yes": "不適切",
       "visibility_success": "公開設定を更新しました",
-      "visibility_title": "スクリプトの公開設定を変更"
+      "visibility_title": "スクリプトの公開設定を変更",
+      "delete_reason": "Reason (optional)",
+      "delete_reason_placeholder": "Record the reason for this deletion (saved with the audit log)",
+      "search_field_content": "Content",
+      "search_field_description": "Description",
+      "search_field_name": "Name"
     },
     "system_config": {
       "ai_api_key": "APIキー",
@@ -380,7 +445,18 @@
       "es_index_hint": "バックグラウンドでスクリプト検索インデックスを全件再構築します。APIの応答はタスク開始のみを示します。完了状況はバックエンドログで確認してください。",
       "es_index_button": "ESインデックスを再構築",
       "es_index_confirm": "ES検索インデックスの再構築を開始しますか？大きなデータベースでは時間がかかる場合があります。",
-      "es_index_started": "ES検索インデックスの再構築を開始しました"
+      "es_index_started": "ES検索インデックスの再構築を開始しました",
+      "migrate_avatar_title": "Avatar Migration",
+      "migrate_avatar_button": "Start Migration",
+      "migrate_avatar_confirm": "Are you sure you want to start avatar migration? This will download user avatars from UCenter and save them locally.",
+      "migrate_avatar_started": "Avatar migration started",
+      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}",
+      "ranking_title": "Ranking Recompute",
+      "recompute_trending_hint": "The daily pick (trending_score) is recomputed automatically every day at 03:10. After changing ranking parameters, trigger a full recompute here to see the effect immediately.",
+      "recompute_trending_button": "Recompute trending_score",
+      "recompute_trending_confirm": "Recompute trending_score for all scripts now? Large databases may take a few seconds to tens of seconds.",
+      "recompute_trending_started": "trending_score recompute started",
+      "recompute_trending_running": "A recompute is already running; not retriggered"
     },
     "users": {
       "action_admin_level": "レベルを変更",
@@ -406,7 +482,8 @@
       "status_banned": "禁止済み",
       "title": "ユーザー管理",
       "unban_confirm": "このユーザーの禁止を解除してもよろしいですか？",
-      "unban_success": "ユーザーの禁止を解除しました"
+      "unban_success": "ユーザーの禁止を解除しました",
+      "col_register_ip": "Register IP"
     },
     "similarity": {
       "tab_pairs": "Pairs",
@@ -510,8 +587,89 @@
         "dean_edwards_packer": "Dean Edwardsパッカーを検出",
         "aa_encode": "AAEncodeエンコーディングを検出",
         "jj_encode": "JJEncodeエンコーディングを検出",
-        "eval_density": "eval/動的実行呼び出し密度が高すぎます"
+        "eval_density": "eval/動的実行呼び出し密度が高すぎます",
+        "gm_cookie_unrecognized_usage": "認識できない、または完全に解釈できない GM_cookie の使用を検出しました",
+        "gm_cookie_unused_sensitive_permission": "機密性の高い GM_cookie 権限が宣言されていますが、正当な用途を確認できませんでした",
+        "gm_cookie_data_exfiltration": "GM_cookie データがネットワークまたは外部コンテキストに送信される可能性があります",
+        "gm_cookie_data_injection": "GM_cookie データがコード、ページ、または永続ストレージに注入される可能性があります",
+        "gm_cookie_analysis_incomplete": "GM_cookie のデータフロー分析が不完全なため、手動レビューが必要です"
       }
+    },
+    "announcements": {
+      "title": "Announcement Management",
+      "action_create": "Create",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "create_title": "Create Announcement",
+      "edit_title": "Edit Announcement",
+      "col_title": "Title",
+      "col_level": "Level",
+      "col_status": "Status",
+      "col_createtime": "Created",
+      "col_actions": "Actions",
+      "field_title": "Title",
+      "field_content": "Content",
+      "field_level": "Level",
+      "field_status": "Status",
+      "level_normal": "Normal",
+      "level_important": "Important",
+      "status_enabled": "Enabled",
+      "status_disabled": "Disabled",
+      "create_success": "Announcement created successfully",
+      "update_success": "Announcement updated successfully",
+      "delete_success": "Announcement deleted successfully",
+      "delete_confirm": "Are you sure you want to delete this announcement?",
+      "at_least_one_language": "Please fill in the title for at least one language"
+    },
+    "script_audits": {
+      "title": "Script Audit",
+      "col_script": "Script",
+      "col_version": "Version",
+      "col_submitter": "Submitter",
+      "col_status": "Status",
+      "col_script_audit_status": "Script Audit State",
+      "script_auditing": "Auditing",
+      "script_not_auditing": "Not auditing",
+      "col_createtime": "Submitted At",
+      "col_actions": "Actions",
+      "status_pending": "Pending",
+      "status_approved": "Approved",
+      "status_rejected": "Rejected",
+      "filter_status": "Status",
+      "filter_all": "All",
+      "filter_script_name_placeholder": "Search script name",
+      "refresh": "Refresh",
+      "action_review": "Review",
+      "action_approve": "Approve",
+      "action_reject": "Reject",
+      "approve_success": "Approved",
+      "reject_success": "Rejected",
+      "drawer_title": "Audit Detail",
+      "detail_script": "Script",
+      "detail_submitter": "Submitter",
+      "detail_changelog": "Changelog",
+      "detail_reason": "Audit Reason / Note",
+      "detail_reject_reason": "Reject Reason",
+      "detail_code": "Code",
+      "approve_modal_title": "Approve Audit",
+      "approve_reason_label": "Approval note (optional, for AI false-positive correction or audit basis)",
+      "approve_reason_placeholder": "If this was an AI false positive, note the manual review basis; leave blank to approve directly",
+      "reject_modal_title": "Reject Audit",
+      "reject_reason_label": "Reject reason (sent to author via in-app notification)",
+      "reject_reason_required": "Please provide a reject reason",
+      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)"
+    },
+    "reports": {
+      "title": "Report management",
+      "col_script": "Script",
+      "col_reporter": "Reporter",
+      "col_reason": "Reason",
+      "col_status": "Status",
+      "col_comments": "Comments",
+      "col_createtime": "Created at",
+      "col_actions": "Actions",
+      "action_view": "View",
+      "filter_status": "Filter by status"
     }
   },
   "auth": {
@@ -627,9 +785,28 @@
     "punish": "処罰",
     "punish_reason": "処罰理由",
     "report": "報告",
-    "select_punish_option": "処罰オプションを選択"
+    "select_punish_option": "処罰オプションを選択",
+    "default_favorite_folder_name": "デフォルトのお気に入り",
+    "default_favorite_folder_description": "これはデフォルトのお気に入りフォルダーです"
   },
   "components": {
+    "loading": {
+      "default": "読み込み中…",
+      "code": "コードエディターを読み込み中…",
+      "chart": "チャートを読み込み中…",
+      "failed": "読み込みに失敗しました",
+      "retry": "再試行",
+      "redirecting": "リダイレクト中…"
+    },
+    "markdown": {
+      "note": "メモ",
+      "tip": "ヒント",
+      "important": "重要",
+      "warning": "警告",
+      "caution": "注意",
+      "footnotes_heading": "脚注",
+      "footnote_backref": "参照 {0} に戻る"
+    },
     "markdown_editor": {
       "image_upload_failed": "画像のアップロードに失敗しました",
       "loading_editor": "エディターを読み込み中...",
@@ -816,7 +993,11 @@
     "error_qq_migrate_unavailable": "QQログイン移行サービスは現在利用できません。別のログイン方法をご利用ください",
     "error_invalid_params": "パラメータが無効です。もう一度お試しください",
     "error_qq_migrate_failed": "QQログイン移行に失敗しました。しばらくしてからもう一度お試しください",
-    "error_unknown": "ログイン中にエラーが発生しました。もう一度お試しください"
+    "error_unknown": "ログイン中にエラーが発生しました。もう一度お試しください",
+    "qq_migrate_deprecation_title": "QQ sign-in will soon be discontinued",
+    "qq_migrate_deprecation_content": "QQ sign-in will soon be discontinued. After signing in, please bind another sign-in method on the settings page to avoid losing access in the future.",
+    "qq_migrate_deprecation_continue": "Continue signing in",
+    "qq_migrate_deprecation_cancel": "Cancel"
   },
   "notifications": {
     "access": {
@@ -917,7 +1098,7 @@
     "privacy_policy_description": "ScriptCat が個人情報をどのように収集・利用・保護するかをご確認ください。",
     "disclaimer_title": "免責事項",
     "disclaimer_description": "ユーザースクリプトの内容と利用リスクに関する ScriptCat の免責事項をご確認ください。",
-    "last_updated": "最終更新日：2026年6月19日",
+    "last_updated": "最終更新日：2026年8月25日",
     "tos_section1_title": "1. General",
     "tos_section1_content": "Welcome to ScriptCat Script Hub (hereinafter referred to as 'the Platform'). The Platform is a user script sharing community that provides services for publishing, searching, and installing scripts, and may display advertisements on its pages. Please carefully read and understand the entire content of this Terms of Service before using the Platform. By registering or using the Platform, you agree to be bound by this agreement.",
     "tos_section2_title": "2. Account Registration and Usage",
@@ -930,20 +1111,22 @@
     "tos_section5_content": "For violations of this agreement or applicable laws, the Platform reserves the right to take measures including but not limited to: removing offending scripts, restricting account features, suspending or permanently banning accounts. For serious violations, the Platform reserves the right to pursue legal remedies.",
     "tos_section6_title": "6. Agreement Changes and Termination",
     "tos_section6_content": "The Platform reserves the right to modify this agreement as needed. Modified agreements will be published on the Platform. Your continued use of the Platform constitutes acceptance of the modified agreement. The Platform may terminate or suspend services within the scope permitted by law, with advance notice provided when possible. The Platform reserves the right of final interpretation of this agreement.",
-    "pp_section1_title": "1. Information Collection",
-    "pp_section1_content": "We collect the following types of user information: registration information (email address, username); device and network information (IP address, browser type); usage data (script browsing, installation, ratings, ad views and clicks, etc.); session information used to maintain your login status.",
-    "pp_section2_title": "2. Information Usage",
-    "pp_section2_content": "We use the collected information for: providing and improving platform services; data statistics such as script installation counts; security measures (preventing malicious registration, abuse, etc.); sending service notifications such as verification codes and password resets; displaying advertisements and measuring their performance, such as views and clicks (our ads are operated by the Platform itself and do not rely on third-party ad networks). We will not sell your personal information to third parties.",
-    "pp_section3_title": "3. Third-Party Services",
-    "pp_section3_content": "The Platform may use third-party services to provide certain features, such as third-party account login and human verification. When using third-party login, we only obtain the basic information you authorize (such as username, email, avatar). Data processing by third-party services is governed by their respective privacy policies.",
-    "pp_section4_title": "4. Cookies and Sessions",
-    "pp_section4_content": "The Platform uses cookies and session technology to maintain your login status and preference settings. You can manage cookies through your browser settings, but this may affect the normal use of the Platform.",
-    "pp_section5_title": "5. Data Security and Retention",
-    "pp_section5_content": "We take reasonable technical and administrative measures to protect user data security. User data will be retained during the existence of your account. After account deletion, your personal information will be deleted or anonymized within a reasonable period, except where required by law.",
-    "pp_section6_title": "6. User Rights",
-    "pp_section6_content": "You have the right to: view and modify your personal information; request deletion of your account and related data; understand how we process your personal information. To exercise these rights or if you have any questions, please contact us through the platform's feedback feature.",
-    "pp_section7_title": "7. Policy Updates",
-    "pp_section7_content": "We may update this Privacy Policy in response to changes in applicable laws or product features. The updated policy will be published on the Platform. We recommend that you review it periodically. Your continued use of the Platform constitutes acceptance of the updated policy. The Platform reserves the right of final interpretation of this policy.",
+    "pp_section1_title": "1. 情報の収集",
+    "pp_section1_content": "当プラットフォームは以下の情報を収集します。登録時にご提供いただくメールアドレス、ユーザー名などの情報。ご利用時の IP アドレス、ブラウザおよび端末の情報。スクリプトの閲覧、インストール、評価などのご利用履歴。ログイン状態を維持するためのセッション情報。\n\n登録時またはフィードバック送信時には、IP アドレスを記録し、そこからおおよその地域（国、都市など）を判定して保存します。これは不正な登録や悪用を防ぐためであり、判定は当プラットフォームのサーバー上で行われます。",
+    "pp_section2_title": "2. 情報の利用",
+    "pp_section2_content": "収集した情報は、サービスの提供および改善、統計、セキュリティの確保、認証コードやパスワード再設定などのサービス通知の送信、広告の表示および広告効果の測定のために利用します。お客様の個人情報を第三者に販売することはありません。",
+    "pp_section3_title": "3. 第三者サービス",
+    "pp_section3_content": "当プラットフォームは、Google アナリティクス（アクセス解析）、Cloudflare Turnstile（人間確認）、第三者アカウントによるログイン、Google AdSense（広告配信）などの第三者サービスを利用しています。第三者アカウントでログインする際に取得するのは、ユーザー名やメールアドレスなど、お客様が許可された基本情報のみです。\n\nこれらのサービスは、それぞれ必要とする端末・閲覧に関する情報を収集し、お客様のブラウザに独自の Cookie を設定する場合があります。その取り扱いは各サービスのプライバシーポリシーに従います。",
+    "pp_section4_title": "4. 広告",
+    "pp_section4_content": "当プラットフォームの広告枠には、当方が自ら取り扱う広告と、Google AdSense によって配信される広告の 2 種類が表示されます。\n\n当方が自ら取り扱う広告については、クリックされた際に、クリック日時や広告の掲載位置などの情報を記録し、広告効果の測定と不正なクリックの検出に利用します。\n\nGoogle AdSense の広告については、配信と計測はいずれも Google が行い、当プラットフォームは誰がどの広告を見たか、またはクリックしたかを知ることはできません。Google の要件に従い、以下のとおりお知らせします。Google を含む第三者配信事業者は、Cookie を使用して、当サイトや他のサイトへの過去のアクセス状況に基づいて広告を配信します。Google が広告 Cookie を使用することにより、Google およびそのパートナーは、当サイトやインターネット上の他のサイトへのアクセス状況に基づいて広告を配信できます。\n\n広告設定（google.com/settings/ads）でパーソナライズ広告を無効にできます。また、aboutads.info では一部の第三者配信事業者による広告 Cookie の使用を無効にできます。",
+    "pp_section5_title": "5. Cookie とセッション",
+    "pp_section5_content": "当プラットフォームは、ログイン状態の維持や、外観・言語の設定を記憶するためなどに Cookie を使用します。上記の第三者サービスも、アクセス解析や広告配信のために独自の Cookie を設定します。\n\nCookie はブラウザの設定で管理・削除できますが、ログインに関する Cookie を削除するとログイン状態を維持できなくなります。当プラットフォームは Cookie 同意バナーを表示していません。パーソナライズ広告の受信を希望されない場合は、前節に記載の方法をご利用ください。",
+    "pp_section6_title": "6. データの安全と保持",
+    "pp_section6_content": "当プラットフォームは、利用者データを保護するために合理的な技術的・管理的措置を講じます。データはアカウントが存続する間保持され、アカウント削除後は、法令により保持が必要な場合を除き、合理的な期間内に削除または匿名化されます。",
+    "pp_section7_title": "7. 利用者の権利",
+    "pp_section7_content": "お客様には、ご自身の個人情報を閲覧・修正する権利、アカウントおよび関連データの削除を求める権利、当方による個人情報の取り扱いについて知る権利があります。これらの権利の行使やご質問は、プラットフォームのフィードバック機能よりご連絡ください。",
+    "pp_section8_title": "8. ポリシーの更新",
+    "pp_section8_content": "法令の要求やサービス内容の変更に応じて、本プライバシーポリシーを更新する場合があります。更新後のポリシーは当プラットフォーム上で公開しますので、定期的にご確認ください。更新後も当プラットフォームを継続してご利用いただいた場合、更新後のポリシーに同意されたものとみなします。本ポリシーの最終的な解釈権は当プラットフォームに帰属します。",
     "dc_section1_title": "1. Script Disclaimer",
     "dc_section1_content": "All user scripts published on the Platform are independently created and maintained by script authors and do not represent the position or views of the Platform. The Platform makes no express or implied warranties regarding the functionality, security, legality, or suitability of any user script. Users install and use scripts at their own discretion, and all risks and consequences are borne by the user.",
     "dc_section2_title": "2. Usage Risks",
@@ -951,7 +1134,7 @@
     "dc_section3_title": "3. Service Availability",
     "dc_section3_content": "The Platform provides services on an 'as-is' basis and does not guarantee uninterrupted, error-free service or that it will meet your specific needs. The Platform is not liable for service interruptions caused by system maintenance, upgrades, network failures, or force majeure. The Platform reserves the right to modify, suspend, or terminate some or all services at any time.",
     "dc_section4_title": "4. Limitation of Liability",
-    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption. The Platform makes no warranties and assumes no responsibility for any goods or services promoted by advertisers through the Platform; any transaction between you and an advertiser is at your own discretion and risk.",
+    "dc_section4_content": "To the maximum extent permitted by law, the Platform and its operators shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Platform services, including but not limited to data loss, loss of profits, or business interruption. The Platform makes no warranties and assumes no responsibility for any goods or services promoted by advertisers through the Platform, or for advertisements served by third-party advertising networks such as Google AdSense; the Platform does not select, review, or endorse advertisements served by such networks. Any transaction between you and an advertiser, or arising from an advertisement served by a third-party advertising network, is at your own discretion and risk.",
     "dc_section5_title": "5. Disclaimer Updates",
     "dc_section5_content": "We may update this Disclaimer in response to changes in applicable laws or product features. The updated disclaimer will be published on the Platform. We recommend that you review it periodically. Your continued use of the Platform constitutes acceptance of the updated disclaimer. The Platform reserves the right of final interpretation of this disclaimer."
   },
@@ -1098,8 +1281,8 @@
       "install": {
         "install_check_failed": "スクリプトインストール状態の検出に失敗しました",
         "install_script": "スクリプトをインストール",
-        "reinstall_script": "スクリプト v{version} を再インストール",
-        "update_script": "スクリプトを v{version} に更新",
+        "reinstall_script": "スクリプトを再インストール",
+        "update_script": "スクリプトを更新",
         "updated_at": "{time} に更新",
         "changelog": "更新履歴"
       },
@@ -1203,7 +1386,7 @@
         "connect": "クロスオリジンアクセス",
         "grants": "使用する機能",
         "more": "+{count}",
-        "high_risk": "高リスクの権限です。インストールにご注意ください",
+        "high_risk": "このスクリプトには、Cookie へのアクセスと変更を許可する機密性の高い権限があります。",
         "cap": {
           "net": "ネットワークリクエスト",
           "notify": "通知",
@@ -1503,6 +1686,7 @@
         "stats": {
           "expired": "期限切れ：",
           "groups": "ユーザーグループ：",
+          "page_scope_note": "（ユーザー / グループ / 承認待ち / 期限切れは現在のページのみの集計です）",
           "pending": "確認待ち：",
           "total": "合計：",
           "users": "ユーザー："
@@ -1936,6 +2120,7 @@
       },
       "sort": {
         "createtime": "最新公開",
+        "long_tail": "おすすめ",
         "score": "評価順",
         "today_download": "人気順",
         "total_download": "ダウンロード数順"
@@ -2013,6 +2198,7 @@
       "username": "ユーザー名"
     },
     "version": {
+      "auto_synced_changelog": "このバージョンはシステムによって自動的に同期されました。",
       "changelog_label": "更新説明",
       "changelog_placeholder": "例：\n✨ 新機能：ユーザーインターフェースの最適化を追加\n🐛 問題修正：ブラウザ互換性の問題を解決\n⚡ パフォーマンス向上：スクリプト実行速度を最適化\n📦 依存関係更新：最新バージョンにアップグレード",
       "changelog_subtitle": "（Markdown構文をサポート）",
@@ -2034,6 +2220,7 @@
       "install_button": "このバージョンをインストール",
       "install_success": "{version} のインストールを開始",
       "latest_version_badge": "最新バージョン",
+      "deleted_version_badge": "削除済み",
       "load_failed": "読み込みに失敗しました",
       "load_failed_description": "バージョン一覧の取得中にエラーが発生しました。ページを更新して再試行してください",
       "no_history_description": "このスクリプトはまだバージョンが公開されていません",
@@ -2042,6 +2229,7 @@
       "pagination_total": "{start}-{end} 項目、全 {total} バージョン",
       "prerelease_badge": "プレリリース版",
       "prerelease_chip": "プレリリース {count}",
+      "deleted_chip": "削除済み {count}",
       "prerelease_checked": "プレリリース版",
       "prerelease_unchecked": "正式版",
       "prerelease_versions": "プレリリース版",
@@ -2250,7 +2438,33 @@
       "processed_col_script": "スクリプト",
       "processed_col_operator": "処理者",
       "processed_col_time": "時間",
-      "processed_col_reason": "理由"
+      "processed_col_reason": "理由",
+      "account_deactivated": "This account has been deactivated",
+      "ban_user": "Ban user",
+      "unban_user": "Unban user",
+      "ban_reason": "Ban reason",
+      "ban_reason_placeholder": "Enter a reason for the ban",
+      "ban_duration": "Ban duration",
+      "ban_permanent": "Permanent ban",
+      "ban_1_day": "1 day",
+      "ban_3_days": "3 days",
+      "ban_7_days": "7 days",
+      "ban_30_days": "30 days",
+      "ban_90_days": "90 days",
+      "ban_custom": "Custom",
+      "ban_clean_options": "Cleanup options",
+      "ban_clean_scores": "Remove user ratings",
+      "ban_clean_scripts": "Remove user scripts",
+      "ban_success": "User banned",
+      "unban_success": "User unbanned",
+      "ban_confirm_title": "Confirm ban",
+      "unban_confirm": "Are you sure you want to unban this user?",
+      "user_banned": "Banned",
+      "ban_expire_at": "Ban expires at",
+      "ban_permanent_label": "Permanent",
+      "register_ip": "Registration IP",
+      "ip_location": "IP location",
+      "register_email": "Registration email"
     },
     "save": "保存",
     "script_list": {
@@ -2263,6 +2477,7 @@
       "status_active": "公開済み",
       "status_all": "すべての状態",
       "status_audit": "審査中",
+      "status_deleted": "削除済み",
       "sort_by_downloads": "ダウンロード数順",
       "sort_by_hot": "人気順",
       "sort_by_latest": "最新公開",
@@ -2281,7 +2496,8 @@
       "deactivate_settings": "アカウント削除",
       "passkey_settings": "Passkeys",
       "account_settings": "アカウント管理",
-      "account_settings_description": "パスワード、パスキー、サードパーティ連携などのアカウントセキュリティ設定を管理"
+      "account_settings_description": "パスワード、パスキー、サードパーティ連携などのアカウントセキュリティ設定を管理",
+      "install_link_settings": "インストールリンク"
     },
     "update_failed": "更新に失敗しました。再試行してください",
     "update_success": "ユーザー情報の更新が完了しました！",
@@ -2369,6 +2585,26 @@
       "cancel_failed": "キャンセルに失敗しました",
       "applied_at": "申請日時",
       "effective_at": "有効日時"
+    },
+    "contact_email": "Contact email",
+    "email_code_placeholder": "Enter the 6-digit verification code",
+    "email_code_required": "Send and enter the email verification code first",
+    "email_code_resend": "Resend",
+    "email_code_sent": "Verification code sent",
+    "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
+    "email_send_code": "Send verification code",
+    "email_send_code_countdown": "Resend in {{seconds}}s",
+    "install_link": {
+      "title": "インストールリンク",
+      "description": "非公開スクリプトのインストールリンクには専用のトークンが含まれます。スクリプトマネージャーはそれを使ってインストールと更新確認を行うため、サイトへのログイン状態は不要です。リンクはアカウントに紐づいています。許可していない相手には共有しないでください。",
+      "reset": "インストールリンクをリセット",
+      "reset_warning_title": "リセットすると既存のリンクは直ちに無効になります",
+      "reset_warning_content": "リセット後、すべての端末にインストール済みの非公開スクリプトは更新を受け取れなくなり、再インストールが必要になります。リンクが漏れた可能性がある場合にのみリセットしてください。Webhook シークレットには影響しません。",
+      "reset_confirm_title": "インストールリンクをリセットしますか？",
+      "reset_confirm_content": "端末にインストール済みの非公開スクリプトはすべて再インストールが必要になります。",
+      "reset_confirm_ok": "リセット",
+      "reset_success": "インストールリンクをリセットしました",
+      "reset_failed": "リセットに失敗しました。しばらくしてからお試しください"
     }
   },
   "ads": {
@@ -2393,5 +2629,8 @@
       "title": "Code Failed Integrity Check",
       "help": "If this is a false positive, please apply for an exemption via the admin contact listed in the site FAQ."
     }
+  },
+  "announcements": {
+    "title": "Announcements"
   }
 }

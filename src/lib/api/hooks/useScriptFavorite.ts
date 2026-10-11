@@ -1,7 +1,12 @@
 import { useState, useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 import { message } from 'antd';
+import { useTranslations } from 'next-intl';
 import { scriptFavoriteService } from '../services/scripts';
+import {
+  folderDisplayName,
+  isDefaultFolder,
+} from '@/lib/utils/favorite-folder';
 import type {
   FavoriteFolderItem,
   CreateFolderRequest,
@@ -18,6 +23,7 @@ export function useScriptFavorite(
 ) {
   const [favoriteIds, setFavoriteIds] = useState<number[]>(initialFavoriteIds);
   const [loading, setLoading] = useState(false);
+  const commonT = useTranslations('common');
 
   // 获取收藏夹列表
   const {
@@ -34,6 +40,17 @@ export function useScriptFavorite(
   );
 
   const folders = useMemo(() => foldersData?.list || [], [foldersData?.list]);
+
+  // 提示里不能直接打印库里的名称：默认收藏夹存的是占位符
+  const resolveFolderName = useCallback(
+    (folderId: number) => {
+      const folder = folders.find((f: FavoriteFolderItem) => f.id === folderId);
+      return folder
+        ? folderDisplayName(folder, commonT('default_favorite_folder_name'))
+        : '';
+    },
+    [folders, commonT],
+  );
 
   // 收藏脚本到指定收藏夹
   const favoriteScript = useCallback(
@@ -55,9 +72,7 @@ export function useScriptFavorite(
         // 刷新收藏夹列表（更新计数）
         mutateFolders();
 
-        const folderName =
-          folders.find((f: FavoriteFolderItem) => f.id === folderId)?.name ||
-          '收藏夹';
+        const folderName = resolveFolderName(folderId) || '收藏夹';
         message.success(`已收藏到：${folderName}`);
 
         return newFavoriteIds;
@@ -69,7 +84,7 @@ export function useScriptFavorite(
         setLoading(false);
       }
     },
-    [scriptId, favoriteIds, folders, mutateFolders],
+    [scriptId, favoriteIds, resolveFolderName, mutateFolders],
   );
 
   // 取消收藏脚本
@@ -92,9 +107,7 @@ export function useScriptFavorite(
         // 刷新收藏夹列表（更新计数）
         mutateFolders();
 
-        const folderName =
-          folders.find((f: FavoriteFolderItem) => f.id === folderId)?.name ||
-          '收藏夹';
+        const folderName = resolveFolderName(folderId) || '收藏夹';
         message.success(`已从${folderName}移除`);
 
         return newFavoriteIds;
@@ -106,7 +119,7 @@ export function useScriptFavorite(
         setLoading(false);
       }
     },
-    [scriptId, favoriteIds, folders, mutateFolders],
+    [scriptId, favoriteIds, resolveFolderName, mutateFolders],
   );
 
   // 切换收藏状态
@@ -156,10 +169,7 @@ export function useScriptFavorite(
           message.success('已取消收藏');
         } else {
           const folderNames = newFolderIds
-            .map(
-              (id) =>
-                folders.find((f: FavoriteFolderItem) => f.id === id)?.name,
-            )
+            .map((id) => resolveFolderName(id))
             .filter(Boolean)
             .join('、');
           message.success(`已收藏到：${folderNames}`);
@@ -174,7 +184,7 @@ export function useScriptFavorite(
         setLoading(false);
       }
     },
-    [scriptId, favoriteIds, folders, mutateFolders],
+    [scriptId, favoriteIds, resolveFolderName, mutateFolders],
   );
 
   // 创建新收藏夹
@@ -202,9 +212,9 @@ export function useScriptFavorite(
 
   // 快速收藏到默认收藏夹
   const quickFavorite = useCallback(async () => {
+    // 按占位符认默认收藏夹；作者改过名后退回第一个
     const defaultFolder =
-      folders.find((f: FavoriteFolderItem) => f.name === '默认收藏夹') ||
-      folders[0];
+      folders.find((f: FavoriteFolderItem) => isDefaultFolder(f)) || folders[0];
 
     if (!defaultFolder) {
       message.error('未找到默认收藏夹');

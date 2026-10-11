@@ -1,3 +1,5 @@
+'use client';
+
 import { DeleteOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { Button, Card, Input, Select, Slider, Tooltip, Typography } from 'antd';
 import React from 'react';

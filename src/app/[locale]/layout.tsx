@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
-import '@/../public/styles/antd.min.css';
+import '../antd.generated.css';
 import { LocalizedServerThemeWrapper } from '@/components/LocalizedServerThemeWrapper';
 
 interface RootLayoutProps {

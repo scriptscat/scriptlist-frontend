@@ -1,16 +1,16 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { Button, Space, Switch, Table, Tag, message } from 'antd';
+import { useState } from 'react';
+import { Button, Space, Switch, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { similarityService } from '@/lib/api/services/similarity';
 import type {
   ScriptBrief,
   SimilarPairItem,
 } from '@/lib/api/services/similarity';
-import { APIError } from '@/types/api';
+import { useSimilarityPairs } from '@/lib/api/hooks/similarity';
+import { useTableStateLocale } from '../../components/tableState';
 
 const PAGE_SIZE = 20;
 
@@ -36,32 +36,22 @@ function ScriptCell({
 
 export default function PairsTable() {
   const t = useTranslations('admin.similarity');
-  const [data, setData] = useState<SimilarPairItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [excludeDeleted, setExcludeDeleted] = useState(false);
 
-  const load = useCallback(async (p: number, exclude: boolean) => {
-    setLoading(true);
-    try {
-      const resp = await similarityService.listPairs({
-        page: p,
-        size: PAGE_SIZE,
-        exclude_deleted: exclude || undefined,
-      });
-      setData(resp.list ?? []);
-      setTotal(resp.total ?? 0);
-    } catch (err) {
-      if (err instanceof APIError) message.error(err.msg);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load(page, excludeDeleted);
-  }, [page, excludeDeleted, load]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh,
+  } = useSimilarityPairs({ page, size: PAGE_SIZE, excludeDeleted });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: refresh,
+  });
 
   const deletedLabel = t('script_deleted');
 
@@ -141,7 +131,8 @@ export default function PairsTable() {
         rowKey="id"
         columns={columns}
         dataSource={data}
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         pagination={{
           current: page,
           pageSize: PAGE_SIZE,

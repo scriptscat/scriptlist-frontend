@@ -23,16 +23,20 @@ import {
   ExclamationCircleOutlined,
   ClockCircleOutlined,
 } from '@ant-design/icons';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
 import { scriptAccessService } from '@/lib/api/services/scripts';
 import type { InviteMessage } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 import type { APIError } from '@/types/api';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { ErrorCodes } from '@/lib/api/errorCodes';
 
 const { Title, Text } = Typography;
+
+// invite_status 的取值见 InviteMessage 定义；只有「已接受」代表权限当场生效，
+// 需要管理员审核的邀请会停在「等待中」，此时还没有任何新权限可用。
+const INVITE_STATUS_ACCEPTED = 2;
 
 export default function InviteConfirm() {
   const router = useRouter();
@@ -113,7 +117,18 @@ export default function InviteConfirm() {
     try {
       await scriptAccessService.handleInvite(code, status);
       message.success(t('submit_success'));
-      mutateInvite();
+      const updated = await mutateInvite();
+      // 权限当场生效时把用户送到能用上这个权限的页面，别留在这个只回显已失效邀请码的
+      // 结果页上。拒绝邀请、或还要等管理员审核的，都停在原地展示状态。
+      if (status && updated?.invite_status === INVITE_STATUS_ACCEPTED) {
+        // 群组邀请拿不到角色（接口只回群组名），按未知处理走详情页；
+        // /manage 的入口本身就只对 manager 开放。
+        router.push(
+          updated.access?.role === 'manager'
+            ? `/script-show-page/${updated.script.id}/manage`
+            : `/script-show-page/${updated.script.id}`,
+        );
+      }
     } catch (error: any) {
       message.error(error.message || t('operation_failed_retry'));
     }

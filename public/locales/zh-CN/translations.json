@@ -96,10 +96,12 @@
       "create_title": "新建广告",
       "edit_title": "编辑广告",
       "col_slot": "广告位",
-      "col_title": "标题",
+      "col_type": "类型",
+      "col_title": "素材 / 标题",
       "col_enabled": "状态",
       "col_stats": "曝光/点击 (CTR)",
       "col_actions": "操作",
+      "col_ad_unit_value": "单元 {id}",
       "action_edit": "编辑",
       "action_delete": "删除",
       "delete_confirm": "确认删除该广告？",
@@ -110,8 +112,20 @@
       "light_required": "请上传浅色图片",
       "enabled": "启用",
       "disabled": "禁用",
+      "type_image": "图片",
+      "type_adsense": "AdSense",
+      "stats_adsense_placeholder": "—",
+      "stats_adsense_note": "曝光 / 点击由 Google 统计",
+      "stats_multi_slot_note": "{count} 个广告位合计",
+      "field_type": "广告类型",
       "field_slot": "广告位",
       "field_title": "标题",
+      "field_remark_title": "备注标题",
+      "field_remark_title_placeholder": "仅后台可见，便于识别",
+      "field_ad_unit_id": "广告单元 ID",
+      "field_ad_unit_id_placeholder": "data-ad-slot，如 1234567890",
+      "field_ad_unit_id_hint": "AdSense 后台广告单元代码里的 data-ad-slot 数值。",
+      "adsense_stats_note": "AdSense 的曝光与点击由 Google 统计，站内统计对该条目恒为 0；收益请在 AdSense 后台查看。",
       "field_languages": "投放语言（留空=全部）",
       "field_light": "浅色图片",
       "field_dark": "深色图片（可选）",
@@ -125,6 +139,11 @@
       "upload": "上传图片",
       "image_url_placeholder": "输入或粘贴图片链接，也可点击上传",
       "recommended_size": "推荐尺寸 {size}",
+      "publisher_id_hint": "未填写 AdSense 发布商 ID 时，AdSense 类型的广告不会投放。",
+      "publisher_id_placeholder": "ca-pub-…",
+      "publisher_id_save": "保存",
+      "publisher_id_save_success": "保存成功",
+      "publisher_id_warning": "尚未填写 AdSense 发布商 ID，共有 {count} 条 AdSense 广告不会投放。",
       "col_weight": "权重",
       "col_schedule": "排期时间",
       "schedule_forever": "长期",
@@ -155,11 +174,11 @@
         },
         "search-rail-left": {
           "name": "搜索页左竖栏",
-          "position": "搜索页浏览态,内容区左侧留白,仅 ≥1650px 宽屏显示"
+          "position": "搜索页浏览态，内容区左侧留白，有投放时内容区收窄让位，留白不足时不展示"
         },
         "search-rail-right": {
           "name": "搜索页右竖栏",
-          "position": "搜索页浏览态,内容区右侧留白,仅 ≥1650px 宽屏显示"
+          "position": "搜索页浏览态，内容区右侧留白，有投放时内容区收窄让位，留白不足时不展示"
         },
         "search-sidebar": {
           "name": "搜索页侧栏",
@@ -172,7 +191,39 @@
         "script-detail-sidebar": {
           "name": "详情页侧栏",
           "position": "脚本详情页右侧 sticky 侧栏,数据统计卡与脚本详情卡之间,大屏显示"
+        },
+        "script-detail-banner": {
+          "name": "详情页横幅",
+          "position": "脚本详情页主内容区,信息卡与内容 Tab 卡之间,整宽展示,全部断点"
+        },
+        "search-results-rail-left": {
+          "name": "搜索结果页左竖栏",
+          "position": "搜索结果页内容区左侧留白，有投放时内容区收窄让位，留白不足时不展示"
+        },
+        "search-results-rail-right": {
+          "name": "搜索结果页右竖栏",
+          "position": "搜索结果页内容区右侧留白，与侧栏卡片并排，留白不足时不展示"
+        },
+        "script-detail-rail-left": {
+          "name": "详情页左竖栏",
+          "position": "脚本详情页内容区左侧留白，有投放时内容区收窄让位，留白不足时不展示"
+        },
+        "script-detail-rail-right": {
+          "name": "详情页右竖栏",
+          "position": "脚本详情页内容区右侧留白，与 sticky 侧栏并排，留白不足时不展示"
         }
+      },
+      "slot_required": "请选择至少一个广告位",
+      "slot_placeholder": "可选多个广告位",
+      "slot_selected_count": "已选 {count} 个广告位",
+      "slot_count_summary": "{count} 个位 · {sizes}",
+      "slot_mixed_title": "所选广告位跨越 {count} 种形态，同一素材无法同时贴合",
+      "slot_mixed_desc": "图片素材在不匹配的位上会按比例缩放并留白；AdSense 条目共用一个广告单元 ID，跨形态会明显拉低填充率。仍可保存。",
+      "slot_unknown": "未知广告位：{keys}",
+      "slot_variant": {
+        "rail": "竖栏",
+        "banner": "横幅",
+        "card": "卡片"
       }
     },
     "ai_review": {
@@ -234,6 +285,9 @@
       "col_version": "版本",
       "col_submitter": "提交者",
       "col_status": "状态",
+      "col_script_audit_status": "脚本审核状态",
+      "script_auditing": "审核中",
+      "script_not_auditing": "非审核中",
       "col_createtime": "提交时间",
       "col_actions": "操作",
       "status_pending": "待审核",
@@ -579,7 +633,12 @@
         "dean_edwards_packer": "检测到 Dean Edwards 打包器",
         "aa_encode": "检测到 AAEncode 编码",
         "jj_encode": "检测到 JJEncode 编码",
-        "eval_density": "eval/动态执行调用密度过高"
+        "eval_density": "eval/动态执行调用密度过高",
+        "gm_cookie_unrecognized_usage": "检测到无法识别或无法完整解释的 GM_cookie 用法",
+        "gm_cookie_unused_sensitive_permission": "声明了 GM_cookie 敏感权限，但未识别到合法用途",
+        "gm_cookie_data_exfiltration": "检测到 GM_cookie 数据可能被发送到网络或外部上下文",
+        "gm_cookie_data_injection": "检测到 GM_cookie 数据可能被注入代码、页面或持久化存储",
+        "gm_cookie_analysis_incomplete": "GM_cookie 数据路径分析不完整，需要人工审核"
       },
       "backfill": {
         "help_title": "历史脚本回填",
@@ -726,9 +785,28 @@
     "punish": "处罚",
     "punish_reason": "处罚原因",
     "report": "举报",
-    "select_punish_option": "选择处罚选项"
+    "select_punish_option": "选择处罚选项",
+    "default_favorite_folder_name": "默认收藏夹",
+    "default_favorite_folder_description": "这是一个默认的收藏夹"
   },
   "components": {
+    "loading": {
+      "default": "加载中…",
+      "code": "加载代码编辑器中…",
+      "chart": "加载图表中…",
+      "failed": "加载失败",
+      "retry": "重试",
+      "redirecting": "跳转中…"
+    },
+    "markdown": {
+      "note": "说明",
+      "tip": "提示",
+      "important": "重要",
+      "warning": "警告",
+      "caution": "注意",
+      "footnotes_heading": "脚注",
+      "footnote_backref": "返回引用 {0}"
+    },
     "markdown_editor": {
       "image_upload_failed": "图片上传失败",
       "loading_editor": "加载编辑器中...",
@@ -1028,7 +1106,7 @@
     "privacy_policy_description": "了解 ScriptCat 如何收集、使用和保护你的个人信息。",
     "disclaimer_title": "免责声明",
     "disclaimer_description": "了解 ScriptCat 关于用户脚本内容与使用风险的免责声明。",
-    "last_updated": "最后更新日期：2026年6月19日",
+    "last_updated": "最后更新日期：2026年8月25日",
     "tos_section1_title": "一、总则",
     "tos_section1_content": "欢迎使用 ScriptCat 脚本站（以下简称「本平台」）。本平台是一个用户脚本分享社区，为用户提供脚本的发布、搜索、安装等服务，并可能在平台页面中展示广告。请您在使用本平台服务前，仔细阅读并理解本服务协议的全部内容。注册或使用本平台即表示您同意受本协议的约束。",
     "tos_section2_title": "二、账号注册与使用",
@@ -1042,19 +1120,21 @@
     "tos_section6_title": "六、协议变更与终止",
     "tos_section6_content": "本平台有权根据需要修改本协议内容，修改后的协议将在平台公布。您继续使用本平台服务即表示接受修改后的协议。本平台有权在法律允许的范围内终止或暂停服务，并尽可能提前通知用户。本协议的最终解释权归本平台所有。",
     "pp_section1_title": "一、信息收集",
-    "pp_section1_content": "我们收集以下类型的用户信息：注册信息（邮箱地址、用户名）；设备与网络信息（IP 地址、浏览器类型）；使用数据（脚本浏览、安装、评分、广告浏览与点击等）；用于维持登录状态的会话信息。",
+    "pp_section1_content": "我们收集：您注册时提供的邮箱、用户名等信息；您访问平台时的 IP 地址、浏览器与设备信息；您在平台上的浏览、安装、评分等使用记录；用于保持登录状态的会话信息。\n\n注册或提交反馈时，我们会记录您的 IP 地址并解析出大致的地理位置（如国家、城市），用于防范恶意注册与滥用。该解析在本平台服务器上完成。",
     "pp_section2_title": "二、信息使用",
-    "pp_section2_content": "我们将收集的信息用于：提供和改进平台服务；脚本安装量等数据统计；安全保障（防止恶意注册、滥用等）；发送验证码、密码重置等服务通知；展示广告并统计广告的展示、点击等效果（本平台广告均为自营，不接入第三方广告联盟）。我们不会将您的个人信息出售给第三方。",
+    "pp_section2_content": "我们将收集的信息用于：提供和改进平台服务；数据统计；安全保障；发送验证码、密码重置等服务通知；展示广告并统计广告效果。我们不会将您的个人信息出售给第三方。",
     "pp_section3_title": "三、第三方服务",
-    "pp_section3_content": "本平台可能使用第三方服务实现部分功能，如第三方账号登录和人机验证等。使用第三方登录时，我们仅获取您授权的基本信息（如用户名、邮箱、头像）。第三方服务的数据处理受其各自隐私政策约束。",
-    "pp_section4_title": "四、Cookie 与会话",
-    "pp_section4_content": "本平台使用 Cookie 和会话技术维持您的登录状态和偏好设置。您可以通过浏览器设置管理 Cookie，但这可能影响平台的正常使用。",
-    "pp_section5_title": "五、数据安全与保留",
-    "pp_section5_content": "我们采取合理的技术和管理措施保护用户数据安全。用户数据将在账号存续期间保留，账号注销后将在合理期限内删除或匿名化处理，法律法规要求保留的除外。",
-    "pp_section6_title": "六、用户权利",
-    "pp_section6_content": "您有权：查看和修改您的个人信息；请求删除您的账号和相关数据；了解我们如何处理您的个人信息。如需行使上述权利或有任何疑问，请通过平台反馈功能联系我们。",
-    "pp_section7_title": "七、政策更新",
-    "pp_section7_content": "我们可能会根据法律法规要求或产品功能变化对本隐私政策进行更新。更新后的政策将在本平台上发布，建议您定期查看以了解最新内容。继续使用本平台即表示您接受更新后的政策。本隐私政策的最终解释权归本平台所有。",
+    "pp_section3_content": "本平台使用 Google Analytics（访问统计）、Cloudflare Turnstile（人机验证）、第三方账号登录、Google AdSense（广告投放）等第三方服务。使用第三方账号登录时，我们仅获取您授权的基本信息（用户名、邮箱等）。\n\n这些服务会收集其所需的设备与浏览信息，并可能在您的浏览器中设置自己的 Cookie，具体以各自的隐私政策为准。",
+    "pp_section4_title": "四、广告",
+    "pp_section4_content": "本平台的广告位会展示两类广告：由我们自行接洽的广告，以及由 Google AdSense 投放的广告。\n\n对于自营广告，当您点击时我们会记录点击时间、广告位置等信息，用于统计广告效果和识别异常点击。\n\n对于 Google AdSense 广告，投放与统计均由 Google 完成，本平台无法得知是谁看到或点击了哪条广告。按照 Google 的要求说明：第三方供应商（包括 Google）会使用 Cookie，根据您以往对本网站或其他网站的访问情况来投放广告；Google 使用广告 Cookie，使其及其合作伙伴能够根据您对本网站和其他网站的访问情况向您投放广告。\n\n您可以通过 Google 广告设置（google.com/settings/ads）停用个性化广告，或通过 aboutads.info 停用部分第三方供应商的广告 Cookie。",
+    "pp_section5_title": "五、Cookie 与会话",
+    "pp_section5_content": "本平台使用 Cookie 保持您的登录状态、记住您的外观与语言偏好等。上述第三方服务也会设置各自的 Cookie，用于访问统计与广告投放。\n\n您可以通过浏览器设置管理或清除 Cookie，但清除登录相关 Cookie 会导致无法保持登录状态。本平台不显示 Cookie 同意横幅；如不希望接收个性化广告，请使用上一节所述方式。",
+    "pp_section6_title": "六、数据安全与保留",
+    "pp_section6_content": "我们采取合理的技术和管理措施保护用户数据安全。用户数据将在账号存续期间保留，账号注销后将在合理期限内删除或匿名化处理，法律法规要求保留的除外。",
+    "pp_section7_title": "七、用户权利",
+    "pp_section7_content": "您有权：查看和修改您的个人信息；请求删除您的账号和相关数据；了解我们如何处理您的个人信息。如需行使上述权利或有任何疑问，请通过平台反馈功能联系我们。",
+    "pp_section8_title": "八、政策更新",
+    "pp_section8_content": "我们可能会根据法律法规要求或产品功能变化对本隐私政策进行更新。更新后的政策将在本平台上发布，建议您定期查看以了解最新内容。继续使用本平台即表示您接受更新后的政策。本隐私政策的最终解释权归本平台所有。",
     "dc_section1_title": "一、脚本免责",
     "dc_section1_content": "本平台上发布的所有用户脚本均由脚本作者独立创作和维护，不代表本平台的立场或观点。本平台不对任何用户脚本的功能性、安全性、合法性或适用性做任何明示或暗示的保证。用户安装和使用任何脚本均属自愿行为，由此产生的一切风险和后果由用户自行承担。",
     "dc_section2_title": "二、使用风险",
@@ -1062,7 +1142,7 @@
     "dc_section3_title": "三、服务可用性",
     "dc_section3_content": "本平台按「现状」提供服务，不保证服务不中断、无错误或满足您的特定需求。因系统维护、升级、网络故障或不可抗力等原因导致的服务中断，本平台不承担责任。本平台保留随时修改、暂停或终止部分或全部服务的权利。",
     "dc_section4_title": "四、责任限制",
-    "dc_section4_content": "在法律允许的最大范围内，本平台及其运营者不对因使用或无法使用本平台服务而导致的任何直接、间接、附带、特殊或后果性损害承担责任，包括但不限于数据丢失、利润损失或业务中断。对于广告主通过本平台所推广的商品或服务，本平台不作任何担保，亦不承担相关责任，您与广告主之间的交易请自行判断并承担风险。",
+    "dc_section4_content": "在法律允许的最大范围内，本平台及其运营者不对因使用或无法使用本平台服务而导致的任何直接、间接、附带、特殊或后果性损害承担责任，包括但不限于数据丢失、利润损失或业务中断。对于广告主通过本平台所推广的商品或服务，以及由 Google AdSense 等第三方广告联盟投放的广告，本平台均不作任何担保，亦不代为甄选或认可其内容，不承担相关责任；第三方广告联盟投放的广告由其自行选择投放对象，本平台不参与该过程。您与广告主，或因第三方广告联盟投放的广告而产生的您与任何一方之间的交易，均请自行判断并承担风险。",
     "dc_section5_title": "五、声明更新",
     "dc_section5_content": "我们可能会根据法律法规要求或产品功能变化对本免责声明进行更新。更新后的声明将在本平台上发布，建议您定期查看以了解最新内容。继续使用本平台即表示您接受更新后的声明。本免责声明的最终解释权归本平台所有。"
   },
@@ -1209,8 +1289,8 @@
       "install": {
         "install_check_failed": "检测脚本安装状态失败",
         "install_script": "安装脚本",
-        "reinstall_script": "重新安装脚本 v{version}",
-        "update_script": "更新脚本至 v{version}",
+        "reinstall_script": "重新安装脚本",
+        "update_script": "更新脚本",
         "updated_at": "更新于 {time}",
         "changelog": "更新日志"
       },
@@ -1314,7 +1394,7 @@
         "connect": "跨域访问",
         "grants": "使用能力",
         "more": "+{count}",
-        "high_risk": "高风险权限，请谨慎安装",
+        "high_risk": "此脚本具有访问和修改 Cookie 的敏感权限",
         "cap": {
           "net": "网络请求",
           "notify": "通知",
@@ -1614,6 +1694,7 @@
         "stats": {
           "expired": "已过期：",
           "groups": "用户组：",
+          "page_scope_note": "（用户 / 用户组 / 等待确认 / 已过期为当前页统计）",
           "pending": "等待确认：",
           "total": "总数：",
           "users": "用户："
@@ -2047,6 +2128,7 @@
       },
       "sort": {
         "createtime": "最新发布",
+        "long_tail": "可能感兴趣",
         "score": "评分最高",
         "today_download": "热度排序",
         "total_download": "下载最多"
@@ -2124,6 +2206,7 @@
       "username": "用户名"
     },
     "version": {
+      "auto_synced_changelog": "该版本为系统自动同步更新",
       "changelog_label": "更新说明",
       "changelog_placeholder": "例如：\n✨ 新增功能：添加了用户界面优化\n🐛 修复问题：解决了浏览器兼容性问题\n⚡ 性能提升：优化了脚本执行速度\n📦 依赖更新：升级到最新版本",
       "changelog_subtitle": "(支持Markdown语法)",
@@ -2145,6 +2228,7 @@
       "install_button": "安装此版本",
       "install_success": "开始安装 {version}",
       "latest_version_badge": "最新版本",
+      "deleted_version_badge": "已删除",
       "load_failed": "加载失败",
       "load_failed_description": "获取版本列表时发生错误，请刷新页面重试",
       "no_history_description": "该脚本还没有发布任何版本",
@@ -2153,6 +2237,7 @@
       "pagination_total": "第 {start}-{end} 项，共 {total} 个版本",
       "prerelease_badge": "预发布版本",
       "prerelease_chip": "预发布 {count}",
+      "deleted_chip": "已删除 {count}",
       "prerelease_checked": "预发布版本",
       "prerelease_unchecked": "正式版本",
       "prerelease_versions": "预发布版本",
@@ -2408,6 +2493,7 @@
       "status_active": "已发布",
       "status_all": "全部状态",
       "status_audit": "审核中",
+      "status_deleted": "已删除",
       "sort_by_downloads": "下载最多",
       "sort_by_hot": "热度排序",
       "sort_by_latest": "最新发布",
@@ -2426,7 +2512,8 @@
       "user_settings": "用户设置",
       "webhook_settings": "Webhook 设置",
       "deactivate_settings": "注销账号",
-      "passkey_settings": "通行密钥"
+      "passkey_settings": "通行密钥",
+      "install_link_settings": "安装链接"
     },
     "update_failed": "更新失败，请重试",
     "update_success": "用户信息更新成功！",
@@ -2514,6 +2601,18 @@
       "cancel_failed": "取消注销失败",
       "applied_at": "申请时间",
       "effective_at": "生效时间"
+    },
+    "install_link": {
+      "title": "安装链接",
+      "description": "私有脚本的安装链接带有一枚专属令牌，脚本管理器凭它安装和检查更新，因此不需要保持网站登录状态。链接与你的账号绑定，请勿分享给未被授权的人。",
+      "reset": "重置安装链接",
+      "reset_warning_title": "重置会使现有链接立即失效",
+      "reset_warning_content": "重置后，你在所有设备上已安装的私有脚本都将无法再检查更新，需要重新安装一次。仅在链接可能已经泄露时才需要重置。此操作不影响 Webhook 密钥。",
+      "reset_confirm_title": "确认重置安装链接？",
+      "reset_confirm_content": "所有设备上已安装的私有脚本都需要重新安装。",
+      "reset_confirm_ok": "确认重置",
+      "reset_success": "安装链接已重置",
+      "reset_failed": "重置失败，请稍后再试"
     }
   },
   "utils": {

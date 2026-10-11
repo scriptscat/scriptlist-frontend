@@ -57,8 +57,26 @@ const script = {
   total_install: 120,
   createtime: now - 10_000,
   updatetime: now,
+  // GFM extensions exercised end-to-end by markdown-gfm.spec.ts (alerts,
+  // footnotes, heading anchors) — see
+  // docs/superpowers/specs/2026-07-31-markdown-gfm-extensions-design.md.
   content:
-    '## E2E Userscript\n\nThis content is served by the Playwright mock API.',
+    '## E2E Userscript\n\n' +
+    'This content is served by the Playwright mock API.\n\n' +
+    '## 安装说明\n\n' +
+    '跳转到 [安装说明](#安装说明) 查看详情。\n\n' +
+    '> [!IMPORTANT]\n' +
+    '> 有且仅有以上3种分发渠道由仓库维护者直接管理。\n\n' +
+    '> [!NOTE]\n' +
+    '> 这是来自 GitHub Flavored Markdown 的提示。\n\n' +
+    '支持脚注引用[^1]。\n\n' +
+    // Author-written raw HTML wearing the footnotes section's own shape. Both
+    // `section` and `class="footnotes"` survive sanitization (see
+    // parseMarkdown.ts STRUCTURE_CLASSES), so the CSS that visually hides the
+    // *generated* footnotes heading must not hide this one — markdown-gfm.spec
+    // asserts it stays at full height.
+    '<section class="footnotes"><h2>作者自己写的脚注标题</h2><p>作者自己写的脚注正文。</p></section>\n\n' +
+    '[^1]: 这是脚注的详细说明内容。\n',
   role: 'owner',
   script: {
     id: 1,
@@ -120,6 +138,18 @@ const report = {
   comment_count: 1,
 };
 
+// 脚本删除后举报历史仍对参与方开放的固定数据。注意真实后端对已删除脚本的
+// /scripts/:id 一律 404（连脚本名都不返回），mock 必须照做，否则测不到
+// layout 里那条「404 时把渲染让给举报详情」的分支。
+const DELETED_SCRIPT_ID = 6240;
+const DELETED_REPORT_ID = 151;
+const deletedReport = {
+  ...report,
+  id: DELETED_REPORT_ID,
+  script_id: DELETED_SCRIPT_ID,
+  content: '这是脚本删除后的历史举报内容。',
+};
+
 const pairDetail = {
   id: 1,
   script_a: {
@@ -162,6 +192,16 @@ const pairDetail = {
 
 const list = <T>(item: T, total = 1) => ({ list: total ? [item] : [], total });
 const ok = (data: unknown) => ({ code: 0, msg: 'ok', data });
+
+/** route() 用它表达非 200 响应；handler 会拆开成真正的 HTTP 状态码。 */
+const HTTP_ERROR = '__httpError' as const;
+const httpError = (status: number, msg: string) => ({
+  [HTTP_ERROR]: { status, msg },
+});
+const isHttpError = (
+  payload: unknown,
+): payload is { __httpError: { status: number; msg: string } } =>
+  typeof payload === 'object' && payload !== null && HTTP_ERROR in payload;
 
 function send(res: ServerResponse, status: number, data: unknown) {
   res.writeHead(status, {
@@ -221,6 +261,33 @@ function route(
       description: script.description,
       snippets: ['console.log("e2e");'],
     });
+  }
+  if (pathname === `/scripts/${DELETED_SCRIPT_ID}`) {
+    return httpError(404, '脚本被删除');
+  }
+  if (
+    pathname === `/scripts/${DELETED_SCRIPT_ID}/reports/${DELETED_REPORT_ID}`
+  ) {
+    return deletedReport;
+  }
+  if (
+    pathname ===
+    `/scripts/${DELETED_SCRIPT_ID}/reports/${DELETED_REPORT_ID}/comments`
+  ) {
+    return list({
+      id: 1,
+      user_id: 1,
+      avatar: user.avatar,
+      username: user.username,
+      report_id: DELETED_REPORT_ID,
+      content: '我参与过这个举报。',
+      type: 1,
+      createtime: now - 300,
+    });
+  }
+  // 已删除脚本的其他子资源跟着脚本一起 404，和后端 RequireScript 的行为一致
+  if (pathname.startsWith(`/scripts/${DELETED_SCRIPT_ID}/`)) {
+    return httpError(404, '脚本被删除');
   }
   if (/^\/scripts\/\d+$/.test(pathname)) return script;
   if (/^\/scripts\/\d+\/code$/.test(pathname)) return script;
@@ -545,7 +612,7 @@ function route(
       completion_tokens: 1,
       latency_ms: 1,
       reason: '',
-      summary: 'ok',
+      summary: { zh: '正常', en: 'ok' },
       tags: [],
       createtime: now,
       updatetime: now,
@@ -687,7 +754,8 @@ function route(
   if (pathname === '/advertise/admin')
     return list({
       id: 1,
-      slot_key: 'home_sidebar',
+      // 多值：管理端列表要渲染 Tag 列表 + 「N 个位」摘要，单值走不到那条分支。
+      slot_keys: 'home-banner,search-sidebar',
       title: 'E2E ad',
       languages: 'zh-CN,en',
       image_url_light: '',
@@ -725,6 +793,10 @@ function handler(req: IncomingMessage, res: ServerResponse) {
 
   const url = new URL(req.url, `http://${req.headers.host || '127.0.0.1'}`);
   const payload = route(url.pathname, req.method || 'GET', url.searchParams);
+  if (isHttpError(payload)) {
+    const { status, msg } = payload[HTTP_ERROR];
+    return send(res, status, { code: -1, msg, data: null });
+  }
   if (url.pathname === '/healthz') return send(res, 200, payload);
   return send(res, 200, ok(payload));
 }

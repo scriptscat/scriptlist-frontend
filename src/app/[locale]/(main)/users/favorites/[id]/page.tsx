@@ -1,10 +1,13 @@
-import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import FolderDetailClient from './components/FolderDetailClient';
 import { scriptFavoriteService } from '@/lib/api/services/scripts';
 import { userService } from '@/lib/api/services/user';
 import { PageIntlProvider } from '@/components/PageIntlProvider';
+import {
+  folderDisplayDescription,
+  folderDisplayName,
+} from '@/lib/utils/favorite-folder';
 import type { FavoriteFolderItem } from '@/lib/api/services/scripts/favorites';
 import type { ScriptInfo } from '@/app/[locale]/(main)/script-show-page/[id]/types';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
@@ -21,6 +24,7 @@ export async function generateMetadata({
   const { id, locale } = await params;
   const folderId = parseInt(id);
   const t = await getTranslations({ locale, namespace: 'user.favorites' });
+  const commonT = await getTranslations({ locale, namespace: 'common' });
 
   try {
     // 获取收藏夹详情
@@ -32,16 +36,24 @@ export async function generateMetadata({
       folderDetail.user_id,
     );
 
+    const folderName = folderDisplayName(
+      folderDetail,
+      commonT('default_favorite_folder_name'),
+    );
+
     const title =
       t('folder_title', {
-        folderName: folderDetail.name,
+        folderName,
         username: userDetail.username,
       }) + ' | ScriptCat';
     const description =
-      folderDetail.description ||
+      folderDisplayDescription(
+        folderDetail,
+        commonT('default_favorite_folder_description'),
+      ) ||
       t('folder_description', {
         username: userDetail.username,
-        folderName: folderDetail.name,
+        folderName,
         count: folderDetail.count,
       });
 
@@ -88,27 +100,21 @@ export default async function FolderDetailPage({
 
   return (
     <PageIntlProvider namespaces={['user', 'script']}>
+      {/* 不放 <Suspense>：三个请求已在上面 await 完，FolderDetailClient 不会挂起。
+          冷进入这一页的等待态由同目录的 loading.tsx（路由级）承担。 */}
       <div>
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center min-h-screen">
-              {'Loading folder...'}
-            </div>
-          }
-        >
-          {hasError || !folderDetail || !userDetail || !scriptsData ? (
-            <FolderDetailClient folderId={folderId} error="folder_error" />
-          ) : (
-            <FolderDetailClient
-              folderId={folderId}
-              folderDetail={folderDetail}
-              userDetail={userDetail}
-              scripts={scriptsData.list}
-              total={scriptsData.total}
-              currentPage={currentPage}
-            />
-          )}
-        </Suspense>
+        {hasError || !folderDetail || !userDetail || !scriptsData ? (
+          <FolderDetailClient folderId={folderId} error="folder_error" />
+        ) : (
+          <FolderDetailClient
+            folderId={folderId}
+            folderDetail={folderDetail}
+            userDetail={userDetail}
+            scripts={scriptsData.list}
+            total={scriptsData.total}
+            currentPage={currentPage}
+          />
+        )}
       </div>
     </PageIntlProvider>
   );

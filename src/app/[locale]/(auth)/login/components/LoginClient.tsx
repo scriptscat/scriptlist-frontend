@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Button, Divider, Form, Input, message, Modal } from 'antd';
 import {
   KeyOutlined,
+  LoadingOutlined,
   LockOutlined,
   MailOutlined,
   SafetyOutlined,
@@ -31,8 +32,13 @@ interface LoginClientProps {
   oidcProviders: OIDCProviderInfo[];
 }
 
+/** `handleOIDCLogin` 之外的第三方跳转（QQ 迁移）在同一个状态里用这个哨兵值占位。 */
+const QQ_MIGRATE_PROVIDER = -1;
+
 export default function LoginClient({ oidcProviders }: LoginClientProps) {
   const t = useTranslations('login');
+  // components.loading.* 由根 layout 注入，任何路由下都可用。
+  const loadingT = useTranslations('components.loading');
   const {
     turnstile_site_key: turnstileSiteKey,
     qq_migrate_enabled: qqMigrateEnabled,
@@ -77,6 +83,12 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
   const [webAuthnLoading, setWebAuthnLoading] = useState(false);
   const [passlessLoading, setPasslessLoading] = useState(false);
   const [webAuthnSupported, setWebAuthnSupported] = useState(false);
+  // 第三方登录是整页跳转：从 `window.location.href` 赋值到浏览器真的离开
+  // 中间隔着一次 TTFB，期间按钮若毫无变化，用户会反复点。
+  const [redirectingProvider, setRedirectingProvider] = useState<number | null>(
+    null,
+  );
+  const isRedirecting = redirectingProvider !== null;
 
   useEffect(() => {
     setWebAuthnSupported(browserSupportsWebAuthn());
@@ -104,9 +116,12 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
         // Need 2FA WebAuthn verification
         setWebAuthnSessionToken(resp.session_token);
         setShowWebAuthnStep(true);
+        setLoading(false);
         // Auto-trigger WebAuthn verification
         handleWebAuthn2FA(resp.session_token);
       } else {
+        // 登录成功：浏览器正在离开本页。这里若把 loading 关掉，按钮会在整页
+        // 跳转完成前恢复可点，形成一个可以重复登录的窗口，所以保持 loading。
         window.location.href = safeRedirect;
       }
     } catch (err) {
@@ -117,7 +132,6 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
       }
       loginTurnstileRef.current?.reset();
       setLoginToken('');
-    } finally {
       setLoading(false);
     }
   };
@@ -133,6 +147,7 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
         sessionToken,
         JSON.stringify(assertionResp),
       );
+      // 验证成功后浏览器正在跳转，保持 loading 直到页面真正离开。
       window.location.href = safeRedirect;
     } catch (err) {
       if (err instanceof APIError) {
@@ -140,7 +155,6 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
       } else if (err instanceof Error && err.name !== 'NotAllowedError') {
         message.error(t('webauthn_verification_failed'));
       }
-    } finally {
       setWebAuthnLoading(false);
     }
   };
@@ -156,6 +170,7 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
         beginResp.challenge_id,
         JSON.stringify(assertionResp),
       );
+      // 同上：跳转期间保持 loading，避免出现可重复登录的窗口。
       window.location.href = safeRedirect;
     } catch (err) {
       if (err instanceof APIError) {
@@ -163,7 +178,6 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
       } else if (err instanceof Error && err.name !== 'NotAllowedError') {
         message.error(t('passkey_login_failed'));
       }
-    } finally {
       setPasslessLoading(false);
     }
   };
@@ -231,6 +245,8 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
   };
 
   const handleOIDCLogin = (providerId: number) => {
+    if (isRedirecting) return;
+    setRedirectingProvider(providerId);
     const oidcUrl = `/api/v2/auth/oidc/${providerId}/login`;
     if (safeRedirect !== '/') {
       window.location.href = `${oidcUrl}?redirect=${encodeURIComponent(safeRedirect)}`;
@@ -240,12 +256,14 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
   };
 
   const handleQQMigrateLogin = () => {
+    if (isRedirecting) return;
     Modal.confirm({
       title: t('qq_migrate_deprecation_title'),
       content: t('qq_migrate_deprecation_content'),
       okText: t('qq_migrate_deprecation_continue'),
       cancelText: t('qq_migrate_deprecation_cancel'),
       onOk: () => {
+        setRedirectingProvider(QQ_MIGRATE_PROVIDER);
         window.location.href = '/api/v2/auth/qq-migrate';
       },
     });
@@ -566,7 +584,7 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
               {webAuthnSupported && (
                 <button
                   onClick={handlePasskeyLogin}
-                  disabled={passlessLoading}
+                  disabled={passlessLoading || isRedirecting}
                   className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <KeyOutlined className="text-base" />
@@ -579,19 +597,35 @@ export default function LoginClient({ oidcProviders }: LoginClientProps) {
                 <button
                   key={provider.id}
                   onClick={() => handleOIDCLogin(provider.id)}
-                  className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm"
+                  disabled={isRedirecting || passlessLoading}
+                  aria-busy={redirectingProvider === provider.id}
+                  className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <ProviderIcon icon={provider.icon} name={provider.name} />
-                  {t('oidc_login_with', { provider: provider.name })}
+                  {redirectingProvider === provider.id ? (
+                    <LoadingOutlined className="text-base" />
+                  ) : (
+                    <ProviderIcon icon={provider.icon} name={provider.name} />
+                  )}
+                  {redirectingProvider === provider.id
+                    ? loadingT('redirecting')
+                    : t('oidc_login_with', { provider: provider.name })}
                 </button>
               ))}
               {qqMigrateEnabled && (
                 <button
                   onClick={handleQQMigrateLogin}
-                  className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm"
+                  disabled={isRedirecting || passlessLoading}
+                  aria-busy={redirectingProvider === QQ_MIGRATE_PROVIDER}
+                  className="flex items-center justify-center gap-2.5 w-full h-11 rounded-xl border border-[rgb(var(--border-primary))] bg-transparent hover:bg-[rgb(var(--bg-tertiary))]/60 text-[rgb(var(--text-primary))] text-sm font-medium transition-all duration-200 cursor-pointer hover:border-[rgb(var(--border-focus))]/40 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <ProviderIcon icon="mingcute:qq-fill" />
-                  {t('qq_migrate_button')}
+                  {redirectingProvider === QQ_MIGRATE_PROVIDER ? (
+                    <LoadingOutlined className="text-base" />
+                  ) : (
+                    <ProviderIcon icon="mingcute:qq-fill" />
+                  )}
+                  {redirectingProvider === QQ_MIGRATE_PROVIDER
+                    ? loadingT('redirecting')
+                    : t('qq_migrate_button')}
                 </button>
               )}
             </div>

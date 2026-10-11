@@ -34,18 +34,21 @@ import { UserModal } from '@/components/ScriptInvite/UserModal';
 
 const { Title, Text } = Typography;
 
+const PAGE_SIZE = 20;
+
 export default function AccessPage() {
   const params = useParams();
   const id = Number(params.id);
   const t = useTranslations('script.manage.access');
 
   const [openUserDialog, setOpenUserDialog] = useState(false);
+  const [page, setPage] = useState(1);
   const [modal, contextHolder] = Modal.useModal();
   const [updateLoading, setUpdateLoading] = useState<number | null>(null);
   const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
   const semDateTime = useSemDateTime();
 
-  const { data, isLoading, mutate } = useAccessRoleList(id, 1);
+  const { data, isLoading, mutate } = useAccessRoleList(id, page);
 
   // 转换数据
   const list = data?.list || [];
@@ -214,6 +217,9 @@ export default function AccessPage() {
           value={role as 'visitor' | 'admin'}
           style={{ width: 120 }}
           loading={updateLoading === record.id}
+          // antd 的 `loading` 不会禁用选择器，请求在途时仍可再选，
+          // 会打出并发的 updateAccessRole；必须显式 disabled。
+          disabled={updateLoading === record.id}
           onChange={(newRole: 'visitor' | 'admin') =>
             handleRoleUpdate(record.id, newRole, record.expiretime)
           }
@@ -281,47 +287,52 @@ export default function AccessPage() {
         </Button>
       </div>
 
-      {/* 统计信息 */}
-      {total > 0 && (
-        <div className="mb-4 p-4 rounded-lg">
-          <Space size="large">
-            <div>
-              <Text strong>{t('stats.total')}</Text>
-              <Text className="text-blue-600 font-medium">{total}</Text>
-            </div>
-            <div>
-              <Text strong>{t('stats.users')}</Text>
-              <Text className="text-blue-600 font-medium">
-                {list.filter((item) => item.type === 1).length}
-              </Text>
-            </div>
-            <div>
-              <Text strong>{t('stats.groups')}</Text>
-              <Text className="text-green-600 font-medium">
-                {list.filter((item) => item.type === 2).length}
-              </Text>
-            </div>
-            <div>
-              <Text strong>{t('stats.pending')}</Text>
-              <Text className="text-orange-600 font-medium">
-                {list.filter((item) => item.invite_status === 3).length}
-              </Text>
-            </div>
-            <div>
-              <Text strong>{t('stats.expired')}</Text>
-              <Text className="text-red-600 font-medium">
-                {
-                  list.filter(
-                    (item) =>
-                      item.expiretime !== 0 &&
-                      item.expiretime * 1000 < Date.now(),
-                  ).length
-                }
-              </Text>
-            </div>
-          </Space>
-        </div>
-      )}
+      {/* 统计信息：始终占位，避免数据到达时突然出现把表格推下去 */}
+      <div className="mb-4 p-4 rounded-lg">
+        <Space size="large" wrap>
+          <div>
+            <Text strong>{t('stats.total')}</Text>
+            <Text
+              className="text-blue-600 font-medium"
+              data-testid="access-stats-total"
+            >
+              {total}
+            </Text>
+          </div>
+          <div>
+            <Text strong>{t('stats.users')}</Text>
+            <Text className="text-blue-600 font-medium">
+              {list.filter((item) => item.type === 1).length}
+            </Text>
+          </div>
+          <div>
+            <Text strong>{t('stats.groups')}</Text>
+            <Text className="text-green-600 font-medium">
+              {list.filter((item) => item.type === 2).length}
+            </Text>
+          </div>
+          <div>
+            <Text strong>{t('stats.pending')}</Text>
+            <Text className="text-orange-600 font-medium">
+              {list.filter((item) => item.invite_status === 3).length}
+            </Text>
+          </div>
+          <div>
+            <Text strong>{t('stats.expired')}</Text>
+            <Text className="text-red-600 font-medium">
+              {
+                list.filter(
+                  (item) =>
+                    item.expiretime !== 0 &&
+                    item.expiretime * 1000 < Date.now(),
+                ).length
+              }
+            </Text>
+          </div>
+          {/* 除总数外的分类计数只能按当前页统计，标注清楚免得被当成全量 */}
+          <Text type="secondary">{t('stats.page_scope_note')}</Text>
+        </Space>
+      </div>
 
       {/* 用户列表表格 */}
       <Table
@@ -330,15 +341,20 @@ export default function AccessPage() {
         loading={isLoading}
         rowKey="id"
         pagination={{
+          current: page,
           total,
-          pageSize: 20,
+          pageSize: PAGE_SIZE,
           showSizeChanger: false,
           showQuickJumper: true,
+          onChange: setPage,
           showTotal: (total, range) =>
             t('pagination.total', { start: range[0], end: range[1], total }),
         }}
         locale={{
-          emptyText: (
+          // 加载中不显示空状态引导，否则 Spin 蒙层底下能读到「暂无权限，去添加」
+          emptyText: isLoading ? (
+            <div style={{ height: 120 }} />
+          ) : (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               description={

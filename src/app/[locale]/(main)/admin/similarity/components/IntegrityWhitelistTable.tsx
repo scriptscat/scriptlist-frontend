@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Form,
@@ -16,39 +16,32 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import type { IntegrityWhitelistItem } from '@/lib/api/services/similarity';
 import { similarityService } from '@/lib/api/services/similarity';
+import { useIntegrityWhitelist } from '@/lib/api/hooks/similarity';
 import { APIError } from '@/types/api';
+import { useTableStateLocale } from '../../components/tableState';
 
 const PAGE_SIZE = 20;
 
 export default function IntegrityWhitelistTable() {
   const t = useTranslations('admin.similarity');
-  const [data, setData] = useState<IntegrityWhitelistItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [addOpen, setAddOpen] = useState(false);
   const [addSubmitting, setAddSubmitting] = useState(false);
   const [form] = Form.useForm<{ script_id: number; reason: string }>();
 
-  const load = useCallback(async (p: number) => {
-    setLoading(true);
-    try {
-      const resp = await similarityService.listIntegrityWhitelist({
-        page: p,
-        size: PAGE_SIZE,
-      });
-      setData(resp.list ?? []);
-      setTotal(resp.total ?? 0);
-    } catch (err) {
-      if (err instanceof APIError) message.error(err.msg);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load(page);
-  }, [page, load]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh,
+  } = useIntegrityWhitelist({ page, size: PAGE_SIZE });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: refresh,
+  });
 
   const handleRemove = (row: IntegrityWhitelistItem) => {
     Modal.confirm({
@@ -57,7 +50,7 @@ export default function IntegrityWhitelistTable() {
         try {
           await similarityService.removeIntegrityWhitelist(row.script.id);
           message.success(t('msg_removed'));
-          load(page);
+          refresh();
         } catch (err) {
           if (err instanceof APIError) message.error(err.msg);
         }
@@ -76,7 +69,7 @@ export default function IntegrityWhitelistTable() {
       message.success(t('msg_whitelisted'));
       setAddOpen(false);
       form.resetFields();
-      load(page);
+      refresh();
     } catch (err) {
       if (err instanceof APIError) message.error(err.msg);
     } finally {
@@ -127,7 +120,8 @@ export default function IntegrityWhitelistTable() {
         rowKey="id"
         columns={columns}
         dataSource={data}
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         pagination={{
           current: page,
           pageSize: PAGE_SIZE,

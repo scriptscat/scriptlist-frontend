@@ -181,6 +181,15 @@ export class UserService {
   }
 
   /**
+   * 重置私有脚本安装链接
+   *
+   * 重置后该用户此前发出的所有安装链接同时失效，已安装的私有脚本需要重新安装。
+   */
+  async refreshInstallToken() {
+    return apiClient.put(`${this.basePath}/install-token`);
+  }
+
+  /**
    * 刷新 Webhook Token
    */
   async refreshWebhookToken() {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import {
   Card,
@@ -14,7 +14,6 @@ import {
   message,
   Avatar,
   Typography,
-  Skeleton,
 } from 'antd';
 import {
   BellOutlined,
@@ -26,23 +25,38 @@ import {
   useNotificationList,
   useUnreadCount,
 } from '@/lib/api/hooks/notification';
+import { useResource } from '@/lib/api/hooks/useResource';
 import { useSemDateTime } from '@/lib/utils/semdate';
+import PendingResults from '@/components/Scriptlist/PendingResults';
+import NotificationListSkeleton from './NotificationListSkeleton';
+import type { Notification } from '@/lib/api/services/notification';
 import Link from 'next/link';
 
 const { Text, Paragraph } = Typography;
 
 const PAGE_SIZE = 20;
+/** 骨架的行数，同时也是刷新期间为卡片预留的高度基准。 */
+const SKELETON_ROWS = 10;
+/** 单行的实际高度：32px 头像 + 上下各 10px 内边距（`!px-3 !py-2.5`）+ 正文行。 */
+const ROW_HEIGHT = 76;
 
 interface NotificationsClientProps {
   initialPage: number;
   initialReadStatus?: number;
+  /** SSR 预取的首屏列表。取数失败时为 undefined，此时首屏画骨架。 */
+  initialList?: Notification[];
+  initialTotal?: number;
 }
 
 export default function NotificationsClient({
   initialPage,
   initialReadStatus,
+  initialList,
+  initialTotal = 0,
 }: NotificationsClientProps) {
   const t = useTranslations('notifications');
+  // components.loading.* 由根 layout 注入，任何路由下都可用。
+  const loadingT = useTranslations('components.loading');
   const semDateTime = useSemDateTime();
 
   const [currentPage, setCurrentPage] = useState(initialPage);
@@ -50,15 +64,31 @@ export default function NotificationsClient({
     initialReadStatus,
   );
 
-  // Use SWR hooks for data fetching
+  // 只有参数与服务端取数时一致，SSR 那份数据才是当前这一页的数据；
+  // 翻页 / 换筛选之后必须撤掉 fallback，否则会把首屏那一页当成新的一页画出来。
+  const isInitialParams =
+    currentPage === initialPage && filterStatus === initialReadStatus;
+  const initialData = useMemo(
+    () =>
+      initialList ? { list: initialList, total: initialTotal } : undefined,
+    [initialList, initialTotal],
+  );
+
+  const swr = useNotificationList(
+    {
+      page: currentPage,
+      size: PAGE_SIZE,
+      read_status: filterStatus,
+    },
+    isInitialParams ? initialData : undefined,
+  );
+  const { mutate } = swr;
   const {
     data: notificationData,
-    isLoading,
-    mutate,
-  } = useNotificationList({
-    page: currentPage,
-    size: PAGE_SIZE,
-    read_status: filterStatus,
+    isInitialLoading,
+    isRefreshing,
+  } = useResource(swr, {
+    hasInitialData: isInitialParams && initialData !== undefined,
   });
 
   const { data: unreadData, mutate: mutateUnread } = useUnreadCount();
@@ -200,159 +230,179 @@ export default function NotificationsClient({
           size="small"
           styles={{ body: { padding: 0 } }}
         >
-          {isLoading ? (
-            <div className="p-4">
-              <Skeleton active paragraph={{ rows: 4 }} />
-            </div>
-          ) : (
-            <List
-              dataSource={notifications}
-              locale={{
-                emptyText: (
-                  <Empty
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    description={<Text type="secondary">{t('empty')}</Text>}
-                  />
-                ),
-              }}
-              renderItem={(item) => {
-                const isUnread = item.read_status === 1;
+          {/* 刷新期间给卡片留住高度：换筛选后新的一页可能只有两三条，
+              不预留的话卡片会从 20 行直接塌下去。骨架同样是 10 行，
+              首屏 → 数据到达也不会跳。 */}
+          <div
+            style={{
+              minHeight:
+                isInitialLoading || isRefreshing
+                  ? SKELETON_ROWS * ROW_HEIGHT
+                  : undefined,
+            }}
+          >
+            {isInitialLoading ? (
+              <NotificationListSkeleton
+                count={SKELETON_ROWS}
+                label={loadingT('default')}
+              />
+            ) : (
+              <PendingResults
+                pending={isRefreshing}
+                label={loadingT('default')}
+              >
+                <List
+                  dataSource={notifications}
+                  locale={{
+                    emptyText: (
+                      <Empty
+                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                        description={<Text type="secondary">{t('empty')}</Text>}
+                      />
+                    ),
+                  }}
+                  renderItem={(item) => {
+                    const isUnread = item.read_status === 1;
 
-                return (
-                  <List.Item
-                    key={item.id}
-                    className={`!px-3 !py-2.5 transition-all cursor-pointer ${
-                      isUnread
-                        ? 'border-l-4 border-l-blue-500 bg-blue-50/40 hover:bg-blue-50/60 dark:bg-blue-950/30 dark:hover:bg-blue-950/40'
-                        : 'hover:bg-gray-50 dark:hover:bg-gray-800'
-                    }`}
-                    onClick={() => {
-                      if (item.link) {
-                        window.open(item.link, '_blank');
-                        // 如果是未读状态，点击后标记为已读
-                        if (isUnread) {
-                          handleMarkAsRead(item.id);
-                        }
-                      }
-                    }}
-                    actions={[
-                      isUnread ? (
-                        <Button
-                          key="read"
-                          type="text"
-                          size="small"
-                          icon={<CheckOutlined />}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleMarkAsRead(item.id);
-                          }}
-                          className="h-6 px-2"
-                        >
-                          {t('mark_as_read')}
-                        </Button>
-                      ) : (
-                        <Button
-                          key="unread"
-                          type="text"
-                          size="small"
-                          icon={<BellOutlined />}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleMarkAsUnread(item.id);
-                          }}
-                          className="h-6 px-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-                        >
-                          {t('mark_as_unread')}
-                        </Button>
-                      ),
-                    ]}
-                  >
-                    <List.Item.Meta
-                      avatar={
-                        item.from_user?.user_id ? (
-                          <Avatar src={item.from_user.avatar} size={32}>
-                            {item.from_user.username[0]}
-                          </Avatar>
-                        ) : (
-                          <Avatar
-                            icon={<BellOutlined className="text-blue-500" />}
-                            size={32}
-                            className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800"
-                          />
-                        )
-                      }
-                      title={
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          {item.title && (
-                            <Text
-                              strong={isUnread}
-                              className={`text-sm leading-tight ${!isUnread ? 'text-gray-500 dark:text-gray-400' : ''}`}
+                    return (
+                      <List.Item
+                        key={item.id}
+                        className={`!px-3 !py-2.5 transition-all cursor-pointer ${
+                          isUnread
+                            ? 'border-l-4 border-l-blue-500 bg-blue-50/40 hover:bg-blue-50/60 dark:bg-blue-950/30 dark:hover:bg-blue-950/40'
+                            : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                        }`}
+                        onClick={() => {
+                          if (item.link) {
+                            window.open(item.link, '_blank');
+                            // 如果是未读状态，点击后标记为已读
+                            if (isUnread) {
+                              handleMarkAsRead(item.id);
+                            }
+                          }
+                        }}
+                        actions={[
+                          isUnread ? (
+                            <Button
+                              key="read"
+                              type="text"
+                              size="small"
+                              icon={<CheckOutlined />}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMarkAsRead(item.id);
+                              }}
+                              className="h-6 px-2"
                             >
-                              {t(item.title, item.params)}
-                            </Text>
-                          )}
-                          {!item.from_user?.user_id && (
-                            <Tag
-                              color="blue"
-                              className="!m-0 !py-0 !text-xs !leading-5"
+                              {t('mark_as_read')}
+                            </Button>
+                          ) : (
+                            <Button
+                              key="unread"
+                              type="text"
+                              size="small"
+                              icon={<BellOutlined />}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleMarkAsUnread(item.id);
+                              }}
+                              className="h-6 px-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
                             >
-                              {t('type_system')}
-                            </Tag>
-                          )}
-                          {isUnread && (
-                            <Badge
-                              status="processing"
-                              text={
-                                <span className="text-blue-600 dark:text-blue-400 text-xs font-medium">
-                                  {t('unread')}
-                                </span>
-                              }
-                              className="!leading-none"
-                            />
-                          )}
-                        </div>
-                      }
-                      description={
-                        <div className="flex items-start gap-2">
-                          <Paragraph
-                            className={`!mb-0 text-sm leading-relaxed flex-1 ${!isUnread ? 'text-gray-500 dark:text-gray-400' : ''}`}
-                            ellipsis={{
-                              rows: 2,
-                              expandable: true,
-                              symbol: '展开',
-                            }}
-                          >
-                            {t.rich(item.content, {
-                              ...item.params,
-                              link: (chunks) => {
-                                return (
-                                  <Link
-                                    href={'#'}
-                                    className="text-blue-600 dark:text-blue-400 underline"
-                                  >
-                                    {chunks}
-                                  </Link>
-                                );
-                              },
-                            })}
-                          </Paragraph>
-                          <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500 flex-shrink-0">
-                            <ClockCircleOutlined className="text-xs" />
-                            <Text
-                              type="secondary"
-                              className="text-xs leading-none whitespace-nowrap"
-                            >
-                              {semDateTime(item.createtime)}
-                            </Text>
-                          </div>
-                        </div>
-                      }
-                    />
-                  </List.Item>
-                );
-              }}
-            />
-          )}
+                              {t('mark_as_unread')}
+                            </Button>
+                          ),
+                        ]}
+                      >
+                        <List.Item.Meta
+                          avatar={
+                            item.from_user?.user_id ? (
+                              <Avatar src={item.from_user.avatar} size={32}>
+                                {item.from_user.username[0]}
+                              </Avatar>
+                            ) : (
+                              <Avatar
+                                icon={
+                                  <BellOutlined className="text-blue-500" />
+                                }
+                                size={32}
+                                className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800"
+                              />
+                            )
+                          }
+                          title={
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              {item.title && (
+                                <Text
+                                  strong={isUnread}
+                                  className={`text-sm leading-tight ${!isUnread ? 'text-gray-500 dark:text-gray-400' : ''}`}
+                                >
+                                  {t(item.title, item.params)}
+                                </Text>
+                              )}
+                              {!item.from_user?.user_id && (
+                                <Tag
+                                  color="blue"
+                                  className="!m-0 !py-0 !text-xs !leading-5"
+                                >
+                                  {t('type_system')}
+                                </Tag>
+                              )}
+                              {isUnread && (
+                                <Badge
+                                  status="processing"
+                                  text={
+                                    <span className="text-blue-600 dark:text-blue-400 text-xs font-medium">
+                                      {t('unread')}
+                                    </span>
+                                  }
+                                  className="!leading-none"
+                                />
+                              )}
+                            </div>
+                          }
+                          description={
+                            <div className="flex items-start gap-2">
+                              <Paragraph
+                                className={`!mb-0 text-sm leading-relaxed flex-1 ${!isUnread ? 'text-gray-500 dark:text-gray-400' : ''}`}
+                                ellipsis={{
+                                  rows: 2,
+                                  expandable: true,
+                                  symbol: '展开',
+                                }}
+                              >
+                                {t.rich(item.content, {
+                                  ...item.params,
+                                  link: (chunks) => {
+                                    return (
+                                      <Link
+                                        href={'#'}
+                                        className="text-blue-600 dark:text-blue-400 underline"
+                                      >
+                                        {chunks}
+                                      </Link>
+                                    );
+                                  },
+                                })}
+                              </Paragraph>
+                              <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500 flex-shrink-0">
+                                <ClockCircleOutlined className="text-xs" />
+                                <Text
+                                  type="secondary"
+                                  className="text-xs leading-none whitespace-nowrap"
+                                >
+                                  {semDateTime(item.createtime)}
+                                </Text>
+                              </div>
+                            </div>
+                          }
+                        />
+                      </List.Item>
+                    );
+                  }}
+                />
+              </PendingResults>
+            )}
+          </div>
         </Card>
 
         {/* 分页 */}

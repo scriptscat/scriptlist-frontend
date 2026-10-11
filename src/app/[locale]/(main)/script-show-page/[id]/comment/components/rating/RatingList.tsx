@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import RatingItem from './RatingItem';
+import RatingListSkeleton from './RatingListSkeleton';
 import type { RatingListProps, SortOption } from './types';
 
 const { Option } = Select;
@@ -50,6 +51,10 @@ export default function RatingList({
     },
   ];
 
+  // 屏幕上还什么都没有、同时又在取数 —— 这才是该画骨架的时刻。
+  // 已经有旧数据时（翻页 / 刷新）继续显示旧列表，底部用轻量的转圈提示。
+  const isFirstLoad = loading && ratings.length === 0;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -57,9 +62,15 @@ export default function RatingList({
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             {t('title')}
           </h2>
-          <span className="font-mono text-sm text-gray-500">
-            {ratings.length}
-          </span>
+          {/* 首屏加载中还不知道条数，画出来就是一个会被改写的 0。 */}
+          {!isFirstLoad && (
+            <span
+              data-testid="rating-count"
+              className="font-mono text-sm tabular-nums text-gray-500"
+            >
+              {ratings.length}
+            </span>
+          )}
         </div>
 
         {/* 排序选择器 */}
@@ -86,7 +97,13 @@ export default function RatingList({
         </div>
       </div>
 
-      {ratings.length === 0 ? (
+      {isFirstLoad ? (
+        // 「空」和「正在加载」是两件事：加载态必须排在空态前面，
+        // 否则首屏一定先闪一次「暂无评价」。高度按三条真实评价预留。
+        <div className="min-h-[420px]">
+          <RatingListSkeleton count={3} />
+        </div>
+      ) : ratings.length === 0 ? (
         <Card className="shadow-sm border-0 rounded-xl">
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}

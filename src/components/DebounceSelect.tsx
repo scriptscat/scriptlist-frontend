@@ -2,8 +2,10 @@ import { useRef, useState } from 'react';
 import type { SelectProps } from 'antd';
 import { Select, Spin } from 'antd';
 
-export interface DebounceSelectProps<ValueType = any>
-  extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
+export interface DebounceSelectProps<ValueType = any> extends Omit<
+  SelectProps<ValueType | ValueType[]>,
+  'options' | 'children'
+> {
   fetchOptions: (search: string) => Promise<ValueType[]>;
   debounceTimeout?: number;
   maxCount?: number;

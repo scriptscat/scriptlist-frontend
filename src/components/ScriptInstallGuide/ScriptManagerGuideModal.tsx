@@ -6,6 +6,8 @@ import { Icon } from '@iconify/react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import type { BrowserStoreKey } from '@/lib/constants/browserStores';
+// 引导弹窗按渠道展示浏览器商店 logo，这几个图标不在全局预注册里。
+import '@/lib/iconify-preload-browser-stores';
 import {
   BROWSER_STORE_LABELS,
   detectBrowserStore,

@@ -5,7 +5,13 @@ import tseslint from 'typescript-eslint';
 
 const eslintConfig = [
   {
-    ignores: ['node_modules/**', '.next/**', 'out/**', 'public/**'],
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'out/**',
+      'public/**',
+      'e2e/scratch/**',
+    ],
   },
   ...nextCoreWebVitals,
   prettierConfig,

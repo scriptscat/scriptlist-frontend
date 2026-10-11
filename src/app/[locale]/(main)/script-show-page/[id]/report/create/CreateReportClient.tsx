@@ -7,10 +7,25 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import type { MarkdownEditorRef } from '@/components/MarkdownEditor';
 import dynamic from 'next/dynamic';
+import LoadingBlock from '@/components/ui/LoadingBlock';
+
+/** 编辑器实际渲染成 400px，占位少 100px 就会在加载完把提交按钮顶到光标底下。 */
+const EDITOR_HEIGHT = 400;
+
+function EditorLoading() {
+  const t = useTranslations('components.markdown_editor');
+  return (
+    <LoadingBlock
+      height={EDITOR_HEIGHT}
+      variant="spinner"
+      label={t('loading_editor')}
+    />
+  );
+}
 
 const MarkdownEditor = dynamic(() => import('@/components/MarkdownEditor'), {
   ssr: false,
-  loading: () => <div style={{ height: '300px' }} />,
+  loading: () => <EditorLoading />,
 });
 import { useScript } from '../../components/ScriptContext';
 import { scriptReportService } from '@/lib/api/services/scripts/report';
@@ -77,10 +92,10 @@ export default function CreateReportClient() {
       setReason('');
 
       message.success(t('submit_success'));
+      // 成功后不要收起 loading：跳转还没发生，按钮先复原会让人以为提交失败又点一次
       router.push(`/script-show-page/${script.id}/report/${resp.id}`);
     } catch (error: any) {
       message.error(error.message || t('submit_failed'));
-    } finally {
       setLoading(false);
     }
   };
@@ -91,7 +106,7 @@ export default function CreateReportClient() {
         <div className="flex flex-col basis-3/4 gap-2">
           <MarkdownEditor
             ref={editorRef}
-            height="400px"
+            height={`${EDITOR_HEIGHT}px`}
             placeholder={t('content_placeholder')}
             comment="create-report"
             linkId={script.id}

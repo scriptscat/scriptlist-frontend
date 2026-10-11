@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Input,
@@ -16,46 +16,39 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { adminService } from '@/lib/api/services/admin';
 import type { UserItem } from '@/lib/api/services/admin';
+import { useAdminUsers } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
+import { useTableStateLocale } from '../../components/tableState';
 
 export default function UsersClient() {
   const t = useTranslations('admin.users');
-  const [data, setData] = useState<UserItem[]>([]);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
+  // 输入框的值只有点「搜索」时才生效，和原来「翻页才重新拉取」的行为一致。
+  const [appliedKeyword, setAppliedKeyword] = useState('');
   const [adminLevelModalOpen, setAdminLevelModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserItem | null>(null);
   const [newAdminLevel, setNewAdminLevel] = useState(0);
 
-  const fetchData = useCallback(
-    async (p: number = page, kw: string = keyword) => {
-      setLoading(true);
-      try {
-        const resp = await adminService.listUsers(p, 20, kw || undefined);
-        setData(resp.list || []);
-        setTotal(resp.total);
-      } catch (err) {
-        if (err instanceof APIError) {
-          message.error(err.msg);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [page, keyword],
-  );
-
-  useEffect(() => {
-    fetchData(page, keyword);
-  }, [page]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh: fetchData,
+  } = useAdminUsers({ page, keyword: appliedKeyword });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: fetchData,
+  });
 
   const handleSearch = () => {
     setPage(1);
-    fetchData(1, keyword);
+    setAppliedKeyword(keyword);
   };
 
   const handleBan = async (id: number) => {
@@ -234,7 +227,8 @@ export default function UsersClient() {
         columns={columns}
         dataSource={data}
         rowKey="id"
-        loading={loading}
+        loading={isLoading || isRefreshing}
+        locale={tableLocale}
         pagination={{
           current: page,
           total,

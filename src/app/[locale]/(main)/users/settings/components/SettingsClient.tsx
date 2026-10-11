@@ -4,11 +4,13 @@ import { useState } from 'react';
 import {
   ApiOutlined,
   BellOutlined,
+  LinkOutlined,
   SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { Card, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
+import InstallLinkSettings from './InstallLinkSettings';
 import WebhookSettings from './WebhookSettings';
 import NotificationSettings from './NotificationSettings';
 import AccountSettings from './AccountSettings';
@@ -32,6 +34,13 @@ const NAV_ITEMS = [
     activeIconCls: 'text-blue-500',
     activeIconBgCls: 'bg-blue-500/10',
     indicatorCls: 'bg-blue-500',
+  },
+  {
+    key: 'install-link',
+    icon: LinkOutlined,
+    activeIconCls: 'text-emerald-500',
+    activeIconBgCls: 'bg-emerald-500/10',
+    indicatorCls: 'bg-emerald-500',
   },
   {
     key: 'notification',
@@ -69,6 +78,7 @@ export default function SettingsClient({
 
   const labelMap: Record<SettingsKey, string> = {
     webhook: t('webhook_settings'),
+    'install-link': t('install_link_settings'),
     notification: t('notification_settings'),
     account: t('account_settings'),
   };
@@ -77,6 +87,8 @@ export default function SettingsClient({
     switch (activeKey) {
       case 'webhook':
         return <WebhookSettings initialToken={initialWebhookToken} />;
+      case 'install-link':
+        return <InstallLinkSettings />;
       case 'notification':
         return (
           <NotificationSettings initialConfig={initialNotificationConfig} />

@@ -1,6 +1,10 @@
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import type { ScriptDetailLayoutProps, ScriptState } from './types';
 import ScriptLayoutProvider from './components/ScriptLayoutProvider';
+import { ScriptProvider } from './components/ScriptContext';
+import { isReportDetailPath } from './reportRoute';
+import { PATHNAME_HEADER } from '@/lib/pathname-header';
 import ScriptBreadcrumb from './components/ScriptBreadcrumb';
 import scriptService from '@/lib/api/services/scripts';
 import ErrorPage from '@/components/ErrorPage';
@@ -22,6 +26,20 @@ export default async function ScriptDetailLayout({
     }
   } catch (error) {
     if (error instanceof APIError && error.statusCode > 0) {
+      // 脚本被删除后举报详情仍对参与方开放，但后端的 /scripts/:id 一律 404，
+      // 所以这里拿不到脚本信息，只能把渲染让给子路由自己去校验权限。
+      // 放行范围必须限定在举报详情：否则随便一个不存在的脚本 id 都会绕过下面
+      // 友好的 404 页，掉进通用 error boundary。
+      if (
+        error.statusCode === 404 &&
+        isReportDetailPath((await headers()).get(PATHNAME_HEADER))
+      ) {
+        return (
+          <PageIntlProvider namespaces={['script', 'admin', 'ads']}>
+            <ScriptProvider>{children}</ScriptProvider>
+          </PageIntlProvider>
+        );
+      }
       return (
         <ErrorPage
           error={error}

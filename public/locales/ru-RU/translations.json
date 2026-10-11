@@ -1,31 +1,5 @@
 {
   "admin": {
-    "announcements": {
-      "title": "Управление объявлениями",
-      "action_create": "Создать",
-      "action_edit": "Редактировать",
-      "action_delete": "Удалить",
-      "create_title": "Создать объявление",
-      "edit_title": "Редактировать объявление",
-      "col_title": "Заголовок",
-      "col_level": "Уровень",
-      "col_status": "Статус",
-      "col_createtime": "Создано",
-      "col_actions": "Действия",
-      "field_title": "Заголовок",
-      "field_content": "Содержание",
-      "field_level": "Уровень",
-      "field_status": "Статус",
-      "level_normal": "Обычное",
-      "level_important": "Важное",
-      "status_enabled": "Включено",
-      "status_disabled": "Отключено",
-      "create_success": "Объявление успешно создано",
-      "update_success": "Объявление успешно обновлено",
-      "delete_success": "Объявление успешно удалено",
-      "delete_confirm": "Вы уверены, что хотите удалить это объявление?",
-      "at_least_one_language": "Укажите заголовок хотя бы на одном языке"
-    },
     "audit_logs": {
       "actions": {
         "script_audit_approved": "Аудит одобрен",
@@ -74,7 +48,6 @@
       "title": "Управление отзывами"
     },
     "navigation": {
-      "announcements": "Объявления",
       "advertise": "Управление рекламой",
       "feedbacks": "Управление отзывами",
       "oauth_apps": "Управление OAuth-приложениями",
@@ -84,10 +57,12 @@
       "system_config": "Настройки системы",
       "users": "Управление пользователями",
       "similarity": "Обнаружение схожести",
-      "script_audits": "Аудит скриптов",
       "ai_review": "ИИ-проверка",
       "ai_review_records": "Записи проверок",
-      "ai_review_fullscan": "Полное сканирование"
+      "ai_review_fullscan": "Полное сканирование",
+      "announcements": "Объявления",
+      "script_audits": "Аудит скриптов",
+      "reports": "Управление жалобами"
     },
     "advertise": {
       "title": "Управление рекламой",
@@ -95,10 +70,12 @@
       "create_title": "Новое объявление",
       "edit_title": "Редактировать объявление",
       "col_slot": "Слот",
+      "col_type": "Тип",
       "col_title": "Заголовок",
       "col_enabled": "Статус",
       "col_stats": "Показы/клики (CTR)",
       "col_actions": "Действия",
+      "col_ad_unit_value": "Блок {id}",
       "action_edit": "Редактировать",
       "action_delete": "Удалить",
       "delete_confirm": "Удалить это рекламное объявление?",
@@ -109,8 +86,20 @@
       "light_required": "Загрузите изображение для светлой темы",
       "enabled": "Включено",
       "disabled": "Отключено",
+      "type_image": "Изображение",
+      "type_adsense": "AdSense",
+      "stats_adsense_placeholder": "—",
+      "stats_adsense_note": "Показы и клики отслеживаются Google",
+      "stats_multi_slot_note": "Суммарно по {count} блокам",
+      "field_type": "Тип рекламы",
       "field_slot": "Рекламный слот",
       "field_title": "Заголовок",
+      "field_remark_title": "Примечание / Название",
+      "field_remark_title_placeholder": "Только для администратора, для удобства",
+      "field_ad_unit_id": "ID рекламного блока",
+      "field_ad_unit_id_placeholder": "data-ad-slot, например 1234567890",
+      "field_ad_unit_id_hint": "Значение data-ad-slot из кода рекламного блока в вашем аккаунте AdSense.",
+      "adsense_stats_note": "Показы и клики AdSense отслеживаются Google; внутренняя статистика сайта для этой записи всегда равна 0. Доход можно посмотреть в панели управления AdSense.",
       "field_languages": "Целевые языки (пусто = все)",
       "field_light": "Изображение для светлой темы",
       "field_dark": "Изображение для тёмной темы (необязательно)",
@@ -124,6 +113,11 @@
       "upload": "Загрузить изображение",
       "image_url_placeholder": "Введите или вставьте URL изображения либо нажмите для загрузки",
       "recommended_size": "Рекомендуемый размер {size}",
+      "publisher_id_hint": "Пока ID издателя AdSense не указан, объявления AdSense показываться не будут.",
+      "publisher_id_placeholder": "ca-pub-…",
+      "publisher_id_save": "Сохранить",
+      "publisher_id_save_success": "Успешно сохранено",
+      "publisher_id_warning": "ID издателя AdSense ещё не указан — {count} объявлений AdSense не будут показываться.",
       "col_weight": "Вес",
       "col_schedule": "Расписание",
       "schedule_forever": "Постоянно",
@@ -171,7 +165,39 @@
         "script-detail-sidebar": {
           "name": "Боковая панель страницы скрипта",
           "position": "Закреплённая боковая панель страницы скрипта, между карточкой статистики и карточкой деталей; на больших экранах"
+        },
+        "script-detail-banner": {
+          "name": "Баннер страницы скрипта",
+          "position": "Основная колонка страницы скрипта, между информационной карточкой и вкладками содержимого; во всю ширину, на всех разрешениях"
+        },
+        "search-results-rail-left": {
+          "name": "Левый вертикальный блок на странице результатов",
+          "position": "Левое поле области контента страницы результатов; при наличии рекламы контент сужается, при нехватке места блок не показывается"
+        },
+        "search-results-rail-right": {
+          "name": "Правый вертикальный блок на странице результатов",
+          "position": "Правое поле области контента страницы результатов, рядом с карточкой в боковой панели; при нехватке места не показывается"
+        },
+        "script-detail-rail-left": {
+          "name": "Левый вертикальный блок на странице скрипта",
+          "position": "Левое поле области контента страницы скрипта; при наличии рекламы контент сужается, при нехватке места блок не показывается"
+        },
+        "script-detail-rail-right": {
+          "name": "Правый вертикальный блок на странице скрипта",
+          "position": "Правое поле области контента страницы скрипта, рядом с закреплённой боковой панелью; при нехватке места не показывается"
         }
+      },
+      "slot_required": "Выберите хотя бы один рекламный блок",
+      "slot_placeholder": "Можно выбрать несколько блоков",
+      "slot_selected_count": "Выбрано блоков: {count}",
+      "slot_count_summary": "{count} блок(ов) · {sizes}",
+      "slot_mixed_title": "Выбранные блоки относятся к {count} форматам; один креатив не подойдёт всем",
+      "slot_mixed_desc": "Изображение масштабируется и дополняется полями в неподходящем блоке; записи AdSense используют один ID блока, поэтому смешение форматов заметно снижает заполняемость. Сохранить всё равно можно.",
+      "slot_unknown": "Неизвестные блоки: {keys}",
+      "slot_variant": {
+        "rail": "Вертикальный",
+        "banner": "Баннер",
+        "card": "Карточка"
       }
     },
     "ai_review": {
@@ -208,7 +234,7 @@
         "title": "Полное ИИ-пересканирование сайта",
         "running": "Выполняется",
         "yes": "Да",
-        "no": "No",
+        "no": "Нет",
         "processed": "Обработано",
         "last_id": "Последний курсор",
         "scope": "Область сканирования",
@@ -226,41 +252,6 @@
         "triggered": "Запущено",
         "cancelled": "Сигнал отмены отправлен"
       }
-    },
-    "script_audits": {
-      "title": "Аудит скриптов",
-      "col_script": "Скрипт",
-      "col_version": "Версия",
-      "col_submitter": "Отправитель",
-      "col_status": "Статус",
-      "col_createtime": "Отправлено",
-      "col_actions": "Действия",
-      "status_pending": "Ожидает",
-      "status_approved": "Одобрено",
-      "status_rejected": "Отклонено",
-      "filter_status": "Статус",
-      "filter_all": "Все",
-      "filter_script_name_placeholder": "Поиск по названию скрипта",
-      "refresh": "Обновить",
-      "action_review": "Проверить",
-      "action_approve": "Одобрить",
-      "action_reject": "Отклонить",
-      "approve_success": "Одобрено",
-      "reject_success": "Отклонено",
-      "drawer_title": "Детали аудита",
-      "detail_script": "Скрипт",
-      "detail_submitter": "Отправитель",
-      "detail_changelog": "Список изменений",
-      "detail_reason": "Причина / примечание аудита",
-      "detail_reject_reason": "Причина отклонения",
-      "detail_code": "Код",
-      "approve_modal_title": "Одобрить аудит",
-      "approve_reason_label": "Комментарий к одобрению (необязательно; для исправления ложного срабатывания ИИ или обоснования)",
-      "approve_reason_placeholder": "Если это ложное срабатывание ИИ, укажите основание ручной проверки; оставьте пустым для прямого одобрения",
-      "reject_modal_title": "Отклонить аудит",
-      "reject_reason_label": "Причина отклонения (отправится автору во внутреннем уведомлении)",
-      "reject_reason_required": "Укажите причину отклонения",
-      "reject_reason_placeholder": "Объясните, почему скрипт отклонён (например: вредоносный код, нарушение правил, авторские права)"
     },
     "no_permission": "У вас нет прав администратора для доступа к этой странице.",
     "oauth_apps": {
@@ -302,7 +293,6 @@
       "action_edit": "Редактировать",
       "col_actions": "Действия",
       "col_client_id": "ID клиента",
-      "col_icon": "Иконка",
       "col_issuer_url": "URL издателя",
       "col_name": "Название",
       "col_status": "Статус",
@@ -312,16 +302,13 @@
       "create_title": "Создать OIDC-провайдер",
       "delete_confirm": "Вы уверены, что хотите удалить этот провайдер?",
       "delete_success": "Успешно удалено",
-      "discover_button": "Автообнаружение",
-      "discover_failed": "Не удалось обнаружить OIDC. Проверьте URL.",
-      "discover_success": "Конфигурация OIDC успешно обнаружена",
       "edit_title": "Редактировать OIDC-провайдер",
+      "field_auth_url": "URL авторизации",
+      "field_auth_url_required": "Please enter the auth URL",
       "field_client_id": "ID клиента",
       "field_client_id_required": "Введите ID клиента",
       "field_client_secret": "Секрет клиента",
       "field_client_secret_required": "Введите секрет клиента",
-      "field_auth_url": "URL авторизации",
-      "field_auth_url_required": "Please enter the auth URL",
       "field_display_order": "Порядок отображения",
       "field_icon": "Иконка",
       "field_icon_placeholder": "URL изображения или имя иконки Iconify, напр. mdi:github",
@@ -338,15 +325,19 @@
       "field_url_invalid": "Введите корректный URL",
       "field_userinfo_url": "Userinfo URL",
       "field_userinfo_url_required": "Please enter the userinfo URL",
-      "icon_upload": "Загрузить иконку",
-      "icon_upload_success": "Иконка успешно загружена",
       "save_button": "Сохранить",
       "status_active": "Активно",
       "status_disabled": "Отключено",
       "title": "Управление OIDC-провайдерами",
       "type_oauth2": "OAuth2 (GitHub)",
       "type_oidc": "OIDC",
-      "update_success": "Успешно обновлено"
+      "update_success": "Успешно обновлено",
+      "col_icon": "Иконка",
+      "discover_button": "Автообнаружение",
+      "discover_failed": "Не удалось обнаружить OIDC. Проверьте URL.",
+      "discover_success": "Конфигурация OIDC успешно обнаружена",
+      "icon_upload": "Загрузить иконку",
+      "icon_upload_success": "Иконка успешно загружена"
     },
     "scores": {
       "action_delete": "Удалить",
@@ -400,8 +391,6 @@
       "ai_review_success": "Задача AI-проверки отправлена",
       "delete_confirm": "Вы уверены, что хотите удалить этот скрипт?",
       "delete_success": "Скрипт успешно удалён",
-      "delete_reason": "Причина (необязательно)",
-      "delete_reason_placeholder": "Запишите причину удаления (сохраняется в журнале аудита)",
       "field_public": "Статус публикации",
       "field_unwell": "Неприемлемый контент",
       "filter_status": "Фильтр по статусу",
@@ -411,9 +400,6 @@
       "restore_confirm": "Вы уверены, что хотите восстановить этот скрипт?",
       "restore_success": "Скрипт успешно восстановлен",
       "search_button": "Поиск",
-      "search_field_content": "Содержимое",
-      "search_field_description": "Описание",
-      "search_field_name": "Название",
       "search_placeholder": "Поиск по названию скрипта",
       "status_active": "Активный",
       "status_deleted": "Удалён",
@@ -429,7 +415,12 @@
       "unwell_no": "Приемлемый",
       "unwell_yes": "Неприемлемый",
       "visibility_success": "Видимость успешно обновлена",
-      "visibility_title": "Изменить видимость скрипта"
+      "visibility_title": "Изменить видимость скрипта",
+      "delete_reason": "Причина (необязательно)",
+      "delete_reason_placeholder": "Запишите причину удаления (сохраняется в журнале аудита)",
+      "search_field_content": "Содержимое",
+      "search_field_description": "Описание",
+      "search_field_name": "Название"
     },
     "system_config": {
       "ai_api_key": "API-ключ",
@@ -450,6 +441,11 @@
       "ucenter_appid": "ID приложения",
       "ucenter_key": "Ключ связи",
       "ucenter_title": "Настройка UCenter",
+      "es_index_title": "Поисковый индекс ES",
+      "es_index_hint": "Запускает полную перестройку поискового индекса скриптов в фоне. Ответ API означает только запуск задачи; прогресс смотрите в логах backend.",
+      "es_index_button": "Перестроить индекс ES",
+      "es_index_confirm": "Начать перестройку поискового индекса ES? Для больших баз это может занять время.",
+      "es_index_started": "Перестройка поискового индекса ES запущена",
       "migrate_avatar_title": "Миграция аватаров",
       "migrate_avatar_button": "Начать миграцию",
       "migrate_avatar_confirm": "Начать миграцию аватаров? Аватары пользователей будут загружены из UCenter и сохранены локально.",
@@ -460,12 +456,7 @@
       "recompute_trending_button": "Пересчитать trending_score",
       "recompute_trending_confirm": "Пересчитать trending_score для всех скриптов сейчас? На больших базах это может занять от нескольких секунд до десятков секунд.",
       "recompute_trending_started": "Пересчёт trending_score запущен",
-      "recompute_trending_running": "Пересчёт уже выполняется; повторный запуск не выполнен",
-      "es_index_title": "Поисковый индекс ES",
-      "es_index_hint": "Запускает полную перестройку поискового индекса скриптов в фоне. Ответ API означает только запуск задачи; прогресс смотрите в логах backend.",
-      "es_index_button": "Перестроить индекс ES",
-      "es_index_confirm": "Начать перестройку поискового индекса ES? Для больших баз это может занять время.",
-      "es_index_started": "Перестройка поискового индекса ES запущена"
+      "recompute_trending_running": "Пересчёт уже выполняется; повторный запуск не выполнен"
     },
     "users": {
       "action_admin_level": "Изменить уровень",
@@ -479,7 +470,6 @@
       "col_admin_level": "Уровень администратора",
       "col_createtime": "Дата создания",
       "col_email": "Электронная почта",
-      "col_register_ip": "IP регистрации",
       "col_status": "Статус",
       "col_username": "Имя пользователя",
       "level_admin": "Администратор",
@@ -492,7 +482,8 @@
       "status_banned": "Заблокирован",
       "title": "Управление пользователями",
       "unban_confirm": "Вы уверены, что хотите разблокировать этого пользователя?",
-      "unban_success": "Пользователь успешно разблокирован"
+      "unban_success": "Пользователь успешно разблокирован",
+      "col_register_ip": "IP регистрации"
     },
     "similarity": {
       "tab_pairs": "Пары",
@@ -522,7 +513,7 @@
       "status_whitelisted": "В белом списке",
       "status_resolved": "Закрыто",
       "review_pending": "Ожидает",
-      "review_ok": "OK",
+      "review_ok": "Норма",
       "review_violated": "Нарушение",
       "action_detail": "Подробности",
       "action_resolve": "Закрыть",
@@ -537,7 +528,7 @@
       "modal_resolve_title": "Отметить проверку целостности",
       "label_decision": "Решение",
       "label_note": "Примечание",
-      "decision_ok": "OK",
+      "decision_ok": "Норма",
       "decision_violated": "Нарушение",
       "msg_review_resolved": "Успешно отмечено",
       "msg_whitelisted": "Добавлено в белый список",
@@ -596,8 +587,89 @@
         "dean_edwards_packer": "Обнаружен упаковщик Dean Edwards",
         "aa_encode": "Обнаружена кодировка AAEncode",
         "jj_encode": "Обнаружена кодировка JJEncode",
-        "eval_density": "Плотность вызовов eval/динамического выполнения слишком высока"
+        "eval_density": "Плотность вызовов eval/динамического выполнения слишком высока",
+        "gm_cookie_unrecognized_usage": "Обнаружено нераспознанное или не полностью интерпретированное использование GM_cookie",
+        "gm_cookie_unused_sensitive_permission": "Объявлено чувствительное разрешение GM_cookie, но допустимое использование не обнаружено",
+        "gm_cookie_data_exfiltration": "Данные GM_cookie могут отправляться в сеть или во внешний контекст",
+        "gm_cookie_data_injection": "Данные GM_cookie могут внедряться в код, страницу или постоянное хранилище",
+        "gm_cookie_analysis_incomplete": "Анализ потока данных GM_cookie не завершён и требует ручной проверки"
       }
+    },
+    "announcements": {
+      "title": "Управление объявлениями",
+      "action_create": "Создать",
+      "action_edit": "Редактировать",
+      "action_delete": "Удалить",
+      "create_title": "Создать объявление",
+      "edit_title": "Редактировать объявление",
+      "col_title": "Заголовок",
+      "col_level": "Уровень",
+      "col_status": "Статус",
+      "col_createtime": "Создано",
+      "col_actions": "Действия",
+      "field_title": "Заголовок",
+      "field_content": "Содержание",
+      "field_level": "Уровень",
+      "field_status": "Статус",
+      "level_normal": "Обычное",
+      "level_important": "Важное",
+      "status_enabled": "Включено",
+      "status_disabled": "Отключено",
+      "create_success": "Объявление успешно создано",
+      "update_success": "Объявление успешно обновлено",
+      "delete_success": "Объявление успешно удалено",
+      "delete_confirm": "Вы уверены, что хотите удалить это объявление?",
+      "at_least_one_language": "Укажите заголовок хотя бы на одном языке"
+    },
+    "script_audits": {
+      "title": "Аудит скриптов",
+      "col_script": "Скрипт",
+      "col_version": "Версия",
+      "col_submitter": "Отправитель",
+      "col_status": "Статус",
+      "col_script_audit_status": "Статус аудита скрипта",
+      "script_auditing": "На проверке",
+      "script_not_auditing": "Не на проверке",
+      "col_createtime": "Отправлено",
+      "col_actions": "Действия",
+      "status_pending": "Ожидает",
+      "status_approved": "Одобрено",
+      "status_rejected": "Отклонено",
+      "filter_status": "Статус",
+      "filter_all": "Все",
+      "filter_script_name_placeholder": "Поиск по названию скрипта",
+      "refresh": "Обновить",
+      "action_review": "Проверить",
+      "action_approve": "Одобрить",
+      "action_reject": "Отклонить",
+      "approve_success": "Одобрено",
+      "reject_success": "Отклонено",
+      "drawer_title": "Детали аудита",
+      "detail_script": "Скрипт",
+      "detail_submitter": "Отправитель",
+      "detail_changelog": "Список изменений",
+      "detail_reason": "Причина / примечание аудита",
+      "detail_reject_reason": "Причина отклонения",
+      "detail_code": "Код",
+      "approve_modal_title": "Одобрить аудит",
+      "approve_reason_label": "Комментарий к одобрению (необязательно; для исправления ложного срабатывания ИИ или обоснования)",
+      "approve_reason_placeholder": "Если это ложное срабатывание ИИ, укажите основание ручной проверки; оставьте пустым для прямого одобрения",
+      "reject_modal_title": "Отклонить аудит",
+      "reject_reason_label": "Причина отклонения (отправится автору во внутреннем уведомлении)",
+      "reject_reason_required": "Укажите причину отклонения",
+      "reject_reason_placeholder": "Объясните, почему скрипт отклонён (например: вредоносный код, нарушение правил, авторские права)"
+    },
+    "reports": {
+      "title": "Управление жалобами",
+      "col_script": "Скрипт",
+      "col_reporter": "Заявитель",
+      "col_reason": "Причина",
+      "col_status": "Статус",
+      "col_comments": "Комментарии",
+      "col_createtime": "Дата создания",
+      "col_actions": "Действия",
+      "action_view": "Просмотр",
+      "filter_status": "Фильтр по статусу"
     }
   },
   "auth": {
@@ -713,9 +785,28 @@
     "punish": "Наказать",
     "punish_reason": "Причина наказания",
     "report": "Пожаловаться",
-    "select_punish_option": "Выберите вариант наказания"
+    "select_punish_option": "Выберите вариант наказания",
+    "default_favorite_folder_name": "Избранное по умолчанию",
+    "default_favorite_folder_description": "Это папка избранного по умолчанию"
   },
   "components": {
+    "loading": {
+      "default": "Загрузка…",
+      "code": "Загрузка редактора кода…",
+      "chart": "Загрузка графика…",
+      "failed": "Загрузка не удалась",
+      "retry": "Повторить",
+      "redirecting": "Перенаправление…"
+    },
+    "markdown": {
+      "note": "Примечание",
+      "tip": "Совет",
+      "important": "Важно",
+      "warning": "Предупреждение",
+      "caution": "Осторожно",
+      "footnotes_heading": "Сноски",
+      "footnote_backref": "Вернуться к сноске {0}"
+    },
     "markdown_editor": {
       "image_upload_failed": "Загрузка изображения не удалась",
       "loading_editor": "Загрузка редактора...",
@@ -750,14 +841,6 @@
     "try_refresh": "Обновить текущую страницу",
     "what_can_do": "Вы можете попробовать:",
     "what_happened": "Что произошло?"
-  },
-  "ads": {
-    "label": "Реклама",
-    "sponsored": "Реклама",
-    "learnMore": "Подробнее"
-  },
-  "announcements": {
-    "title": "Объявления"
   },
   "home": {
     "browser_stores": {
@@ -910,7 +993,11 @@
     "error_qq_migrate_unavailable": "Служба миграции QQ-входа временно недоступна, используйте другой способ входа",
     "error_invalid_params": "Неверные параметры, попробуйте ещё раз",
     "error_qq_migrate_failed": "Миграция QQ-входа не удалась, попробуйте позже",
-    "error_unknown": "Произошла ошибка при входе, попробуйте ещё раз"
+    "error_unknown": "Произошла ошибка при входе, попробуйте ещё раз",
+    "qq_migrate_deprecation_title": "Вход через QQ скоро будет отключён",
+    "qq_migrate_deprecation_content": "Авторизация через QQ скоро перестанет поддерживаться. Пожалуйста, после входа привяжите другой способ авторизации на странице настроек, чтобы не потерять доступ.",
+    "qq_migrate_deprecation_continue": "Продолжить вход",
+    "qq_migrate_deprecation_cancel": "Отмена"
   },
   "notifications": {
     "access": {
@@ -1038,6 +1125,8 @@
     "pp_section6_content": "Вы имеете право: просматривать и изменять свои персональные данные; запрашивать удаление аккаунта и связанных данных; узнавать, как мы обрабатываем ваши персональные данные. Чтобы реализовать эти права или задать вопросы, свяжитесь с нами через функцию обратной связи на платформе.",
     "pp_section7_title": "7. Обновления политики",
     "pp_section7_content": "Мы можем обновлять эту Политику конфиденциальности в связи с изменениями применимого законодательства или функций продукта. Обновлённая политика публикуется на Платформе. Рекомендуем периодически её просматривать. Продолжая использовать Платформу, вы принимаете обновлённую политику. Платформа оставляет за собой право окончательного толкования этой политики.",
+    "pp_section8_title": "8. Обновление политики",
+    "pp_section8_content": "Мы можем обновлять настоящую Политику конфиденциальности в связи с требованиями законодательства или изменениями в работе Платформы. Обновлённые версии публикуются на Платформе; рекомендуем периодически с ними знакомиться. Продолжая пользоваться Платформой, вы принимаете обновлённую политику. Право окончательного толкования настоящей Политики принадлежит Платформе.",
     "dc_section1_title": "1. Отказ от ответственности за скрипты",
     "dc_section1_content": "Все пользовательские скрипты, опубликованные на Платформе, создаются и поддерживаются авторами самостоятельно и не выражают позицию или взгляды Платформы. Платформа не даёт явных или подразумеваемых гарантий относительно функциональности, безопасности, законности или пригодности любого пользовательского скрипта. Установка и использование скриптов — на усмотрение пользователя; все риски и последствия несёт пользователь.",
     "dc_section2_title": "2. Риски использования",
@@ -1597,6 +1686,7 @@
         "stats": {
           "expired": "Истёкшие:",
           "groups": "Группы пользователей:",
+          "page_scope_note": "(Пользователи / группы / ожидающие / истёкшие подсчитаны только для текущей страницы)",
           "pending": "Ожидают подтверждения:",
           "total": "Всего:",
           "users": "Пользователи:"
@@ -2030,6 +2120,7 @@
       },
       "sort": {
         "createtime": "Последние опубликованные",
+        "long_tail": "Может быть интересно",
         "score": "Самый высокий рейтинг",
         "today_download": "Сортировка по популярности",
         "total_download": "Наиболее загружаемые"
@@ -2107,6 +2198,7 @@
       "username": "Имя пользователя"
     },
     "version": {
+      "auto_synced_changelog": "Эта версия была автоматически синхронизирована системой.",
       "changelog_label": "Описание обновления",
       "changelog_placeholder": "Например:\n✨ Новая функция: добавлена оптимизация пользовательского интерфейса\n🐛 Исправление проблемы: решена проблема совместимости с браузером\n⚡ Повышение производительности: оптимизирована скорость выполнения скрипта\n📦 Обновление зависимостей: обновлено до последней версии",
       "changelog_subtitle": "(поддерживается синтаксис Markdown)",
@@ -2128,6 +2220,7 @@
       "install_button": "Установить эту версию",
       "install_success": "Начинается установка {version}",
       "latest_version_badge": "Последняя версия",
+      "deleted_version_badge": "Удалено",
       "load_failed": "Загрузка не удалась",
       "load_failed_description": "Произошла ошибка при получении списка версий, пожалуйста, обновите страницу и попробуйте ещё раз",
       "no_history_description": "Этот скрипт ещё не опубликовал ни одной версии",
@@ -2136,6 +2229,7 @@
       "pagination_total": "Элементы {start}-{end}, всего {total} версий",
       "prerelease_badge": "Предварительная версия",
       "prerelease_chip": "Предрелизные {count}",
+      "deleted_chip": "Удалённые: {count}",
       "prerelease_checked": "Предварительная версия",
       "prerelease_unchecked": "Официальная версия",
       "prerelease_versions": "Предварительные версии",
@@ -2303,7 +2397,7 @@
       "rename": "Переименовать",
       "rename_title": "Переименовать Passkey",
       "rename_placeholder": "Введите новое название",
-      "rename_ok": "OK",
+      "rename_ok": "ОК",
       "rename_success": "Успешно переименовано",
       "rename_failed": "Не удалось переименовать",
       "delete": "Удалить",
@@ -2344,7 +2438,33 @@
       "processed_col_script": "Скрипт",
       "processed_col_operator": "Оператор",
       "processed_col_time": "Время",
-      "processed_col_reason": "Причина"
+      "processed_col_reason": "Причина",
+      "account_deactivated": "Этот аккаунт деактивирован",
+      "ban_user": "Заблокировать пользователя",
+      "unban_user": "Разблокировать пользователя",
+      "ban_reason": "Причина блокировки",
+      "ban_reason_placeholder": "Введите причину блокировки",
+      "ban_duration": "Срок блокировки",
+      "ban_permanent": "Навсегда",
+      "ban_1_day": "1 день",
+      "ban_3_days": "3 дня",
+      "ban_7_days": "7 дней",
+      "ban_30_days": "30 дней",
+      "ban_90_days": "90 дней",
+      "ban_custom": "Другой срок",
+      "ban_clean_options": "Параметры очистки",
+      "ban_clean_scores": "Удалить оценки пользователя",
+      "ban_clean_scripts": "Удалить скрипты пользователя",
+      "ban_success": "Пользователь заблокирован",
+      "unban_success": "Пользователь разблокирован",
+      "ban_confirm_title": "Подтверждение блокировки",
+      "unban_confirm": "Вы действительно хотите разблокировать этого пользователя?",
+      "user_banned": "Заблокирован",
+      "ban_expire_at": "Срок действия блокировки",
+      "ban_permanent_label": "Бессрочно",
+      "register_ip": "IP при регистрации",
+      "ip_location": "Местоположение IP",
+      "register_email": "Email при регистрации"
     },
     "save": "Сохранить",
     "script_list": {
@@ -2357,6 +2477,7 @@
       "status_active": "Опубликовано",
       "status_all": "Все статусы",
       "status_audit": "На проверке",
+      "status_deleted": "Удалено",
       "sort_by_downloads": "Наиболее загружаемые",
       "sort_by_hot": "Сортировка по популярности",
       "sort_by_latest": "Последние опубликованные",
@@ -2366,8 +2487,6 @@
       "type_script": "Скрипт"
     },
     "settings": {
-      "account_settings": "Управление аккаунтом",
-      "account_settings_description": "Управление паролями, ключами доступа, привязками сторонних сервисов и настройками безопасности аккаунта",
       "notification_settings": "Настройки уведомлений",
       "oauth_bind_settings": "Привязка OIDC",
       "password_settings": "Изменить пароль",
@@ -2375,7 +2494,10 @@
       "user_settings": "Настройки пользователя",
       "webhook_settings": "Настройки Webhook",
       "deactivate_settings": "Удалить аккаунт",
-      "passkey_settings": "Passkey"
+      "passkey_settings": "Passkey",
+      "account_settings": "Управление аккаунтом",
+      "account_settings_description": "Управление паролями, ключами доступа, привязками сторонних сервисов и настройками безопасности аккаунта",
+      "install_link_settings": "Ссылка для установки"
     },
     "update_failed": "Обновление не удалось, попробуйте ещё раз",
     "update_success": "Информация пользователя успешно обновлена!",
@@ -2463,7 +2585,32 @@
       "cancel_failed": "Ошибка отмены",
       "applied_at": "Дата заявки",
       "effective_at": "Дата вступления в силу"
+    },
+    "contact_email": "Контактный email",
+    "email_code_placeholder": "Введите 6-значный код подтверждения",
+    "email_code_required": "Пожалуйста, сначала отправьте и введите код подтверждения",
+    "email_code_resend": "Отправить повторно",
+    "email_code_sent": "Код подтверждения отправлен",
+    "email_help_text": "Отображается публично, чтобы с вами могли связаться. Может отличаться от регистрационного email, можно оставить пустым.",
+    "email_send_code": "Отправить код",
+    "email_send_code_countdown": "Повторная отправка через {{seconds}}с",
+    "install_link": {
+      "title": "Ссылка для установки",
+      "description": "Ссылки для установки приватных скриптов содержат собственный токен. Менеджер скриптов использует его для установки и проверки обновлений, поэтому вход на сайт не требуется. Ссылка привязана к вашей учётной записи — не передавайте её посторонним.",
+      "reset": "Сбросить ссылку для установки",
+      "reset_warning_title": "Сброс немедленно делает существующие ссылки недействительными",
+      "reset_warning_content": "После сброса все приватные скрипты, уже установленные на ваших устройствах, перестанут получать обновления, и их придётся установить заново. Сбрасывайте только если ссылка могла утечь. На секрет вебхука это не влияет.",
+      "reset_confirm_title": "Сбросить ссылку для установки?",
+      "reset_confirm_content": "Все приватные скрипты, уже установленные на ваших устройствах, придётся установить заново.",
+      "reset_confirm_ok": "Сбросить",
+      "reset_success": "Ссылка для установки сброшена",
+      "reset_failed": "Не удалось сбросить, попробуйте позже"
     }
+  },
+  "ads": {
+    "label": "Реклама",
+    "sponsored": "Реклама",
+    "learnMore": "Подробнее"
   },
   "utils": {
     "time_format": "DD.MM.YYYY"
@@ -2482,5 +2629,8 @@
       "title": "Код не прошёл проверку целостности",
       "help": "Если это ложное срабатывание, запросите исключение через контакт администратора из FAQ сайта."
     }
+  },
+  "announcements": {
+    "title": "Объявления"
   }
 }

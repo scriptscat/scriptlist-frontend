@@ -59,7 +59,10 @@
       "similarity": "相似度檢測",
       "ai_review": "AI 審核",
       "ai_review_records": "審核記錄",
-      "ai_review_fullscan": "全站掃描"
+      "ai_review_fullscan": "全站掃描",
+      "announcements": "Announcements",
+      "script_audits": "Script Audit",
+      "reports": "Report management"
     },
     "advertise": {
       "title": "廣告管理",
@@ -67,10 +70,12 @@
       "create_title": "新建廣告",
       "edit_title": "編輯廣告",
       "col_slot": "廣告位",
-      "col_title": "標題",
+      "col_type": "類型",
+      "col_title": "素材 / 標題",
       "col_enabled": "狀態",
       "col_stats": "曝光/點擊 (CTR)",
       "col_actions": "操作",
+      "col_ad_unit_value": "單元 {id}",
       "action_edit": "編輯",
       "action_delete": "刪除",
       "delete_confirm": "確認刪除該廣告？",
@@ -81,8 +86,20 @@
       "light_required": "請上傳淺色圖片",
       "enabled": "啟用",
       "disabled": "禁用",
+      "type_image": "圖片",
+      "type_adsense": "AdSense",
+      "stats_adsense_placeholder": "—",
+      "stats_adsense_note": "曝光 / 點擊由 Google 統計",
+      "stats_multi_slot_note": "{count} 個廣告位合計",
+      "field_type": "廣告類型",
       "field_slot": "廣告位",
       "field_title": "標題",
+      "field_remark_title": "備註標題",
+      "field_remark_title_placeholder": "僅後台可見，便於識別",
+      "field_ad_unit_id": "廣告單元 ID",
+      "field_ad_unit_id_placeholder": "data-ad-slot，如 1234567890",
+      "field_ad_unit_id_hint": "AdSense 後台廣告單元代碼中的 data-ad-slot 數值。",
+      "adsense_stats_note": "AdSense 的曝光與點擊由 Google 統計，站內統計對該條目恆為 0；收益請至 AdSense 後台查看。",
       "field_languages": "投放語言（留空=全部）",
       "field_light": "淺色圖片",
       "field_dark": "深色圖片（可選）",
@@ -96,6 +113,11 @@
       "upload": "上傳圖片",
       "image_url_placeholder": "輸入或貼上圖片連結，也可點擊上傳",
       "recommended_size": "建議尺寸 {size}",
+      "publisher_id_hint": "未填寫 AdSense 發布商 ID 時，AdSense 類型的廣告不會投放。",
+      "publisher_id_placeholder": "ca-pub-…",
+      "publisher_id_save": "儲存",
+      "publisher_id_save_success": "儲存成功",
+      "publisher_id_warning": "尚未填寫 AdSense 發布商 ID，共有 {count} 條 AdSense 廣告不會投放。",
       "col_weight": "權重",
       "col_schedule": "排期時間",
       "schedule_forever": "長期",
@@ -126,11 +148,11 @@
         },
         "search-rail-left": {
           "name": "搜尋頁左側欄",
-          "position": "搜尋頁瀏覽態,內容區左側留白,僅 ≥1650px 寬螢幕顯示"
+          "position": "搜尋頁瀏覽態，內容區左側留白，有投放時內容區收窄讓位，留白不足時不顯示"
         },
         "search-rail-right": {
           "name": "搜尋頁右側欄",
-          "position": "搜尋頁瀏覽態,內容區右側留白,僅 ≥1650px 寬螢幕顯示"
+          "position": "搜尋頁瀏覽態，內容區右側留白，有投放時內容區收窄讓位，留白不足時不顯示"
         },
         "search-sidebar": {
           "name": "搜尋頁側欄",
@@ -143,7 +165,39 @@
         "script-detail-sidebar": {
           "name": "詳情頁側欄",
           "position": "腳本詳情頁右側 sticky 側欄,資料統計卡與腳本詳情卡之間,大螢幕顯示"
+        },
+        "script-detail-banner": {
+          "name": "詳情頁橫幅",
+          "position": "腳本詳情頁主內容區,資訊卡與內容 Tab 卡之間,整寬顯示,全部斷點"
+        },
+        "search-results-rail-left": {
+          "name": "搜尋結果頁左直欄",
+          "position": "搜尋結果頁內容區左側留白，有投放時內容區收窄讓位，留白不足時不顯示"
+        },
+        "search-results-rail-right": {
+          "name": "搜尋結果頁右直欄",
+          "position": "搜尋結果頁內容區右側留白，與側欄卡片並排，留白不足時不顯示"
+        },
+        "script-detail-rail-left": {
+          "name": "詳情頁左直欄",
+          "position": "腳本詳情頁內容區左側留白，有投放時內容區收窄讓位，留白不足時不顯示"
+        },
+        "script-detail-rail-right": {
+          "name": "詳情頁右直欄",
+          "position": "腳本詳情頁內容區右側留白，與 sticky 側欄並排，留白不足時不顯示"
         }
+      },
+      "slot_required": "請選擇至少一個廣告位",
+      "slot_placeholder": "可選多個廣告位",
+      "slot_selected_count": "已選 {count} 個廣告位",
+      "slot_count_summary": "{count} 個位 · {sizes}",
+      "slot_mixed_title": "所選廣告位跨越 {count} 種形態，同一素材無法同時貼合",
+      "slot_mixed_desc": "圖片素材在不匹配的位上會按比例縮放並留白；AdSense 項目共用一個廣告單元 ID，跨形態會明顯拉低填充率。仍可儲存。",
+      "slot_unknown": "未知廣告位：{keys}",
+      "slot_variant": {
+        "rail": "直欄",
+        "banner": "橫幅",
+        "card": "卡片"
       }
     },
     "ai_review": {
@@ -277,7 +331,13 @@
       "title": "OIDC 提供商管理",
       "type_oauth2": "OAuth2 (GitHub)",
       "type_oidc": "OIDC",
-      "update_success": "更新成功"
+      "update_success": "更新成功",
+      "col_icon": "Icon",
+      "discover_button": "Auto Discover",
+      "discover_failed": "OIDC discovery failed. Please check the URL.",
+      "discover_success": "OIDC configuration discovered successfully",
+      "icon_upload": "Upload Icon",
+      "icon_upload_success": "Icon uploaded successfully"
     },
     "scores": {
       "action_delete": "刪除",
@@ -355,7 +415,12 @@
       "unwell_no": "正常",
       "unwell_yes": "不當",
       "visibility_success": "可见性更新成功",
-      "visibility_title": "修改腳本可见性"
+      "visibility_title": "修改腳本可见性",
+      "delete_reason": "Reason (optional)",
+      "delete_reason_placeholder": "Record the reason for this deletion (saved with the audit log)",
+      "search_field_content": "Content",
+      "search_field_description": "Description",
+      "search_field_name": "Name"
     },
     "system_config": {
       "ai_api_key": "API Key",
@@ -386,7 +451,12 @@
       "es_index_hint": "觸發後會在後台全量重建腳本搜尋索引。接口返回只表示任務已啟動，完成進度請查看後端日誌。",
       "es_index_button": "重建 ES 索引",
       "es_index_confirm": "確定要開始重建 ES 搜尋索引嗎？大庫可能需要較長時間。",
-      "es_index_started": "ES 搜尋索引重建任務已啟動"
+      "es_index_started": "ES 搜尋索引重建任務已啟動",
+      "migrate_avatar_title": "Avatar Migration",
+      "migrate_avatar_button": "Start Migration",
+      "migrate_avatar_confirm": "Are you sure you want to start avatar migration? This will download user avatars from UCenter and save them locally.",
+      "migrate_avatar_started": "Avatar migration started",
+      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}"
     },
     "users": {
       "action_admin_level": "修改等級",
@@ -412,7 +482,8 @@
       "status_banned": "已封禁",
       "title": "用戶管理",
       "unban_confirm": "確定要解封此用戶吗？",
-      "unban_success": "用戶解封成功"
+      "unban_success": "用戶解封成功",
+      "col_register_ip": "Register IP"
     },
     "similarity": {
       "tab_pairs": "相似對",
@@ -516,8 +587,89 @@
         "dean_edwards_packer": "偵測到 Dean Edwards 打包器",
         "aa_encode": "偵測到 AAEncode 編碼",
         "jj_encode": "偵測到 JJEncode 編碼",
-        "eval_density": "eval/動態執行呼叫密度過高"
+        "eval_density": "eval/動態執行呼叫密度過高",
+        "gm_cookie_unrecognized_usage": "偵測到無法識別或無法完整解釋的 GM_cookie 用法",
+        "gm_cookie_unused_sensitive_permission": "宣告了 GM_cookie 敏感權限，但未識別到合法用途",
+        "gm_cookie_data_exfiltration": "偵測到 GM_cookie 資料可能被傳送至網路或外部環境",
+        "gm_cookie_data_injection": "偵測到 GM_cookie 資料可能被注入程式碼、頁面或持久化儲存空間",
+        "gm_cookie_analysis_incomplete": "GM_cookie 資料流分析不完整，需要人工審查"
       }
+    },
+    "announcements": {
+      "title": "Announcement Management",
+      "action_create": "Create",
+      "action_edit": "Edit",
+      "action_delete": "Delete",
+      "create_title": "Create Announcement",
+      "edit_title": "Edit Announcement",
+      "col_title": "Title",
+      "col_level": "Level",
+      "col_status": "Status",
+      "col_createtime": "Created",
+      "col_actions": "Actions",
+      "field_title": "Title",
+      "field_content": "Content",
+      "field_level": "Level",
+      "field_status": "Status",
+      "level_normal": "Normal",
+      "level_important": "Important",
+      "status_enabled": "Enabled",
+      "status_disabled": "Disabled",
+      "create_success": "Announcement created successfully",
+      "update_success": "Announcement updated successfully",
+      "delete_success": "Announcement deleted successfully",
+      "delete_confirm": "Are you sure you want to delete this announcement?",
+      "at_least_one_language": "Please fill in the title for at least one language"
+    },
+    "script_audits": {
+      "title": "Script Audit",
+      "col_script": "Script",
+      "col_version": "Version",
+      "col_submitter": "Submitter",
+      "col_status": "Status",
+      "col_script_audit_status": "腳本審核狀態",
+      "script_auditing": "審核中",
+      "script_not_auditing": "非審核中",
+      "col_createtime": "Submitted At",
+      "col_actions": "Actions",
+      "status_pending": "Pending",
+      "status_approved": "Approved",
+      "status_rejected": "Rejected",
+      "filter_status": "Status",
+      "filter_all": "All",
+      "filter_script_name_placeholder": "Search script name",
+      "refresh": "Refresh",
+      "action_review": "Review",
+      "action_approve": "Approve",
+      "action_reject": "Reject",
+      "approve_success": "Approved",
+      "reject_success": "Rejected",
+      "drawer_title": "Audit Detail",
+      "detail_script": "Script",
+      "detail_submitter": "Submitter",
+      "detail_changelog": "Changelog",
+      "detail_reason": "Audit Reason / Note",
+      "detail_reject_reason": "Reject Reason",
+      "detail_code": "Code",
+      "approve_modal_title": "Approve Audit",
+      "approve_reason_label": "Approval note (optional, for AI false-positive correction or audit basis)",
+      "approve_reason_placeholder": "If this was an AI false positive, note the manual review basis; leave blank to approve directly",
+      "reject_modal_title": "Reject Audit",
+      "reject_reason_label": "Reject reason (sent to author via in-app notification)",
+      "reject_reason_required": "Please provide a reject reason",
+      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)"
+    },
+    "reports": {
+      "title": "Report management",
+      "col_script": "Script",
+      "col_reporter": "Reporter",
+      "col_reason": "Reason",
+      "col_status": "Status",
+      "col_comments": "Comments",
+      "col_createtime": "Created at",
+      "col_actions": "Actions",
+      "action_view": "View",
+      "filter_status": "Filter by status"
     }
   },
   "auth": {
@@ -633,9 +785,28 @@
     "punish": "處罰",
     "punish_reason": "處罰原因",
     "report": "舉報",
-    "select_punish_option": "選擇處罰選項"
+    "select_punish_option": "選擇處罰選項",
+    "default_favorite_folder_name": "預設收藏夾",
+    "default_favorite_folder_description": "這是一個預設的收藏夾"
   },
   "components": {
+    "loading": {
+      "default": "載入中…",
+      "code": "載入程式碼編輯器中…",
+      "chart": "載入圖表中…",
+      "failed": "載入失敗",
+      "retry": "重試",
+      "redirecting": "跳轉中…"
+    },
+    "markdown": {
+      "note": "說明",
+      "tip": "提示",
+      "important": "重要",
+      "warning": "警告",
+      "caution": "注意",
+      "footnotes_heading": "註腳",
+      "footnote_backref": "返回引用 {0}"
+    },
     "markdown_editor": {
       "image_upload_failed": "圖片上傳失敗",
       "loading_editor": "載入編輯器中...",
@@ -822,7 +993,11 @@
     "error_qq_migrate_unavailable": "QQ 登入遷移服務暫時不可用，請使用其他方式登入",
     "error_invalid_params": "參數錯誤，請重試",
     "error_qq_migrate_failed": "QQ 登入遷移失敗，請稍後重試",
-    "error_unknown": "登入過程中出現錯誤，請重試"
+    "error_unknown": "登入過程中出現錯誤，請重試",
+    "qq_migrate_deprecation_title": "QQ sign-in will soon be discontinued",
+    "qq_migrate_deprecation_content": "QQ sign-in will soon be discontinued. After signing in, please bind another sign-in method on the settings page to avoid losing access in the future.",
+    "qq_migrate_deprecation_continue": "Continue signing in",
+    "qq_migrate_deprecation_cancel": "Cancel"
   },
   "notifications": {
     "access": {
@@ -923,7 +1098,7 @@
     "privacy_policy_description": "了解 ScriptCat 如何收集、使用與保護你的個人資訊。",
     "disclaimer_title": "免責聲明",
     "disclaimer_description": "了解 ScriptCat 關於使用者腳本內容與使用風險的免責聲明。",
-    "last_updated": "最後更新日期：2026年6月19日",
+    "last_updated": "最後更新日期：2026年8月25日",
     "tos_section1_title": "一、總則",
     "tos_section1_content": "歡迎使用 ScriptCat 腳本站（以下簡稱「本平台」）。本平台是一個用戶腳本分享社區，為用戶提供腳本的發佈、搜索、安裝等服務，並可能在平台頁面中展示廣告。請您在使用本平台服務前，仔細閱讀並理解本服務協議的全部內容。註冊或使用本平台即表示您同意受本協議的約束。",
     "tos_section2_title": "二、帳號註冊與使用",
@@ -937,19 +1112,21 @@
     "tos_section6_title": "六、協議變更與終止",
     "tos_section6_content": "本平台有權根據需要修改本協議內容，修改後的協議將在平台公佈。您繼續使用本平台服務即表示接受修改後的協議。本平台有權在法律允許的範圍內終止或暫停服務，並儘可能提前通知用戶。本協議的最終解釋權歸本平台所有。",
     "pp_section1_title": "一、資訊收集",
-    "pp_section1_content": "我們收集以下類型的用戶信息：註冊信息（郵箱地址、用戶名）；設備與網絡信息（IP 地址、瀏覽器類型）；使用數據（腳本瀏覽、安裝、評分、廣告瀏覽與點擊等）；用於維持登錄狀態的會話信息。",
+    "pp_section1_content": "我們收集：您註冊時提供的信箱、使用者名稱等資訊；您訪問平台時的 IP 位址、瀏覽器與裝置資訊；您在平台上的瀏覽、安裝、評分等使用記錄；用於保持登錄狀態的工作階段資訊。\n\n註冊或提交回饋時，我們會記錄您的 IP 位址並解析出大致的地理位置（如國家、城市），用於防範惡意註冊與濫用。該解析在本平台伺服器上完成。",
     "pp_section2_title": "二、資訊使用",
-    "pp_section2_content": "我們將收集的信息用於：提供和改進平台服務；腳本安裝量等數據統計；安全保障（防止惡意註冊、濫用等）；發送驗證碼、密碼重置等服務通知；展示廣告並統計廣告的展示、點擊等效果（本平台廣告均為自營，不接入第三方廣告聯盟）。我們不會將您的個人信息出售給第三方。",
+    "pp_section2_content": "我們將收集的資訊用於：提供和改進平台服務；資料統計；安全保障；傳送驗證碼、密碼重設等服務通知；展示廣告並統計廣告效果。我們不會將您的個人資訊出售給第三方。",
     "pp_section3_title": "三、第三方服務",
-    "pp_section3_content": "本平台可能使用第三方服務實現部分功能，如第三方賬號登錄和人機驗證等。使用第三方登錄時，我們僅獲取您授權的基本信息（如用戶名、郵箱、頭像）。第三方服務的數據處理受其各自隱私政策約束。",
-    "pp_section4_title": "四、Cookie 與會話",
-    "pp_section4_content": "本平台使用 Cookie 和會話技術維持您的登錄狀態和偏好設置。您可以通過瀏覽器設置管理 Cookie，但這可能影響平台的正常使用。",
-    "pp_section5_title": "五、數據安全與保留",
-    "pp_section5_content": "我們採取合理的技術和管理措施保護用戶數據安全。用戶數據將在賬號存續期間保留，賬號註銷後將在合理期限內刪除或匿名化處理，法律法規要求保留的除外。",
-    "pp_section6_title": "六、用戶權利",
-    "pp_section6_content": "您有權：查看和修改您的個人信息；請求刪除您的賬號和相關數據；了解我們如何處理您的個人信息。如需行使上述權利或有任何疑問，請通過平台反饋功能聯繫我們。",
-    "pp_section7_title": "七、政策更新",
-    "pp_section7_content": "我們可能會根據法律法規要求或產品功能變化對本隱私政策進行更新。更新後的政策將在本平台上發布，建議您定期查看以了解最新內容。繼續使用本平台即表示您接受更新後的政策。本隱私政策的最終解釋權歸本平台所有。",
+    "pp_section3_content": "本平台使用 Google Analytics（訪問統計）、Cloudflare Turnstile（人機驗證）、第三方帳號登錄、Google AdSense（廣告投放）等第三方服務。使用第三方帳號登錄時，我們僅獲取您授權的基本資訊（使用者名稱、信箱等）。\n\n這些服務會收集其所需的裝置與瀏覽資訊，並可能在您的瀏覽器中設定自己的 Cookie，具體以各自的隱私政策為準。",
+    "pp_section4_title": "四、廣告",
+    "pp_section4_content": "本平台的廣告位會展示兩類廣告：由我們自行接洽的廣告，以及由 Google AdSense 投放的廣告。\n\n對於自營廣告，當您點擊時我們會記錄點擊時間、廣告位置等資訊，用於統計廣告效果和識別異常點擊。\n\n對於 Google AdSense 廣告，投放與統計均由 Google 完成，本平台無法得知是誰看到或點擊了哪條廣告。按照 Google 的要求說明：第三方供應商（包括 Google）會使用 Cookie，根據您以往對本網站或其他網站的訪問情況來投放廣告；Google 使用廣告 Cookie，使其及其合作夥伴能夠根據您對本網站和其他網站的訪問情況向您投放廣告。\n\n您可以透過 Google 廣告設定（google.com/settings/ads）停用個人化廣告，或透過 aboutads.info 停用部分第三方供應商的廣告 Cookie。",
+    "pp_section5_title": "五、Cookie 與工作階段",
+    "pp_section5_content": "本平台使用 Cookie 保持您的登錄狀態、記住您的外觀與語言偏好等。上述第三方服務也會設定各自的 Cookie，用於訪問統計與廣告投放。\n\n您可以透過瀏覽器設定管理或清除 Cookie，但清除登錄相關 Cookie 會導致無法保持登錄狀態。本平台不顯示 Cookie 同意橫幅；如不希望接收個人化廣告，請使用上一節所述方式。",
+    "pp_section6_title": "六、資料安全與保留",
+    "pp_section6_content": "我們採取合理的技術和管理措施保護使用者資料安全。使用者資料將在帳號存續期間保留，帳號登出後將在合理期限內刪除或匿名化處理，法律法規要求保留的除外。",
+    "pp_section7_title": "七、使用者權利",
+    "pp_section7_content": "您有權：查看和修改您的個人資訊；請求刪除您的帳號和相關資料；了解我們如何處理您的個人資訊。如需行使上述權利或有任何疑問，請透過平台回饋功能聯絡我們。",
+    "pp_section8_title": "八、政策更新",
+    "pp_section8_content": "我們可能會根據法律法規要求或產品功能變化對本隱私政策進行更新。更新後的政策將在本平台上發布，建議您定期查看以了解最新內容。繼續使用本平台即表示您接受更新後的政策。本隱私政策的最終解釋權歸本平台所有。",
     "dc_section1_title": "一、腳本免責",
     "dc_section1_content": "本平台上發佈的所有用戶腳本均由腳本作者獨立創作和維護，不代表本平台的立場或觀點。本平台不對任何用戶腳本的功能性、安全性、合法性或適用性做任何明示或暗示的保證。用戶安裝和使用任何腳本均屬自願行為，由此產生的一切風險和後果由用戶自行承擔。",
     "dc_section2_title": "二、使用風險",
@@ -957,7 +1134,7 @@
     "dc_section3_title": "三、服務可用性",
     "dc_section3_content": "本平台按「現狀」提供服務，不保證服務不中斷、無錯誤或滿足您的特定需求。因系統維護、升級、網路故障或不可抗力等原因導致的服務中斷，本平台不承擔責任。本平台保留隨時修改、暫停或終止部分或全部服務的權利。",
     "dc_section4_title": "四、責任限制",
-    "dc_section4_content": "在法律允許的最大範圍內，本平台及其營運者不對因使用或無法使用本平台服務而導致的任何直接、間接、附帶、特殊或後果性損害承擔責任，包括但不限於數據遺失、利潤損失或業務中斷。對於廣告主透過本平台所推廣的商品或服務，本平台不作任何擔保，亦不承擔相關責任，您與廣告主之間的交易請自行判斷並承擔風險。",
+    "dc_section4_content": "在法律允許的最大範圍內，本平台及其營運者不對因使用或無法使用本平台服務而導致的任何直接、間接、附帶、特殊或後果性損害承擔責任，包括但不限於數據遺失、利潤損失或業務中斷。對於廣告主透過本平台所推廣的商品或服務，以及由 Google AdSense 等第三方廣告聯盟投放的廣告，本平台均不作任何擔保，亦不代為甄選或認可其內容，不承擔相關責任；第三方廣告聯盟投放的廣告由其自行選擇投放對象，本平台不參與該過程。您與廣告主，或因第三方廣告聯盟投放的廣告而產生的您與任何一方之間的交易，均請自行判斷並承擔風險。",
     "dc_section5_title": "五、聲明更新",
     "dc_section5_content": "我們可能會根據法律法規要求或產品功能變化對本免責聲明進行更新。更新後的聲明將在本平台上發布，建議您定期查看以了解最新內容。繼續使用本平台即表示您接受更新後的聲明。本免責聲明的最終解釋權歸本平台所有。"
   },
@@ -1104,8 +1281,8 @@
       "install": {
         "install_check_failed": "檢測腳本安裝狀態失敗",
         "install_script": "安裝腳本",
-        "reinstall_script": "重新安裝腳本 v{version}",
-        "update_script": "更新腳本至 v{version}",
+        "reinstall_script": "重新安裝腳本",
+        "update_script": "更新腳本",
         "updated_at": "更新於 {time}",
         "changelog": "更新記錄"
       },
@@ -1209,7 +1386,7 @@
         "connect": "跨域存取",
         "grants": "使用能力",
         "more": "+{count}",
-        "high_risk": "高風險權限，請謹慎安裝",
+        "high_risk": "此腳本具有存取及修改 Cookie 的敏感權限",
         "cap": {
           "net": "網路請求",
           "notify": "通知",
@@ -1509,6 +1686,7 @@
         "stats": {
           "expired": "已過期：",
           "groups": "使用者群組：",
+          "page_scope_note": "（使用者 / 使用者群組 / 等待確認 / 已過期為目前頁面統計）",
           "pending": "等待確認：",
           "total": "總數：",
           "users": "使用者："
@@ -1942,6 +2120,7 @@
       },
       "sort": {
         "createtime": "最新發佈",
+        "long_tail": "可能感興趣",
         "score": "評分最高",
         "today_download": "熱度排序",
         "total_download": "下載最多"
@@ -2019,6 +2198,7 @@
       "username": "使用者名稱"
     },
     "version": {
+      "auto_synced_changelog": "此版本由系統自動同步更新",
       "changelog_label": "更新說明",
       "changelog_placeholder": "例如：\n✨ 新增功能：新增了使用者介面最佳化\n🐛 修復問題：解決了瀏覽器相容性問題\n⚡ 效能提升：最佳化了腳本執行速度\n📦 相依性更新：升級到最新版本",
       "changelog_subtitle": "(支援Markdown語法)",
@@ -2040,6 +2220,7 @@
       "install_button": "安裝此版本",
       "install_success": "開始安裝 {version}",
       "latest_version_badge": "最新版本",
+      "deleted_version_badge": "已刪除",
       "load_failed": "載入失敗",
       "load_failed_description": "取得版本列表時發生錯誤，請重新整理頁面重試",
       "no_history_description": "該腳本還沒有發佈任何版本",
@@ -2048,6 +2229,7 @@
       "pagination_total": "第 {start}-{end} 項，共 {total} 個版本",
       "prerelease_badge": "預發佈版本",
       "prerelease_chip": "預發佈 {count}",
+      "deleted_chip": "已刪除 {count}",
       "prerelease_checked": "預發佈版本",
       "prerelease_unchecked": "正式版本",
       "prerelease_versions": "預發佈版本",
@@ -2256,7 +2438,33 @@
       "processed_col_script": "腳本",
       "processed_col_operator": "處理人",
       "processed_col_time": "時間",
-      "processed_col_reason": "原因"
+      "processed_col_reason": "原因",
+      "account_deactivated": "This account has been deactivated",
+      "ban_user": "Ban user",
+      "unban_user": "Unban user",
+      "ban_reason": "Ban reason",
+      "ban_reason_placeholder": "Enter a reason for the ban",
+      "ban_duration": "Ban duration",
+      "ban_permanent": "Permanent ban",
+      "ban_1_day": "1 day",
+      "ban_3_days": "3 days",
+      "ban_7_days": "7 days",
+      "ban_30_days": "30 days",
+      "ban_90_days": "90 days",
+      "ban_custom": "Custom",
+      "ban_clean_options": "Cleanup options",
+      "ban_clean_scores": "Remove user ratings",
+      "ban_clean_scripts": "Remove user scripts",
+      "ban_success": "User banned",
+      "unban_success": "User unbanned",
+      "ban_confirm_title": "Confirm ban",
+      "unban_confirm": "Are you sure you want to unban this user?",
+      "user_banned": "Banned",
+      "ban_expire_at": "Ban expires at",
+      "ban_permanent_label": "Permanent",
+      "register_ip": "Registration IP",
+      "ip_location": "IP location",
+      "register_email": "Registration email"
     },
     "save": "儲存",
     "script_list": {
@@ -2269,6 +2477,7 @@
       "status_active": "已發佈",
       "status_all": "全部狀態",
       "status_audit": "審核中",
+      "status_deleted": "已刪除",
       "sort_by_downloads": "下載最多",
       "sort_by_hot": "熱度排序",
       "sort_by_latest": "最新發佈",
@@ -2287,7 +2496,8 @@
       "deactivate_settings": "註銷帳號",
       "passkey_settings": "Passkeys",
       "account_settings": "帳號管理",
-      "account_settings_description": "管理密碼、通行金鑰、第三方綁定等帳號安全設定"
+      "account_settings_description": "管理密碼、通行金鑰、第三方綁定等帳號安全設定",
+      "install_link_settings": "安裝連結"
     },
     "update_failed": "更新失敗，請重試",
     "update_success": "使用者資訊更新成功！",
@@ -2375,6 +2585,26 @@
       "cancel_failed": "取消註銷失敗",
       "applied_at": "申請時間",
       "effective_at": "生效時間"
+    },
+    "contact_email": "Contact email",
+    "email_code_placeholder": "Enter the 6-digit verification code",
+    "email_code_required": "Send and enter the email verification code first",
+    "email_code_resend": "Resend",
+    "email_code_sent": "Verification code sent",
+    "email_help_text": "Displayed publicly so others can contact you. This can differ from your registration email and may be left blank.",
+    "email_send_code": "Send verification code",
+    "email_send_code_countdown": "Resend in {{seconds}}s",
+    "install_link": {
+      "title": "安裝連結",
+      "description": "私有腳本的安裝連結帶有一枚專屬權杖，腳本管理器憑它安裝與檢查更新，因此不需要保持網站登入狀態。連結與你的帳號綁定，請勿分享給未經授權的人。",
+      "reset": "重設安裝連結",
+      "reset_warning_title": "重設會使現有連結立即失效",
+      "reset_warning_content": "重設後，你在所有裝置上已安裝的私有腳本都將無法再檢查更新，需要重新安裝一次。僅在連結可能已外洩時才需要重設。此操作不影響 Webhook 密鑰。",
+      "reset_confirm_title": "確認重設安裝連結？",
+      "reset_confirm_content": "所有裝置上已安裝的私有腳本都需要重新安裝。",
+      "reset_confirm_ok": "確認重設",
+      "reset_success": "安裝連結已重設",
+      "reset_failed": "重設失敗，請稍後再試"
     }
   },
   "ads": {
@@ -2399,5 +2629,8 @@
       "title": "程式碼未通過完整性檢查",
       "help": "如為誤判，請透過網站 FAQ 中的「管理員聯絡方式」申請豁免。"
     }
+  },
+  "announcements": {
+    "title": "Announcements"
   }
 }

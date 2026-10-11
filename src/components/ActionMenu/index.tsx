@@ -23,7 +23,7 @@ export interface ActionMenuProps {
   uid: number | number[];
   deleteLevel: DeleteLevel; // 删除等级 管理员 超级版主 版主
   allowSelfDelete: boolean; // 允许自己删除
-  onDeleteClick: (reason?: string) => void;
+  onDeleteClick: (reason?: string) => Promise<void> | void;
   // 处罚
   punish?: boolean;
   onPunishClick?: () => void;
@@ -252,9 +252,9 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                 okText: t('confirm'),
                 cancelText: t('cancel'),
                 maskClosable: true,
-                onOk: () => {
-                  onDeleteClick();
-                },
+                // 必须把 Promise 交回给 antd：否则 OK 按钮不转圈，
+                // 且弹窗会在请求返回前就关掉（管理员删除分支即是这么做的）。
+                onOk: () => onDeleteClick(),
               });
             }
           },

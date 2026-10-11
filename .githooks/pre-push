@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -eu
+
+locale_changed=0
+base_ref=''
+while read -r local_ref local_oid remote_ref remote_oid; do
+  if [ "$local_oid" = "0000000000000000000000000000000000000000" ]; then
+    continue
+  fi
+  if [ "$remote_oid" = "0000000000000000000000000000000000000000" ]; then
+    if git diff-tree --no-commit-id --name-only -r "$local_oid" -- 'public/locales/*/translations.json' | grep -q .; then
+      locale_changed=1
+      base_ref=$(git merge-base "$local_oid" origin/main 2>/dev/null || git rev-parse "$local_oid^")
+    fi
+  elif ! git diff --quiet "$remote_oid..$local_oid" -- 'public/locales/*/translations.json'; then
+    locale_changed=1
+    base_ref=$remote_oid
+  fi
+done
+
+if [ "$locale_changed" -eq 1 ]; then
+  pnpm run check:i18n -- --base-ref="$base_ref"
+fi

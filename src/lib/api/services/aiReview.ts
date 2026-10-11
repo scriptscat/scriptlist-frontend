@@ -1,4 +1,5 @@
 import { apiClient } from '../client';
+import type { LocalizedSummary } from '@/types/api';
 
 export type AIReviewStatus = 0 | 1 | 2 | 3 | 4 | 5;
 export type AIVerdict = 0 | 1 | 2 | 3;
@@ -17,7 +18,7 @@ export interface AIReviewItem {
   completion_tokens: number;
   latency_ms: number;
   reason: string;
-  summary: string;
+  summary: LocalizedSummary;
   tags: string[];
   createtime: number;
   updatetime: number;

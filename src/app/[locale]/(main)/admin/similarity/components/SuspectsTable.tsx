@@ -1,42 +1,33 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { message, Table } from 'antd';
+import { useState } from 'react';
+import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { similarityService } from '@/lib/api/services/similarity';
 import type { SuspectScriptItem } from '@/lib/api/services/similarity';
-import { APIError } from '@/types/api';
+import { useSimilaritySuspects } from '@/lib/api/hooks/similarity';
+import { useTableStateLocale } from '../../components/tableState';
 
 const PAGE_SIZE = 20;
 
 export default function SuspectsTable() {
   const t = useTranslations('admin.similarity');
-  const [data, setData] = useState<SuspectScriptItem[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
 
-  const load = useCallback(async (p: number) => {
-    setLoading(true);
-    try {
-      const resp = await similarityService.listSuspects({
-        page: p,
-        size: PAGE_SIZE,
-      });
-      setData(resp.list ?? []);
-      setTotal(resp.total ?? 0);
-    } catch (err) {
-      if (err instanceof APIError) message.error(err.msg);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load(page);
-  }, [page, load]);
+  const {
+    list: data,
+    total,
+    isLoading,
+    isRefreshing,
+    error,
+    refresh,
+  } = useSimilaritySuspects({ page, size: PAGE_SIZE });
+  const tableLocale = useTableStateLocale({
+    isLoading,
+    error,
+    onRetry: refresh,
+  });
 
   const columns: ColumnsType<SuspectScriptItem> = [
     {
@@ -73,7 +64,8 @@ export default function SuspectsTable() {
       rowKey={(record) => record.script.id}
       columns={columns}
       dataSource={data}
-      loading={loading}
+      loading={isLoading || isRefreshing}
+      locale={tableLocale}
       pagination={{
         current: page,
         pageSize: PAGE_SIZE,
