@@ -64,6 +64,48 @@ describe('buildServerErrorReport', () => {
     },
   );
 
+  // 「脚本不存在 / 已删除 / 未登录」是页面抛出的预期结果，后端自己有记录，
+  // 报上来只会把真正的故障淹没（上线首日占了全部上报的四成）。
+  it.each([400, 401, 403, 404, 429])(
+    'does not report an expected API error (HTTP %i)',
+    (statusCode) => {
+      const error = Object.assign(new Error('脚本不存在'), {
+        name: 'APIError',
+        statusCode,
+        code: 101004,
+      });
+      expect(buildServerErrorReport(error, request())).toBeNull();
+    },
+  );
+
+  it.each([
+    ['a backend failure', 500],
+    ['a timeout or network error', -1],
+  ])('still reports an API error that is %s', (_label, statusCode) => {
+    const error = Object.assign(new Error('请求超时'), {
+      name: 'APIError',
+      statusCode,
+      code: 0,
+    });
+    expect(buildServerErrorReport(error, request())?.payload.message).toBe(
+      '请求超时',
+    );
+  });
+
+  it('still reports ordinary errors that happen to carry a 4xx-looking field', () => {
+    const error = Object.assign(new Error('boom'), { statusCode: 404 });
+    expect(buildServerErrorReport(error, request())).not.toBeNull();
+  });
+
+  it('does not report a visitor closing the connection mid-render', () => {
+    expect(
+      buildServerErrorReport(
+        new Error('The destination stream closed early.'),
+        request(),
+      ),
+    ).toBeNull();
+  });
+
   it('forwards the visitor identity so the backend attributes the report to them', () => {
     const report = buildServerErrorReport(
       new Error('boom'),

@@ -6,7 +6,7 @@ export interface ScriptManagerAPI {
   isInstalled: (
     name: string,
     namespace: string,
-    callback: (res: { installed: boolean; version: string }) => void,
+    callback: (res?: { installed: boolean; version: string } | null) => void,
   ) => void;
 }
 
@@ -55,9 +55,10 @@ export function checkScriptInstalled(
 
     try {
       api.isInstalled(name, namespace, (res) => {
+        // 有的脚本管理器在脚本未安装时回调不带任何参数
         resolve({
-          installed: res.installed || false,
-          version: res.version,
+          installed: res?.installed || false,
+          version: res?.version,
         });
       });
     } catch (error) {
