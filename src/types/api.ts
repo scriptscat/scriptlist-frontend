@@ -21,8 +21,20 @@ export interface PageRequest {
   size?: number;
 }
 
+/** 失败的那次请求，供错误上报归因到具体接口 */
+export interface APIRequestInfo {
+  method: string;
+  /** 不含查询串的接口路径 */
+  endpoint: string;
+  /** 从发起到失败的毫秒数 */
+  duration: number;
+  contentType?: string;
+}
+
 // API错误类型
 export class APIError extends Error {
+  request?: APIRequestInfo;
+
   constructor(
     public statusCode: number,
     public code: number,

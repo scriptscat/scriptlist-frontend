@@ -1,3 +1,5 @@
+import type { APIRequestInfo } from '@/types/api';
+
 export type ClientErrorKind = 'boundary' | 'uncaught' | 'rejection' | 'ssr';
 
 /** 上报给后端的请求体，字段与长度上限同后端 `ReportClientErrorRequest`。 */
@@ -22,6 +24,8 @@ export interface ErrorReportInput {
   errorId?: string;
   /** 抛出错误的脚本地址（`ErrorEvent.filename`） */
   source?: string;
+  /** 附在消息后的补充信息（如失败的接口）；不参与去重 */
+  detail?: string;
 }
 
 export interface ReportContext {
@@ -120,13 +124,41 @@ export function isControlFlowError(error: unknown): boolean {
   );
 }
 
+/**
+ * 请求失败的错误只有「请求超时」这类消息，看不出是哪个接口；
+ * 取出 `APIError.request` 里记下的方法、路径、状态码与耗时。
+ */
+export function requestDetail(error: unknown): string | undefined {
+  const { request, statusCode } = (error ?? {}) as {
+    request?: APIRequestInfo;
+    statusCode?: number;
+  };
+  if (!request) {
+    return undefined;
+  }
+  const parts = [
+    request.method,
+    request.endpoint,
+    `status=${statusCode}`,
+    `${request.duration}ms`,
+  ];
+  if (request.contentType && !request.contentType.includes('json')) {
+    parts.push(`content-type=${request.contentType}`);
+  }
+  return parts.join(' ');
+}
+
 export function buildPayload(
   input: ErrorReportInput,
   context: ReportContext,
 ): ClientErrorPayload {
+  const message = input.message || 'Unknown error';
   return {
     kind: input.kind,
-    message: (input.message || 'Unknown error').slice(0, LIMITS.message),
+    message: (input.detail ? `${message} [${input.detail}]` : message).slice(
+      0,
+      LIMITS.message,
+    ),
     stack: input.stack?.slice(0, LIMITS.stack),
     digest: input.digest?.slice(0, LIMITS.digest),
     error_id: input.errorId?.slice(0, LIMITS.errorId),

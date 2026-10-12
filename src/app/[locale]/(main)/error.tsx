@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import ErrorPage from '@/components/ErrorPage';
 import { reportClientError } from '@/lib/error-report/client';
-import { generateErrorId } from '@/lib/error-report/core';
+import { generateErrorId, requestDetail } from '@/lib/error-report/core';
 
 export default function Error({
   error,
@@ -24,6 +24,7 @@ export default function Error({
       stack: error.stack,
       digest: error.digest,
       errorId,
+      detail: requestDetail(error),
     });
   }, [error, errorId]);
 

@@ -6,6 +6,7 @@ import {
   isControlFlowError,
   isPageTranslated,
   localeFromPath,
+  requestDetail,
   sanitizeUrl,
   shouldIgnoreError,
 } from './core';
@@ -178,10 +179,62 @@ describe('buildPayload', () => {
     expect(payload.build).toHaveLength(64);
   });
 
+  it('appends the detail to the message', () => {
+    const payload = buildPayload(
+      {
+        kind: 'rejection',
+        message: '请求超时',
+        detail: 'GET /scripts/1 status=-1 20003ms',
+      },
+      context,
+    );
+    expect(payload.message).toBe('请求超时 [GET /scripts/1 status=-1 20003ms]');
+  });
+
   it('never sends an empty message', () => {
     expect(
       buildPayload({ kind: 'rejection', message: '' }, context).message,
     ).not.toBe('');
+  });
+});
+
+describe('requestDetail', () => {
+  const apiError = (over: Record<string, unknown>) =>
+    Object.assign(new Error('请求超时'), { name: 'APIError', ...over });
+
+  it('describes the failed request: method, endpoint, status and duration', () => {
+    const error = apiError({
+      statusCode: -1,
+      request: {
+        method: 'GET',
+        endpoint: '/scripts/8274/state',
+        duration: 20003,
+      },
+    });
+    expect(requestDetail(error)).toBe(
+      'GET /scripts/8274/state status=-1 20003ms',
+    );
+  });
+
+  it('adds the content type when the response was not JSON', () => {
+    const error = apiError({
+      statusCode: 502,
+      request: {
+        method: 'GET',
+        endpoint: '/scripts/1',
+        duration: 31,
+        contentType: 'text/html',
+      },
+    });
+    expect(requestDetail(error)).toBe(
+      'GET /scripts/1 status=502 31ms content-type=text/html',
+    );
+  });
+
+  it('is undefined for errors that did not come from a request', () => {
+    expect(requestDetail(new Error('boom'))).toBeUndefined();
+    expect(requestDetail('boom')).toBeUndefined();
+    expect(requestDetail(null)).toBeUndefined();
   });
 });
 
@@ -217,6 +270,21 @@ describe('createReporter', () => {
     expect(report({ kind: 'boundary', message: 'boom', stack: 'at a' })).toBe(
       false,
     );
+    expect(sent).toHaveLength(1);
+  });
+
+  it('treats the same error as a duplicate even when its detail differs', () => {
+    const { report, sent } = setup();
+    report({
+      kind: 'rejection',
+      message: '请求超时',
+      detail: 'GET /a 20001ms',
+    });
+    report({
+      kind: 'rejection',
+      message: '请求超时',
+      detail: 'GET /a 20007ms',
+    });
     expect(sent).toHaveLength(1);
   });
 

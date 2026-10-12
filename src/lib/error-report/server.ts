@@ -1,5 +1,10 @@
 import { systemService } from '@/lib/api/services/system';
-import { buildPayload, isControlFlowError, localeFromPath } from './core';
+import {
+  buildPayload,
+  isControlFlowError,
+  localeFromPath,
+  requestDetail,
+} from './core';
 import type { ClientErrorPayload } from './core';
 
 /** `onRequestError` 给出的请求信息 */
@@ -73,6 +78,7 @@ export function buildServerErrorReport(
         message: isError ? error.message : String(error),
         stack: isError ? error.stack : undefined,
         digest: (error as { digest?: string } | null)?.digest,
+        detail: requestDetail(error),
       },
       {
         pathname,

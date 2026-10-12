@@ -55,4 +55,21 @@ describe('route error boundary', () => {
     // 用户截图里的 ID 必须能在日志里搜到
     expect(screen.getByText(new RegExp(report.errorId))).toBeInTheDocument();
   });
+
+  it('names the failed request when an API call crashed the page', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const error = Object.assign(new Error('network error'), {
+      name: 'APIError',
+      statusCode: -1,
+      request: { method: 'GET', endpoint: '/scripts', duration: 12 },
+    });
+
+    render(<ErrorBoundaryPage error={error} reset={() => {}} />);
+
+    expect(reportClientError.mock.calls[0][0]).toMatchObject({
+      kind: 'boundary',
+      message: 'network error',
+      detail: 'GET /scripts status=-1 12ms',
+    });
+  });
 });

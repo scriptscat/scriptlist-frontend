@@ -3,7 +3,11 @@
 import { useEffect, useState } from 'react';
 import { languageMap } from '@/i18n/routing';
 import { reportClientError } from '@/lib/error-report/client';
-import { generateErrorId, localeFromPath } from '@/lib/error-report/core';
+import {
+  generateErrorId,
+  localeFromPath,
+  requestDetail,
+} from '@/lib/error-report/core';
 
 // 根布局崩溃时 next-intl 的 Provider 和全局样式都不在了，这里只能自带文案与内联样式。
 // 英文作兜底，再按路径里的语言去取与 500 错误页相同的翻译。
@@ -38,6 +42,7 @@ export default function GlobalError({
       stack: error.stack,
       digest: error.digest,
       errorId,
+      detail: requestDetail(error),
     });
   }, [error, errorId]);
 

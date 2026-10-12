@@ -34,6 +34,21 @@ describe('buildServerErrorReport', () => {
     expect(report?.payload.stack).toContain('用户不允许操作');
   });
 
+  it('names the backend request that failed during rendering', () => {
+    const error = Object.assign(new Error('请求超时'), {
+      name: 'APIError',
+      statusCode: -1,
+      request: { method: 'GET', endpoint: '/scripts', duration: 20004 },
+    });
+    const report = buildServerErrorReport(
+      error,
+      request({ path: '/zh-CN/search?keyword=x' }),
+    );
+    expect(report?.payload.message).toBe(
+      '请求超时 [GET /scripts status=-1 20004ms]',
+    );
+  });
+
   it('keeps the query string but not the sensitive or internal parameters', () => {
     const report = buildServerErrorReport(
       new Error('boom'),

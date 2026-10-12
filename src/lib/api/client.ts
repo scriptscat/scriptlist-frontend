@@ -248,10 +248,33 @@ class APIClient {
     }
   }
 
+  /**
+   * 发起请求并解析响应；失败时把这次请求记到 APIError 上，错误上报才能归因到接口
+   */
+  private async send<T>(
+    endpoint: string,
+    options: RequestOptions = {},
+  ): Promise<T> {
+    const startedAt = Date.now();
+    let response: Response | undefined;
+    try {
+      response = await this._request(endpoint, options);
+      return await this.handleResponse<T>(response);
+    } catch (error) {
+      if (error instanceof APIError) {
+        error.request = {
+          method: (options.method ?? 'GET').toUpperCase(),
+          endpoint: endpoint.split('?')[0],
+          duration: Date.now() - startedAt,
+          contentType: response?.headers.get('content-type') ?? undefined,
+        };
+      }
+      throw error;
+    }
+  }
+
   async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-    return this._request(endpoint, options).then((resp) =>
-      this.handleResponse<T>(resp),
-    );
+    return this.send<T>(endpoint, options);
   }
 
   async requestWithCookie<T>(
@@ -290,8 +313,7 @@ class APIClient {
       }
       options.headers = headers;
 
-      const resp = await this._request(endpoint, options);
-      return this.handleResponse<T>(resp);
+      return this.send<T>(endpoint, options);
     }
     return this.request<T>(endpoint, options);
   }

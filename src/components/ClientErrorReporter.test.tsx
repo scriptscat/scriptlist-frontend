@@ -51,6 +51,24 @@ describe('ClientErrorReporter', () => {
     });
   });
 
+  it('names the failed request when an API call is rejected', () => {
+    render(<ClientErrorReporter />);
+    const error = Object.assign(new Error('请求超时'), {
+      name: 'APIError',
+      statusCode: -1,
+      request: { method: 'GET', endpoint: '/scripts/1/state', duration: 20003 },
+    });
+
+    dispatchRejection(error);
+
+    expect(reportClientError).toHaveBeenCalledWith({
+      kind: 'rejection',
+      message: '请求超时',
+      stack: error.stack,
+      detail: 'GET /scripts/1/state status=-1 20003ms',
+    });
+  });
+
   it('describes rejections whose reason is not an Error', () => {
     render(<ClientErrorReporter />);
 
