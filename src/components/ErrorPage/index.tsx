@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import { useRouter } from '@/i18n/routing';
 import { useEffect, useMemo, useState } from 'react';
+import { generateErrorId } from '@/lib/error-report/core';
 
 const { Paragraph, Text } = Typography;
 
@@ -24,6 +25,8 @@ interface ErrorPageProps {
   showErrorDetails?: boolean;
   showFeedback?: boolean;
   error?: Error & { digest?: string };
+  /** 已上报的错误 ID；不传则只在本页生成一个用于展示 */
+  errorId?: string;
 }
 
 export default function ErrorPage({
@@ -33,12 +36,12 @@ export default function ErrorPage({
   showErrorDetails = true,
   showFeedback = true,
   error,
+  errorId: reportedErrorId,
 }: ErrorPageProps) {
   const t = useTranslations();
   const router = useRouter();
-  const [errorId] = useState(() =>
-    Math.random().toString(36).substr(2, 9).toUpperCase(),
-  );
+  const [generatedErrorId] = useState(generateErrorId);
+  const errorId = reportedErrorId ?? generatedErrorId;
   const errorTime = useMemo(() => new Date().toLocaleString('zh-CN'), []);
 
   useEffect(() => {

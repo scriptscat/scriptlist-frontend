@@ -110,6 +110,7 @@ Data fetching uses SWR with global config: 2s deduping, no focus revalidation, r
 NEXT_PUBLIC_APP_URL   # Client-side app URL
 APP_API_URL           # Server-side API base URL
 APP_API_PROXY         # API proxy destination (used in next.config.ts rewrites)
+NEXT_PUBLIC_BUILD_ID  # Build identifier (CI sets <env>.<short sha>); sent with frontend error reports
 ```
 
 Frontend proxies API calls via Next.js rewrites: `/api/v2/:path*` → `APP_API_PROXY/:path*`. `next.config.ts` also sets global security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`), immutable long-cache headers for `/assets` and `/monaco`, and `optimizePackageImports` for `antd` / `@ant-design/*` / `@iconify/react`. `pnpm` is pinned via `packageManager` (`pnpm@10.x`); use it rather than npm/yarn.

@@ -1,7 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ErrorPage from '@/components/ErrorPage';
+import { reportClientError } from '@/lib/error-report/client';
+import { generateErrorId } from '@/lib/error-report/core';
 
 export default function Error({
   error,
@@ -9,19 +11,28 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  // 页面上显示的 ID 就是上报的 ID：用户截图里有它，就能在日志里搜到这次错误
+  const [errorId] = useState(generateErrorId);
+
   useEffect(() => {
     // 记录错误到控制台
     console.error('Application error:', error);
 
-    // 这里可以添加错误上报逻辑
-    // 例如发送到错误监控服务
-  }, [error]);
+    reportClientError({
+      kind: 'boundary',
+      message: error.message,
+      stack: error.stack,
+      digest: error.digest,
+      errorId,
+    });
+  }, [error, errorId]);
 
   // 对于500类错误，显示专门的500错误页面
   return (
     <ErrorPage
       statusCode={500}
       error={error}
+      errorId={errorId}
       showErrorDetails={true}
       showFeedback={true}
     />
