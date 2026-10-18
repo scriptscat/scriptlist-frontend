@@ -142,6 +142,11 @@ describe('ScriptRatingClient 的初始数据', () => {
     );
 
     expect(lastListProps?.ratings).toHaveLength(0);
+    expect(useScoreListMock).toHaveBeenCalledWith(
+      1,
+      expect.objectContaining({ page: 1, size: 10 }),
+      null,
+    );
   });
 });
 
