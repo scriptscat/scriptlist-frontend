@@ -71,6 +71,12 @@ export default function ScriptRatingClient({
     }
   }, [scriptId]);
 
+  // 详情页不再为首屏预取评分状态；进入评分 Tab 后补齐分布数据。
+  useEffect(() => {
+    if (initialData !== null) return;
+    void updateRatingStats();
+  }, [initialData, updateRatingStats]);
+
   // 构建查询参数
   const queryParams = useMemo(() => {
     const sortMap: Record<SortOption, { sort: string; order: 'asc' | 'desc' }> =
