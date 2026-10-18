@@ -1,7 +1,16 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Card, Form, Input, message, Popconfirm, Progress } from 'antd';
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  message,
+  Popconfirm,
+  Progress,
+  Switch,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { LoadingBlock } from '@/components/ui/LoadingBlock';
 import { adminService } from '@/lib/api/services/admin';
@@ -123,12 +132,16 @@ export default function SystemConfigClient() {
     }
   };
 
-  const handleSave = async (group: string, keys: string[]) => {
+  const handleSave = async (
+    group: string,
+    keys: string[],
+    defaults: Record<string, string> = {},
+  ) => {
     setSaving(group);
     try {
       const items: SystemConfigItem[] = keys.map((key) => ({
         key,
-        value: configs[key] || '',
+        value: configs[key] || defaults[key] || '',
       }));
       await adminService.updateSystemConfigs(items);
       message.success(t('save_success'));
@@ -158,12 +171,15 @@ export default function SystemConfigClient() {
   }
 
   const turnstileKeys = [
+    'captcha.turnstile.enabled',
     'captcha.turnstile.site_key',
     'captcha.turnstile.secret_key',
   ];
   const ucenterKeys = ['ucenter.api', 'ucenter.key', 'ucenter.appid'];
   const aiKeys = ['ai.base_url', 'ai.api_key', 'ai.model', 'ai.system_prompt'];
   const githubKeys = ['github.pat'];
+  // 未配置过开关时后端视为开启
+  const turnstileEnabled = configs['captcha.turnstile.enabled'] !== 'false';
 
   const migrateRunning = migrateStatus?.running ?? false;
   const migrateTotal = migrateStatus?.total ?? 0;
@@ -182,6 +198,17 @@ export default function SystemConfigClient() {
         {/* Turnstile */}
         <Card title={t('turnstile_title')} size="small">
           <Form layout="vertical">
+            <Form.Item
+              label={t('turnstile_enabled')}
+              extra={t('turnstile_enabled_extra')}
+            >
+              <Switch
+                checked={turnstileEnabled}
+                onChange={(checked) =>
+                  updateConfig('captcha.turnstile.enabled', String(checked))
+                }
+              />
+            </Form.Item>
             <Form.Item label={t('turnstile_site_key')}>
               <Input
                 value={configs['captcha.turnstile.site_key'] || ''}
@@ -201,7 +228,11 @@ export default function SystemConfigClient() {
             <Button
               type="primary"
               loading={saving === 'turnstile'}
-              onClick={() => handleSave('turnstile', turnstileKeys)}
+              onClick={() =>
+                handleSave('turnstile', turnstileKeys, {
+                  'captcha.turnstile.enabled': 'true',
+                })
+              }
             >
               {t('save_button')}
             </Button>

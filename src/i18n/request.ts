@@ -21,6 +21,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale: finalLocale,
+    // 下发给客户端组件，水合时用同一个「现在」算相对时间（见 useSemDateTime）
+    now: new Date(),
     messages: (
       await import(
         `../../public/locales/${languageMap[finalLocale].locale}/translations.json`

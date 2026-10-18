@@ -30,6 +30,8 @@ export interface ActionMenuProps {
   // 举报
   scriptId?: number;
   onReportClick?: () => void;
+  // 隐藏「举报」项（如仅管理员可见的举报详情页）
+  hideReport?: boolean;
   // 分享（移动端将分享收进更多菜单）
   onShareClick?: () => void;
   // AI 审核
@@ -48,6 +50,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   onPunishClick,
   scriptId,
   onReportClick,
+  hideReport,
   allowAIReview,
   aiReviewLoading,
   onAIReviewClick,
@@ -138,7 +141,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
     }
   }
 
-  if (!user.user || !authorMap.has(user.user.user_id)) {
+  if (!hideReport && (!user.user || !authorMap.has(user.user.user_id))) {
     items.push({
       label: (
         <Space className="anticon-middle">

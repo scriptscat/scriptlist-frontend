@@ -8,6 +8,8 @@ export const API_CONFIG = {
     process.env.NEXT_PUBLIC_APP_URL + '/api/v2' ||
     '',
   timeout: 20000,
+  // 上传走慢速上行链路时 20s 不够（几百 KB 就可能超时），且有进度条可见，放宽到 5 分钟
+  uploadTimeout: 300000,
   defaultHeaders: {
     'Content-Type': 'application/json',
   },

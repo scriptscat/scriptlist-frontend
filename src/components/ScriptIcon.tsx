@@ -54,10 +54,17 @@ export default function ScriptIcon({
   fallback,
   className = '',
 }: ScriptIconProps) {
-  const [hasError, setHasError] = useState(false);
-  const iconUrl = ScriptUtils.icon(script);
+  const [iconSource, setIconSource] = useState<
+    'thumbnail' | 'original' | 'fallback'
+  >('thumbnail');
+  const iconUrl =
+    iconSource === 'thumbnail'
+      ? ScriptUtils.icon(script, size)
+      : iconSource === 'original'
+        ? ScriptUtils.iconOriginal(script)
+        : null;
 
-  if (iconUrl && !hasError) {
+  if (iconUrl) {
     return (
       // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
       <img
@@ -67,7 +74,11 @@ export default function ScriptIcon({
         loading="lazy"
         className={`flex-shrink-0 object-cover ${className}`}
         style={{ borderRadius: radius }}
-        onError={() => setHasError(true)}
+        onError={() =>
+          setIconSource((source) =>
+            source === 'thumbnail' ? 'original' : 'fallback',
+          )
+        }
       />
     );
   }

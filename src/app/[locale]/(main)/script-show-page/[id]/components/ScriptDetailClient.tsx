@@ -21,7 +21,6 @@ import {
   Badge,
   Input,
   Select,
-  Tabs,
 } from 'antd';
 import {
   DownloadOutlined,
@@ -47,12 +46,6 @@ import { useScript, useScriptState } from './ScriptContext';
 import { useUser } from '@/contexts/UserContext';
 import { useSemDateTime, formatCompactNumber } from '@/lib/utils/semdate';
 import { Link, useRouter } from '@/i18n/routing';
-import dynamic from 'next/dynamic';
-import MarkdownViewLoading from '@/components/MarkdownView/MarkdownViewLoading';
-// 不给 `loading` 的话 fallback 是 `null`，客户端导航时整段正文会塌成 0px。
-const MarkdownView = dynamic(() => import('@/components/MarkdownView'), {
-  loading: () => <MarkdownViewLoading height={360} />,
-});
 import { ScriptUtils } from '../utils';
 import { getLicenseDisplay } from '@/lib/license';
 import { copyToClipboard, hashColor } from '@/lib/utils/utils';
@@ -64,16 +57,14 @@ import { useScriptWatch, useScriptFavorite } from '@/lib/api/hooks';
 import { WatchLevel } from '../types';
 import { scriptService } from '@/lib/api/services/scripts';
 import { aiReviewService } from '@/lib/api/services/aiReview';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import ActionMenu from '@/components/ActionMenu';
 import AdSlot from '@/components/AdSlot';
 import SideRails from '@/components/AdSlot/SideRails';
 import { railContainerProps } from '@/components/AdSlot/railLayout';
 import ScriptIcon from '@/components/ScriptIcon';
 import type { AdSlotItem } from '@/lib/api/services/advertise';
-import ScriptVersionsClient from '../version/components/ScriptVersionsClient';
-import ScriptRatingClient from '../comment/components/ScriptRatingClient';
-import ScriptMetadataExplainer from './ScriptMetadataExplainer';
+import ScriptDetailTabs from './ScriptDetailTabs';
 import ScriptPermissionsCard from './overview/ScriptPermissionsCard';
 import type {
   ScoreListItem,
@@ -81,9 +72,8 @@ import type {
   VersionStatResponse,
 } from '@/lib/api/services/scripts/scripts';
 import { APIError } from '@/types/api';
-import type { ListData, LocalizedSummary } from '@/types/api';
+import type { ListData } from '@/types/api';
 import type { RatingStats } from '../comment/components/rating';
-import { selectLocalizedSummary } from '../localizedSummary';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -107,51 +97,6 @@ interface ScriptDetailClientProps {
     right?: { ad: AdSlotItem | null };
     hasAd: boolean;
   };
-}
-
-function CountChip({ value }: { value: number }) {
-  return (
-    <span className="ml-1.5 inline-flex items-center rounded-full bg-gray-100 px-1.5 text-xs font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-400">
-      {value}
-    </span>
-  );
-}
-
-function AISummary({ summary }: { summary: LocalizedSummary }) {
-  const t = useTranslations('script.detail');
-  const locale = useLocale();
-  const [expanded, setExpanded] = useState(true);
-  const text = selectLocalizedSummary(summary, locale);
-  if (!text.trim()) return null;
-  return (
-    <div className="mb-4 rounded-md border-l-[3px] border-indigo-500 bg-indigo-50 px-3.5 py-2.5 dark:border-indigo-400 dark:bg-indigo-950/40">
-      <button
-        type="button"
-        onClick={() => setExpanded((v) => !v)}
-        className="flex w-full items-center gap-1.5"
-        aria-expanded={expanded}
-      >
-        <Icon
-          icon="mdi:auto-awesome"
-          className="flex-shrink-0 text-base text-indigo-600 dark:text-indigo-400"
-        />
-        <span className="text-xs font-semibold tracking-wide text-indigo-700 dark:text-indigo-300">
-          {t('summary.label')}
-        </span>
-        <Icon
-          icon="mdi:chevron-down"
-          className={`ml-auto flex-shrink-0 text-base text-indigo-400 transition-transform dark:text-indigo-500 ${
-            expanded ? '' : '-rotate-90'
-          }`}
-        />
-      </button>
-      {expanded && (
-        <div className="mt-1.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-          {text}
-        </div>
-      )}
-    </div>
-  );
 }
 
 // 生成@require链接的函数
@@ -743,81 +688,6 @@ export default function ScriptDetailClient({
     ],
   );
 
-  const detailTabs = useMemo(
-    () => [
-      {
-        key: 'description',
-        label: t('tabs.description'),
-        children: (
-          <div>
-            {script.summary && <AISummary summary={script.summary} />}
-            <div className="prose prose-sm max-w-3xl dark:prose-invert">
-              <MarkdownView
-                id="readme"
-                content={content}
-                resourceBaseUrl={contentBaseUrl}
-                resourceRootUrl={contentRootUrl}
-              />
-            </div>
-          </div>
-        ),
-      },
-      {
-        key: 'versions',
-        label: (
-          <span className="inline-flex items-center">
-            {t('tabs.versions')}
-            <CountChip value={initialVersionData?.total ?? 0} />
-          </span>
-        ),
-        children: (
-          <ScriptVersionsClient
-            initialVersionData={initialVersionData}
-            versionStat={versionStat}
-            initialPage={1}
-            initialPageSize={10}
-            embedded
-            initialError={versionError}
-          />
-        ),
-      },
-      {
-        key: 'ratings',
-        label: (
-          <span className="inline-flex items-center">
-            {t('tabs.ratings')}
-            <CountChip value={initialRatingStats.totalRatings} />
-          </span>
-        ),
-        children: (
-          <ScriptRatingClient
-            initialData={initialScoreList}
-            initialRatingStats={initialRatingStats}
-            scriptId={script.id}
-            embedded
-          />
-        ),
-      },
-      {
-        key: 'metadata',
-        label: t('tabs.metadata'),
-        children: <ScriptMetadataExplainer meta={script.script.meta_json} />,
-      },
-    ],
-    [
-      content,
-      initialRatingStats,
-      initialScoreList,
-      initialVersionData,
-      script.id,
-      script.summary,
-      script.script.meta_json,
-      t,
-      versionError,
-      versionStat,
-    ],
-  );
-
   // 数据统计卡（桌面侧栏与移动端共用，移动端展示在描述上方）
   const statsCard = (
     <Card
@@ -1118,17 +988,16 @@ export default function ScriptDetailClient({
                 initialData={bannerAd}
               />
 
-              {/* 内容 Tab 卡 */}
-              <Card className="shadow-sm" classNames={{ body: '!p-0' }}>
-                <Tabs
-                  items={detailTabs}
-                  size="middle"
-                  classNames={{
-                    header: '!mb-0 !px-4 sm:!px-6',
-                    content: '!px-4 !py-5 sm:!px-6 sm:!pb-6',
-                  }}
-                />
-              </Card>
+              <ScriptDetailTabs
+                content={content}
+                contentBaseUrl={contentBaseUrl}
+                contentRootUrl={contentRootUrl}
+                initialVersionData={initialVersionData}
+                versionStat={versionStat}
+                versionError={versionError}
+                initialScoreList={initialScoreList}
+                initialRatingStats={initialRatingStats}
+              />
             </div>
           </div>
 

@@ -73,15 +73,24 @@ export class ScriptUtils {
   }
 
   /**
-   * 返回图标的后端代理 URL。
+   * 返回图标的后端缩略图代理 URL。
    *
-   * 图标一律经 /api/v2/scripts/:id/icon 走 scriptcat.org,浏览器不再直连
-   * 作者填的第三方站点。meta_json 里的原始值只用来判断「有没有图标」,
-   * URL 由 id + updatetime 重建,因此对已 slim 过的数据同样幂等。
-   *
-   * 没有图标时返回 null,调用方渲染兜底(不必请求接口)。
+   * 只使用后端已确认的 64/128 两个 preset：小于等于 64 的渲染尺寸
+   * 使用 64，其他尺寸使用 128，避免把任意用户输入拼到 URL。
    */
-  static icon(script: ScriptIconSource): string | null {
+  static icon(script: ScriptIconSource, size: number = 64): string | null {
+    const meta = script.script?.meta_json;
+    const raw = meta?.icon?.[0] ?? meta?.iconURL?.[0];
+    if (!raw) {
+      return null;
+    }
+    const preset = size <= 64 ? 64 : 128;
+    const t = script.updatetime ? `?t=${script.updatetime}` : '';
+    return `/api/v2/scripts/${script.id}/icon/thumb/${preset}${t}`;
+  }
+
+  /** 缩略图不可用时使用的原图代理 URL。 */
+  static iconOriginal(script: ScriptIconSource): string | null {
     const meta = script.script?.meta_json;
     const raw = meta?.icon?.[0] ?? meta?.iconURL?.[0];
     if (!raw) {

@@ -98,6 +98,15 @@ export interface RequestOptions extends RequestInit {
 }
 
 /**
+ * 上传选项
+ */
+export interface UploadOptions {
+  timeout?: number;
+  /** 上传进度回调，参数为 0-100 的百分比 */
+  onProgress?: (percent: number) => void;
+}
+
+/**
  * API客户端类
  */
 class APIClient {
@@ -239,10 +248,33 @@ class APIClient {
     }
   }
 
+  /**
+   * 发起请求并解析响应；失败时把这次请求记到 APIError 上，错误上报才能归因到接口
+   */
+  private async send<T>(
+    endpoint: string,
+    options: RequestOptions = {},
+  ): Promise<T> {
+    const startedAt = Date.now();
+    let response: Response | undefined;
+    try {
+      response = await this._request(endpoint, options);
+      return await this.handleResponse<T>(response);
+    } catch (error) {
+      if (error instanceof APIError) {
+        error.request = {
+          method: (options.method ?? 'GET').toUpperCase(),
+          endpoint: endpoint.split('?')[0],
+          duration: Date.now() - startedAt,
+          contentType: response?.headers.get('content-type') ?? undefined,
+        };
+      }
+      throw error;
+    }
+  }
+
   async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
-    return this._request(endpoint, options).then((resp) =>
-      this.handleResponse<T>(resp),
-    );
+    return this.send<T>(endpoint, options);
   }
 
   async requestWithCookie<T>(
@@ -281,8 +313,7 @@ class APIClient {
       }
       options.headers = headers;
 
-      const resp = await this._request(endpoint, options);
-      return this.handleResponse<T>(resp);
+      return this.send<T>(endpoint, options);
     }
     return this.request<T>(endpoint, options);
   }
@@ -336,6 +367,52 @@ class APIClient {
           : JSON.stringify(data)
         : undefined,
       ...options,
+    });
+  }
+
+  /**
+   * 上传文件（仅客户端）
+   * fetch 无法获取上传进度，这里使用 XMLHttpRequest
+   */
+  upload<T>(
+    endpoint: string,
+    data: FormData,
+    options: UploadOptions = {},
+  ): Promise<T> {
+    const { timeout = API_CONFIG.uploadTimeout, onProgress } = options;
+
+    return new Promise<T>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', this.buildURL(endpoint));
+      xhr.withCredentials = true;
+      xhr.timeout = timeout;
+
+      if (onProgress) {
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable && e.total > 0) {
+            onProgress(Math.round((e.loaded / e.total) * 100));
+          }
+        };
+      }
+
+      xhr.onload = () => {
+        let resp: APIResponse<T>;
+        try {
+          resp = JSON.parse(xhr.responseText);
+        } catch (error) {
+          reject(new APIError(xhr.status, -1, '解析响应数据失败', error));
+          return;
+        }
+        if (resp.code !== 0) {
+          reject(new APIError(xhr.status, resp.code, resp.msg, resp));
+          return;
+        }
+        resolve(resp.data as T);
+      };
+      xhr.ontimeout = () => reject(new APIError(-1, 0, '请求超时'));
+      xhr.onerror = () => reject(new APIError(-1, 0, '网络错误'));
+
+      xhr.send(data);
     });
   }
 

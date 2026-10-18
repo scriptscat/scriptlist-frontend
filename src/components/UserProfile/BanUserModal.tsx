@@ -61,6 +61,7 @@ export default function BanUserModal({
         expire_at: expireAt,
         clean_scores: values.clean_scores || false,
         clean_scripts: values.clean_scripts || false,
+        clean_issues: values.clean_issues || false,
       });
 
       message.success(t('ban_success'));
@@ -96,6 +97,7 @@ export default function BanUserModal({
           duration: 0,
           clean_scores: false,
           clean_scripts: false,
+          clean_issues: false,
         }}
       >
         <Form.Item name="reason" label={t('ban_reason')}>
@@ -118,6 +120,9 @@ export default function BanUserModal({
             </Form.Item>
             <Form.Item name="clean_scripts" valuePropName="checked" noStyle>
               <Checkbox>{t('ban_clean_scripts')}</Checkbox>
+            </Form.Item>
+            <Form.Item name="clean_issues" valuePropName="checked" noStyle>
+              <Checkbox>{t('ban_clean_issues')}</Checkbox>
             </Form.Item>
           </Space>
         </Form.Item>

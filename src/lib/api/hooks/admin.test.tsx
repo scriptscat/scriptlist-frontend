@@ -6,11 +6,25 @@ import { SWRConfig } from 'swr';
 import { swrConfig } from '@/lib/swr-config';
 import { APIError } from '@/types/api';
 import type { ListData } from '@/types/api';
-import { useAdminList, useAdminUsers } from './admin';
+import {
+  useAdminContentReport,
+  useContentReportActions,
+  useAdminContentReportPendingCount,
+  useAdminContentReports,
+  useAdminList,
+  useAdminUsers,
+} from './admin';
 import { adminService } from '@/lib/api/services/admin';
 
 vi.mock('@/lib/api/services/admin', () => ({
-  adminService: { listUsers: vi.fn() },
+  adminService: {
+    listUsers: vi.fn(),
+    listContentReports: vi.fn(),
+    getContentReportPendingCount: vi.fn(),
+    getContentReport: vi.fn(),
+    handleContentReport: vi.fn(),
+    reopenContentReport: vi.fn(),
+  },
 }));
 
 /**
@@ -159,5 +173,131 @@ describe('useAdminUsers', () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(adminService.listUsers).toHaveBeenCalledWith(1, 20, undefined);
+  });
+});
+
+describe('内容举报 hooks', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('useAdminContentReports 把筛选与分页传给 service，key 含参数', async () => {
+    vi.mocked(adminService.listContentReports).mockResolvedValue(listOf([], 0));
+    const { result } = renderHook(
+      () =>
+        useAdminContentReports({
+          page: 2,
+          status: 1,
+          targetType: 'issue',
+        }),
+      { wrapper },
+    );
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(adminService.listContentReports).toHaveBeenCalledWith({
+      page: 2,
+      size: 20,
+      status: 1,
+      target_type: 'issue',
+    });
+  });
+
+  it('useAdminContentReportPendingCount 返回 count', async () => {
+    vi.mocked(adminService.getContentReportPendingCount).mockResolvedValue({
+      count: 5,
+    });
+    const { result } = renderHook(() => useAdminContentReportPendingCount(), {
+      wrapper,
+    });
+    await waitFor(() => expect(result.current.count).toBe(5));
+  });
+
+  it('useAdminContentReport(null) 不发请求；有 id 才取详情', async () => {
+    vi.mocked(adminService.getContentReport).mockResolvedValue({
+      id: 9,
+    } as never);
+    const { result, rerender } = renderHook(
+      ({ id }: { id: number | null }) => useAdminContentReport(id),
+      { wrapper, initialProps: { id: null as number | null } },
+    );
+    expect(adminService.getContentReport).not.toHaveBeenCalled();
+    rerender({ id: 9 });
+    await waitFor(() => expect(result.current.data?.id).toBe(9));
+    expect(adminService.getContentReport).toHaveBeenCalledWith(9);
+  });
+});
+
+describe('useContentReportActions', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  /** 同一个 provider 里挂上三个会被刷新的 key，验证处理后全部重新请求。 */
+  function setup() {
+    vi.mocked(adminService.listContentReports).mockResolvedValue(listOf([]));
+    vi.mocked(adminService.getContentReportPendingCount).mockResolvedValue({
+      count: 1,
+    });
+    vi.mocked(adminService.getContentReport).mockResolvedValue({} as never);
+    return renderHook(
+      () => ({
+        list: useAdminContentReports({ page: 1, status: 1 }),
+        badge: useAdminContentReportPendingCount(),
+        detail: useAdminContentReport(7),
+        actions: useContentReportActions(),
+      }),
+      { wrapper },
+    );
+  }
+
+  it('handle 以 {action, note} 调用服务，并刷新列表 / 徽标 / 详情', async () => {
+    vi.mocked(adminService.handleContentReport).mockResolvedValue({});
+    const { result } = setup();
+    await waitFor(() => expect(result.current.detail.data).toBeDefined());
+    vi.mocked(adminService.listContentReports).mockClear();
+    vi.mocked(adminService.getContentReportPendingCount).mockClear();
+    vi.mocked(adminService.getContentReport).mockClear();
+
+    await act(async () => {
+      await result.current.actions.handle(7, { action: 'resolve', note: 'x' });
+    });
+
+    expect(adminService.handleContentReport).toHaveBeenCalledWith(7, {
+      action: 'resolve',
+      note: 'x',
+    });
+    await waitFor(() => {
+      expect(adminService.listContentReports).toHaveBeenCalled();
+      expect(adminService.getContentReportPendingCount).toHaveBeenCalled();
+      expect(adminService.getContentReport).toHaveBeenCalled();
+    });
+  });
+
+  it('reopen 调用服务并刷新三处', async () => {
+    vi.mocked(adminService.reopenContentReport).mockResolvedValue({});
+    const { result } = setup();
+    await waitFor(() => expect(result.current.detail.data).toBeDefined());
+    vi.mocked(adminService.getContentReportPendingCount).mockClear();
+
+    await act(async () => {
+      await result.current.actions.reopen(7);
+    });
+
+    expect(adminService.reopenContentReport).toHaveBeenCalledWith(7);
+    await waitFor(() =>
+      expect(adminService.getContentReportPendingCount).toHaveBeenCalled(),
+    );
+  });
+
+  it('失败时抛出原错误且不刷新', async () => {
+    const err = new APIError(400, 112010, '该举报已处理');
+    vi.mocked(adminService.handleContentReport).mockRejectedValue(err);
+    const { result } = setup();
+    await waitFor(() => expect(result.current.detail.data).toBeDefined());
+    vi.mocked(adminService.getContentReportPendingCount).mockClear();
+
+    await expect(
+      result.current.actions.handle(7, { action: 'reject' }),
+    ).rejects.toBe(err);
+    expect(adminService.getContentReportPendingCount).not.toHaveBeenCalled();
   });
 });

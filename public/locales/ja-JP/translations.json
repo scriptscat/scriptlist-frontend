@@ -434,6 +434,8 @@
       "save_button": "保存",
       "save_success": "保存しました",
       "title": "システム設定",
+      "turnstile_enabled": "人間確認を有効化",
+      "turnstile_enabled_extra": "オフにすると、ログイン・登録・パスワード再設定で人間確認を行いません",
       "turnstile_site_key": "サイトキー",
       "turnstile_secret_key": "シークレットキー",
       "turnstile_title": "Cloudflare Turnstile",
@@ -669,7 +671,48 @@
       "col_createtime": "Created at",
       "col_actions": "Actions",
       "action_view": "View",
-      "filter_status": "Filter by status"
+      "filter_status": "Filter by status",
+      "tab_script": "スクリプトの通報",
+      "tab_content": "コンテンツの通報",
+      "content": {
+        "status_all": "すべて",
+        "status_1": "未処理",
+        "status_2": "処理済み",
+        "status_3": "却下",
+        "type_all": "すべての種類",
+        "type_score": "レビュー",
+        "type_issue": "フィードバック",
+        "type_issue_comment": "フィードバックへの返信",
+        "col_type": "種類",
+        "col_summary": "通報されたコンテンツ",
+        "col_author": "投稿者",
+        "col_times": "件数",
+        "target_deleted": "（コンテンツは削除されました）",
+        "action_handle": "対応",
+        "drawer_title": "コンテンツ通報 #{id}",
+        "view_origin": "元の場所で表示",
+        "published_at": "投稿日時 {time}",
+        "handler": "対応者",
+        "handle_note": "対応メモ",
+        "no_note": "（記入なし）",
+        "result_deleted": "コンテンツ削除済み",
+        "result_resolved": "処理済み",
+        "result_rejected": "却下",
+        "snapshot": "通報されたコンテンツ",
+        "records": "通報履歴（{count}）",
+        "load_failed": "読み込みに失敗しました",
+        "retry": "再試行",
+        "action_reject": "却下",
+        "action_resolve": "対応済みにする",
+        "action_delete": "コンテンツを削除して完了",
+        "action_reopen": "再オープン",
+        "delete_confirm_title": "このコンテンツを削除しますか？",
+        "delete_confirm_desc": "コンテンツは完全に削除され、このコンテンツに対する未処理の通報はすべて完了になります。",
+        "note_hint": "管理者のみ表示",
+        "note_placeholder": "対応メモ（任意）",
+        "action_success": "操作が完了しました",
+        "action_failed": "操作に失敗しました。もう一度お試しください"
+      }
     }
   },
   "auth": {
@@ -812,6 +855,54 @@
       "loading_editor": "エディターを読み込み中...",
       "placeholder": "内容を入力してください...",
       "uploading_image": "画像をアップロード中..."
+    },
+    "contentReport": {
+      "title_score": "レビューを通報",
+      "title_issue": "フィードバックを通報",
+      "title_issue_comment": "フィードバックへの返信を通報",
+      "quote_score": "{name} さんのレビュー",
+      "quote_issue": "{name} さんのフィードバック「{title}」",
+      "quote_issue_comment": "{name} さんの返信",
+      "reason_label": "通報の理由",
+      "reasons": {
+        "spam": {
+          "name": "スパム・広告",
+          "desc": "誘導、宣伝、連投"
+        },
+        "abuse": {
+          "name": "誹謗中傷",
+          "desc": "個人攻撃、差別、嫌がらせ"
+        },
+        "porn": {
+          "name": "性的・低俗",
+          "desc": "性的・暴力的・不快な内容"
+        },
+        "illegal": {
+          "name": "違法・規約違反",
+          "desc": "違法情報、詐欺、悪意のあるリンク"
+        },
+        "misleading": {
+          "name": "不正評価・虚偽内容",
+          "desc": "スクリプトと無関係、偽のレビュー"
+        },
+        "other": {
+          "name": "その他",
+          "desc": "補足説明に記入してください"
+        }
+      },
+      "note_label": "補足説明",
+      "note_optional": "（任意）",
+      "note_required_mark": "（必須）",
+      "note_placeholder": "問題の内容を記入してください",
+      "note_required_error": "「その他」を選んだ場合は説明を記入してください",
+      "note_too_long_error": "補足説明は 500 文字以内で入力してください",
+      "privacy": "通報内容は管理者のみに表示され、通報された人には誰が通報したか分かりません。",
+      "submit": "通報する",
+      "cancel": "キャンセル",
+      "success": "通報を送信しました。コミュニティへのご協力ありがとうございます。",
+      "duplicate": "このコンテンツはすでに通報済みです。管理者が対応しますのでお待ちください。",
+      "not_found": "コンテンツが存在しないか、削除されています",
+      "submit_failed": "通報の送信に失敗しました。しばらくしてからもう一度お試しください"
     }
   },
   "error": {
@@ -2455,6 +2546,7 @@
       "ban_clean_options": "Cleanup options",
       "ban_clean_scores": "Remove user ratings",
       "ban_clean_scripts": "Remove user scripts",
+      "ban_clean_issues": "ユーザーのフィードバックと返信を削除",
       "ban_success": "User banned",
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",

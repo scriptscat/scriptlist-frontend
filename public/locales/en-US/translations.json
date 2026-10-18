@@ -498,6 +498,8 @@
       "save_button": "Save",
       "save_success": "Saved successfully",
       "title": "System Configuration",
+      "turnstile_enabled": "Enable verification",
+      "turnstile_enabled_extra": "When off, login, registration and password reset skip the human verification",
       "turnstile_site_key": "Site Key",
       "turnstile_secret_key": "Secret Key",
       "turnstile_title": "Cloudflare Turnstile",
@@ -669,7 +671,48 @@
       "col_createtime": "Created at",
       "col_actions": "Actions",
       "action_view": "View",
-      "filter_status": "Filter by status"
+      "filter_status": "Filter by status",
+      "tab_script": "Script reports",
+      "tab_content": "Content reports",
+      "content": {
+        "status_all": "All",
+        "status_1": "Pending",
+        "status_2": "Resolved",
+        "status_3": "Rejected",
+        "type_all": "All types",
+        "type_score": "Review",
+        "type_issue": "Feedback",
+        "type_issue_comment": "Feedback reply",
+        "col_type": "Type",
+        "col_summary": "Reported content",
+        "col_author": "Author",
+        "col_times": "Count",
+        "target_deleted": "(Content deleted)",
+        "action_handle": "Handle",
+        "drawer_title": "Content report #{id}",
+        "view_origin": "View in place",
+        "published_at": "Posted {time}",
+        "handler": "Handled by",
+        "handle_note": "Note",
+        "no_note": "(none)",
+        "result_deleted": "Content deleted",
+        "result_resolved": "Resolved",
+        "result_rejected": "Rejected",
+        "snapshot": "Reported content",
+        "records": "Reports ({count})",
+        "load_failed": "Failed to load",
+        "retry": "Retry",
+        "action_reject": "Reject",
+        "action_resolve": "Mark as resolved",
+        "action_delete": "Delete content and close",
+        "action_reopen": "Reopen",
+        "delete_confirm_title": "Delete this content?",
+        "delete_confirm_desc": "The content will be permanently deleted and all pending reports on it will be closed.",
+        "note_hint": "Visible to admins only",
+        "note_placeholder": "Handling note (optional)",
+        "action_success": "Done",
+        "action_failed": "Action failed, please try again"
+      }
     }
   },
   "auth": {
@@ -812,6 +855,54 @@
       "loading_editor": "Loading editor...",
       "placeholder": "Please enter content...",
       "uploading_image": "Uploading image..."
+    },
+    "contentReport": {
+      "title_score": "Report review",
+      "title_issue": "Report feedback",
+      "title_issue_comment": "Report feedback reply",
+      "quote_score": "Review by {name}",
+      "quote_issue": "Feedback by {name}: \"{title}\"",
+      "quote_issue_comment": "Reply by {name}",
+      "reason_label": "Reason",
+      "reasons": {
+        "spam": {
+          "name": "Spam / ads",
+          "desc": "Promotion, traffic diversion, flooding"
+        },
+        "abuse": {
+          "name": "Abuse",
+          "desc": "Personal attacks, discrimination, harassment"
+        },
+        "porn": {
+          "name": "Pornographic / vulgar",
+          "desc": "Sexual, violent or disturbing content"
+        },
+        "illegal": {
+          "name": "Illegal",
+          "desc": "Illegal info, scams, malicious links"
+        },
+        "misleading": {
+          "name": "Fake ratings / misleading",
+          "desc": "Unrelated to the script, fake reviews"
+        },
+        "other": {
+          "name": "Other",
+          "desc": "Please explain in the note"
+        }
+      },
+      "note_label": "Additional details",
+      "note_optional": "(optional)",
+      "note_required_mark": "(required)",
+      "note_placeholder": "Describe the problem",
+      "note_required_error": "Please provide details when choosing \"Other\"",
+      "note_too_long_error": "Details cannot exceed 500 characters",
+      "privacy": "Reports are only visible to administrators. The reported user will not know who reported them.",
+      "submit": "Submit report",
+      "cancel": "Cancel",
+      "success": "Report submitted. Thank you for helping keep the community healthy.",
+      "duplicate": "You have already reported this content. Administrators will handle it soon.",
+      "not_found": "The content does not exist or has been deleted",
+      "submit_failed": "Failed to submit the report, please try again later"
     }
   },
   "error": {
@@ -2463,6 +2554,7 @@
       "ban_clean_options": "Cleanup options",
       "ban_clean_scores": "Remove user ratings",
       "ban_clean_scripts": "Remove user scripts",
+      "ban_clean_issues": "Remove user feedback and replies",
       "ban_success": "User banned",
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",

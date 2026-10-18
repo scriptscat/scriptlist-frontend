@@ -434,6 +434,8 @@
       "save_button": "Speichern",
       "save_success": "Erfolgreich gespeichert",
       "title": "Systemkonfiguration",
+      "turnstile_enabled": "Verifizierung aktivieren",
+      "turnstile_enabled_extra": "Wenn deaktiviert, entfällt die Menschen-Verifizierung bei Anmeldung, Registrierung und Passwort-Zurücksetzung",
       "turnstile_site_key": "Website-Schlüssel (Site Key)",
       "turnstile_secret_key": "Geheimer Schlüssel",
       "turnstile_title": "Cloudflare Turnstile",
@@ -669,7 +671,48 @@
       "col_createtime": "Created at",
       "col_actions": "Actions",
       "action_view": "View",
-      "filter_status": "Filter by status"
+      "filter_status": "Filter by status",
+      "tab_script": "Skriptmeldungen",
+      "tab_content": "Inhaltsmeldungen",
+      "content": {
+        "status_all": "Alle",
+        "status_1": "Offen",
+        "status_2": "Bearbeitet",
+        "status_3": "Abgelehnt",
+        "type_all": "Alle Typen",
+        "type_score": "Bewertung",
+        "type_issue": "Feedback",
+        "type_issue_comment": "Feedback-Antwort",
+        "col_type": "Typ",
+        "col_summary": "Gemeldeter Inhalt",
+        "col_author": "Autor",
+        "col_times": "Anzahl",
+        "target_deleted": "(Inhalt gelöscht)",
+        "action_handle": "Bearbeiten",
+        "drawer_title": "Inhaltsmeldung #{id}",
+        "view_origin": "Am Originalort ansehen",
+        "published_at": "Veröffentlicht {time}",
+        "handler": "Bearbeitet von",
+        "handle_note": "Notiz",
+        "no_note": "(keine)",
+        "result_deleted": "Inhalt gelöscht",
+        "result_resolved": "Bearbeitet",
+        "result_rejected": "Abgelehnt",
+        "snapshot": "Gemeldeter Inhalt",
+        "records": "Meldungen ({count})",
+        "load_failed": "Laden fehlgeschlagen",
+        "retry": "Erneut versuchen",
+        "action_reject": "Ablehnen",
+        "action_resolve": "Als bearbeitet markieren",
+        "action_delete": "Inhalt löschen und abschließen",
+        "action_reopen": "Wieder öffnen",
+        "delete_confirm_title": "Diesen Inhalt löschen?",
+        "delete_confirm_desc": "Der Inhalt wird endgültig gelöscht und alle offenen Meldungen dazu werden abgeschlossen.",
+        "note_hint": "Nur für Admins sichtbar",
+        "note_placeholder": "Bearbeitungsnotiz (optional)",
+        "action_success": "Erledigt",
+        "action_failed": "Aktion fehlgeschlagen, bitte erneut versuchen"
+      }
     }
   },
   "auth": {
@@ -812,6 +855,54 @@
       "loading_editor": "Editor wird geladen...",
       "placeholder": "Bitte Inhalt eingeben...",
       "uploading_image": "Bild wird hochgeladen..."
+    },
+    "contentReport": {
+      "title_score": "Bewertung melden",
+      "title_issue": "Feedback melden",
+      "title_issue_comment": "Feedback-Antwort melden",
+      "quote_score": "Bewertung von {name}",
+      "quote_issue": "Feedback von {name}: „{title}“",
+      "quote_issue_comment": "Antwort von {name}",
+      "reason_label": "Meldegrund",
+      "reasons": {
+        "spam": {
+          "name": "Spam / Werbung",
+          "desc": "Eigenwerbung, Traffic-Lenkung, Flooding"
+        },
+        "abuse": {
+          "name": "Beleidigung",
+          "desc": "Persönliche Angriffe, Diskriminierung, Belästigung"
+        },
+        "porn": {
+          "name": "Pornografisch / vulgär",
+          "desc": "Sexuelle, gewalttätige oder verstörende Inhalte"
+        },
+        "illegal": {
+          "name": "Rechtswidrig",
+          "desc": "Illegale Inhalte, Betrug, schädliche Links"
+        },
+        "misleading": {
+          "name": "Manipulierte Bewertung / Falschinfo",
+          "desc": "Ohne Bezug zum Skript, gefälschte Bewertungen"
+        },
+        "other": {
+          "name": "Sonstiges",
+          "desc": "Bitte in der Anmerkung erläutern"
+        }
+      },
+      "note_label": "Zusätzliche Angaben",
+      "note_optional": "(optional)",
+      "note_required_mark": "(erforderlich)",
+      "note_placeholder": "Beschreibe das Problem",
+      "note_required_error": "Bei „Sonstiges“ bitte eine Erläuterung angeben",
+      "note_too_long_error": "Die Angaben dürfen höchstens 500 Zeichen lang sein",
+      "privacy": "Meldungen sind nur für Administratoren sichtbar. Die gemeldete Person erfährt nicht, wer gemeldet hat.",
+      "submit": "Meldung absenden",
+      "cancel": "Abbrechen",
+      "success": "Meldung gesendet. Danke, dass du die Community unterstützt.",
+      "duplicate": "Du hast diesen Inhalt bereits gemeldet. Die Administratoren kümmern sich bald darum.",
+      "not_found": "Der Inhalt existiert nicht oder wurde gelöscht",
+      "submit_failed": "Meldung konnte nicht gesendet werden, bitte später erneut versuchen"
     }
   },
   "error": {
@@ -2455,6 +2546,7 @@
       "ban_clean_options": "Cleanup options",
       "ban_clean_scores": "Remove user ratings",
       "ban_clean_scripts": "Remove user scripts",
+      "ban_clean_issues": "Feedback und Antworten des Nutzers entfernen",
       "ban_success": "User banned",
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",

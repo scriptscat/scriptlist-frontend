@@ -37,14 +37,19 @@ export const dayjsLocaleMapping: Record<string, string> = {
   'ach-ug': 'en', // 回退到英语
 };
 
+/** 把页面语言换成 dayjs 的语言包名，未知语言回退到英语 */
+export function resolveDayjsLocale(locale: string): string {
+  return (
+    dayjsLocaleMapping[locale.toLocaleLowerCase()] || dayjsLocaleMapping['en']
+  );
+}
+
 /**
  * 设置 dayjs 的语言环境
  * @param locale 语言代码
  */
 export function setDayjsLocale(locale: string): void {
-  const dayjsLocale =
-    dayjsLocaleMapping[locale.toLocaleLowerCase()] || dayjsLocaleMapping['en'];
-  dayjs.locale(dayjsLocale);
+  dayjs.locale(resolveDayjsLocale(locale));
 }
 
 export default dayjs;

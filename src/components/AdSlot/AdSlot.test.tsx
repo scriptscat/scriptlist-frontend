@@ -149,6 +149,29 @@ describe('AdSlot 图片广告分支', () => {
     );
   });
 
+  it('曝光上报失败时静默，不产生未处理的 Promise 拒绝', async () => {
+    // 广告拦截器会直接掐掉 /advertise/*/impression，线上表现为一条条 unhandledrejection 上报
+    // 用真实的 service、只让 fetch 失败：vi.fn 会给自己返回的 Promise 挂处理器，测不出「没人接」
+    vi.mocked(advertiseService.reportImpression).mockRestore();
+    const fetchMock = vi.fn(() =>
+      Promise.reject(new TypeError('Failed to fetch')),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+    const unhandled = vi.fn();
+    process.on('unhandledRejection', unhandled);
+    try {
+      setAd(imageAd);
+      renderSlot('banner');
+      enterViewport();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(unhandled).not.toHaveBeenCalled();
+    } finally {
+      process.off('unhandledRejection', unhandled);
+    }
+  });
+
   it('card 变体披露文案带素材标题', () => {
     setAd(imageAd);
     const { container } = renderSlot('card', 'search-sidebar');

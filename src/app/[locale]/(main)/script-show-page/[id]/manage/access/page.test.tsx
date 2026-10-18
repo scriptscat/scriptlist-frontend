@@ -25,6 +25,11 @@ vi.mock('next-intl', () => ({
   useLocale: () => 'zh-CN',
 }));
 
+// 时间文本不是这里要验证的；useSemDateTime 还依赖 next-intl 的 now / 时区
+vi.mock('@/lib/utils/semdate', () => ({
+  useSemDateTime: () => () => '2026-01-01',
+}));
+
 vi.mock('@/i18n/routing', () => ({
   Link: ({ children, ...rest }: any) => <a {...rest}>{children}</a>,
 }));

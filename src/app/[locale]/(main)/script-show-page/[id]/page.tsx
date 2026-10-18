@@ -7,7 +7,6 @@ import { generateScriptMetadata } from './metadata';
 import scriptService from '@/lib/api/services/scripts';
 import { prefetchAd } from '@/lib/api/services/advertise';
 import { prefetchRails } from '@/components/AdSlot/railLayout';
-import { calculateRatingStats } from './comment/components/rating/utils';
 
 export default async function ScriptDetailPage({
   params,
@@ -15,34 +14,17 @@ export default async function ScriptDetailPage({
   const { id, locale } = await params;
   // Fetch content separately - React.cache deduplicates with layout's call
   const script = await scriptService.infoCached(id);
-  const scriptId = parseInt(id, 10);
 
-  const [
-    versionListResult,
-    versionStatResult,
-    scoreStateResult,
-    scoreListResult,
-    sidebarAdResult,
-    bannerAdResult,
-    railsResult,
-  ] = await Promise.allSettled([
-    scriptService.getVersionListCached(scriptId, { page: 1, size: 10 }),
-    scriptService.getVersionStatCached(scriptId),
-    scriptService.getScoreState(scriptId),
-    scriptService.getScoreList(scriptId, {
-      page: 1,
-      size: 10,
-      sort: 'createtime',
-      order: 'desc',
-    }),
-    prefetchAd('script-detail-sidebar', locale),
-    prefetchAd('script-detail-banner', locale),
-    prefetchRails(
-      'script-detail-rail-left',
-      'script-detail-rail-right',
-      locale,
-    ),
-  ]);
+  const [sidebarAdResult, bannerAdResult, railsResult] =
+    await Promise.allSettled([
+      prefetchAd('script-detail-sidebar', locale),
+      prefetchAd('script-detail-banner', locale),
+      prefetchRails(
+        'script-detail-rail-left',
+        'script-detail-rail-right',
+        locale,
+      ),
+    ]);
 
   const sidebarAd =
     sidebarAdResult.status === 'fulfilled' ? sidebarAdResult.value : undefined;
@@ -54,29 +36,20 @@ export default async function ScriptDetailPage({
       ? railsResult.value
       : { left: undefined, right: undefined, hasAd: false };
 
-  const initialVersionData =
-    versionListResult.status === 'fulfilled' ? versionListResult.value : null;
-  const versionStat =
-    versionStatResult.status === 'fulfilled' ? versionStatResult.value : null;
-  const initialScoreList =
-    scoreListResult.status === 'fulfilled' ? scoreListResult.value : null;
-  const ratingStats =
-    scoreStateResult.status === 'fulfilled'
-      ? calculateRatingStats(scoreStateResult.value)
-      : {
-          averageRating:
-            script.score && script.score_num
-              ? parseFloat((script.score / script.score_num / 10).toFixed(1))
-              : 0,
-          totalRatings: script.score_num,
-          distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-        };
-  const versionError =
-    versionListResult.status === 'rejected'
-      ? versionListResult.reason?.message
-      : versionStatResult.status === 'rejected'
-        ? versionStatResult.reason?.message
-        : undefined;
+  // 版本与评分只在用户打开对应 Tab 后请求，避免详情首屏等待两组重数据。
+  const initialVersionData = null;
+  const versionStat = null;
+  const initialScoreList = null;
+  // 脚本详情 DTO 自带评分均值和评分数；用它初始化概览，避免未知计数伪装成 0。
+  const ratingStats = {
+    averageRating:
+      script.score && script.score_num
+        ? parseFloat((script.score / script.score_num / 10).toFixed(1))
+        : 0,
+    totalRatings: script.score_num,
+    distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+  };
+  const versionError = undefined;
 
   // 访问统计是一次写请求，`await` 它等于把 TTFB 押在统计接口上。
   // 交给 `after()` 在响应发出之后再跑：既不阻塞 JSX 返回，也不会像裸 Promise
