@@ -458,7 +458,17 @@
       "migrate_avatar_button": "Start Migration",
       "migrate_avatar_confirm": "Are you sure you want to start avatar migration? This will download user avatars from UCenter and save them locally.",
       "migrate_avatar_started": "Avatar migration started",
-      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}"
+      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}",
+      "ai_test_hint": "用目前填寫的配置（含尚未儲存的修改）實際呼叫一次 AI 服務，用來確認 Base URL / API Key / 模型是否可用。測試呼叫不會寫入任何審核記錄。",
+      "ai_test_prompt": "測試內容（可選）",
+      "ai_test_prompt_placeholder": "留空則送出一句固定的連通性測試提示",
+      "ai_test_button": "測試呼叫",
+      "ai_test_running": "呼叫中…",
+      "ai_test_success": "呼叫成功 · 模型 {model} · 耗時 {latency} ms",
+      "ai_test_failed": "呼叫失敗",
+      "ai_test_failed_unknown": "呼叫失敗，請查看後端日誌",
+      "ai_test_tokens": "輸入 {prompt} / 輸出 {completion} tokens",
+      "ai_base_url_extra": "修改 Base URL 後必須重新填寫 API Key：為避免金鑰被送往新位址，測試呼叫不會沿用已儲存的 Key。"
     },
     "users": {
       "action_admin_level": "修改等級",

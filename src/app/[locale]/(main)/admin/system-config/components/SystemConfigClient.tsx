@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Alert,
   Button,
   Card,
   Form,
@@ -18,6 +19,7 @@ import { scriptService } from '@/lib/api/services/scripts';
 import type {
   MigrateAvatarStatus,
   SystemConfigItem,
+  TestAIConfigResponse,
 } from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
 
@@ -37,6 +39,14 @@ export default function SystemConfigClient() {
   // Recompute trending_score state
   const [recomputing, setRecomputing] = useState(false);
   const [rebuildingEsIndex, setRebuildingEsIndex] = useState(false);
+
+  // AI 配置测试状态
+  const [aiTesting, setAiTesting] = useState(false);
+  const [aiTestResult, setAiTestResult] = useState<TestAIConfigResponse | null>(
+    null,
+  );
+  const [aiTestError, setAiTestError] = useState<string | null>(null);
+  const [aiTestPrompt, setAiTestPrompt] = useState('');
 
   const fetchConfigs = useCallback(async (isInitial = false) => {
     if (isInitial) setInitialLoading(true);
@@ -157,6 +167,30 @@ export default function SystemConfigClient() {
 
   const updateConfig = (key: string, value: string) => {
     setConfigs((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // 测试 AI 配置：用当前表单值（可能尚未保存）真发一次调用
+  const handleTestAI = async () => {
+    setAiTesting(true);
+    setAiTestResult(null);
+    setAiTestError(null);
+    try {
+      const resp = await adminService.testAIConfig({
+        base_url: configs['ai.base_url'] || '',
+        // 掩码值原样提交，后端会回退到已保存的 key
+        api_key: configs['ai.api_key'] || '',
+        model: configs['ai.model'] || '',
+        system_prompt: configs['ai.system_prompt'] || '',
+        user_prompt: aiTestPrompt.trim(),
+      });
+      setAiTestResult(resp);
+    } catch (err) {
+      setAiTestError(
+        err instanceof APIError ? err.msg : t('ai_test_failed_unknown'),
+      );
+    } finally {
+      setAiTesting(false);
+    }
   };
 
   if (initialLoading) {
@@ -354,7 +388,7 @@ export default function SystemConfigClient() {
         {/* AI */}
         <Card title={t('ai_title')} size="small">
           <Form layout="vertical">
-            <Form.Item label={t('ai_base_url')}>
+            <Form.Item label={t('ai_base_url')} extra={t('ai_base_url_extra')}>
               <Input
                 value={configs['ai.base_url'] || ''}
                 onChange={(e) => updateConfig('ai.base_url', e.target.value)}
@@ -389,6 +423,61 @@ export default function SystemConfigClient() {
               {t('save_button')}
             </Button>
           </Form>
+
+          {/* 测试调用：用当前表单值（含尚未保存的修改）真实请求一次 */}
+          <div className="mt-6 border-t border-app-primary pt-4">
+            <div className="text-sm text-app-secondary mb-2">
+              {t('ai_test_hint')}
+            </div>
+            <Form layout="vertical">
+              <Form.Item label={t('ai_test_prompt')}>
+                <Input.TextArea
+                  rows={2}
+                  placeholder={t('ai_test_prompt_placeholder')}
+                  value={aiTestPrompt}
+                  onChange={(e) => setAiTestPrompt(e.target.value)}
+                />
+              </Form.Item>
+            </Form>
+            <Button loading={aiTesting} onClick={handleTestAI}>
+              {aiTesting ? t('ai_test_running') : t('ai_test_button')}
+            </Button>
+
+            {aiTestError && (
+              <Alert
+                className="mt-3"
+                type="error"
+                showIcon
+                message={t('ai_test_failed')}
+                description={aiTestError}
+              />
+            )}
+
+            {aiTestResult && (
+              <Alert
+                className="mt-3"
+                type="success"
+                showIcon
+                message={t('ai_test_success', {
+                  model: aiTestResult.model,
+                  latency: aiTestResult.latency_ms,
+                })}
+                description={
+                  <div className="space-y-1">
+                    <div className="text-app-secondary">
+                      {t('ai_test_tokens', {
+                        prompt: aiTestResult.prompt_tokens,
+                        completion: aiTestResult.completion_tokens,
+                      })}
+                    </div>
+                    <div className="whitespace-pre-wrap break-words">
+                      {aiTestResult.content}
+                    </div>
+                  </div>
+                }
+              />
+            )}
+          </div>
         </Card>
 
         {/* GitHub */}

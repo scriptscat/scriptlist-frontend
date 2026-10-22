@@ -575,7 +575,17 @@
       "es_index_hint": "触发后会在后台全量重建脚本搜索索引。接口返回只表示任务已启动，完成进度请查看后端日志。",
       "es_index_button": "重建 ES 索引",
       "es_index_confirm": "确定要开始重建 ES 搜索索引吗？大库可能需要较长时间。",
-      "es_index_started": "ES 搜索索引重建任务已启动"
+      "es_index_started": "ES 搜索索引重建任务已启动",
+      "ai_test_hint": "用当前填写的配置（含尚未保存的修改）真实调用一次 AI 服务，用于确认 Base URL / API Key / 模型是否可用。测试调用不会写入任何审核记录。",
+      "ai_test_prompt": "测试内容（可选）",
+      "ai_test_prompt_placeholder": "留空则发送一句固定的连通性测试提示",
+      "ai_test_button": "测试调用",
+      "ai_test_running": "调用中…",
+      "ai_test_success": "调用成功 · 模型 {model} · 耗时 {latency} ms",
+      "ai_test_failed": "调用失败",
+      "ai_test_failed_unknown": "调用失败，请查看后端日志",
+      "ai_test_tokens": "输入 {prompt} / 输出 {completion} tokens",
+      "ai_base_url_extra": "修改 Base URL 后必须重新填写 API Key：为避免密钥被发往新地址，测试调用不会复用已保存的 Key。"
     },
     "users": {
       "action_admin_level": "修改等级",

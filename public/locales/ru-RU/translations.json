@@ -458,7 +458,17 @@
       "recompute_trending_button": "Recompute trending_score",
       "recompute_trending_confirm": "Recompute trending_score for all scripts now? Large databases may take a few seconds to tens of seconds.",
       "recompute_trending_started": "trending_score recompute started",
-      "recompute_trending_running": "A recompute is already running; not retriggered"
+      "recompute_trending_running": "A recompute is already running; not retriggered",
+      "ai_test_hint": "Отправляет один реальный запрос со значениями из формы (включая несохранённые правки), чтобы проверить Base URL, API-ключ и модель. Тестовые вызовы не записываются как проверки.",
+      "ai_test_prompt": "Тестовый запрос (необязательно)",
+      "ai_test_prompt_placeholder": "Оставьте пустым, чтобы отправить фиксированный запрос проверки связи",
+      "ai_test_button": "Тестовый вызов",
+      "ai_test_running": "Выполняется…",
+      "ai_test_success": "Вызов выполнен · модель {model} · {latency} мс",
+      "ai_test_failed": "Вызов не выполнен",
+      "ai_test_failed_unknown": "Вызов не выполнен. Подробности в логах бэкенда.",
+      "ai_test_tokens": "{prompt} в запросе / {completion} в ответе токенов",
+      "ai_base_url_extra": "После изменения Base URL нужно заново указать API-ключ: тестовый вызов не передаёт сохранённый ключ на новый адрес."
     },
     "users": {
       "action_admin_level": "Изменить уровень",

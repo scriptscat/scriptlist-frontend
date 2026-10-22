@@ -6,6 +6,7 @@ import type {
   ListData,
 } from '@/types/api';
 import { apiClient } from '../client';
+import { API_CONFIG } from '../config';
 
 // ==================== OAuth Apps ====================
 
@@ -48,6 +49,24 @@ export interface SystemConfigItem {
 
 export interface GetSystemConfigsResponse {
   configs: SystemConfigItem[];
+}
+
+/** 测试 AI 配置的请求体；api_key 留空或掩码时后端回退到已保存的 key */
+export interface TestAIConfigRequest {
+  base_url?: string;
+  api_key?: string;
+  model?: string;
+  system_prompt?: string;
+  user_prompt?: string;
+}
+
+/** 测试结果：上游的真实反馈 */
+export interface TestAIConfigResponse {
+  model: string;
+  content: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  latency_ms: number;
 }
 
 // ==================== User Management ====================
@@ -269,6 +288,15 @@ class AdminService {
     return apiClient.put<void>(`${this.basePath}/system-configs`, {
       configs,
     });
+  }
+
+  // 用当前（可能尚未保存的）配置发起一次真实调用，验证连通性与模型
+  async testAIConfig(data: TestAIConfigRequest) {
+    return apiClient.post<TestAIConfigResponse>(
+      `${this.basePath}/system-configs/ai-test`,
+      data,
+      { timeout: API_CONFIG.aiTestTimeout },
+    );
   }
 
   // User Management

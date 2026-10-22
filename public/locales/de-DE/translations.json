@@ -458,7 +458,17 @@
       "recompute_trending_button": "Recompute trending_score",
       "recompute_trending_confirm": "Recompute trending_score for all scripts now? Large databases may take a few seconds to tens of seconds.",
       "recompute_trending_started": "trending_score recompute started",
-      "recompute_trending_running": "A recompute is already running; not retriggered"
+      "recompute_trending_running": "A recompute is already running; not retriggered",
+      "ai_test_hint": "Sendet eine echte Anfrage mit den aktuellen Formularwerten (inkl. ungespeicherter Änderungen), um Base-URL, API-Key und Modell zu prüfen. Testaufrufe werden nicht als Prüfungen gespeichert.",
+      "ai_test_prompt": "Testinhalt (optional)",
+      "ai_test_prompt_placeholder": "Leer lassen, um eine feste Verbindungstest-Anfrage zu senden",
+      "ai_test_button": "Testaufruf",
+      "ai_test_running": "Wird aufgerufen…",
+      "ai_test_success": "Aufruf erfolgreich · Modell {model} · {latency} ms",
+      "ai_test_failed": "Aufruf fehlgeschlagen",
+      "ai_test_failed_unknown": "Aufruf fehlgeschlagen. Details stehen im Backend-Log.",
+      "ai_test_tokens": "{prompt} Prompt- / {completion} Completion-Tokens",
+      "ai_base_url_extra": "Nach Änderung der Base-URL muss der API-Key neu eingegeben werden: Ein Testaufruf verwendet den gespeicherten Key nie für einen neuen Host."
     },
     "users": {
       "action_admin_level": "Stufe ändern",

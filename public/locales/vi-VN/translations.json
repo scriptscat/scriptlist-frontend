@@ -441,7 +441,17 @@
       "recompute_trending_button": "Tính lại trending_score thủ công",
       "recompute_trending_confirm": "Bạn có chắc muốn tính lại trending_score cho tất cả script ngay bây giờ? Với cơ sở dữ liệu lớn, việc này có thể mất từ vài giây đến vài chục giây.",
       "recompute_trending_started": "Đã bắt đầu tính lại trending_score",
-      "recompute_trending_running": "Tác vụ tính lại đang chạy, không kích hoạt lại"
+      "recompute_trending_running": "Tác vụ tính lại đang chạy, không kích hoạt lại",
+      "ai_test_hint": "Gọi thật một lần tới dịch vụ AI bằng giá trị đang có trên biểu mẫu (bao gồm thay đổi chưa lưu) để kiểm tra Base URL, API Key và model. Lần gọi thử không được ghi thành bản ghi duyệt.",
+      "ai_test_prompt": "Nội dung thử (tùy chọn)",
+      "ai_test_prompt_placeholder": "Để trống sẽ gửi một câu nhắc kiểm tra kết nối cố định",
+      "ai_test_button": "Gọi thử",
+      "ai_test_running": "Đang gọi…",
+      "ai_test_success": "Gọi thành công · model {model} · {latency} ms",
+      "ai_test_failed": "Gọi thất bại",
+      "ai_test_failed_unknown": "Gọi thất bại. Vui lòng xem log backend.",
+      "ai_test_tokens": "{prompt} token đầu vào / {completion} token đầu ra",
+      "ai_base_url_extra": "Khi đổi Base URL phải nhập lại API Key: lần gọi thử không dùng lại key đã lưu cho địa chỉ mới."
     },
     "users": {
       "action_admin_level": "Thay đổi cấp",

@@ -522,7 +522,17 @@
       "es_index_hint": "This starts a background rebuild of the script search index. The API response only means the task was started; check backend logs for completion progress.",
       "es_index_button": "Rebuild ES Index",
       "es_index_confirm": "Start rebuilding the ES search index now? Large databases may take a while.",
-      "es_index_started": "ES search index rebuild started"
+      "es_index_started": "ES search index rebuild started",
+      "ai_test_hint": "Send one real request with the values currently in the form (including unsaved edits) to verify the Base URL, API key and model. Test calls are not recorded as reviews.",
+      "ai_test_prompt": "Test content (optional)",
+      "ai_test_prompt_placeholder": "Leave empty to send a fixed connectivity check prompt",
+      "ai_test_button": "Test call",
+      "ai_test_running": "Calling…",
+      "ai_test_success": "Call succeeded · model {model} · {latency} ms",
+      "ai_test_failed": "Call failed",
+      "ai_test_failed_unknown": "Call failed. Check the backend logs for details.",
+      "ai_test_tokens": "{prompt} prompt / {completion} completion tokens",
+      "ai_base_url_extra": "Changing the Base URL requires re-entering the API key: a test call never reuses the saved key with a new host."
     },
     "users": {
       "action_admin_level": "Change Level",

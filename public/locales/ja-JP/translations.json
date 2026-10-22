@@ -458,7 +458,17 @@
       "recompute_trending_button": "Recompute trending_score",
       "recompute_trending_confirm": "Recompute trending_score for all scripts now? Large databases may take a few seconds to tens of seconds.",
       "recompute_trending_started": "trending_score recompute started",
-      "recompute_trending_running": "A recompute is already running; not retriggered"
+      "recompute_trending_running": "A recompute is already running; not retriggered",
+      "ai_test_hint": "現在フォームに入力されている値（未保存の変更を含む）で AI サービスへ実際に 1 回リクエストし、Base URL・API Key・モデルが使えるか確認します。テスト呼び出しは審査記録として保存されません。",
+      "ai_test_prompt": "テスト内容（任意）",
+      "ai_test_prompt_placeholder": "空欄の場合は固定の疎通確認プロンプトを送信します",
+      "ai_test_button": "テスト実行",
+      "ai_test_running": "実行中…",
+      "ai_test_success": "成功 · モデル {model} · {latency} ms",
+      "ai_test_failed": "呼び出しに失敗しました",
+      "ai_test_failed_unknown": "呼び出しに失敗しました。バックエンドのログを確認してください。",
+      "ai_test_tokens": "入力 {prompt} / 出力 {completion} トークン",
+      "ai_base_url_extra": "Base URL を変更した場合は API Key を再入力してください。保存済みのキーを新しい宛先へ送らないため、テスト実行では再利用しません。"
     },
     "users": {
       "action_admin_level": "レベルを変更",
