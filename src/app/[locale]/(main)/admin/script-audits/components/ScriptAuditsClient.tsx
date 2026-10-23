@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useSWRConfig } from 'swr';
 import {
+  Alert,
   Button,
+  Collapse,
   Drawer,
   Form,
   Input,
@@ -14,6 +17,7 @@ import {
   Tag,
   message,
 } from 'antd';
+import { RobotOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 import { adminService } from '@/lib/api/services/admin';
@@ -21,9 +25,15 @@ import type {
   ScriptAuditDetail,
   ScriptAuditItem,
 } from '@/lib/api/services/admin';
+import { aiReviewService } from '@/lib/api/services/aiReview';
 import { useAdminScriptAudits } from '@/lib/api/hooks/admin';
+import {
+  resetScriptAuditAIReviewPolling,
+  scriptAuditAIReviewKey,
+} from '@/lib/api/hooks/useAIReviews';
 import { APIError } from '@/types/api';
 import { useTableStateLocale } from '../../components/tableState';
+import ScriptAuditAIReview from './ScriptAuditAIReview';
 
 const STATUS_PENDING = 1;
 const STATUS_APPROVED = 2;
@@ -48,9 +58,16 @@ export default function ScriptAuditsClient() {
 
   const [rejectOpen, setRejectOpen] = useState(false);
   const [approveOpen, setApproveOpen] = useState(false);
+  const [aiReviewOpen, setAiReviewOpen] = useState(false);
+  const [aiReviewNote, setAiReviewNote] = useState('');
+  const [aiReviewSubmitting, setAiReviewSubmitting] = useState(false);
   const [approveForm] = Form.useForm<{ reason?: string }>();
   const [rejectForm] = Form.useForm<{ reason: string }>();
   const [submitting, setSubmitting] = useState(false);
+
+  // 与抽屉里的结论卡共用同一个 SWR key，提交后 mutate 即可让卡片立刻重新拉取。
+  // 不在这里再调一次 useScriptAuditAIReview：那会多出一个轮询订阅者与定时器。
+  const { mutate } = useSWRConfig();
 
   const {
     list: data,
@@ -126,6 +143,38 @@ export default function ScriptAuditsClient() {
       if (err instanceof APIError) message.error(err.msg);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const openAIReview = () => {
+    setAiReviewOpen(true);
+  };
+
+  const closeAIReview = () => {
+    setAiReviewOpen(false);
+    setAiReviewNote('');
+  };
+
+  const handleAIReview = async () => {
+    if (!detail) return;
+    setAiReviewSubmitting(true);
+    try {
+      await aiReviewService.triggerAuditReview(
+        detail.id,
+        aiReviewNote.trim() || undefined,
+      );
+      message.success(t('ai_review_submit_success'));
+      closeAIReview();
+      resetScriptAuditAIReviewPolling(detail.id);
+      void mutate(scriptAuditAIReviewKey(detail.id));
+    } catch (err) {
+      if (err instanceof APIError) {
+        message.error(err.msg);
+      } else {
+        message.error(t('ai_review_submit_failed'));
+      }
+    } finally {
+      setAiReviewSubmitting(false);
     }
   };
 
@@ -302,24 +351,44 @@ export default function ScriptAuditsClient() {
         destroyOnHidden
         loading={detailLoading}
         extra={
-          detail &&
-          (detail.status === STATUS_PENDING ||
-            detail.status === STATUS_REJECTED) ? (
+          detail ? (
             <Space>
-              {detail.status === STATUS_PENDING && (
-                <Button danger onClick={openReject} disabled={submitting}>
-                  {t('action_reject')}
-                </Button>
-              )}
-              <Button type="primary" onClick={openApprove} loading={submitting}>
-                {t('action_approve')}
+              <Button
+                icon={<RobotOutlined />}
+                onClick={openAIReview}
+                loading={aiReviewSubmitting}
+                style={{ color: '#8250df', borderColor: '#d8c2f7' }}
+              >
+                {t('action_ai_review')}
               </Button>
+              {(detail.status === STATUS_PENDING ||
+                detail.status === STATUS_REJECTED) && (
+                <>
+                  {detail.status === STATUS_PENDING && (
+                    <Button danger onClick={openReject} disabled={submitting}>
+                      {t('action_reject')}
+                    </Button>
+                  )}
+                  <Button
+                    type="primary"
+                    onClick={openApprove}
+                    loading={submitting}
+                  >
+                    {t('action_approve')}
+                  </Button>
+                </>
+              )}
             </Space>
           ) : null
         }
       >
         {detail && (
           <div className="space-y-4">
+            <ScriptAuditAIReview
+              auditId={detail.id}
+              onTrigger={openAIReview}
+              triggering={aiReviewSubmitting}
+            />
             <div>
               <b>
                 {t('detail_script')}
@@ -420,6 +489,58 @@ export default function ScriptAuditsClient() {
             />
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title={t('ai_review_modal_title')}
+        open={aiReviewOpen}
+        zIndex={ACTION_MODAL_Z_INDEX}
+        onCancel={closeAIReview}
+        onOk={handleAIReview}
+        confirmLoading={aiReviewSubmitting}
+        okText={t('action_ai_review')}
+        width={640}
+      >
+        <Space orientation="vertical" size={12} className="w-full">
+          <Alert
+            type="info"
+            showIcon
+            title={t('ai_review_modal_alert', {
+              name: detail?.script_name ?? '',
+              version: detail?.version ?? '',
+            })}
+          />
+          <div>
+            <div className="mb-1">{t('ai_review_note_label')}</div>
+            <Input.TextArea
+              rows={4}
+              maxLength={500}
+              showCount
+              value={aiReviewNote}
+              onChange={(e) => setAiReviewNote(e.target.value)}
+              placeholder={t('ai_review_note_placeholder')}
+            />
+            <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {t('ai_review_modal_hint')}
+            </div>
+          </div>
+          <Collapse
+            size="small"
+            items={[
+              {
+                key: 'preview',
+                label: t('ai_review_modal_preview_toggle'),
+                children: (
+                  <pre className="whitespace-pre-wrap text-xs font-mono bg-gray-50 dark:bg-zinc-800 p-3 rounded m-0 max-h-60 overflow-auto">
+                    {`# 管理员补充说明（平台填写，可信，仅指出重点核查方向）\n\n${
+                      aiReviewNote.trim() || '(空)'
+                    }`}
+                  </pre>
+                ),
+              },
+            ]}
+          />
+        </Space>
       </Modal>
     </div>
   );
