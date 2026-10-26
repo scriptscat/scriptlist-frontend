@@ -10,6 +10,7 @@ import {
   message,
   Popconfirm,
   Progress,
+  Select,
   Switch,
 } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -17,11 +18,21 @@ import { LoadingBlock } from '@/components/ui/LoadingBlock';
 import { adminService } from '@/lib/api/services/admin';
 import { scriptService } from '@/lib/api/services/scripts';
 import type {
+  AIAPIFormat,
   MigrateAvatarStatus,
   SystemConfigItem,
   TestAIConfigResponse,
 } from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
+
+// 上游接口协议；未配置过时后端按 chat_completions 处理
+const DEFAULT_AI_API_FORMAT: AIAPIFormat = 'chat_completions';
+const AI_API_FORMAT_OPTIONS: { value: AIAPIFormat; label: string }[] = [
+  { value: 'chat_completions', label: 'Chat Completions (/chat/completions)' },
+  { value: 'responses', label: 'Responses (/responses)' },
+];
+const toAIAPIFormat = (v?: string): AIAPIFormat =>
+  v === 'responses' ? 'responses' : DEFAULT_AI_API_FORMAT;
 
 export default function SystemConfigClient() {
   const t = useTranslations('admin.system_config');
@@ -180,6 +191,7 @@ export default function SystemConfigClient() {
         // 掩码值原样提交，后端会回退到已保存的 key
         api_key: configs['ai.api_key'] || '',
         model: configs['ai.model'] || '',
+        api_format: toAIAPIFormat(configs['ai.api_format']),
         system_prompt: configs['ai.system_prompt'] || '',
         user_prompt: aiTestPrompt.trim(),
       });
@@ -210,7 +222,13 @@ export default function SystemConfigClient() {
     'captcha.turnstile.secret_key',
   ];
   const ucenterKeys = ['ucenter.api', 'ucenter.key', 'ucenter.appid'];
-  const aiKeys = ['ai.base_url', 'ai.api_key', 'ai.model', 'ai.system_prompt'];
+  const aiKeys = [
+    'ai.base_url',
+    'ai.api_key',
+    'ai.model',
+    'ai.api_format',
+    'ai.system_prompt',
+  ];
   const githubKeys = ['github.pat'];
   // 未配置过开关时后端视为开启
   const turnstileEnabled = configs['captcha.turnstile.enabled'] !== 'false';
@@ -406,6 +424,16 @@ export default function SystemConfigClient() {
                 onChange={(e) => updateConfig('ai.model', e.target.value)}
               />
             </Form.Item>
+            <Form.Item
+              label={t('ai_api_format')}
+              extra={t('ai_api_format_extra')}
+            >
+              <Select<AIAPIFormat>
+                value={toAIAPIFormat(configs['ai.api_format'])}
+                onChange={(v) => updateConfig('ai.api_format', v)}
+                options={AI_API_FORMAT_OPTIONS}
+              />
+            </Form.Item>
             <Form.Item label={t('ai_system_prompt')}>
               <Input.TextArea
                 rows={4}
@@ -418,7 +446,11 @@ export default function SystemConfigClient() {
             <Button
               type="primary"
               loading={saving === 'ai'}
-              onClick={() => handleSave('ai', aiKeys)}
+              onClick={() =>
+                handleSave('ai', aiKeys, {
+                  'ai.api_format': DEFAULT_AI_API_FORMAT,
+                })
+              }
             >
               {t('save_button')}
             </Button>

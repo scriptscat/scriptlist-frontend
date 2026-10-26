@@ -426,6 +426,8 @@
       "ai_api_key": "APIキー",
       "ai_base_url": "ベースURL",
       "ai_model": "モデル",
+      "ai_api_format": "API 形式",
+      "ai_api_format_extra": "Chat Completions は Base URL + /chat/completions、Responses は Base URL + /responses（OpenAI の新しい API）を呼び出します。AI レビューとチャットの両方で使用されます。",
       "ai_system_prompt": "システムプロンプト",
       "ai_title": "AI設定",
       "github_title": "GitHub設定",

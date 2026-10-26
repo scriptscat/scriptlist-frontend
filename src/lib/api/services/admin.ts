@@ -52,10 +52,14 @@ export interface GetSystemConfigsResponse {
 }
 
 /** 测试 AI 配置的请求体；api_key 留空或掩码时后端回退到已保存的 key */
+/** AI 上游接口协议 */
+export type AIAPIFormat = 'chat_completions' | 'responses';
+
 export interface TestAIConfigRequest {
   base_url?: string;
   api_key?: string;
   model?: string;
+  api_format?: AIAPIFormat;
   system_prompt?: string;
   user_prompt?: string;
 }

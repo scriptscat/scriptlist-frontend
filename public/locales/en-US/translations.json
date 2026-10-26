@@ -517,6 +517,8 @@
       "ai_api_key": "API Key",
       "ai_base_url": "Base URL",
       "ai_model": "Model",
+      "ai_api_format": "API format",
+      "ai_api_format_extra": "Chat Completions calls Base URL + /chat/completions; Responses calls Base URL + /responses (the newer OpenAI API). Used by both AI review and chat.",
       "ai_system_prompt": "System Prompt",
       "ai_title": "AI Configuration",
       "github_title": "GitHub Configuration",

@@ -570,6 +570,8 @@
       "ai_api_key": "API Key",
       "ai_base_url": "Base URL",
       "ai_model": "模型",
+      "ai_api_format": "接口协议",
+      "ai_api_format_extra": "Chat Completions 请求 Base URL + /chat/completions；Responses 请求 Base URL + /responses（OpenAI 新版接口）。AI 审核与聊天都会使用该协议。",
       "ai_system_prompt": "系统提示词",
       "ai_title": "AI 配置",
       "github_title": "GitHub 配置",

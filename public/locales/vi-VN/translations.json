@@ -409,6 +409,8 @@
       "ai_api_key": "Khóa API",
       "ai_base_url": "URL cơ sở",
       "ai_model": "Mô hình",
+      "ai_api_format": "Định dạng API",
+      "ai_api_format_extra": "Chat Completions gọi Base URL + /chat/completions; Responses gọi Base URL + /responses (API mới của OpenAI). Được dùng cho cả kiểm duyệt AI và trò chuyện.",
       "ai_system_prompt": "Lời nhắc hệ thống",
       "ai_title": "Cấu hình AI",
       "github_title": "Cấu hình GitHub",

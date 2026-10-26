@@ -426,6 +426,8 @@
       "ai_api_key": "API-ключ",
       "ai_base_url": "Базовый URL",
       "ai_model": "Модель",
+      "ai_api_format": "Формат API",
+      "ai_api_format_extra": "Chat Completions обращается к Base URL + /chat/completions, Responses — к Base URL + /responses (новый API OpenAI). Используется и AI-проверкой, и чатом.",
       "ai_system_prompt": "Системный промпт",
       "ai_title": "Настройка ИИ",
       "github_title": "Настройки GitHub",

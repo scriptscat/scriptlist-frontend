@@ -21,6 +21,7 @@ describe('adminService.testAIConfig', () => {
       base_url: 'https://form.example.com',
       api_key: 'sk-form',
       model: 'gpt-test',
+      api_format: 'responses',
       system_prompt: 'sys',
       user_prompt: 'ping',
     });
@@ -31,6 +32,7 @@ describe('adminService.testAIConfig', () => {
         base_url: 'https://form.example.com',
         api_key: 'sk-form',
         model: 'gpt-test',
+        api_format: 'responses',
         system_prompt: 'sys',
         user_prompt: 'ping',
       },
