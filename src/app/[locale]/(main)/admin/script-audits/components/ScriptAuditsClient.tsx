@@ -43,12 +43,21 @@ const ACTION_MODAL_Z_INDEX = 1200;
 
 type StatusFilter = 0 | 1 | 2 | 3; // 0 = all
 
+// 脚本当前审核状态筛选，与后端 script_audit_status 对应
+const SCRIPT_AUDIT_FILTER_ALL = 0;
+const SCRIPT_AUDIT_FILTER_AUDITING = 1;
+const SCRIPT_AUDIT_FILTER_NOT_AUDITING = 2;
+type ScriptAuditFilter = 0 | 1 | 2;
+
 export default function ScriptAuditsClient() {
   const t = useTranslations('admin.script_audits');
   const [page, setPage] = useState(1);
   const [size] = useState(20);
   const [statusFilter, setStatusFilter] =
     useState<StatusFilter>(STATUS_PENDING);
+  const [scriptAuditFilter, setScriptAuditFilter] = useState<ScriptAuditFilter>(
+    SCRIPT_AUDIT_FILTER_ALL,
+  );
   const [scriptNameInput, setScriptNameInput] = useState('');
   const [scriptNameFilter, setScriptNameFilter] = useState('');
 
@@ -81,6 +90,7 @@ export default function ScriptAuditsClient() {
     size,
     status: statusFilter,
     scriptName: scriptNameFilter,
+    scriptAuditStatus: scriptAuditFilter,
   });
   const tableLocale = useTableStateLocale({
     isLoading,
@@ -194,6 +204,11 @@ export default function ScriptAuditsClient() {
     { text: t('status_rejected'), value: STATUS_REJECTED },
   ];
 
+  const scriptAuditFilterOptions = [
+    { text: t('script_auditing'), value: SCRIPT_AUDIT_FILTER_AUDITING },
+    { text: t('script_not_auditing'), value: SCRIPT_AUDIT_FILTER_NOT_AUDITING },
+  ];
+
   const handleScriptNameSearch = (value: string) => {
     setPage(1);
     setScriptNameFilter(value.trim());
@@ -210,6 +225,13 @@ export default function ScriptAuditsClient() {
       parsedStatus !== undefined && Number.isFinite(parsedStatus)
         ? (parsedStatus as StatusFilter)
         : 0,
+    );
+    const nextScriptAudit = Number(filters.script_status?.[0]);
+    setScriptAuditFilter(
+      nextScriptAudit === SCRIPT_AUDIT_FILTER_AUDITING ||
+        nextScriptAudit === SCRIPT_AUDIT_FILTER_NOT_AUDITING
+        ? nextScriptAudit
+        : SCRIPT_AUDIT_FILTER_ALL,
     );
     setPage(pagination.current || 1);
   };
@@ -258,6 +280,12 @@ export default function ScriptAuditsClient() {
       key: 'script_status',
       width: 120,
       align: 'center',
+      filters: scriptAuditFilterOptions,
+      filterMultiple: false,
+      filteredValue:
+        scriptAuditFilter === SCRIPT_AUDIT_FILTER_ALL
+          ? null
+          : [scriptAuditFilter],
       render: (status: number) => (
         <Switch
           checked={status === SCRIPT_STATUS_AUDIT}
@@ -306,6 +334,29 @@ export default function ScriptAuditsClient() {
             { value: STATUS_PENDING, label: t('status_pending') },
             { value: STATUS_APPROVED, label: t('status_approved') },
             { value: STATUS_REJECTED, label: t('status_rejected') },
+          ]}
+        />
+        <span>
+          {t('col_script_audit_status')}
+          {':'}
+        </span>
+        <Select<ScriptAuditFilter>
+          value={scriptAuditFilter}
+          style={{ width: 140 }}
+          onChange={(v) => {
+            setPage(1);
+            setScriptAuditFilter(v);
+          }}
+          options={[
+            { value: SCRIPT_AUDIT_FILTER_ALL, label: t('filter_all') },
+            {
+              value: SCRIPT_AUDIT_FILTER_AUDITING,
+              label: t('script_auditing'),
+            },
+            {
+              value: SCRIPT_AUDIT_FILTER_NOT_AUDITING,
+              label: t('script_not_auditing'),
+            },
           ]}
         />
         <Input.Search

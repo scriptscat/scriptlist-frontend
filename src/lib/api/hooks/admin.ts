@@ -265,11 +265,25 @@ export function useAdminScriptAudits(params: {
   size?: number;
   status?: number;
   scriptName?: string;
+  scriptAuditStatus?: number;
 }): AdminListResult<ScriptAuditItem> {
-  const { page, size = ADMIN_PAGE_SIZE, status, scriptName } = params;
+  const {
+    page,
+    size = ADMIN_PAGE_SIZE,
+    status,
+    scriptName,
+    scriptAuditStatus,
+  } = params;
   const name = scriptName || undefined;
   return useAdminList(
-    ['admin-script-audits', page, size, status ?? null, name ?? ''],
+    [
+      'admin-script-audits',
+      page,
+      size,
+      status ?? null,
+      name ?? '',
+      scriptAuditStatus ?? null,
+    ],
     () =>
       adminService.listScriptAudits(
         page,
@@ -278,6 +292,7 @@ export function useAdminScriptAudits(params: {
         undefined,
         undefined,
         name,
+        scriptAuditStatus,
       ),
   );
 }

@@ -61,3 +61,26 @@ describe('adminService.testAIConfig', () => {
     });
   });
 });
+
+describe('adminService.listScriptAudits', () => {
+  it('把脚本审核状态筛选作为 script_audit_status 查询参数发给后端', async () => {
+    const get = vi
+      .spyOn(apiClient, 'get')
+      .mockResolvedValue({ list: [], total: 0 } as never);
+
+    await adminService.listScriptAudits(
+      1,
+      20,
+      0,
+      undefined,
+      undefined,
+      undefined,
+      1,
+    );
+
+    expect(get).toHaveBeenCalledWith(
+      '/admin/script-audits',
+      expect.objectContaining({ script_audit_status: 1 }),
+    );
+  });
+});

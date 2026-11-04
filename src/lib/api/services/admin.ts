@@ -492,6 +492,8 @@ class AdminService {
     submitterId?: number,
     scriptId?: number,
     scriptName?: string,
+    // 脚本当前审核状态：0 全部 1 审核中 2 非审核中
+    scriptAuditStatus?: number,
   ) {
     return apiClient.get<ListData<ScriptAuditItem>>(
       `${this.basePath}/script-audits`,
@@ -502,6 +504,7 @@ class AdminService {
         submitter_id: submitterId,
         script_id: scriptId,
         script_name: scriptName,
+        script_audit_status: scriptAuditStatus,
       },
     );
   }

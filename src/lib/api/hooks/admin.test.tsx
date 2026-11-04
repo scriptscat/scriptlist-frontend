@@ -12,6 +12,7 @@ import {
   useAdminContentReportPendingCount,
   useAdminContentReports,
   useAdminList,
+  useAdminScriptAudits,
   useAdminUsers,
 } from './admin';
 import { adminService } from '@/lib/api/services/admin';
@@ -19,6 +20,7 @@ import { adminService } from '@/lib/api/services/admin';
 vi.mock('@/lib/api/services/admin', () => ({
   adminService: {
     listUsers: vi.fn(),
+    listScriptAudits: vi.fn(),
     listContentReports: vi.fn(),
     getContentReportPendingCount: vi.fn(),
     getContentReport: vi.fn(),
@@ -299,5 +301,31 @@ describe('useContentReportActions', () => {
       result.current.actions.handle(7, { action: 'reject' }),
     ).rejects.toBe(err);
     expect(adminService.getContentReportPendingCount).not.toHaveBeenCalled();
+  });
+});
+
+describe('useAdminScriptAudits', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('把脚本审核状态筛选透传给 service', async () => {
+    vi.mocked(adminService.listScriptAudits).mockResolvedValue(listOf([]));
+
+    const { result } = renderHook(
+      () => useAdminScriptAudits({ page: 1, status: 0, scriptAuditStatus: 2 }),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(adminService.listScriptAudits).toHaveBeenCalledWith(
+      1,
+      expect.any(Number),
+      0,
+      undefined,
+      undefined,
+      undefined,
+      2,
+    );
   });
 });
