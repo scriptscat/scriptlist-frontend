@@ -478,8 +478,6 @@
       "action_unban": "禁止解除",
       "admin_level_success": "管理者レベルを更新しました",
       "admin_level_title": "管理者レベルを変更",
-      "ban_confirm": "このユーザーを禁止してもよろしいですか？",
-      "ban_success": "ユーザーを禁止しました",
       "col_actions": "操作",
       "col_admin_level": "管理者レベル",
       "col_createtime": "作成日時",
@@ -493,7 +491,6 @@
       "search_button": "検索",
       "search_placeholder": "ユーザー名またはメールで検索",
       "status_active": "有効",
-      "status_banned": "禁止済み",
       "title": "ユーザー管理",
       "unban_confirm": "このユーザーの禁止を解除してもよろしいですか？",
       "unban_success": "ユーザーの禁止を解除しました",
@@ -942,6 +939,20 @@
       "duplicate": "このコンテンツはすでに通報済みです。管理者が対応しますのでお待ちください。",
       "not_found": "コンテンツが存在しないか、削除されています",
       "submit_failed": "通報の送信に失敗しました。しばらくしてからもう一度お試しください"
+    },
+    "ban": {
+      "banned": "凍結中",
+      "permanent": "永久凍結",
+      "until": "{time} に解除",
+      "today": "今日 {time}",
+      "tomorrow": "明日 {time}",
+      "remaining_days": "{count} 日",
+      "remaining_hours": "{count} 時間",
+      "remaining_lt_hour": "1 時間未満",
+      "until_with_remaining": "{until} に解除 · 残り {remaining}",
+      "tooltip_until": "解除日時",
+      "tooltip_remaining": "残り",
+      "tooltip_reason": "理由"
     }
   },
   "error": {
@@ -2590,7 +2601,6 @@
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",
       "unban_confirm": "Are you sure you want to unban this user?",
-      "user_banned": "Banned",
       "ban_expire_at": "Ban expires at",
       "ban_permanent_label": "Permanent",
       "register_ip": "Registration IP",

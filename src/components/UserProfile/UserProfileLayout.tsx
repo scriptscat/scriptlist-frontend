@@ -44,6 +44,7 @@ import { useUser } from '@/contexts/UserContext';
 import type { GetUserDetailResponse } from '@/lib/api/services/user';
 import UserEditModal from './UserEditModal';
 import BanUserModal from './BanUserModal';
+import BanStatusBar from './BanStatusBar';
 import { adminService } from '@/lib/api/services/admin';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useFollowUser } from '@/lib/api/hooks/userClient';
@@ -218,13 +219,19 @@ export default function UserProfileLayout({
         {/* 左侧用户信息卡片 */}
         <Col xs={24} lg={8}>
           <Card className="shadow-lg border-0 h-fit sticky">
+            {isBanned && !isDeactivated && (
+              <BanStatusBar
+                expireAt={currentUserData.ban_expire_at ?? 0}
+                showDetail={!!isAdmin}
+              />
+            )}
             {/* 用户基本信息 */}
             <div className="text-center mb-6">
               <Avatar
                 size={100}
                 src={isDeactivated ? undefined : currentUserData.avatar}
                 icon={<UserOutlined />}
-                className="shadow-lg border-4 border-white mb-4"
+                className={`shadow-lg border-4 border-white mb-4${isBanned ? ' grayscale opacity-85' : ''}`}
               />
 
               <div className="flex items-center justify-center gap-2 mb-3">
@@ -262,11 +269,6 @@ export default function UserProfileLayout({
                     {currentUserData.is_admin === 1 && (
                       <Tag color="gold" icon={<CrownOutlined />}>
                         {t('administrator')}
-                      </Tag>
-                    )}
-                    {isBanned && (
-                      <Tag color="red" icon={<StopOutlined />}>
-                        {t('user_banned')}
                       </Tag>
                     )}
                   </div>
@@ -456,6 +458,17 @@ export default function UserProfileLayout({
                                   )}
                                 </span>
                               ),
+                            },
+                          ]
+                        : []),
+                      ...(isAdmin && isBanned && currentUserData.ban_reason
+                        ? [
+                            {
+                              key: 'ban_reason',
+                              label: (
+                                <Text type="danger">{t('ban_reason')}</Text>
+                              ),
+                              children: currentUserData.ban_reason,
                             },
                           ]
                         : []),

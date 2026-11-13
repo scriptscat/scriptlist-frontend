@@ -569,8 +569,6 @@
       "action_unban": "Unban",
       "admin_level_success": "Admin level updated successfully",
       "admin_level_title": "Change Admin Level",
-      "ban_confirm": "Are you sure you want to ban this user?",
-      "ban_success": "User banned successfully",
       "col_actions": "Actions",
       "col_admin_level": "Admin Level",
       "col_createtime": "Created",
@@ -585,7 +583,6 @@
       "search_button": "Search",
       "search_placeholder": "Search username or email",
       "status_active": "Active",
-      "status_banned": "Banned",
       "title": "User Management",
       "unban_confirm": "Are you sure you want to unban this user?",
       "unban_success": "User unbanned successfully"
@@ -942,6 +939,20 @@
       "duplicate": "You have already reported this content. Administrators will handle it soon.",
       "not_found": "The content does not exist or has been deleted",
       "submit_failed": "Failed to submit the report, please try again later"
+    },
+    "ban": {
+      "banned": "Banned",
+      "permanent": "Permanently banned",
+      "until": "Lifted {time}",
+      "today": "today {time}",
+      "tomorrow": "tomorrow {time}",
+      "remaining_days": "{count, plural, one {# day} other {# days}}",
+      "remaining_hours": "{count, plural, one {# hour} other {# hours}}",
+      "remaining_lt_hour": "less than 1 hour",
+      "until_with_remaining": "Lifted {until} · {remaining} left",
+      "tooltip_until": "Lifted at",
+      "tooltip_remaining": "Remaining",
+      "tooltip_reason": "Reason"
     }
   },
   "error": {
@@ -2598,7 +2609,6 @@
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",
       "unban_confirm": "Are you sure you want to unban this user?",
-      "user_banned": "Banned",
       "ban_expire_at": "Ban expires at",
       "ban_permanent_label": "Permanent",
       "register_ip": "Registration IP",

@@ -461,8 +461,6 @@
       "action_unban": "Bỏ cấm",
       "admin_level_success": "Đã cập nhật cấp quản trị thành công",
       "admin_level_title": "Thay đổi cấp quản trị",
-      "ban_confirm": "Bạn có chắc muốn cấm người dùng này?",
-      "ban_success": "Đã cấm người dùng thành công",
       "col_actions": "Thao tác",
       "col_admin_level": "Cấp quản trị",
       "col_createtime": "Ngày tạo",
@@ -476,7 +474,6 @@
       "search_button": "Tìm kiếm",
       "search_placeholder": "Tìm kiếm tên người dùng hoặc email",
       "status_active": "Hoạt động",
-      "status_banned": "Đã cấm",
       "title": "Quản lý người dùng",
       "unban_confirm": "Bạn có chắc muốn bỏ cấm người dùng này?",
       "unban_success": "Đã bỏ cấm người dùng thành công",
@@ -942,6 +939,20 @@
       "duplicate": "Bạn đã báo cáo nội dung này rồi, quản trị viên sẽ xử lý sớm.",
       "not_found": "Nội dung không tồn tại hoặc đã bị xóa",
       "submit_failed": "Gửi báo cáo thất bại, vui lòng thử lại sau"
+    },
+    "ban": {
+      "banned": "Đang bị cấm",
+      "permanent": "Bị cấm vĩnh viễn",
+      "until": "Gỡ lúc {time}",
+      "today": "hôm nay {time}",
+      "tomorrow": "ngày mai {time}",
+      "remaining_days": "{count} ngày",
+      "remaining_hours": "{count} giờ",
+      "remaining_lt_hour": "dưới 1 giờ",
+      "until_with_remaining": "Gỡ lúc {until} · còn {remaining}",
+      "tooltip_until": "Thời gian gỡ",
+      "tooltip_remaining": "Còn lại",
+      "tooltip_reason": "Lý do"
     }
   },
   "error": {
@@ -2590,7 +2601,6 @@
       "unban_success": "Gỡ cấm thành công",
       "ban_confirm_title": "Xác nhận cấm",
       "unban_confirm": "Bạn có chắc muốn gỡ cấm người dùng này?",
-      "user_banned": "Đã bị cấm",
       "ban_expire_at": "Thời điểm hết hạn cấm",
       "ban_permanent_label": "Vĩnh viễn",
       "register_ip": "IP đăng ký",

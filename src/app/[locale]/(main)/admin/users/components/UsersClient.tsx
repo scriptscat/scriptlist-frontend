@@ -11,6 +11,7 @@ import {
   Space,
   Table,
   Tag,
+  Tooltip,
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
@@ -21,9 +22,14 @@ import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
 import { useTableStateLocale } from '../../components/tableState';
+import BanUserModal from '@/components/UserProfile/BanUserModal';
+import { useBanTime } from '@/lib/utils/banTime';
 
 export default function UsersClient() {
   const t = useTranslations('admin.users');
+  const tBan = useTranslations('components.ban');
+  const banTime = useBanTime();
+  const [banningUser, setBanningUser] = useState<UserItem | null>(null);
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   // 输入框的值只有点「搜索」时才生效，和原来「翻页才重新拉取」的行为一致。
@@ -49,18 +55,6 @@ export default function UsersClient() {
   const handleSearch = () => {
     setPage(1);
     setAppliedKeyword(keyword);
-  };
-
-  const handleBan = async (id: number) => {
-    try {
-      await adminService.updateUserStatus(id, 2);
-      message.success(t('ban_success'));
-      fetchData();
-    } catch (err) {
-      if (err instanceof APIError) {
-        message.error(err.msg);
-      }
-    }
   };
 
   const handleUnban = async (id: number) => {
@@ -96,9 +90,46 @@ export default function UsersClient() {
     }
   };
 
-  const getStatusTag = (status: number) => {
-    if (status === 2) return <Tag color="red">{t('status_banned')}</Tag>;
-    return <Tag color="green">{t('status_active')}</Tag>;
+  const renderStatus = (record: UserItem) => {
+    if (record.status !== 2) {
+      return <Tag color="green">{t('status_active')}</Tag>;
+    }
+    const expireAt = record.ban_expire_at ?? 0;
+    if (!expireAt) {
+      return <Tag color="red">{tBan('permanent')}</Tag>;
+    }
+    return (
+      <div>
+        <Tag color="red">{tBan('banned')}</Tag>
+        <Tooltip
+          title={
+            <div>
+              <div>
+                <span className="opacity-60 mr-1.5">
+                  {tBan('tooltip_until')}
+                </span>
+                {banTime.full(expireAt)}
+              </div>
+              {record.ban_reason && (
+                <div>
+                  <span className="opacity-60 mr-1.5">
+                    {tBan('tooltip_reason')}
+                  </span>
+                  {record.ban_reason}
+                </div>
+              )}
+            </div>
+          }
+        >
+          <div className="mt-1 w-fit cursor-help whitespace-nowrap text-xs text-app-secondary underline decoration-dotted underline-offset-4">
+            {tBan('until_with_remaining', {
+              until: banTime.until(expireAt),
+              remaining: banTime.remaining(expireAt),
+            })}
+          </div>
+        </Tooltip>
+      </div>
+    );
   };
 
   const getAdminLevelTag = (level: number) => {
@@ -151,7 +182,7 @@ export default function UsersClient() {
       title: t('col_status'),
       dataIndex: 'status',
       key: 'status',
-      render: (val: number) => getStatusTag(val),
+      render: (_: unknown, record: UserItem) => renderStatus(record),
     },
     {
       title: t('col_admin_level'),
@@ -171,14 +202,14 @@ export default function UsersClient() {
       render: (_: unknown, record: UserItem) => (
         <Space>
           {record.status === 1 ? (
-            <Popconfirm
-              title={t('ban_confirm')}
-              onConfirm={() => handleBan(record.id)}
+            <Button
+              type="link"
+              size="small"
+              danger
+              onClick={() => setBanningUser(record)}
             >
-              <Button type="link" size="small" danger>
-                {t('action_ban')}
-              </Button>
-            </Popconfirm>
+              {t('action_ban')}
+            </Button>
           ) : (
             <Popconfirm
               title={t('unban_confirm')}
@@ -236,6 +267,19 @@ export default function UsersClient() {
           onChange: setPage,
         }}
       />
+
+      {banningUser && (
+        <BanUserModal
+          visible
+          userId={banningUser.id}
+          username={banningUser.username}
+          onCancel={() => setBanningUser(null)}
+          onSuccess={() => {
+            setBanningUser(null);
+            fetchData();
+          }}
+        />
+      )}
 
       <Modal
         title={t('admin_level_title')}

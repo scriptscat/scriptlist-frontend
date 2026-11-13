@@ -85,6 +85,9 @@ export interface UserItem {
   status: number;
   admin_level: number;
   createtime: number;
+  // 仅封禁中时有值；ban_expire_at 缺省或 0 表示永久
+  ban_expire_at?: number;
+  ban_reason?: string;
 }
 
 // ==================== Script Management ====================

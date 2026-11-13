@@ -18,7 +18,7 @@ export default async function AdminRootLayout({
     const t = await getTranslations('admin');
 
     return (
-      <PageIntlProvider namespaces={['admin', 'script']}>
+      <PageIntlProvider namespaces={['admin', 'script', 'user']}>
         <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
           <Result status="403" title="403" subTitle={t('no_permission')} />
         </div>
@@ -27,7 +27,7 @@ export default async function AdminRootLayout({
   }
 
   return (
-    <PageIntlProvider namespaces={['admin', 'script']}>
+    <PageIntlProvider namespaces={['admin', 'script', 'user']}>
       <AdminLayout>{children}</AdminLayout>
     </PageIntlProvider>
   );

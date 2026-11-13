@@ -478,8 +478,6 @@
       "action_unban": "Entsperren",
       "admin_level_success": "Administratorstufe erfolgreich aktualisiert",
       "admin_level_title": "Administratorstufe ändern",
-      "ban_confirm": "Möchten Sie diesen Benutzer wirklich sperren?",
-      "ban_success": "Benutzer erfolgreich gesperrt",
       "col_actions": "Aktionen",
       "col_admin_level": "Administratorstufe",
       "col_createtime": "Erstellt am",
@@ -493,7 +491,6 @@
       "search_button": "Suchen",
       "search_placeholder": "Benutzername oder E-Mail suchen",
       "status_active": "Aktiv",
-      "status_banned": "Gesperrt",
       "title": "Benutzerverwaltung",
       "unban_confirm": "Möchten Sie diesen Benutzer wirklich entsperren?",
       "unban_success": "Benutzer erfolgreich entsperrt",
@@ -942,6 +939,20 @@
       "duplicate": "Du hast diesen Inhalt bereits gemeldet. Die Administratoren kümmern sich bald darum.",
       "not_found": "Der Inhalt existiert nicht oder wurde gelöscht",
       "submit_failed": "Meldung konnte nicht gesendet werden, bitte später erneut versuchen"
+    },
+    "ban": {
+      "banned": "Gesperrt",
+      "permanent": "Dauerhaft gesperrt",
+      "until": "Aufhebung {time}",
+      "today": "heute {time}",
+      "tomorrow": "morgen {time}",
+      "remaining_days": "{count, plural, one {# Tag} other {# Tage}}",
+      "remaining_hours": "{count, plural, one {# Stunde} other {# Stunden}}",
+      "remaining_lt_hour": "weniger als 1 Stunde",
+      "until_with_remaining": "Aufhebung {until} · noch {remaining}",
+      "tooltip_until": "Aufhebung am",
+      "tooltip_remaining": "Verbleibend",
+      "tooltip_reason": "Grund"
     }
   },
   "error": {
@@ -2590,7 +2601,6 @@
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",
       "unban_confirm": "Are you sure you want to unban this user?",
-      "user_banned": "Banned",
       "ban_expire_at": "Ban expires at",
       "ban_permanent_label": "Permanent",
       "register_ip": "Registration IP",

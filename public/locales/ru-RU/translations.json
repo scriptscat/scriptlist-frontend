@@ -478,8 +478,6 @@
       "action_unban": "Разблокировать",
       "admin_level_success": "Уровень администратора успешно обновлён",
       "admin_level_title": "Изменить уровень администратора",
-      "ban_confirm": "Вы уверены, что хотите заблокировать этого пользователя?",
-      "ban_success": "Пользователь успешно заблокирован",
       "col_actions": "Действия",
       "col_admin_level": "Уровень администратора",
       "col_createtime": "Дата создания",
@@ -493,7 +491,6 @@
       "search_button": "Поиск",
       "search_placeholder": "Поиск по имени пользователя или email",
       "status_active": "Активный",
-      "status_banned": "Заблокирован",
       "title": "Управление пользователями",
       "unban_confirm": "Вы уверены, что хотите разблокировать этого пользователя?",
       "unban_success": "Пользователь успешно разблокирован",
@@ -942,6 +939,20 @@
       "duplicate": "Вы уже отправляли жалобу на этот контент. Администраторы скоро её рассмотрят.",
       "not_found": "Контент не существует или был удалён",
       "submit_failed": "Не удалось отправить жалобу, попробуйте позже"
+    },
+    "ban": {
+      "banned": "Заблокирован",
+      "permanent": "Заблокирован навсегда",
+      "until": "Снятие {time}",
+      "today": "сегодня {time}",
+      "tomorrow": "завтра {time}",
+      "remaining_days": "{count, plural, one {# день} few {# дня} many {# дней} other {# дня}}",
+      "remaining_hours": "{count, plural, one {# час} few {# часа} many {# часов} other {# часа}}",
+      "remaining_lt_hour": "меньше 1 часа",
+      "until_with_remaining": "Снятие {until} · осталось {remaining}",
+      "tooltip_until": "Снятие",
+      "tooltip_remaining": "Осталось",
+      "tooltip_reason": "Причина"
     }
   },
   "error": {
@@ -2590,7 +2601,6 @@
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",
       "unban_confirm": "Are you sure you want to unban this user?",
-      "user_banned": "Banned",
       "ban_expire_at": "Ban expires at",
       "ban_permanent_label": "Permanent",
       "register_ip": "Registration IP",

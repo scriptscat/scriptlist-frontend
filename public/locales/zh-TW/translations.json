@@ -478,8 +478,6 @@
       "action_unban": "解封",
       "admin_level_success": "管理員等級更新成功",
       "admin_level_title": "修改管理員等級",
-      "ban_confirm": "確定要封禁此用戶吗？",
-      "ban_success": "用戶封禁成功",
       "col_actions": "操作",
       "col_admin_level": "管理員等級",
       "col_createtime": "創建時間",
@@ -493,7 +491,6 @@
       "search_button": "搜索",
       "search_placeholder": "搜索用戶名或郵箱",
       "status_active": "正常",
-      "status_banned": "已封禁",
       "title": "用戶管理",
       "unban_confirm": "確定要解封此用戶吗？",
       "unban_success": "用戶解封成功",
@@ -942,6 +939,20 @@
       "duplicate": "你已經檢舉過該內容，管理員會盡快處理",
       "not_found": "內容不存在或已被刪除",
       "submit_failed": "檢舉提交失敗，請稍後重試"
+    },
+    "ban": {
+      "banned": "封禁中",
+      "permanent": "永久封禁",
+      "until": "{time} 解除",
+      "today": "今天 {time}",
+      "tomorrow": "明天 {time}",
+      "remaining_days": "{count} 天",
+      "remaining_hours": "{count} 小時",
+      "remaining_lt_hour": "不到 1 小時",
+      "until_with_remaining": "{until} 解除 · 剩 {remaining}",
+      "tooltip_until": "解除時間",
+      "tooltip_remaining": "剩餘",
+      "tooltip_reason": "理由"
     }
   },
   "error": {
@@ -2590,7 +2601,6 @@
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",
       "unban_confirm": "Are you sure you want to unban this user?",
-      "user_banned": "Banned",
       "ban_expire_at": "Ban expires at",
       "ban_permanent_label": "Permanent",
       "register_ip": "Registration IP",
