@@ -1755,8 +1755,6 @@
         "reopened_feedback": "повторно открыл отзыв",
         "reply": "Ответить",
         "reply_success": "Ответ успешно отправлен",
-        "status_pending": "Ожидает обработки",
-        "status_resolved": "Решено",
         "system_error": "Системная ошибка",
         "unwatch_success": "Отписка выполнена",
         "update_failed": "Обновление не удалось",
@@ -1766,6 +1764,7 @@
         "watch_tooltip": "Следить за этим отзывом, чтобы получать уведомления об обновлениях",
         "watched_button": "Отслеживается"
       },
+      "comment_count": "{count, plural, one {# комментарий} few {# комментария} other {# комментариев}}",
       "create": {
         "content_placeholder": "Пожалуйста, подробно опишите проблему, включая шаги воспроизведения, ожидаемые результаты и т.д...",
         "content_required": "Пожалуйста, введите содержание",
@@ -1776,6 +1775,7 @@
         "title_required": "Пожалуйста, введите заголовок"
       },
       "create_issue": "Создать новую проблему",
+      "created_at": "создано {time}",
       "detail": {
         "issue_description": "Отчёт о проблеме {scriptName}: {title}",
         "issue_feedback_title": "Отчёт о проблеме | ScriptCat",

@@ -36,7 +36,11 @@ export type IssueComment = {
   createtime: number;
 };
 
-export type IssueListResponse = ListData<Issue>;
+export type IssueListResponse = ListData<Issue> & {
+  /** 待解决 / 已解决数量：受关键字过滤，不受状态筛选影响 */
+  open_count: number;
+  closed_count: number;
+};
 export type IssueCommentListResponse = ListData<IssueComment>;
 
 // Watch相关类型定义

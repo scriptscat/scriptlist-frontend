@@ -1763,8 +1763,6 @@
         "reopened_feedback": "reopened the feedback",
         "reply": "Reply",
         "reply_success": "Reply successful",
-        "status_pending": "Pending",
-        "status_resolved": "Resolved",
         "system_error": "System error",
         "unwatch_success": "Unwatched",
         "update_failed": "Update failed",
@@ -1774,6 +1772,7 @@
         "watch_tooltip": "Watch this feedback to receive update notifications",
         "watched_button": "Watching"
       },
+      "comment_count": "{count, plural, one {# comment} other {# comments}}",
       "create": {
         "content_placeholder": "Please describe the issue in detail, including reproduction steps, expected results, etc...",
         "content_required": "Please enter content",
@@ -1784,6 +1783,7 @@
         "title_required": "Please enter title"
       },
       "create_issue": "Create Issue",
+      "created_at": "opened {time}",
       "detail": {
         "issue_description": "Issue feedback for {scriptName}: {title}",
         "issue_feedback_title": "Issue Feedback | ScriptCat",

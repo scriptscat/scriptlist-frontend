@@ -52,6 +52,16 @@ html[data-theme='dark'] {
   /* #0b5ed7 - GitHub深蓝 */
   --primary-700: 10 82 190;
   /* #0a52be - 很深蓝 */
+
+  /* 反馈状态 - GitHub open / completed。*-emphasis 是白字胶囊的底色 */
+  --status-open: 26 127 55;
+  /* #1a7f37 */
+  --status-open-emphasis: 31 136 61;
+  /* #1f883d */
+  --status-closed: 130 80 223;
+  /* #8250df */
+  --status-closed-emphasis: 130 80 223;
+  /* #8250df */
 }
 
 /* 深色模式变量 - 参考 GitHub 深色主题 */
@@ -95,6 +105,16 @@ html[data-theme='dark'] {
   /* #4f95e5 */
   --primary-700: 65 132 228;
   /* #4184e4 */
+
+  /* 反馈状态：图标用亮色，胶囊底色压暗以保证白字对比度 */
+  --status-open: 63 185 80;
+  /* #3fb950 */
+  --status-open-emphasis: 35 134 54;
+  /* #238636 */
+  --status-closed: 163 113 247;
+  /* #a371f7 */
+  --status-closed-emphasis: 137 87 229;
+  /* #8957e5 */
 }
 
 /* 通用样式类 */

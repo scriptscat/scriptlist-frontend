@@ -1755,8 +1755,6 @@
         "reopened_feedback": "フィードバックを再開しました",
         "reply": "返信",
         "reply_success": "返信が完了しました",
-        "status_pending": "処理待ち",
-        "status_resolved": "解決済み",
         "system_error": "システムエラー",
         "unwatch_success": "フォローを解除しました",
         "update_failed": "更新に失敗しました",
@@ -1766,6 +1764,7 @@
         "watch_tooltip": "このフィードバックをフォローして更新通知を受け取る",
         "watched_button": "フォロー中"
       },
+      "comment_count": "{count} 件の返信",
       "create": {
         "content_placeholder": "再現手順、期待する結果などを含めて問題を詳しく説明してください...",
         "content_required": "内容を入力してください",
@@ -1776,6 +1775,7 @@
         "title_required": "タイトルを入力してください"
       },
       "create_issue": "新しい問題",
+      "created_at": "{time} に作成",
       "detail": {
         "issue_description": "{scriptName}の問題フィードバック：{title}",
         "issue_feedback_title": "問題フィードバック | ScriptCat",

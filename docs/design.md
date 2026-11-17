@@ -46,6 +46,8 @@ themes, async states and accessibility.
 | `--border-focus` | `13 110 253` | `88 166 255` | focus ring |
 | `--primary-500` | `13 110 253` | `88 166 255` | brand |
 | `--primary-600` / `--primary-700` | `11 94 215` / `10 82 190` | `79 149 229` / `65 132 228` | brand, pressed and deep |
+| `--status-open` / `--status-closed` | `26 127 55` / `130 80 223` | `63 185 80` / `163 113 247` | feedback open / resolved (icon, text) |
+| `--status-open-emphasis` / `--status-closed-emphasis` | `31 136 61` / `130 80 223` | `35 134 54` / `137 87 229` | fill behind white text (status badge) |
 
 Values are space-separated RGB channels so they compose with an alpha:
 `rgb(var(--primary-500) / 0.08)`.

@@ -1755,8 +1755,6 @@
         "reopened_feedback": "Feedback wieder geöffnet",
         "reply": "Antworten",
         "reply_success": "Antwort erfolgreich",
-        "status_pending": "In Bearbeitung",
-        "status_resolved": "Gelöst",
         "system_error": "Systemfehler",
         "unwatch_success": "Nicht mehr gefolgt",
         "update_failed": "Aktualisierung fehlgeschlagen",
@@ -1766,6 +1764,7 @@
         "watch_tooltip": "Diesem Feedback folgen, um Update-Benachrichtigungen zu erhalten",
         "watched_button": "Gefolgt"
       },
+      "comment_count": "{count, plural, one {# Kommentar} other {# Kommentare}}",
       "create": {
         "content_placeholder": "Bitte beschreiben Sie das Problem detailliert, einschließlich Reproduktionsschritte, erwartete Ergebnisse usw...",
         "content_required": "Bitte Inhalt eingeben",
@@ -1776,6 +1775,7 @@
         "title_required": "Bitte Titel eingeben"
       },
       "create_issue": "Neues Problem",
+      "created_at": "erstellt {time}",
       "detail": {
         "issue_description": "Problemfeedback für {scriptName}: {title}",
         "issue_feedback_title": "Problemfeedback | ScriptCat",

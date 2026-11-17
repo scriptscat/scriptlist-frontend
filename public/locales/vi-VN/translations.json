@@ -1755,8 +1755,6 @@
         "reopened_feedback": "đã mở lại phản hồi",
         "reply": "Trả lời",
         "reply_success": "Trả lời thành công",
-        "status_pending": "Chờ xử lý",
-        "status_resolved": "Đã giải quyết",
         "system_error": "Lỗi hệ thống",
         "unwatch_success": "Đã bỏ theo dõi",
         "update_failed": "Cập nhật thất bại",
@@ -1766,6 +1764,7 @@
         "watch_tooltip": "Theo dõi phản hồi này để nhận thông báo cập nhật",
         "watched_button": "Đang theo dõi"
       },
+      "comment_count": "{count} bình luận",
       "create": {
         "content_placeholder": "Vui lòng mô tả chi tiết vấn đề, bao gồm các bước tái hiện, kết quả mong đợi...",
         "content_required": "Vui lòng nhập nội dung",
@@ -1776,6 +1775,7 @@
         "title_required": "Vui lòng nhập tiêu đề"
       },
       "create_issue": "Tạo phản hồi",
+      "created_at": "tạo {time}",
       "detail": {
         "issue_description": "Phản hồi vấn đề của {scriptName}: {title}",
         "issue_feedback_title": "Phản hồi vấn đề | ScriptCat",

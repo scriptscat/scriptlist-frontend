@@ -1,29 +1,16 @@
 'use client';
 
-import {
-  Button,
-  Tag,
-  Typography,
-  Input,
-  Empty,
-  Pagination,
-  Card,
-  Avatar,
-  Space,
-  theme,
-  Spin,
-} from 'antd';
-import { PlusOutlined, MessageOutlined } from '@ant-design/icons';
+import { Button, Input, Empty, Pagination, Card, theme, Spin } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import type { Issue } from '@/lib/api/services/scripts/issue';
-import { useSemDateTime } from '@/lib/utils/semdate';
 import { useIssueList } from '@/lib/api/hooks/issue';
 import { useResource } from '@/lib/api/hooks/useResource';
-import IssueLabel from './IssueLabel';
-import { ISSUE_PAGE_SIZE, IssueListSkeleton } from './IssueRowSkeleton';
-import { openIssueDetail } from './issueNavigation';
+import { ISSUE_PAGE_SIZE, IssueRowsSkeleton } from './IssueRowSkeleton';
+import IssueRow from './IssueRow';
+import IssueStatusTabs from './IssueStatusTabs';
 
 const PAGE_SIZE = ISSUE_PAGE_SIZE;
 
@@ -34,6 +21,8 @@ interface ScriptIssueClientProps {
   initialKeyword: string;
   initialIssues: Issue[];
   initialTotal: number;
+  initialOpenCount: number;
+  initialClosedCount: number;
 }
 
 export default function ScriptIssueClient({
@@ -43,9 +32,10 @@ export default function ScriptIssueClient({
   initialKeyword,
   initialIssues,
   initialTotal,
+  initialOpenCount,
+  initialClosedCount,
 }: ScriptIssueClientProps) {
   const { token } = theme.useToken();
-  const semDateTime = useSemDateTime();
   const t = useTranslations('script.issue');
   const tLoading = useTranslations('components.loading');
 
@@ -83,6 +73,25 @@ export default function ScriptIssueClient({
   const displayIssues = paramsChanged ? (data?.list ?? []) : initialIssues;
   // 加载中 / 失败时不要把 total 掉回 0，否则 Pagination 会整块卸载再挂回来。
   const totalCount = data?.total ?? initialTotal;
+  // 表头的待解决 / 已解决数量只随关键字变化，与状态筛选无关；
+  // 换筛选 / 翻页的请求在途时沿用上一次的数量，避免数字闪成 0。
+  const latestCounts = !paramsChanged
+    ? { open: initialOpenCount, closed: initialClosedCount }
+    : data
+      ? { open: data.open_count, closed: data.closed_count }
+      : null;
+  const [lastCounts, setLastCounts] = useState({
+    open: initialOpenCount,
+    closed: initialClosedCount,
+  });
+  if (
+    latestCounts &&
+    (latestCounts.open !== lastCounts.open ||
+      latestCounts.closed !== lastCounts.closed)
+  ) {
+    setLastCounts(latestCounts);
+  }
+  const counts = latestCounts ?? lastCounts;
   // 搜索防抖窗口内输入框已经变了但请求还没发，这段时间也要给反馈。
   const searchPending = searchValue !== currentKeyword;
 
@@ -171,29 +180,6 @@ export default function ScriptIssueClient({
               loading={searchPending || (isRefreshing && !!currentKeyword)}
               className="flex-1 w-full"
             />
-            <Space.Compact>
-              <Button
-                type={currentStatus === 'all' ? 'primary' : 'default'}
-                onClick={() => handleStatusFilter('all')}
-                size="middle"
-              >
-                {t('filter_all')}
-              </Button>
-              <Button
-                type={currentStatus === 'pending' ? 'primary' : 'default'}
-                onClick={() => handleStatusFilter('pending')}
-                size="middle"
-              >
-                {t('filter_pending')}
-              </Button>
-              <Button
-                type={currentStatus === 'resolved' ? 'primary' : 'default'}
-                onClick={() => handleStatusFilter('resolved')}
-                size="middle"
-              >
-                {t('filter_resolved')}
-              </Button>
-            </Space.Compact>
             <Link href={`/script-show-page/${scriptId}/issue/create`}>
               <Button type="primary" icon={<PlusOutlined />} size="middle">
                 {t('create_issue')}
@@ -202,33 +188,30 @@ export default function ScriptIssueClient({
           </div>
         </div>
 
-        {/* 问题列表 */}
-        {isInitialLoading ? (
-          <IssueListSkeleton />
-        ) : error && !data ? (
-          <div
-            role="alert"
-            style={{
-              border: `1px solid ${token.colorBorder}`,
-              backgroundColor: token.colorBgContainer,
-              borderRadius: token.borderRadius,
-            }}
-          >
-            <div className="flex flex-col items-center gap-3 py-12 text-center">
+        {/* 问题列表：表头（状态切换 + 数量）始终在框内，下面是行 / 骨架 / 空 / 错误 */}
+        <div
+          className="overflow-hidden rounded-md border border-app-primary bg-app-elevated"
+          aria-busy={isInitialLoading || isRefreshing}
+        >
+          <IssueStatusTabs
+            status={currentStatus}
+            openCount={counts.open}
+            closedCount={counts.closed}
+            onChange={handleStatusFilter}
+          />
+          {isInitialLoading ? (
+            <IssueRowsSkeleton />
+          ) : error && !data ? (
+            <div
+              role="alert"
+              className="flex flex-col items-center gap-3 py-12 text-center"
+            >
               <span style={{ color: token.colorTextSecondary }}>
                 {tLoading('failed')}
               </span>
               <Button onClick={() => swr.mutate()}>{tLoading('retry')}</Button>
             </div>
-          </div>
-        ) : displayIssues.length === 0 ? (
-          <div
-            style={{
-              border: `1px solid ${token.colorBorder}`,
-              backgroundColor: token.colorBgContainer,
-              borderRadius: token.borderRadius,
-            }}
-          >
+          ) : displayIssues.length === 0 ? (
             <div className="py-12 text-center">
               <Empty
                 description={
@@ -239,141 +222,14 @@ export default function ScriptIssueClient({
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
             </div>
-          </div>
-        ) : (
-          <Spin spinning={isRefreshing}>
-            <div
-              style={{
-                border: `1px solid ${token.colorBorder}`,
-                backgroundColor: token.colorBgContainer,
-                borderRadius: token.borderRadius,
-              }}
-            >
-              {displayIssues.map((issue, index) => (
-                <div
-                  key={issue.id}
-                  className="px-4 py-3 transition-colors duration-200 cursor-pointer"
-                  role="link"
-                  tabIndex={0}
-                  aria-label={issue.title}
-                  style={{
-                    borderBottom:
-                      index !== displayIssues.length - 1
-                        ? `1px solid ${token.colorBorder}`
-                        : 'none',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor =
-                      token.colorBgTextHover;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
-                  onClick={(e) => {
-                    if ((e.target as HTMLElement).closest('a, button')) return;
-                    openIssueDetail(scriptId, issue.id);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.target !== e.currentTarget) return;
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      openIssueDetail(scriptId, issue.id);
-                    }
-                  }}
-                >
-                  <div className="flex items-start gap-3">
-                    {/* 主要内容 */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          {/* 标题和标签 */}
-                          <div className="mb-2">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Link
-                                href={`/script-show-page/${scriptId}/issue/${issue.id}`}
-                                target="_blank"
-                              >
-                                <Typography.Title level={5}>
-                                  {issue.title}
-                                </Typography.Title>
-                              </Link>
-
-                              <Tag
-                                color={
-                                  issue.status === 1 ? 'warning' : 'success'
-                                }
-                                className="text-xs"
-                              >
-                                {issue.status === 1
-                                  ? t('status_pending')
-                                  : t('status_resolved')}
-                              </Tag>
-                            </div>
-                            <div className="mt-1 flex flex-wrap gap-1">
-                              {issue.labels.slice(0, 4).map((label) => (
-                                <IssueLabel key={label} label={label} />
-                              ))}
-                              {issue.labels.length > 4 && (
-                                <Tag color="default" className="text-xs">
-                                  {'+' + (issue.labels.length - 4)}
-                                </Tag>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* 用户和时间信息 */}
-                          <div
-                            className="flex items-center gap-1 text-sm"
-                            style={{ color: token.colorTextSecondary }}
-                          >
-                            <Link
-                              href={'/users/' + issue.user_id}
-                              target="_blank"
-                            >
-                              <span className="inline-flex items-center gap-1">
-                                <Avatar size={20} src={issue.avatar} />
-                                <span>{issue.username}</span>
-                              </span>
-                            </Link>
-                            <Link
-                              href={`/script-show-page/${scriptId}/issue/${issue.id}`}
-                              target="_blank"
-                            >
-                              <Tag className="!mr-0 cursor-pointer">
-                                {'#' + issue.id}
-                              </Tag>
-                            </Link>
-                            <span>{semDateTime(issue.createtime)}</span>
-                            {issue.updatetime > 0 &&
-                              issue.updatetime !== issue.createtime && (
-                                <span>
-                                  {'• ' +
-                                    t('updated_at', {
-                                      time: semDateTime(issue.updatetime),
-                                    })}
-                                </span>
-                              )}
-                          </div>
-                        </div>
-
-                        {/* 右侧信息 */}
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                          <div
-                            className="flex items-center gap-1 text-base"
-                            style={{ color: token.colorTextSecondary }}
-                          >
-                            <MessageOutlined style={{ fontSize: '16px' }} />
-                            <span>{issue.comment_count || 0}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+          ) : (
+            <Spin spinning={isRefreshing}>
+              {displayIssues.map((issue) => (
+                <IssueRow key={issue.id} scriptId={scriptId} issue={issue} />
               ))}
-            </div>
-          </Spin>
-        )}
+            </Spin>
+          )}
+        </div>
 
         {/* 分页 */}
         {totalCount > PAGE_SIZE && (

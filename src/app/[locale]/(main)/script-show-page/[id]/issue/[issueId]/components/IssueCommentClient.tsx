@@ -1,8 +1,6 @@
 'use client';
 
 import {
-  InfoCircleTwoTone,
-  CheckCircleTwoTone,
   UserOutlined,
   InfoCircleFilled,
   CheckCircleFilled,
@@ -69,6 +67,7 @@ import { useUser } from '@/contexts/UserContext';
 import { Link } from '@/i18n/routing';
 import { useIsWatchIssue } from '@/lib/api/hooks/script';
 import IssueLabel from '../../components/IssueLabel';
+import { IssueStatusBadge } from '../../components/IssueStatus';
 
 const LabelsStatus: React.FC<{ content: string }> = ({ content }) => {
   const json = JSON.parse(content);
@@ -210,18 +209,9 @@ export default function IssueCommentClient({
             </ActionMenu>
           </div>
           <div className="flex flex-row items-center">
-            {status === 1 ? (
-              <Tag icon={<InfoCircleTwoTone />} color="blue">
-                {t('status_pending')}
-              </Tag>
-            ) : (
-              <Tag
-                icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
-                color="green"
-              >
-                {t('status_resolved')}
-              </Tag>
-            )}
+            <span className="me-2">
+              <IssueStatusBadge status={status} />
+            </span>
             <CopyToClipboard
               text={`${issueUrl}#issue-${issue.id}`}
               onCopy={() => message.success(t('copy_success'))}

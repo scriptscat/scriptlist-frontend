@@ -1763,8 +1763,6 @@
         "reopened_feedback": "重新开启了反馈",
         "reply": "回复",
         "reply_success": "回复成功",
-        "status_pending": "待处理",
-        "status_resolved": "已解决",
         "system_error": "系统错误",
         "unwatch_success": "已取消关注",
         "update_failed": "更新失败",
@@ -1774,6 +1772,7 @@
         "watch_tooltip": "关注此反馈以接收更新通知",
         "watched_button": "已关注"
       },
+      "comment_count": "{count} 条回复",
       "create": {
         "content_placeholder": "请详细描述问题，包括复现步骤、期望结果等...",
         "content_required": "请输入内容",
@@ -1784,6 +1783,7 @@
         "title_required": "请输入标题"
       },
       "create_issue": "新建问题",
+      "created_at": "创建于 {time}",
       "detail": {
         "issue_description": "{scriptName}的问题反馈：{title}",
         "issue_feedback_title": "问题反馈 | ScriptCat",

@@ -1755,8 +1755,6 @@
         "reopened_feedback": "重新開啟了回饋",
         "reply": "回覆",
         "reply_success": "回覆成功",
-        "status_pending": "待處理",
-        "status_resolved": "已解決",
         "system_error": "繫統錯誤",
         "unwatch_success": "已取消關註",
         "update_failed": "更新失敗",
@@ -1766,6 +1764,7 @@
         "watch_tooltip": "關註此回饋以接收更新通知",
         "watched_button": "已關註"
       },
+      "comment_count": "{count} 則回覆",
       "create": {
         "content_placeholder": "請詳細描述問題，包括重現步驟、期望結果等...",
         "content_required": "請輸入內容",
@@ -1776,6 +1775,7 @@
         "title_required": "請輸入標題"
       },
       "create_issue": "新建問題",
+      "created_at": "建立於 {time}",
       "detail": {
         "issue_description": "{scriptName}的問題回饋：{title}",
         "issue_feedback_title": "問題回饋 | ScriptCat",

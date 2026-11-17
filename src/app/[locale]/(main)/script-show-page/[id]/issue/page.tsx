@@ -62,10 +62,14 @@ export default async function ScriptIssuePage({
     ReturnType<typeof scriptIssueService.getIssueList>
   >['list'] = [];
   let initialTotal = 0;
+  let initialOpenCount = 0;
+  let initialClosedCount = 0;
   try {
     const data = await scriptIssueService.getIssueList(scriptId, apiParams);
     initialIssues = data.list;
     initialTotal = data.total;
+    initialOpenCount = data.open_count ?? 0;
+    initialClosedCount = data.closed_count ?? 0;
   } catch (error) {
     console.error('Failed to fetch issues:', error);
   }
@@ -78,6 +82,8 @@ export default async function ScriptIssuePage({
       initialKeyword={initialKeyword}
       initialIssues={initialIssues}
       initialTotal={initialTotal}
+      initialOpenCount={initialOpenCount}
+      initialClosedCount={initialClosedCount}
     />
   );
 }

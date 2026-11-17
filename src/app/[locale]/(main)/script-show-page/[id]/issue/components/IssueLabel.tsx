@@ -2,7 +2,11 @@ import type { TagProps } from 'antd';
 import { Tag } from 'antd';
 import { useTranslations } from 'next-intl';
 
-const IssueLabel: React.FC<TagProps & { label: string }> = (props) => {
+const IssueLabel: React.FC<TagProps & { label: string }> = ({
+  label,
+  className = '',
+  ...props
+}) => {
   const t = useTranslations('script.issue.labels');
 
   const IssueTagMap: { [key: string]: string[] } = {
@@ -11,17 +15,16 @@ const IssueLabel: React.FC<TagProps & { label: string }> = (props) => {
     bug: [t('bug'), 'red'],
   };
 
-  return IssueTagMap[props.label] ? (
-    <Tag
-      {...props}
-      className="anticon-middle"
-      color={IssueTagMap[props.label][1]}
-    >
-      {IssueTagMap[props.label][0]}
+  // GitHub 式胶囊标签
+  const cls = `anticon-middle !rounded-full ${className}`;
+
+  return IssueTagMap[label] ? (
+    <Tag {...props} className={cls} color={IssueTagMap[label][1]}>
+      {IssueTagMap[label][0]}
     </Tag>
   ) : (
-    <Tag {...props} className="anticon-middle">
-      {props.label || 'null'}
+    <Tag {...props} className={cls}>
+      {label || 'null'}
     </Tag>
   );
 };
