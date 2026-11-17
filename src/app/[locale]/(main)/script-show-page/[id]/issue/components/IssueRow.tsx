@@ -44,13 +44,17 @@ export default function IssueRow({
         }
       }}
     >
-      <IssueStatusIcon status={issue.status} className="mt-[3px]" />
+      {/* 图标盒子与标题行同高（leading-6 = 24px）并居中，标题折行时仍对齐首行 */}
+      <IssueStatusIcon
+        status={issue.status}
+        className="h-6 items-center self-start"
+      />
       <div className="min-w-0 flex-1">
-        <div className="leading-6">
+        <div className="text-[15px] leading-6">
           <Link
             href={href}
             target="_blank"
-            className="align-middle text-[15px] font-semibold break-words !text-[rgb(var(--text-primary))] hover:!text-[rgb(var(--primary-500))] hover:underline"
+            className="font-semibold break-words !text-[rgb(var(--text-primary))] hover:!text-[rgb(var(--primary-500))] hover:underline"
           >
             {issue.title}
           </Link>
@@ -58,13 +62,13 @@ export default function IssueRow({
             <IssueLabel
               key={label}
               label={label}
-              className="!ms-1 !me-0 align-middle"
+              className="relative top-px !ms-1 !me-0 align-top"
             />
           ))}
           {issue.labels.length > MAX_LABELS && (
             <IssueLabel
               label={'+' + (issue.labels.length - MAX_LABELS)}
-              className="!ms-1 !me-0 align-middle"
+              className="relative top-px !ms-1 !me-0 align-top"
             />
           )}
         </div>
@@ -87,7 +91,7 @@ export default function IssueRow({
           href={href}
           target="_blank"
           aria-label={t('comment_count', { count: issue.comment_count })}
-          className="flex shrink-0 items-start gap-1 pt-[3px] text-xs !text-[rgb(var(--text-secondary))] hover:!text-[rgb(var(--primary-500))]"
+          className="flex h-6 shrink-0 items-center gap-1 text-xs !text-[rgb(var(--text-secondary))] hover:!text-[rgb(var(--primary-500))]"
         >
           <Icon icon="mdi:comment-outline" width={16} height={16} aria-hidden />
           {issue.comment_count}
