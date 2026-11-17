@@ -1,5 +1,5 @@
 import { apiClient } from '../../client';
-import type { ListData } from '@/types/api';
+import type { CreateContentReportRequest, ListData } from '@/types/api';
 
 export type ReportStatusType = 1 | 3; // 1: 待处理, 3: 已解决
 
@@ -65,6 +65,16 @@ export class ScriptReportService {
   ): Promise<{ id: number }> {
     return apiClient.post<{ id: number }>(
       `${this.basePath}/${scriptId}/reports`,
+      data,
+    );
+  }
+
+  async createContentReport(
+    scriptId: number,
+    data: CreateContentReportRequest,
+  ): Promise<{ id: number }> {
+    return apiClient.post<{ id: number }>(
+      `${this.basePath}/${scriptId}/content-reports`,
       data,
     );
   }

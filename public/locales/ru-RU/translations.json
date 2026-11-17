@@ -434,6 +434,8 @@
       "save_button": "Сохранить",
       "save_success": "Успешно сохранено",
       "title": "Настройки системы",
+      "turnstile_enabled": "Включить проверку",
+      "turnstile_enabled_extra": "Если выключено, проверка на человека при входе, регистрации и сбросе пароля не выполняется",
       "turnstile_site_key": "Ключ сайта (Site Key)",
       "turnstile_secret_key": "Секретный ключ",
       "turnstile_title": "Cloudflare Turnstile",
@@ -456,7 +458,17 @@
       "recompute_trending_button": "Пересчитать trending_score",
       "recompute_trending_confirm": "Пересчитать trending_score для всех скриптов сейчас? На больших базах это может занять от нескольких секунд до десятков секунд.",
       "recompute_trending_started": "Пересчёт trending_score запущен",
-      "recompute_trending_running": "Пересчёт уже выполняется; повторный запуск не выполнен"
+      "recompute_trending_running": "Пересчёт уже выполняется; повторный запуск не выполнен",
+      "ai_test_hint": "Отправляет один реальный запрос со значениями из формы (включая несохранённые правки), чтобы проверить Base URL, API-ключ и модель. Тестовые вызовы не записываются как проверки.",
+      "ai_test_prompt": "Тестовый запрос (необязательно)",
+      "ai_test_prompt_placeholder": "Оставьте пустым, чтобы отправить фиксированный запрос проверки связи",
+      "ai_test_button": "Тестовый вызов",
+      "ai_test_running": "Выполняется…",
+      "ai_test_success": "Вызов выполнен · модель {model} · {latency} мс",
+      "ai_test_failed": "Вызов не выполнен",
+      "ai_test_failed_unknown": "Вызов не выполнен. Подробности в логах бэкенда.",
+      "ai_test_tokens": "{prompt} в запросе / {completion} в ответе токенов",
+      "ai_base_url_extra": "После изменения Base URL нужно заново указать API-ключ: тестовый вызов не передаёт сохранённый ключ на новый адрес."
     },
     "users": {
       "action_admin_level": "Изменить уровень",
@@ -657,7 +669,34 @@
       "reject_modal_title": "Отклонить аудит",
       "reject_reason_label": "Причина отклонения (отправится автору во внутреннем уведомлении)",
       "reject_reason_required": "Укажите причину отклонения",
-      "reject_reason_placeholder": "Объясните, почему скрипт отклонён (например: вредоносный код, нарушение правил, авторские права)"
+      "reject_reason_placeholder": "Объясните, почему скрипт отклонён (например: вредоносный код, нарушение правил, авторские права)",
+      "action_ai_review": "AI Review",
+      "ai_review_modal_title": "Re-run AI Review",
+      "ai_review_modal_alert": "AI review will be re-run for {name} {version} (the code version of this audit record). The result comes back asynchronously, usually in 10–60 seconds.",
+      "ai_review_modal_hint": "This text is added to the prompt as an \"Administrator Note\" section. It only highlights what to focus on and does not relax any review rule; later reviews of this version will include it, and submitting it empty clears the previous note.",
+      "ai_review_modal_preview_toggle": "Preview the section added to the prompt",
+      "ai_review_note_label": "Note (optional)",
+      "ai_review_note_placeholder": "e.g. focus on whether the script exfiltrates user data; the author claims authorization, so check whether the script description documents it.",
+      "ai_review_submit_success": "AI review task submitted",
+      "ai_review_submit_failed": "Submission failed, please try again later",
+      "ai_review_card_title": "AI Review Result",
+      "ai_review_card_running": "Reviewing",
+      "ai_review_card_pass": "Pass",
+      "ai_review_card_reject": "Suggest reject",
+      "ai_review_card_uncertain": "Uncertain",
+      "ai_review_card_failed": "Review failed",
+      "ai_review_card_skipped": "Skipped",
+      "ai_review_card_pass_hint": "AI suggests approving, but the audit status is unchanged — please confirm and then click \"Approve\" yourself.",
+      "ai_review_card_empty": "No AI review record yet for the code version of this audit",
+      "ai_review_card_view_records": "View in AI review records →",
+      "ai_review_card_retry": "Retry",
+      "ai_review_card_timeout": "Fetch timed out, please refresh manually",
+      "ai_review_card_reason": "Reason",
+      "ai_review_card_summary": "Summary",
+      "ai_review_card_tags": "Tags",
+      "ai_review_card_signals": "Risk signals",
+      "ai_review_card_note": "Administrator note",
+      "ai_review_card_updated_at": "Updated at"
     },
     "reports": {
       "title": "Управление жалобами",
@@ -669,7 +708,48 @@
       "col_createtime": "Дата создания",
       "col_actions": "Действия",
       "action_view": "Просмотр",
-      "filter_status": "Фильтр по статусу"
+      "filter_status": "Фильтр по статусу",
+      "tab_script": "Жалобы на скрипты",
+      "tab_content": "Жалобы на контент",
+      "content": {
+        "status_all": "Все",
+        "status_1": "Ожидает",
+        "status_2": "Обработано",
+        "status_3": "Отклонено",
+        "type_all": "Все типы",
+        "type_score": "Отзыв",
+        "type_issue": "Обращение",
+        "type_issue_comment": "Ответ на обращение",
+        "col_type": "Тип",
+        "col_summary": "Контент жалобы",
+        "col_author": "Автор",
+        "col_times": "Кол-во",
+        "target_deleted": "(Контент удалён)",
+        "action_handle": "Обработать",
+        "drawer_title": "Жалоба на контент #{id}",
+        "view_origin": "Открыть на месте",
+        "published_at": "Опубликовано {time}",
+        "handler": "Обработал",
+        "handle_note": "Примечание",
+        "no_note": "(не указано)",
+        "result_deleted": "Контент удалён",
+        "result_resolved": "Обработано",
+        "result_rejected": "Отклонено",
+        "snapshot": "Контент жалобы",
+        "records": "Жалобы ({count})",
+        "load_failed": "Не удалось загрузить",
+        "retry": "Повторить",
+        "action_reject": "Отклонить",
+        "action_resolve": "Отметить как обработанную",
+        "action_delete": "Удалить контент и закрыть",
+        "action_reopen": "Открыть снова",
+        "delete_confirm_title": "Удалить этот контент?",
+        "delete_confirm_desc": "Контент будет удалён безвозвратно, а все ожидающие жалобы на него будут закрыты.",
+        "note_hint": "Видно только администраторам",
+        "note_placeholder": "Заметка об обработке (необязательно)",
+        "action_success": "Готово",
+        "action_failed": "Не удалось выполнить действие, попробуйте ещё раз"
+      }
     }
   },
   "auth": {
@@ -812,6 +892,54 @@
       "loading_editor": "Загрузка редактора...",
       "placeholder": "Пожалуйста, введите содержание...",
       "uploading_image": "Загрузка изображения..."
+    },
+    "contentReport": {
+      "title_score": "Пожаловаться на отзыв",
+      "title_issue": "Пожаловаться на обратную связь",
+      "title_issue_comment": "Пожаловаться на ответ",
+      "quote_score": "Отзыв пользователя {name}",
+      "quote_issue": "Обращение пользователя {name}: «{title}»",
+      "quote_issue_comment": "Ответ пользователя {name}",
+      "reason_label": "Причина жалобы",
+      "reasons": {
+        "spam": {
+          "name": "Спам / реклама",
+          "desc": "Привлечение трафика, продвижение, флуд"
+        },
+        "abuse": {
+          "name": "Оскорбления",
+          "desc": "Личные нападки, дискриминация, травля"
+        },
+        "porn": {
+          "name": "Порнография / пошлость",
+          "desc": "Сексуальный, жестокий или неприятный контент"
+        },
+        "illegal": {
+          "name": "Нарушение закона",
+          "desc": "Незаконная информация, мошенничество, вредоносные ссылки"
+        },
+        "misleading": {
+          "name": "Накрутка / ложная информация",
+          "desc": "Не относится к скрипту, фальшивые отзывы"
+        },
+        "other": {
+          "name": "Другое",
+          "desc": "Опишите в дополнительном комментарии"
+        }
+      },
+      "note_label": "Дополнительное описание",
+      "note_optional": "(необязательно)",
+      "note_required_mark": "(обязательно)",
+      "note_placeholder": "Опишите проблему",
+      "note_required_error": "При выборе «Другое» необходимо добавить описание",
+      "note_too_long_error": "Описание не должно превышать 500 символов",
+      "privacy": "Жалобы видны только администраторам. Автор контента не узнает, кто пожаловался.",
+      "submit": "Отправить жалобу",
+      "cancel": "Отмена",
+      "success": "Жалоба отправлена. Спасибо, что помогаете поддерживать сообщество.",
+      "duplicate": "Вы уже отправляли жалобу на этот контент. Администраторы скоро её рассмотрят.",
+      "not_found": "Контент не существует или был удалён",
+      "submit_failed": "Не удалось отправить жалобу, попробуйте позже"
     }
   },
   "error": {
@@ -2455,6 +2583,7 @@
       "ban_clean_options": "Параметры очистки",
       "ban_clean_scores": "Удалить оценки пользователя",
       "ban_clean_scripts": "Удалить скрипты пользователя",
+      "ban_clean_issues": "Удалить обращения и ответы пользователя",
       "ban_success": "Пользователь заблокирован",
       "unban_success": "Пользователь разблокирован",
       "ban_confirm_title": "Подтверждение блокировки",

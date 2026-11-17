@@ -67,6 +67,7 @@ jobs:
           NEXT_PUBLIC_APP_URL=https://${{ env.DOMAIN }}
           APP_API_URL=http://${{ env.INNER_DOMAIN }}.app.svc.cluster.local/api/v2
           APP_API_PROXY=http://${{ env.INNER_DOMAIN }}.app.svc.cluster.local/api/v2
+          NEXT_PUBLIC_BUILD_ID=${{ env.ENV }}.${{ steps.vars.outputs.sha_short }}
 
     - name: Set up kubeconfig
 #      uses: azure/k8s-set-context@v4

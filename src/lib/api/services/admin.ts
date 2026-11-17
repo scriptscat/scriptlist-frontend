@@ -1,5 +1,12 @@
-import type { ListData } from '@/types/api';
+import type {
+  AdminContentReportDetail,
+  AdminContentReportItem,
+  ContentReportHandleBody,
+  ContentReportTargetType,
+  ListData,
+} from '@/types/api';
 import { apiClient } from '../client';
+import { API_CONFIG } from '../config';
 
 // ==================== OAuth Apps ====================
 
@@ -42,6 +49,24 @@ export interface SystemConfigItem {
 
 export interface GetSystemConfigsResponse {
   configs: SystemConfigItem[];
+}
+
+/** 测试 AI 配置的请求体；api_key 留空或掩码时后端回退到已保存的 key */
+export interface TestAIConfigRequest {
+  base_url?: string;
+  api_key?: string;
+  model?: string;
+  system_prompt?: string;
+  user_prompt?: string;
+}
+
+/** 测试结果：上游的真实反馈 */
+export interface TestAIConfigResponse {
+  model: string;
+  content: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  latency_ms: number;
 }
 
 // ==================== User Management ====================
@@ -265,6 +290,15 @@ class AdminService {
     });
   }
 
+  // 用当前（可能尚未保存的）配置发起一次真实调用，验证连通性与模型
+  async testAIConfig(data: TestAIConfigRequest) {
+    return apiClient.post<TestAIConfigResponse>(
+      `${this.basePath}/system-configs/ai-test`,
+      data,
+      { timeout: API_CONFIG.aiTestTimeout },
+    );
+  }
+
   // User Management
   async listUsers(page: number = 1, size: number = 20, keyword?: string) {
     return apiClient.get<ListData<UserItem>>(`${this.basePath}/users`, {
@@ -282,6 +316,7 @@ class AdminService {
       expire_at?: number;
       clean_scores?: boolean;
       clean_scripts?: boolean;
+      clean_issues?: boolean;
     },
   ) {
     return apiClient.put<void>(`${this.basePath}/users/${id}/status`, {
@@ -491,6 +526,44 @@ class AdminService {
     return apiClient.get<ListData<AdminReportItem>>(
       `${this.basePath}/reports`,
       { page, size, status },
+    );
+  }
+
+  // Content Report Management
+  async listContentReports(params: {
+    page: number;
+    size: number;
+    status?: number;
+    target_type?: ContentReportTargetType;
+  }) {
+    return apiClient.get<ListData<AdminContentReportItem>>(
+      `${this.basePath}/content-reports`,
+      params,
+    );
+  }
+
+  async getContentReportPendingCount() {
+    return apiClient.get<{ count: number }>(
+      `${this.basePath}/content-reports/pending-count`,
+    );
+  }
+
+  async getContentReport(id: number) {
+    return apiClient.get<AdminContentReportDetail>(
+      `${this.basePath}/content-reports/${id}`,
+    );
+  }
+
+  async handleContentReport(id: number, body: ContentReportHandleBody) {
+    return apiClient.post<Record<string, never>>(
+      `${this.basePath}/content-reports/${id}/handle`,
+      body,
+    );
+  }
+
+  async reopenContentReport(id: number) {
+    return apiClient.put<Record<string, never>>(
+      `${this.basePath}/content-reports/${id}/reopen`,
     );
   }
 

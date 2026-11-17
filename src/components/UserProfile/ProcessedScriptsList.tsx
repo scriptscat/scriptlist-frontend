@@ -43,7 +43,7 @@ export default function ProcessedScriptsList({
     );
   }
 
-  if (!data || data.list.length === 0) {
+  if (!data?.list?.length) {
     return <Empty description={t('processed_empty')} />;
   }
 

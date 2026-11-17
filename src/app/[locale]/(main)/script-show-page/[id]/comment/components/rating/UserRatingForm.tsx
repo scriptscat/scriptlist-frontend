@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import LoadingBlock from '@/components/ui/LoadingBlock';
 import type { UserRatingFormProps } from './types';
-import { getRatingText } from './utils';
+import { getRatingText, scoreToRating } from './utils';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useTranslations } from 'next-intl';
 
@@ -35,7 +35,7 @@ export default function UserRatingForm({
   const tLoading = useTranslations('components.loading');
   const tRatingText = useTranslations('script.rating.text');
   const [userRating, setUserRating] = useState<number>(
-    existingRating ? existingRating.score / 10 : 0,
+    existingRating ? scoreToRating(existingRating.score) : 0,
   );
   const [userComment, setUserComment] = useState<string>(
     existingRating?.message ?? '',
@@ -52,7 +52,7 @@ export default function UserRatingForm({
   const [syncedRating, setSyncedRating] = useState(existingRating);
   if (existingRating !== syncedRating && !isEditing && !expanded) {
     setSyncedRating(existingRating);
-    setUserRating(existingRating ? existingRating.score / 10 : 0);
+    setUserRating(existingRating ? scoreToRating(existingRating.score) : 0);
     setUserComment(existingRating?.message ?? '');
   }
 
@@ -86,14 +86,14 @@ export default function UserRatingForm({
 
   const handleEdit = () => {
     // 进编辑态时把当前评价灌回表单，否则编辑框里是初值（0 / 空）。
-    setUserRating(existingRating ? existingRating.score / 10 : 0);
+    setUserRating(existingRating ? scoreToRating(existingRating.score) : 0);
     setUserComment(existingRating?.message ?? '');
     setIsEditing(true);
   };
 
   const handleCancel = () => {
     if (existingRating) {
-      setUserRating(existingRating.score / 10);
+      setUserRating(scoreToRating(existingRating.score));
       setUserComment(existingRating.message);
       setIsEditing(false);
     } else {
@@ -144,6 +144,8 @@ export default function UserRatingForm({
 
   // 如果存在已有评分且不在编辑模式，显示已有评分
   if (existingRating && !isEditing) {
+    const existingUserRating = scoreToRating(existingRating.score);
+
     return (
       <Card className="shadow-sm border-0 bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
         <div className="border-l-4 border-green-500 bg-green-50 dark:bg-green-950/30 p-6">
@@ -186,13 +188,13 @@ export default function UserRatingForm({
               </Text>
               <div className="mt-2">
                 <Rate
-                  value={existingRating.score}
+                  value={existingUserRating}
                   disabled
                   className="text-xl"
                   character={<StarFilled />}
                 />
                 <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
-                  {getRatingDescription(existingRating.score)}
+                  {getRatingDescription(existingUserRating)}
                 </span>
               </div>
             </div>

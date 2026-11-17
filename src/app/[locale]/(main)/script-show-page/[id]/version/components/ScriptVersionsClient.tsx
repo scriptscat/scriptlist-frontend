@@ -139,6 +139,7 @@ interface ScriptVersionsClientProps {
   initialPageSize?: number;
   embedded?: boolean;
   initialError?: string;
+  onTotalChange?: (total: number) => void;
 }
 
 export default function ScriptVersionsClient({
@@ -148,6 +149,7 @@ export default function ScriptVersionsClient({
   initialPageSize = 10,
   embedded = false,
   initialError,
+  onTotalChange,
 }: ScriptVersionsClientProps) {
   const { script } = useScript();
   const t = useTranslations('script.version');
@@ -172,11 +174,15 @@ export default function ScriptVersionsClient({
   // 版本对比状态管理
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 
-  // 使用传入的版本数据
-  const [versionData, setVersionData] = useState<VersionListResponse>(
-    initialVersionData || { list: [], total: 0 },
+  // 使用传入的版本数据；null 表示尚未加载，不能当成空列表或 0 条。
+  const [versionData, setVersionData] = useState<VersionListResponse | null>(
+    initialVersionData,
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [versionStatData, setVersionStatData] =
+    useState<VersionStatResponse | null>(versionStat);
+  const [isLoading, setIsLoading] = useState(
+    initialVersionData === null && !initialError,
+  );
   // 每次请求领一个序号，只有最后发出的那个有权改状态。
   // 否则慢的旧响应后到，会把新一页的结果盖回去。
   const requestSeqRef = React.useRef(0);
@@ -185,17 +191,74 @@ export default function ScriptVersionsClient({
   );
   const semDateTime = useSemDateTime();
 
-  const versions = versionData?.list || [];
-  const totalVersions = versionData?.total || 0;
-  const releaseCount = versionStat?.release_num || 0;
-  const preReleaseCount = versionStat?.pre_release_num || 0;
+  React.useEffect(() => {
+    if (initialError || (initialVersionData !== null && versionStat !== null)) {
+      return;
+    }
+
+    let cancelled = false;
+    const seq = ++requestSeqRef.current;
+    setIsLoading(true);
+    setError(null);
+
+    void Promise.allSettled([
+      scriptService.getVersionList(script.id, {
+        page: initialPage,
+        size: initialPageSize,
+      }),
+      scriptService.getVersionStat(script.id),
+    ])
+      .then(([listResult, statResult]) => {
+        if (cancelled || seq !== requestSeqRef.current) return;
+
+        if (listResult.status === 'fulfilled') {
+          setVersionData(listResult.value);
+          onTotalChange?.(listResult.value.total);
+        }
+        if (statResult.status === 'fulfilled') {
+          setVersionStatData(statResult.value);
+        }
+
+        const rejected = [listResult, statResult].find(
+          (result) => result.status === 'rejected',
+        );
+        if (rejected?.status === 'rejected') {
+          setError(
+            rejected.reason instanceof Error
+              ? rejected.reason
+              : new Error(String(rejected.reason)),
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled && seq === requestSeqRef.current) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    initialError,
+    initialPage,
+    initialPageSize,
+    initialVersionData,
+    onTotalChange,
+    script.id,
+    versionStat,
+  ]);
+
+  const versions = versionData?.list ?? [];
+  const totalVersions = versionData?.total ?? 0;
+  const releaseCount = versionStatData?.release_num ?? 0;
+  const preReleaseCount = versionStatData?.pre_release_num ?? 0;
   // 管理员的版本列表包含已删除版本，而 release/pre-release 计数只数存活的；
   // 把差额显式标出来，头部三个数字才对得上。
-  const deletedCount = deletedVersionCount(
-    totalVersions,
-    releaseCount,
-    preReleaseCount,
-  );
+  const hasVersionStats = versionData !== null && versionStatData !== null;
+  const deletedCount = hasVersionStats
+    ? deletedVersionCount(totalVersions, releaseCount, preReleaseCount)
+    : 0;
   const latestReleaseIndex = findLatestReleaseIndex(versions, currentPage);
 
   // 刷新数据的函数
@@ -210,6 +273,7 @@ export default function ScriptVersionsClient({
       });
       if (seq !== requestSeqRef.current) return;
       setVersionData(newData);
+      onTotalChange?.(newData.total);
     } catch (err) {
       if (seq !== requestSeqRef.current) return;
       setError(err as Error);
@@ -242,6 +306,7 @@ export default function ScriptVersionsClient({
       });
       if (seq !== requestSeqRef.current) return;
       setVersionData(newData);
+      onTotalChange?.(newData.total);
     } catch (err) {
       if (seq !== requestSeqRef.current) return;
       setError(err as Error);
@@ -377,7 +442,11 @@ export default function ScriptVersionsClient({
   }
 
   // 如果没有版本数据，显示空状态。加载中不走这里 —— 「空」和「正在加载」是两件事。
-  if (!isLoading && (!versions || versions.length === 0)) {
+  if (
+    !isLoading &&
+    versionData !== null &&
+    (!versions || versions.length === 0)
+  ) {
     const emptyContent = (
       <div className="space-y-6">
         <Empty
@@ -431,34 +500,36 @@ export default function ScriptVersionsClient({
       )}
 
       {/* 版本统计信息 */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-800/50">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
-            {t('version_count', { count: totalVersions })}
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium tabular-nums text-green-700 dark:bg-green-900/30 dark:text-green-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-            {t('release_chip', { count: releaseCount })}
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium tabular-nums text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-            {t('prerelease_chip', { count: preReleaseCount })}
-          </span>
-          {deletedCount > 0 && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-medium tabular-nums text-red-700 dark:bg-red-900/30 dark:text-red-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-              {t('deleted_chip', { count: deletedCount })}
+      {hasVersionStats && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-gray-50 px-4 py-3 dark:bg-gray-800/50">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="font-semibold tabular-nums text-gray-900 dark:text-gray-100">
+              {t('version_count', { count: totalVersions })}
             </span>
-          )}
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium tabular-nums text-green-700 dark:bg-green-900/30 dark:text-green-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              {t('release_chip', { count: releaseCount })}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium tabular-nums text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+              {t('prerelease_chip', { count: preReleaseCount })}
+            </span>
+            {deletedCount > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-medium tabular-nums text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                {t('deleted_chip', { count: deletedCount })}
+              </span>
+            )}
+          </div>
+          <span className="text-sm tabular-nums text-gray-500">
+            {t('pagination_info', {
+              start: (currentPage - 1) * pageSize + 1,
+              end: Math.min(currentPage * pageSize, totalVersions),
+              total: totalVersions,
+            })}
+          </span>
         </div>
-        <span className="text-sm tabular-nums text-gray-500">
-          {t('pagination_info', {
-            start: (currentPage - 1) * pageSize + 1,
-            end: Math.min(currentPage * pageSize, totalVersions),
-            total: totalVersions,
-          })}
-        </span>
-      </div>
+      )}
 
       {/* 版本列表 */}
       {isLoading ? (

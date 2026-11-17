@@ -52,7 +52,10 @@ export default function AdSlot({
     const ob = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting)) {
         reportedAdId.current = currentId;
-        void advertiseService.reportImpression(currentId, slot, locale);
+        // 曝光统计是旁路：被广告拦截器掐掉或超时都不该变成未处理的 Promise 拒绝
+        advertiseService
+          .reportImpression(currentId, slot, locale)
+          .catch(() => {});
         ob.disconnect();
       }
     });

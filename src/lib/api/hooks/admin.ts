@@ -1,7 +1,14 @@
 import { useCallback } from 'react';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import type { Key } from 'swr';
-import type { APIError, ListData } from '@/types/api';
+import type {
+  AdminContentReportDetail,
+  AdminContentReportItem,
+  APIError,
+  ContentReportHandleBody,
+  ContentReportTargetType,
+  ListData,
+} from '@/types/api';
 import { adminService } from '../services/admin';
 import type {
   AdminReportItem,
@@ -89,6 +96,76 @@ export function useAdminReports(params: {
   return useAdminList(['admin-reports', page, size, status ?? null], () =>
     adminService.listReports(page, size, status),
   );
+}
+
+// ==================== 内容举报 ====================
+
+export function useAdminContentReports(params: {
+  page: number;
+  size?: number;
+  /** 0 全部 | 1 待处理 | 2 已处理 | 3 已驳回 */
+  status?: number;
+  /** 空串 / 未传表示全部类型 */
+  targetType?: ContentReportTargetType | '';
+}): AdminListResult<AdminContentReportItem> {
+  const { page, size = ADMIN_PAGE_SIZE, status, targetType } = params;
+  const target_type = targetType || undefined;
+  const query = { page, size, status, target_type };
+  return useAdminList(['admin-content-reports', query], () =>
+    adminService.listContentReports(query),
+  );
+}
+
+/** 内容举报页签徽标：待处理数。失败 / 加载中时 count 为 0（徽标隐藏）。 */
+export function useAdminContentReportPendingCount() {
+  const swr = useSWR<{ count: number }, APIError>(
+    ['admin-content-reports-pending-count'],
+    () => adminService.getContentReportPendingCount(),
+  );
+  return { count: swr.data?.count ?? 0, refresh: () => void swr.mutate() };
+}
+
+/** 举报详情；id 为 null 时不请求（抽屉关闭）。 */
+export function useAdminContentReport(id: number | null) {
+  const swr = useSWR<AdminContentReportDetail, APIError>(
+    id === null ? null : ['admin-content-report', id],
+    () => adminService.getContentReport(id as number),
+  );
+  const { data, isInitialLoading, error } = useResource(swr);
+  return {
+    data,
+    isLoading: isInitialLoading,
+    error,
+    refresh: () => void swr.mutate(),
+  };
+}
+
+const CONTENT_REPORT_KEYS = new Set([
+  'admin-content-reports',
+  'admin-content-reports-pending-count',
+  'admin-content-report',
+]);
+
+/**
+ * 内容举报处理动作。成功后一并刷新列表、待处理徽标、详情；
+ * 失败原样抛出（调用方负责提示），且不刷新。
+ */
+export function useContentReportActions() {
+  const { mutate } = useSWRConfig();
+  const revalidate = () =>
+    mutate(
+      (key) => Array.isArray(key) && CONTENT_REPORT_KEYS.has(key[0] as string),
+    );
+  return {
+    handle: async (id: number, body: ContentReportHandleBody) => {
+      await adminService.handleContentReport(id, body);
+      await revalidate();
+    },
+    reopen: async (id: number) => {
+      await adminService.reopenContentReport(id);
+      await revalidate();
+    },
+  };
 }
 
 // ==================== 脚本 ====================

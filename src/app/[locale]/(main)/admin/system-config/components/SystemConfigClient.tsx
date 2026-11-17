@@ -1,7 +1,17 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Card, Form, Input, message, Popconfirm, Progress } from 'antd';
+import {
+  Alert,
+  Button,
+  Card,
+  Form,
+  Input,
+  message,
+  Popconfirm,
+  Progress,
+  Switch,
+} from 'antd';
 import { useTranslations } from 'next-intl';
 import { LoadingBlock } from '@/components/ui/LoadingBlock';
 import { adminService } from '@/lib/api/services/admin';
@@ -9,6 +19,7 @@ import { scriptService } from '@/lib/api/services/scripts';
 import type {
   MigrateAvatarStatus,
   SystemConfigItem,
+  TestAIConfigResponse,
 } from '@/lib/api/services/admin';
 import { APIError } from '@/types/api';
 
@@ -28,6 +39,14 @@ export default function SystemConfigClient() {
   // Recompute trending_score state
   const [recomputing, setRecomputing] = useState(false);
   const [rebuildingEsIndex, setRebuildingEsIndex] = useState(false);
+
+  // AI 配置测试状态
+  const [aiTesting, setAiTesting] = useState(false);
+  const [aiTestResult, setAiTestResult] = useState<TestAIConfigResponse | null>(
+    null,
+  );
+  const [aiTestError, setAiTestError] = useState<string | null>(null);
+  const [aiTestPrompt, setAiTestPrompt] = useState('');
 
   const fetchConfigs = useCallback(async (isInitial = false) => {
     if (isInitial) setInitialLoading(true);
@@ -123,12 +142,16 @@ export default function SystemConfigClient() {
     }
   };
 
-  const handleSave = async (group: string, keys: string[]) => {
+  const handleSave = async (
+    group: string,
+    keys: string[],
+    defaults: Record<string, string> = {},
+  ) => {
     setSaving(group);
     try {
       const items: SystemConfigItem[] = keys.map((key) => ({
         key,
-        value: configs[key] || '',
+        value: configs[key] || defaults[key] || '',
       }));
       await adminService.updateSystemConfigs(items);
       message.success(t('save_success'));
@@ -146,6 +169,30 @@ export default function SystemConfigClient() {
     setConfigs((prev) => ({ ...prev, [key]: value }));
   };
 
+  // 测试 AI 配置：用当前表单值（可能尚未保存）真发一次调用
+  const handleTestAI = async () => {
+    setAiTesting(true);
+    setAiTestResult(null);
+    setAiTestError(null);
+    try {
+      const resp = await adminService.testAIConfig({
+        base_url: configs['ai.base_url'] || '',
+        // 掩码值原样提交，后端会回退到已保存的 key
+        api_key: configs['ai.api_key'] || '',
+        model: configs['ai.model'] || '',
+        system_prompt: configs['ai.system_prompt'] || '',
+        user_prompt: aiTestPrompt.trim(),
+      });
+      setAiTestResult(resp);
+    } catch (err) {
+      setAiTestError(
+        err instanceof APIError ? err.msg : t('ai_test_failed_unknown'),
+      );
+    } finally {
+      setAiTesting(false);
+    }
+  };
+
   if (initialLoading) {
     // 整页只有一份配置表单，形状未知；用等高的占位块撑住，配置到达时页面高度不跳。
     return (
@@ -158,12 +205,15 @@ export default function SystemConfigClient() {
   }
 
   const turnstileKeys = [
+    'captcha.turnstile.enabled',
     'captcha.turnstile.site_key',
     'captcha.turnstile.secret_key',
   ];
   const ucenterKeys = ['ucenter.api', 'ucenter.key', 'ucenter.appid'];
   const aiKeys = ['ai.base_url', 'ai.api_key', 'ai.model', 'ai.system_prompt'];
   const githubKeys = ['github.pat'];
+  // 未配置过开关时后端视为开启
+  const turnstileEnabled = configs['captcha.turnstile.enabled'] !== 'false';
 
   const migrateRunning = migrateStatus?.running ?? false;
   const migrateTotal = migrateStatus?.total ?? 0;
@@ -182,6 +232,17 @@ export default function SystemConfigClient() {
         {/* Turnstile */}
         <Card title={t('turnstile_title')} size="small">
           <Form layout="vertical">
+            <Form.Item
+              label={t('turnstile_enabled')}
+              extra={t('turnstile_enabled_extra')}
+            >
+              <Switch
+                checked={turnstileEnabled}
+                onChange={(checked) =>
+                  updateConfig('captcha.turnstile.enabled', String(checked))
+                }
+              />
+            </Form.Item>
             <Form.Item label={t('turnstile_site_key')}>
               <Input
                 value={configs['captcha.turnstile.site_key'] || ''}
@@ -201,7 +262,11 @@ export default function SystemConfigClient() {
             <Button
               type="primary"
               loading={saving === 'turnstile'}
-              onClick={() => handleSave('turnstile', turnstileKeys)}
+              onClick={() =>
+                handleSave('turnstile', turnstileKeys, {
+                  'captcha.turnstile.enabled': 'true',
+                })
+              }
             >
               {t('save_button')}
             </Button>
@@ -323,7 +388,7 @@ export default function SystemConfigClient() {
         {/* AI */}
         <Card title={t('ai_title')} size="small">
           <Form layout="vertical">
-            <Form.Item label={t('ai_base_url')}>
+            <Form.Item label={t('ai_base_url')} extra={t('ai_base_url_extra')}>
               <Input
                 value={configs['ai.base_url'] || ''}
                 onChange={(e) => updateConfig('ai.base_url', e.target.value)}
@@ -358,6 +423,61 @@ export default function SystemConfigClient() {
               {t('save_button')}
             </Button>
           </Form>
+
+          {/* 测试调用：用当前表单值（含尚未保存的修改）真实请求一次 */}
+          <div className="mt-6 border-t border-app-primary pt-4">
+            <div className="text-sm text-app-secondary mb-2">
+              {t('ai_test_hint')}
+            </div>
+            <Form layout="vertical">
+              <Form.Item label={t('ai_test_prompt')}>
+                <Input.TextArea
+                  rows={2}
+                  placeholder={t('ai_test_prompt_placeholder')}
+                  value={aiTestPrompt}
+                  onChange={(e) => setAiTestPrompt(e.target.value)}
+                />
+              </Form.Item>
+            </Form>
+            <Button loading={aiTesting} onClick={handleTestAI}>
+              {aiTesting ? t('ai_test_running') : t('ai_test_button')}
+            </Button>
+
+            {aiTestError && (
+              <Alert
+                className="mt-3"
+                type="error"
+                showIcon
+                message={t('ai_test_failed')}
+                description={aiTestError}
+              />
+            )}
+
+            {aiTestResult && (
+              <Alert
+                className="mt-3"
+                type="success"
+                showIcon
+                message={t('ai_test_success', {
+                  model: aiTestResult.model,
+                  latency: aiTestResult.latency_ms,
+                })}
+                description={
+                  <div className="space-y-1">
+                    <div className="text-app-secondary">
+                      {t('ai_test_tokens', {
+                        prompt: aiTestResult.prompt_tokens,
+                        completion: aiTestResult.completion_tokens,
+                      })}
+                    </div>
+                    <div className="whitespace-pre-wrap break-words">
+                      {aiTestResult.content}
+                    </div>
+                  </div>
+                }
+              />
+            )}
+          </div>
         </Card>
 
         {/* GitHub */}

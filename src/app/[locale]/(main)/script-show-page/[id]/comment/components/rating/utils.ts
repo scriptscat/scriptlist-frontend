@@ -1,5 +1,10 @@
 import type { ScoreStateResponse } from '@/lib/api/services/scripts/scripts';
 
+/** Convert the backend's 10-50 score scale to the 1-5 star scale. */
+export function scoreToRating(score: number): number {
+  return score / 10;
+}
+
 /**
  * 获取评分对应的文本描述
  * @param rating 评分数值
@@ -50,7 +55,7 @@ export function calculateRatingStats(
 
   // 填充分布数据
   Object.entries(scoreState.score_group).forEach(([score, count]) => {
-    const scoreNum = parseInt(score) / 10;
+    const scoreNum = scoreToRating(parseInt(score));
     if (scoreNum >= 1 && scoreNum <= 5) {
       distribution[scoreNum as keyof typeof distribution] = count;
       totalScore += scoreNum * count;

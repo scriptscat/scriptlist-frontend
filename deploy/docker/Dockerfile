@@ -35,13 +35,16 @@ FROM base AS builder
 ARG NEXT_PUBLIC_APP_URL=https://scriptcat.org
 ARG APP_API_PROXY=https://scriptcat.org/api/v2
 ARG APP_API_URL=https://scriptcat.org/api/v2
+# 前端构建版本，随错误上报写进日志，用来把压缩后的堆栈对回某次构建
+ARG NEXT_PUBLIC_BUILD_ID=""
 
 # 设置工作目录
 WORKDIR /app
 
 ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL} \
     APP_API_URL=${APP_API_URL} \
-    APP_API_PROXY=${APP_API_PROXY}
+    APP_API_PROXY=${APP_API_PROXY} \
+    NEXT_PUBLIC_BUILD_ID=${NEXT_PUBLIC_BUILD_ID}
 
 # 从 deps 阶段复制 node_modules
 COPY --from=deps /app/node_modules ./node_modules

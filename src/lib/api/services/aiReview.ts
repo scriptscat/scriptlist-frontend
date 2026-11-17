@@ -20,6 +20,8 @@ export interface AIReviewItem {
   reason: string;
   summary: LocalizedSummary;
   tags: string[];
+  /** 管理员在重审时填写的补充说明，会写入提示词 */
+  admin_note: string;
   createtime: number;
   updatetime: number;
 }
@@ -60,6 +62,12 @@ export interface TriggerScriptReviewResponse {
   script_code_id: number;
 }
 
+export interface TriggerAuditReviewResponse {
+  ai_review_id: number;
+  script_id: number;
+  script_code_id: number;
+}
+
 export interface FullScanScope {
   start_id?: number;
   end_id?: number;
@@ -91,6 +99,24 @@ class AIReviewService {
   triggerScriptReview(scriptId: number) {
     return apiClient.post<TriggerScriptReviewResponse>(
       `${this.basePath}/scripts/${scriptId}/run`,
+    );
+  }
+
+  /**
+   * 针对某条脚本审核记录（对应一个代码版本）重新调用 AI 审核。
+   * `note` 会作为「管理员补充说明」写入提示词，留空提交则清除上一次的说明。
+   */
+  triggerAuditReview(auditId: number, note?: string) {
+    return apiClient.post<TriggerAuditReviewResponse>(
+      `${this.basePath}/audits/${auditId}/run`,
+      note ? { note } : {},
+    );
+  }
+
+  /** 查询某条脚本审核记录最新的 AI 审核结论 */
+  getAuditReview(auditId: number) {
+    return apiClient.get<{ ai_review: AIReviewDetail | null }>(
+      `${this.basePath}/audits/${auditId}`,
     );
   }
 

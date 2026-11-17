@@ -1,5 +1,5 @@
 /** @vitest-environment jsdom */
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ScoreListItem } from '@/lib/api/services/scripts/scripts';
@@ -16,6 +16,7 @@ vi.mock('@/contexts/UserContext', () => ({
 
 const useScoreListMock = vi.fn();
 const useMyScoreMock = vi.fn();
+const getScoreStateMock = vi.fn();
 
 vi.mock('@/lib/api/hooks/script', () => ({
   useScoreList: (...args: unknown[]) => useScoreListMock(...args),
@@ -24,7 +25,7 @@ vi.mock('@/lib/api/hooks/script', () => ({
 
 vi.mock('@/lib/api/services/scripts/scripts', () => ({
   scriptService: {
-    getScoreState: vi.fn(),
+    getScoreState: (...args: unknown[]) => getScoreStateMock(...args),
     submitScore: vi.fn(),
     deleteScore: vi.fn(),
     submitCommentReply: vi.fn(),
@@ -82,6 +83,11 @@ beforeEach(() => {
   lastListProps = null;
   useScoreListMock.mockReset();
   useMyScoreMock.mockReset();
+  getScoreStateMock.mockReset();
+  getScoreStateMock.mockResolvedValue({
+    score_group: { 5: 1 },
+    score_user_count: 1,
+  });
   useMyScoreMock.mockReturnValue({ data: undefined, mutate: vi.fn() });
   useScoreListMock.mockReturnValue({
     data: initialData,
@@ -142,6 +148,31 @@ describe('ScriptRatingClient 的初始数据', () => {
     );
 
     expect(lastListProps?.ratings).toHaveLength(0);
+    expect(useScoreListMock).toHaveBeenCalledWith(
+      1,
+      expect.objectContaining({ page: 1, size: 10 }),
+      null,
+    );
+  });
+
+  it('没有 initialData 时首次挂载会加载评分分布', async () => {
+    useScoreListMock.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      mutate: vi.fn(),
+      isLoading: true,
+      isValidating: true,
+    });
+
+    render(
+      <ScriptRatingClient
+        initialData={null}
+        initialRatingStats={ratingStats}
+        scriptId={1}
+      />,
+    );
+
+    await waitFor(() => expect(getScoreStateMock).toHaveBeenCalledWith(1));
   });
 });
 

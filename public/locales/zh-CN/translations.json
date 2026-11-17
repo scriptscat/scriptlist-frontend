@@ -315,7 +315,34 @@
       "reject_modal_title": "拒绝该审核",
       "reject_reason_label": "拒绝原因（将通过站内信告知作者）",
       "reject_reason_required": "请填写拒绝原因",
-      "reject_reason_placeholder": "请说明拒绝原因，比如：含有恶意代码、违反平台规则、版权问题等"
+      "reject_reason_placeholder": "请说明拒绝原因，比如：含有恶意代码、违反平台规则、版权问题等",
+      "action_ai_review": "AI 审核",
+      "ai_review_modal_title": "AI 重新审核",
+      "ai_review_modal_alert": "将对 {name} {version}（本审核记录对应的代码版本）重新调用 AI 审核，结果异步返回，通常 10–60 秒。",
+      "ai_review_modal_hint": "这段文字会以「管理员补充说明」小节写入提示词，仅用于指出重点，不会放宽审核规则；该版本的后续审核都会带上它，留空提交则清除上一次的说明。",
+      "ai_review_modal_preview_toggle": "预览提示词里新增的小节",
+      "ai_review_note_label": "补充说明（可选）",
+      "ai_review_note_placeholder": "例如：重点核查脚本是否将用户数据外发；作者称已获授权，请确认授权说明是否在脚本说明中体现。",
+      "ai_review_submit_success": "AI 审核任务已提交",
+      "ai_review_submit_failed": "提交失败，请稍后重试",
+      "ai_review_card_title": "AI 审核结论",
+      "ai_review_card_running": "审核中",
+      "ai_review_card_pass": "通过",
+      "ai_review_card_reject": "建议拒绝",
+      "ai_review_card_uncertain": "不确定",
+      "ai_review_card_failed": "审核失败",
+      "ai_review_card_skipped": "已跳过",
+      "ai_review_card_pass_hint": "AI 建议通过，审核状态未改变 —— 请你确认后再点「通过」。",
+      "ai_review_card_empty": "该审核对应的代码版本还没有 AI 审核记录",
+      "ai_review_card_view_records": "在 AI 审核记录中查看 →",
+      "ai_review_card_retry": "重试",
+      "ai_review_card_timeout": "获取超时，请手动刷新",
+      "ai_review_card_reason": "审核理由",
+      "ai_review_card_summary": "摘要",
+      "ai_review_card_tags": "标签",
+      "ai_review_card_signals": "风险信号",
+      "ai_review_card_note": "补充说明",
+      "ai_review_card_updated_at": "更新于"
     },
     "no_permission": "您没有管理员权限访问此页面。",
     "reports": {
@@ -328,7 +355,48 @@
       "col_createtime": "创建时间",
       "col_actions": "操作",
       "action_view": "查看",
-      "filter_status": "筛选状态"
+      "filter_status": "筛选状态",
+      "tab_script": "脚本举报",
+      "tab_content": "内容举报",
+      "content": {
+        "status_all": "全部",
+        "status_1": "待处理",
+        "status_2": "已处理",
+        "status_3": "已驳回",
+        "type_all": "全部类型",
+        "type_score": "评价",
+        "type_issue": "反馈",
+        "type_issue_comment": "反馈回复",
+        "col_type": "类型",
+        "col_summary": "被举报内容",
+        "col_author": "内容作者",
+        "col_times": "次数",
+        "target_deleted": "（内容已删除）",
+        "action_handle": "处理",
+        "drawer_title": "内容举报 #{id}",
+        "view_origin": "在原位置查看",
+        "published_at": "发布于 {time}",
+        "handler": "处理人",
+        "handle_note": "处理备注",
+        "no_note": "（未填写）",
+        "result_deleted": "内容已删除",
+        "result_resolved": "已处理",
+        "result_rejected": "已驳回",
+        "snapshot": "被举报内容",
+        "records": "举报记录（{count}）",
+        "load_failed": "加载失败",
+        "retry": "重试",
+        "action_reject": "驳回",
+        "action_resolve": "标记已处理",
+        "action_delete": "删除内容并结案",
+        "action_reopen": "重新打开",
+        "delete_confirm_title": "确认删除该内容？",
+        "delete_confirm_desc": "内容将被删除且无法恢复，并且该内容的所有待处理举报会一并结案。",
+        "note_hint": "仅管理员可见",
+        "note_placeholder": "处理备注（选填）",
+        "action_success": "操作成功",
+        "action_failed": "操作失败，请重试"
+      }
     },
     "oauth_apps": {
       "action_delete": "删除",
@@ -510,6 +578,8 @@
       "save_button": "保存",
       "save_success": "保存成功",
       "title": "系统配置",
+      "turnstile_enabled": "启用人机验证",
+      "turnstile_enabled_extra": "关闭后，登录、注册和找回密码将不再进行人机验证",
       "turnstile_site_key": "站点密钥（Site Key）",
       "turnstile_secret_key": "密钥（Secret Key）",
       "turnstile_title": "Cloudflare Turnstile",
@@ -532,7 +602,17 @@
       "es_index_hint": "触发后会在后台全量重建脚本搜索索引。接口返回只表示任务已启动，完成进度请查看后端日志。",
       "es_index_button": "重建 ES 索引",
       "es_index_confirm": "确定要开始重建 ES 搜索索引吗？大库可能需要较长时间。",
-      "es_index_started": "ES 搜索索引重建任务已启动"
+      "es_index_started": "ES 搜索索引重建任务已启动",
+      "ai_test_hint": "用当前填写的配置（含尚未保存的修改）真实调用一次 AI 服务，用于确认 Base URL / API Key / 模型是否可用。测试调用不会写入任何审核记录。",
+      "ai_test_prompt": "测试内容（可选）",
+      "ai_test_prompt_placeholder": "留空则发送一句固定的连通性测试提示",
+      "ai_test_button": "测试调用",
+      "ai_test_running": "调用中…",
+      "ai_test_success": "调用成功 · 模型 {model} · 耗时 {latency} ms",
+      "ai_test_failed": "调用失败",
+      "ai_test_failed_unknown": "调用失败，请查看后端日志",
+      "ai_test_tokens": "输入 {prompt} / 输出 {completion} tokens",
+      "ai_base_url_extra": "修改 Base URL 后必须重新填写 API Key：为避免密钥被发往新地址，测试调用不会复用已保存的 Key。"
     },
     "users": {
       "action_admin_level": "修改等级",
@@ -812,6 +892,54 @@
       "loading_editor": "加载编辑器中...",
       "placeholder": "请输入内容...",
       "uploading_image": "图片上传中..."
+    },
+    "contentReport": {
+      "title_score": "举报评价",
+      "title_issue": "举报反馈",
+      "title_issue_comment": "举报反馈回复",
+      "quote_score": "{name} 的评价",
+      "quote_issue": "{name} 的反馈《{title}》",
+      "quote_issue_comment": "{name} 的回复",
+      "reason_label": "举报原因",
+      "reasons": {
+        "spam": {
+          "name": "垃圾广告",
+          "desc": "引流、推广、刷屏"
+        },
+        "abuse": {
+          "name": "辱骂攻击",
+          "desc": "人身攻击、歧视、骚扰"
+        },
+        "porn": {
+          "name": "色情低俗",
+          "desc": "色情、暴力、令人不适"
+        },
+        "illegal": {
+          "name": "违法违规",
+          "desc": "违法信息、诈骗、恶意链接"
+        },
+        "misleading": {
+          "name": "恶意刷分 / 不实内容",
+          "desc": "与脚本无关、虚假评价"
+        },
+        "other": {
+          "name": "其他",
+          "desc": "需在补充说明中写明"
+        }
+      },
+      "note_label": "补充说明",
+      "note_optional": "（选填）",
+      "note_required_mark": "（必填）",
+      "note_placeholder": "请描述你遇到的问题",
+      "note_required_error": "选择「其他」时请填写说明",
+      "note_too_long_error": "补充说明不能超过 500 字",
+      "privacy": "举报内容仅管理员可见，被举报人不会知道是谁举报的。",
+      "submit": "提交举报",
+      "cancel": "取消",
+      "success": "举报已提交，感谢你帮助维护社区",
+      "duplicate": "你已经举报过该内容，管理员会尽快处理",
+      "not_found": "内容不存在或已被删除",
+      "submit_failed": "举报提交失败，请稍后重试"
     }
   },
   "error": {
@@ -2462,6 +2590,7 @@
       "ban_clean_options": "清理选项",
       "ban_clean_scores": "清理用户评分",
       "ban_clean_scripts": "清理用户脚本",
+      "ban_clean_issues": "清理用户反馈及回复",
       "ban_success": "封禁成功",
       "unban_success": "解封成功",
       "ban_confirm_title": "确认封禁",

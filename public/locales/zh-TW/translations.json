@@ -434,6 +434,8 @@
       "save_button": "保存",
       "save_success": "保存成功",
       "title": "系統配置",
+      "turnstile_enabled": "啟用人機驗證",
+      "turnstile_enabled_extra": "關閉後，登入、註冊和找回密碼將不再進行人機驗證",
       "turnstile_site_key": "站點密鑰（Site Key）",
       "turnstile_secret_key": "密鑰（Secret Key）",
       "turnstile_title": "Cloudflare Turnstile",
@@ -456,7 +458,17 @@
       "migrate_avatar_button": "Start Migration",
       "migrate_avatar_confirm": "Are you sure you want to start avatar migration? This will download user avatars from UCenter and save them locally.",
       "migrate_avatar_started": "Avatar migration started",
-      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}"
+      "migrate_avatar_progress": "Migrated: {migrated} / Skipped: {skipped} / Failed: {failed} / Total: {total}",
+      "ai_test_hint": "用目前填寫的配置（含尚未儲存的修改）實際呼叫一次 AI 服務，用來確認 Base URL / API Key / 模型是否可用。測試呼叫不會寫入任何審核記錄。",
+      "ai_test_prompt": "測試內容（可選）",
+      "ai_test_prompt_placeholder": "留空則送出一句固定的連通性測試提示",
+      "ai_test_button": "測試呼叫",
+      "ai_test_running": "呼叫中…",
+      "ai_test_success": "呼叫成功 · 模型 {model} · 耗時 {latency} ms",
+      "ai_test_failed": "呼叫失敗",
+      "ai_test_failed_unknown": "呼叫失敗，請查看後端日誌",
+      "ai_test_tokens": "輸入 {prompt} / 輸出 {completion} tokens",
+      "ai_base_url_extra": "修改 Base URL 後必須重新填寫 API Key：為避免金鑰被送往新位址，測試呼叫不會沿用已儲存的 Key。"
     },
     "users": {
       "action_admin_level": "修改等級",
@@ -657,7 +669,34 @@
       "reject_modal_title": "Reject Audit",
       "reject_reason_label": "Reject reason (sent to author via in-app notification)",
       "reject_reason_required": "Please provide a reject reason",
-      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)"
+      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)",
+      "action_ai_review": "AI 審核",
+      "ai_review_modal_title": "AI 重新審核",
+      "ai_review_modal_alert": "將對 {name} {version}（本審核記錄對應的程式碼版本）重新呼叫 AI 審核，結果非同步返回，通常 10–60 秒。",
+      "ai_review_modal_hint": "這段文字會以「管理員補充說明」小節寫入提示詞，僅用於指出重點，不會放寬審核規則；該版本的後續審核都會帶上它，留空提交則清除上一次的說明。",
+      "ai_review_modal_preview_toggle": "預覽提示詞裡新增的小節",
+      "ai_review_note_label": "補充說明（可選）",
+      "ai_review_note_placeholder": "例如：重點核查腳本是否將使用者資料外送；作者稱已獲授權，請確認授權說明是否在腳本說明中體現。",
+      "ai_review_submit_success": "AI 審核任務已提交",
+      "ai_review_submit_failed": "提交失敗，請稍後重試",
+      "ai_review_card_title": "AI 審核結論",
+      "ai_review_card_running": "審核中",
+      "ai_review_card_pass": "通過",
+      "ai_review_card_reject": "建議拒絕",
+      "ai_review_card_uncertain": "不確定",
+      "ai_review_card_failed": "審核失敗",
+      "ai_review_card_skipped": "已跳過",
+      "ai_review_card_pass_hint": "AI 建議通過，審核狀態未改變 —— 請你確認後再點「通過」。",
+      "ai_review_card_empty": "該審核對應的程式碼版本還沒有 AI 審核記錄",
+      "ai_review_card_view_records": "在 AI 審核記錄中檢視 →",
+      "ai_review_card_retry": "重試",
+      "ai_review_card_timeout": "取得逾時，請手動重新整理",
+      "ai_review_card_reason": "審核理由",
+      "ai_review_card_summary": "摘要",
+      "ai_review_card_tags": "標籤",
+      "ai_review_card_signals": "風險信號",
+      "ai_review_card_note": "補充說明",
+      "ai_review_card_updated_at": "更新於"
     },
     "reports": {
       "title": "Report management",
@@ -669,7 +708,48 @@
       "col_createtime": "Created at",
       "col_actions": "Actions",
       "action_view": "View",
-      "filter_status": "Filter by status"
+      "filter_status": "Filter by status",
+      "tab_script": "腳本檢舉",
+      "tab_content": "內容檢舉",
+      "content": {
+        "status_all": "全部",
+        "status_1": "待處理",
+        "status_2": "已處理",
+        "status_3": "已駁回",
+        "type_all": "全部類型",
+        "type_score": "評價",
+        "type_issue": "回饋",
+        "type_issue_comment": "回饋回覆",
+        "col_type": "類型",
+        "col_summary": "被檢舉內容",
+        "col_author": "內容作者",
+        "col_times": "次數",
+        "target_deleted": "（內容已刪除）",
+        "action_handle": "處理",
+        "drawer_title": "內容檢舉 #{id}",
+        "view_origin": "在原位置查看",
+        "published_at": "發佈於 {time}",
+        "handler": "處理人",
+        "handle_note": "處理備註",
+        "no_note": "（未填寫）",
+        "result_deleted": "內容已刪除",
+        "result_resolved": "已處理",
+        "result_rejected": "已駁回",
+        "snapshot": "被檢舉內容",
+        "records": "檢舉記錄（{count}）",
+        "load_failed": "載入失敗",
+        "retry": "重試",
+        "action_reject": "駁回",
+        "action_resolve": "標記為已處理",
+        "action_delete": "刪除內容並結案",
+        "action_reopen": "重新開啟",
+        "delete_confirm_title": "確認刪除此內容？",
+        "delete_confirm_desc": "內容將被刪除且無法復原，該內容的所有待處理檢舉也會一併結案。",
+        "note_hint": "僅管理員可見",
+        "note_placeholder": "處理備註（選填）",
+        "action_success": "操作成功",
+        "action_failed": "操作失敗，請重試"
+      }
     }
   },
   "auth": {
@@ -812,6 +892,54 @@
       "loading_editor": "載入編輯器中...",
       "placeholder": "請輸入內容...",
       "uploading_image": "圖片上傳中..."
+    },
+    "contentReport": {
+      "title_score": "檢舉評價",
+      "title_issue": "檢舉回饋",
+      "title_issue_comment": "檢舉回饋回覆",
+      "quote_score": "{name} 的評價",
+      "quote_issue": "{name} 的回饋〈{title}〉",
+      "quote_issue_comment": "{name} 的回覆",
+      "reason_label": "檢舉原因",
+      "reasons": {
+        "spam": {
+          "name": "垃圾廣告",
+          "desc": "引流、推廣、洗版"
+        },
+        "abuse": {
+          "name": "辱罵攻擊",
+          "desc": "人身攻擊、歧視、騷擾"
+        },
+        "porn": {
+          "name": "色情低俗",
+          "desc": "色情、暴力、令人不適"
+        },
+        "illegal": {
+          "name": "違法違規",
+          "desc": "違法資訊、詐騙、惡意連結"
+        },
+        "misleading": {
+          "name": "惡意刷分 / 不實內容",
+          "desc": "與腳本無關、虛假評價"
+        },
+        "other": {
+          "name": "其他",
+          "desc": "需在補充說明中寫明"
+        }
+      },
+      "note_label": "補充說明",
+      "note_optional": "（選填）",
+      "note_required_mark": "（必填）",
+      "note_placeholder": "請描述你遇到的問題",
+      "note_required_error": "選擇「其他」時請填寫說明",
+      "note_too_long_error": "補充說明不能超過 500 字",
+      "privacy": "檢舉內容僅管理員可見，被檢舉人不會知道是誰檢舉的。",
+      "submit": "提交檢舉",
+      "cancel": "取消",
+      "success": "檢舉已提交，感謝你協助維護社群",
+      "duplicate": "你已經檢舉過該內容，管理員會盡快處理",
+      "not_found": "內容不存在或已被刪除",
+      "submit_failed": "檢舉提交失敗，請稍後重試"
     }
   },
   "error": {
@@ -2455,6 +2583,7 @@
       "ban_clean_options": "Cleanup options",
       "ban_clean_scores": "Remove user ratings",
       "ban_clean_scripts": "Remove user scripts",
+      "ban_clean_issues": "清理使用者回饋及回覆",
       "ban_success": "User banned",
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",

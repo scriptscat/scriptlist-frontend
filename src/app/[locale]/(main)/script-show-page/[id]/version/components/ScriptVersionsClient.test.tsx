@@ -77,6 +77,7 @@ vi.mock('@/lib/api/hooks/script', () => ({
 }));
 
 const getVersionListMock = vi.fn();
+const getVersionStatMock = vi.fn();
 vi.mock('@/lib/api/services/scripts/scripts', () => ({
   EnablePreRelease: {
     EnablePreReleaseScript: 1,
@@ -84,6 +85,7 @@ vi.mock('@/lib/api/services/scripts/scripts', () => ({
   },
   scriptService: {
     getVersionList: (...args: unknown[]) => getVersionListMock(...args),
+    getVersionStat: (...args: unknown[]) => getVersionStatMock(...args),
     updateVersion: vi.fn(),
     deleteVersion: vi.fn(),
   },
@@ -115,6 +117,7 @@ beforeEach(() => {
     isLoading: false,
   });
   getVersionListMock.mockReset();
+  getVersionStatMock.mockReset();
   scriptMock.public = 1;
 });
 
@@ -133,6 +136,37 @@ function renderClient() {
     />,
   );
 }
+
+describe('ScriptVersionsClient 的冷加载', () => {
+  it(
+    '没有 SSR 数据时首次挂载请求列表和统计，并显示加载态',
+    async () => {
+      getVersionListMock.mockReturnValue(new Promise(() => {}));
+      getVersionStatMock.mockReturnValue(new Promise(() => {}));
+
+      render(
+        <ScriptVersionsClient
+          initialVersionData={null}
+          versionStat={null}
+          initialPage={1}
+          initialPageSize={10}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(getVersionListMock).toHaveBeenCalledWith(7, {
+          page: 1,
+          size: 10,
+        });
+        expect(getVersionStatMock).toHaveBeenCalledWith(7);
+        expect(screen.getByTestId('version-list-skeleton')).toBeInTheDocument();
+      });
+
+      expect(screen.queryByText(/^version_count:.*0/)).not.toBeInTheDocument();
+    },
+    SLOW,
+  );
+});
 
 /**
  * 翻页时整块组件被一个居中的 `<Spin size="large">` 顶替：

@@ -315,7 +315,34 @@
       "reject_modal_title": "Reject Audit",
       "reject_reason_label": "Reject reason (sent to author via in-app notification)",
       "reject_reason_required": "Please provide a reject reason",
-      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)"
+      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)",
+      "action_ai_review": "AI Review",
+      "ai_review_modal_title": "Re-run AI Review",
+      "ai_review_modal_alert": "AI review will be re-run for {name} {version} (the code version of this audit record). The result comes back asynchronously, usually in 10–60 seconds.",
+      "ai_review_modal_hint": "This text is added to the prompt as an \"Administrator Note\" section. It only highlights what to focus on and does not relax any review rule; later reviews of this version will include it, and submitting it empty clears the previous note.",
+      "ai_review_modal_preview_toggle": "Preview the section added to the prompt",
+      "ai_review_note_label": "Note (optional)",
+      "ai_review_note_placeholder": "e.g. focus on whether the script exfiltrates user data; the author claims authorization, so check whether the script description documents it.",
+      "ai_review_submit_success": "AI review task submitted",
+      "ai_review_submit_failed": "Submission failed, please try again later",
+      "ai_review_card_title": "AI Review Result",
+      "ai_review_card_running": "Reviewing",
+      "ai_review_card_pass": "Pass",
+      "ai_review_card_reject": "Suggest reject",
+      "ai_review_card_uncertain": "Uncertain",
+      "ai_review_card_failed": "Review failed",
+      "ai_review_card_skipped": "Skipped",
+      "ai_review_card_pass_hint": "AI suggests approving, but the audit status is unchanged — please confirm and then click \"Approve\" yourself.",
+      "ai_review_card_empty": "No AI review record yet for the code version of this audit",
+      "ai_review_card_view_records": "View in AI review records →",
+      "ai_review_card_retry": "Retry",
+      "ai_review_card_timeout": "Fetch timed out, please refresh manually",
+      "ai_review_card_reason": "Reason",
+      "ai_review_card_summary": "Summary",
+      "ai_review_card_tags": "Tags",
+      "ai_review_card_signals": "Risk signals",
+      "ai_review_card_note": "Administrator note",
+      "ai_review_card_updated_at": "Updated at"
     },
     "no_permission": "You do not have admin permission to access this page.",
     "oauth_apps": {
@@ -498,6 +525,8 @@
       "save_button": "Save",
       "save_success": "Saved successfully",
       "title": "System Configuration",
+      "turnstile_enabled": "Enable verification",
+      "turnstile_enabled_extra": "When off, login, registration and password reset skip the human verification",
       "turnstile_site_key": "Site Key",
       "turnstile_secret_key": "Secret Key",
       "turnstile_title": "Cloudflare Turnstile",
@@ -520,7 +549,17 @@
       "es_index_hint": "This starts a background rebuild of the script search index. The API response only means the task was started; check backend logs for completion progress.",
       "es_index_button": "Rebuild ES Index",
       "es_index_confirm": "Start rebuilding the ES search index now? Large databases may take a while.",
-      "es_index_started": "ES search index rebuild started"
+      "es_index_started": "ES search index rebuild started",
+      "ai_test_hint": "Send one real request with the values currently in the form (including unsaved edits) to verify the Base URL, API key and model. Test calls are not recorded as reviews.",
+      "ai_test_prompt": "Test content (optional)",
+      "ai_test_prompt_placeholder": "Leave empty to send a fixed connectivity check prompt",
+      "ai_test_button": "Test call",
+      "ai_test_running": "Calling…",
+      "ai_test_success": "Call succeeded · model {model} · {latency} ms",
+      "ai_test_failed": "Call failed",
+      "ai_test_failed_unknown": "Call failed. Check the backend logs for details.",
+      "ai_test_tokens": "{prompt} prompt / {completion} completion tokens",
+      "ai_base_url_extra": "Changing the Base URL requires re-entering the API key: a test call never reuses the saved key with a new host."
     },
     "users": {
       "action_admin_level": "Change Level",
@@ -669,7 +708,48 @@
       "col_createtime": "Created at",
       "col_actions": "Actions",
       "action_view": "View",
-      "filter_status": "Filter by status"
+      "filter_status": "Filter by status",
+      "tab_script": "Script reports",
+      "tab_content": "Content reports",
+      "content": {
+        "status_all": "All",
+        "status_1": "Pending",
+        "status_2": "Resolved",
+        "status_3": "Rejected",
+        "type_all": "All types",
+        "type_score": "Review",
+        "type_issue": "Feedback",
+        "type_issue_comment": "Feedback reply",
+        "col_type": "Type",
+        "col_summary": "Reported content",
+        "col_author": "Author",
+        "col_times": "Count",
+        "target_deleted": "(Content deleted)",
+        "action_handle": "Handle",
+        "drawer_title": "Content report #{id}",
+        "view_origin": "View in place",
+        "published_at": "Posted {time}",
+        "handler": "Handled by",
+        "handle_note": "Note",
+        "no_note": "(none)",
+        "result_deleted": "Content deleted",
+        "result_resolved": "Resolved",
+        "result_rejected": "Rejected",
+        "snapshot": "Reported content",
+        "records": "Reports ({count})",
+        "load_failed": "Failed to load",
+        "retry": "Retry",
+        "action_reject": "Reject",
+        "action_resolve": "Mark as resolved",
+        "action_delete": "Delete content and close",
+        "action_reopen": "Reopen",
+        "delete_confirm_title": "Delete this content?",
+        "delete_confirm_desc": "The content will be permanently deleted and all pending reports on it will be closed.",
+        "note_hint": "Visible to admins only",
+        "note_placeholder": "Handling note (optional)",
+        "action_success": "Done",
+        "action_failed": "Action failed, please try again"
+      }
     }
   },
   "auth": {
@@ -812,6 +892,54 @@
       "loading_editor": "Loading editor...",
       "placeholder": "Please enter content...",
       "uploading_image": "Uploading image..."
+    },
+    "contentReport": {
+      "title_score": "Report review",
+      "title_issue": "Report feedback",
+      "title_issue_comment": "Report feedback reply",
+      "quote_score": "Review by {name}",
+      "quote_issue": "Feedback by {name}: \"{title}\"",
+      "quote_issue_comment": "Reply by {name}",
+      "reason_label": "Reason",
+      "reasons": {
+        "spam": {
+          "name": "Spam / ads",
+          "desc": "Promotion, traffic diversion, flooding"
+        },
+        "abuse": {
+          "name": "Abuse",
+          "desc": "Personal attacks, discrimination, harassment"
+        },
+        "porn": {
+          "name": "Pornographic / vulgar",
+          "desc": "Sexual, violent or disturbing content"
+        },
+        "illegal": {
+          "name": "Illegal",
+          "desc": "Illegal info, scams, malicious links"
+        },
+        "misleading": {
+          "name": "Fake ratings / misleading",
+          "desc": "Unrelated to the script, fake reviews"
+        },
+        "other": {
+          "name": "Other",
+          "desc": "Please explain in the note"
+        }
+      },
+      "note_label": "Additional details",
+      "note_optional": "(optional)",
+      "note_required_mark": "(required)",
+      "note_placeholder": "Describe the problem",
+      "note_required_error": "Please provide details when choosing \"Other\"",
+      "note_too_long_error": "Details cannot exceed 500 characters",
+      "privacy": "Reports are only visible to administrators. The reported user will not know who reported them.",
+      "submit": "Submit report",
+      "cancel": "Cancel",
+      "success": "Report submitted. Thank you for helping keep the community healthy.",
+      "duplicate": "You have already reported this content. Administrators will handle it soon.",
+      "not_found": "The content does not exist or has been deleted",
+      "submit_failed": "Failed to submit the report, please try again later"
     }
   },
   "error": {
@@ -2463,6 +2591,7 @@
       "ban_clean_options": "Cleanup options",
       "ban_clean_scores": "Remove user ratings",
       "ban_clean_scripts": "Remove user scripts",
+      "ban_clean_issues": "Remove user feedback and replies",
       "ban_success": "User banned",
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",

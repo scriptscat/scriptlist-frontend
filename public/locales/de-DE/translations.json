@@ -434,6 +434,8 @@
       "save_button": "Speichern",
       "save_success": "Erfolgreich gespeichert",
       "title": "Systemkonfiguration",
+      "turnstile_enabled": "Verifizierung aktivieren",
+      "turnstile_enabled_extra": "Wenn deaktiviert, entfällt die Menschen-Verifizierung bei Anmeldung, Registrierung und Passwort-Zurücksetzung",
       "turnstile_site_key": "Website-Schlüssel (Site Key)",
       "turnstile_secret_key": "Geheimer Schlüssel",
       "turnstile_title": "Cloudflare Turnstile",
@@ -456,7 +458,17 @@
       "recompute_trending_button": "Recompute trending_score",
       "recompute_trending_confirm": "Recompute trending_score for all scripts now? Large databases may take a few seconds to tens of seconds.",
       "recompute_trending_started": "trending_score recompute started",
-      "recompute_trending_running": "A recompute is already running; not retriggered"
+      "recompute_trending_running": "A recompute is already running; not retriggered",
+      "ai_test_hint": "Sendet eine echte Anfrage mit den aktuellen Formularwerten (inkl. ungespeicherter Änderungen), um Base-URL, API-Key und Modell zu prüfen. Testaufrufe werden nicht als Prüfungen gespeichert.",
+      "ai_test_prompt": "Testinhalt (optional)",
+      "ai_test_prompt_placeholder": "Leer lassen, um eine feste Verbindungstest-Anfrage zu senden",
+      "ai_test_button": "Testaufruf",
+      "ai_test_running": "Wird aufgerufen…",
+      "ai_test_success": "Aufruf erfolgreich · Modell {model} · {latency} ms",
+      "ai_test_failed": "Aufruf fehlgeschlagen",
+      "ai_test_failed_unknown": "Aufruf fehlgeschlagen. Details stehen im Backend-Log.",
+      "ai_test_tokens": "{prompt} Prompt- / {completion} Completion-Tokens",
+      "ai_base_url_extra": "Nach Änderung der Base-URL muss der API-Key neu eingegeben werden: Ein Testaufruf verwendet den gespeicherten Key nie für einen neuen Host."
     },
     "users": {
       "action_admin_level": "Stufe ändern",
@@ -657,7 +669,34 @@
       "reject_modal_title": "Reject Audit",
       "reject_reason_label": "Reject reason (sent to author via in-app notification)",
       "reject_reason_required": "Please provide a reject reason",
-      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)"
+      "reject_reason_placeholder": "Explain why this script is rejected (e.g. malicious code, policy violation, copyright issue)",
+      "action_ai_review": "AI Review",
+      "ai_review_modal_title": "Re-run AI Review",
+      "ai_review_modal_alert": "AI review will be re-run for {name} {version} (the code version of this audit record). The result comes back asynchronously, usually in 10–60 seconds.",
+      "ai_review_modal_hint": "This text is added to the prompt as an \"Administrator Note\" section. It only highlights what to focus on and does not relax any review rule; later reviews of this version will include it, and submitting it empty clears the previous note.",
+      "ai_review_modal_preview_toggle": "Preview the section added to the prompt",
+      "ai_review_note_label": "Note (optional)",
+      "ai_review_note_placeholder": "e.g. focus on whether the script exfiltrates user data; the author claims authorization, so check whether the script description documents it.",
+      "ai_review_submit_success": "AI review task submitted",
+      "ai_review_submit_failed": "Submission failed, please try again later",
+      "ai_review_card_title": "AI Review Result",
+      "ai_review_card_running": "Reviewing",
+      "ai_review_card_pass": "Pass",
+      "ai_review_card_reject": "Suggest reject",
+      "ai_review_card_uncertain": "Uncertain",
+      "ai_review_card_failed": "Review failed",
+      "ai_review_card_skipped": "Skipped",
+      "ai_review_card_pass_hint": "AI suggests approving, but the audit status is unchanged — please confirm and then click \"Approve\" yourself.",
+      "ai_review_card_empty": "No AI review record yet for the code version of this audit",
+      "ai_review_card_view_records": "View in AI review records →",
+      "ai_review_card_retry": "Retry",
+      "ai_review_card_timeout": "Fetch timed out, please refresh manually",
+      "ai_review_card_reason": "Reason",
+      "ai_review_card_summary": "Summary",
+      "ai_review_card_tags": "Tags",
+      "ai_review_card_signals": "Risk signals",
+      "ai_review_card_note": "Administrator note",
+      "ai_review_card_updated_at": "Updated at"
     },
     "reports": {
       "title": "Report management",
@@ -669,7 +708,48 @@
       "col_createtime": "Created at",
       "col_actions": "Actions",
       "action_view": "View",
-      "filter_status": "Filter by status"
+      "filter_status": "Filter by status",
+      "tab_script": "Skriptmeldungen",
+      "tab_content": "Inhaltsmeldungen",
+      "content": {
+        "status_all": "Alle",
+        "status_1": "Offen",
+        "status_2": "Bearbeitet",
+        "status_3": "Abgelehnt",
+        "type_all": "Alle Typen",
+        "type_score": "Bewertung",
+        "type_issue": "Feedback",
+        "type_issue_comment": "Feedback-Antwort",
+        "col_type": "Typ",
+        "col_summary": "Gemeldeter Inhalt",
+        "col_author": "Autor",
+        "col_times": "Anzahl",
+        "target_deleted": "(Inhalt gelöscht)",
+        "action_handle": "Bearbeiten",
+        "drawer_title": "Inhaltsmeldung #{id}",
+        "view_origin": "Am Originalort ansehen",
+        "published_at": "Veröffentlicht {time}",
+        "handler": "Bearbeitet von",
+        "handle_note": "Notiz",
+        "no_note": "(keine)",
+        "result_deleted": "Inhalt gelöscht",
+        "result_resolved": "Bearbeitet",
+        "result_rejected": "Abgelehnt",
+        "snapshot": "Gemeldeter Inhalt",
+        "records": "Meldungen ({count})",
+        "load_failed": "Laden fehlgeschlagen",
+        "retry": "Erneut versuchen",
+        "action_reject": "Ablehnen",
+        "action_resolve": "Als bearbeitet markieren",
+        "action_delete": "Inhalt löschen und abschließen",
+        "action_reopen": "Wieder öffnen",
+        "delete_confirm_title": "Diesen Inhalt löschen?",
+        "delete_confirm_desc": "Der Inhalt wird endgültig gelöscht und alle offenen Meldungen dazu werden abgeschlossen.",
+        "note_hint": "Nur für Admins sichtbar",
+        "note_placeholder": "Bearbeitungsnotiz (optional)",
+        "action_success": "Erledigt",
+        "action_failed": "Aktion fehlgeschlagen, bitte erneut versuchen"
+      }
     }
   },
   "auth": {
@@ -812,6 +892,54 @@
       "loading_editor": "Editor wird geladen...",
       "placeholder": "Bitte Inhalt eingeben...",
       "uploading_image": "Bild wird hochgeladen..."
+    },
+    "contentReport": {
+      "title_score": "Bewertung melden",
+      "title_issue": "Feedback melden",
+      "title_issue_comment": "Feedback-Antwort melden",
+      "quote_score": "Bewertung von {name}",
+      "quote_issue": "Feedback von {name}: „{title}“",
+      "quote_issue_comment": "Antwort von {name}",
+      "reason_label": "Meldegrund",
+      "reasons": {
+        "spam": {
+          "name": "Spam / Werbung",
+          "desc": "Eigenwerbung, Traffic-Lenkung, Flooding"
+        },
+        "abuse": {
+          "name": "Beleidigung",
+          "desc": "Persönliche Angriffe, Diskriminierung, Belästigung"
+        },
+        "porn": {
+          "name": "Pornografisch / vulgär",
+          "desc": "Sexuelle, gewalttätige oder verstörende Inhalte"
+        },
+        "illegal": {
+          "name": "Rechtswidrig",
+          "desc": "Illegale Inhalte, Betrug, schädliche Links"
+        },
+        "misleading": {
+          "name": "Manipulierte Bewertung / Falschinfo",
+          "desc": "Ohne Bezug zum Skript, gefälschte Bewertungen"
+        },
+        "other": {
+          "name": "Sonstiges",
+          "desc": "Bitte in der Anmerkung erläutern"
+        }
+      },
+      "note_label": "Zusätzliche Angaben",
+      "note_optional": "(optional)",
+      "note_required_mark": "(erforderlich)",
+      "note_placeholder": "Beschreibe das Problem",
+      "note_required_error": "Bei „Sonstiges“ bitte eine Erläuterung angeben",
+      "note_too_long_error": "Die Angaben dürfen höchstens 500 Zeichen lang sein",
+      "privacy": "Meldungen sind nur für Administratoren sichtbar. Die gemeldete Person erfährt nicht, wer gemeldet hat.",
+      "submit": "Meldung absenden",
+      "cancel": "Abbrechen",
+      "success": "Meldung gesendet. Danke, dass du die Community unterstützt.",
+      "duplicate": "Du hast diesen Inhalt bereits gemeldet. Die Administratoren kümmern sich bald darum.",
+      "not_found": "Der Inhalt existiert nicht oder wurde gelöscht",
+      "submit_failed": "Meldung konnte nicht gesendet werden, bitte später erneut versuchen"
     }
   },
   "error": {
@@ -2455,6 +2583,7 @@
       "ban_clean_options": "Cleanup options",
       "ban_clean_scores": "Remove user ratings",
       "ban_clean_scripts": "Remove user scripts",
+      "ban_clean_issues": "Feedback und Antworten des Nutzers entfernen",
       "ban_success": "User banned",
       "unban_success": "User unbanned",
       "ban_confirm_title": "Confirm ban",

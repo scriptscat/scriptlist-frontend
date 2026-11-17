@@ -1,4 +1,6 @@
 import { apiClient } from '../client';
+import type { RequestOptions } from '../client';
+import type { ClientErrorPayload } from '@/lib/error-report/core';
 
 export interface GlobalConfig {
   turnstile_site_key: string;
@@ -12,6 +14,18 @@ class SystemService {
 
   async getGlobalConfig() {
     return apiClient.get<GlobalConfig>('/global-config');
+  }
+
+  /** 上报一次前端错误（浏览器端或服务端渲染）；后端只写日志。 */
+  async reportClientError(
+    payload: ClientErrorPayload,
+    options?: RequestOptions,
+  ) {
+    return apiClient.post<Record<string, never>>(
+      `${this.basePath}/client-errors`,
+      payload,
+      options,
+    );
   }
 }
 

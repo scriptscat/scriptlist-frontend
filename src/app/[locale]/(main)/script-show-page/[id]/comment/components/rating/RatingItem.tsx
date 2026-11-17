@@ -11,12 +11,14 @@ import {
 import { useState } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import ActionMenu from '@/components/ActionMenu';
+import ContentReportModal from '@/components/ContentReportModal';
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import ReplyItem from './ReplyItem';
 import type { RatingItemProps } from './types';
 import { useSemDateTime } from '@/lib/utils/semdate';
 import { useScript } from '../../../components/ScriptContext';
+import { scoreToRating } from './utils';
 
 const { TextArea } = Input;
 
@@ -34,6 +36,7 @@ export default function RatingItem({
   // 回复是一次写请求，之前按钮只有 disabled={!content}，
   // 请求在飞的时候按钮仍然可点 —— 连点就会发出多条回复。
   const [replying, setReplying] = useState<boolean>(false);
+  const [reportOpen, setReportOpen] = useState<boolean>(false);
   const semDateTime = useSemDateTime();
 
   const handleReply = async () => {
@@ -84,7 +87,7 @@ export default function RatingItem({
               </Link>
               <Rate
                 disabled
-                value={rating.score / 10}
+                value={scoreToRating(rating.score)}
                 className="text-sm"
                 character={<StarFilled />}
               />
@@ -113,6 +116,7 @@ export default function RatingItem({
             uid={rating.user_id}
             deleteLevel="super_moderator"
             allowSelfDelete={false}
+            onReportClick={() => setReportOpen(true)}
             onDeleteClick={async () => {
               await onDeleteRating(rating.id);
             }}
@@ -121,6 +125,16 @@ export default function RatingItem({
           </ActionMenu>
         </div>
       </div>
+
+      <ContentReportModal
+        open={reportOpen}
+        onClose={() => setReportOpen(false)}
+        scriptId={rating.script_id || script.id}
+        targetType="score"
+        targetId={rating.id}
+        authorName={rating.username}
+        quote={rating.message}
+      />
 
       {/* 评价内容 */}
       {rating.message && (
