@@ -15,12 +15,12 @@ console.log(
   `Generated Ant Design CSS: ${antdCssMetrics.bytes} bytes, ${antdCssMetrics.rules} rules`,
 );
 
-// Monaco 0.56 的 AMD 入口会引用带内容哈希的根级 chunk 与 assets worker，
+// Monaco 0.57 的 AMD 入口会引用带内容哈希的根级 chunk 与 assets worker，
 // 无法再按旧版 base/editor/language 固定目录安全裁剪。复制官方 min/vs 发布树，
 // 并先清理旧输出，避免已删除或改名的资源被上一次构建残留掩盖。
 const monacoSrc = './node_modules/monaco-editor/min/vs';
 const monacoRoot = './public/assets/monaco-editor';
-const monacoDst = path.join(monacoRoot, '0.56.0/min/vs');
+const monacoDst = path.join(monacoRoot, '0.57.0/min/vs');
 
 fs.rmSync(monacoRoot, { recursive: true, force: true });
 fs.mkdirSync(path.dirname(monacoDst), { recursive: true });
