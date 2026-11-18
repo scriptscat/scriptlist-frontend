@@ -19,6 +19,8 @@ import {
 } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
+import AdminMobileNav from './AdminMobileNav';
+import type { AdminNavItem } from './AdminMobileNav';
 import type { MenuProps } from 'antd';
 
 const { Sider, Content } = Layout;
@@ -53,26 +55,30 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     return 'users';
   };
 
-  const menuItems: MenuItem[] = [
+  const navItems: AdminNavItem[] = [
     {
       key: 'users',
+      href: '/admin/users',
       icon: <UserOutlined />,
-      label: <Link href="/admin/users">{t('users')}</Link>,
+      label: t('users'),
     },
     {
       key: 'scripts',
+      href: '/admin/scripts',
       icon: <FileTextOutlined />,
-      label: <Link href="/admin/scripts">{t('scripts')}</Link>,
+      label: t('scripts'),
     },
     {
       key: 'similarity',
+      href: '/admin/similarity',
       icon: <DiffOutlined />,
-      label: <Link href="/admin/similarity">{t('similarity')}</Link>,
+      label: t('similarity'),
     },
     {
       key: 'script-audits',
+      href: '/admin/script-audits',
       icon: <AuditOutlined />,
-      label: <Link href="/admin/script-audits">{t('script_audits')}</Link>,
+      label: t('script_audits'),
     },
     {
       key: 'ai-review',
@@ -81,64 +87,89 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       children: [
         {
           key: 'ai-review-records',
-          label: <Link href="/admin/ai-review">{t('ai_review_records')}</Link>,
+          href: '/admin/ai-review',
+          label: t('ai_review_records'),
         },
         {
           key: 'ai-review-fullscan',
-          label: (
-            <Link href="/admin/ai-review/full-scan">
-              {t('ai_review_fullscan')}
-            </Link>
-          ),
+          href: '/admin/ai-review/full-scan',
+          label: t('ai_review_fullscan'),
         },
       ],
     },
     {
       key: 'feedbacks',
+      href: '/admin/feedbacks',
       icon: <MessageOutlined />,
-      label: <Link href="/admin/feedbacks">{t('feedbacks')}</Link>,
+      label: t('feedbacks'),
     },
     {
       key: 'reports',
+      href: '/admin/reports',
       icon: <WarningOutlined />,
-      label: <Link href="/admin/reports">{t('reports')}</Link>,
+      label: t('reports'),
     },
     {
       key: 'scores',
+      href: '/admin/scores',
       icon: <StarOutlined />,
-      label: <Link href="/admin/scores">{t('scores')}</Link>,
+      label: t('scores'),
     },
     {
       key: 'announcements',
+      href: '/admin/announcements',
       icon: <NotificationOutlined />,
-      label: <Link href="/admin/announcements">{t('announcements')}</Link>,
+      label: t('announcements'),
     },
     {
       key: 'advertise',
+      href: '/admin/advertise',
       icon: <SoundOutlined />,
-      label: <Link href="/admin/advertise">{t('advertise')}</Link>,
+      label: t('advertise'),
     },
     {
       key: 'oauth-apps',
+      href: '/admin/oauth-apps',
       icon: <ApiOutlined />,
-      label: <Link href="/admin/oauth-apps">{t('oauth_apps')}</Link>,
+      label: t('oauth_apps'),
     },
     {
       key: 'oidc-providers',
+      href: '/admin/oidc-providers',
       icon: <LoginOutlined />,
-      label: <Link href="/admin/oidc-providers">{t('oidc_providers')}</Link>,
+      label: t('oidc_providers'),
     },
     {
       key: 'system-config',
+      href: '/admin/system-config',
       icon: <SettingOutlined />,
-      label: <Link href="/admin/system-config">{t('system_config')}</Link>,
+      label: t('system_config'),
     },
   ];
 
+  const toMenuItem = (item: AdminNavItem): MenuItem =>
+    'children' in item
+      ? {
+          key: item.key,
+          icon: item.icon,
+          label: item.label,
+          children: item.children.map(toMenuItem),
+        }
+      : {
+          key: item.key,
+          icon: item.icon,
+          label: <Link href={item.href}>{item.label}</Link>,
+        };
+  const menuItems = navItems.map(toMenuItem);
+
   return (
-    <Card>
+    <Card className="max-md:[&_.ant-card-body]:!p-3">
       <Layout className="h-full min-h-[calc(100vh-300px)]">
-        <Sider width={220} style={{ background: token.colorBgContainer }}>
+        <Sider
+          width={220}
+          className="max-md:!hidden"
+          style={{ background: token.colorBgContainer }}
+        >
           <Menu
             mode="inline"
             selectedKeys={[getSelectedKey()]}
@@ -148,9 +179,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </Sider>
         <Layout>
           <Content
-            className="overflow-auto p-6"
+            className="overflow-auto p-6 max-md:!p-0"
             style={{ backgroundColor: token.colorBgContainer }}
           >
+            <AdminMobileNav items={navItems} selectedKey={getSelectedKey()} />
             {children}
           </Content>
         </Layout>

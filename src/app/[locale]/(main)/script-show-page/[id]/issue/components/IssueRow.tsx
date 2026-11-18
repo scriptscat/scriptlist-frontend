@@ -73,17 +73,26 @@ export default function IssueRow({
           )}
         </div>
         <div className="mt-0.5 text-xs text-app-secondary">
-          {'#' + issue.id + ' · '}
-          <Link
-            href={'/users/' + issue.user_id}
-            target="_blank"
-            className="!text-[rgb(var(--text-secondary))] hover:!text-[rgb(var(--primary-500))] hover:underline"
-          >
-            {issue.username}
-          </Link>{' '}
-          {t('created_at', { time: semDateTime(issue.createtime) })}
-          {updated &&
-            ' · ' + t('updated_at', { time: semDateTime(issue.updatetime) })}
+          <span className="whitespace-nowrap">{'#' + issue.id}</span>
+          {' · '}
+          <span className="whitespace-nowrap">
+            <Link
+              href={'/users/' + issue.user_id}
+              target="_blank"
+              className="!text-[rgb(var(--text-secondary))] hover:!text-[rgb(var(--primary-500))] hover:underline"
+            >
+              {issue.username}
+            </Link>{' '}
+            {t('created_at', { time: semDateTime(issue.createtime) })}
+          </span>
+          {updated && (
+            <>
+              {' · '}
+              <span className="whitespace-nowrap">
+                {t('updated_at', { time: semDateTime(issue.updatetime) })}
+              </span>
+            </>
+          )}
         </div>
       </div>
       {issue.comment_count > 0 && (

@@ -21,6 +21,8 @@ import { copyToClipboard } from '@/lib/utils/utils';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 
 const REASON_CODES = ['bug', 'unused', 'feature', 'better', 'other'] as const;
 
@@ -140,6 +142,23 @@ export default function FeedbacksClient() {
     },
   ];
 
+  const toCard = (record: FeedbackItem): AdminCardSpec => ({
+    title: record.content || <span className="text-neutral-400">{'—'}</span>,
+    titleLines: 3,
+    subtitle: [`#${record.id}`, record.client_ip],
+    badges: reasonLabel(record.reason),
+    time: record.createtime,
+    actions: [
+      {
+        key: 'delete',
+        label: t('action_delete'),
+        danger: true,
+        confirm: { title: t('delete_confirm') },
+        onClick: () => handleDelete(record.id),
+      },
+    ],
+  });
+
   return (
     <div>
       <div className="mb-4">
@@ -148,7 +167,7 @@ export default function FeedbacksClient() {
 
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <Input.Search
-          className="w-60"
+          className="w-full md:w-60"
           allowClear
           placeholder={t('search_content_placeholder')}
           defaultValue={keyword}
@@ -158,7 +177,7 @@ export default function FeedbacksClient() {
           }}
         />
         <Select
-          className="w-40"
+          className="w-40 max-w-full"
           value={reason}
           onChange={(value) => {
             setReason(value);
@@ -183,12 +202,29 @@ export default function FeedbacksClient() {
         </Checkbox>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
+      <AdminResponsiveList<FeedbackItem>
+        table={
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="id"
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            pagination={{
+              current: page,
+              total,
+              pageSize: 20,
+              onChange: setPage,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={fetchData}
         pagination={{
           current: page,
           total,

@@ -110,7 +110,12 @@ export default function UserScriptList({
   return (
     <>
       {/* 搜索区域 */}
-      <Card className="!mb-6" style={{ borderRadius: '16px' }}>
+      <Card
+        data-testid="user-script-filters"
+        className="!mb-6 max-md:!border-0 max-md:!bg-transparent max-md:!shadow-none"
+        classNames={{ body: 'max-md:!p-0' }}
+        style={{ borderRadius: '16px' }}
+      >
         <Space direction="vertical" size="large" className="w-full mb-6">
           <Input.Search
             placeholder={userT('search_placeholder')}
@@ -129,7 +134,10 @@ export default function UserScriptList({
             disabled={isPending}
           />
 
-          <Space wrap>
+          <Space
+            wrap
+            className="max-md:!flex max-md:!flex-nowrap max-md:overflow-x-auto max-md:[&>.ant-space-item]:shrink-0"
+          >
             <Select
               placeholder={userT('all_types_placeholder')}
               style={{ width: 150 }}

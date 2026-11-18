@@ -48,6 +48,7 @@
       "search_content_placeholder": "Tìm nội dung"
     },
     "navigation": {
+      "title": "Quản trị",
       "advertise": "Quản lý quảng cáo",
       "feedbacks": "Quản lý phản hồi",
       "oauth_apps": "Quản lý ứng dụng OAuth",
@@ -749,6 +750,14 @@
         "action_success": "Hoàn tất",
         "action_failed": "Thao tác thất bại, vui lòng thử lại"
       }
+    },
+    "card": {
+      "more_actions": "Thao tác khác",
+      "sort": "Sắp xếp",
+      "sort_default": "Thứ tự mặc định",
+      "sort_asc": "{field} tăng dần",
+      "sort_desc": "{field} giảm dần",
+      "show_full_time": "Chạm để xem thời gian đầy đủ"
     }
   },
   "auth": {
@@ -1067,7 +1076,11 @@
     "tampermonkey_chinese_website": "Trang Tampermonkey tiếng Trung",
     "user_profile": "Hồ sơ cá nhân",
     "user_setting": "Cài đặt người dùng",
-    "code_search": "Tìm mã nguồn"
+    "code_search": "Tìm mã nguồn",
+    "open_menu": "Mở menu",
+    "menu": "Menu",
+    "appearance": "Giao diện",
+    "language": "Ngôn ngữ"
   },
   "login": {
     "account_placeholder": "Vui lòng nhập email hoặc tên người dùng",
@@ -1403,7 +1416,9 @@
         "background_script_desc": "Nó sẽ chạy nền trong trình duyệt",
         "browser_compatibility": "Tương thích trình duyệt",
         "browser_support": "Hỗ trợ {browser}",
+        "collapse": "Thu gọn",
         "created_at": "Created at {time}",
+        "expand": "Xem thêm",
         "feature_notice": "Lưu ý tính năng",
         "forum_post": "Bài viết diễn đàn",
         "library_description": "Đây là thư viện được userscript sử dụng, bạn có thể tham chiếu trực tiếp nó trong script của mình.",

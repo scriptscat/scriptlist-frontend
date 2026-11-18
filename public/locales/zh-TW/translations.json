@@ -48,6 +48,7 @@
       "title": "反饋管理"
     },
     "navigation": {
+      "title": "管理後台",
       "advertise": "廣告管理",
       "feedbacks": "反饋管理",
       "oauth_apps": "OAuth 應用管理",
@@ -749,6 +750,14 @@
         "action_success": "操作成功",
         "action_failed": "操作失敗，請重試"
       }
+    },
+    "card": {
+      "more_actions": "更多操作",
+      "sort": "排序",
+      "sort_default": "預設排序",
+      "sort_asc": "{field} 升冪",
+      "sort_desc": "{field} 降冪",
+      "show_full_time": "點按查看完整時間"
     }
   },
   "auth": {
@@ -1067,7 +1076,11 @@
     "tampermonkey_chinese_website": "油猴中文網",
     "user_profile": "個人資料",
     "user_setting": "使用者設定",
-    "code_search": "源碼搜尋"
+    "code_search": "源碼搜尋",
+    "open_menu": "開啟選單",
+    "menu": "選單",
+    "appearance": "外觀",
+    "language": "語言"
   },
   "login": {
     "account_placeholder": "請輸入郵箱或用戶名",
@@ -1403,7 +1416,9 @@
         "background_script_desc": "它會在瀏覽器背景執行",
         "browser_compatibility": "瀏覽器相容性",
         "browser_support": "支援 {browser}",
+        "collapse": "收起",
         "created_at": "建立於 {time}",
+        "expand": "展開",
         "feature_notice": "功能提醒",
         "forum_post": "論壇文章",
         "library_description": "這是一個使用者腳本使用的庫，你可以在你的腳本中直接引用它。",

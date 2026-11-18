@@ -25,6 +25,8 @@ import { useAdminOAuthApps } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
 import { useTableStateLocale } from '../../components/tableState';
 import type { ColumnsType } from 'antd/es/table';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 
 const { Paragraph } = Typography;
 
@@ -44,6 +46,12 @@ function useRedirectUriValidator(t: ReturnType<typeof useTranslations>) {
     }
     return Promise.resolve();
   };
+}
+
+function formatRedirectUri(val: string) {
+  const uris = val.split('\n').filter((s: string) => s.trim());
+  if (uris.length <= 1) return val;
+  return `${uris[0]} (+${uris.length - 1})`;
 }
 
 export default function OAuthAppsClient() {
@@ -158,6 +166,14 @@ export default function OAuthAppsClient() {
     setEditModalOpen(true);
   };
 
+  // 状态单元格（表格与窄屏卡片共用）
+  const statusTag = (status: number) =>
+    status === 1 ? (
+      <Tag color="green">{t('status_active')}</Tag>
+    ) : (
+      <Tag color="red">{t('status_disabled')}</Tag>
+    );
+
   const columns: ColumnsType<OAuthAppItem> = [
     {
       title: t('col_name'),
@@ -179,22 +195,13 @@ export default function OAuthAppsClient() {
       dataIndex: 'redirect_uri',
       key: 'redirect_uri',
       ellipsis: true,
-      render: (val: string) => {
-        const uris = val.split('\n').filter((s: string) => s.trim());
-        if (uris.length <= 1) return val;
-        return `${uris[0]} (+${uris.length - 1})`;
-      },
+      render: (val: string) => formatRedirectUri(val),
     },
     {
       title: t('col_status'),
       dataIndex: 'status',
       key: 'status',
-      render: (val: number) =>
-        val === 1 ? (
-          <Tag color="green">{t('status_active')}</Tag>
-        ) : (
-          <Tag color="red">{t('status_disabled')}</Tag>
-        ),
+      render: (val: number) => statusTag(val),
     },
     {
       title: t('col_actions'),
@@ -225,9 +232,48 @@ export default function OAuthAppsClient() {
     },
   ];
 
+  const toCard = (record: OAuthAppItem): AdminCardSpec => ({
+    title: record.name,
+    badges: statusTag(record.status),
+    fields: [
+      {
+        label: t('col_client_id'),
+        value: (
+          <Paragraph copyable className="!mb-0 break-all">
+            {record.client_id}
+          </Paragraph>
+        ),
+      },
+      {
+        label: t('col_redirect_uri'),
+        value: (
+          <span className="break-all">
+            {formatRedirectUri(record.redirect_uri)}
+          </span>
+        ),
+      },
+    ],
+    actions: [
+      { key: 'edit', label: t('action_edit'), onClick: () => openEdit(record) },
+      {
+        key: 'reset_secret',
+        label: t('reset_secret'),
+        confirm: { title: t('reset_secret_confirm') },
+        onClick: () => handleResetSecret(record.id),
+      },
+      {
+        key: 'delete',
+        label: t('action_delete'),
+        danger: true,
+        confirm: { title: t('delete_confirm') },
+        onClick: () => handleDelete(record.id),
+      },
+    ],
+  });
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-semibold">{t('title')}</h2>
         <Button
           type="primary"
@@ -238,12 +284,29 @@ export default function OAuthAppsClient() {
         </Button>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
+      <AdminResponsiveList<OAuthAppItem>
+        table={
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="id"
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            pagination={{
+              current: page,
+              total,
+              pageSize: 20,
+              onChange: setPage,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={refresh}
         pagination={{
           current: page,
           total,

@@ -14,6 +14,8 @@ import type {
 import { useIntegrityReviews } from '@/lib/api/hooks/similarity';
 import { APIError } from '@/types/api';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 import ResolveReviewModal from './ResolveReviewModal';
 
 const PAGE_SIZE = 20;
@@ -54,6 +56,42 @@ export default function IntegrityReviewTable() {
     [data],
   );
 
+  const statusTag = (s: number) => {
+    const map: Record<number, { color: string; label: string }> = {
+      0: { color: 'warning', label: t('review_pending') },
+      1: { color: 'success', label: t('review_ok') },
+      2: { color: 'error', label: t('review_violated') },
+    };
+    const m = map[s] ?? map[0];
+    return <Tag color={m.color}>{m.label}</Tag>;
+  };
+
+  const toCard = (r: IntegrityReviewItem): AdminCardSpec => ({
+    title: (
+      <Link href={`/script-show-page/${r.script.id}`}>{r.script.name}</Link>
+    ),
+    subtitle: [`#${r.id}`],
+    badges: statusTag(r.status),
+    fields: [{ label: t('col_score'), value: r.score.toFixed(3) }],
+    time: r.createtime,
+    actions: [
+      {
+        key: 'detail',
+        label: t('action_detail'),
+        onClick: () => openDetail(r.id),
+      },
+      ...(r.status === 0
+        ? [
+            {
+              key: 'resolve',
+              label: t('action_resolve'),
+              onClick: () => setResolveTarget(r.id),
+            },
+          ]
+        : []),
+    ],
+  });
+
   const columns: ColumnsType<IntegrityReviewItem> = [
     { title: t('col_id'), dataIndex: 'id', width: 70 },
     {
@@ -70,15 +108,7 @@ export default function IntegrityReviewTable() {
     {
       title: t('col_status'),
       dataIndex: 'status',
-      render: (s: number) => {
-        const map: Record<number, { color: string; label: string }> = {
-          0: { color: 'warning', label: t('review_pending') },
-          1: { color: 'success', label: t('review_ok') },
-          2: { color: 'error', label: t('review_violated') },
-        };
-        const m = map[s] ?? map[0];
-        return <Tag color={m.color}>{m.label}</Tag>;
-      },
+      render: statusTag,
     },
     {
       title: t('col_createtime'),
@@ -108,16 +138,33 @@ export default function IntegrityReviewTable() {
 
   return (
     <>
-      <Table
+      <AdminResponsiveList<IntegrityReviewItem>
+        table={
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={visibleData}
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            pagination={{
+              current: page,
+              pageSize: PAGE_SIZE,
+              total,
+              onChange: setPage,
+            }}
+          />
+        }
+        rows={visibleData}
         rowKey="id"
-        columns={columns}
-        dataSource={visibleData}
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={refresh}
         pagination={{
           current: page,
-          pageSize: PAGE_SIZE,
           total,
+          pageSize: PAGE_SIZE,
           onChange: setPage,
         }}
       />

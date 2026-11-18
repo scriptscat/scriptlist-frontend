@@ -7,7 +7,6 @@ import {
   InputNumber,
   message,
   Popconfirm,
-  Space,
   Table,
   Tag,
 } from 'antd';
@@ -20,6 +19,8 @@ import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 
 export default function ScoresClient() {
   const t = useTranslations('admin.scores');
@@ -133,23 +134,50 @@ export default function ScoresClient() {
     },
   ];
 
+  const toCard = (record: ScoreItem): AdminCardSpec => ({
+    title: (
+      <Link href={`/script-show-page/${record.script_id}`} target="_blank">
+        {record.script_name}
+      </Link>
+    ),
+    subtitle: [
+      `#${record.id}`,
+      <Link key="user" href={`/users/${record.user_id}`} target="_blank">
+        {record.username}
+      </Link>,
+    ],
+    badges: getScoreTag(record.score),
+    body: record.message || undefined,
+    time: record.createtime,
+    actions: [
+      {
+        key: 'delete',
+        label: t('action_delete'),
+        danger: true,
+        confirm: { title: t('delete_confirm') },
+        onClick: () => handleDelete(record.script_id, record.id),
+      },
+    ],
+  });
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h2 className="text-lg font-semibold">{t('title')}</h2>
-        <Space>
+        {/* 窄屏：脚本 ID 独占一行，搜索框与按钮一行且占满 */}
+        <div className="flex flex-wrap items-center gap-2 md:flex-nowrap">
           <InputNumber
             placeholder={t('filter_script_id')}
             value={scriptId}
             onChange={(val) => setScriptId(val || undefined)}
-            style={{ width: 150 }}
+            className="!w-full md:!w-[150px]"
           />
           <Input
             placeholder={t('search_placeholder')}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onPressEnter={handleSearch}
-            style={{ width: 200 }}
+            className="min-w-0 flex-1 md:!w-[200px] md:flex-none"
           />
           <Button
             type="primary"
@@ -158,15 +186,32 @@ export default function ScoresClient() {
           >
             {t('search_button')}
           </Button>
-        </Space>
+        </div>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
+      <AdminResponsiveList<ScoreItem>
+        table={
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="id"
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            pagination={{
+              current: page,
+              total,
+              pageSize: 20,
+              onChange: setPage,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={fetchData}
         pagination={{
           current: page,
           total,

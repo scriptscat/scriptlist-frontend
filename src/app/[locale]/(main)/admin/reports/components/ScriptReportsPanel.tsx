@@ -8,6 +8,8 @@ import { useAdminReports } from '@/lib/api/hooks/admin';
 import type { ColumnsType } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 
 const REASON_COLORS: Record<string, string> = {
   malware: 'red',
@@ -42,6 +44,48 @@ export default function ScriptReportsPanel() {
     setPage(1);
   };
 
+  const reasonTag = (reason: string) => (
+    <Tag color={REASON_COLORS[reason] || 'default'}>
+      {tReport(`reasons.${reason}`)}
+    </Tag>
+  );
+
+  const statusTag = (val: number) => (
+    <Tag color={val === 1 ? 'error' : 'success'}>
+      {val === 1 ? tReport('status_pending') : tReport('status_resolved')}
+    </Tag>
+  );
+
+  const toCard = (record: AdminReportItem): AdminCardSpec => ({
+    title: (
+      <Link href={`/script-show-page/${record.script_id}`} target="_blank">
+        {record.script_name || `#${record.script_id}`}
+      </Link>
+    ),
+    subtitle: [
+      `#${record.id}`,
+      <Link key="reporter" href={`/users/${record.user_id}`} target="_blank">
+        {record.username}
+      </Link>,
+    ],
+    badges: (
+      <>
+        {statusTag(record.status)}
+        {reasonTag(record.reason)}
+      </>
+    ),
+    fields: [{ label: t('col_comments'), value: record.comment_count }],
+    time: record.createtime,
+    actions: [
+      {
+        key: 'view',
+        label: t('action_view'),
+        href: `/script-show-page/${record.script_id}/report/${record.id}`,
+        target: '_blank',
+      },
+    ],
+  });
+
   const columns: ColumnsType<AdminReportItem> = [
     {
       title: 'ID',
@@ -71,21 +115,13 @@ export default function ScriptReportsPanel() {
       title: t('col_reason'),
       dataIndex: 'reason',
       key: 'reason',
-      render: (reason: string) => (
-        <Tag color={REASON_COLORS[reason] || 'default'}>
-          {tReport(`reasons.${reason}`)}
-        </Tag>
-      ),
+      render: (reason: string) => reasonTag(reason),
     },
     {
       title: t('col_status'),
       dataIndex: 'status',
       key: 'status',
-      render: (val: number) => (
-        <Tag color={val === 1 ? 'error' : 'success'}>
-          {val === 1 ? tReport('status_pending') : tReport('status_resolved')}
-        </Tag>
-      ),
+      render: (val: number) => statusTag(val),
     },
     {
       title: t('col_comments'),
@@ -115,13 +151,13 @@ export default function ScriptReportsPanel() {
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-end">
+      <div className="mb-4 flex flex-wrap items-center justify-end gap-2">
         <Select
           allowClear
           placeholder={t('filter_status')}
           value={status}
           onChange={handleStatusChange}
-          style={{ width: 160 }}
+          className="!w-full md:!w-[160px]"
           options={[
             { value: 1, label: tReport('status_pending') },
             { value: 3, label: tReport('status_resolved') },
@@ -129,18 +165,30 @@ export default function ScriptReportsPanel() {
         />
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
+      <AdminResponsiveList<AdminReportItem>
+        table={
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="id"
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            pagination={{
+              current: page,
+              total,
+              pageSize: 20,
+              onChange: setPage,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
-        pagination={{
-          current: page,
-          total,
-          pageSize: 20,
-          onChange: setPage,
-        }}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={refresh}
+        pagination={{ current: page, total, pageSize: 20, onChange: setPage }}
       />
     </div>
   );

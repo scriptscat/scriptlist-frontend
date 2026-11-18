@@ -80,15 +80,34 @@ describe('IssueRow GitHub 式行布局', () => {
 
   it('第二行显示 #id、作者、创建与更新时间', () => {
     renderRow();
-    const meta = screen.getByText(/#131/);
+    const meta = screen.getByText('#131').parentElement!;
     expect(meta).toHaveTextContent('小明');
     expect(meta).toHaveTextContent('created_at:{"time":"t100"}');
     expect(meta).toHaveTextContent('updated_at:{"time":"t200"}');
   });
 
+  it('元信息每一段（#id、作者+创建、更新）各自不折行，只在「 · 」处换行', () => {
+    renderRow();
+    const meta = screen.getByText('#131').parentElement!;
+    const segments = Array.from(meta.children).filter((el) =>
+      el.classList.contains('whitespace-nowrap'),
+    );
+    expect(segments.map((el) => el.textContent)).toEqual([
+      '#131',
+      '小明 created_at:{"time":"t100"}',
+      'updated_at:{"time":"t200"}',
+    ]);
+    // 段与段之间保留可折行的「 · 」文本
+    expect(meta.textContent).toBe(
+      '#131 · 小明 created_at:{"time":"t100"} · updated_at:{"time":"t200"}',
+    );
+  });
+
   it('未更新过时不显示更新时间', () => {
     renderRow({ updatetime: 100 });
-    expect(screen.getByText(/#131/)).not.toHaveTextContent('updated_at');
+    expect(screen.getByText('#131').parentElement).not.toHaveTextContent(
+      'updated_at',
+    );
   });
 
   it('有回复时右侧显示回复数，0 条时不显示', () => {

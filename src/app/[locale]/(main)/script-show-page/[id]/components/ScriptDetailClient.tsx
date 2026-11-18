@@ -65,6 +65,7 @@ import { railContainerProps } from '@/components/AdSlot/railLayout';
 import ScriptIcon from '@/components/ScriptIcon';
 import type { AdSlotItem } from '@/lib/api/services/advertise';
 import ScriptDetailTabs from './ScriptDetailTabs';
+import ScriptDetailMobileHeader from './ScriptDetailMobileHeader';
 import ScriptPermissionsCard from './overview/ScriptPermissionsCard';
 import type {
   ScoreListItem,
@@ -688,7 +689,7 @@ export default function ScriptDetailClient({
     ],
   );
 
-  // 数据统计卡（桌面侧栏与移动端共用，移动端展示在描述上方）
+  // 数据统计卡（仅桌面侧栏；窄屏的三项数据已在方案 B 头部里）
   const statsCard = (
     <Card
       size="small"
@@ -765,8 +766,15 @@ export default function ScriptDetailClient({
           {/* 左·主内容 */}
           <div className="min-w-0">
             <div className="flex flex-col gap-4">
-              {/* 头部卡：头像/标题/作者·创建于/简介/标签 */}
-              <Card className="shadow-sm">
+              {/* 窄屏（< lg）头部：方案 B */}
+              <ScriptDetailMobileHeader
+                script={script}
+                name={scriptName}
+                description={scriptDescription}
+              />
+
+              {/* 头部卡（≥ lg）：头像/标题/作者·创建于/简介/标签 */}
+              <Card className="shadow-sm hidden lg:block">
                 <div className="flex items-start space-x-4">
                   <ScriptIcon
                     script={script}
@@ -905,6 +913,7 @@ export default function ScriptDetailClient({
                     )}
                   </Space.Compact>
 
+                  {/* 「关注」按内容宽度，剩余宽度都给「收藏」；标签文字不收缩 */}
                   <div className="flex gap-2">
                     <Dropdown
                       trigger={['click']}
@@ -914,10 +923,10 @@ export default function ScriptDetailClient({
                       <Button
                         icon={isWatched ? <EyeFilled /> : <EyeOutlined />}
                         size="large"
-                        className="flex-1 min-w-0 flex items-center justify-center"
+                        className="flex-none flex items-center justify-center"
                         loading={watchLoading}
                       >
-                        <span className="min-w-0 truncate">
+                        <span className="flex-none whitespace-nowrap">
                           {t('actions.watch')}
                         </span>
                         <span className="ml-1 flex-none">
@@ -935,7 +944,7 @@ export default function ScriptDetailClient({
                         className="flex-1 min-w-0 flex items-center justify-center"
                         loading={favoriteLoading}
                       >
-                        <span className="min-w-0 truncate">
+                        <span className="flex-none whitespace-nowrap">
                           {t('actions.favorite')}
                         </span>
                         <span className="ml-1 flex-none">
@@ -977,9 +986,6 @@ export default function ScriptDetailClient({
                   </div>
                 </div>
               )}
-
-              {/* 数据统计卡（移动端展示在描述上方；桌面端在右侧栏） */}
-              <div className="lg:hidden">{statsCard}</div>
 
               {/* 详情页横幅广告：主内容列内，Tab 卡上方；无广告时不渲染、不占位 */}
               <AdSlot

@@ -33,6 +33,8 @@ import {
 } from '@/lib/api/hooks/useAIReviews';
 import { APIError } from '@/types/api';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 import ScriptAuditAIReview from './ScriptAuditAIReview';
 
 const STATUS_PENDING = 1;
@@ -236,20 +238,57 @@ export default function ScriptAuditsClient() {
     setPage(pagination.current || 1);
   };
 
+  const scriptAuditSwitch = (status: number) => (
+    <Switch
+      checked={status === SCRIPT_STATUS_AUDIT}
+      checkedChildren={t('script_auditing')}
+      unCheckedChildren={t('script_not_auditing')}
+      aria-label={t('col_script_audit_status')}
+      disabled
+    />
+  );
+
+  // 脚本链接（表格与窄屏卡片共用）
+  const scriptLink = (row: ScriptAuditItem) => (
+    <a
+      href={`/script-show-page/${row.script_id}`}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {row.script_name || `#${row.script_id}`}
+    </a>
+  );
+
+  const toCard = (row: ScriptAuditItem): AdminCardSpec => ({
+    title: scriptLink(row),
+    subtitle: [
+      `#${row.id}`,
+      `v${row.version}`,
+      row.submitter || `#${row.submitter_id}`,
+    ],
+    badges: statusTag(row.status),
+    fields: [
+      {
+        label: t('col_script_audit_status'),
+        value: scriptAuditSwitch(row.script_status),
+      },
+    ],
+    time: row.createtime,
+    actions: [
+      {
+        key: 'review',
+        label: t('action_review'),
+        onClick: () => openDetail(row.id),
+      },
+    ],
+  });
+
   const columns: ColumnsType<ScriptAuditItem> = [
     { title: 'ID', dataIndex: 'id', key: 'id', width: 80 },
     {
       title: t('col_script'),
       key: 'script',
-      render: (_, row) => (
-        <a
-          href={`/script-show-page/${row.script_id}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {row.script_name || `#${row.script_id}`}
-        </a>
-      ),
+      render: (_, row) => scriptLink(row),
     },
     {
       title: t('col_version'),
@@ -286,15 +325,7 @@ export default function ScriptAuditsClient() {
         scriptAuditFilter === SCRIPT_AUDIT_FILTER_ALL
           ? null
           : [scriptAuditFilter],
-      render: (status: number) => (
-        <Switch
-          checked={status === SCRIPT_STATUS_AUDIT}
-          checkedChildren={t('script_auditing')}
-          unCheckedChildren={t('script_not_auditing')}
-          aria-label={t('col_script_audit_status')}
-          disabled
-        />
-      ),
+      render: (status: number) => scriptAuditSwitch(status),
     },
     {
       title: t('col_createtime'),
@@ -317,48 +348,55 @@ export default function ScriptAuditsClient() {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16 }}>
-        <span>
-          {t('filter_status')}
-          {':'}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {/* 「标签：控件」成组，窄屏换行时不分开 */}
+        <span className="flex items-center gap-2">
+          <span>
+            {t('filter_status')}
+            {':'}
+          </span>
+          <Select<StatusFilter>
+            aria-label={t('filter_status')}
+            value={statusFilter}
+            style={{ width: 140 }}
+            onChange={(v) => {
+              setPage(1);
+              setStatusFilter(v);
+            }}
+            options={[
+              { value: 0, label: t('filter_all') },
+              { value: STATUS_PENDING, label: t('status_pending') },
+              { value: STATUS_APPROVED, label: t('status_approved') },
+              { value: STATUS_REJECTED, label: t('status_rejected') },
+            ]}
+          />
         </span>
-        <Select<StatusFilter>
-          value={statusFilter}
-          style={{ width: 140 }}
-          onChange={(v) => {
-            setPage(1);
-            setStatusFilter(v);
-          }}
-          options={[
-            { value: 0, label: t('filter_all') },
-            { value: STATUS_PENDING, label: t('status_pending') },
-            { value: STATUS_APPROVED, label: t('status_approved') },
-            { value: STATUS_REJECTED, label: t('status_rejected') },
-          ]}
-        />
-        <span>
-          {t('col_script_audit_status')}
-          {':'}
+        <span className="flex items-center gap-2">
+          <span>
+            {t('col_script_audit_status')}
+            {':'}
+          </span>
+          <Select<ScriptAuditFilter>
+            aria-label={t('col_script_audit_status')}
+            value={scriptAuditFilter}
+            style={{ width: 140 }}
+            onChange={(v) => {
+              setPage(1);
+              setScriptAuditFilter(v);
+            }}
+            options={[
+              { value: SCRIPT_AUDIT_FILTER_ALL, label: t('filter_all') },
+              {
+                value: SCRIPT_AUDIT_FILTER_AUDITING,
+                label: t('script_auditing'),
+              },
+              {
+                value: SCRIPT_AUDIT_FILTER_NOT_AUDITING,
+                label: t('script_not_auditing'),
+              },
+            ]}
+          />
         </span>
-        <Select<ScriptAuditFilter>
-          value={scriptAuditFilter}
-          style={{ width: 140 }}
-          onChange={(v) => {
-            setPage(1);
-            setScriptAuditFilter(v);
-          }}
-          options={[
-            { value: SCRIPT_AUDIT_FILTER_ALL, label: t('filter_all') },
-            {
-              value: SCRIPT_AUDIT_FILTER_AUDITING,
-              label: t('script_auditing'),
-            },
-            {
-              value: SCRIPT_AUDIT_FILTER_NOT_AUDITING,
-              label: t('script_not_auditing'),
-            },
-          ]}
-        />
         <Input.Search
           allowClear
           value={scriptNameInput}
@@ -371,23 +409,40 @@ export default function ScriptAuditsClient() {
           }}
           onSearch={handleScriptNameSearch}
           placeholder={t('filter_script_name_placeholder')}
-          style={{ width: 260 }}
+          className="!w-full md:!w-[260px]"
         />
         <Button onClick={fetchList}>{t('refresh')}</Button>
-      </Space>
-      <Table<ScriptAuditItem>
+      </div>
+      <AdminResponsiveList<ScriptAuditItem>
+        table={
+          <Table<ScriptAuditItem>
+            rowKey="id"
+            columns={columns}
+            dataSource={data}
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            onChange={handleTableChange}
+            pagination={{
+              current: page,
+              pageSize: size,
+              total,
+              onChange: (p) => setPage(p),
+              showSizeChanger: false,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        columns={columns}
-        dataSource={data}
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
-        onChange={handleTableChange}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={fetchList}
         pagination={{
           current: page,
-          pageSize: size,
           total,
-          onChange: (p) => setPage(p),
-          showSizeChanger: false,
+          pageSize: size,
+          onChange: setPage,
         }}
       />
 

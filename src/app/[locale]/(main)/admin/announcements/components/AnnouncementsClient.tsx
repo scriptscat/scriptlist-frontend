@@ -25,6 +25,8 @@ import { useAdminAnnouncements } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 
 const LOCALES = ['zh-CN', 'en-US'];
 
@@ -143,6 +145,22 @@ export default function AnnouncementsClient() {
     }
   };
 
+  // 标题 / 级别 / 状态单元格（表格与窄屏卡片共用）
+  const announcementTitle = (title: string) => {
+    const m = parseJsonField(title);
+    return m['zh-CN'] || m['en-US'] || title;
+  };
+  const levelTag = (level: number) => (
+    <Tag color={level === 2 ? 'orange' : 'blue'}>
+      {level === 2 ? t('level_important') : t('level_normal')}
+    </Tag>
+  );
+  const statusTag = (status: number) => (
+    <Tag color={status === 1 ? 'green' : 'default'}>
+      {status === 1 ? t('status_enabled') : t('status_disabled')}
+    </Tag>
+  );
+
   const columns: ColumnsType<AdminAnnouncement> = [
     {
       title: 'ID',
@@ -155,32 +173,21 @@ export default function AnnouncementsClient() {
       dataIndex: 'title',
       key: 'title',
       ellipsis: true,
-      render: (val: string) => {
-        const m = parseJsonField(val);
-        return m['zh-CN'] || m['en-US'] || val;
-      },
+      render: (val: string) => announcementTitle(val),
     },
     {
       title: t('col_level'),
       dataIndex: 'level',
       key: 'level',
       width: 100,
-      render: (val: number) => (
-        <Tag color={val === 2 ? 'orange' : 'blue'}>
-          {val === 2 ? t('level_important') : t('level_normal')}
-        </Tag>
-      ),
+      render: (val: number) => levelTag(val),
     },
     {
       title: t('col_status'),
       dataIndex: 'status',
       key: 'status',
       width: 100,
-      render: (val: number) => (
-        <Tag color={val === 1 ? 'green' : 'default'}>
-          {val === 1 ? t('status_enabled') : t('status_disabled')}
-        </Tag>
-      ),
+      render: (val: number) => statusTag(val),
     },
     {
       title: t('col_createtime'),
@@ -210,6 +217,32 @@ export default function AnnouncementsClient() {
       ),
     },
   ];
+
+  const toCard = (record: AdminAnnouncement): AdminCardSpec => ({
+    title: announcementTitle(record.title),
+    subtitle: [`#${record.id}`],
+    badges: (
+      <>
+        {statusTag(record.status)}
+        {levelTag(record.level)}
+      </>
+    ),
+    time: record.createtime,
+    actions: [
+      {
+        key: 'edit',
+        label: t('action_edit'),
+        onClick: () => handleEdit(record),
+      },
+      {
+        key: 'delete',
+        label: t('action_delete'),
+        danger: true,
+        confirm: { title: t('delete_confirm') },
+        onClick: () => handleDelete(record.id),
+      },
+    ],
+  });
 
   const tabItems = LOCALES.map((locale) => ({
     key: locale,
@@ -241,12 +274,29 @@ export default function AnnouncementsClient() {
         </Button>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
+      <AdminResponsiveList<AdminAnnouncement>
+        table={
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="id"
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            pagination={{
+              current: page,
+              total,
+              pageSize: 20,
+              onChange: setPage,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={fetchData}
         pagination={{
           current: page,
           total,

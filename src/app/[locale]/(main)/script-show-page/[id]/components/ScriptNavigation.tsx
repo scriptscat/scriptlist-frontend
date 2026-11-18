@@ -147,7 +147,8 @@ export default function ScriptNavigation({ activeKey }: ScriptNavigationProps) {
       mode="horizontal"
       selectedKeys={[activeKey]}
       items={menuItems}
-      className="w-full shadow-sm"
+      // 水合前 antd 还没测量、收起溢出项，窄屏下先裁掉，避免撑宽页面
+      className="w-full shadow-sm max-md:!overflow-hidden"
       style={menuStyle}
     />
   );

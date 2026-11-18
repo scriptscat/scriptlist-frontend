@@ -14,6 +14,7 @@ const { Header, Content, Footer } = Layout;
 import { useLocale, useTranslations } from 'next-intl';
 import { languageMap, Link, usePathname, useRouter } from '@/i18n/routing';
 import { ThemeToggle } from './ThemeToggle';
+import MobileNavDrawer from './MobileNavDrawer';
 import UserAuth from '@/components/UserAuth';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
 import { useUser } from '@/contexts/UserContext';
@@ -77,6 +78,15 @@ export default function MainLayout({
       },
     ],
     [t],
+  );
+
+  // 窄屏抽屉：站内项在前、外链在后（首页、脚本列表、社区、浏览器扩展）
+  const mobileNavItems = useMemo(
+    () => [
+      ...navItems.filter((item) => !item.href.startsWith('http')),
+      ...navItems.filter((item) => item.href.startsWith('http')),
+    ],
+    [navItems],
   );
 
   // 用于Menu的items
@@ -186,12 +196,12 @@ export default function MainLayout({
           />
 
           {/* Right side */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-4">
             {/* Publish Script Button */}
             {user && (
               <>
                 <Button
-                  className="!hidden sm:!inline-flex"
+                  className="!hidden md:!inline-flex"
                   type="primary"
                   icon={<PlusOutlined />}
                   onClick={handlePublishScript}
@@ -232,7 +242,7 @@ export default function MainLayout({
             `}</style> */}
 
             {/* Theme Toggle */}
-            <ThemeToggle />
+            <ThemeToggle className="!hidden md:!flex" />
 
             {/* Language Switcher */}
             <Dropdown
@@ -240,11 +250,19 @@ export default function MainLayout({
               trigger={['click']}
               placement="bottomLeft"
             >
-              <GlobalOutlined style={{ display: 'block' }} />
+              <GlobalOutlined className="!hidden md:!block" />
             </Dropdown>
 
             {/* User Authentication */}
             <UserAuth />
+
+            {/* 窄屏导航抽屉 */}
+            <MobileNavDrawer
+              navItems={mobileNavItems}
+              showPublish={!!user}
+              onPublish={handlePublishScript}
+              onSwitchLocale={switchLocale}
+            />
           </div>
         </div>
       </Header>

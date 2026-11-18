@@ -670,7 +670,7 @@ export default function ScriptVersionsClient({
               })
             }
             pageSizeOptions={['5', '10', '20', '50']}
-            className="!mb-0"
+            className="!mb-0 max-sm:[&_.ant-pagination-total-text]:!hidden"
           />
         </div>
       )}

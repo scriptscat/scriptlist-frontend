@@ -48,6 +48,7 @@
       "title": "フィードバック管理"
     },
     "navigation": {
+      "title": "管理画面",
       "advertise": "広告管理",
       "feedbacks": "フィードバック管理",
       "oauth_apps": "OAuthアプリ管理",
@@ -749,6 +750,14 @@
         "action_success": "操作が完了しました",
         "action_failed": "操作に失敗しました。もう一度お試しください"
       }
+    },
+    "card": {
+      "more_actions": "その他の操作",
+      "sort": "並べ替え",
+      "sort_default": "デフォルト順",
+      "sort_asc": "{field}（昇順）",
+      "sort_desc": "{field}（降順）",
+      "show_full_time": "タップして正確な日時を表示"
     }
   },
   "auth": {
@@ -1067,7 +1076,11 @@
     "tampermonkey_chinese_website": "Tampermonkey中国サイト",
     "user_profile": "プロフィール",
     "user_setting": "ユーザー設定",
-    "code_search": "コード検索"
+    "code_search": "コード検索",
+    "open_menu": "メニューを開く",
+    "menu": "メニュー",
+    "appearance": "外観",
+    "language": "言語"
   },
   "login": {
     "account_placeholder": "メールアドレスまたはユーザー名を入力",
@@ -1403,7 +1416,9 @@
         "background_script_desc": "ブラウザのバックグラウンドで実行されます",
         "browser_compatibility": "ブラウザ互換性",
         "browser_support": "{browser} をサポート",
+        "collapse": "折りたたむ",
         "created_at": "{time} に作成",
+        "expand": "もっと見る",
         "feature_notice": "機能通知",
         "forum_post": "フォーラム投稿",
         "library_description": "これはユーザースクリプトが使用するライブラリです。スクリプト内で直接参照できます。",

@@ -48,6 +48,7 @@
       "title": "Управление отзывами"
     },
     "navigation": {
+      "title": "Администрирование",
       "advertise": "Управление рекламой",
       "feedbacks": "Управление отзывами",
       "oauth_apps": "Управление OAuth-приложениями",
@@ -749,6 +750,14 @@
         "action_success": "Готово",
         "action_failed": "Не удалось выполнить действие, попробуйте ещё раз"
       }
+    },
+    "card": {
+      "more_actions": "Другие действия",
+      "sort": "Сортировка",
+      "sort_default": "По умолчанию",
+      "sort_asc": "{field}: по возрастанию",
+      "sort_desc": "{field}: по убыванию",
+      "show_full_time": "Нажмите, чтобы увидеть точное время"
     }
   },
   "auth": {
@@ -1067,7 +1076,11 @@
     "tampermonkey_chinese_website": "Китайский сайт Tampermonkey",
     "user_profile": "Профиль пользователя",
     "user_setting": "Настройки пользователя",
-    "code_search": "Поиск по коду"
+    "code_search": "Поиск по коду",
+    "open_menu": "Открыть меню",
+    "menu": "Меню",
+    "appearance": "Оформление",
+    "language": "Язык"
   },
   "login": {
     "account_placeholder": "Email или имя пользователя",
@@ -1403,7 +1416,9 @@
         "background_script_desc": "Он будет работать в фоне браузера",
         "browser_compatibility": "Совместимость с браузерами",
         "browser_support": "Поддерживает {browser}",
+        "collapse": "Свернуть",
         "created_at": "Создано {time}",
+        "expand": "Развернуть",
         "feature_notice": "Уведомление о функциях",
         "forum_post": "Сообщение на форуме",
         "library_description": "Это библиотека, используемая пользовательскими скриптами, вы можете напрямую ссылаться на неё в своих скриптах.",

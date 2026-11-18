@@ -28,6 +28,8 @@ import {
   type AIReviewItem,
 } from '@/lib/api/services/aiReview';
 import { APIError } from '@/types/api';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 
 const statusColors: Record<number, string> = {
   0: 'blue',
@@ -80,7 +82,7 @@ export default function AIReviewRecordsClient() {
     [filters, page, pageSize],
   );
 
-  const { data, isLoading } = useAIReviews(params);
+  const { data, isLoading, error, mutate } = useAIReviews(params);
 
   useEffect(() => {
     if (detailID === null) return;
@@ -143,6 +145,36 @@ export default function AIReviewRecordsClient() {
     setPage(pagination.current || 1);
     setPageSize(pagination.pageSize || pageSize);
   };
+
+  const toCard = (r: AIReviewItem): AdminCardSpec => ({
+    title: (
+      <Link href={`/script-show-page/${r.script_id}`}>
+        {r.script_name || `#${r.script_id}`}
+      </Link>
+    ),
+    subtitle: [`#${r.id}`, r.model || '-'],
+    badges: (
+      <Tag color={statusColors[r.status]}>
+        {t(`status_${r.status}` as const)}
+      </Tag>
+    ),
+    fields: [
+      {
+        label: t('col_tokens'),
+        value: `${r.prompt_tokens}/${r.completion_tokens}`,
+      },
+      { label: t('col_latency'), value: formatLatency(r.latency_ms) },
+      { label: t('col_reason'), value: r.reason || '-' },
+    ],
+    time: r.createtime,
+    actions: [
+      {
+        key: 'detail',
+        label: t('view_detail'),
+        onClick: () => openDetail(r.id),
+      },
+    ],
+  });
 
   const columns: ColumnsType<AIReviewItem> = [
     { title: t('col_id'), dataIndex: 'id', width: 80 },
@@ -212,9 +244,14 @@ export default function AIReviewRecordsClient() {
           });
           setPage(1);
         }}
-        style={{ marginBottom: 16 }}
+        // 窄屏：筛选项两列排布，每项的「标签：控件」不折行
+        className="!mb-4 max-md:!grid max-md:grid-cols-2 max-md:gap-2 max-md:[&_.ant-form-item-control]:!min-w-0 max-md:[&_.ant-form-item-row]:!flex-nowrap"
       >
-        <Form.Item name="status" label={t('filter_status')}>
+        <Form.Item
+          name="status"
+          label={t('filter_status')}
+          className="max-md:!me-0 max-md:!mb-0"
+        >
           <Select
             allowClear
             placeholder={t('filter_status')}
@@ -222,25 +259,45 @@ export default function AIReviewRecordsClient() {
               value: v,
               label: t(`status_${v}` as const),
             }))}
-            style={{ width: 160 }}
+            className="!w-full md:!w-[160px]"
           />
         </Form.Item>
-        <Form.Item name="script_id" label="script_id">
-          <InputNumber style={{ width: 140 }} min={1} />
+        <Form.Item
+          name="script_id"
+          label="script_id"
+          className="max-md:!me-0 max-md:!mb-0"
+        >
+          <InputNumber className="!w-full md:!w-[140px]" min={1} />
         </Form.Item>
       </Form>
-      <Table<AIReviewItem>
+      <AdminResponsiveList<AIReviewItem>
+        table={
+          <Table<AIReviewItem>
+            rowKey="id"
+            loading={isLoading}
+            columns={columns}
+            dataSource={data?.list ?? []}
+            pagination={{
+              total: data?.total ?? 0,
+              current: page,
+              pageSize,
+              showSizeChanger: true,
+            }}
+            onChange={handleTableChange}
+          />
+        }
+        rows={data?.list}
         rowKey="id"
-        loading={isLoading}
-        columns={columns}
-        dataSource={data?.list ?? []}
+        card={toCard}
+        isLoading={isLoading}
+        error={error}
+        onRetry={() => void mutate()}
         pagination={{
-          total: data?.total ?? 0,
           current: page,
+          total: data?.total ?? 0,
           pageSize,
-          showSizeChanger: true,
+          onChange: setPage,
         }}
-        onChange={handleTableChange}
       />
       <Drawer
         open={detailID !== null}

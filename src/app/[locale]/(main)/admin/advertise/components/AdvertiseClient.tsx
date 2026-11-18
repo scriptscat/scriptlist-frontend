@@ -40,6 +40,8 @@ import { API_CONFIG } from '@/lib/api/config';
 import { useAdminAdvertises } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 import { AD_SLOT_KEYS, getAdSlotMeta } from '@/components/AdSlot/slots';
 import {
   crossSlotAggregateCount,
@@ -413,6 +415,26 @@ export default function AdvertiseClient() {
     }
   };
 
+  // 曝光 / 点击单元格（表格与窄屏卡片共用）
+  const renderStats = (r: AdminAdvertise) =>
+    resolveAdType(r) === 'adsense' ? (
+      <Tooltip title={t('stats_adsense_note')}>
+        <span className="text-gray-400">{t('stats_adsense_placeholder')}</span>
+      </Tooltip>
+    ) : (
+      <div>
+        <div>{`${r.impressions} / ${r.clicks} (${r.impressions ? ((r.clicks / r.impressions) * 100).toFixed(1) : '0'}%)`}</div>
+        {/* 统计只按 ad_id 累计（spec 决策 1）：多位条目的数字是跨位合计，点明避免被当成单位数据。 */}
+        {crossSlotAggregateCount(r.slot_keys) > 0 && (
+          <div className="text-xs text-gray-400">
+            {t('stats_multi_slot_note', {
+              count: crossSlotAggregateCount(r.slot_keys),
+            })}
+          </div>
+        )}
+      </div>
+    );
+
   const columns: ColumnsType<AdminAdvertise> = [
     { title: 'ID', dataIndex: 'id', width: 70 },
     {
@@ -515,26 +537,7 @@ export default function AdvertiseClient() {
     {
       title: t('col_stats'),
       width: 180,
-      render: (_: unknown, r: AdminAdvertise) =>
-        resolveAdType(r) === 'adsense' ? (
-          <Tooltip title={t('stats_adsense_note')}>
-            <span className="text-gray-400">
-              {t('stats_adsense_placeholder')}
-            </span>
-          </Tooltip>
-        ) : (
-          <div>
-            <div>{`${r.impressions} / ${r.clicks} (${r.impressions ? ((r.clicks / r.impressions) * 100).toFixed(1) : '0'}%)`}</div>
-            {/* 统计只按 ad_id 累计（spec 决策 1）：多位条目的数字是跨位合计，点明避免被当成单位数据。 */}
-            {crossSlotAggregateCount(r.slot_keys) > 0 && (
-              <div className="text-xs text-gray-400">
-                {t('stats_multi_slot_note', {
-                  count: crossSlotAggregateCount(r.slot_keys),
-                })}
-              </div>
-            )}
-          </div>
-        ),
+      render: (_: unknown, r: AdminAdvertise) => renderStats(r),
     },
     {
       title: t('col_actions'),
@@ -557,9 +560,59 @@ export default function AdvertiseClient() {
     },
   ];
 
+  const toCard = (r: AdminAdvertise): AdminCardSpec => {
+    const isAdsense = resolveAdType(r) === 'adsense';
+    const keys = parseSlotKeys(r.slot_keys);
+    return {
+      title: isAdsense
+        ? [t('col_ad_unit_value', { id: r.ad_unit_id }), r.title]
+            .filter(Boolean)
+            .join(' · ')
+        : r.title,
+      subtitle: [`#${r.id}`],
+      badges: (
+        <>
+          <Tag color={r.enabled ? 'green' : 'default'}>
+            {r.enabled ? t('enabled') : t('disabled')}
+          </Tag>
+          <Tag color={isAdsense ? 'blue' : 'default'}>
+            {isAdsense ? t('type_adsense') : t('type_image')}
+          </Tag>
+        </>
+      ),
+      fields: [
+        {
+          label: t('col_slot'),
+          value: (
+            <span className="flex flex-wrap gap-1">
+              {keys.map((k) => (
+                <Tag key={k} className="!mr-0">
+                  {getAdSlotMeta(k) ? slotName(k) : k}
+                </Tag>
+              ))}
+            </span>
+          ),
+        },
+        { label: t('col_weight'), value: r.weight },
+        { label: t('col_schedule'), value: formatSchedule(r) },
+        { label: t('col_stats'), value: renderStats(r) },
+      ],
+      actions: [
+        { key: 'edit', label: t('action_edit'), onClick: () => handleEdit(r) },
+        {
+          key: 'delete',
+          label: t('action_delete'),
+          danger: true,
+          confirm: { title: t('delete_confirm') },
+          onClick: () => handleDelete(r.id),
+        },
+      ],
+    };
+  };
+
   return (
     <div>
-      <div className="mb-4 flex justify-between items-center">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-semibold">{t('title')}</h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
           {t('action_create')}
@@ -576,7 +629,7 @@ export default function AdvertiseClient() {
             : t('publisher_id_hint')
         }
         description={
-          <div className="mt-1 flex items-center gap-2">
+          <div className="mt-1 flex flex-wrap items-center gap-2">
             <Input
               className="!max-w-xs font-mono"
               value={publisherIdInput}
@@ -597,20 +650,88 @@ export default function AdvertiseClient() {
         }
       />
 
-      <Table
-        columns={columns}
-        dataSource={data}
+      <AdminResponsiveList<AdminAdvertise>
+        table={
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="id"
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            onChange={handleTableChange}
+            scroll={{ x: 1200 }}
+            pagination={{
+              current: page,
+              total,
+              pageSize: 20,
+              showSizeChanger: false,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
-        onChange={handleTableChange}
-        scroll={{ x: 1200 }}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={fetchData}
         pagination={{
           current: page,
           total,
           pageSize: 20,
-          showSizeChanger: false,
+          onChange: setPage,
         }}
+        mobileToolbar={
+          <div className="grid grid-cols-1 gap-2">
+            <Select<string>
+              allowClear
+              aria-label={t('col_slot')}
+              placeholder={t('col_slot')}
+              className="!w-full"
+              value={slotFilter}
+              onChange={(v) => {
+                setSlotFilter(v ?? undefined);
+                setPage(1);
+              }}
+              options={AD_SLOT_KEYS.map((k) => ({
+                value: k,
+                label: slotName(k),
+              }))}
+            />
+            <Select<AdType>
+              allowClear
+              aria-label={t('col_type')}
+              placeholder={t('col_type')}
+              className="!w-full"
+              value={typeFilter}
+              onChange={(v) => {
+                setTypeFilter(v ?? undefined);
+                setPage(1);
+              }}
+              options={[
+                { value: 'image', label: t('type_image') },
+                { value: 'adsense', label: t('type_adsense') },
+              ]}
+            />
+            <Select<string>
+              allowClear
+              aria-label={t('col_enabled')}
+              placeholder={t('col_enabled')}
+              className="!w-full"
+              value={
+                enabledFilter === undefined ? undefined : String(enabledFilter)
+              }
+              onChange={(v) => {
+                setEnabledFilter(v === undefined ? undefined : v === 'true');
+                setPage(1);
+              }}
+              options={[
+                { value: 'true', label: t('enabled') },
+                { value: 'false', label: t('disabled') },
+              ]}
+            />
+          </div>
+        }
       />
 
       <Modal

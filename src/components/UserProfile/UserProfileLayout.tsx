@@ -528,7 +528,11 @@ export default function UserProfileLayout({
 
         {/* 右侧主要内容区域 */}
         <Col xs={24} lg={16}>
-          <Card className="shadow-lg border-0">
+          <Card
+            data-testid="user-profile-content-card"
+            className="shadow-lg border-0 max-md:!border-0 max-md:!bg-transparent max-md:!shadow-none"
+            classNames={{ body: 'max-md:!p-0' }}
+          >
             <Tabs
               activeKey={activeTab}
               onChange={handleTabChange}

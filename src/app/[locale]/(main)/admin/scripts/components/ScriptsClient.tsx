@@ -23,6 +23,11 @@ import { scriptService } from '@/lib/api/services/scripts/scripts';
 import { useAdminScripts } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type {
+  AdminCardAction,
+  AdminCardSpec,
+} from '../../components/AdminResponsiveList';
 import type { ColumnsType, TableProps } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
 import dayjs from 'dayjs';
@@ -35,9 +40,12 @@ type ScriptStatusFilter = 1 | 2;
 
 const STATUS_ACTIVE = 1;
 const STATUS_DELETED = 2;
+const PAGE_SIZE = 20;
+const SORT_DEFAULT = 'default';
 
 export default function ScriptsClient() {
   const t = useTranslations('admin.scripts');
+  const tCard = useTranslations('admin.card');
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [searchField, setSearchField] = useState<
@@ -242,6 +250,24 @@ export default function ScriptsClient() {
     return <Tag color="red">{t('status_deleted')}</Tag>;
   };
 
+  const renderMultiplier = (record: ScriptItem) => {
+    const active = record.multiplier_expire_at > dayjs().unix();
+    if (!active || record.score_multiplier === 1) {
+      return <span style={{ color: '#999' }}>{'—'}</span>;
+    }
+    return (
+      <span>
+        {record.score_multiplier.toFixed(2)}
+        {' × '}
+        <span style={{ color: '#999', fontSize: 12 }}>
+          {'('}
+          {dayjs.unix(record.multiplier_expire_at).format('YYYY-MM-DD HH:mm')}
+          {')'}
+        </span>
+      </span>
+    );
+  };
+
   const statusFilterOptions = [
     { text: t('status_active'), value: STATUS_ACTIVE },
     { text: t('status_deleted'), value: STATUS_DELETED },
@@ -311,25 +337,7 @@ export default function ScriptsClient() {
       title: t('col_score_multiplier'),
       key: 'score_multiplier',
       width: 180,
-      render: (_: unknown, record: ScriptItem) => {
-        const active = record.multiplier_expire_at > dayjs().unix();
-        if (!active || record.score_multiplier === 1) {
-          return <span style={{ color: '#999' }}>{'—'}</span>;
-        }
-        return (
-          <span>
-            {record.score_multiplier.toFixed(2)}
-            {' × '}
-            <span style={{ color: '#999', fontSize: 12 }}>
-              {'('}
-              {dayjs
-                .unix(record.multiplier_expire_at)
-                .format('YYYY-MM-DD HH:mm')}
-              {')'}
-            </span>
-          </span>
-        );
-      },
+      render: (_: unknown, record: ScriptItem) => renderMultiplier(record),
     },
     {
       title: t('col_createtime'),
@@ -406,15 +414,106 @@ export default function ScriptsClient() {
     },
   ];
 
+  // 与操作列同序：主位取第一个安全操作（普通行「修改可见性」，已删除行「恢复」）
+  const cardActions = (record: ScriptItem): AdminCardAction[] => [
+    record.status === STATUS_ACTIVE
+      ? {
+          key: 'delete',
+          label: t('action_delete'),
+          danger: true,
+          onClick: () => setDeletingScript(record),
+        }
+      : {
+          key: 'restore',
+          label: t('action_restore'),
+          confirm: { title: t('restore_confirm') },
+          onClick: () => handleRestore(record.id),
+        },
+    {
+      key: 'visibility',
+      label: t('action_visibility'),
+      onClick: () => openVisibilityModal(record),
+    },
+    {
+      key: 'trending_score',
+      label: t('action_trending_score'),
+      onClick: () => openTrendingModal(record),
+    },
+    {
+      key: 'ai_review',
+      label: t('action_ai_review'),
+      confirm: { title: t('ai_review_confirm') },
+      loading: reviewingScriptId === record.id,
+      onClick: () => handleAIReview(record),
+    },
+    {
+      key: 'set_multiplier',
+      label: t('action_set_multiplier'),
+      onClick: () =>
+        setMultiplierTarget({
+          id: record.id,
+          name: record.name,
+          multiplier: record.score_multiplier,
+          expireAt: record.multiplier_expire_at,
+        }),
+    },
+  ];
+
+  const toCard = (record: ScriptItem): AdminCardSpec => ({
+    title: (
+      <Link href={`/script-show-page/${record.id}`} target="_blank">
+        {record.name}
+      </Link>
+    ),
+    subtitle: [
+      `#${record.id}`,
+      <Link key="author" href={`/users/${record.user_id}`} target="_blank">
+        {record.username}
+      </Link>,
+    ],
+    badges: (
+      <>
+        {getStatusTag(record.status)}
+        {getPublicTag(record.public)}
+        {getTypeTag(record.type)}
+      </>
+    ),
+    fields: [
+      {
+        label: t('col_trending_score'),
+        value: formatTrendingScore(record.trending_score),
+      },
+      { label: t('col_score_multiplier'), value: renderMultiplier(record) },
+    ],
+    time: record.createtime,
+    actions: cardActions(record),
+  });
+
+  // 表头的趋势分排序在窄屏改为工具栏下拉框，产生与表头相同的查询
+  const sortValue = sortField ? `${sortField}:${sortOrder}` : SORT_DEFAULT;
+  const handleSortSelect = (value: string) => {
+    if (value === SORT_DEFAULT) {
+      setSortField(undefined);
+      setSortOrder(undefined);
+    } else {
+      const [field, order] = value.split(':');
+      setSortField(field as ScriptSortField);
+      setSortOrder(order as ScriptSortOrder);
+    }
+    setPage(1);
+  };
+  const sortFieldLabel = t('col_trending_score');
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h2 className="text-lg font-semibold">{t('title')}</h2>
-        <Space>
+        <div className="grid grid-cols-2 gap-2 md:flex md:items-center">
           <Select<ScriptStatusFilter>
             placeholder={t('filter_status')}
+            aria-label={t('filter_status')}
             allowClear
-            style={{ width: 120 }}
+            className="!w-full md:!w-[120px]"
             value={statusFilter}
             onChange={(val) => {
               setStatusFilter(val);
@@ -428,7 +527,7 @@ export default function ScriptsClient() {
           <Select
             value={searchField}
             onChange={setSearchField}
-            style={{ width: 120 }}
+            className="!w-full md:!w-[120px]"
             options={[
               { value: 'name', label: t('search_field_name') },
               { value: 'description', label: t('search_field_description') },
@@ -440,7 +539,7 @@ export default function ScriptsClient() {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onPressEnter={handleSearch}
-            style={{ width: 250 }}
+            className="md:!w-[250px]"
           />
           <Button
             type="primary"
@@ -449,21 +548,57 @@ export default function ScriptsClient() {
           >
             {t('search_button')}
           </Button>
-        </Space>
+        </div>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
+      <AdminResponsiveList<ScriptItem>
+        table={
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="id"
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            onChange={handleTableChange}
+            pagination={{
+              current: page,
+              total,
+              pageSize: PAGE_SIZE,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
-        onChange={handleTableChange}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={refreshList}
         pagination={{
           current: page,
           total,
-          pageSize: 20,
+          pageSize: PAGE_SIZE,
+          onChange: setPage,
         }}
+        mobileToolbar={
+          <Select<string>
+            aria-label={tCard('sort')}
+            value={sortValue}
+            onChange={handleSortSelect}
+            className="!w-full"
+            options={[
+              { value: SORT_DEFAULT, label: tCard('sort_default') },
+              {
+                value: 'trending_score:desc',
+                label: tCard('sort_desc', { field: sortFieldLabel }),
+              },
+              {
+                value: 'trending_score:asc',
+                label: tCard('sort_asc', { field: sortFieldLabel }),
+              },
+            ]}
+          />
+        }
       />
 
       <Modal

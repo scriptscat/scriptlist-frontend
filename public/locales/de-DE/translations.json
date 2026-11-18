@@ -48,6 +48,7 @@
       "title": "Feedback-Verwaltung"
     },
     "navigation": {
+      "title": "Verwaltung",
       "advertise": "Anzeigenverwaltung",
       "feedbacks": "Feedback-Verwaltung",
       "oauth_apps": "OAuth-App-Verwaltung",
@@ -749,6 +750,14 @@
         "action_success": "Erledigt",
         "action_failed": "Aktion fehlgeschlagen, bitte erneut versuchen"
       }
+    },
+    "card": {
+      "more_actions": "Weitere Aktionen",
+      "sort": "Sortierung",
+      "sort_default": "Standardreihenfolge",
+      "sort_asc": "{field} aufsteigend",
+      "sort_desc": "{field} absteigend",
+      "show_full_time": "Tippen, um die genaue Zeit anzuzeigen"
     }
   },
   "auth": {
@@ -1067,7 +1076,11 @@
     "tampermonkey_chinese_website": "Tampermonkey Chinese Website",
     "user_profile": "Benutzerprofil",
     "user_setting": "Benutzereinstellungen",
-    "code_search": "Code-Suche"
+    "code_search": "Code-Suche",
+    "open_menu": "Menü öffnen",
+    "menu": "Menü",
+    "appearance": "Darstellung",
+    "language": "Sprache"
   },
   "login": {
     "account_placeholder": "E-Mail oder Benutzername",
@@ -1403,7 +1416,9 @@
         "background_script_desc": "Es läuft im Browser-Hintergrund",
         "browser_compatibility": "Browser-Kompatibilität",
         "browser_support": "Unterstützt {browser}",
+        "collapse": "Weniger anzeigen",
         "created_at": "Erstellt am {time}",
+        "expand": "Mehr anzeigen",
         "feature_notice": "Funktionshinweis",
         "forum_post": "Forumsbeitrag",
         "library_description": "Dies ist eine Bibliothek, die von Benutzerskripten verwendet wird. Sie können sie direkt in Ihren Skripten referenzieren.",

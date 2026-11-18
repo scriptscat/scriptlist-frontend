@@ -33,6 +33,8 @@ import { useAdminOIDCProviders } from '@/lib/api/hooks/admin';
 import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 import { API_CONFIG } from '@/lib/api/config';
 import ProviderIcon from '@/components/ProviderIcon';
 
@@ -195,20 +197,34 @@ export default function OIDCProvidersClient() {
     }
   };
 
+  // 图标 / 端点 / 状态单元格（表格与窄屏卡片共用）
+  const providerIcon = (record: OIDCProviderItem) =>
+    record.icon ? (
+      <ProviderIcon icon={record.icon} name={record.name} size={24} />
+    ) : (
+      <Avatar size="small" shape="square">
+        {record.name?.[0]?.toUpperCase()}
+      </Avatar>
+    );
+  // OIDC 显示 issuer，其余类型显示授权端点
+  const providerEndpoint = (record: OIDCProviderItem) =>
+    (record.type || 'oidc') === 'oidc'
+      ? record.issuer_url
+      : record.auth_url || '-';
+  const statusTag = (status: number) =>
+    status === 1 ? (
+      <Tag color="green">{t('status_active')}</Tag>
+    ) : (
+      <Tag color="red">{t('status_disabled')}</Tag>
+    );
+
   const columns: ColumnsType<OIDCProviderItem> = [
     {
       title: t('col_icon'),
       dataIndex: 'icon',
       key: 'icon',
       width: 60,
-      render: (val: string, record: OIDCProviderItem) =>
-        val ? (
-          <ProviderIcon icon={val} name={record.name} size={24} />
-        ) : (
-          <Avatar size="small" shape="square">
-            {record.name?.[0]?.toUpperCase()}
-          </Avatar>
-        ),
+      render: (_: string, record: OIDCProviderItem) => providerIcon(record),
     },
     {
       title: t('col_type'),
@@ -227,11 +243,7 @@ export default function OIDCProvidersClient() {
       dataIndex: 'issuer_url',
       key: 'issuer_url',
       ellipsis: true,
-      render: (_: string, record: OIDCProviderItem) => {
-        const type = record.type || 'oidc';
-        if (type === 'oidc') return record.issuer_url;
-        return record.auth_url || '-';
-      },
+      render: (_: string, record: OIDCProviderItem) => providerEndpoint(record),
     },
     {
       title: t('col_client_id'),
@@ -243,12 +255,7 @@ export default function OIDCProvidersClient() {
       title: t('col_status'),
       dataIndex: 'status',
       key: 'status',
-      render: (val: number) =>
-        val === 1 ? (
-          <Tag color="green">{t('status_active')}</Tag>
-        ) : (
-          <Tag color="red">{t('status_disabled')}</Tag>
-        ),
+      render: (val: number) => statusTag(val),
     },
     {
       title: t('col_actions'),
@@ -440,9 +447,48 @@ export default function OIDCProvidersClient() {
     );
   };
 
+  const toCard = (record: OIDCProviderItem): AdminCardSpec => ({
+    icon: (
+      <span data-provider-icon="" className="inline-flex">
+        {providerIcon(record)}
+      </span>
+    ),
+    title: record.name,
+    badges: (
+      <>
+        {statusTag(record.status)}
+        <Tag>{typeLabel(record.type)}</Tag>
+      </>
+    ),
+    fields: [
+      {
+        label: t('col_issuer_url'),
+        value: <span className="break-all">{providerEndpoint(record)}</span>,
+      },
+      {
+        label: t('col_client_id'),
+        value: <span className="break-all">{record.client_id}</span>,
+      },
+    ],
+    actions: [
+      {
+        key: 'edit',
+        label: t('action_edit'),
+        onClick: () => openEdit(record),
+      },
+      {
+        key: 'delete',
+        label: t('action_delete'),
+        danger: true,
+        confirm: { title: t('delete_confirm') },
+        onClick: () => handleDelete(record.id),
+      },
+    ],
+  });
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg font-semibold">{t('title')}</h2>
         <Button
           type="primary"
@@ -457,12 +503,29 @@ export default function OIDCProvidersClient() {
         </Button>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
+      <AdminResponsiveList<OIDCProviderItem>
+        table={
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="id"
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            pagination={{
+              current: page,
+              total,
+              pageSize: 20,
+              onChange: setPage,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={refresh}
         pagination={{
           current: page,
           total,

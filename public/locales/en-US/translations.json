@@ -74,6 +74,7 @@
       "title": "Feedback Management"
     },
     "navigation": {
+      "title": "Admin",
       "announcements": "Announcements",
       "advertise": "Ad Management",
       "feedbacks": "Feedback Management",
@@ -749,6 +750,14 @@
         "action_success": "Done",
         "action_failed": "Action failed, please try again"
       }
+    },
+    "card": {
+      "more_actions": "More actions",
+      "sort": "Sort",
+      "sort_default": "Default order",
+      "sort_asc": "{field} ascending",
+      "sort_desc": "{field} descending",
+      "show_full_time": "Tap to show the full time"
     }
   },
   "auth": {
@@ -1075,7 +1084,11 @@
     "tampermonkey_chinese_website": "Tampermonkey Chinese Website",
     "user_profile": "User Profile",
     "user_setting": "User Settings",
-    "code_search": "Code Search"
+    "code_search": "Code Search",
+    "open_menu": "Open menu",
+    "menu": "Menu",
+    "appearance": "Appearance",
+    "language": "Language"
   },
   "login": {
     "account_placeholder": "Email or username",
@@ -1411,7 +1424,9 @@
         "background_script_desc": "It runs in the browser background",
         "browser_compatibility": "Browser Compatibility",
         "browser_support": "Supports {browser}",
+        "collapse": "Show less",
         "created_at": "Created {time}",
+        "expand": "Show more",
         "feature_notice": "Feature Notice",
         "forum_post": "Forum Post",
         "library_description": "This is a library used by userscripts, you can reference it directly in your scripts.",

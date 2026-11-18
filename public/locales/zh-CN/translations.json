@@ -74,6 +74,7 @@
       "title": "反馈管理"
     },
     "navigation": {
+      "title": "管理后台",
       "announcements": "公告管理",
       "advertise": "广告管理",
       "feedbacks": "反馈管理",
@@ -749,6 +750,14 @@
         "btn_stop_fp_refresh": "立即刷新",
         "msg_stop_fp_refreshed": "Stop-fingerprint 集合已刷新"
       }
+    },
+    "card": {
+      "more_actions": "更多操作",
+      "sort": "排序",
+      "sort_default": "默认排序",
+      "sort_asc": "{field} 升序",
+      "sort_desc": "{field} 降序",
+      "show_full_time": "点按查看完整时间"
     }
   },
   "auth": {
@@ -1075,7 +1084,11 @@
     "tampermonkey_chinese_website": "油猴中文网",
     "user_profile": "个人资料",
     "user_setting": "用户设置",
-    "code_search": "源码搜索"
+    "code_search": "源码搜索",
+    "open_menu": "打开菜单",
+    "menu": "菜单",
+    "appearance": "外观",
+    "language": "语言"
   },
   "login": {
     "account_placeholder": "请输入邮箱或用户名",
@@ -1411,7 +1424,9 @@
         "background_script_desc": "它会在浏览器后台运行",
         "browser_compatibility": "浏览器兼容性",
         "browser_support": "支持 {browser}",
+        "collapse": "收起",
         "created_at": "创建于 {time}",
+        "expand": "展开",
         "feature_notice": "功能提醒",
         "forum_post": "论坛帖子",
         "library_description": "这是一个用户脚本使用的库，你可以在你的脚本中直接引用它。",

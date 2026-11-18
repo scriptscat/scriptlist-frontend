@@ -38,8 +38,6 @@ export function useTableStateLocale({
   error,
   onRetry,
 }: TableStateOptions): TableLocale {
-  const t = useTranslations('components.loading');
-
   return useMemo(() => {
     if (isLoading) {
       return {
@@ -50,22 +48,23 @@ export function useTableStateLocale({
     }
 
     if (error) {
-      return {
-        emptyText: (
-          <div role="alert">
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={t('failed')}
-            >
-              <Button size="small" onClick={onRetry}>
-                {t('retry')}
-              </Button>
-            </Empty>
-          </div>
-        ),
-      };
+      return { emptyText: <LoadFailedState onRetry={onRetry} /> };
     }
 
     return {};
-  }, [isLoading, error, onRetry, t]);
+  }, [isLoading, error, onRetry]);
+}
+
+/** 取数失败：错误文案 + 重试按钮，标记为 alert。表格空态与窄屏卡片列表共用。 */
+export function LoadFailedState({ onRetry }: { onRetry: () => void }) {
+  const t = useTranslations('components.loading');
+  return (
+    <div role="alert">
+      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('failed')}>
+        <Button size="small" onClick={onRetry}>
+          {t('retry')}
+        </Button>
+      </Empty>
+    </div>
+  );
 }

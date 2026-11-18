@@ -110,6 +110,44 @@ export default React.memo(function ScriptCard({
     [script.public],
   );
 
+  const hasTags = script.type === 3 || script.tags.length > 0;
+  const tagItems = (
+    <>
+      {script.type === 3 && (
+        <Tooltip title={t('library_tooltip')} color="blue">
+          <Tag color="blue" className="text-xs px-1 py-0 border-blue-300">
+            {t('library_tag')}
+          </Tag>
+        </Tooltip>
+      )}
+      {script.tags.slice(0, 3).map((tag) => (
+        <Tooltip
+          title={t('tag_label', { name: tag.name })}
+          placement="bottom"
+          key={tag.id}
+        >
+          <Tag color={hashColor(tag.name)} className="text-xs px-1 py-0">
+            {'#' +
+              (tag.name.length > 4 ? tag.name.slice(0, 4) + '…' : tag.name)}
+          </Tag>
+        </Tooltip>
+      ))}
+      {script.tags.length > 3 && (
+        <Tooltip
+          title={script.tags
+            .slice(3)
+            .map((tag) => '#' + tag.name)
+            .join(' ')}
+          placement="bottom"
+        >
+          <Tag className="text-xs px-1 py-0">
+            {'+' + (script.tags.length - 3)}
+          </Tag>
+        </Tooltip>
+      )}
+    </>
+  );
+
   return (
     <Badge.Ribbon
       text={ScriptUtils.getRibbonText(script.public)}
@@ -152,7 +190,7 @@ export default React.memo(function ScriptCard({
                     <Tag
                       color="red"
                       variant="filled"
-                      className="text-xs px-1 py-0"
+                      className="text-xs px-1 py-0 !hidden md:!inline-block"
                     >
                       {'v' + script.script.version}
                     </Tag>
@@ -160,12 +198,21 @@ export default React.memo(function ScriptCard({
                 </div>
 
                 {/* 作者信息区域 - 更紧凑的布局 */}
-                <div className="flex items-center gap-3 text-sm">
+                <div className="flex items-center gap-x-3 gap-y-1 text-sm flex-wrap md:flex-nowrap">
+                  <Tag
+                    color="red"
+                    variant="filled"
+                    data-testid="script-card-version-mobile"
+                    className="text-xs px-1 py-0 !m-0 md:!hidden"
+                  >
+                    {'v' + script.script.version}
+                  </Tag>
                   <Link
                     href={`/users/${script.user_id}`}
                     target="_blank"
                     onClick={stopPropagation}
-                    className="flex items-center gap-1.5 hover:text-[#1677ff] transition-colors"
+                    data-testid="script-card-author"
+                    className="flex items-center gap-1.5 hover:text-[#1677ff] transition-colors min-w-0 max-md:flex-1 md:flex-none"
                   >
                     <Avatar
                       size={16}
@@ -175,7 +222,7 @@ export default React.memo(function ScriptCard({
                     />
                     <Text
                       type="secondary"
-                      className="hover:!text-[#1677ff] text-xs"
+                      className="hover:!text-[#1677ff] text-xs max-md:truncate"
                     >
                       {script.username}
                     </Text>
@@ -193,7 +240,10 @@ export default React.memo(function ScriptCard({
                     </Tooltip>
                   )}
 
-                  <div className="flex items-center gap-1">
+                  <div
+                    data-testid="script-card-today"
+                    className="flex items-center gap-1 max-md:basis-full"
+                  >
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                     <span className="text-green-600 dark:text-green-400 font-medium text-xs">
                       {t('today_installs', {
@@ -207,11 +257,21 @@ export default React.memo(function ScriptCard({
 
             <div
               className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed line-clamp-2 overflow-hidden"
+              data-testid="script-card-description"
               title={scriptDescription}
               style={descriptionStyle}
             >
               {scriptDescription}
             </div>
+            {/* 标签区域：窄屏在描述下方单独一行 */}
+            {hasTags && (
+              <div
+                data-testid="script-card-tags-mobile"
+                className="md:hidden flex items-center gap-1.5 flex-wrap mt-3"
+              >
+                {tagItems}
+              </div>
+            )}
           </div>
 
           <div className="ml-6 flex flex-col items-end gap-2">
@@ -288,7 +348,10 @@ export default React.memo(function ScriptCard({
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
           {/* 统计信息 */}
-          <div className="flex items-center space-x-4 text-sm">
+          <div
+            data-testid="script-card-stats"
+            className="flex flex-nowrap items-center space-x-4 text-sm whitespace-nowrap max-md:w-full"
+          >
             <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
               <DownloadOutlined className="text-blue-500" />
               <Text type="secondary" className="font-medium">
@@ -315,50 +378,22 @@ export default React.memo(function ScriptCard({
                   icon={<ShareAltOutlined />}
                   type="text"
                   size="small"
-                  className="!text-gray-500 hover:!text-blue-500 transition-colors"
+                  className="!text-gray-500 hover:!text-blue-500 transition-colors max-md:!ml-auto"
                   onClick={stopPropagation}
                 />
               </CopyToClipboard>
             </Tooltip>
           </div>
 
-          {/* 标签区域 */}
-          <div className="flex items-center gap-1.5 flex-wrap max-w-[40%]">
-            {script.type === 3 && (
-              <Tooltip title={t('library_tooltip')} color="blue">
-                <Tag color="blue" className="text-xs px-1 py-0 border-blue-300">
-                  {t('library_tag')}
-                </Tag>
-              </Tooltip>
-            )}
-            {script.tags.slice(0, 3).map((tag) => (
-              <Tooltip
-                title={t('tag_label', { name: tag.name })}
-                placement="bottom"
-                key={tag.id}
-              >
-                <Tag color={hashColor(tag.name)} className="text-xs px-1 py-0">
-                  {'#' +
-                    (tag.name.length > 4
-                      ? tag.name.slice(0, 4) + '…'
-                      : tag.name)}
-                </Tag>
-              </Tooltip>
-            ))}
-            {script.tags.length > 3 && (
-              <Tooltip
-                title={script.tags
-                  .slice(3)
-                  .map((tag) => '#' + tag.name)
-                  .join(' ')}
-                placement="bottom"
-              >
-                <Tag className="text-xs px-1 py-0">
-                  {'+' + (script.tags.length - 3)}
-                </Tag>
-              </Tooltip>
-            )}
-          </div>
+          {/* 标签区域：md 及以上在底栏右侧 */}
+          {hasTags && (
+            <div
+              data-testid="script-card-tags-desktop"
+              className="hidden md:flex items-center gap-1.5 flex-wrap md:max-w-[40%]"
+            >
+              {tagItems}
+            </div>
+          )}
         </div>
       </Card>
     </Badge.Ribbon>

@@ -165,7 +165,7 @@ export default function ScriptIssueClient({
   );
 
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-sm" classNames={{ body: 'max-md:!p-3' }}>
       <div className="mx-auto">
         {/* 紧凑的页面头部 */}
         <div className="mb-4">

@@ -19,6 +19,8 @@ import { similarityService } from '@/lib/api/services/similarity';
 import { useIntegrityWhitelist } from '@/lib/api/hooks/similarity';
 import { APIError } from '@/types/api';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 
 const PAGE_SIZE = 20;
 
@@ -77,6 +79,26 @@ export default function IntegrityWhitelistTable() {
     }
   };
 
+  const toCard = (r: IntegrityWhitelistItem): AdminCardSpec => ({
+    title: (
+      <Link href={`/script-show-page/${r.script.id}`}>{r.script.name}</Link>
+    ),
+    subtitle: [`#${r.id}`],
+    fields: [
+      { label: t('col_reason'), value: r.reason },
+      { label: t('col_added_by'), value: r.added_by_name },
+    ],
+    time: r.createtime,
+    actions: [
+      {
+        key: 'remove',
+        label: t('action_remove'),
+        danger: true,
+        onClick: () => handleRemove(r),
+      },
+    ],
+  });
+
   const columns: ColumnsType<IntegrityWhitelistItem> = [
     { title: t('col_id'), dataIndex: 'id', width: 70 },
     {
@@ -116,18 +138,35 @@ export default function IntegrityWhitelistTable() {
           {t('btn_add')}
         </Button>
       </div>
-      <Table
+      <AdminResponsiveList<IntegrityWhitelistItem>
+        table={
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={data}
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            pagination={{
+              current: page,
+              pageSize: PAGE_SIZE,
+              total,
+              onChange: setPage,
+              showSizeChanger: false,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        columns={columns}
-        dataSource={data}
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={refresh}
         pagination={{
           current: page,
-          pageSize: PAGE_SIZE,
           total,
+          pageSize: PAGE_SIZE,
           onChange: setPage,
-          showSizeChanger: false,
         }}
       />
       <Modal

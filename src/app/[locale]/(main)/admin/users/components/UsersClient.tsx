@@ -22,6 +22,11 @@ import { APIError } from '@/types/api';
 import type { ColumnsType } from 'antd/es/table';
 import { Link } from '@/i18n/routing';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type {
+  AdminCardAction,
+  AdminCardSpec,
+} from '../../components/AdminResponsiveList';
 import BanUserModal from '@/components/UserProfile/BanUserModal';
 import { useBanTime } from '@/lib/utils/banTime';
 
@@ -145,6 +150,16 @@ export default function UsersClient() {
     }
   };
 
+  // 注册 IP 单元格（表格与窄屏卡片共用）
+  const renderRegisterIp = (record: UserItem) => (
+    <div>
+      <div>{record.register_ip || '-'}</div>
+      {record.ip_location && (
+        <div className="text-xs text-neutral-500">{record.ip_location}</div>
+      )}
+    </div>
+  );
+
   const columns: ColumnsType<UserItem> = [
     {
       title: 'ID',
@@ -169,14 +184,7 @@ export default function UsersClient() {
     {
       title: t('col_register_ip'),
       key: 'register_ip',
-      render: (_: unknown, record: UserItem) => (
-        <div>
-          <div>{record.register_ip || '-'}</div>
-          {record.ip_location && (
-            <div className="text-xs text-neutral-500">{record.ip_location}</div>
-          )}
-        </div>
-      ),
+      render: (_: unknown, record: UserItem) => renderRegisterIp(record),
     },
     {
       title: t('col_status'),
@@ -232,17 +240,62 @@ export default function UsersClient() {
     },
   ];
 
+  // 与操作列同序：封禁 / 解封在前，主位取第一个安全操作
+  const cardActions = (record: UserItem): AdminCardAction[] => [
+    record.status === 1
+      ? {
+          key: 'ban',
+          label: t('action_ban'),
+          danger: true,
+          onClick: () => setBanningUser(record),
+        }
+      : {
+          key: 'unban',
+          label: t('action_unban'),
+          confirm: { title: t('unban_confirm') },
+          onClick: () => handleUnban(record.id),
+        },
+    {
+      key: 'admin_level',
+      label: t('action_admin_level'),
+      onClick: () => openAdminLevelModal(record),
+    },
+  ];
+
+  const toCard = (record: UserItem): AdminCardSpec => ({
+    title: (
+      <Link href={`/users/${record.id}`} target="_blank">
+        {record.username}
+      </Link>
+    ),
+    subtitle: [`#${record.id}`, record.email],
+    badges: (
+      <>
+        {renderStatus(record)}
+        {getAdminLevelTag(record.admin_level)}
+      </>
+    ),
+    fields: [
+      {
+        label: t('col_register_ip'),
+        value: renderRegisterIp(record),
+      },
+    ],
+    time: record.createtime,
+    actions: cardActions(record),
+  });
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h2 className="text-lg font-semibold">{t('title')}</h2>
-        <Space>
+        <div className="flex items-center gap-2">
           <Input
             placeholder={t('search_placeholder')}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             onPressEnter={handleSearch}
-            style={{ width: 250 }}
+            className="min-w-0 flex-1 md:!w-[250px] md:flex-none"
           />
           <Button
             type="primary"
@@ -251,15 +304,32 @@ export default function UsersClient() {
           >
             {t('search_button')}
           </Button>
-        </Space>
+        </div>
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={data}
+      <AdminResponsiveList<UserItem>
+        table={
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey="id"
+            loading={isLoading || isRefreshing}
+            locale={tableLocale}
+            pagination={{
+              current: page,
+              total,
+              pageSize: 20,
+              onChange: setPage,
+            }}
+          />
+        }
+        rows={data}
         rowKey="id"
-        loading={isLoading || isRefreshing}
-        locale={tableLocale}
+        card={toCard}
+        isLoading={isLoading}
+        isRefreshing={isRefreshing}
+        error={error}
+        onRetry={fetchData}
         pagination={{
           current: page,
           total,

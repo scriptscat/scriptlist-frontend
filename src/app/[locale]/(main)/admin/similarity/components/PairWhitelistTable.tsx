@@ -10,6 +10,8 @@ import { similarityService } from '@/lib/api/services/similarity';
 import { usePairWhitelist } from '@/lib/api/hooks/similarity';
 import { APIError } from '@/types/api';
 import { useTableStateLocale } from '../../components/tableState';
+import { AdminResponsiveList } from '../../components/AdminResponsiveList';
+import type { AdminCardSpec } from '../../components/AdminResponsiveList';
 
 const PAGE_SIZE = 20;
 
@@ -45,6 +47,34 @@ export default function PairWhitelistTable() {
       },
     });
   };
+
+  const toCard = (r: PairWhitelistItem): AdminCardSpec => ({
+    title: (
+      <>
+        <Link href={`/script-show-page/${r.script_a.id}`}>
+          {r.script_a.name}
+        </Link>
+        {' ↔ '}
+        <Link href={`/script-show-page/${r.script_b.id}`}>
+          {r.script_b.name}
+        </Link>
+      </>
+    ),
+    subtitle: [`#${r.id}`],
+    fields: [
+      { label: t('col_reason'), value: r.reason },
+      { label: t('col_added_by'), value: r.added_by_name },
+    ],
+    time: r.createtime,
+    actions: [
+      {
+        key: 'remove',
+        label: t('action_remove'),
+        danger: true,
+        onClick: () => handleRemove(r),
+      },
+    ],
+  });
 
   const columns: ColumnsType<PairWhitelistItem> = [
     { title: t('col_id'), dataIndex: 'id', width: 70 },
@@ -89,18 +119,35 @@ export default function PairWhitelistTable() {
   ];
 
   return (
-    <Table
+    <AdminResponsiveList<PairWhitelistItem>
+      table={
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={data}
+          loading={isLoading || isRefreshing}
+          locale={tableLocale}
+          pagination={{
+            current: page,
+            pageSize: PAGE_SIZE,
+            total,
+            onChange: setPage,
+            showSizeChanger: false,
+          }}
+        />
+      }
+      rows={data}
       rowKey="id"
-      columns={columns}
-      dataSource={data}
-      loading={isLoading || isRefreshing}
-      locale={tableLocale}
+      card={toCard}
+      isLoading={isLoading}
+      isRefreshing={isRefreshing}
+      error={error}
+      onRetry={refresh}
       pagination={{
         current: page,
-        pageSize: PAGE_SIZE,
         total,
+        pageSize: PAGE_SIZE,
         onChange: setPage,
-        showSizeChanger: false,
       }}
     />
   );

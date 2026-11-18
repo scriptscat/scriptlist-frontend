@@ -5,8 +5,12 @@ import { Button, Dropdown, Space } from 'antd';
 import { MoonOutlined, SunOutlined, DesktopOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/contexts/ThemeClientContext';
+import type { ThemeMode } from '@/lib/cookies';
+import { resolveThemeMode } from './themeMode';
 
-export const ThemeToggle: React.FC = () => {
+export const ThemeToggle: React.FC<{ className?: string }> = ({
+  className = 'flex',
+}) => {
   const { themeMode, setThemeMode } = useTheme();
   const t = useTranslations('layout');
 
@@ -28,16 +32,7 @@ export const ThemeToggle: React.FC = () => {
       menu={{
         selectedKeys: [themeMode.mode],
         onClick: ({ key }) => {
-          const mode = key as 'light' | 'dark' | 'auto';
-          // auto（跟随系统）需读取当前系统主题，而不是固定为 light，
-          // 否则在深色系统上切到「跟随系统」会错误地显示为浅色。
-          const theme: 'light' | 'dark' =
-            mode === 'auto'
-              ? window.matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'dark'
-                : 'light'
-              : mode;
-          setThemeMode({ mode, theme });
+          setThemeMode(resolveThemeMode(key as ThemeMode['mode']));
         },
         items: [
           {
@@ -76,7 +71,7 @@ export const ThemeToggle: React.FC = () => {
         type="text"
         icon={getIcon()}
         size="small"
-        className="flex items-center justify-center theme-transition hover:bg-app-tertiary"
+        className={`${className} items-center justify-center theme-transition hover:bg-app-tertiary`}
       />
     </Dropdown>
   );
