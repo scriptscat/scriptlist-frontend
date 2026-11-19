@@ -8,7 +8,7 @@ describe('selectLocalizedSummary', () => {
     expect(selectLocalizedSummary(summary, locale)).toBe('中文摘要');
   });
 
-  it.each(['en', 'ja', 'ru', 'de', 'vi'])(
+  it.each(['en', 'ja', 'ru', 'de', 'vi', 'es'])(
     'selects English for %s',
     (locale) => {
       expect(selectLocalizedSummary(summary, locale)).toBe('English summary');

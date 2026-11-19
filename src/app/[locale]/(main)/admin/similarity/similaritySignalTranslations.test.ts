@@ -10,6 +10,7 @@ const localeDirectories = [
   'ja-JP',
   'de-DE',
   'vi-VN',
+  'es-ES',
 ];
 const gmCookieSignals = [
   'gm_cookie_unrecognized_usage',

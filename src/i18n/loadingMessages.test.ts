@@ -10,9 +10,10 @@ const LOCALES = [
   'ru-RU',
   'de-DE',
   'vi-VN',
+  'es-ES',
 ] as const;
 
-/** 共享加载态组件用到的文案，四个业务域都会引用，必须 7 语种齐备。 */
+/** 共享加载态组件用到的文案，四个业务域都会引用，必须 8 语种齐备。 */
 const LOADING_KEYS = [
   'default',
   'code',
