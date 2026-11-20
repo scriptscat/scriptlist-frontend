@@ -12,6 +12,7 @@ import 'dayjs/locale/ja';
 import 'dayjs/locale/ru';
 import 'dayjs/locale/vi';
 import 'dayjs/locale/de';
+import 'dayjs/locale/es';
 
 // 扩展 dayjs 插件
 dayjs.extend(relativeTime);
@@ -34,6 +35,8 @@ export const dayjsLocaleMapping: Record<string, string> = {
   'vi-vn': 'vi',
   de: 'de',
   'de-de': 'de',
+  es: 'es',
+  'es-es': 'es',
   'ach-ug': 'en', // 回退到英语
 };
 

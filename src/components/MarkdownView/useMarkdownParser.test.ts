@@ -156,6 +156,7 @@ const LOCALES = [
   'ru-RU',
   'de-DE',
   'vi-VN',
+  'es-ES',
 ] as const;
 
 const localesDir = fileURLToPath(

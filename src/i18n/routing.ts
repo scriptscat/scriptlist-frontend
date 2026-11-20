@@ -37,6 +37,10 @@ export const languageMap: {
     label: 'Tiếng Việt',
     locale: 'vi-VN',
   },
+  es: {
+    label: 'Español',
+    locale: 'es-ES',
+  },
   // {
   //   key: 'ach-UG',
   //   label: 'Acholi',

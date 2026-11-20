@@ -51,7 +51,7 @@ import {
 } from '../slotSelection';
 import { countUnservableAdsense, getAdFieldRequirements } from '../adTypeRules';
 
-const LANGS = ['en', 'zh-CN', 'zh-TW', 'ru', 'ja', 'de', 'vi'];
+const LANGS = ['en', 'zh-CN', 'zh-TW', 'ru', 'ja', 'de', 'vi', 'es'];
 
 /** system_config key holding the AdSense publisher id (design doc §3 / §6.3). */
 const PUBLISHER_ID_KEY = 'advertise.adsense_publisher_id';
