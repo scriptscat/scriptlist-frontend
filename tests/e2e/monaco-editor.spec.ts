@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 
-const MONACO_ASSET_PREFIX = '/assets/monaco-editor/0.56.0/min/vs/';
+const MONACO_ASSET_PREFIX = '/assets/monaco-editor/0.57.0/min/vs/';
 
 type MonacoRuntime = {
   editor: {
